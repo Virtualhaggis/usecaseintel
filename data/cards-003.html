@@ -2328,11 +2328,11 @@ DeviceTvmSoftwareVulnerabilities
   data-phases="actions,c2,delivery,exploit,install" data-sev="high"
   data-techs="T1027,T1190,T1195.002"
   data-sources="StepSecurity"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network"
   data-targets="windows"
   data-uc-count="8" data-llm-uc-count="3"
-  data-search="Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosquat On June 17, 2026, an attacker compromised the @mastra npm organization and quietly added easy-day-js as a dependency across 140+ packages in the Mastra AI framework ecosystem. easy-day-js is a typosquat of the popular dayjs date library, and its latest version contained an obfuscated postinstall dropper that downloaded and ran a second-stage payload from attacker-controlled servers, then deleted itself to remove any trace. Packages with a combined weekly download count exceeding 1.1 million were exposed. If you installed any @mastra package today, treat your environment as compromised.  T1027 T1190 T1195.002 [LLM] easy-day-js Mastra dropper C2 callout to 23.254.164.92 / 23.254.164.123 [LLM] npm postinstall dropper: node executes setup.cjs with --no-warnings [LLM] easy-day-js typosquat package dropped on disk (node_modules/easy-day-js/setup.cjs) Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosqu">
+  data-search="Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosquat On June 17, 2026, an attacker compromised the @mastra npm organization and quietly added easy-day-js as a dependency across 140+ packages in the Mastra AI framework ecosystem. easy-day-js is a typosquat of the popular dayjs date library, and its latest version contained an obfuscated postinstall dropper that downloaded and ran a second-stage payload from attacker-controlled servers, then deleted itself to remove any trace. Packages with a combined weekly download count exceeding 1.1 million were exposed. If you installed any @mastra package today, treat your environment as compromised.  T1027 T1190 T1195.002 [LLM] easy-day-js Mastra dropper C2 callout to 23.254.164.92 / .123 [LLM] Mastra easy-day-js postinstall dropper: node setup.cjs --no-warnings [LLM] easy-day-js malicious setup.cjs written/deleted under node_modules Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosqu">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-06-18-mastra-npm-supply-chain-attack-140-packages-backdoored-via-e" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2391,62 +2391,60 @@ DeviceTvmSoftwareVulnerabilities
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] easy-day-js typosquat package dropped on disk (node_modules/easy-day-js/setup.cjs)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] easy-day-js malicious setup.cjs written/deleted under node_modules</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosqu</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] npm postinstall dropper: node executes setup.cjs with --no-warnings</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] easy-day-js Mastra dropper C2 callout to 23.254.164.92 / 23.254.164.123 · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Mastra easy-day-js postinstall dropper: node setup.cjs --no-warnings</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] easy-day-js Mastra dropper C2 callout to 23.254.164.92 / .123 · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="fe37ff367a" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="a9aa442003" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">easy-day-js Mastra dropper C2 callout to 23.254.164.92 / 23.254.164.123</span>
+    <span class="uc-title">easy-day-js Mastra dropper C2 callout to 23.254.164.92 / .123</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="fe37ff367a" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="a9aa442003" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects any host (dev workstation, CI runner, or AI service) making an outbound connection to the easy-day-js second-stage delivery/C2 infrastructure. The dropper in setup.cjs pulls its stealer from https://23.254.164.92:8000/update/49890878; both IPs are confirmed campaign infrastructure across multiple vendor write-ups.
+    <div class="uc-desc">Hunts outbound connections to the two hardcoded easy-day-js second-stage C2 hosts (23.254.164.92, 23.254.164.123, payload at https://23.254.164.92:8000/update/49890878). Any dev workstation or CI agent reaching these IPs indicates a compromised @mastra/easy-day-js install fetching the Sapphire Sleet Node.js RAT.
 
-Rationale: Both IPs (23.254.164.92 hosting the /update/49890878 endpoint on :8000, and 23.254.164.123) are explicitly named in the article and corroborated by JFrog, Orca, Socket and Microsoft as campaign infrastructure; StepSecurity globally blocklisted .92. A dedicated-IP match is the highest-fidelity pivot available.
+Rationale: Both IPs (23.254.164.92, 23.254.164.123) and the :8000/update/ payload URL are confirmed by JFrog, Socket and Microsoft as dedicated easy-day-js C2 — destination-IP match on confirmed-malicious infra is the highest-fidelity pivot available.
 
 Cross-checked against:
-  • https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using-easy-day-js
   • https://research.jfrog.com/post/easy-day-js/
-  • https://orca.security/resources/blog/mastra-npm-supply-chain-attack/
+  • https://socket.dev/blog/mastra-npm-packages-compromised
   • https://www.microsoft.com/en-us/security/blog/2026/06/17/postinstall-payload-inside-mastra-npm-supply-chain-compromise/
-  • https://socket.dev/blog/mastra-npm-packages-compromised</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Non-Standard Port">T1571</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+  • https://thehackernews.com/2026/06/144-mastra-npm-packages-compromised-via.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Non-Standard Port">T1571</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher detonating the sample in a sandbox that egresses through corporate IP space</li><li>Threat-intel/EASM platform actively probing the C2 IP for liveness</li><li>The 23.254.164.0/24 (HostKey-style bulletproof/cheap hosting) range later reassigned to a benign tenant after takedown</li><li>Internal honeypot deliberately calling the IP to validate the blocklist</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify the InitiatingProcess/ContextImage on the connecting host — confirm it is node/npm or a child it spawned, and pull the host&#x27;s recent `npm install` history and package-lock for @mastra or easy-day-js. 2) CONTAIN: Network-isolate the host, block 23.254.164.92 and 23.254.164.123 at egress, and treat ALL secrets reachable from that host as compromised — rotate npm tokens, cloud keys, LLM API keys, DB creds and any browser-stored credentials/crypto-wallet seeds. 3) HUNT: Search the org for any node_modules path containing easy-day-js and for the postinstall dropper (see companion UCs); enumerate CI runners that ran fresh installs in the 06-17 window.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Malware analyst or detection engineer detonating the sample in a lab segment that routes through corp egress</li><li>Threat-intel platform / sandbox actively probing the IOC IPs for enrichment</li><li>Internal vuln scanner sweeping the 23.254.164.0/24 (FranTech/BuyVM) range</li><li>Honeypot or canary deliberately reaching the C2 to confirm the block</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(DeviceName has_any (&quot;sandbox&quot;,&quot;malware-lab&quot;,&quot;detonation&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process (expect node.exe) and host role — dev workstation vs CI runner. Pull the parent npm command and the package.json/lockfile to confirm an @mastra or easy-day-js dependency was installed in the last 96h. 2) Contain: block 23.254.164.92 and 23.254.164.123 at egress, isolate the host, and rotate ALL credentials reachable from that environment (npm tokens, LLM API keys, cloud provider tokens, DB secrets) — the RAT harvests them. 3) Hunt: pivot to other hosts that resolved/contacted these IPs, search for node executing setup.cjs, and enumerate every machine that ran npm install since 2026-06-17 01:01 UTC.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-69-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-69-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-69-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-69-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-69-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-69-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-69-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-69-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
+| where Timestamp &gt; ago(14d)
 | where RemoteIP in (&quot;23.254.164.92&quot;, &quot;23.254.164.123&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-69-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(30d)
-| where DestinationIP in (&quot;23.254.164.92&quot;, &quot;23.254.164.123&quot;)
-| project TimeGenerated, SourceIP, SourceUserName, DestinationIP, DestinationPort, ApplicationProtocol, RequestURL, DeviceProduct, DeviceAction
+    <div class="tab-content" id="art-69-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(14d)
+| where DstIpAddr in (&quot;23.254.164.92&quot;, &quot;23.254.164.123&quot;)
+| project TimeGenerated, SrcHostname, SrcIpAddr, SrcUsername, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, Url, DvcAction
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-69-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: easy-day-js Mastra Dropper C2 Connection
-id: 4d2f8c61-9a3e-4b77-b1c2-0e6f5a9c2d11
-description: Outbound connection to easy-day-js (Mastra npm supply-chain) second-stage/C2 IPs
+    <div class="tab-content" id="art-69-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: easy-day-js Mastra Supply-Chain Dropper C2 Connection
+id: 7f3c1d2a-9b44-4e51-8a6c-1e2f3a4b5c6d
+description: Detects outbound network connection to the hardcoded easy-day-js second-stage C2 hosts used in the June 2026 @mastra npm supply-chain compromise.
 references:
   - https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using-easy-day-js
   - https://research.jfrog.com/post/easy-day-js/
 author: SOC Detection Engineering
-date: 2026/06/20
+date: 2026/06/21
 tags:
   - attack.t1105
   - attack.t1571
@@ -2463,40 +2461,34 @@ level: high</code></pre></div>
     <div class="tab-content" id="art-69-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(23.254.164.92 OR 23.254.164.123)</code></pre></div>
     <div class="tab-content" id="art-69-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^23\.254\.164\.(92|123)$/
 | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-69-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
-| filter dstAddr in [&quot;23.254.164.92&quot;, &quot;23.254.164.123&quot;] or srcAddr in [&quot;23.254.164.92&quot;, &quot;23.254.164.123&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-69-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-69-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-69-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-69-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip=&quot;23.254.164.92&quot; OR All_Traffic.dest_ip=&quot;23.254.164.123&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user
+    <div class="tab-content" id="art-69-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-69-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-69-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-69-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;23.254.164.92&quot;,&quot;23.254.164.123&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_id
 | `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-69-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip=&quot;23.254.164.92&quot; OR All_Traffic.dest_ip=&quot;23.254.164.123&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-69-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;23.254.164.92&quot;,&quot;23.254.164.123&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_id
 | `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="ce77309bab" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="15a02401c3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">npm postinstall dropper: node executes setup.cjs with --no-warnings</span>
+    <span class="uc-title">Mastra easy-day-js postinstall dropper: node setup.cjs --no-warnings</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ce77309bab" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="15a02401c3" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects execution of the easy-day-js postinstall dropper, which npm invokes as `node setup.cjs --no-warnings`. The --no-warnings flag is deliberately used to suppress Node deprecation/experimental output that would otherwise surface to the installing user, making this exact node+setup.cjs+--no-warnings combination article-specific.
+    <div class="uc-desc">Hunts execution of the easy-day-js postinstall dropper — &#x27;node setup.cjs --no-warnings&#x27; — that decodes and runs the obfuscated second-stage loader. The --no-warnings flag is the attacker&#x27;s deliberate suppression of Node deprecation/experimental warnings during install.
 
-Rationale: The article quotes the exact postinstall string `&quot;postinstall&quot;: &quot;node setup.cjs --no-warnings&quot;`; the --no-warnings flag is an unusual, deliberately-evasive combination with a generically-named setup.cjs, giving a tight three-token match (node + setup.cjs + --no-warnings) that won&#x27;t fire on ordinary Node usage.
+Rationale: &#x27;node setup.cjs --no-warnings&#x27; is the verbatim postinstall hook from the article and is corroborated by Socket/JFrog; the setup.cjs basename plus the --no-warnings evasion flag together make this near-unique to the dropper.
 
 Cross-checked against:
-  • https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using-easy-day-js
-  • https://www.mend.io/blog/mastra-npm-scope-takeover-easy-day-js/
-  • https://socket.dev/blog/mastra-npm-packages-compromised</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
+  • https://socket.dev/blog/mastra-npm-packages-compromised
+  • https://research.jfrog.com/post/easy-day-js/
+  • https://www.mend.io/blog/mastra-npm-scope-takeover-easy-day-js/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="JavaScript">T1059.007</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate internal package whose postinstall genuinely ships a file named setup.cjs invoked with --no-warnings</li><li>A developer manually running `node setup.cjs --no-warnings` for an unrelated tool</li><li>A monorepo build script that happens to name its bootstrap file setup.cjs and suppresses warnings</li><li>EDR replaying/quarantine-detonating the captured sample on an analyst VM</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FolderPath has &quot;easy-day-js&quot; or InitiatingProcessCommandLine has &quot;easy-day-js&quot; or InitiatingProcessFolderPath has &quot;easy-day-js&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the parent is npm/node from a node_modules install and grab the FolderPath — if it resolves under easy-day-js it is a true positive; capture the child process tree and any outbound connection that immediately follows. 2) CONTAIN: Kill the node process, isolate the host/runner, and quarantine the easy-day-js package directory before it self-deletes. 3) HUNT: Correlate to the C2 callout UC (23.254.164.92/.123) within seconds of this exec, and sweep CI/CD and dev fleets for @mastra installs in the 2026-06-17 01:01–01:48 UTC publish window.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate internal npm package that ships its own setup.cjs install script (rare, and rarely with --no-warnings)</li><li>Developer manually running a script literally named setup.cjs with --no-warnings for an unrelated project</li><li>CI pipeline build step invoking a benign setup.cjs</li><li>Reproduction of the IOC by a researcher on a sanctioned analysis box</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessFolderPath has &quot;\\sanctioned-malware-analysis\\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the parent chain is npm/npx (node running npm-cli.js) and inspect the working directory — node_modules\easy-day-js confirms TP. Capture SHA256 of node and any child process. 2) Contain: kill the node process tree, isolate the host, block the C2 IPs, and remove easy-day-js plus the affected @mastra package versions from the project and npm cache. 3) Hunt: search DeviceNetworkEvents for callouts to 23.254.164.92/.123 from the same host, check for OS login-persistence (Run key / LaunchAgent / systemd) written by node, and pull which @mastra packages/versions are pinned across all repos and CI configs.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-69-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-69-uc1-sentinel">Sentinel KQL</button>
@@ -2506,77 +2498,73 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-69-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-69-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
+| where Timestamp &gt; ago(14d)
 | where FileName in~ (&quot;node.exe&quot;, &quot;node&quot;)
 | where ProcessCommandLine has &quot;setup.cjs&quot; and ProcessCommandLine has &quot;--no-warnings&quot;
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-69-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
+| where TimeGenerated &gt; ago(14d)
 | where EventID == 4688
-| where NewProcessName endswith &quot;node.exe&quot; or NewProcessName endswith &quot;\\node&quot;
+| where NewProcessName endswith &quot;\\node.exe&quot;
 | where CommandLine has &quot;setup.cjs&quot; and CommandLine has &quot;--no-warnings&quot;
-| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-69-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: easy-day-js Postinstall Dropper Execution (node setup.cjs --no-warnings)
-id: b6e1a2d4-3c5f-4a90-9d7e-1f2c8b40a7e3
-description: node.exe executing setup.cjs with --no-warnings, the easy-day-js npm postinstall dropper
+    <div class="tab-content" id="art-69-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: easy-day-js npm Postinstall Dropper Execution
+id: 2b9e6c41-3d72-4a18-9f0b-6c7d8e9a0b1c
+description: Detects the easy-day-js postinstall hook running &#x27;node setup.cjs --no-warnings&#x27;, the dropper for the Sapphire Sleet second-stage RAT in the @mastra npm compromise.
 references:
   - https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using-easy-day-js
-  - https://www.mend.io/blog/mastra-npm-scope-takeover-easy-day-js/
+  - https://socket.dev/blog/mastra-npm-packages-compromised
 author: SOC Detection Engineering
-date: 2026/06/20
+date: 2026/06/21
 tags:
   - attack.t1195.002
   - attack.t1059.007
 logsource:
   category: process_creation
+  product: windows
 detection:
   selection:
-    Image|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;/node&#x27;
+    Image|endswith: &#x27;\node.exe&#x27;
     CommandLine|contains|all:
       - &#x27;setup.cjs&#x27;
       - &#x27;--no-warnings&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-69-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\node.exe OR *\Node.exe OR *\NODE.EXE) @CommandLine:*setup.cjs* @CommandLine:*--no-warnings*</code></pre></div>
-    <div class="tab-content" id="art-69-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/node(\.exe)?$/i
+    <div class="tab-content" id="art-69-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\node.exe OR *\Node.exe OR *\NODE.EXE) @CommandLine:*setup.cjs*</code></pre></div>
+    <div class="tab-content" id="art-69-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\node\.exe$/i
 | CommandLine=/setup\.cjs/i
 | CommandLine=/--no-warnings/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-69-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-69-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-69-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-69-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;node.exe&quot; OR Processes.process_name=&quot;node&quot;) AND Processes.process=&quot;*setup.cjs*&quot; AND Processes.process=&quot;*--no-warnings*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| groupBy([aid, ComputerName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-69-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-69-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-69-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-69-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name=&quot;node.exe&quot; Endpoint.Processes.process=&quot;*setup.cjs*&quot; Endpoint.Processes.process=&quot;*--no-warnings*&quot; by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process
 | `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-69-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;node.exe&quot; OR Processes.process_name=&quot;node&quot;) AND Processes.process=&quot;*setup.cjs*&quot; AND Processes.process=&quot;*--no-warnings*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-69-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name=&quot;node.exe&quot; Endpoint.Processes.process=&quot;*setup.cjs*&quot; Endpoint.Processes.process=&quot;*--no-warnings*&quot; by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process
 | `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="0b5c054248" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="f4903ebbd8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">easy-day-js typosquat package dropped on disk (node_modules/easy-day-js/setup.cjs)</span>
+    <span class="uc-title">easy-day-js malicious setup.cjs written/deleted under node_modules</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0b5c054248" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="f4903ebbd8" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the malicious setup.cjs being written into a node_modules/easy-day-js path during install — the on-disk artifact of the typosquatted dependency landing on a host. Also catches the dropper&#x27;s self-delete (FileDeleted), since the article notes setup.cjs removes itself to destroy forensic evidence.
+    <div class="uc-desc">Hunts the on-disk footprint of the compromised dependency: the 4,572-byte obfuscated setup.cjs dropped into a node_modules\easy-day-js path during install, and its subsequent self-deletion to destroy forensic evidence. Catches the supply-chain artifact even when egress to C2 is already blocked.
 
-Rationale: `easy-day-js` is the campaign&#x27;s unique typosquat package name (of dayjs) and `setup.cjs` is the named dropper file; the combination of that package path + that filename is effectively pathognomonic and corroborated by JFrog/Socket/Mend. Projecting ActionType also surfaces the self-delete the article calls out.
+Rationale: The setup.cjs filename and the easy-day-js package directory are both verbatim article IOCs; the combination of that exact basename within an easy-day-js node_modules path is unique to this campaign and also surfaces the self-delete (FileDeleted) used for anti-forensics.
 
 Cross-checked against:
-  • https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using-easy-day-js
   • https://research.jfrog.com/post/easy-day-js/
   • https://socket.dev/blog/mastra-npm-packages-compromised
   • https://www.mend.io/blog/mastra-npm-scope-takeover-easy-day-js/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Indicator Removal: File Deletion">T1070.004</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="File Deletion">T1070.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security tool (Socket/JFrog/SCA scanner) extracting the sample tarball into a scratch path for analysis</li><li>An analyst manually unpacking easy-day-js to a research directory</li><li>A cached/forked copy of the malicious package restored from an artifact proxy (Artifactory/Nexus) during a verification exercise</li><li>Backup/AV software re-scanning a previously-infected node_modules tree</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the file is under node_modules/easy-day-js (not an analyst scratch dir) and capture SHA256 + the InitiatingProcess (should be node/npm). Note whether you also see a matching FileDeleted (self-delete = active detonation). 2) CONTAIN: Isolate the host/runner, preserve the package dir, and freeze the affected pipeline; pin lockfiles to known-good @mastra versions and purge easy-day-js from the proxy cache. 3) HUNT: Pivot to the C2 callout and node setup.cjs --no-warnings UCs on the same host, and inventory every project whose package-lock references easy-day-js or the listed compromised @mastra versions (e.g. @mastra/core@1.42.1, @mastra/schema-compat@1.2.12).</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher unpacking the easy-day-js tarball on a sanctioned analysis host</li><li>EDR/AV quarantine or remediation tooling relocating the file (shows as a delete/move)</li><li>Backup or sync agent copying a node_modules tree that still contains the artifact</li><li>npm cache extraction of the package during offline triage</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessFileName in~ (&quot;MsMpEng.exe&quot;,&quot;MsSense.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm ActionType — a FileCreated/Modified means an active install; a lone FileDeleted with no prior create suggests the dropper already self-removed (pivot to network + process telemetry). Note FileSize ~4572 bytes and the initiating process. 2) Contain: isolate the host, block the C2 IPs, and purge easy-day-js and the affected @mastra versions from the repo, lockfile and npm cache; rotate any secrets exposed to that env. 3) Hunt: enumerate all hosts/CI runners with an easy-day-js folder, correlate to node setup.cjs executions and C2 callouts, and audit package-lock.json across repos for &#x27;&quot;easy-day-js&quot;: &quot;^1.11.21&quot;&#x27;.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-69-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-69-uc2-sentinel">Sentinel KQL</button>
@@ -2586,47 +2574,46 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-69-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-69-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
+| where Timestamp &gt; ago(14d)
 | where FileName =~ &quot;setup.cjs&quot;
 | where FolderPath has &quot;easy-day-js&quot;
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, FileSize, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-69-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>imFileEvent
-| where TimeGenerated &gt; ago(30d)
+    <div class="tab-content" id="art-69-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(14d)
 | where TargetFileName =~ &quot;setup.cjs&quot;
 | where TargetFilePath has &quot;easy-day-js&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, EventType
+| project TimeGenerated, DvcHostname, ActorUsername, EventType, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileSHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-69-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: easy-day-js Typosquat Package Written to Disk
-id: e9c4d7a1-58b2-4f63-aa10-7d3e2c6b9f04
-description: setup.cjs created or deleted inside a node_modules/easy-day-js path (Mastra npm supply-chain dropper)
+    <div class="tab-content" id="art-69-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: easy-day-js Malicious setup.cjs Dropped in node_modules
+id: 9d4a2f80-6e15-4c93-bb27-0a1b2c3d4e5f
+description: Detects creation/modification of setup.cjs inside an easy-day-js node_modules path, the dropper artifact of the @mastra npm supply-chain compromise.
 references:
   - https://www.stepsecurity.io/blog/mastra-npm-packages-compromised-using-easy-day-js
   - https://research.jfrog.com/post/easy-day-js/
 author: SOC Detection Engineering
-date: 2026/06/20
+date: 2026/06/21
 tags:
   - attack.t1195.002
   - attack.t1070.004
 logsource:
   category: file_event
+  product: windows
 detection:
   selection:
-    TargetFilename|contains: &#x27;easy-day-js&#x27;
-    TargetFilename|endswith: &#x27;setup.cjs&#x27;
+    TargetFilename|contains: &#x27;\easy-day-js\&#x27;
+    TargetFilename|endswith: &#x27;\setup.cjs&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-69-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:*easy-day-js* @TargetFilename:*setup.cjs*</code></pre></div>
+    <div class="tab-content" id="art-69-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:*easy-day-js* @TargetFilename:*setup.cjs</code></pre></div>
     <div class="tab-content" id="art-69-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/easy-day-js/i
 | TargetFileName=/setup\.cjs$/i
 | groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-69-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-69-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-69-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-69-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*easy-day-js*&quot; AND Filesystem.file_name=&quot;setup.cjs&quot; by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action
+    <div class="tab-content" id="art-69-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-69-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-69-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-69-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name=&quot;setup.cjs&quot; Endpoint.Filesystem.file_path=&quot;*easy-day-js*&quot; by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name Endpoint.Filesystem.process_id
 | `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-69-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*easy-day-js*&quot; AND Filesystem.file_name=&quot;setup.cjs&quot; by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-69-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name=&quot;setup.cjs&quot; Endpoint.Filesystem.file_path=&quot;*easy-day-js*&quot; by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name Endpoint.Filesystem.process_id
 | `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -3635,10 +3622,10 @@ level: medium
   data-techs="T1190,T1539,T1555.003"
   data-sources="StepSecurity"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
+  data-splunk-cats="endpoint,network,web"
   data-targets="linux,vcs,windows"
   data-uc-count="8" data-llm-uc-count="5"
-  data-search="400+ AUR Packages Hijacked: What the “Atomic Arch” Campaign Means for Supply-Chain Security On June 11th 2026, security researchers and the Arch Linux community disclosed a large-scale supply-chain attack against the Arch User Repository (AUR). Attackers hijacked more than 400 community packages and turned them into a malware delivery network. While the immediate blast radius is limited to Arch Linux systems, the campaign is a textbook example of how modern attackers compromise developers and CI infrastructure by abusing trust in open-source ecosystems.  T1190 T1539 T1555.003 [LLM] Atomic Arch malicious npm/bun dependency install via hijacked AUR PKGBUILD [LLM] Node/bun build process reading SSH keys, Vault tokens &amp; browser credential stores [LLM] Egress to Atomic Arch C2/exfil infrastructure (temp.sh, fardewoak/nodejs-argo) [LLM] Package-build process making unexpected public network egress during AUR install [LLM] Atomic Arch persistence: node/bun writing systemd unit or eBPF/kernel-module load Infostealer — non-browser process accessing browser cookie/login DBs Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains">
+  data-search="400+ AUR Packages Hijacked: What the “Atomic Arch” Campaign Means for Supply-Chain Security On June 11th 2026, security researchers and the Arch Linux community disclosed a large-scale supply-chain attack against the Arch User Repository (AUR). Attackers hijacked more than 400 community packages and turned them into a malware delivery network. While the immediate blast radius is limited to Arch Linux systems, the campaign is a textbook example of how modern attackers compromise developers and CI infrastructure by abusing trust in open-source ecosystems.  T1190 T1539 T1555.003 [LLM] AUR build pulls malicious npm/Bun dependency (atomic-lockfile / js-digest / lockfile-js) [LLM] Atomic Arch payload execution: JS runtime spawning shell/network tooling under AUR build (or known payload hash) [LLM] Atomic Arch infostealer: build-spawned process harvesting SSH keys, dev tokens and browser/Electron sessions [LLM] Atomic Arch persistence: systemd unit, cron or shell-rc written by AUR build / JS runtime [LLM] Atomic Arch C2/exfil: build-spawned egress to temp.sh and github.com/fardewoak/nodejs-argo Infostealer — non-browser process accessing browser cookie/login DBs Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-18-400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -3697,33 +3684,33 @@ level: medium
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] AUR build pulls malicious npm/Bun dependency (atomic-lockfile / js-digest / lockfile-js)</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Atomic Arch malicious npm/bun dependency install via hijacked AUR PKGBUILD · [LLM] Atomic Arch persistence: node/bun writing systemd unit or eBPF/kernel-module load</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Egress to Atomic Arch C2/exfil infrastructure (temp.sh, fardewoak/nodejs-argo) · [LLM] Package-build process making unexpected public network egress during AUR install · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Node/bun build process reading SSH keys, Vault tokens &amp; browser credential stores · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Atomic Arch payload execution: JS runtime spawning shell/network tooling under AUR build (or known payload hash) · [LLM] Atomic Arch persistence: systemd unit, cron or shell-rc written by AUR build / JS runtime</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Atomic Arch C2/exfil: build-spawned egress to temp.sh and github.com/fardewoak/nodejs-argo · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Atomic Arch infostealer: build-spawned process harvesting SSH keys, dev tokens and browser/Electron sessions · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="03528d8dfe" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="5bac1371de" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">Atomic Arch malicious npm/bun dependency install via hijacked AUR PKGBUILD</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">AUR build pulls malicious npm/Bun dependency (atomic-lockfile / js-digest / lockfile-js)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="03528d8dfe" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="5bac1371de" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the core Atomic Arch execution event: a hijacked AUR PKGBUILD/install hook running a Node package manager that pulls the campaign&#x27;s malicious dependencies (atomic-lockfile, js-digest, lockfile-js). These package names are campaign-specific and high-fidelity.
+    <div class="uc-desc">Hunts the Atomic Arch supply-chain delivery: an Arch package build (makepkg/yay/paru/pacman) invoking npm/bun/pnpm to install the campaign&#x27;s rogue dependencies atomic-lockfile, js-digest or lockfile-js. These package names are the single highest-fidelity IOC of the campaign and are confirmed across Sonatype and The Hacker News.
 
-Rationale: Anchors on the three campaign-specific malicious npm package names (atomic-lockfile, js-digest, lockfile-js) confirmed by Sonatype and Corgea, paired with a Node package manager invocation — these strings have no legitimate use and the injected PKGBUILD line was &#x27;npm install atomic-lockfile minimalist chalk&#x27;.
+Rationale: Anchored on the three confirmed rogue package names (atomic-lockfile/js-digest/lockfile-js) cross-checked against Sonatype (Sonatype-2026-003775) and The Hacker News; npm names are lowercase-only so no case-folding needed and FPs are near-zero outside the campaign.
 
 Cross-checked against:
   • https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency
-  • https://corgea.com/research/atomic-arch-aur-atomic-lockfile-js-digest-ebpf-rootkit
-  • https://github.com/lenucksi/aur-malware-check</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
+  • https://thehackernews.com/2026/06/over-400-arch-linux-aur-packages.html
+  • https://ioctl.fail/preliminary-analysis-of-aur-malware/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security researcher or DFIR analyst intentionally installing the malicious package in an isolated lab</li><li>An internal mirror/quarantine tool that references the package names in a blocklist string (would lack the npm/bun manager token)</li><li>A SIEM/EDR self-test or purple-team exercise replaying the campaign command line</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;--dry-run&quot; and ProcessCommandLine !has &quot;audit&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the parent chain is a package build (makepkg/pacman/yay/paru) and capture DeviceName, user, and the exact AUR package being installed. Pull the SHA256 of any node/bun binary spawned. 2) Contain: Isolate the host immediately — per the article a compromised host is fully untrusted; kill the build, block temp.sh and github.com/fardewoak egress, and freeze the affected developer/CI identity. 3) Hunt: Rotate ALL credentials that touched the host (SSH keys, GitHub/npm tokens, Vault tokens, cloud API keys), then pivot to UCs covering credential file access (UC2), temp.sh/nodejs-argo egress (UC3), and eBPF/systemd persistence (UC5) on the same DeviceId.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security researcher or detection engineer intentionally pulling the IOC packages into a sandbox for analysis</li><li>An internal mirror/quarantine job that downloads flagged packages for scanning (trivy/grype/snyk) before blocking</li><li>A developer pasting a remediation command containing the package name into a terminal to verify it is NOT installed</li><li>Threat-intel enrichment tooling echoing the package name in a build log</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;trivy&quot;,&quot;grype&quot;,&quot;snyk&quot;,&quot;clamscan&quot;) and InitiatingProcessCommandLine !has &quot;npm audit&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the host is Arch/Arch-derivative or WSL2-Arch and pull the full process tree — identify the parent PKGBUILD/AUR package name and the user context (root vs user). Capture install timestamp vs AUR upgrade history since early June 2026. 2) Contain: Isolate the host from the network; the build host must be treated as fully compromised, not cleaned. Block egress to temp.sh. 3) Hunt: Rotate ALL credentials reachable from the host (SSH keys, GitHub/npm tokens, cloud keys, Vault tokens), pivot to the credential-access and C2 UCs on the same DeviceId, and rebuild from trusted media.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-71-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-71-uc0-sentinel">Sentinel KQL</button>
@@ -3734,174 +3721,127 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-71-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
+| where FileName in~ (&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;node&quot;,&quot;npx&quot;)
 | where ProcessCommandLine has_any (&quot;atomic-lockfile&quot;,&quot;js-digest&quot;,&quot;lockfile-js&quot;)
-| where ProcessCommandLine has_any (&quot;npm&quot;,&quot;bun&quot;,&quot;npx&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;node&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          ParentImage = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildCmd = ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-71-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
+| where DvcOs has &quot;Linux&quot; or isempty(DvcOs)
+| where TargetProcessName has_any (&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;node&quot;,&quot;npx&quot;)
 | where TargetProcessCommandLine has_any (&quot;atomic-lockfile&quot;,&quot;js-digest&quot;,&quot;lockfile-js&quot;)
-| where TargetProcessCommandLine has_any (&quot;npm&quot;,&quot;bun&quot;,&quot;npx&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;node&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Atomic Arch Malicious npm/bun Dependency Install via Hijacked AUR PKGBUILD
-id: 4f1c8e2a-7b3d-4a9e-9c1f-2d6a8b0e5c11
-status: experimental
-description: Detects installation of the Atomic Arch campaign&#x27;s malicious npm/bun dependencies (atomic-lockfile, js-digest, lockfile-js) executed from hijacked AUR PKGBUILD post-install hooks.
+| project TimeGenerated, DvcHostname, ActorUsername,
+          Parent = ActingProcessName, ParentCmd = ActingProcessCommandLine,
+          Child = TargetProcessName, ChildCmd = TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-71-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Atomic Arch Malicious npm/Bun Dependency Install
+id: 5f1a2b3c-4d5e-4a6b-8c7d-9e0f1a2b3c4d
+description: Detects an Arch package build installing the Atomic Arch rogue npm/Bun packages atomic-lockfile, js-digest or lockfile-js.
 references:
-    - https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency
-    - https://www.stepsecurity.io/blog/400-aur-packages-hijacked-atomic-arch-campaign
+  - https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency
+  - https://thehackernews.com/2026/06/over-400-arch-linux-aur-packages.html
 author: SOC Detection Engineering
-date: 2026/06/20
+date: 2026/06/21
 tags:
-    - attack.t1195.002
-    - attack.t1059.004
-    - attack.t1059.007
+  - attack.t1195.001
 logsource:
-    category: process_creation
-    product: linux
+  category: process_creation
+  product: linux
 detection:
-    selection_pkg:
-        CommandLine|contains:
-            - &#x27;atomic-lockfile&#x27;
-            - &#x27;js-digest&#x27;
-            - &#x27;lockfile-js&#x27;
-    selection_mgr:
-        CommandLine|contains:
-            - &#x27;npm&#x27;
-            - &#x27;bun&#x27;
-            - &#x27;npx&#x27;
-            - &#x27;pnpm&#x27;
-            - &#x27;yarn&#x27;
-    condition: selection_pkg and selection_mgr
-falsepositives:
-    - Security researchers reproducing the campaign in a sandbox
+  selection:
+    CommandLine|contains:
+      - &#x27;atomic-lockfile&#x27;
+      - &#x27;js-digest&#x27;
+      - &#x27;lockfile-js&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-71-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:*atomic-lockfile* OR @process.command_line:*js-digest* OR @process.command_line:*lockfile-js*) (@process.command_line:*npm* OR @process.command_line:*bun* OR @process.command_line:*npx*)</code></pre></div>
-    <div class="tab-content" id="art-71-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+    <div class="tab-content" id="art-71-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*atomic-lockfile* OR *js-digest* OR *lockfile-js*)</code></pre></div>
+    <div class="tab-content" id="art-71-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/(npm|bun|pnpm|yarn|node|npx)$/i
 | regex(&quot;atomic-lockfile|js-digest|lockfile-js&quot;, field=CommandLine)
-| regex(&quot;npm|bun|npx|pnpm|yarn&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-71-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*atomic-lockfile*&quot; OR Processes.process=&quot;*js-digest*&quot; OR Processes.process=&quot;*lockfile-js*&quot;) AND (Processes.process=&quot;*npm*&quot; OR Processes.process=&quot;*bun*&quot; OR Processes.process=&quot;*npx*&quot; OR Processes.process=&quot;*node*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-71-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*atomic-lockfile*&quot; OR Processes.process=&quot;*js-digest*&quot; OR Processes.process=&quot;*lockfile-js*&quot;) AND (Processes.process=&quot;*npm*&quot; OR Processes.process=&quot;*bun*&quot; OR Processes.process=&quot;*npx*&quot; OR Processes.process=&quot;*node*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+| table([_time, aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine, SHA256HashData])</code></pre></div>
+    <div class="tab-content" id="art-71-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN (&quot;*atomic-lockfile*&quot;,&quot;*js-digest*&quot;,&quot;*lockfile-js*&quot;)) AND (Processes.process_name IN (&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;node&quot;,&quot;npx&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-71-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN (&quot;*atomic-lockfile*&quot;,&quot;*js-digest*&quot;,&quot;*lockfile-js*&quot;)) AND (Processes.process_name IN (&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;node&quot;,&quot;npx&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="9fc8918583" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="06fc394b7a" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Node/bun build process reading SSH keys, Vault tokens &amp; browser credential stores</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="9fc8918583" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Atomic Arch payload execution: JS runtime spawning shell/network tooling under AUR build (or known payload hash)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="06fc394b7a" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Atomic Arch stealer&#x27;s collection stage: the malicious node/bun dependency accessing high-value secret files (SSH private keys, ~/.vault-token, browser cookie stores, Slack/Discord/Docker/cloud creds). A package build runtime touching these paths is anomalous.
+    <div class="uc-desc">Hunts the post-install execution branch of Atomic Arch: a Node/npm/Bun process spawned inside a makepkg/pacman build chain that then launches shells or network/encoding utilities (curl, wget, nc, openssl, base64), or any process matching the confirmed Rust payload SHA-256. Captures the stealer/eBPF dropper executing as root during package install.
 
-Rationale: Targets the stealer&#x27;s documented collection set (SSH artifacts, HashiCorp Vault tokens, browser cookies, Slack/Discord/Docker/cloud creds per Sonatype/Corgea) by flagging a Node-runtime build process reading those exact paths — behaviour a normal package build does not exhibit.
+Rationale: Pairs the campaign&#x27;s runtime chain (makepkg/pacman -&gt; JS runtime -&gt; shell/egress tooling) with the multi-source-confirmed payload SHA-256 6144d433...c98b, giving an alerting-grade hash clause plus a behavioural net for renamed payloads.
 
 Cross-checked against:
-  • https://corgea.com/research/atomic-arch-aur-atomic-lockfile-js-digest-ebpf-rootkit
-  • https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Private Keys">T1552.004</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate npm/yarn install reading ~/.npmrc for a private-registry auth token</li><li>An Electron-based dev tool (built on node) legitimately accessing its own ~/.config store</li><li>Git-over-SSH dependency fetch where node tooling reads known_hosts</li><li>A CI bootstrap that reads ~/.aws/credentials or ~/.docker/config.json for legitimate auth</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has &quot;/.npmrc&quot; and InitiatingProcessCommandLine has_any (&quot;install&quot;,&quot;ci&quot;,&quot;publish&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Identify which secret paths the node/bun process touched and whether it is part of a current AUR/makepkg build tree; confirm the package name and whether atomic-lockfile/js-digest is present (pivot to UC1). 2) Contain: Isolate the host and immediately revoke/rotate every secret class the process accessed — SSH keys (and remove from authorized_keys everywhere), Vault tokens, GitHub/npm tokens, cloud keys, and force browser session/passkey re-enrollment. 3) Hunt: Search for subsequent egress to temp.sh or github.com/fardewoak (UC3) and for archives staged in /tmp or /var/tmp by the same process, indicating collection-before-exfil.</div></details>
+  • https://thehackernews.com/2026/06/over-400-arch-linux-aur-packages.html
+  • https://ioctl.fail/preliminary-analysis-of-aur-malware/
+  • https://labs.cloudsecurityalliance.org/research/csa-research-note-aur-supply-chain-ebpf-rootkit-20260614-csa/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="JavaScript">T1059.007</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate npm postinstall scripts of native modules (node-gyp / node-pre-gyp / prebuild) spawning sh and downloading prebuilt binaries</li><li>A developer manually running &#x27;npm install&#x27; on a project whose lifecycle scripts call curl/openssl</li><li>CI bootstrap steps that fetch artefacts via curl invoked from a Node toolchain</li><li>Electron app build steps invoking base64/openssl for code signing</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ChildCmd has_any (&quot;node-gyp&quot;,&quot;node-pre-gyp&quot;,&quot;prebuild-install&quot;,&quot;registry.npmjs.org&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Inspect the grandparent (makepkg/pacman) and the child command line — a curl/nc/openssl invocation with an external host or piped to sh is malicious; node-gyp fetching from registry.npmjs.org / github releases is benign. Confirm the SHA-256 against 6144d433...c98b. 2) Contain: Isolate the host and kill the process tree; preserve /tmp and the user&#x27;s npm cache for forensics. 3) Hunt: Pivot to the credential-access and C2 UCs on the same DeviceId and check for systemd/cron persistence and eBPF objects.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-71-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-71-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-71-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-71-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-71-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-71-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-71-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;bun&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;pnpm&quot;,&quot;yarn&quot;)
-| where FolderPath has_any (&quot;/.ssh/&quot;,&quot;/.vault-token&quot;,&quot;known_hosts&quot;,&quot;/google-chrome/&quot;,&quot;/.mozilla/firefox/&quot;,&quot;/Slack/&quot;,&quot;/discord/&quot;,&quot;/.docker/config.json&quot;,&quot;/.aws/credentials&quot;,&quot;/.npmrc&quot;,&quot;/.config/gh/&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName
+    <div class="tab-content active" id="art-71-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;bun&quot;,&quot;pnpm&quot;)
+        and FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;ssh&quot;,&quot;base64&quot;,&quot;openssl&quot;,&quot;gpg&quot;)
+        and InitiatingProcessParentFileName in~ (&quot;makepkg&quot;,&quot;fakeroot&quot;,&quot;pacman&quot;,&quot;yay&quot;,&quot;paru&quot;,&quot;bash&quot;,&quot;sh&quot;))
+    or SHA256 =~ &quot;6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessIntegrityLevel,
+          GrandParent = InitiatingProcessParentFileName,
+          Parent = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,
+          Child = FileName, ChildCmd = ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessName has_any (&quot;node&quot;,&quot;bun&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;pnpm&quot;,&quot;yarn&quot;)
-| where TargetFilePath has_any (&quot;/.ssh/&quot;,&quot;/.vault-token&quot;,&quot;known_hosts&quot;,&quot;/google-chrome/&quot;,&quot;/.mozilla/firefox/&quot;,&quot;/Slack/&quot;,&quot;/discord/&quot;,&quot;/.docker/config.json&quot;,&quot;/.aws/credentials&quot;,&quot;/.npmrc&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, EventType
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Atomic Arch Stealer - Node/Bun Runtime Accessing Credential Stores
-id: 9a2e6d41-5c88-4f0b-b3a7-1e4c9f7d2a08
-status: experimental
-description: Detects the Atomic Arch malicious dependency (running under node/bun) accessing SSH keys, Vault tokens, browser cookie stores and developer credential files during an AUR package build.
-references:
-    - https://corgea.com/research/atomic-arch-aur-atomic-lockfile-js-digest-ebpf-rootkit
-    - https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency
-author: SOC Detection Engineering
-date: 2026/06/20
-tags:
-    - attack.t1552.004
-    - attack.t1539
-    - attack.t1552.001
-logsource:
-    category: file_access
-    product: linux
-detection:
-    selection_proc:
-        Image|endswith:
-            - &#x27;/node&#x27;
-            - &#x27;/bun&#x27;
-            - &#x27;/npm&#x27;
-            - &#x27;/npx&#x27;
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;/.ssh/&#x27;
-            - &#x27;/.vault-token&#x27;
-            - &#x27;known_hosts&#x27;
-            - &#x27;/google-chrome/&#x27;
-            - &#x27;/.mozilla/firefox/&#x27;
-            - &#x27;/.docker/config.json&#x27;
-            - &#x27;/.aws/credentials&#x27;
-            - &#x27;/.npmrc&#x27;
-    condition: selection_proc and selection_path
-falsepositives:
-    - Build tooling that legitimately reads ~/.npmrc for a registry token
-level: high</code></pre></div>
-    <div class="tab-content" id="art-71-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo
-| regex(&quot;/(node|bun|npm|npx|pnpm|yarn)$&quot;, field=ContextImageFileName)
-| regex(&quot;/.ssh/|/.vault-token|known_hosts|/google-chrome/|/.mozilla/firefox/|/Slack/|/discord/|/.docker/config.json|/.aws/credentials|/.npmrc&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-71-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;node&quot;,&quot;bun&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;pnpm&quot;,&quot;yarn&quot;)) AND (Filesystem.file_path=&quot;*/.ssh/*&quot; OR Filesystem.file_path=&quot;*/.vault-token*&quot; OR Filesystem.file_path=&quot;*known_hosts*&quot; OR Filesystem.file_path=&quot;*/google-chrome/*&quot; OR Filesystem.file_path=&quot;*/.mozilla/firefox/*&quot; OR Filesystem.file_path=&quot;*/Slack/*&quot; OR Filesystem.file_path=&quot;*/discord/*&quot; OR Filesystem.file_path=&quot;*/.docker/config.json*&quot; OR Filesystem.file_path=&quot;*/.aws/credentials*&quot; OR Filesystem.file_path=&quot;*/.npmrc*&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-71-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;node&quot;,&quot;bun&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;pnpm&quot;,&quot;yarn&quot;)) AND (Filesystem.file_path=&quot;*/.ssh/*&quot; OR Filesystem.file_path=&quot;*/.vault-token*&quot; OR Filesystem.file_path=&quot;*known_hosts*&quot; OR Filesystem.file_path=&quot;*/google-chrome/*&quot; OR Filesystem.file_path=&quot;*/.mozilla/firefox/*&quot; OR Filesystem.file_path=&quot;*/Slack/*&quot; OR Filesystem.file_path=&quot;*/discord/*&quot; OR Filesystem.file_path=&quot;*/.docker/config.json*&quot; OR Filesystem.file_path=&quot;*/.aws/credentials*&quot; OR Filesystem.file_path=&quot;*/.npmrc*&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-71-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where (ActingProcessName has_any (&quot;node&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;bun&quot;,&quot;pnpm&quot;)
+        and TargetProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;ssh&quot;,&quot;base64&quot;,&quot;openssl&quot;,&quot;gpg&quot;)
+        and ParentProcessName has_any (&quot;makepkg&quot;,&quot;fakeroot&quot;,&quot;pacman&quot;,&quot;yay&quot;,&quot;paru&quot;))
+    or Hash =~ &quot;6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b&quot;
+| project TimeGenerated, DvcHostname, ActorUsername,
+          GrandParent = ParentProcessName, Parent = ActingProcessName,
+          Child = TargetProcessName, ChildCmd = TargetProcessCommandLine, SHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-71-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(node OR npm OR bun OR pnpm) @process.command_line:(*curl* OR *wget* OR *&quot; nc &quot;* OR *ncat* OR *openssl* OR *base64*)</code></pre></div>
+    <div class="tab-content" id="art-71-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(node|npm|npx|bun|pnpm)$/i
+| ImageFileName=/\/(sh|bash|curl|wget|nc|ncat|ssh|base64|openssl|gpg)$/i
+| table([_time, aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine, SHA256HashData])</code></pre></div>
+    <div class="tab-content" id="art-71-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process_name IN (&quot;node&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;bun&quot;,&quot;pnpm&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;ssh&quot;,&quot;base64&quot;,&quot;openssl&quot;,&quot;gpg&quot;)) OR Processes.process_hash=&quot;6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-71-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process_name IN (&quot;node&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;bun&quot;,&quot;pnpm&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;ssh&quot;,&quot;base64&quot;,&quot;openssl&quot;,&quot;gpg&quot;)) OR Processes.process_hash=&quot;6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="2279dec1db" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+<details class="uc" data-uc-slug="d6f6eb5df4" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Egress to Atomic Arch C2/exfil infrastructure (temp.sh, fardewoak/nodejs-argo)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="2279dec1db" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Atomic Arch infostealer: build-spawned process harvesting SSH keys, dev tokens and browser/Electron sessions</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="d6f6eb5df4" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on connections or DNS lookups to the named Atomic Arch infrastructure: temp.sh (HTTP exfil of stolen secrets) and github.com/fardewoak (nodejs-argo reverse-shell/Argo-tunnel proxy). IOC-driven, high confidence.
+    <div class="uc-desc">Hunts the Rust stealer&#x27;s credential-collection stage: a Node/npm/Bun process (or a child of makepkg/pacman) reading or copying high-value developer secrets — SSH private keys &amp; known_hosts, ~/.npmrc, ~/.docker/config.json, HashiCorp ~/.vault-token, GitHub CLI hosts.yml, and Chromium/Electron cookie &amp; Login Data stores for Chrome/Edge/Brave/Slack/Discord/Teams/Telegram.
 
-Rationale: Uses the two named-and-corroborated network IOCs: temp.sh (confirmed by Sonatype/Corgea as the HTTP exfil endpoint) and github.com/fardewoak (nodejs-argo reverse-shell/proxy, container herbsobering430). Domain lookups to these have no benign explanation on a build host.
+Rationale: Targets the exact secret stores Sonatype/THN list as Atomic Arch loot (SSH keys, ~/.npmrc, Docker/Vault tokens, Chromium &amp; Electron cookie DBs) and ties access to the JS-runtime/AUR-build initiator so it reads as theft, not normal app use. Datadog left empty: auditd file-read capture needs per-path watch rules and Datadog&#x27;s standard Linux schema exposes no reliable file.path facet.
 
 Cross-checked against:
-  • https://corgea.com/research/atomic-arch-aur-atomic-lockfile-js-digest-ebpf-rootkit
-  • https://github.com/lenucksi/aur-malware-check
-  • https://www.securityweek.com/atomic-arch-supply-chain-attack-hits-1500-aur-packages/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration to Cloud Storage">T1567.002</span> <span class="ind tech" title="Protocol Tunneling">T1572</span> <span class="ind tech" title="Proxy: Multi-hop Proxy">T1090.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer legitimately using temp.sh to share a non-sensitive file</li><li>DNS sinkhole/passive-DNS appliance resolving the IOC for enrichment (would originate from the security host, not a build host)</li><li>Threat-intel feed validation tooling that resolves IOC domains</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Identify the initiating process (DeviceNetworkEvents InitiatingProcessFileName) and confirm whether it is node/bun/curl/wget tied to a recent AUR install (pivot UC1); determine direction and bytes transferred to temp.sh. 2) Contain: Block temp.sh and the fardewoak GitHub/ghcr paths at the egress proxy/firewall, isolate the host, and treat any data sent to temp.sh as exfiltrated. 3) Hunt: Enumerate all hosts that resolved these domains since early June 2026, check for Tor client activity (article notes a Tor hidden-service C2), and rotate every credential present on confirmed hosts.</div></details>
+  • https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency
+  • https://thehackernews.com/2026/06/over-400-arch-linux-aur-packages.html
+  • https://ioctl.fail/preliminary-analysis-of-aur-malware/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Credentials from Web Browsers">T1555.003</span> <span class="ind tech" title="Private Keys">T1552.004</span> <span class="ind tech" title="Credentials In Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate Node CLI (e.g. an SSH/git wrapper, vault-cli helper, or gh extension) reading ~/.ssh or ~/.config/gh/hosts.yml during normal use</li><li>Electron apps (Slack/Discord) reading their own cookie DB on launch when the initiator is misattributed to node</li><li>Developer tooling reading ~/.npmrc for auth during a normal npm install</li><li>Backup/sync agents copying dotfiles — partially excluded by the initiator filter</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;rsync&quot;,&quot;tar&quot;,&quot;restic&quot;,&quot;borg&quot;,&quot;gh&quot;,&quot;ssh&quot;,&quot;git&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the accessing process descends from a makepkg/pacman build and is not the credential file&#x27;s own owning application; a single process touching SSH keys AND browser cookie DBs AND ~/.npmrc within seconds is decisive. 2) Contain: Isolate the host and immediately rotate every secret enumerated (SSH keys, GitHub/npm/Vault/cloud tokens), invalidate browser and Slack/Discord/Teams sessions. 3) Hunt: Pivot to the C2 UC for egress to temp.sh on the same host and search other Arch hosts that installed the same AUR package for identical access patterns.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-71-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-71-uc2-sentinel">Sentinel KQL</button>
@@ -3909,205 +3849,226 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-71-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-71-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-71-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-71-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl endswith &quot;temp.sh&quot; or RemoteUrl has &quot;fardewoak&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
+| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;npx&quot;)
+    or InitiatingProcessParentFileName in~ (&quot;makepkg&quot;,&quot;pacman&quot;,&quot;yay&quot;,&quot;paru&quot;,&quot;fakeroot&quot;)
+| where FolderPath has_any (&quot;/.ssh/&quot;,&quot;/.npmrc&quot;,&quot;/.docker/config.json&quot;,&quot;/.config/containers&quot;,
+        &quot;/.config/google-chrome/&quot;,&quot;/.config/BraveSoftware/&quot;,&quot;/.config/microsoft-edge/&quot;,
+        &quot;/.config/discord/&quot;,&quot;/.config/Slack/&quot;,&quot;/.config/Microsoft/Microsoft Teams&quot;,&quot;/.config/teams&quot;,
+        &quot;/.local/share/TelegramDesktop&quot;,&quot;/.vault-token&quot;,&quot;/.config/gh/hosts.yml&quot;,&quot;/.bash_history&quot;,&quot;/.zsh_history&quot;)
+    or FileName in~ (&quot;id_rsa&quot;,&quot;id_ed25519&quot;,&quot;id_ecdsa&quot;,&quot;known_hosts&quot;,&quot;Cookies&quot;,&quot;Login Data&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
+    <div class="tab-content" id="art-71-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(30d)
-| where DnsQuery endswith &quot;temp.sh&quot; or DnsQuery has &quot;fardewoak&quot;
-| project TimeGenerated, SrcIpAddr, SrcHostname, SrcUsername, DnsQuery, DnsResponseName
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Atomic Arch C2/Exfil Domain Lookup (temp.sh / fardewoak nodejs-argo)
-id: c7d40b19-2a6e-4e51-8b2c-6f3a9d18e740
-status: experimental
-description: Detects DNS resolution of Atomic Arch exfiltration and C2 infrastructure - temp.sh (HTTP exfil) and the fardewoak GitHub namespace hosting the nodejs-argo proxy/reverse shell.
-references:
-    - https://corgea.com/research/atomic-arch-aur-atomic-lockfile-js-digest-ebpf-rootkit
-    - https://github.com/lenucksi/aur-malware-check
-author: SOC Detection Engineering
-date: 2026/06/20
-tags:
-    - attack.t1567.002
-    - attack.t1572
-    - attack.t1090.003
-logsource:
-    category: dns
-    product: linux
-detection:
-    selection:
-        query|contains:
-            - &#x27;temp.sh&#x27;
-            - &#x27;fardewoak&#x27;
-    condition: selection
-falsepositives:
-    - Unrelated legitimate use of the temp.sh file-sharing service by a developer
-level: high</code></pre></div>
-    <div class="tab-content" id="art-71-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| regex(&quot;temp.sh$|fardewoak&quot;, field=DomainName)
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-71-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=&quot;*temp.sh&quot; OR DNS.query=&quot;*.temp.sh&quot; OR DNS.query=&quot;*fardewoak*&quot;) by DNS.src DNS.query DNS.dest
-| `drop_dm_object_name(DNS)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-71-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=&quot;*temp.sh&quot; OR DNS.query=&quot;*.temp.sh&quot; OR DNS.query=&quot;*fardewoak*&quot;) by DNS.src DNS.query DNS.dest
-| `drop_dm_object_name(DNS)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="3ffb308f9c" data-platforms="def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Package-build process making unexpected public network egress during AUR install</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="3ffb308f9c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Behavioral catch-all for the Atomic Arch beaconing/exfil stage: a package-manager or Node-runtime process (makepkg, pacman, yay, paru, npm, bun, node) opening a connection to a public IP during a build, excluding known package registries and mirrors. Catches infrastructure not yet in IOC lists.
-
-Rationale: Implements reviewer suggestion #5 as a behavioral net for C2/exfil infrastructure not yet enumerated: a build/Node runtime reaching a public IP during install, with package registries and mirrors excluded so only anomalous destinations surface. Sentinel left empty because its Linux network telemetry (ImNetworkSession) lacks initiating-process attribution needed to scope to build tooling.
-
-Cross-checked against:
-  • https://corgea.com/research/atomic-arch-aur-atomic-lockfile-js-digest-ebpf-rootkit
-  • https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>makepkg/npm fetching source tarballs or dependencies from a CDN not in the allowlist</li><li>A build pulling from a self-hosted registry or proxy resolving to a public IP</li><li>node-based postinstall scripts that legitimately call a vendor API (e.g. telemetry opt-in)</li><li>First-party package mirrors fronted by Cloudflare/Fastly under a custom domain</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(RemoteUrl has_any (&quot;sentry.io&quot;,&quot;npmjs.com&quot;,&quot;yarnpkg.com&quot;,&quot;pypi.org&quot;,&quot;crates.io&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Review the surfaced destination IPs/domains and the initiating process; check whether the connection coincides with an AUR install and whether atomic-lockfile/js-digest is present on the host (UC1). 2) Contain: If the destination is unrecognized and the host installed an AUR package recently, isolate the host and block the destination; preserve the build directory for forensics. 3) Hunt: Add confirmed-bad destinations to the IOC list feeding UC3, and sweep other Arch/WSL2 hosts and self-hosted runners for the same process-to-destination pattern since early June 2026.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-71-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-71-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-71-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-71-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-71-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;makepkg&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;node&quot;,&quot;npx&quot;,&quot;pacman&quot;,&quot;yay&quot;,&quot;paru&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| where not(RemoteUrl has_any (&quot;registry.npmjs.org&quot;,&quot;registry.yarnpkg.com&quot;,&quot;github.com&quot;,&quot;githubusercontent.com&quot;,&quot;archlinux.org&quot;,&quot;mirror&quot;,&quot;cloudflare&quot;,&quot;fastly&quot;,&quot;jsdelivr&quot;,&quot;unpkg.com&quot;,&quot;ghcr.io&quot;))
-| summarize ConnCount=count(), Domains=make_set(RemoteUrl,10), DestIPs=make_set(RemoteIP,10), arg_min(Timestamp,*) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-DeviceNetworkEvents
-| where TimeGenerated &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;makepkg&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;node&quot;,&quot;npx&quot;,&quot;pacman&quot;,&quot;yay&quot;,&quot;paru&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| where not(RemoteUrl has_any (&quot;registry.npmjs.org&quot;,&quot;registry.yarnpkg.com&quot;,&quot;github.com&quot;,&quot;githubusercontent.com&quot;,&quot;archlinux.org&quot;,&quot;mirror&quot;,&quot;cloudflare&quot;,&quot;fastly&quot;,&quot;jsdelivr&quot;,&quot;unpkg.com&quot;,&quot;ghcr.io&quot;))
-| summarize ConnCount=count(), Domains=make_set(RemoteUrl,10), DestIPs=make_set(RemoteIP,10), arg_min(TimeGenerated,*) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
+| where ActingProcessName has_any (&quot;node&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;npx&quot;)
+| where TargetFilePath has_any (&quot;/.ssh/&quot;,&quot;/.npmrc&quot;,&quot;/.docker/config.json&quot;,
+        &quot;/.config/google-chrome/&quot;,&quot;/.config/BraveSoftware/&quot;,&quot;/.config/microsoft-edge/&quot;,
+        &quot;/.config/discord/&quot;,&quot;/.config/Slack/&quot;,&quot;/.vault-token&quot;,&quot;/.config/gh/hosts.yml&quot;,
+        &quot;/.bash_history&quot;,&quot;/.zsh_history&quot;)
+    or TargetFileName in~ (&quot;id_rsa&quot;,&quot;id_ed25519&quot;,&quot;id_ecdsa&quot;,&quot;known_hosts&quot;,&quot;Cookies&quot;,&quot;Login Data&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, EventType,
+          ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| regex(&quot;/(makepkg|npm|bun|node|npx|pacman|yay|paru)$&quot;, field=ContextImageFileName)
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-71-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN (&quot;makepkg&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;node&quot;,&quot;npx&quot;,&quot;pacman&quot;,&quot;yay&quot;,&quot;paru&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,dest) OR cidrmatch(&quot;172.16.0.0/12&quot;,dest) OR cidrmatch(&quot;192.168.0.0/16&quot;,dest) OR cidrmatch(&quot;127.0.0.0/8&quot;,dest))
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-71-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN (&quot;makepkg&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;node&quot;,&quot;npx&quot;,&quot;pacman&quot;,&quot;yay&quot;,&quot;paru&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,dest) OR cidrmatch(&quot;172.16.0.0/12&quot;,dest) OR cidrmatch(&quot;192.168.0.0/16&quot;,dest) OR cidrmatch(&quot;127.0.0.0/8&quot;,dest))
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-71-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Atomic Arch Infostealer Credential File Access by JS Runtime
+id: 7b2c3d4e-5f6a-4b7c-9d8e-0a1b2c3d4e5f
+description: Detects a Node/npm/Bun process accessing developer credential stores (SSH keys, npm/docker/vault tokens, browser cookie DBs) consistent with the Atomic Arch Rust stealer.
+references:
+  - https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency
+  - https://ioctl.fail/preliminary-analysis-of-aur-malware/
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.t1552.004
+  - attack.t1555.003
+logsource:
+  category: file_access
+  product: linux
+detection:
+  selection_proc:
+    Image|endswith:
+      - &#x27;/node&#x27;
+      - &#x27;/npm&#x27;
+      - &#x27;/bun&#x27;
+      - &#x27;/pnpm&#x27;
+  selection_file:
+    TargetFilename|contains:
+      - &#x27;/.ssh/&#x27;
+      - &#x27;/.npmrc&#x27;
+      - &#x27;/.docker/config.json&#x27;
+      - &#x27;/.vault-token&#x27;
+      - &#x27;/.config/gh/hosts.yml&#x27;
+      - &#x27;/.config/google-chrome/&#x27;
+      - &#x27;/.config/BraveSoftware/&#x27;
+      - &#x27;/.config/discord/&#x27;
+      - &#x27;/.config/Slack/&#x27;
+  condition: selection_proc and selection_file
+level: high</code></pre></div>
+    <div class="tab-content" id="art-71-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo ContextImageFileName=/\/(node|npm|bun|pnpm|npx)$/i
+| regex(&quot;/(\\.ssh/|\\.npmrc|\\.docker/config\\.json|\\.vault-token|\\.config/(google-chrome|BraveSoftware|microsoft-edge|discord|Slack|gh)/|known_hosts|id_(rsa|ed25519|ecdsa))&quot;, field=TargetFileName)
+| table([_time, aid, ComputerName, ContextImageFileName, TargetFileName])</code></pre></div>
+    <div class="tab-content" id="art-71-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (&quot;*/.ssh/*&quot;,&quot;*/.npmrc&quot;,&quot;*/.docker/config.json&quot;,&quot;*/.vault-token&quot;,&quot;*/.config/gh/hosts.yml&quot;,&quot;*/.config/google-chrome/*&quot;,&quot;*/.config/BraveSoftware/*&quot;,&quot;*/.config/microsoft-edge/*&quot;,&quot;*/.config/discord/*&quot;,&quot;*/.config/Slack/*&quot;,&quot;*/.bash_history&quot;,&quot;*/.zsh_history&quot;) OR Filesystem.file_name IN (&quot;id_rsa&quot;,&quot;id_ed25519&quot;,&quot;id_ecdsa&quot;,&quot;known_hosts&quot;,&quot;Cookies&quot;,&quot;Login Data&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-71-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (&quot;*/.ssh/*&quot;,&quot;*/.npmrc&quot;,&quot;*/.docker/config.json&quot;,&quot;*/.vault-token&quot;,&quot;*/.config/gh/hosts.yml&quot;,&quot;*/.config/google-chrome/*&quot;,&quot;*/.config/BraveSoftware/*&quot;,&quot;*/.config/microsoft-edge/*&quot;,&quot;*/.config/discord/*&quot;,&quot;*/.config/Slack/*&quot;,&quot;*/.bash_history&quot;,&quot;*/.zsh_history&quot;) OR Filesystem.file_name IN (&quot;id_rsa&quot;,&quot;id_ed25519&quot;,&quot;id_ecdsa&quot;,&quot;known_hosts&quot;,&quot;Cookies&quot;,&quot;Login Data&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="71f1bd22c7" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="459b92555f" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Atomic Arch persistence: node/bun writing systemd unit or eBPF/kernel-module load</span>
+    <span class="uc-title">Atomic Arch persistence: systemd unit, cron or shell-rc written by AUR build / JS runtime</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="71f1bd22c7" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="459b92555f" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Atomic Arch persistence/defense-evasion stage on root-privileged installs: a build/Node-runtime process creating a systemd service/timer unit (the article&#x27;s &#x27;suspicious systemd units&#x27;) or loading a kernel/eBPF object for the documented rootkit that hides processes, files and connections.
+    <div class="uc-desc">Hunts persistence dropped by the hijacked package: a Node/npm/Bun process (or makepkg-spawned shell) creating a systemd .service unit, a cron entry, an /etc/profile.d script, or modifying shell rc files (.bashrc/.zshrc/.bash_profile). Package managers legitimately ship units to /usr/lib/systemd, so this anchors on the malicious JS-runtime/build initiator and excludes that path.
 
-Rationale: Grounded in the article&#x27;s explicit IR guidance to watch for &#x27;suspicious systemd units or eBPF objects&#x27; plus the corroborated eBPF-rootkit capability (CSA/Corgea); flags a Node/Bun build runtime — not a normal author of systemd units — installing persistence. Datadog left empty: capturing the bpf()/init_module syscall requires a custom auditd-syscall facet not in the standard Datadog Linux schema.
+Rationale: Maps the article&#x27;s explicit guidance to &#x27;monitor for creation of suspicious systemd units&#x27; to concrete autostart paths, and scopes the writer to the JS runtime/AUR build so it excludes the normal pacman -&gt; /usr/lib/systemd unit drops that would otherwise flood the rule. Datadog empty: relies on auditd file-watch coverage not in Datadog&#x27;s standard Linux facet set.
 
 Cross-checked against:
   • https://labs.cloudsecurityalliance.org/research/csa-research-note-aur-supply-chain-ebpf-rootkit-20260614-csa/
-  • https://corgea.com/research/atomic-arch-aur-atomic-lockfile-js-digest-ebpf-rootkit</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create or Modify System Process: Systemd Service">T1543.002</span> <span class="ind tech" title="Rootkit">T1014</span> <span class="ind tech" title="Boot or Logon Autostart Execution: Kernel Modules and Extensions">T1547.006</span></div>
+  • https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Systemd Service">T1543.002</span> <span class="ind tech" title="Cron">T1053.003</span> <span class="ind tech" title="Unix Shell Configuration Modification">T1546.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate AUR/Makepkg package whose install routine genuinely installs a systemd unit via a packaged shell script</li><li>A configuration-management run (Ansible/Salt) using python3/bash to drop a service unit</li><li>A developer manually creating a user-level systemd unit under ~/.config/systemd/user/</li><li>Container/devcontainer bootstrap scripts writing service units</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;systemctl&quot; and InitiatingProcessFolderPath !startswith &quot;/opt/puppetlabs&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Open the written unit file and inspect ExecStart for references to node/bun, /tmp payloads, or the campaign packages; confirm whether the writing process descends from an AUR install (UC1) and whether it ran as root. 2) Contain: If the unit is attacker-controlled, treat the host as fully compromised per the article — isolate, do NOT rely on a malware scan (eBPF rootkit can hide artifacts), and schedule rebuild from trusted media. 3) Hunt: Check for loaded eBPF programs / unexpected kernel modules (auditd bpf/init_module, `bpftool prog show`), hidden processes/connections, and replicate the systemd-unit search across all Arch and WSL2 hosts and self-hosted runners.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate npm global package postinstall that registers a user-level systemd service (e.g. a self-hosted runner or dev daemon)</li><li>nvm/asdf or a dotfiles manager appending to ~/.bashrc/.zshrc during a normal install</li><li>A Node-based devtool writing an /etc/profile.d helper for PATH setup</li><li>Cron entries created by a legitimate Node scheduler package</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;ansible&quot;,&quot;puppet&quot;,&quot;chef-client&quot;,&quot;systemctl&quot;,&quot;nvm&quot;,&quot;asdf&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Open the created unit/cron/rc content — a systemd ExecStart or cron line invoking a binary from /tmp, a hidden dir, or curl|sh is malicious; a named, signed dev daemon is likely benign. Correlate the write time with an AUR package install. 2) Contain: Stop and disable the unit/cron entry, isolate the host, and snapshot the file for IR before removal. 3) Hunt: Search for the referenced payload binary&#x27;s SHA-256 (6144d433...c98b), check for eBPF objects, and sweep other Arch hosts for the same unit name.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-71-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-71-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-71-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-71-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-71-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-71-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;npx&quot;)
+    or InitiatingProcessParentFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;makepkg&quot;)
+| where (FolderPath has_any (&quot;/etc/systemd/system/&quot;,&quot;/.config/systemd/user/&quot;) and FileName endswith &quot;.service&quot;)
+    or FolderPath has_any (&quot;/etc/cron.d/&quot;,&quot;/var/spool/cron/&quot;,&quot;/etc/cron.daily/&quot;,&quot;/etc/profile.d/&quot;)
+    or FileName in~ (&quot;.bashrc&quot;,&quot;.bash_profile&quot;,&quot;.zshrc&quot;,&quot;.profile&quot;,&quot;.bash_logout&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-71-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessName has_any (&quot;node&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;npx&quot;,&quot;makepkg&quot;)
+| where (TargetFilePath has_any (&quot;/etc/systemd/system/&quot;,&quot;/.config/systemd/user/&quot;) and TargetFileName endswith &quot;.service&quot;)
+    or TargetFilePath has_any (&quot;/etc/cron.d/&quot;,&quot;/var/spool/cron/&quot;,&quot;/etc/cron.daily/&quot;,&quot;/etc/profile.d/&quot;)
+    or TargetFileName in~ (&quot;.bashrc&quot;,&quot;.bash_profile&quot;,&quot;.zshrc&quot;,&quot;.profile&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, EventType,
+          ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-71-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Atomic Arch Persistence via Systemd/Cron/Shell-rc Written by JS Runtime
+id: 9c3d4e5f-6a7b-4c8d-0e9f-1a2b3c4d5e6f
+description: Detects a Node/npm/Bun or makepkg-spawned process creating systemd units, cron entries, profile.d scripts or modifying shell rc files - persistence consistent with Atomic Arch.
+references:
+  - https://labs.cloudsecurityalliance.org/research/csa-research-note-aur-supply-chain-ebpf-rootkit-20260614-csa/
+  - https://www.sonatype.com/blog/atomic-arch-npm-campaign-adds-malicious-dependency
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.t1543.002
+  - attack.t1053.003
+  - attack.t1546.004
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection_proc:
+    Image|endswith:
+      - &#x27;/node&#x27;
+      - &#x27;/npm&#x27;
+      - &#x27;/bun&#x27;
+      - &#x27;/pnpm&#x27;
+  selection_persist:
+    TargetFilename|contains:
+      - &#x27;/etc/systemd/system/&#x27;
+      - &#x27;/.config/systemd/user/&#x27;
+      - &#x27;/etc/cron.d/&#x27;
+      - &#x27;/var/spool/cron/&#x27;
+      - &#x27;/etc/profile.d/&#x27;
+  selection_rc:
+    TargetFilename|endswith:
+      - &#x27;/.bashrc&#x27;
+      - &#x27;/.bash_profile&#x27;
+      - &#x27;/.zshrc&#x27;
+      - &#x27;/.profile&#x27;
+  condition: selection_proc and (selection_persist or selection_rc)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-71-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/\/(node|npm|bun|pnpm|npx)$/i
+| regex(&quot;(/etc/systemd/system/.*\\.service$|/\\.config/systemd/user/.*\\.service$|/etc/cron\\.d/|/var/spool/cron/|/etc/profile\\.d/|/\\.(bashrc|bash_profile|zshrc|profile)$)&quot;, field=TargetFileName)
+| table([_time, aid, ComputerName, ContextImageFileName, TargetFileName])</code></pre></div>
+    <div class="tab-content" id="art-71-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (&quot;*/etc/systemd/system/*.service&quot;,&quot;*/.config/systemd/user/*.service&quot;,&quot;*/etc/cron.d/*&quot;,&quot;*/var/spool/cron/*&quot;,&quot;*/etc/cron.daily/*&quot;,&quot;*/etc/profile.d/*&quot;) OR Filesystem.file_name IN (&quot;.bashrc&quot;,&quot;.bash_profile&quot;,&quot;.zshrc&quot;,&quot;.profile&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-71-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (&quot;*/etc/systemd/system/*.service&quot;,&quot;*/.config/systemd/user/*.service&quot;,&quot;*/etc/cron.d/*&quot;,&quot;*/var/spool/cron/*&quot;,&quot;*/etc/cron.daily/*&quot;,&quot;*/etc/profile.d/*&quot;) OR Filesystem.file_name IN (&quot;.bashrc&quot;,&quot;.bash_profile&quot;,&quot;.zshrc&quot;,&quot;.profile&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="eb94f49c68" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Atomic Arch C2/exfil: build-spawned egress to temp.sh and github.com/fardewoak/nodejs-argo</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="eb94f49c68" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the campaign&#x27;s outbound stage: a Node/npm/Bun/curl/git process launched from an AUR build reaching the exfil/staging endpoints temp.sh (file-sharing exfil) or the fardewoak/nodejs-argo GitHub repo (Cloudflare argo tunnel C2 tooling). Surfaces credential exfil and second-stage C2 retrieval during/after package install.
+
+Rationale: Uses the article&#x27;s two extracted network IOCs (temp.sh exfil host, github.com/fardewoak/nodejs-argo argo-tunnel C2 repo) and scopes the initiator to the AUR build / JS-runtime chain so generic temp.sh usage isn&#x27;t flagged. github path only surfaces in HTTP-inspected/proxy logs; the DNS/auditd-cmdline anchors (temp.sh, fardewoak, nodejs-argo) execute as-is.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/400-aur-packages-hijacked-atomic-arch-campaign
+  • https://ioctl.fail/preliminary-analysis-of-aur-malware/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration to Cloud Storage">T1567.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer legitimately using temp.sh as a quick file-share from a terminal (curl) unrelated to the campaign</li><li>A CI job that git-clones an unrelated GitHub repo where &#x27;argo&#x27; appears in the URL</li><li>Proxy/SSL-inspection mislabeling the RemoteUrl host</li><li>Browser-driven downloads from temp.sh (excluded by the process filter)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;firefox&quot;,&quot;chrome&quot;,&quot;chromium&quot;,&quot;thunderbird&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the initiating process descends from an AUR build (makepkg/pacman) and review the command line — an upload (curl -T / -F to temp.sh) or a clone of fardewoak/nodejs-argo is decisive; capture the full URL and any uploaded path. 2) Contain: Block temp.sh and the resolved IPs at the egress proxy/firewall, isolate the host, and assume all on-host secrets are exfiltrated. 3) Hunt: Rotate all credentials, pull the same DeviceId&#x27;s credential-access and execution UCs, and sweep the org for any other host resolving temp.sh from a node/npm/git parent.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-71-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-71-uc4-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-71-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-71-uc4-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-71-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-71-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-71-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(14d)
-| where FolderPath has_any (&quot;/etc/systemd/system/&quot;,&quot;/usr/lib/systemd/system/&quot;,&quot;/etc/systemd/user/&quot;,&quot;/.config/systemd/user/&quot;)
-| where FileName endswith &quot;.service&quot; or FileName endswith &quot;.timer&quot;
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;bun&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;makepkg&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;python3&quot;)
-   or InitiatingProcessParentFileName in~ (&quot;makepkg&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;node&quot;,&quot;pacman&quot;,&quot;yay&quot;,&quot;paru&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
+    <div class="tab-content active" id="art-71-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;pnpm&quot;,&quot;npx&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;git&quot;,&quot;makepkg&quot;)
+| where RemoteUrl has_any (&quot;temp.sh&quot;,&quot;fardewoak&quot;,&quot;nodejs-argo&quot;)
+    or InitiatingProcessCommandLine has_any (&quot;temp.sh&quot;,&quot;fardewoak/nodejs-argo&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(14d)
-| where TargetFilePath has_any (&quot;/etc/systemd/system/&quot;,&quot;/usr/lib/systemd/system/&quot;,&quot;/etc/systemd/user/&quot;,&quot;/.config/systemd/user/&quot;)
-| where TargetFileName endswith &quot;.service&quot; or TargetFileName endswith &quot;.timer&quot;
-| where ActingProcessName has_any (&quot;node&quot;,&quot;bun&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;makepkg&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;python3&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, EventType
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-71-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Atomic Arch Persistence - Node/Bun Build Runtime Writing systemd Unit
-id: e2b95c07-4d3a-4c6f-9a81-7b0e2f1d9c3a
-status: experimental
-description: Detects a Node/Bun/shell process in an AUR build lineage creating a systemd service or timer unit, consistent with Atomic Arch persistence (the campaign also deploys an eBPF rootkit when run as root).
+    <div class="tab-content" id="art-71-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(30d)
+| where Url has_any (&quot;temp.sh&quot;,&quot;fardewoak&quot;,&quot;nodejs-argo&quot;) or DstHostname =~ &quot;temp.sh&quot;
+| project TimeGenerated, SrcHostname, SrcUsername, Url, DstHostname, DstIpAddr,
+          UserAgent = HttpRequestHeaderUserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-71-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Atomic Arch C2/Exfil Egress to temp.sh / fardewoak nodejs-argo
+id: a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d
+description: Detects DNS/web egress to the Atomic Arch staging and exfil endpoints temp.sh and github.com/fardewoak/nodejs-argo.
 references:
-    - https://labs.cloudsecurityalliance.org/research/csa-research-note-aur-supply-chain-ebpf-rootkit-20260614-csa/
-    - https://corgea.com/research/atomic-arch-aur-atomic-lockfile-js-digest-ebpf-rootkit
+  - https://www.stepsecurity.io/blog/400-aur-packages-hijacked-atomic-arch-campaign
+  - https://ioctl.fail/preliminary-analysis-of-aur-malware/
 author: SOC Detection Engineering
-date: 2026/06/20
+date: 2026/06/21
 tags:
-    - attack.t1543.002
-    - attack.t1014
-    - attack.t1547.006
+  - attack.t1071.001
+  - attack.t1567.002
 logsource:
-    category: file_event
-    product: linux
+  category: dns
+  product: linux
 detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;/etc/systemd/system/&#x27;
-            - &#x27;/usr/lib/systemd/system/&#x27;
-            - &#x27;/.config/systemd/user/&#x27;
-    selection_ext:
-        TargetFilename|endswith:
-            - &#x27;.service&#x27;
-            - &#x27;.timer&#x27;
-    selection_proc:
-        Image|endswith:
-            - &#x27;/node&#x27;
-            - &#x27;/bun&#x27;
-            - &#x27;/npm&#x27;
-            - &#x27;/npx&#x27;
-            - &#x27;/makepkg&#x27;
-    condition: selection_path and selection_ext and selection_proc
-falsepositives:
-    - A legitimate AUR package whose install hook installs a systemd unit via a packaged install script
-level: high</code></pre></div>
-    <div class="tab-content" id="art-71-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;/etc/systemd/system/|/usr/lib/systemd/system/|/.config/systemd/user/&quot;, field=TargetFileName)
-| regex(&quot;(service|timer)$&quot;, field=TargetFileName)
-| regex(&quot;/(node|bun|npm|npx|makepkg|bash|sh)$&quot;, field=ContextImageFileName)
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-71-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;node&quot;,&quot;bun&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;makepkg&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;python3&quot;)) AND (Filesystem.file_path=&quot;*/etc/systemd/system/*&quot; OR Filesystem.file_path=&quot;*/usr/lib/systemd/system/*&quot; OR Filesystem.file_path=&quot;*/.config/systemd/user/*&quot;) AND (Filesystem.file_name=&quot;*.service&quot; OR Filesystem.file_name=&quot;*.timer&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-71-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;node&quot;,&quot;bun&quot;,&quot;npm&quot;,&quot;npx&quot;,&quot;makepkg&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;python3&quot;)) AND (Filesystem.file_path=&quot;*/etc/systemd/system/*&quot; OR Filesystem.file_path=&quot;*/usr/lib/systemd/system/*&quot; OR Filesystem.file_path=&quot;*/.config/systemd/user/*&quot;) AND (Filesystem.file_name=&quot;*.service&quot; OR Filesystem.file_name=&quot;*.timer&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+  selection:
+    query|contains:
+      - &#x27;temp.sh&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-71-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*temp.sh* OR *fardewoak* OR *nodejs-argo*)</code></pre></div>
+    <div class="tab-content" id="art-71-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(^|\.)temp\.sh$/i
+| ContextImageFileName=/\/(node|npm|bun|pnpm|npx|curl|wget|git)$/i
+| table([_time, aid, ComputerName, DomainName, ContextImageFileName, ContextProcessId])</code></pre></div>
+    <div class="tab-content" id="art-71-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-71-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-71-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-71-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url IN (&quot;*temp.sh*&quot;,&quot;*fardewoak*&quot;,&quot;*nodejs-argo*&quot;) OR Web.dest IN (&quot;temp.sh&quot;)) by Web.src Web.user Web.url Web.dest Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-71-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url IN (&quot;*temp.sh*&quot;,&quot;*fardewoak*&quot;,&quot;*nodejs-argo*&quot;) OR Web.dest IN (&quot;temp.sh&quot;)) by Web.src Web.user Web.url Web.dest Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">

@@ -1,4 +1,4 @@
-# [CRIT] Miasma Worm Hits Microsoft Again: Azure Functions Action and 72 Other Repositories Disabled After Supply Chain Attack Targeting AI Coding Agents
+# [HIGH] Miasma Worm Hits Microsoft Again: Azure Functions Action and 72 Other Repositories Disabled After Supply Chain Attack Targeting AI Coding Agents
 
 **Source:** StepSecurity
 **Published:** 2026-06-09
@@ -10,17 +10,25 @@ Back to Blog Threat Intel Miasma Worm Hits Microsoft Again: Azure Functions Acti
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-45321`
+- **IPv4 (defanged):** `160.119.64.3`
+- **IPv4 (defanged):** `185.95.159.32`
 - **Domain (defanged):** `check.git-service.com`
 - **Domain (defanged):** `t.m-kosche.com`
-- **Domain (defanged):** `git-service.com`
+- **Domain (defanged):** `dnsowl.com`
+- **SHA256:** `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`
+- **SHA256:** `3de04fe2a76262743ed089efa7115f4508619838e77d60b9a1aab8b20d2cc8bf`
+- **SHA256:** `85f54c089d78ebfb101454ec934c767065a342a43c9ee1beac8430cdd3b2086f`
+- **SHA256:** `c0b094e46842260936d4b97ce63e4539b99a3eae48b736798c700217c52569dc`
+- **SHA256:** `3a9db5ba0c8cd4c91e91717df6b1a141fc1e0fbc0558b5a78d7f5c23f5b2a150`
+- **SHA256:** `d630397de8b01af0f6f5cf4463da91b17f28195a2c50c8f3f38ad9f7873fdb8e`
+- **SHA256:** `633c8410ee0413ca4b090a19c30b20c03f31598c25247c484846fa34c1df5b64`
+- **SHA256:** `ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -390,12 +398,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `check.git-service.com`, `t.m-kosche.com`, `git-service.com`
+  - IP / domain IOC(s): `160.119.64.3`, `185.95.159.32`, `check.git-service.com`, `t.m-kosche.com`, `dnsowl.com`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45321`
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`, `3de04fe2a76262743ed089efa7115f4508619838e77d60b9a1aab8b20d2cc8bf`, `85f54c089d78ebfb101454ec934c767065a342a43c9ee1beac8430cdd3b2086f`, `c0b094e46842260936d4b97ce63e4539b99a3eae48b736798c700217c52569dc`, `3a9db5ba0c8cd4c91e91717df6b1a141fc1e0fbc0558b5a78d7f5c23f5b2a150`, `d630397de8b01af0f6f5cf4463da91b17f28195a2c50c8f3f38ad9f7873fdb8e`, `633c8410ee0413ca4b090a19c30b20c03f31598c25247c484846fa34c1df5b64`, `ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

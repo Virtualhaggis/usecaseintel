@@ -2,11 +2,11 @@
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1059.003"
   data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application,web"
-  data-targets="linux,windows"
-  data-uc-count="2" data-llm-uc-count="0"
-  data-search="[GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command injection and @file exfiltration via prompt quoting (CVE-2026-0755) gemini-mcp-tool vulnerable to OS command injection and @file exfiltration via prompt quoting (CVE-2026-0755) CVE-2026-0755 T1059.003 Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject">
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="4" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command injection and @file exfiltration via prompt quoting (CVE-2026-0755) gemini-mcp-tool vulnerable to OS command injection and @file exfiltration via prompt quoting (CVE-2026-0755) CVE-2026-0755 T1059.003 [LLM] gemini-mcp-tool @file path-traversal / sensitive-file exfiltration via Gemini CLI [LLM] gemini-mcp-tool Windows cmd.exe metacharacter injection (node -&gt; cmd.exe breakout) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-18-ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -15,7 +15,7 @@
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-18</span>
-    <span>2 use cases</span>
+    <span>4 use cases</span>
     <span>1 technique</span>
     <span>4 kill-chain phases detected</span>
   </div>
@@ -66,12 +66,180 @@
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] gemini-mcp-tool Windows cmd.exe metacharacter injection (node -&gt; cmd.exe breakout)</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] gemini-mcp-tool @file path-traversal / sensitive-file exfiltration via Gemini CLI</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="3d960320eb" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">gemini-mcp-tool @file path-traversal / sensitive-file exfiltration via Gemini CLI</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="3d960320eb" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts Gemini CLI invocations (driven by the gemini-mcp-tool MCP server, CVE-2026-0755) whose command line carries an @file reference that escapes the working directory or targets sensitive files (@/etc/passwd, @~/.ssh/id_rsa, @../../secret). Article-specific because it keys on the Gemini CLI @file parser abuse used to read/exfiltrate arbitrary local files through the LLM channel.
+
+Rationale: Keys on the article&#x27;s exact @file PoC strings (@/etc/passwd, @~/.ssh/id_rsa, @../../secret) scoped to a &#x27;gemini&#x27; command line — the CVE-2026-0755 exfiltration sink. Cross-checked against the GitLab Advisory DB and Snyk entries which confirm the @file parser as the read/exfil vector.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/npm/gemini-mcp-tool/CVE-2026-0755/
+  • https://security.snyk.io/vuln/SNYK-JS-GEMINIMCPTOOL-15091895
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-0755/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span> <span class="ind tech" title="Unsecured Credentials: Private Keys">T1552.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer legitimately referencing a sibling project with @../other-repo/file.ts for cross-repo code analysis</li><li>Power user analyzing their own dotfiles, e.g. gemini -p &#x27;review @~/.bashrc&#x27;</li><li>CI job pointing Gemini CLI at an absolute build-artifact path outside the checkout dir</li><li>Security researcher reproducing the CVE in an authorized test lab</li><li>Legitimate analysis of /var/log or /etc config files by an ops engineer using Gemini CLI</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine matches regex @&quot;(?i)@\.\./[A-Za-z0-9._-]+/(src|lib|test|tests|docs)/&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ProcessCommandLine and the parent (expect node.exe running the gemini-mcp-tool MCP server). Confirm the @file target is outside the project working directory and is sensitive (passwd, id_rsa, .env, cloud creds). Identify who/what supplied the prompt (MCP client, chat session, automated agent). 2) Contain: kill the MCP server process, upgrade gemini-mcp-tool to &gt;=1.1.6, and rotate any credential file referenced (SSH keys, tokens) since the content was sent to the Gemini API. 3) Hunt: review DeviceNetworkEvents for outbound to the Gemini API from this host around the event, search other hosts for the same gemini @traversal pattern, and check the MCP client logs for the originating untrusted prompt.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-34-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-34-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-34-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-34-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-34-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-34-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-34-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where ProcessCommandLine has &quot;gemini&quot;
+| where ProcessCommandLine matches regex @&quot;(?i)@(\.\.[\\/]|~[\\/]|/(etc|root|home|var|proc)/|[a-zA-Z]:\\)&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-34-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessCommandLine has &quot;gemini&quot;
+| where ActingProcessCommandLine matches regex @&quot;(?i)@(\.\.[\\/]|~[\\/]|/(etc|root|home|var|proc)/|[a-zA-Z]:\\)&quot;
+| where ActorUsername !endswith &quot;$&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-34-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: gemini-mcp-tool @file Traversal / Sensitive File Exfiltration (CVE-2026-0755)
+id: 5b1f3c2a-9d4e-4f1a-8c6b-7e2a1d9f0b34
+description: Detects Gemini CLI invocations carrying an @file reference escaping the working directory or targeting sensitive files, indicative of CVE-2026-0755 abuse in gemini-mcp-tool.
+references:
+  - https://github.com/advisories/GHSA-4h5r-5jm8-jxjm
+  - https://security.snyk.io/vuln/SNYK-JS-GEMINIMCPTOOL-15091895
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.collection
+  - attack.t1005
+  - attack.t1552.004
+logsource:
+  category: process_creation
+detection:
+  selection_cli:
+    CommandLine|contains: &#x27;gemini&#x27;
+  selection_atfile:
+    CommandLine|re: &#x27;(?i)@(\.\.[\\/]|~[\\/]|/(etc|root|home|var|proc)/|[a-zA-Z]:\\)&#x27;
+  condition: selection_cli and selection_atfile
+level: high</code></pre></div>
+    <div class="tab-content" id="art-34-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:*gemini* OR @process.command_line:*Gemini*) (@process.command_line:*@../* OR @process.command_line:*@/etc/* OR @process.command_line:*@~/* OR @process.command_line:*@/root/* OR @process.command_line:*@/home/*)</code></pre></div>
+    <div class="tab-content" id="art-34-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 CommandLine=/gemini/i
+| regex(&quot;@(\\.\\.[\\\\/]|~[\\\\/]|/(etc|root|home|var|proc)/|[a-zA-Z]:\\\\)&quot;, field=CommandLine, flags=&quot;i&quot;)
+| table([_time, aid, ComputerName, UserName, ImageFileName, CommandLine])</code></pre></div>
+    <div class="tab-content" id="art-34-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-34-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-34-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-34-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*gemini*&quot; by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| regex process=&quot;(?i)@(\.\.[\\/]|~[\\/]|/(etc|root|home|var|proc)/|[a-zA-Z]:\\)&quot;
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime, lastTime, dest, user, process_name, parent_process_name, process, count</code></pre><pre class="spl-mode-body" id="art-34-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*gemini*&quot; by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| regex process=&quot;(?i)@(\.\.[\\/]|~[\\/]|/(etc|root|home|var|proc)/|[a-zA-Z]:\\)&quot;
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime, lastTime, dest, user, process_name, parent_process_name, process, count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="adc1c0cd5b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">gemini-mcp-tool Windows cmd.exe metacharacter injection (node -&gt; cmd.exe breakout)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="adc1c0cd5b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the CVE-2026-0755 Windows command-injection vector: the gemini-mcp-tool MCP server (node.exe) spawns cmd.exe to run the Gemini CLI, and unquoted prompt metacharacters break out of the gemini argument into arbitrary OS commands. Article-specific because it pivots on the node-&gt;cmd.exe chain carrying &#x27;gemini&#x27; plus shell metacharacters (&amp;, |, &gt;, &lt;, ^, `).
+
+Rationale: Pivots on the article&#x27;s exact Windows injection mechanism — node-spawned cmd.exe running the Gemini CLI with unquoted metacharacters (the &#x27;broken shell:false double-quote wrapping&#x27; the 1.1.6 fix removed). The node-&gt;cmd.exe-&gt;gemini chain is rare and the metacharacter requirement makes it alert-grade; corroborated by Penligent&#x27;s execAsync sink analysis.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-4h5r-5jm8-jxjm
+  • https://www.penligent.ai/hackinglabs/deep-analysis-of-gemini-mcp-tool-command-injection-cve-2026-0755-when-an-mcp-toolchain-hands-user-input-to-the-shell/
+  • https://advisories.gitlab.com/npm/gemini-mcp-tool/CVE-2026-0755/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Indirect Command Execution">T1202</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate prompt that genuinely contains &#x27;&amp;&#x27; or &#x27;|&#x27; inside quotes on a patched (&gt;=1.1.6) host where quoting now contains it</li><li>Developer asking gemini about shell syntax, e.g. a prompt mentioning &#x27;cmd &amp; redirect&#x27;</li><li>Build wrapper that intentionally chains gemini with another command via cmd.exe (&amp;&amp;)</li><li>Local reproduction of the CVE in an authorized lab</li><li>A node-based task runner that pipes Gemini CLI output to a file with &#x27;&gt;&#x27;</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine matches regex @&quot;(?i)gemini[^\&quot;]*[&amp;|&gt;&lt;^`]&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the cmd.exe ProcessCommandLine and isolate what follows the metacharacter after the gemini token — that is the injected command. Enumerate child processes of this cmd.exe (DeviceProcessEvents where InitiatingProcessId == this ProcessId) to see what actually executed (whoami, certutil, powershell, net). 2) Contain: isolate the host, kill the node MCP server and any spawned children, and upgrade gemini-mcp-tool to &gt;=1.1.6. 3) Hunt: review DeviceNetworkEvents from the host for download/exfil by the injected child, search for the same node-&gt;cmd-&gt;gemini+metacharacter pattern fleet-wide, and trace the originating untrusted prompt in the MCP client logs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-34-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-34-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-34-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-34-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-34-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-34-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-34-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;node.exe&quot;
+| where FileName =~ &quot;cmd.exe&quot;
+| where ProcessCommandLine has &quot;gemini&quot;
+| where ProcessCommandLine matches regex @&quot;(?i)gemini.*[&amp;|&gt;&lt;^`]&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-34-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where NewProcessName endswith &quot;\\cmd.exe&quot;
+| where ParentProcessName endswith &quot;\\node.exe&quot;
+| where CommandLine has &quot;gemini&quot;
+| where CommandLine matches regex @&quot;(?i)gemini.*[&amp;|&gt;&lt;^`]&quot;
+| where not(TargetUserName endswith &quot;$&quot;)
+| project TimeGenerated, Computer, TargetUserName, NewProcessName, ParentProcessName, CommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-34-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: gemini-mcp-tool Windows cmd.exe Metacharacter Injection (CVE-2026-0755)
+id: a3e7d2c1-4b6f-4a8e-9c2d-1f5b8e0a7c93
+description: Detects node.exe spawning cmd.exe to run the Gemini CLI with shell metacharacters, the CVE-2026-0755 Windows command-injection breakout in gemini-mcp-tool.
+references:
+  - https://github.com/advisories/GHSA-4h5r-5jm8-jxjm
+  - https://www.penligent.ai/hackinglabs/deep-analysis-of-gemini-mcp-tool-command-injection-cve-2026-0755-when-an-mcp-toolchain-hands-user-input-to-the-shell/
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - attack.t1202
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith: &#x27;\node.exe&#x27;
+    Image|endswith: &#x27;\cmd.exe&#x27;
+    CommandLine|contains: &#x27;gemini&#x27;
+  selection_meta:
+    CommandLine|re: &#x27;(?i)gemini.*[&amp;|&gt;&lt;^`]&#x27;
+  condition: selection and selection_meta
+level: high</code></pre></div>
+    <div class="tab-content" id="art-34-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@ParentImage:*\\node.exe OR @ParentImage:*\\Node.exe) (@Image:*\\cmd.exe OR @Image:*\\CMD.EXE) (@CommandLine:*gemini* OR @CommandLine:*Gemini*)</code></pre></div>
+    <div class="tab-content" id="art-34-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/node\.exe/i
+| ImageFileName=/\\cmd\.exe$/i
+| CommandLine=/gemini/i
+| regex(&quot;gemini.*[&amp;|&gt;&lt;^`]&quot;, field=CommandLine, flags=&quot;i&quot;)
+| table([_time, aid, ComputerName, UserName, ParentBaseFileName, CommandLine])</code></pre></div>
+    <div class="tab-content" id="art-34-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-34-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-34-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-34-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;node.exe&quot; Processes.process_name=&quot;cmd.exe&quot; Processes.process=&quot;*gemini*&quot; by Processes.dest, Processes.user, Processes.parent_process, Processes.process
+| `drop_dm_object_name(Processes)`
+| regex process=&quot;(?i)gemini.*[&amp;|&gt;&lt;^`]&quot;
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime, lastTime, dest, user, parent_process, process, count</code></pre><pre class="spl-mode-body" id="art-34-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;node.exe&quot; Processes.process_name=&quot;cmd.exe&quot; Processes.process=&quot;*gemini*&quot; by Processes.dest, Processes.user, Processes.parent_process, Processes.process
+| `drop_dm_object_name(Processes)`
+| regex process=&quot;(?i)gemini.*[&amp;|&gt;&lt;^`]&quot;
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime, lastTime, dest, user, parent_process, process, count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
   <summary>
     <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
     <span class="uc-phase">Reconnaissance</span>
@@ -86,11 +254,11 @@
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-34-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-34-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-34-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-34-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-34-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-34-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-34-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-34-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -99,7 +267,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-34-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-34-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -111,12 +279,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-34-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-34-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-34-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-34-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-34-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-34-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-34-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-34-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-0755&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-34-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-34-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-0755&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -139,11 +307,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-34-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-34-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-34-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-34-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-34-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-34-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-34-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject
+    <div class="tab-content active" id="art-34-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -156,7 +324,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-34-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-34-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject
@@ -172,14 +340,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-34-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-34-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-34-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-34-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject ```
+    <div class="tab-content" id="art-34-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-34-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-34-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-34-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-34-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-34-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-0755: gemini-mcp-tool vulnerable to OS command inject ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
@@ -5791,14 +5959,14 @@ DeviceFileEvents
 </details></div>
 </article>
 <article class="card" id="art-54" data-art-slug="2026-06-18-ghsa-critical-ghsa-9752-mhqh-h34f-npm-praisonai-agentos-expo"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
+  data-phases="actions,c2,exploit,install" data-sev="crit"
   data-techs="T1190,T1528"
   data-sources="GitHub Security Advisories"
-  data-platforms="cloudwatch,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,network"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,vcs,windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] GHSA-9752-mhqh-h34f: npm PraisonAI AgentOS exposes unauthenticated agent listing and invocation npm PraisonAI AgentOS exposes unauthenticated agent listing and invocation  T1190 T1528 [LLM] Unauthenticated PraisonAI AgentOS API access (GET /api/agents, POST /api/chat) [LLM] PraisonAI AgentOS node listener exposed on 0.0.0.0:8000 to non-loopback OAuth consent / suspicious app grant">
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] GHSA-9752-mhqh-h34f: npm PraisonAI AgentOS exposes unauthenticated agent listing and invocation npm PraisonAI AgentOS exposes unauthenticated agent listing and invocation  T1190 T1528 [LLM] PraisonAI AgentOS Node server exposed to non-loopback on default port 8000 [LLM] Unauthenticated PraisonAI AgentOS API hits: GET /api/agents enumeration + POST /api/chat invocation [LLM] Vulnerable PraisonAI npm package present (dist/os/agentos.js) on managed hosts OAuth consent / suspicious app grant">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-18-ghsa-critical-ghsa-9752-mhqh-h34f-npm-praisonai-agentos-expo" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -5807,7 +5975,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-18</span>
-    <span>3 use cases</span>
+    <span>4 use cases</span>
     <span>2 techniques</span>
     <span>4 kill-chain phases detected</span>
   </div>
@@ -5829,20 +5997,20 @@ DeviceFileEvents
   <div class="name">Weaponization</div>
   <div class="marker">—</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 4</div>
   <div class="name">Exploitation</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 5</div>
   <div class="name">Installation</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 6</div>
@@ -5856,123 +6024,195 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] PraisonAI AgentOS node listener exposed on 0.0.0.0:8000 to non-loopback</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unauthenticated PraisonAI AgentOS API access (GET /api/agents, POST /api/chat)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] PraisonAI AgentOS Node server exposed to non-loopback on default port 8000</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Vulnerable PraisonAI npm package present (dist/os/agentos.js) on managed hosts</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Unauthenticated PraisonAI AgentOS API hits: GET /api/agents enumeration + POST /api/chat invocation · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="bb335baf0f" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="4004a680b0" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Unauthenticated PraisonAI AgentOS API access (GET /api/agents, POST /api/chat)</span>
+    <span class="uc-title">PraisonAI AgentOS Node server exposed to non-loopback on default port 8000</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="bb335baf0f" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="4004a680b0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP requests to the PraisonAI npm AgentOS sensitive routes /api/agents (agent + instruction-prefix disclosure) and /api/chat (unauthenticated agent invocation), which the npm package (&gt;=1.6.0,&lt;=1.7.1) exposes with no auth middleware. Article-specific because it pivots on the exact route paths and methods registered in src/praisonai-ts/src/os/agentos.ts, not a generic web pattern.
+    <div class="uc-desc">Hunts for a node.exe process accepting inbound network connections from non-loopback/public source addresses on TCP 8000, the configuration the advisory describes when AgentOS keeps its default host &#x27;0.0.0.0&#x27; and is started with serve({ port: 8000 }). This surfaces PraisonAI AgentOS instances that are network-reachable without authentication.
 
-Rationale: Pivots on the exact unauthenticated routes (/api/agents, /api/chat) and methods named in the advisory&#x27;s agentos.ts source listing; a 200 response to these paths from an unexpected client is the missing-auth boundary being exercised. Defender XDR has no web-server access-log table so defender_kql is intentionally empty (the listener angle is UC2); sentinel_kql targets AppServiceHTTPLogs (Azure App Service is a common Node host) but W3CIISLog (csUriStem) or CommonSecurityLog (RequestURL on a fronting WAF) work identically. Cross-checked the route pair and 0.0.0.0 default against GitLab Advisory DB, Snyk, and SecurityWeek, which also note this vuln class was scanned within hours of disclosure.
+Rationale: Anchors on the advisory&#x27;s named defaults: AgentOS binds host &#x27;0.0.0.0&#x27; with no auth and the PoV/serve example listens on port 8000 via a node process. Inbound acceptance from a non-loopback source on node:8000 is the network signature of an internet/LAN-reachable unauthenticated AgentOS. Port is configurable so this is hunting-tier; cross-checked against the sibling Python AgentOS advisory and Sysdig&#x27;s observation of internet-wide scanning of these instances.
 
 Cross-checked against:
-  • https://advisories.gitlab.com/npm/praisonai/GHSA-4qq2-2j2x-x62c/
-  • https://github.com/MervinPraison/PraisonAI/security/advisories/GHSA-6rmh-7xcm-cpxj
-  • https://security.snyk.io/vuln/SNYK-PYTHON-PRAISONAI-16635978
-  • https://www.securityweek.com/hackers-targeted-praisonai-vulnerability-hours-after-disclosure/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>The PraisonAI app&#x27;s own authorized frontend/UI calling /api/chat for legitimate users from an internal client.</li><li>Internal uptime/health monitors probing /api/agents.</li><li>Authorized vulnerability scanners (Nessus/Qualys) or internal pentest enumerating /api/* endpoints.</li><li>A different in-house REST service that coincidentally exposes /api/chat or /api/agents paths.</li><li>Load-balancer or synthetic-transaction checks hitting the routes.</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ipv4_is_private(CIp))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the CIp/src hitting /api/agents and /api/chat and whether it is an expected internal client or external/unknown; confirm ScStatus 200 (successful unauthenticated access) and inspect any logged /api/agents response body for leaked agent instruction prefixes. 2) Contain: rebind AgentOS to 127.0.0.1 and add bearer-token middleware before all non-health routes (or block the port externally at the firewall); the npm package default is 0.0.0.0 with no auth on 1.6.0-1.7.1, so treat any external reachability as exposure. 3) Hunt: enumerate which tools/memory/API credentials the deployed agent holds, review downstream systems for actions driven through /api/chat, and grep request bodies for prompt-injection payloads.</div></details>
+  • https://github.com/advisories/GHSA-892R-P3JQ-JP24
+  • https://webflow.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation
+  • https://github.com/advisories/GHSA-6rmh-7xcm-cpxj</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate internal Node/Express dev servers (webpack-dev-server, http-server, json-server) that also default to port 8000</li><li>Authorized internal access to a PraisonAI AgentOS instance that has been correctly fronted by auth/reverse proxy</li><li>Vulnerability scanners / Nessus / internal pentest sweeps probing 8000 across the estate</li><li>Containerized microservices that legitimately publish 8000 to the host network</li><li>Health-check or load-balancer probes to the listener from internal monitoring subnets</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine has_any (&quot;praisonai&quot;, &quot;agentos&quot;, &quot;AgentOS&quot;) or InitiatingProcessFolderPath has &quot;praisonai&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the listening process is PraisonAI by inspecting InitiatingProcessCommandLine / the node working directory for a node_modules/praisonai path, and identify whether SampleSources are internal or public. 2) Contain: if reachable from untrusted networks, firewall TCP 8000 to loopback/management only and restart AgentOS bound to 127.0.0.1, or place an authenticating reverse proxy in front. 3) Hunt: pull web/proxy logs for the same host to see whether /api/agents or /api/chat were actually hit (UC2), and review agent tool/credential scope for signs of abuse.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-54-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-54-uc0-sigma">Sigma</button>
+      <button class="tab-btn active" data-target="art-54-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-54-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-54-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-54-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-54-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-54-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AppServiceHTTPLogs
-| where TimeGenerated &gt; ago(7d)
-| where CsUriStem has_any (&quot;/api/agents&quot;, &quot;/api/chat&quot;)
-| where CsMethod in (&quot;GET&quot;, &quot;POST&quot;)
-| where ScStatus == 200
-| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Requests=count(), Methods=make_set(CsMethod), Paths=make_set(CsUriStem) by CsHost, CIp, UserAgent
+    <div class="tab-content active" id="art-54-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where LocalPort == 8000
+| where InitiatingProcessFileName =~ &quot;node.exe&quot;
+| where RemoteIPType != &quot;Loopback&quot; and RemoteIP != &quot;127.0.0.1&quot; and RemoteIP != &quot;::1&quot;
+| summarize Connections = count(), DistinctSources = dcount(RemoteIP), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleSources = make_set(RemoteIP, 20) by DeviceName, LocalPort, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unauthenticated PraisonAI AgentOS API Route Access
-id: 7c1f2a8e-4d3b-4e9a-9c2f-2b6d8a1f0e44
-description: Detects HTTP requests to PraisonAI npm AgentOS sensitive routes /api/agents and /api/chat, which the package exposes without authentication (GHSA-9752-mhqh-h34f, npm praisonai &gt;=1.6.0 &lt;=1.7.1).
+    <div class="tab-content" id="art-54-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstPortNumber == 8000
+| where NetworkDirection =~ &quot;Inbound&quot;
+| where SrcIpAddr !in (&quot;127.0.0.1&quot;, &quot;::1&quot;)
+| where isnotempty(SrcIpAddr)
+| summarize Connections = count(), DistinctSources = dcount(SrcIpAddr), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), SampleSources = make_set(SrcIpAddr, 20) by DstHostname, DstIpAddr, DstPortNumber
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-54-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:8000 @Image:(*\node.exe OR *\Node.exe OR *\NODE.EXE) -@SourceIp:(127.0.0.1 OR ::1)</code></pre></div>
+    <div class="tab-content" id="art-54-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=8000 ContextImageFileName=/node\.exe$/i
+| ConnectionDirection=0
+| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, LocalPort, RemoteAddressIP4], function=count())</code></pre></div>
+    <div class="tab-content" id="art-54-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8000 All_Traffic.direction=inbound (All_Traffic.transport=tcp OR All_Traffic.transport=&quot;6&quot;) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where app=&quot;node.exe&quot; OR app=&quot;node&quot; OR isnull(app) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-54-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8000 All_Traffic.direction=inbound (All_Traffic.transport=tcp OR All_Traffic.transport=&quot;6&quot;) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where app=&quot;node.exe&quot; OR app=&quot;node&quot; OR isnull(app) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1bc7f69883" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">Unauthenticated PraisonAI AgentOS API hits: GET /api/agents enumeration + POST /api/chat invocation</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1bc7f69883" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects HTTP access to the AgentOS routes /api/agents (discloses agent names, roles and instruction prefixes) and /api/chat (invokes the agent without credentials) returning 200. Same source IP touching both endpoints, or the documented scanner User-Agent, indicates the read-then-invoke exploitation flow the advisory describes.
+
+Rationale: Uses the advisory&#x27;s exact route literals (apiPrefix default &#x27;/api&#x27; → /api/agents, /api/chat) and the 200-status fail-open behaviour (patched servers return 401). Requiring the same client to hit BOTH the enumeration and invocation routes encodes the read-then-invoke flow; the CVE-Detector/1.0 UA is the real scanner string Sysdig observed probing the identical endpoints on the sibling CVE-2026-44338. Defender XDR has no inbound-HTTP-request table, so defender_kql is intentionally empty; FDR/Datadog likewise don&#x27;t ship web access logs.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-892R-P3JQ-JP24
+  • https://webflow.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation
+  • https://thehackernews.com/2026/05/praisonai-cve-2026-44338-auth-bypass.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developers or QA exercising /api/agents and /api/chat from a browser/Postman during testing</li><li>Application uptime monitors or synthetic transactions hitting both routes on a schedule</li><li>A correctly authenticated front-end legitimately calling both endpoints from one egress IP</li><li>Internal load testing tools generating GET+POST traffic to the AgentOS API</li><li>Security scanners other than CVE-Detector cataloguing the endpoints during an authorized assessment</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where CIp !startswith &quot;10.&quot; and CIp !startswith &quot;192.168.&quot; and not (ipv4_is_in_range(CIp, &quot;172.16.0.0/12&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: determine whether CIp is external/untrusted and whether the requests carried an Authorization header (check WAF/proxy header logs if available); a 200 on /api/chat from an external IP with no auth = confirmed unauthenticated invocation. 2) Contain: block the source IP at the proxy/WAF, take the AgentOS instance off untrusted networks, and rotate any credentials/tokens reachable by the invoked agent (env vars, downstream API keys). 3) Hunt: review the agent&#x27;s tool/MCP/business-action logs for actions triggered in the request window, and pivot to UC1 to enumerate every exposed AgentOS listener in the estate.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-54-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-54-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-54-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-54-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AppServiceHTTPLogs
+| where TimeGenerated &gt; ago(7d)
+| where CsUriStem in~ (&quot;/api/agents&quot;, &quot;/api/chat&quot;)
+| where ScStatus == 200
+| summarize Requests = count(), Methods = make_set(CsMethod), Endpoints = make_set(CsUriStem), UserAgents = make_set(UserAgent, 20), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by CIp, CsHost
+| extend Scanner = iff(UserAgents has &quot;CVE-Detector/1.0&quot;, &quot;yes&quot;, &quot;no&quot;)
+| where (set_has_element(Endpoints, &quot;/api/agents&quot;) and set_has_element(Endpoints, &quot;/api/chat&quot;)) or Scanner == &quot;yes&quot;
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-54-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: PraisonAI AgentOS unauthenticated API access (/api/agents, /api/chat)
+id: 7e2c1a44-9b3f-4f0e-8d21-3c6a9f1b2d57
+status: experimental
+description: Detects HTTP access to PraisonAI AgentOS routes /api/agents and /api/chat returning 200, the unauthenticated discovery+invocation endpoints described in GHSA-9752-mhqh-h34f.
 references:
   - https://github.com/advisories/GHSA-9752-mhqh-h34f
+  - https://github.com/advisories/GHSA-892R-P3JQ-JP24
 author: SOC Detection Engineering
-date: 2026/06/20
+date: 2026/06/21
 tags:
   - attack.t1190
   - attack.t1213
 logsource:
   category: webserver
 detection:
-  selection:
-    cs-method:
-      - &#x27;GET&#x27;
-      - &#x27;POST&#x27;
-    cs-uri-stem|contains:
+  selection_endpoint:
+    cs-uri-stem:
       - &#x27;/api/agents&#x27;
       - &#x27;/api/chat&#x27;
+  selection_ok:
     sc-status: 200
-  condition: selection
+  scanner:
+    c-useragent|contains: &#x27;CVE-Detector&#x27;
+  condition: (selection_endpoint and selection_ok) or scanner
+falsepositives:
+  - Authenticated internal use of a PraisonAI AgentOS instance
+  - Application monitoring / synthetic checks against these routes
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-54-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*/api/agents&quot;,&quot;*/api/agents?*&quot;,&quot;*/api/chat&quot;,&quot;*/api/chat?*&quot;)) (Web.http_method IN (&quot;GET&quot;,&quot;POST&quot;)) (Web.status=200) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-54-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*/api/agents&quot;,&quot;*/api/agents?*&quot;,&quot;*/api/chat&quot;,&quot;*/api/chat?*&quot;)) (Web.http_method IN (&quot;GET&quot;,&quot;POST&quot;)) (Web.status=200) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-54-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count values(Web.http_method) as methods values(Web.url) as urls min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/api/agents*&quot; OR Web.url=&quot;*/api/chat*&quot;) Web.status=200 by Web.src, Web.dest, Web.site, Web.http_user_agent | `drop_dm_object_name(Web)` | eval scanner=if(match(http_user_agent,&quot;(?i)CVE-Detector&quot;),&quot;yes&quot;,&quot;no&quot;) | eval hit_both=if(mvcount(mvfilter(match(urls,&quot;/api/agents&quot;)))&gt;0 AND mvcount(mvfilter(match(urls,&quot;/api/chat&quot;)))&gt;0,&quot;yes&quot;,&quot;no&quot;) | where hit_both=&quot;yes&quot; OR scanner=&quot;yes&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-54-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count values(Web.http_method) as methods values(Web.url) as urls min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/api/agents*&quot; OR Web.url=&quot;*/api/chat*&quot;) Web.status=200 by Web.src, Web.dest, Web.site, Web.http_user_agent | `drop_dm_object_name(Web)` | eval scanner=if(match(http_user_agent,&quot;(?i)CVE-Detector&quot;),&quot;yes&quot;,&quot;no&quot;) | eval hit_both=if(mvcount(mvfilter(match(urls,&quot;/api/agents&quot;)))&gt;0 AND mvcount(mvfilter(match(urls,&quot;/api/chat&quot;)))&gt;0,&quot;yes&quot;,&quot;no&quot;) | where hit_both=&quot;yes&quot; OR scanner=&quot;yes&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="14ba5239ff" data-platforms="cloudwatch,def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="830257f520" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
   <summary>
-    <span class="uc-title">PraisonAI AgentOS node listener exposed on 0.0.0.0:8000 to non-loopback</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="14ba5239ff" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Vulnerable PraisonAI npm package present (dist/os/agentos.js) on managed hosts</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="830257f520" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts a node.exe process accepting inbound connections on TCP 8000 from a public/remote address, matching the PraisonAI AgentOS default of host:&#x27;0.0.0.0&#x27; with app.serve({ port: 8000 }). Article-specific because it pivots on the exact default bind (all-interfaces) and default port the advisory&#x27;s config.ts/agentos.ts ship, surfacing the exposure even where HTTP access logs are unavailable.
+    <div class="uc-desc">Asset-exposure hunt for the affected component: the file dist/os/agentos.js dropped under a node_modules/praisonai path (shipped in npm praisonai &gt;=1.6.0,&lt;=1.7.1), or an &#x27;npm install praisonai&#x27; command. Identifies which hosts actually carry the unauthenticated AgentOS code so they can be hardened before exploitation.
 
-Rationale: Pivots on the advisory&#x27;s two concrete defaults — host &#x27;0.0.0.0&#x27; (config.ts) and port 8000 (app.serve({ port: 8000 })) — to surface a node.exe listener reachable from non-loopback even with no application HTTP logging. Defender keys on InitiatingProcessFileName node.exe + LocalPort 8000 + Public RemoteIP (InboundConnectionAccepted) plus the ListeningConnectionCreated posture signal; Falcon/CommonSecurityLog/VPC-Flow give the same exposure from network telemetry. Datadog left empty: the listed windows.sysmon source has no clean inbound-listener direction field to express an accepted inbound on a bound port. Port 8000 + node is inherently broad, hence Low confidence — pair with UC1&#x27;s route hits to confirm it is PraisonAI.
+Rationale: Deterministic article artifact: the advisory names the affected component path src/praisonai-ts/.../os/agentos.ts which ships as dist/os/agentos.js inside the npm praisonai tarball (boundary: &lt;=1.5.4 did not ship dist/os). Matching agentos.js under a praisonai folder pins the exact vulnerable code on disk with near-zero ambiguity. Affected range &gt;=1.6.0,&lt;=1.7.1 confirmed in the advisory; the unauthenticated-by-default behaviour corroborated by the sibling AgentOS advisory GHSA-892R-P3JQ-JP24.
 
 Cross-checked against:
-  • https://advisories.gitlab.com/npm/praisonai/GHSA-4qq2-2j2x-x62c/
-  • https://webflow.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation
-  • https://www.csoonline.com/article/4171215/praisonai-vulnerability-gets-scanned-within-4-hours-of-disclosure</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Other Node.js dev/test servers bound to 8000 (webpack-dev-server, http-server, json-server).</li><li>Legitimate internal microservices or API gateways listening on 8000 within the corp network.</li><li>CI/build runners spinning up ephemeral node services on 8000.</li><li>Containerized apps publishing port 8000 to the host.</li><li>Internal-only PraisonAI instances correctly firewalled but still showing inbound from trusted management subnets.</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine has_any (&quot;praisonai&quot;, &quot;agentos&quot;, &quot;AgentOS&quot;, &quot;dist/os&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the node.exe process is PraisonAI AgentOS (inspect InitiatingProcessCommandLine/working directory and the installed praisonai version — 1.6.0-1.7.1 are vulnerable) and whether the listener actually binds 0.0.0.0 vs loopback; identify the external RemoteIPs that connected. 2) Contain: override host to 127.0.0.1 (or add auth middleware) and restrict TCP 8000 via host firewall / security group; rotate any credentials exposed in the process environment, since /api/chat can drive tools using them. 3) Hunt: correlate these RemoteIPs against UC1&#x27;s /api/agents and /api/chat access hits, and review agent tool/MCP action logs for unauthorized invocations in the same window.</div></details>
+  • https://github.com/advisories/GHSA-892R-P3JQ-JP24
+  • https://github.com/advisories/GHSA-6rmh-7xcm-cpxj</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate, authorized PraisonAI deployment by an internal AI/ML team</li><li>CI/CD build agents that npm-install praisonai during pipeline runs</li><li>Developer workstations with the package in a local project&#x27;s node_modules</li><li>Container image builds layering the package (file write seen at build time)</li><li>Security team intentionally staging the package for testing/reproduction</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the installed version (read package.json under the praisonai folder, or the InitiatingProcessCommandLine for an &#x27;npm install praisonai@x&#x27;); flag any version in &gt;=1.6.0,&lt;=1.7.1. 2) Contain: ensure the AgentOS server is not started with the default host (bind 127.0.0.1), require an auth token, and firewall the listener; no fixed npm version existed at advisory time, so treat all installs as needing compensating controls. 3) Hunt: for each affected host, pivot to UC1 (is it listening on a non-loopback interface?) and UC2 (has anyone hit /api/agents or /api/chat?) to distinguish merely-installed from actively-exposed-and-probed.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-54-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-54-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-54-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-54-uc1-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-54-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-54-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-54-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-54-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-54-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-54-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-54-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-54-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;InboundConnectionAccepted&quot;, &quot;ListeningConnectionCreated&quot;)
-| where LocalPort == 8000
-| where InitiatingProcessFileName =~ &quot;node.exe&quot;
-| where RemoteIPType == &quot;Public&quot; or ActionType == &quot;ListeningConnectionCreated&quot;
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), RemoteIPs=make_set(RemoteIP, 50), ConnCount=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, LocalIP, LocalPort, ActionType
+    <div class="tab-content active" id="art-54-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;agentos.js&quot;
+| where FolderPath has &quot;praisonai&quot; and FolderPath has @&quot;\dist\os\&quot;
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Paths = make_set(FolderPath, 10) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where DestinationPort == 8000
-| where DeviceAction !in~ (&quot;deny&quot;, &quot;drop&quot;, &quot;denied&quot;, &quot;blocked&quot;, &quot;reset&quot;)
-| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), DistinctSources=dcount(SourceIP), Sessions=count() by DestinationIP, DestinationPort, DeviceVendor, DeviceProduct
+    <div class="tab-content" id="art-54-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileName =~ &quot;agentos.js&quot;
+| where TargetFilePath has &quot;praisonai&quot;
+| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Paths = make_set(TargetFilePath, 10) by DvcHostname, ActingProcessName, ActingProcessCommandLine, ActorUsername
 | order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=8000
-| ContextImageFileName=/\\node\.exe$/i
-| groupBy([aid, ComputerName, ContextImageFileName, LocalPort, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
-| filter dstPort = 8000 and action = &quot;ACCEPT&quot;
-| stats count(*) as flows, sum(bytes) as totalBytes, earliest(@timestamp) as firstSeen, latest(@timestamp) as lastSeen by srcAddr, dstAddr
-| sort flows desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=8000) (All_Traffic.direction=&quot;inbound&quot; OR All_Traffic.transport=&quot;tcp&quot;) (All_Traffic.action=&quot;allowed&quot;) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-54-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=8000) (All_Traffic.direction=&quot;inbound&quot; OR All_Traffic.transport=&quot;tcp&quot;) (All_Traffic.action=&quot;allowed&quot;) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-54-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Vulnerable PraisonAI npm package file written (dist/os/agentos.js)
+id: b41d8e92-2a7c-4d6b-9f0a-5e1c7a3b8d44
+status: experimental
+description: Detects creation of dist/os/agentos.js under a node_modules/praisonai path, the affected component shipped in npm praisonai &gt;=1.6.0,&lt;=1.7.1 (GHSA-9752-mhqh-h34f).
+references:
+  - https://github.com/advisories/GHSA-9752-mhqh-h34f
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.t1190
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    TargetFilename|contains|all:
+      - &#x27;\praisonai\&#x27;
+      - &#x27;agentos.js&#x27;
+  condition: selection
+falsepositives:
+  - Authorized installation of PraisonAI for legitimate development
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-54-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\praisonai\*agentos.js OR *\PraisonAI\*agentos.js OR *\praisonai\*AgentOS.js)</code></pre></div>
+    <div class="tab-content" id="art-54-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/praisonai.*agentos\.js$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-54-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name=&quot;agentos.js&quot; Endpoint.Filesystem.file_path=&quot;*praisonai*os*&quot; by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_name, Endpoint.Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-54-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name=&quot;agentos.js&quot; Endpoint.Filesystem.file_path=&quot;*praisonai*os*&quot; by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_name, Endpoint.Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
@@ -5990,17 +6230,17 @@ fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-54-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-54-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-54-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-54-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-54-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-54-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-54-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-54-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-54-uc2-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-54-uc3-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-54-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-54-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -6011,7 +6251,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-54-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-54-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -6037,7 +6277,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-54-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-54-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -6046,7 +6286,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-54-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-54-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (

@@ -41,12 +41,116 @@ This attribution comes after Microsoft first disclosed earlier this week that at
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — JavaScript
+- **T1564.003** — Hidden Window
+- **T1105** — Ingress Tool Transfer
+- **T1562.001** — Disable or Modify Tools
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Sapphire Sleet 'easy-day-js' typosquat dependency landed in node_modules (@mastra supply chain)
+
+`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\easy-day-js\\*" OR Filesystem.file_path="*/node_modules/easy-day-js/*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has @"\node_modules\easy-day-js" or FolderPath has "/node_modules/easy-day-js"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### npm postinstall dropper: node.exe spawning shell/script host or detached child (Mastra easy-day-js)
+
+`UC_2_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="node.exe" AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","node.exe") OR Processes.process="*NODE_TLS_REJECT_UNAUTHORIZED*") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where (FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","node.exe"))
+    or ProcessCommandLine has "NODE_TLS_REJECT_UNAUTHORIZED"
+    or InitiatingProcessCommandLine has "NODE_TLS_REJECT_UNAUTHORIZED"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### C2 / second-stage fetch to Sapphire Sleet (BlueNoroff) Mastra infrastructure
+
+`UC_2_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("23.254.164.92","23.254.164.123") OR All_Traffic.dest IN ("teams.onweblive.org","maskasd.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("23.254.164.92","23.254.164.123")
+    or RemoteUrl has_any ("teams.onweblive.org","maskasd.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### Cross-platform stealer: non-browser process accessing browser credential & crypto-wallet extension stores
+
+`UC_2_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Local Extension Settings\\*" OR Filesystem.file_path="*\\Login Data*" OR Filesystem.file_path="*\\Web Data*" OR Filesystem.file_path="*\\Local Storage\\leveldb*") AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","brave.exe","firefox.exe","opera.exe","msedgewebview2.exe") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has_any (@"\Local Extension Settings\", @"\Extension State\", @"\Local Storage\leveldb", @"\Login Data", @"\Web Data")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","brave.exe","firefox.exe","opera.exe","chrome_proxy.exe","msedgewebview2.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
+| order by Timestamp desc
+```
+
+### Sapphire Sleet follow-on: Microsoft Defender exclusion added (Add/Set-MpPreference)
+
+`UC_2_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*Add-MpPreference*" OR Processes.process="*Set-MpPreference*") AND (Processes.process="*Exclusion*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("Add-MpPreference","Set-MpPreference")
+| where ProcessCommandLine has_any ("ExclusionPath","ExclusionProcess","ExclusionExtension")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -233,4 +337,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
