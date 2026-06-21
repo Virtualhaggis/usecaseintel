@@ -14,12 +14,10 @@ For us on the Security Research team, the C and C++ ecosystems have been out of 
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **CVE:** `CVE-2021-23514`
 - **CVE:** `CVE-2022-25299`
-- **CVE:** `CVE-2022-25297`
 - **CVE:** `CVE-2021-23520`
 - **CVE:** `CVE-2021-23521`
-- **CVE:** `CVE-2021-23514`
-- **CVE:** `CVE-2022-25298`
 
 ## MITRE ATT&CK Techniques
 
@@ -70,7 +68,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2022-25299`, `CVE-2022-25297`, `CVE-2021-23520`, `CVE-2021-23521`, `CVE-2021-23514`, `CVE-2022-25298`
+  - CVE(s): `CVE-2021-23514`, `CVE-2022-25299`, `CVE-2021-23520`, `CVE-2021-23521`
 
 
 ## Why this matters

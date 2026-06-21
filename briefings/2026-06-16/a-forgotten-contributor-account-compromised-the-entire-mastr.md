@@ -37,16 +37,16 @@ June 16, 2026
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
-- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
 - **T1571** — Non-Standard Port
-- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573** — Encrypted Channel
 - **T1543.001** — Create or Modify System Process: Launch Agent
 - **T1543.002** — Create or Modify System Process: Systemd Service
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1070.004** — Indicator Removal: File Deletion
 
 ## Kill chain phases observed
 
@@ -54,107 +54,107 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious easy-day-js npm package install + postinstall dropper marker files
+### npm install pulls malicious easy-day-js dropper (setup.cjs + .pkg marker files)
 
-`UC_107_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_107_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (".pkg_history",".pkg_logs") OR Filesystem.file_path="*\\node_modules\\easy-day-js\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\easy-day-js\\*" OR Filesystem.file_name="setup.cjs" OR Filesystem.file_name=".pkg_history" OR Filesystem.file_name=".pkg_logs") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName in~ (".pkg_history", ".pkg_logs")
-    or FolderPath has @"\node_modules\easy-day-js\"
-    or (FileName =~ "setup.cjs" and FolderPath has "easy-day-js")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where (FileName in~ ("setup.cjs",".pkg_history",".pkg_logs")) or FolderPath has @"\node_modules\easy-day-js\"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### C2 / dropper callout to Hostwinds-hosted easy-day-js infrastructure (23.254.164.92 / .123)
+### Node dropper fetches second stage from Hostwinds raw IP 23.254.164.92:8000
 
-`UC_107_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_107_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("23.254.164.92","23.254.164.123")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="23.254.164.92" All_Traffic.dest_port=8000 by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("23.254.164.92", "23.254.164.123")
-    or RemoteUrl has_any ("hwsrv-1327786.hostwindsdns.com", "hwsrv-1327785.hostwindsdns.com")
+| where RemoteIP == "23.254.164.92" and RemotePort == 8000
 | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessParentFileName,
           InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Cross-platform persistence: com.nvm.protocal.plist / nvmconf.service / C:\ProgramData\NodePackages
+### Cross-platform stealer RAT C2 beacon to 23.254.164.123
 
-`UC_107_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_107_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\ProgramData\\NodePackages\\*" OR Filesystem.file_name IN ("com.nvm.protocal.plist","nvmconf.service")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count dc(_time) as distinct_times min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="23.254.164.123" by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | where count >= 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP == "23.254.164.123"
+| summarize ConnCount=count(), BeaconHours=dcount(bin(Timestamp, 1h)),
+            FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+            Ports=make_set(RemotePort, 5), Proc=any(InitiatingProcessFileName)
+            by DeviceName, RemoteIP
+| where ConnCount >= 3   // >=3 hits = repeat beacon, not a stray probe
+| order by ConnCount desc
+```
+
+### easy-day-js stealer persistence masquerading as Node tooling (NodePackages / LaunchAgent / systemd)
+
+`UC_107_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\ProgramData\\NodePackages\\*" OR Filesystem.file_name="com.nvm.protocal.plist" OR Filesystem.file_name="nvmconf.service") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has @"\ProgramData\NodePackages"
-    or FileName =~ "com.nvm.protocal.plist"
-    or FileName =~ "nvmconf.service"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FolderPath has @"\ProgramData\NodePackages" or FileName in~ ("com.nvm.protocal.plist","nvmconf.service")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### easy-day-js second-stage payload by SHA256 (crypto stealer + RAT)
+### Mastra easy-day-js second-stage stealer payload by SHA256
 
-`UC_107_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_107_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf","b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4","c38954e85bf5433e61e7c8f4230336695624ae88b6953afabf7bf817aa91b638","cdec8b20338beb708b5be8d3d7a3041a35a8b0fb92f9186262f312d55ff82066","9570f77a5e1511869f4e554e7166df9fde081f2583e293c2569621792ed7d9c9")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf" OR Filesystem.file_hash="b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4" OR Filesystem.file_hash="c38954e85bf5433e61e7c8f4230336695624ae88b6953afabf7bf817aa91b638" OR Filesystem.file_hash="cdec8b20338beb708b5be8d3d7a3041a35a8b0fb92f9186262f312d55ff82066" OR Filesystem.file_hash="9570f77a5e1511869f4e554e7166df9fde081f2583e293c2569621792ed7d9c9") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let badHashes = dynamic(["221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf","b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4","c38954e85bf5433e61e7c8f4230336695624ae88b6953afabf7bf817aa91b638","cdec8b20338beb708b5be8d3d7a3041a35a8b0fb92f9186262f312d55ff82066","9570f77a5e1511869f4e554e7166df9fde081f2583e293c2569621792ed7d9c9"]);
+let payloadHashes = dynamic(["221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf","b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4","c38954e85bf5433e61e7c8f4230336695624ae88b6953afabf7bf817aa91b638","cdec8b20338beb708b5be8d3d7a3041a35a8b0fb92f9186262f312d55ff82066","9570f77a5e1511869f4e554e7166df9fde081f2583e293c2569621792ed7d9c9"]);
 union
-  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (badHashes) | project Timestamp, DeviceName, EventKind="File", Name=FileName, Path=FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
-  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (badHashes) | project Timestamp, DeviceName, EventKind="Process", Name=FileName, Path=FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
-| order by Timestamp desc
-```
-
-### node.exe spawning detached payload from Temp / ProgramData\NodePackages
-
-`UC_107_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="node.exe") AND (Processes.process_path="*\\ProgramData\\NodePackages\\*" OR Processes.process_path="*\\AppData\\Local\\Temp\\*" OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*NodePackages*")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe", "node")
-| where FolderPath has @"\ProgramData\NodePackages"
-    or FolderPath has @"\AppData\Local\Temp\"
-    or (FileName in~ ("powershell.exe", "pwsh.exe") and ProcessCommandLine has "NodePackages")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine,
-          FileName, FolderPath, ProcessCommandLine, SHA256
+( DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (payloadHashes)
+  | project Timestamp, DeviceName, Kind="FileWrite", Path=FolderPath, Name=FileName, SHA256,
+            Proc=InitiatingProcessFileName, Cmd=InitiatingProcessCommandLine ),
+( DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (payloadHashes)
+  | project Timestamp, DeviceName, Kind="ProcExec", Path=FolderPath, Name=FileName, SHA256,
+            Proc=InitiatingProcessFileName, Cmd=ProcessCommandLine )
 | order by Timestamp desc
 ```
 

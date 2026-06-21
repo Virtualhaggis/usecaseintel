@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2239 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2242 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -2712,6 +2712,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-05-19
 - [cloud security challenges](./2022-05-19/cloud-security-challenges.md)
+- [how liveramp used snyk to remediate log4shell](./2022-05-19/how-liveramp-used-snyk-to-remediate-log4shell.md)
 - [snyk takes over boston for snykweek](./2022-05-19/snyk-takes-over-boston-for-snykweek.md)
 
 ## 2022-05-16
@@ -2819,6 +2820,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2021 34484 microsoft windows user profile servi](./2022-03-31/cisa-kev-cve-2021-34484-microsoft-windows-user-profile-servi.md)
 - [cisa kev cve 2022 1040 sophos firewall authentication bypass](./2022-03-31/cisa-kev-cve-2022-1040-sophos-firewall-authentication-bypass.md)
 - [cisa kev cve 2022 26871 trend micro apex central arbitrary f](./2022-03-31/cisa-kev-cve-2022-26871-trend-micro-apex-central-arbitrary-f.md)
+- [spring4shell what we know about the java rce vulnerability](./2022-03-31/spring4shell-what-we-know-about-the-java-rce-vulnerability.md)
+
+## 2022-03-30
+- [using the snyk vulnerability database to find projects for t](./2022-03-30/using-the-snyk-vulnerability-database-to-find-projects-for-t.md)
 
 ## 2022-03-29
 - [building a secure graphql api with node js](./2022-03-29/building-a-secure-graphql-api-with-node-js.md)

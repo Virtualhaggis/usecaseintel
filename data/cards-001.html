@@ -6383,15 +6383,15 @@ level: medium</code></pre></div>
 </details></div>
 </article>
 <article class="card" id="art-12" data-art-slug="2026-06-19-hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpres"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1021.001,T1190,T1528"
   data-sources="BleepingComputer"
   data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application"
-  data-targets="azure"
-  data-uc-count="2" data-llm-uc-count="0"
-  data-search="Hackers exploit info disclosure bug in Gravity SMTP WordPress plugin Threat actors are exploiting an unauthenticated information disclosure vulnerability in the WordPress plugin Gravity SMTP, active on 100,000 sites. [...] CVE-2026-4020 CVE-2026-8713 T1021.001 T1190 T1528 Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
-  <div class="sev-ribbon high">High</div>
+  data-splunk-cats="application,web"
+  data-targets="azure,vcs"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="Hackers exploit info disclosure bug in Gravity SMTP WordPress plugin Threat actors are exploiting an unauthenticated information disclosure vulnerability in the WordPress plugin Gravity SMTP, active on 100,000 sites. [...] CVE-2026-4020 CVE-2026-8713 T1021.001 T1190 T1528 [LLM] Unauthenticated GET to Gravity SMTP mock-data System Report endpoint (CVE-2026-4020) [LLM] Successful Gravity SMTP System Report exfiltration (200 + ~365KB JSON body) [LLM] Mass scanning / volumetric exploitation of Gravity SMTP mock-data endpoint Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
+  <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-19-hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpres" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
@@ -6399,7 +6399,7 @@ level: medium</code></pre></div>
   <div class="source-badges"><span class="source-badge bc">BleepingComputer</span></div>
   <div class="pubmeta">
     <span>2026-06-19</span>
-    <span>2 use cases</span>
+    <span>5 use cases</span>
     <span>3 techniques</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -6447,15 +6447,193 @@ level: medium</code></pre></div>
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Mass scanning / volumetric exploitation of Gravity SMTP mock-data endpoint · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unauthenticated GET to Gravity SMTP mock-data System Report endpoint (CVE-2026-4020)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Successful Gravity SMTP System Report exfiltration (200 + ~365KB JSON body) · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="7f5469c34d" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">Unauthenticated GET to Gravity SMTP mock-data System Report endpoint (CVE-2026-4020)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7f5469c34d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the explicit exploitation signature for CVE-2026-4020: HTTP requests to /wp-json/gravitysmtp/v1/tests/mock-data carrying the ?page=gravitysmtp-settings query parameter, which forces the plugin to assemble and return the full System Report. Article-specific because both the exact REST route and the triggering query parameter are named as the key IOC.
+
+Rationale: Uses the article&#x27;s exact IOC pair (route /wp-json/gravitysmtp/v1/tests/mock-data + ?page=gravitysmtp-settings). Corroborated by the GitHub Advisory and Hacker News write-up confirming the permission_callback-always-true endpoint and the page parameter as the trigger.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-jxfc-8wcq-xxcg
+  • https://thehackernews.com/2026/06/hackers-exploit-gravity-smtp-wordpress.html
+  • https://www.tenable.com/cve/CVE-2026-4020</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A logged-in WordPress admin opening the Gravity SMTP settings page triggers the same endpoint+parameter (cookie auth is not visible in IIS/access logs, so it looks identical)</li><li>Org-owned uptime/security scanners (Wordfence, internal DAST) probing the route</li><li>Synthetic monitoring that crawls /wp-json/ REST routes</li><li>Plugin developers/QA testing the settings page in staging</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Exclude approved admin / monitoring sources via a Sentinel watchlist of admin egress IPs
+| where cIP !in ((_GetWatchlist(&#x27;AdminSourceIPs&#x27;) | project SearchKey))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check scStatus — a 200 means the report was returned; confirm the source IP is not a known admin or monitoring host (check csReferer and whether the same IP also authenticated to /wp-admin). 2) Contain: block the source IP at the WAF/edge; if any 200 was served, treat ALL plugin-stored email credentials as exposed — rotate SES/Mailjet/Zoho/Resend/Google/SendGrid/Mailgun API keys, OAuth tokens and DKIM keys and update the plugin to 2.1.5. 3) Hunt: enumerate every source that hit the endpoint over 30d, and pivot exposed SES keys into AWS CloudTrail for SendEmail/GetSendQuota from unfamiliar IPs (see SES-abuse UC).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-12-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-12-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-12-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-12-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csUriStem =~ &quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot;
+| where csUriQuery has &quot;gravitysmtp-settings&quot;
+| project TimeGenerated, Computer, SourceIP = cIP, csMethod, csUriStem, csUriQuery, scStatus, ResponseBytes = scBytes, csUserName, csUserAgent, csReferer
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-12-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unauthenticated Access to Gravity SMTP System Report Endpoint (CVE-2026-4020)
+id: a3f1c9d2-7b48-4e6a-9c12-5f8e2d1b4a90
+status: experimental
+description: Detects requests to the Gravity SMTP mock-data REST endpoint with the gravitysmtp-settings page parameter that returns the plugin System Report to unauthenticated callers (CVE-2026-4020).
+references:
+  - https://www.bleepingcomputer.com/news/security/hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpress-plugin/
+  - https://github.com/advisories/GHSA-jxfc-8wcq-xxcg
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.initial_access
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-stem: &#x27;/wp-json/gravitysmtp/v1/tests/mock-data&#x27;
+    cs-uri-query|contains: &#x27;gravitysmtp-settings&#x27;
+  condition: selection
+falsepositives:
+  - Authenticated WordPress administrator loading the Gravity SMTP settings page
+  - Internal vulnerability scanners probing the endpoint
+level: high</code></pre></div>
+    <div class="tab-content" id="art-12-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-12-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-12-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-12-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot; by Web.src Web.dest Web.uri_query
+| `drop_dm_object_name(&quot;Web&quot;)`
+| search uri_query=&quot;*page=gravitysmtp-settings*&quot;
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-12-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot; by Web.src Web.dest Web.uri_query
+| `drop_dm_object_name(&quot;Web&quot;)`
+| search uri_query=&quot;*page=gravitysmtp-settings*&quot;
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="d0f2e3cba7" data-platforms="sent,sigma,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Successful Gravity SMTP System Report exfiltration (200 + ~365KB JSON body)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d0f2e3cba7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Higher-severity variant that fires only when the mock-data endpoint actually returns the full System Report — HTTP 200 with an unusually large response body (the report is ~365 KB; error/empty responses are a few KB). A 200 here means API keys, OAuth tokens, DKIM and DB/system metadata were disclosed to the caller.
+
+Rationale: Anchors on the corroborated ~365 KB System Report payload size returned only when register_connector_data() runs (page=gravitysmtp-settings) with a 200 — separates &#x27;attempt&#x27; from &#x27;creds actually exfiltrated&#x27;. Response-size detail comes from the CrowdSec/secondary write-ups, not the original article.
+
+Cross-checked against:
+  • https://www.crowdsec.net/vulntracking-report/cve-2026-4020-gravity-smtp-information-disclosure
+  • https://github.com/advisories/GHSA-jxfc-8wcq-xxcg
+  • https://thehackernews.com/2026/06/hackers-exploit-gravity-smtp-wordpress.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Gather Victim Host Information: Client Configurations">T1592.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authenticated admin loading the settings page also receives the full ~365 KB report and a 200</li><li>CDN/cache warmers or scanners that follow through to a 200</li><li>Staging/dev environments where admins repeatedly open the settings tab</li><li>Site backup/migration tools that crawl REST routes while logged in</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Drop disclosures served to known admin/monitoring egress IPs
+| where cIP !in ((_GetWatchlist(&#x27;AdminSourceIPs&#x27;) | project SearchKey))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm scBytes ~365 KB and that the cIP is not an authenticated admin/monitor (cross-check /wp-admin sessions from that IP). 2) Contain: block the IP; because a 200 = disclosure, immediately rotate every email-connector secret (SES, Mailjet, Zoho, Resend, Google, SendGrid, Mailgun keys, OAuth tokens, DKIM) and upgrade to Gravity SMTP 2.1.5. 3) Hunt: list all IPs that received a large 200 from this route over 90d; for each disclosed SES key, pivot to CloudTrail SES activity from new source IPs and check for new verified identities or quota-increase requests.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-12-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-12-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-12-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-12-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csUriStem =~ &quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot;
+| where csUriQuery has &quot;gravitysmtp-settings&quot;
+| where scStatus == 200
+| where scBytes &gt; 100000   // full System Report JSON is ~365 KB; error/empty responses are &lt;5 KB
+| project TimeGenerated, Computer, SourceIP = cIP, csMethod, csUriStem, scStatus, ResponseBytes = scBytes, csUserName, csUserAgent, csReferer
+| order by scBytes desc</code></pre></div>
+    <div class="tab-content" id="art-12-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gravity SMTP System Report Successfully Disclosed (CVE-2026-4020)
+id: b7e4d8a1-2c39-4f5b-8a61-9d3c7e2f1b08
+status: experimental
+description: Detects a successful (HTTP 200) Gravity SMTP mock-data request returning a large response body consistent with the ~365 KB System Report containing email-service credentials (CVE-2026-4020).
+references:
+  - https://www.bleepingcomputer.com/news/security/hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpress-plugin/
+  - https://www.crowdsec.net/vulntracking-report/cve-2026-4020-gravity-smtp-information-disclosure
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.credential_access
+  - attack.t1552.001
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-stem: &#x27;/wp-json/gravitysmtp/v1/tests/mock-data&#x27;
+    cs-uri-query|contains: &#x27;gravitysmtp-settings&#x27;
+    sc-status: 200
+  large_body:
+    sc-bytes|gte: 100000
+  condition: selection and large_body
+falsepositives:
+  - Authenticated administrator viewing the Gravity SMTP settings page (also receives the full report)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-12-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-12-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-12-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-12-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime sum(Web.bytes_out) as bytes_out values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot; Web.status=200 by Web.src Web.dest Web.uri_query
+| `drop_dm_object_name(&quot;Web&quot;)`
+| search uri_query=&quot;*gravitysmtp-settings*&quot; bytes_out&gt;100000
+| convert ctime(firstTime) ctime(lastTime)
+| sort - bytes_out</code></pre><pre class="spl-mode-body" id="art-12-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime sum(Web.bytes_out) as bytes_out values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot; Web.status=200 by Web.src Web.dest Web.uri_query
+| `drop_dm_object_name(&quot;Web&quot;)`
+| search uri_query=&quot;*gravitysmtp-settings*&quot; bytes_out&gt;100000
+| convert ctime(firstTime) ctime(lastTime)
+| sort - bytes_out</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="3b881e0850" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Mass scanning / volumetric exploitation of Gravity SMTP mock-data endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="3b881e0850" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the campaign-scale scanning the article describes (17M+ blocked attempts, a 4M-request spike on June 7) by flagging source IPs that hit the mock-data endpoint at automated volume. Distinct pivot from the per-request UCs: it aggregates by source IP over a short window to separate bulk scanning from occasional legitimate access.
+
+Rationale: Grounded in the article&#x27;s volumetric figures (4M blocked on June 7, 17M total) and corroborated 412 distinct attacking IPs (CrowdSec). Threshold-based aggregation on the named endpoint catches scanning infra that single-event rules would alert on one-IP-at-a-time.
+
+Cross-checked against:
+  • https://www.crowdsec.net/vulntracking-report/cve-2026-4020-gravity-smtp-information-disclosure
+  • https://thehackernews.com/2026/06/hackers-exploit-gravity-smtp-wordpress.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>The org&#x27;s own Wordfence/WAF or scheduled vulnerability scanner repeatedly probing the route</li><li>Uptime/synthetic monitoring polling REST endpoints</li><li>A shared NAT/proxy egress IP aggregating many legitimate admin sessions</li><li>Load-test or CI traffic against a staging site behind the same logging</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Exclude sanctioned scanners/monitors
+| where cIP !in ((_GetWatchlist(&#x27;SanctionedScannerIPs&#x27;) | project SearchKey))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: review the top source IPs and user-agents; cross-reference against Wordfence&#x27;s published exploit-source IP list and confirm they aren&#x27;t internal scanners. 2) Contain: block/rate-limit offending IPs at the edge and ensure the plugin is on 2.1.5 so even successful requests return no secrets. 3) Hunt: for any of these IPs that received a 200 with a large body (see exfiltration UC), rotate all email-connector credentials and trace downstream SES/SMTP abuse.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-12-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-12-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-12-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(1d)
+| where csUriStem =~ &quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot;
+| summarize Requests = count(), Hits200 = countif(scStatus == 200), DistinctTargets = dcount(Computer), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), UserAgents = make_set(csUserAgent, 5) by SourceIP = cIP, bin(TimeGenerated, 5m)
+| where Requests &gt; 25   // &gt;25 hits/5min/IP indicates automated scanning vs occasional legit settings load
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-12-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-12-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-12-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-12-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web where Web.uri_path=&quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot; by Web.src Web.dest _time span=5m
+| `drop_dm_object_name(&quot;Web&quot;)`
+| where count &gt; 25
+| sort - count</code></pre><pre class="spl-mode-body" id="art-12-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.uri_path=&quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot; by Web.src Web.dest _time span=5m
+| `drop_dm_object_name(&quot;Web&quot;)`
+| where count &gt; 25
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
   <summary>
     <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
     <span class="uc-phase">Reconnaissance</span>
@@ -6470,11 +6648,11 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-12-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-12-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-12-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-12-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-12-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-12-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-12-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-12-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -6483,7 +6661,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-12-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-12-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -6495,12 +6673,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-12-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-12-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-12-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-12-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-12-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-12-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-12-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-12-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-4020&quot;, &quot;CVE-2026-8713&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-12-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-12-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-4020&quot;, &quot;CVE-2026-8713&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -6523,17 +6701,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-12-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-12-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-12-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-12-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-12-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-12-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-12-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-12-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-12-uc1-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-12-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-12-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-12-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -6544,7 +6722,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-12-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-12-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -6570,7 +6748,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-12-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-12-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-12-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-12-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-12-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-12-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-12-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-12-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -6579,7 +6757,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-12-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-12-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (

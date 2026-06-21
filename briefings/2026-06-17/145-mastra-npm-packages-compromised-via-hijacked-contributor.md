@@ -27,12 +27,81 @@ Blog Vulnerabilities & Threats Over 140 popular Mastra npm Packages Hit by Suppl
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1105** — Ingress Tool Transfer
+- **T1571** — Non-Standard Port
+- **T1571** — Application Layer Protocol
+- **T1059.007** — JavaScript
+- **T1070.004** — File Deletion
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### easy-day-js Mastra supply-chain C2 callback to Hostwinds 23.254.164.92 / .123
+
+`UC_101_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("23.254.164.92","23.254.164.123")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
+| `drop_dm_object_name(All_Traffic)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteIP in ("23.254.164.92","23.254.164.123")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### easy-day-js dropper: node spawns detached node passing C2 host 23.254.164.123 as argv
+
+`UC_101_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.process="*23.254.164.123*" OR Endpoint.Processes.parent_process="*23.254.164.123*") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name Endpoint.Processes.parent_process
+| `drop_dm_object_name(Endpoint.Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where ProcessCommandLine has "23.254.164.123" or InitiatingProcessCommandLine has "23.254.164.123"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### easy-day-js postinstall: node writes random-hex .js second-stage to OS temp dir
+
+`UC_101_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.process_name IN ("node.exe","node") (Endpoint.Filesystem.file_path="*\\Temp\\*" OR Endpoint.Filesystem.file_path="*/tmp/*") by Endpoint.Filesystem.dest Endpoint.Filesystem.user Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name
+| `drop_dm_object_name(Endpoint.Filesystem)`
+| where match(file_name,"^[0-9a-f]{24}\.js$")
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType == "FileCreated"
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where FolderPath has @"\Temp\" or FolderPath has "/tmp/"
+| where FileName matches regex @"^[0-9a-f]{24}\.js$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -216,4 +285,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
