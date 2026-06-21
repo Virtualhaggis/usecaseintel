@@ -1,4 +1,4 @@
-# [HIGH] How open source C++ code can introduce security risks
+# [CRIT] How open source C++ code can introduce security risks
 
 **Source:** Snyk
 **Published:** 2022-08-22
@@ -14,11 +14,14 @@ However, adding any code to a project carries an inherent risk of introducing po
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2015-7547`
+- **IPv4 (defanged):** `104.248.94.23`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -50,7 +53,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2015-7547`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `104.248.94.23`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2238 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2239 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -2586,6 +2586,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-07-20
 - [addressing cybersecurity challenges in open source software ](./2022-07-20/addressing-cybersecurity-challenges-in-open-source-software-.md)
+
+## 2022-07-14
+- [improving developer experience with security tools at pinter](./2022-07-14/improving-developer-experience-with-security-tools-at-pinter.md)
 
 ## 2022-07-12
 - [cisa kev cve 2022 22047 microsoft windows client server runt](./2022-07-12/cisa-kev-cve-2022-22047-microsoft-windows-client-server-runt.md)

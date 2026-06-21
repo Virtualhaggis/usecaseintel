@@ -27,13 +27,10 @@ The targets for this research are web applications and libr…
 - **CVE:** `CVE-2022-25865`
 - **CVE:** `CVE-2022-24065`
 - **CVE:** `CVE-2022-26945`
-- **SHA1:** `0b45970ce1fb978be66ef696ff9983f1752828bc`
-- **SHA1:** `521b8e7384cd7ccf3e6c681bd904d1744ac3d70b`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
@@ -44,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Rediscovering argument injection when using VCS tools — git and mercurial
 
-`UC_1950_2` · phase: **exploit** · confidence: **High**
+`UC_1950_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,10 +95,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2022-25766`, `CVE-2022-29184`, `CVE-2022-23915`, `CVE-2022-24433`, `CVE-2022-25648`, `CVE-2022-24440`, `CVE-2022-21223`, `CVE-2022-21235` _(+5 more)_
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `0b45970ce1fb978be66ef696ff9983f1752828bc`, `521b8e7384cd7ccf3e6c681bd904d1744ac3d70b`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
