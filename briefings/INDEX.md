@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2242 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2245 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -2963,6 +2963,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2022 26486 mozilla firefox use after free vulne](./2022-03-07/cisa-kev-cve-2022-26486-mozilla-firefox-use-after-free-vulne.md)
 
 ## 2022-03-03
+- [adding container and iac security to the snyk plugin for jet](./2022-03-03/adding-container-and-iac-security-to-the-snyk-plugin-for-jet.md)
 - [cisa kev cve 2004 0210 microsoft windows privilege escalatio](./2022-03-03/cisa-kev-cve-2004-0210-microsoft-windows-privilege-escalatio.md)
 - [cisa kev cve 2008 2992 adobe reader and acrobat input valida](./2022-03-03/cisa-kev-cve-2008-2992-adobe-reader-and-acrobat-input-valida.md)
 - [cisa kev cve 2008 3431 oracle virtualbox insufficient input ](./2022-03-03/cisa-kev-cve-2008-3431-oracle-virtualbox-insufficient-input-.md)
@@ -3043,6 +3044,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-02-17
 - [cve 2022 24086 vulnerability alert for websites using magent](./2022-02-17/cve-2022-24086-vulnerability-alert-for-websites-using-magent.md)
+
+## 2022-02-16
+- [teaming up with sysdig to deliver developer and runtime kube](./2022-02-16/teaming-up-with-sysdig-to-deliver-developer-and-runtime-kube.md)
+- [using the snyk vulnerability database to identify projects f](./2022-02-16/using-the-snyk-vulnerability-database-to-identify-projects-f.md)
 
 ## 2022-02-15
 - [case study python rce vulnerability in celery](./2022-02-15/case-study-python-rce-vulnerability-in-celery.md)

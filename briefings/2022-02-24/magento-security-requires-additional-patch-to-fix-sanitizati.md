@@ -1,4 +1,4 @@
-# [HIGH] Magento security requires additional patch to fix sanitization vulnerability
+# [CRIT] Magento security requires additional patch to fix sanitization vulnerability
 
 **Source:** Snyk
 **Published:** 2022-02-24
@@ -16,10 +16,12 @@ Recently, a critical patch was released for Magento Ecommerce , Magento Open Sou
 
 - **CVE:** `CVE-2022-24086`
 - **CVE:** `CVE-2022-24087`
+- **IPv4 (defanged):** `45.134.20.11`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -34,7 +36,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2022-24086`, `CVE-2022-24087`
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `45.134.20.11`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

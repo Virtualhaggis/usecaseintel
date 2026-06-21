@@ -15,11 +15,13 @@ This security incident involves destructive acts of corrupting files on disk by 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2022-23812`
+- **Domain (defanged):** `api.ipgeolocation.io`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
@@ -54,7 +56,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Alert: peacenotwar module sabotages npm developers in the node-ipc package to pr
 
-`UC_2293_2` · phase: **exploit** · confidence: **High**
+`UC_2293_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +110,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2022-23812`
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `api.ipgeolocation.io`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
