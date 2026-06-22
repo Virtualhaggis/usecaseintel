@@ -11,12 +11,8 @@ Sponsored by Flare
 June 22, 2026
 10:05 AM
 0 
-
-
 Threat actors are increasingly turning massive infostealer-derived credential collections into searchable underground services, allowing buyers to request credentials for a specific company, platform, domain, geography, or account type.
-
-
-Flare researchers analyzed 470 underground forum posts published between January 2025 and June 2026, across different sources, related to …
+Flare researchers analyzed 470 underground forum posts published between January 2025 and June 2026, across different sources, related to actors o…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Prinz Eugen ransomware payload 'servertool.exe' execution with --delete flag
 
-`UC_12_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### Prinz Eugen mass file encryption — .prinzeugen extension burst
 
-`UC_12_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_14_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceFileEvents
 
 ### RemotePC RMM tool deployment as Prinz Eugen post-compromise foothold
 
-`UC_12_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_14_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### Backdoor local administrator account creation (Prinz Eugen persistence)
 
-`UC_12_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +242,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Prinz Eugen ransomware prioritizes recent files for encryption
 
-`UC_12_5` · phase: **exploit** · confidence: **High**
+`UC_14_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

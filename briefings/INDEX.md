@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -17,6 +17,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [google sets sept 30 deadline for android developer verificat](./2026-06-22/google-sets-sept-30-deadline-for-android-developer-verificat.md)
 - [interpol warns phishing ransomware and ai scams are rising a](./2026-06-22/interpol-warns-phishing-ransomware-and-ai-scams-are-rising-a.md)
 - [new oxloader loader uses malicious google ads to deliver cas](./2026-06-22/new-oxloader-loader-uses-malicious-google-ads-to-deliver-cas.md)
+- [researchers detail difytap flaws in dify that could expose a](./2026-06-22/researchers-detail-difytap-flaws-in-dify-that-could-expose-a.md)
 - [stop your legacy infrastructure from hijacking your ai agent](./2026-06-22/stop-your-legacy-infrastructure-from-hijacking-your-ai-agent.md)
 
 ## 2026-06-21
@@ -84,7 +85,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [microsoft details windows clipper malware campaign using usb](./2026-06-18/microsoft-details-windows-clipper-malware-campaign-using-usb.md)
-- [nintendo confirms data stolen in webmd subsidiary cyberattac](./2026-06-18/nintendo-confirms-data-stolen-in-webmd-subsidiary-cyberattac.md)
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 
@@ -135,7 +135,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [litellm vulnerability chain lets low privilege users take ov](./2026-06-15/litellm-vulnerability-chain-lets-low-privilege-users-take-ov.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
 - [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
-- [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
 - [the onboarding password mistake that creates unnecessary ris](./2026-06-15/the-onboarding-password-mistake-that-creates-unnecessary-ris.md)
 

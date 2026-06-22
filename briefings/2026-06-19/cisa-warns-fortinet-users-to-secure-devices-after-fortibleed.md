@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate SSL VPN credential-stuffing / brute force (FortiBleed mass ssl-login-fail)
 
-`UC_41_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_43_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate SSL VPN brute-force SUCCESS — failed burst then tunnel-up from same external IP
 
-`UC_41_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_43_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate administrative login from public internet IP (exposed management interface)
 
-`UC_41_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_43_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

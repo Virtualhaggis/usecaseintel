@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Sapphire Sleet 'easy-day-js' typosquat dependency landed in node_modules (@mastra supply chain)
 
-`UC_13_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_15_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceFileEvents
 
 ### npm postinstall dropper: node.exe spawning shell/script host or detached child (Mastra easy-day-js)
 
-`UC_13_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_15_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### C2 / second-stage fetch to Sapphire Sleet (BlueNoroff) Mastra infrastructure
 
-`UC_13_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_15_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceNetworkEvents
 
 ### Cross-platform stealer: non-browser process accessing browser credential & crypto-wallet extension stores
 
-`UC_13_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_15_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceFileEvents
 
 ### Sapphire Sleet follow-on: Microsoft Defender exclusion added (Add/Set-MpPreference)
 
-`UC_13_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_15_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

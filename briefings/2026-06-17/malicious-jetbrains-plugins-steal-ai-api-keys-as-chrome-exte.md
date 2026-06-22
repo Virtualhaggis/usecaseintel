@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### JetBrains IDE exfiltrating AI API keys to Aikido C2 39.107.60.51
 
-`UC_107_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_108_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### Malicious DeepSeek/CodeGPT JetBrains plugin written to IDE plugins directory
 
-`UC_107_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_108_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents
 
 ### PromptSnatcher malicious Chrome ad-blocker extension installed by ID
 
-`UC_107_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_108_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceFileEvents
 
 ### PromptSnatcher Chrome extension exfiltrating AI chats to c.smartadblocker.com / c.abforbrowser.com
 
-`UC_107_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_108_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
