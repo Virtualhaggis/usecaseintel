@@ -24,6 +24,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [researchers detail difytap flaws in dify that could expose a](./2026-06-22/researchers-detail-difytap-flaws-in-dify-that-could-expose-a.md)
 - [shapedplugin wordpress pro plugins backdoored in supply chai](./2026-06-22/shapedplugin-wordpress-pro-plugins-backdoored-in-supply-chai.md)
 - [stop your legacy infrastructure from hijacking your ai agent](./2026-06-22/stop-your-legacy-infrastructure-from-hijacking-your-ai-agent.md)
+- [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
+- [whatsapp phishing attack uses fake business docs to hack pcs](./2026-06-22/whatsapp-phishing-attack-uses-fake-business-docs-to-hack-pcs.md)
 
 ## 2026-06-21
 - [arystinger botnet infected thousands of d link routers world](./2026-06-21/arystinger-botnet-infected-thousands-of-d-link-routers-world.md)
@@ -38,7 +40,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-19
 - [autojack attack lets one web page hijack ai agent for host c](./2026-06-19/autojack-attack-lets-one-web-page-hijack-ai-agent-for-host-c.md)
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
-- [cisa splunk enterprise flaw actively exploited patch by sund](./2026-06-19/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sund.md)
 - [cisa warns fortinet customers as fortibleed hits 86 644 fort](./2026-06-19/cisa-warns-fortinet-customers-as-fortibleed-hits-86-644-fort.md)
 - [ghsa critical cve 2026 48814 network ai cve 2026 46701 fix i](./2026-06-19/ghsa-critical-cve-2026-48814-network-ai-cve-2026-46701-fix-i.md)
 - [ghsa critical cve 2026 54051 network ai improper neutralizat](./2026-06-19/ghsa-critical-cve-2026-54051-network-ai-improper-neutralizat.md)
@@ -293,7 +294,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dev machine guard now supports linux](./2026-05-20/dev-machine-guard-now-supports-linux.md)
 - [github breached via a malicious vs code extension why develo](./2026-05-20/github-breached-via-a-malicious-vs-code-extension-why-develo.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
-- [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
 - [webworm new burrowing techniques](./2026-05-20/webworm-new-burrowing-techniques.md)
 
 ## 2026-05-19

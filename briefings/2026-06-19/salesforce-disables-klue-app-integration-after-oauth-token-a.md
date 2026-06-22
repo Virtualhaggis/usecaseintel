@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Salesforce REST API access with Python-urllib agent from integration identity (Icarus/UNC6395)
 
-`UC_47_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_48_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ CloudAppEvents
 
 ### Salesforce object-catalog enumeration via /services/data/v59.0/sobjects
 
-`UC_47_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_48_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ CloudAppEvents
 
 ### Bulk Salesforce CRM extraction: high-volume /query + QueryMore loop from one identity
 
-`UC_47_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_48_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ CloudAppEvents
 
 ### Egress to Icarus Salesforce data-theft infrastructure (campaign IPs + gofile.io exfil)
 
-`UC_47_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_48_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

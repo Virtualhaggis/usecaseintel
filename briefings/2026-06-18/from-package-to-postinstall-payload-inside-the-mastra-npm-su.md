@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Sapphire Sleet npm postinstall dropper: node executing easy-day-js setup.cjs
 
-`UC_89_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_90_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Mastra easy-day-js C2 beacon to 23.254.164.92 / 23.254.164.123
 
-`UC_89_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_90_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### easy-day-js persistence: NvmProtocal Run key / ProgramData NodePackages autostart
 
-`UC_89_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_90_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceRegistryEvents
 
 ### easy-day-js install markers: .pkg_history / .pkg_logs dropped by Node.js
 
-`UC_89_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_90_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceFileEvents
 
 ### easy-day-js second stage: detached Node.js executing .js from ProgramData NodePackages
 
-`UC_89_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_90_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -339,7 +339,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From package to postinstall payload: Inside the Mastra npm supply chain compromi
 
-`UC_89_8` · phase: **exploit** · confidence: **High**
+`UC_90_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,12 +11,8 @@ By Lawrence Abrams
 June 22, 2026
 04:01 PM
 0 
-
-
 Security firm SOCRadar says the large-scale FortiBleed campaign targeting Fortinet FortiGate devices used custom sniffers to harvest authentication secrets from compromised firewalls and steal credentials.
-
-
-The report, published today, expands on the company's previous research into the large-scale "FortiBleed" campaign , which revealed a collection of Fortinet VPN credent…
+The report, published today, expands on the company's previous research into the large-scale "FortiBleed" campaign , which revealed a collection of Fortinet VPN credentials ass…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -11,12 +11,8 @@ By Bill Toulas
 June 22, 2026
 05:05 PM
 0 
-
-
 A newly disclosed FFmpeg flaw dubbed 'PixelSmash' could be exploited for remote code execution on Jellyfin servers under certain conditions, and can also trigger a denial-of-service  condition in applications like Kodi, Emby, Nextcloud, PhotoPrism, and OBS Studio.
-
-
-The vulnerability is tracked as CVE-2026-8461 and is a heap out-of-bounds write in the MagicYUV decoder. It received a high-se…
+The vulnerability is tracked as CVE-2026-8461 and is a heap out-of-bounds write in the MagicYUV decoder. It received a high-severity s…
 
 ## Indicators of Compromise (high-fidelity only)
 

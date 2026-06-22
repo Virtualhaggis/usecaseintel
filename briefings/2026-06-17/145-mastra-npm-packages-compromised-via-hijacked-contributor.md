@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### easy-day-js Mastra supply-chain C2 callback to Hostwinds 23.254.164.92 / .123
 
-`UC_114_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_115_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceNetworkEvents
 
 ### easy-day-js dropper: node spawns detached node passing C2 host 23.254.164.123 as argv
 
-`UC_114_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### easy-day-js postinstall: node writes random-hex .js second-stage to OS temp dir
 
-`UC_114_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_115_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
