@@ -98,7 +98,7 @@ _(none detected from narrative keywords)_
 
 ### VS Code/Cursor 'runOn folderOpen' tasks.json auto-execution spawning a script interpreter
 
-`UC_132_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_134_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### UNK_DeadDrop Windows loader: VBScript/CMD chain sideloading a named malicious Jupyter VSIX
 
-`UC_132_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_134_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### UNK_DeadDrop C2 egress to 23.137.105[.]75:5173 and related campaign IPs
 
-`UC_132_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_134_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### Contagious Interview Git hooks: .githooks/pre-commit firing a shell on repo clone/commit
 
-`UC_132_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_134_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +176,7 @@ DeviceProcessEvents
 
 ### Named malicious Jupyter/Markdown VSIX extensions written to the VS Code extensions directory
 
-`UC_132_18` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_134_18` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +194,7 @@ DeviceFileEvents
 
 ### North Korea supply-chain packages: malicious npm/Packagist deps dropped into a project tree
 
-`UC_132_19` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_134_19` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,7 +212,7 @@ DeviceFileEvents
 
 ### Overlord/VSIX stealer staging ZIP exfil to campaign C2 from a developer-tool process
 
-`UC_132_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_134_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

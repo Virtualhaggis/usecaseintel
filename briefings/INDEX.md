@@ -8,6 +8,10 @@ _2247 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-22
+- [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
+- [interpol warns phishing ransomware and ai scams are rising a](./2026-06-22/interpol-warns-phishing-ransomware-and-ai-scams-are-rising-a.md)
+
 ## 2026-06-21
 - [arystinger botnet infected thousands of d link routers world](./2026-06-21/arystinger-botnet-infected-thousands-of-d-link-routers-world.md)
 
@@ -138,8 +142,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical splunk enterprise flaw lets attackers run code with](./2026-06-13/critical-splunk-enterprise-flaw-lets-attackers-run-code-with.md)
 
 ## 2026-06-12
-- [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
-- [china linked hackers backdoored linux login software to hide](./2026-06-12/china-linked-hackers-backdoored-linux-login-software-to-hide.md)
 - [cisa kev cve 2026 35273 oracle peoplesoft enterprise peoplet](./2026-06-12/cisa-kev-cve-2026-35273-oracle-peoplesoft-enterprise-peoplet.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
 - [google sues chinese smishing network accused of using gemini](./2026-06-12/google-sues-chinese-smishing-network-accused-of-using-gemini.md)
