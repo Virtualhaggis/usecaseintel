@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### CryptoBandits curl beacon over Tor SOCKS5 proxy to .onion C2
 
-`UC_88_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_90_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### Renamed Tor binary ugate.exe / Tor masquerade launched on endpoint
 
-`UC_88_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_90_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### Scheduled task created from JScript payload XML in Public\Documents staging folder
 
-`UC_88_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_90_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### WScript/CScript executing dropped JScript clipper from Public\Documents staging folder
 
-`UC_88_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_90_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### Microsoft Defender exclusion added for clipper staging folder or script-host binaries
 
-`UC_88_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_90_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceRegistryEvents
 
 ### USB worm propagation: burst of .lnk shortcuts created by non-Explorer process
 
-`UC_88_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_90_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -172,7 +172,7 @@ DeviceFileEvents
 
 ### Tor EVAL backdoor: script-host clipper spawning command interpreters
 
-`UC_88_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_90_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ DeviceProcessEvents
 
 ### PowerShell screen capture spawned by clipper script host (collection)
 
-`UC_88_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_90_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -306,7 +306,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Crypto Clipper uses Tor and worm-like propagation for persistence and control
 
-`UC_88_4` · phase: **exploit** · confidence: **High**
+`UC_90_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
