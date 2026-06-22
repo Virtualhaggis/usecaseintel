@@ -9,6 +9,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-22
+- [29 year old squid proxy bug squidbleed can leak cleartext ht](./2026-06-22/29-year-old-squid-proxy-bug-squidbleed-can-leak-cleartext-ht.md)
+- [a glimpse into the search your target market for stolen cred](./2026-06-22/a-glimpse-into-the-search-your-target-market-for-stolen-cred.md)
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
 - [canada s spy agency used first of its kind warrant to clean ](./2026-06-22/canada-s-spy-agency-used-first-of-its-kind-warrant-to-clean-.md)
@@ -85,7 +87,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [nintendo confirms data stolen in webmd subsidiary cyberattac](./2026-06-18/nintendo-confirms-data-stolen-in-webmd-subsidiary-cyberattac.md)
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
-- [usb worm spreads crypto stealing malware via windows shortcu](./2026-06-18/usb-worm-spreads-crypto-stealing-malware-via-windows-shortcu.md)
 
 ## 2026-06-17
 - [145 mastra npm packages compromised via hijacked contributor](./2026-06-17/145-mastra-npm-packages-compromised-via-hijacked-contributor.md)
@@ -135,7 +136,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
 - [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
 - [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
-- [sniper dz scams target mena users via fake facebook offers a](./2026-06-15/sniper-dz-scams-target-mena-users-via-fake-facebook-offers-a.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
 - [the onboarding password mistake that creates unnecessary ris](./2026-06-15/the-onboarding-password-mistake-that-creates-unnecessary-ris.md)
 

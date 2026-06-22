@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Rogue admin & self-hiding plugin C2/exfil to tidio.cc and 84.201.6.54
 
-`UC_147_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_148_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### Hidden WordPress backdoor plugin dropped (content-delivery-helper / database-optimizer)
 
-`UC_147_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_148_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### Rogue WordPress administrator account (developer_api1 / dev_xxxxxx)
 
-`UC_147_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_148_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Web server PHP runtime spawning a shell (WordPress web shell execution)
 
-`UC_147_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_148_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### WordPress plugin/theme PHP files modified by the web runtime (backdoor / skimmer injection)
 
-`UC_147_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_148_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceFileEvents
 
 ### Admin browser loaded poisoned PushEngage CDN script during exposure window
 
-`UC_147_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_148_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -211,7 +211,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular WordPress Plugin Scripts Tampered to Plant Hidden Backdoors on Sites
 
-`UC_147_4` · phase: **exploit** · confidence: **High**
+`UC_148_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

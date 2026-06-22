@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### NGINX hosts vulnerable to CVE-2026-42530 / CVE-2026-42055 (HTTP/3 UAF & HTTP/2 heap overflow)
 
-`UC_47_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_49_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### NGINX worker process crash-loop — memory-corruption exploitation of CVE-2026-42530/42055
 
-`UC_47_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_49_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
