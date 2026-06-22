@@ -237,7 +237,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication
 
-`UC_149_6` · phase: **install** · confidence: **High**
+`UC_151_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

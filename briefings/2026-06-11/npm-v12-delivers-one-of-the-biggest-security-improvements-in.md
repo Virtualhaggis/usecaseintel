@@ -281,7 +281,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_159_8` · phase: **exploit** · confidence: **High**
+`UC_160_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

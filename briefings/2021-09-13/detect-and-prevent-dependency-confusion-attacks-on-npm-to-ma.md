@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Detect and prevent dependency confusion attacks on npm to maintain supply chain
 
-`UC_2782_1` · phase: **exploit** · confidence: **High**
+`UC_2783_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

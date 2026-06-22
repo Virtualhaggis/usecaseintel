@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Bitbucket Server Integration in Beta
 
-`UC_3336_0` · phase: **exploit** · confidence: **High**
+`UC_3337_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk uncovers malicious code activities in open source supply chain security on
 
-`UC_2861_1` · phase: **exploit** · confidence: **High**
+`UC_2862_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,4 +1,4 @@
-# [CRIT] IT threat evolution in Q1 2026. Mobile statistics
+# [HIGH] IT threat evolution in Q1 2026. Mobile statistics
 
 **Source:** Securelist (Kaspersky)
 **Published:** 2026-05-18
@@ -7,39 +7,31 @@
 ## Threat Profile
 
 Table of Contents
-Quarterly figures 
-Ransomware 
-Quarterly trends and highlights 
-Law enforcement success 
-Vulnerabilities and attacks 
-The most prolific groups 
-Number of new variants 
-Number of users attacked by ransomware Trojans 
-Attack geography 
-TOP 10 countries and territories attacked by ransomware Trojans 
-TOP 10 most common families of ransomware Trojans 
-Miners 
-Number of new variants 
-Number of users attacked by miners 
-Attack geography 
-TOP 10 countries and territories attacked by m…
+The quarter in numbers 
+Quarterly highlights 
+Mobile threat statistics 
+TOP 20 most frequently detected types of mobile malware 
+Mobile banking Trojans 
+TOP 10 mobile bankers 
+Authors
+Anton Kivva 
+IT threat evolution in Q1 2026. Mobile statistics
+IT threat evolution in Q1 2026. Non-mobile statistics 
+In the third quarter of 2025, we updated the methodology for calculating statistical indicators based on the Kaspersky Security Network. These changes affected all sections of the …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-20131`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
-- **T1005** — Data from Local System
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
+- **T1059.001** — PowerShell
+- **T1027** — Obfuscated Files or Information
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -47,63 +39,33 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Crypto-wallet file/keystore access by non-wallet process
+### PowerShell encoded / obfuscated command
 
-`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Ethereum\keystore\*"
-        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
-        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
-        OR Filesystem.file_path="*\Electrum\wallets\*"
-        OR Filesystem.file_path="*\MetaMask\*"
-        OR Filesystem.file_path="*\Phantom\*"
-        OR Filesystem.file_path="*\Atomic\Local Storage\*")
-      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
-| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Infostealer — non-browser process accessing browser cookie/login DBs
-
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -190,38 +152,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-20131`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

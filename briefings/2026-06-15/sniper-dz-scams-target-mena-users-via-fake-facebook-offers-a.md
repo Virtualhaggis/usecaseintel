@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Sniper Dz PhaaS scam/decoy domain contact (MENA Facebook-offer funnel)
 
-`UC_143_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_145_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### Sniper Dz scam hosting-IP egress (push-notification / TDS infrastructure)
 
-`UC_143_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_145_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -183,7 +183,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What is typosquatting and how typosquatting attacks are responsible for maliciou
 
-`UC_2920_3` · phase: **exploit** · confidence: **High**
+`UC_2921_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

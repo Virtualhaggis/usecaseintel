@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — NPM security: preventing supply chain attacks
 
-`UC_1825_3` · phase: **exploit** · confidence: **High**
+`UC_1826_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

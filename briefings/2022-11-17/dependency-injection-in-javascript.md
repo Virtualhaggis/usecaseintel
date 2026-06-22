@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Dependency injection in JavaScript
 
-`UC_1808_0` · phase: **exploit** · confidence: **High**
+`UC_1809_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

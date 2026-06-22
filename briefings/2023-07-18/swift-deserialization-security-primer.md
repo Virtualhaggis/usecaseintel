@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Swift deserialization security primer
 
-`UC_1546_0` · phase: **install** · confidence: **High**
+`UC_1547_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -327,7 +327,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Over 400 Arch Linux AUR Packages Hijacked to Deploy Infostealer and eBPF Rootkit
 
-`UC_153_10` · phase: **exploit** · confidence: **High**
+`UC_155_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Why developer-first SAST tools are the future of code security
 
-`UC_2866_0` · phase: **exploit** · confidence: **High**
+`UC_2867_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

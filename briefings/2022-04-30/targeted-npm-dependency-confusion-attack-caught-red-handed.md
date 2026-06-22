@@ -239,7 +239,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Targeted npm dependency confusion attack caught red-handed
 
-`UC_2129_6` · phase: **exploit** · confidence: **High**
+`UC_2130_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

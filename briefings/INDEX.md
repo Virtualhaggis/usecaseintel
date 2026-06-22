@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-22
+- [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
+- [canada s spy agency used first of its kind warrant to clean ](./2026-06-22/canada-s-spy-agency-used-first-of-its-kind-warrant-to-clean-.md)
 - [interpol warns phishing ransomware and ai scams are rising a](./2026-06-22/interpol-warns-phishing-ransomware-and-ai-scams-are-rising-a.md)
 
 ## 2026-06-21
@@ -144,7 +146,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-12
 - [cisa kev cve 2026 35273 oracle peoplesoft enterprise peoplet](./2026-06-12/cisa-kev-cve-2026-35273-oracle-peoplesoft-enterprise-peoplet.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
-- [google sues chinese smishing network accused of using gemini](./2026-06-12/google-sues-chinese-smishing-network-accused-of-using-gemini.md)
 - [over 400 arch linux aur packages hijacked to deploy infostea](./2026-06-12/over-400-arch-linux-aur-packages-hijacked-to-deploy-infostea.md)
 - [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
 
