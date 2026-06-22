@@ -1,41 +1,32 @@
-# [HIGH] Over 400 Arch Linux AUR Packages Hijacked to Deploy Infostealer and eBPF Rootkit
+# [CRIT] New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer
 
 **Source:** The Hacker News
-**Published:** 2026-06-12
-**Article:** https://thehackernews.com/2026/06/over-400-arch-linux-aur-packages.html
+**Published:** 2026-06-22
+**Article:** https://thehackernews.com/2026/06/new-oxloader-loader-uses-malicious.html
 
 ## Threat Profile
 
-Over 400 Arch Linux AUR Packages Hijacked to Deploy Infostealer and eBPF Rootkit 
- Swati Khandelwal  Jun 12, 2026 Linux / Supply Chain Attack 
-Attackers took over more than 400 packages in the Arch User Repository (AUR) this week and rewrote their build scripts to install a credential stealer on any machine that built them.
-The malware is a Rust binary built to harvest developer secrets. When it lands with root, it can also load an eBPF rootkit to hide itself. The AUR is Arch Linux's community…
+New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer 
+ Ravie Lakshmanan  Jun 22, 2026 Malvertising / Endpoint Security 
+Cybersecurity researchers have disclosed details of a new campaign that delivers CastleStealer by means of a previously unreported malware loader dubbed OXLOADER .
+According to Elastic Security Labs, the campaign leverages malicious Google Ads as a starting point to distribute the malware. Evidence indicates that the threat actor is likely Russian-speaking a…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `olrh4mibs62l6kkuvvjyc5lrercqg5tz543r4lsw3o6mh5qb7g7sneid.onion`
-- **Domain (defanged):** `temp.sh`
-- **SHA256:** `6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b`
-- **MD5:** `42b59fdbe1b72895b2951412222ebf40`
+- **CVE:** `CVE-2026-11645`
+- **Domain (defanged):** `node-js.prentiva99.info`
 
 ## MITRE ATT&CK Techniques
 
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1566.004** — Phishing: Spearphishing Voice
-- **T1566** — Phishing
-- **T1219** — Remote Access Software
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
@@ -43,41 +34,6 @@ The malware is a Rust binary built to harvest developer secrets. When it lands w
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Beaconing — periodic outbound to small set of destinations
-
-`UC_BEACONING` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
-| order by conn_count desc
-```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -106,86 +62,6 @@ DeviceFileEvents
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
-
-`UC_TEAMS_VISHING` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`o365_management_activity`
-  Workload=MicrosoftTeams Operation=MessageSent
-  ExternalParticipants=*
-| where match(SenderDisplayName, "(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)")
-| stats count, earliest(_time) as firstTime, latest(_time) as lastTime
-    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Microsoft Teams"
-| where ActionType == "MessageSent"
-| where RawEventData has "ExternalParticipants"
-| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
-| where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
-| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData
-```
-
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
-### OAuth consent / suspicious app grant
-
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -301,17 +177,21 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### Trusted vendor binary / installer launching unusual children
+### PowerShell encoded / obfuscated command
 
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
 
@@ -320,21 +200,22 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Over 400 Arch Linux AUR Packages Hijacked to Deploy Infostealer and eBPF Rootkit
+### Article-specific behavioural hunt — New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer
 
-`UC_155_10` · phase: **exploit** · confidence: **High**
+`UC_0_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Over 400 Arch Linux AUR Packages Hijacked to Deploy Infostealer and eBPF Rootkit ```
+``` Article-specific bespoke detection — New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("temp.sh"))
+    where (Processes.process_name IN ("node.js"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -343,7 +224,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*/var/lib/*" OR Filesystem.file_path="*/etc/systemd/system/*" OR Filesystem.file_path="*/var/lib/.*" OR Filesystem.file_name IN ("temp.sh"))
+      AND (Filesystem.file_name IN ("node.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -352,12 +233,12 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Over 400 Arch Linux AUR Packages Hijacked to Deploy Infostealer and eBPF Rootkit
+// Article-specific bespoke detection — New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("temp.sh"))
+| where (FileName in~ ("node.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -367,7 +248,7 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("/var/lib/", "/etc/systemd/system/", "/var/lib/.") or FileName in~ ("temp.sh"))
+| where (FileName in~ ("node.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -378,13 +259,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `olrh4mibs62l6kkuvvjyc5lrercqg5tz543r4lsw3o6mh5qb7g7sneid.onion`, `temp.sh`
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-11645`
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b`, `42b59fdbe1b72895b2951412222ebf40`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `node-js.prentiva99.info`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

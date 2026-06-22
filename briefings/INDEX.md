@@ -12,7 +12,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
 - [canada s spy agency used first of its kind warrant to clean ](./2026-06-22/canada-s-spy-agency-used-first-of-its-kind-warrant-to-clean-.md)
+- [google sets sept 30 deadline for android developer verificat](./2026-06-22/google-sets-sept-30-deadline-for-android-developer-verificat.md)
 - [interpol warns phishing ransomware and ai scams are rising a](./2026-06-22/interpol-warns-phishing-ransomware-and-ai-scams-are-rising-a.md)
+- [new oxloader loader uses malicious google ads to deliver cas](./2026-06-22/new-oxloader-loader-uses-malicious-google-ads-to-deliver-cas.md)
+- [stop your legacy infrastructure from hijacking your ai agent](./2026-06-22/stop-your-legacy-infrastructure-from-hijacking-your-ai-agent.md)
 
 ## 2026-06-21
 - [arystinger botnet infected thousands of d link routers world](./2026-06-21/arystinger-botnet-infected-thousands-of-d-link-routers-world.md)
@@ -131,7 +134,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [litellm vulnerability chain lets low privilege users take ov](./2026-06-15/litellm-vulnerability-chain-lets-low-privilege-users-take-ov.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
 - [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
-- [palo alto warns of active exploitation of pan os globalprote](./2026-06-15/palo-alto-warns-of-active-exploitation-of-pan-os-globalprote.md)
 - [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
 - [sniper dz scams target mena users via fake facebook offers a](./2026-06-15/sniper-dz-scams-target-mena-users-via-fake-facebook-offers-a.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
@@ -140,13 +142,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-14
 - [when a government pulls an ai model what the fable 5 and myt](./2026-06-14/when-a-government-pulls-an-ai-model-what-the-fable-5-and-myt.md)
 
-## 2026-06-13
-- [critical splunk enterprise flaw lets attackers run code with](./2026-06-13/critical-splunk-enterprise-flaw-lets-attackers-run-code-with.md)
-
 ## 2026-06-12
 - [cisa kev cve 2026 35273 oracle peoplesoft enterprise peoplet](./2026-06-12/cisa-kev-cve-2026-35273-oracle-peoplesoft-enterprise-peoplet.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
-- [over 400 arch linux aur packages hijacked to deploy infostea](./2026-06-12/over-400-arch-linux-aur-packages-hijacked-to-deploy-infostea.md)
 - [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
 
 ## 2026-06-11

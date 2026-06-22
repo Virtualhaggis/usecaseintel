@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### SprySOCKS WIN_DRV encrypted kernel-driver containers dropped (KW1B/KX1B .dat)
 
-`UC_123_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_127_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### SprySOCKS WIN_PLUS: Print Spooler (spoolsv.exe) spawning svchost.exe injection target
 
-`UC_123_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_127_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### Custom Print Processor persistence registration (non-winprint.dll Driver)
 
-`UC_123_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_127_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceRegistryEvents
 
 ### Kernel driver service installed with .dat or non-standard ImagePath
 
-`UC_123_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_127_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceRegistryEvents
 
 ### SprySOCKS C2 egress to Vultr 207.148.64.0/20 (TCP/443, UDP/53, WS/80)
 
-`UC_123_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_127_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceNetworkEvents
 
 ### Exposure hunt: unpatched CVE-2023-24932 Boot Manager (BlackLotus/UEFI bootkit risk)
 
-`UC_123_9` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_127_9` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

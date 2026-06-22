@@ -1,28 +1,20 @@
-# [CRIT] Palo Alto Warns of Active Exploitation of PAN-OS GlobalProtect VPN Flaw
+# [HIGH] Stop Your Legacy Infrastructure from Hijacking Your AI Agents
 
 **Source:** The Hacker News
-**Published:** 2026-06-15
-**Article:** https://thehackernews.com/2026/06/palo-alto-warns-of-active-exploitation.html
+**Published:** 2026-06-22
+**Article:** https://thehackernews.com/2026/06/stop-your-legacy-infrastructure-from.html
 
 ## Threat Profile
 
-Palo Alto Warns of Active Exploitation of PAN-OS GlobalProtect VPN Flaw 
- Ravie Lakshmanan  Jun 15, 2026 Vulnerability / VPN Security 
-Palo Alto Networks has revealed that it has observed "active exploitation" of a recently disclosed PAN-OS vulnerability by an unknown threat actor to obtain unauthorized access to GlobalProtect portals.
-The vulnerability in question is CVE-2026-0257 (CVSS score: 7.8), an authentication bypass flaw affecting the portal and gateway components of PAN-OS software t…
+Stop Your Legacy Infrastructure from Hijacking Your AI Agents 
+ The Hacker News  Jun 22, 2026 Exposure Management / AI Security 
+Earlier this month, I spoke at the Gartner Security & Risk Management Summit about a blind spot most security programs are still not accounting for - how attackers are circumventing AI security programs by using legacy infrastructure to hijack AI agents.
+AI adoption is moving faster than security programs can account for. Roughly 71% of organizations are piloting AI …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-0257`
-- **IPv4 (defanged):** `23.128.228.6`
-- **IPv4 (defanged):** `104.207.144.154`
-- **IPv4 (defanged):** `146.19.216.119`
-- **IPv4 (defanged):** `146.19.216.120`
-- **IPv4 (defanged):** `146.19.216.125`
-- **IPv4 (defanged):** `179.43.172.213`
-- **IPv4 (defanged):** `185.195.232.139`
-- **IPv4 (defanged):** `198.12.106.60`
-- **IPv4 (defanged):** `202.144.192.47`
+- **CVE:** `CVE-2025-24813`
+- **CVE:** `CVE-2026-11645`
 
 ## MITRE ATT&CK Techniques
 
@@ -32,62 +24,12 @@ The vulnerability in question is CVE-2026-0257 (CVSS score: 7.8), an authenticat
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
-- **T1071** — Application Layer Protocol
-- **T1606.001** — Forge Web Credentials: Web Cookies
-- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### GlobalProtect gateway-connected sessions matching CVE-2026-0257 PoC forged-cookie client config
-
-`UC_146_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=* sourcetype="pan:globalprotect" "Microsoft Windows 10 Pro 64-bit"
-| eval domain_blank=if(isnull(srcdomain) OR srcdomain="" OR srcdomain="N/A",1,0)
-| where domain_blank=1
-| stats min(_time) as firstTime max(_time) as lastTime count by src_ip, src_user, machinename, public_ip
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-### GlobalProtect portal/gateway access from CVE-2026-0257 exploitation IP addresses
-
-`UC_146_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src IN ("23.128.228.6","104.207.144.154","146.19.216.119","146.19.216.120","146.19.216.125","179.43.172.213","185.195.232.139","198.12.106.60","202.144.192.47") Authentication.app="globalprotect*" by Authentication.src, Authentication.user, Authentication.action, Authentication.dest
-| `drop_dm_object_name(Authentication)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in ("23.128.228.6","104.207.144.154","146.19.216.119","146.19.216.120","146.19.216.125","179.43.172.213","185.195.232.139","198.12.106.60","202.144.192.47")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalIP, LocalPort, RemoteIP, RemotePort, ActionType
-| order by Timestamp desc
-```
-
-### GlobalProtect connection from CVE-2026-0257 PoC default device identifiers (hostnames/MACs)
-
-`UC_146_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=* sourcetype="pan:globalprotect" (machinename="WINDOWS-LAPTOP-001" OR machinename="DESKTOP-GP01" OR machinename="GP-CLIENT" OR "aa:bb:cc:dd:ee:ff" OR "00:11:22:33:44:55")
-| stats min(_time) as firstTime max(_time) as lastTime count by src_ip, src_user, machinename, public_ip
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -175,12 +117,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-0257`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `23.128.228.6`, `104.207.144.154`, `146.19.216.119`, `146.19.216.120`, `146.19.216.125`, `179.43.172.213`, `185.195.232.139`, `198.12.106.60` _(+1 more)_
+  - CVE(s): `CVE-2025-24813`, `CVE-2026-11645`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

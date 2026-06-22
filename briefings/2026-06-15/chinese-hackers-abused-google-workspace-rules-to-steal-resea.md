@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### INFINITERED trojanized REDCap web-shell files by known SHA256
 
-`UC_135_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_139_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ union
 
 ### UNC6508 admin-login / network activity from 23.169.65.49
 
-`UC_135_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_139_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ union
 
 ### Mail content-compliance / transport rule blind-copying mail to an external address
 
-`UC_135_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_139_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -106,7 +106,7 @@ CloudAppEvents
 
 ### External mailbox auto-forwarding rule creation (inbox rule / mailbox forwarding)
 
-`UC_135_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_139_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -122,7 +122,7 @@ CloudAppEvents
 
 ### Single principal accessing many distinct mailboxes within one hour
 
-`UC_135_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_139_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
