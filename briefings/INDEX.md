@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,7 +14,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
 - [canada s spy agency used first of its kind warrant to clean ](./2026-06-22/canada-s-spy-agency-used-first-of-its-kind-warrant-to-clean-.md)
+- [ffmpeg fixes pixelsmash flaw in widely used video decoder](./2026-06-22/ffmpeg-fixes-pixelsmash-flaw-in-widely-used-video-decoder.md)
+- [fortibleed campaign used custom fortigate sniffer to steal c](./2026-06-22/fortibleed-campaign-used-custom-fortigate-sniffer-to-steal-c.md)
 - [google sets sept 30 deadline for android developer verificat](./2026-06-22/google-sets-sept-30-deadline-for-android-developer-verificat.md)
+- [guarding ai memory](./2026-06-22/guarding-ai-memory.md)
 - [interpol warns phishing ransomware and ai scams are rising a](./2026-06-22/interpol-warns-phishing-ransomware-and-ai-scams-are-rising-a.md)
 - [new oxloader loader uses malicious google ads to deliver cas](./2026-06-22/new-oxloader-loader-uses-malicious-google-ads-to-deliver-cas.md)
 - [one intrusion two cyberattackers uncovering parallel threat ](./2026-06-22/one-intrusion-two-cyberattackers-uncovering-parallel-threat-.md)
@@ -37,7 +40,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
 - [cisa splunk enterprise flaw actively exploited patch by sund](./2026-06-19/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sund.md)
 - [cisa warns fortinet customers as fortibleed hits 86 644 fort](./2026-06-19/cisa-warns-fortinet-customers-as-fortibleed-hits-86-644-fort.md)
-- [cisa warns fortinet users to secure devices after fortibleed](./2026-06-19/cisa-warns-fortinet-users-to-secure-devices-after-fortibleed.md)
 - [ghsa critical cve 2026 48814 network ai cve 2026 46701 fix i](./2026-06-19/ghsa-critical-cve-2026-48814-network-ai-cve-2026-46701-fix-i.md)
 - [ghsa critical cve 2026 54051 network ai improper neutralizat](./2026-06-19/ghsa-critical-cve-2026-54051-network-ai-improper-neutralizat.md)
 - [ghsa critical cve 2026 55255 langflow idor vulnerability in ](./2026-06-19/ghsa-critical-cve-2026-55255-langflow-idor-vulnerability-in-.md)
