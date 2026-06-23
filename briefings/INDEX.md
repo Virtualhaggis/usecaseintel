@@ -8,6 +8,9 @@ _2249 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-23
+- [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
+
 ## 2026-06-22
 - [29 year old squid proxy bug squidbleed can leak cleartext ht](./2026-06-22/29-year-old-squid-proxy-bug-squidbleed-can-leak-cleartext-ht.md)
 - [a glimpse into the search your target market for stolen cred](./2026-06-22/a-glimpse-into-the-search-your-target-market-for-stolen-cred.md)
@@ -139,7 +142,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
 - [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
-- [the onboarding password mistake that creates unnecessary ris](./2026-06-15/the-onboarding-password-mistake-that-creates-unnecessary-ris.md)
 
 ## 2026-06-14
 - [when a government pulls an ai model what the fable 5 and myt](./2026-06-14/when-a-government-pulls-an-ai-model-what-the-fable-5-and-myt.md)

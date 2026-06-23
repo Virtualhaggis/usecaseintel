@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-fq2m-6wqh-x44g: PraisonAI: Jobs API exposes agent-executi
 
-`UC_76_0` · phase: **exploit** · confidence: **High**
+`UC_77_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,24 +1,31 @@
-# [MED] The Onboarding Password Mistake That Creates Unnecessary Risk
+# [CRIT] OpenAI Expands Daybreak With GPT-5.5-Cyber to Help Defenders Patch Security Flaws
 
 **Source:** The Hacker News
-**Published:** 2026-06-15
-**Article:** https://thehackernews.com/2026/06/the-onboarding-password-mistake-that.html
+**Published:** 2026-06-23
+**Article:** https://thehackernews.com/2026/06/openai-expands-daybreak-with-gpt-55.html
 
 ## Threat Profile
 
-The Onboarding Password Mistake That Creates Unnecessary Risk 
- The Hacker News  Jun 15, 2026 Password Security / Critical Infrastructure 
-Employee onboarding is a busy time for IT teams. New starters need devices, accounts, access permissions, and passwords, all delivered within a tight timeframe.
-That usually means sharing a temporary "first-day" password so employees can access systems for the first time. The issue is that these passwords don't always stay temporary. They may be sent over e…
+OpenAI Expands Daybreak With GPT-5.5-Cyber to Help Defenders Patch Security Flaws 
+ Ravie Lakshmanan  Jun 23, 2026 Artificial Intelligence / Codex Security 
+OpenAI on Monday said it's releasing an improved version of its GPT‑5.5‑Cyber model to trusted defenders as part of the Daybreak initiative , the artificial intelligence (AI) company announced last month.
+Calling GPT‑5.5‑Cyber its "strongest model yet for finding and helping patch software vulnerabilities," OpenAI said the model can "susta…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2026-47729`
+- **CVE:** `CVE-2026-4890`
+- **CVE:** `CVE-2026-4891`
+- **CVE:** `CVE-2026-4892`
+- **CVE:** `CVE-2026-5172`
+- **CVE:** `CVE-2026-8390`
+- **CVE:** `CVE-2026-11645`
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -55,7 +62,14 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-47729`, `CVE-2026-4890`, `CVE-2026-4891`, `CVE-2026-4892`, `CVE-2026-5172`, `CVE-2026-8390`, `CVE-2026-11645`
+
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

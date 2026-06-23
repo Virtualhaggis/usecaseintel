@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Vertex AI model registered with artifact URI in untrusted predictable staging bucket
 
-`UC_126_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_127_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Creation of GCS bucket matching predictable Vertex AI staging naming convention
 
-`UC_126_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_127_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable google-cloud-aiplatform SDK (<1.148.0) install detected in pipeline/build
 
-`UC_126_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_127_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
