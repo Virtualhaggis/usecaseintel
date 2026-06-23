@@ -11,15 +11,9 @@ By Bill Toulas
 June 23, 2026
 11:31 AM
 0 
-
-
 Two members of the 'Scattered Spider' cybercrime group pleaded guilty to hacking the Transport for London (TfL) systems in 2024.
-
-
 The two individuals, Thalha Jubair (20) and Owen Flowers (18), breached the systems of London's transportation service between August 31 and September 3, 2024, causing millions of pounds in losses.
-
-
-Jubair and Flowers previously declined involveme…
+Jubair and Flowers previously declined involvement in the in…
 
 ## Indicators of Compromise (high-fidelity only)
 
