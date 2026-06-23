@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Close Encounters of the Human Kind
 
-`UC_57_1` · phase: **exploit** · confidence: **High**
+`UC_60_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

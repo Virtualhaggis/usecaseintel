@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,8 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-23
+- [agentic ai the weapon that no longer needs a warrior](./2026-06-23/agentic-ai-the-weapon-that-no-longer-needs-a-warrior.md)
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
+- [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
 - [whatsapp vbscript campaign uses fake documents to install ma](./2026-06-23/whatsapp-vbscript-campaign-uses-fake-documents-to-install-ma.md)
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
 
@@ -141,7 +143,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [eviltokens a phishing attack that doesn t steal your passwor](./2026-06-15/eviltokens-a-phishing-attack-that-doesn-t-steal-your-passwor.md)
 - [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
 - [inside the modern soc the 72 minute race](./2026-06-15/inside-the-modern-soc-the-72-minute-race.md)
-- [litellm vulnerability chain lets low privilege users take ov](./2026-06-15/litellm-vulnerability-chain-lets-low-privilege-users-take-ov.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
 - [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
@@ -3750,7 +3751,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-10-30
 - [84 of all websites are impacted by jquery xss vulnerabilitie](./2019-10-30/84-of-all-websites-are-impacted-by-jquery-xss-vulnerabilitie.md)
-- [angular vs react the security risk of indirect dependencies](./2019-10-30/angular-vs-react-the-security-risk-of-indirect-dependencies.md)
+- [angular vs react security bakeoff 2019](./2019-10-30/angular-vs-react-security-bakeoff-2019.md)
 - [javascript frameworks security report 2019](./2019-10-30/javascript-frameworks-security-report-2019.md)
 
 ## 2019-10-09

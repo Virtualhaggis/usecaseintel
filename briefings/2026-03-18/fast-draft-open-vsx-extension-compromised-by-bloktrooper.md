@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### VSCode/VSCodium spawning shell or curl to raw.githubusercontent.com/BlokTrooper
 
-`UC_472_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_474_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### Outbound TCP beacon to BlokTrooper Socket.IO C2 195.201.104.53:6931/6936/6939
 
-`UC_472_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_474_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### VSCode-family host fetching from raw.githubusercontent.com/BlokTrooper/extension path
 
-`UC_472_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_474_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### Four-way node.exe -e fanout spawned from VSCode shell descendants (BlokTrooper stage-2)
 
-`UC_472_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_474_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceProcessEvents
 
 ### Non-browser process copying Chrome/Edge/Brave Login Data, Web Data, or wallet extension LevelDB state
 
-`UC_472_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_474_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -305,7 +305,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast-draft Open VSX Extension Compromised by BlokTrooper
 
-`UC_472_6` · phase: **install** · confidence: **High**
+`UC_474_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

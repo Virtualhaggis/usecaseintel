@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SourMint malicious SDK research write up
 
-`UC_2976_1` · phase: **install** · confidence: **High**
+`UC_2978_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

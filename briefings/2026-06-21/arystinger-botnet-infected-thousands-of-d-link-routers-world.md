@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### AryStinger C2 beaconing to ajb8/ahb8/auq8/dataexplore/ary2 infrastructure
 
-`UC_25_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_28_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ union
 
 ### Inbound CVE-2016-5681 exploitation of D-Link DIR-850L /dws/api/Login (port 8181)
 
-`UC_25_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_28_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### AryStinger executor tooling: gs-netcat/dropbear tunnels and known payload hashes on NAS
 
-`UC_25_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_28_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### C2 egress to flipboxstudio.info from Laravel-Lang composer dropper
 
-`UC_282_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_284_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union isfuzzy=true
 
 ### cscript.exe launching .vbs from .laravel_locale temp directory
 
-`UC_282_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_284_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### Composer install of malicious helpers.php in laravel-lang vendor package
 
-`UC_282_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_284_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceFileEvents
 
 ### Stealer or VBS launcher dropped into .laravel_locale temp directory
 
-`UC_282_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_284_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -305,7 +305,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Supply Chain Attack Targets Laravel-Lang Packages with Credential Stealer
 
-`UC_282_6` · phase: **exploit** · confidence: **High**
+`UC_284_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

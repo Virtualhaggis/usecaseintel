@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk research team discovers severe prototype pollution security vulnerabilities
 
-`UC_3203_1` · phase: **exploit** · confidence: **High**
+`UC_3205_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

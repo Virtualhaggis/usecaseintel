@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Fake Microsoft account security-alert spear-phish delivering ZIP-with-LNK (APT37/ScarCruft)
 
-`UC_140_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_143_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ EmailEvents
 
 ### NarwhalRAT LNK-spawned batch downloader fetching payload + CAT file from APT37 C2
 
-`UC_140_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_143_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### NarwhalRAT scheduled-task persistence by exact task name (MicrosoftUserInterfacePicturesUpdateTackMachine)
 
-`UC_140_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_143_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### NarwhalRAT 'naverwhale' staging directory under %APPDATA%
 
-`UC_140_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_143_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceFileEvents
 
 ### NarwhalRAT C2 to APT37 Korean relay domains/IPs
 
-`UC_140_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_143_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceNetworkEvents
 
 ### NarwhalRAT pCloud dead-drop resolver secondary C2 from Python loader
 
-`UC_140_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_143_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

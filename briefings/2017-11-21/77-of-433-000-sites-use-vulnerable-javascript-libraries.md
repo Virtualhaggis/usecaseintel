@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 77% of 433,000 sites use vulnerable JavaScript libraries
 
-`UC_3325_0` · phase: **exploit** · confidence: **High**
+`UC_3327_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

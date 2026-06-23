@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Crypto-clipper fake sniper-bot binary execution (silke / SniperBot / Sniper_TradingBot)
 
-`UC_112_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### Crypto-clipper Windows persistence: silke.exe drop to %APPDATA%\silke + Startup shortcut
 
-`UC_112_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceFileEvents
 
 ### Crypto-clipper delivery: fake sniper-bot installer downloaded from threat-actor GitHub/SourceForge
 
-`UC_112_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_115_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceFileEvents
 
 ### Crypto-clipper macOS persistence: com.example LaunchAgent + ~/launch.sh watchdog
 
-`UC_112_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
