@@ -186,7 +186,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Packages Pose as PostCSS Tools to Deliver Windows RAT
 
-`UC_13_7` · phase: **exploit** · confidence: **High**
+`UC_16_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

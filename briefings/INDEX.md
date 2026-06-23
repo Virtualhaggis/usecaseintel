@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,14 +10,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-23
 - [agentic ai the weapon that no longer needs a warrior](./2026-06-23/agentic-ai-the-weapon-that-no-longer-needs-a-warrior.md)
+- [cisco unified cm flaw cve 2026 20230 now exploited in attack](./2026-06-23/cisco-unified-cm-flaw-cve-2026-20230-now-exploited-in-attack.md)
 - [fake ai agent skill passed security scans and reportedly rea](./2026-06-23/fake-ai-agent-skill-passed-security-scans-and-reportedly-rea.md)
 - [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
 - [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)
 - [healthtech firm xolis suffers data breach impacting 1 4 mill](./2026-06-23/healthtech-firm-xolis-suffers-data-breach-impacting-1-4-mill.md)
 - [lastpass confirms data breach in klue supply chain attack](./2026-06-23/lastpass-confirms-data-breach-in-klue-supply-chain-attack.md)
+- [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [new macos clickfix attack silently mounts dmgs to push infos](./2026-06-23/new-macos-clickfix-attack-silently-mounts-dmgs-to-push-infos.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
+- [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
 - [scattered spider members plead guilty to hacking transport f](./2026-06-23/scattered-spider-members-plead-guilty-to-hacking-transport-f.md)
 - [tata electronics confirms cyberattack as hackers leak data](./2026-06-23/tata-electronics-confirms-cyberattack-as-hackers-leak-data.md)
 - [the exploit doesn t exist you can still prove it works again](./2026-06-23/the-exploit-doesn-t-exist-you-can-still-prove-it-works-again.md)
@@ -28,7 +31,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-22
 - [29 year old squid proxy bug squidbleed can leak cleartext ht](./2026-06-22/29-year-old-squid-proxy-bug-squidbleed-can-leak-cleartext-ht.md)
-- [a glimpse into the search your target market for stolen cred](./2026-06-22/a-glimpse-into-the-search-your-target-market-for-stolen-cred.md)
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
 - [canada s spy agency used first of its kind warrant to clean ](./2026-06-22/canada-s-spy-agency-used-first-of-its-kind-warrant-to-clean-.md)
@@ -280,7 +282,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
-- [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
 
 ## 2026-05-21

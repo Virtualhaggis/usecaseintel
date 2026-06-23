@@ -11,15 +11,9 @@ By Bill Toulas
 June 23, 2026
 05:06 PM
 0 
-
-
 Tata Electronics has confirmed in a statement to BleepingComputer that it was the target of a cyberattack that impacted parts of its IT infrastructure.
-
-
 The company emphasizes that its operations continued to run normally and were not affected by the incident.
-
-
-"A few weeks ago, Tata Electronics identified a cybersecurity incident on some of our systems,” a Tata Electronics spokesperso…
+"A few weeks ago, Tata Electronics identified a cybersecurity incident on some of our systems,” a Tata Electronics spokesperson told Bleep…
 
 ## Indicators of Compromise (high-fidelity only)
 

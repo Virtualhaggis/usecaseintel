@@ -11,15 +11,9 @@ By Bill Toulas
 June 23, 2026
 03:59 PM
 1 
-
-
 Healthcare technology company Xsolis says that sensitive data belonging to nearly 1.4 million individuals was compromised in a phishing attack that gave attackers access to its network.
-
-
 Although the company is not aware of any attempted misuse of the exposed information, it is warning affected individuals to stay alert for potential targeted attacks.
-
-
-Xsolis is a U.S.-base…
+Xsolis is a U.S.-based healthcare…
 
 ## Indicators of Compromise (high-fidelity only)
 

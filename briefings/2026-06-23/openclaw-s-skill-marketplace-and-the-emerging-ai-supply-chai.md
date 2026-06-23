@@ -1,41 +1,125 @@
-# [HIGH] A Glimpse into the “Search Your Target” Market for Stolen Credentials
+# [CRIT] OpenClaw’s Skill Marketplace and the Emerging AI Supply Chain Threat
 
-**Source:** BleepingComputer
-**Published:** 2026-06-22
-**Article:** https://www.bleepingcomputer.com/news/security/a-glimpse-into-the-search-your-target-market-for-stolen-credentials/
+**Source:** Unit 42 (Palo Alto)
+**Published:** 2026-06-23
+**Article:** https://unit42.paloaltonetworks.com/openclaw-ai-supply-chain-risk/
 
 ## Threat Profile
 
-A Glimpse into the “Search Your Target” Market for Stolen Credentials 
-Sponsored by Flare 
-June 22, 2026
-10:05 AM
-0 
-Threat actors are increasingly turning massive infostealer-derived credential collections into searchable underground services, allowing buyers to request credentials for a specific company, platform, domain, geography, or account type.
-Flare researchers analyzed 470 underground forum posts published between January 2025 and June 2026, across different sources, related to actors o…
+Threat Research Center 
+Threat Research 
+Malware 
+Malware 
+OpenClaw’s Skill Marketplace and the Emerging AI Supply Chain Threat 
+9 min read 
+Related Products Advanced DNS Security Advanced URL Filtering Advanced WildFire Cloud-Delivered Security Services Cortex Cortex XDR Cortex XSIAM Unit 42 AI Security Assessment Unit 42 Frontier AI Defense Unit 42 Incident Response 
+By: Shresta Bellary Seetharam 
+Nabeel Mohamed 
+Billy Melicher 
+Oleksii Starov 
+Published: June 23, 2026 
+Categories: Malware 
+Th…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `91.92.242.30`
+- **IPv4 (defanged):** `2.26.75.16`
+- **Domain (defanged):** `glot.io`
+- **Domain (defanged):** `laosji.net`
+- **Domain (defanged):** `letssendit.fun`
+- **Domain (defanged):** `pump.fun`
+- **Domain (defanged):** `download.setup-service.com`
+- **Domain (defanged):** `install.app-distribution.net`
+- **Domain (defanged):** `openclawcli.vercel.app`
+- **Domain (defanged):** `install.app`
+- **SHA256:** `b6c7e0bf573b1c7d9d3a05eb08d26579199515b847df984862805f44a7af8007`
+- **SHA256:** `818aea6143282b352fdfdc0f3ebf77a36e54eb3befb5cad1a355a99ab97c6aa7`
+- **SHA256:** `b30eaed1f7478c28f4ec50d07ed5ef014ffbc4b2bc5a38d689ba9f7abb5e19c2`
+- **SHA256:** `ebb73dbb5aac1f6fe1a88e8f26126a1e1aa34c9f3345ad4345189b40d9bf1d1d`
+- **SHA256:** `f4e41aa269c88bf11a2022701a9cf41e9a186aa1b224d837c31bf34e0b875d0e`
+- **SHA256:** `881ce5cb124c4d2e814783724cc1388f6a1cbf6eee274c3f3366e77ba3503ad7`
 
 ## MITRE ATT&CK Techniques
 
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
+- **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
-- **T1566.001** — Spearphishing Attachment
-- **T1204.002** — User Execution: Malicious File
-- **T1059.005** — Visual Basic
-- **T1218** — System Binary Proxy Execution
+- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Beaconing — periodic outbound to small set of destinations
+
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
+```
+
+### Suspicious browser extension installation
+
+`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -151,57 +235,21 @@ DeviceProcessEvents
 | order by ClickTime desc
 ```
 
-### Email attachment opened from external sender
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
 
-`UC_PHISH_ATTACH` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count
-    from datamodel=Email.All_Email
-    where All_Email.file_name!="-"
-    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
-| rename All_Email.recipient as user
-| join type=inner user
-    [| tstats `summariesonly` count
-        from datamodel=Endpoint.Processes
-        where Processes.parent_process_name IN ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
-          AND Processes.process_name IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
-        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 7d;
-let MalAttachments = EmailAttachmentInfo
-    | where Timestamp > ago(LookbackDays)
-    | where AccountName !endswith "$"
-    | project NetworkMessageId, RecipientEmailAddress,
-              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
-DeviceProcessEvents
-| where Timestamp > ago(LookbackDays)
-| where InitiatingProcessFileName in~ ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe",
-                      "mshta.exe","rundll32.exe","regsvr32.exe")
-| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256
-```
-
-### Office app spawning script/LOLBin child process
-
-`UC_OFFICE_CHILD` · phase: **exploit** · confidence: **High**
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
-      AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -209,9 +257,10 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -238,7 +287,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `91.92.242.30`, `2.26.75.16`, `glot.io`, `laosji.net`, `letssendit.fun`, `pump.fun`, `download.setup-service.com`, `install.app-distribution.net` _(+2 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `b6c7e0bf573b1c7d9d3a05eb08d26579199515b847df984862805f44a7af8007`, `818aea6143282b352fdfdc0f3ebf77a36e54eb3befb5cad1a355a99ab97c6aa7`, `b30eaed1f7478c28f4ec50d07ed5ef014ffbc4b2bc5a38d689ba9f7abb5e19c2`, `ebb73dbb5aac1f6fe1a88e8f26126a1e1aa34c9f3345ad4345189b40d9bf1d1d`, `f4e41aa269c88bf11a2022701a9cf41e9a186aa1b224d837c31bf34e0b875d0e`, `881ce5cb124c4d2e814783724cc1388f6a1cbf6eee274c3f3366e77ba3503ad7`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

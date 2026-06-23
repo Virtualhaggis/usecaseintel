@@ -248,7 +248,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_173_8` · phase: **exploit** · confidence: **High**
+`UC_175_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
