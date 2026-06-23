@@ -208,7 +208,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer
 
-`UC_20_6` · phase: **exploit** · confidence: **High**
+`UC_24_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

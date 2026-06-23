@@ -10,8 +10,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-23
 - [agentic ai the weapon that no longer needs a warrior](./2026-06-23/agentic-ai-the-weapon-that-no-longer-needs-a-warrior.md)
+- [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)
+- [lastpass confirms data breach in klue supply chain attack](./2026-06-23/lastpass-confirms-data-breach-in-klue-supply-chain-attack.md)
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
+- [the exploit doesn t exist you can still prove it works again](./2026-06-23/the-exploit-doesn-t-exist-you-can-still-prove-it-works-again.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
 - [whatsapp vbscript campaign uses fake documents to install ma](./2026-06-23/whatsapp-vbscript-campaign-uses-fake-documents-to-install-ma.md)
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
@@ -61,7 +64,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [klue oauth breach victim list grows as icarus hackers claim ](./2026-06-19/klue-oauth-breach-victim-list-grows-as-icarus-hackers-claim-.md)
 - [operation endgame disrupts socgholish servers cleans 14 971 ](./2026-06-19/operation-endgame-disrupts-socgholish-servers-cleans-14-971-.md)
 - [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
-- [texas govt data breach exposes over 3 million driver s licen](./2026-06-19/texas-govt-data-breach-exposes-over-3-million-driver-s-licen.md)
 - [the gentlemen raas uses gentlekiller edr framework targeting](./2026-06-19/the-gentlemen-raas-uses-gentlekiller-edr-framework-targeting.md)
 
 ## 2026-06-18
@@ -144,13 +146,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
 - [inside the modern soc the 72 minute race](./2026-06-15/inside-the-modern-soc-the-72-minute-race.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
-- [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
 
 ## 2026-06-14
 - [when a government pulls an ai model what the fable 5 and myt](./2026-06-14/when-a-government-pulls-an-ai-model-what-the-fable-5-and-myt.md)
 
 ## 2026-06-12
+- [5 socket security alternatives and why they are better](./2026-06-12/5-socket-security-alternatives-and-why-they-are-better.md)
 - [cisa kev cve 2026 35273 oracle peoplesoft enterprise peoplet](./2026-06-12/cisa-kev-cve-2026-35273-oracle-peoplesoft-enterprise-peoplet.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
 - [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
@@ -680,14 +682,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 37079 broadcom vmware vcenter server out o](./2026-01-23/cisa-kev-cve-2024-37079-broadcom-vmware-vcenter-server-out-o.md)
 - [eset research sandworm behind cyberattack on poland s power ](./2026-01-23/eset-research-sandworm-behind-cyberattack-on-poland-s-power-.md)
 - [g wagon npm package deploys python stealer targeting 100 cry](./2026-01-23/g-wagon-npm-package-deploys-python-stealer-targeting-100-cry.md)
-- [gone phishin npm packages serving custom credential harvesti](./2026-01-23/gone-phishin-npm-packages-serving-custom-credential-harvesti.md)
 
 ## 2026-01-22
 - [cisa kev cve 2025 31125 vite vitejs improper access control ](./2026-01-22/cisa-kev-cve-2025-31125-vite-vitejs-improper-access-control-.md)
 - [cisa kev cve 2025 34026 versa concerto improper authenticati](./2026-01-22/cisa-kev-cve-2025-34026-versa-concerto-improper-authenticati.md)
 - [cisa kev cve 2025 54313 prettier eslint config prettier embe](./2026-01-22/cisa-kev-cve-2025-54313-prettier-eslint-config-prettier-embe.md)
 - [cisa kev cve 2025 68645 synacor zimbra collaboration suite z](./2026-01-22/cisa-kev-cve-2025-68645-synacor-zimbra-collaboration-suite-z.md)
-- [malicious pypi packages spellcheckpy and spellcheckerpy deli](./2026-01-22/malicious-pypi-packages-spellcheckpy-and-spellcheckerpy-deli.md)
 
 ## 2026-01-21
 - [cisa kev cve 2026 20045 cisco unified communications product](./2026-01-21/cisa-kev-cve-2026-20045-cisco-unified-communications-product.md)

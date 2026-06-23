@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — WhatsApp VBScript Campaign Uses Fake Documents to Install ManageEngine RMM Tool
 
-`UC_2_5` · phase: **exploit** · confidence: **High**
+`UC_6_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
