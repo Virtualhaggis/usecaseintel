@@ -10,11 +10,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-23
 - [agentic ai the weapon that no longer needs a warrior](./2026-06-23/agentic-ai-the-weapon-that-no-longer-needs-a-warrior.md)
+- [fake ai agent skill passed security scans and reportedly rea](./2026-06-23/fake-ai-agent-skill-passed-security-scans-and-reportedly-rea.md)
 - [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)
 - [lastpass confirms data breach in klue supply chain attack](./2026-06-23/lastpass-confirms-data-breach-in-klue-supply-chain-attack.md)
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
+- [scattered spider members plead guilty to hacking transport f](./2026-06-23/scattered-spider-members-plead-guilty-to-hacking-transport-f.md)
 - [the exploit doesn t exist you can still prove it works again](./2026-06-23/the-exploit-doesn-t-exist-you-can-still-prove-it-works-again.md)
+- [trump order sets 2030 deadline for federal post quantum cryp](./2026-06-23/trump-order-sets-2030-deadline-for-federal-post-quantum-cryp.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
 - [whatsapp vbscript campaign uses fake documents to install ma](./2026-06-23/whatsapp-vbscript-campaign-uses-fake-documents-to-install-ma.md)
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
@@ -60,7 +63,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa c8qj jx8j fg2w dotvvm missing authorizati](./2026-06-19/ghsa-critical-ghsa-c8qj-jx8j-fg2w-dotvvm-missing-authorizati.md)
 - [ghsa critical ghsa h3m5 97jq qjrf openremote manager removea](./2026-06-19/ghsa-critical-ghsa-h3m5-97jq-qjrf-openremote-manager-removea.md)
 - [ghsa critical ghsa wfqx gjrf g28r crossplane signature verif](./2026-06-19/ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif.md)
-- [hackers exploit info disclosure bug in gravity smtp wordpres](./2026-06-19/hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpres.md)
 - [klue oauth breach victim list grows as icarus hackers claim ](./2026-06-19/klue-oauth-breach-victim-list-grows-as-icarus-hackers-claim-.md)
 - [operation endgame disrupts socgholish servers cleans 14 971 ](./2026-06-19/operation-endgame-disrupts-socgholish-servers-cleans-14-971-.md)
 - [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
@@ -119,7 +121,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-16
 - [a forgotten contributor account compromised the entire mastr](./2026-06-16/a-forgotten-contributor-account-compromised-the-entire-mastr.md)
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
-- [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
 - [cisa kev cve 2026 48907 widget factory joomla content editor](./2026-06-16/cisa-kev-cve-2026-48907-widget-factory-joomla-content-editor.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
 - [clickfix campaigns expand malware delivery with new loaders ](./2026-06-16/clickfix-campaigns-expand-malware-delivery-with-new-loaders-.md)
@@ -139,7 +140,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
 
 ## 2026-06-15
-- [chinese hackers abused google workspace rules to steal resea](./2026-06-15/chinese-hackers-abused-google-workspace-rules-to-steal-resea.md)
 - [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
 - [cisa kev cve 2026 54420 litespeed cpanel plugin unix symboli](./2026-06-15/cisa-kev-cve-2026-54420-litespeed-cpanel-plugin-unix-symboli.md)
 - [eviltokens a phishing attack that doesn t steal your passwor](./2026-06-15/eviltokens-a-phishing-attack-that-doesn-t-steal-your-passwor.md)

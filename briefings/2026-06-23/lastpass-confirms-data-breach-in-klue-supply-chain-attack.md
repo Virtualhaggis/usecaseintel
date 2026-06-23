@@ -11,15 +11,9 @@ By Bill Toulas
 June 23, 2026
 09:58 AM
 0 
-
-
 LastPass announced that hackers accessed customer data from its Salesforce environment after stealing the company's OAuth tokens in the Klue supply chain attack earlier this month.
-
-
 The password management platform says its products, services, and infrastructure were not affected by the incident and that customer vaults remained secure.
-
-
-“On June 12th, LastPass was made aware of an inci…
+“On June 12th, LastPass was made aware of an incident that oc…
 
 ## Indicators of Compromise (high-fidelity only)
 
