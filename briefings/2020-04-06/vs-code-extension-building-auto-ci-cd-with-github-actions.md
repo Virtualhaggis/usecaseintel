@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — VS Code extension: building auto CI/CD with GitHub Actions
 
-`UC_3081_0` · phase: **exploit** · confidence: **High**
+`UC_3080_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

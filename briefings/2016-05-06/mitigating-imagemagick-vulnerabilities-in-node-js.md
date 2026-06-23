@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Mitigating ImageMagick vulnerabilities in Node.js
 
-`UC_3382_0` · phase: **exploit** · confidence: **High**
+`UC_3381_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

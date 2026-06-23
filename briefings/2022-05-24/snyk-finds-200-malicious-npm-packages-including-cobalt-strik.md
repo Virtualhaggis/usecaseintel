@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk finds 200+ malicious npm packages, including Cobalt Strike dependency confu
 
-`UC_2076_3` · phase: **exploit** · confidence: **High**
+`UC_2075_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

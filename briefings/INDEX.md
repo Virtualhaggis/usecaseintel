@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-23
+- [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
 - [whatsapp vbscript campaign uses fake documents to install ma](./2026-06-23/whatsapp-vbscript-campaign-uses-fake-documents-to-install-ma.md)
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
@@ -3749,7 +3750,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-10-30
 - [84 of all websites are impacted by jquery xss vulnerabilitie](./2019-10-30/84-of-all-websites-are-impacted-by-jquery-xss-vulnerabilitie.md)
-- [angular vs react security bakeoff 2019](./2019-10-30/angular-vs-react-security-bakeoff-2019.md)
+- [angular vs react the security risk of indirect dependencies](./2019-10-30/angular-vs-react-the-security-risk-of-indirect-dependencies.md)
 - [javascript frameworks security report 2019](./2019-10-30/javascript-frameworks-security-report-2019.md)
 
 ## 2019-10-09
@@ -3870,6 +3871,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2018-11-27
 - [malicious code found in npm package event stream downloaded ](./2018-11-27/malicious-code-found-in-npm-package-event-stream-downloaded-.md)
+
+## 2018-10-17
+- [jvm ecosystem report 2018 about your platform and applicatio](./2018-10-17/jvm-ecosystem-report-2018-about-your-platform-and-applicatio.md)
 
 ## 2018-08-15
 - [behind the disclosure the zip slip vulnerability](./2018-08-15/behind-the-disclosure-the-zip-slip-vulnerability.md)

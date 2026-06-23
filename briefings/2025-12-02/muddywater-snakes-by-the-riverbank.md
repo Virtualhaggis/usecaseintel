@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### MuddyWater Fooder loader (OsUpdater.exe) execution from Downloads
 
-`UC_685_0` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_684_0` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### MuddyViper persistence via ManageOnDriveUpdater scheduled task or Startup folder hijack
 
-`UC_685_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_684_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ union SchedTaskHits, StartupHijackHits
 
 ### MuddyViper C2 fingerprint: 'A WinHTTP Example Program/1.0' UA + distinctive URI paths
 
-`UC_685_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_684_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceNetworkEvents
 
 ### MuddyWater CE-Notes / LP-Notes / Blub stealer staging-file writes
 
-`UC_685_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_684_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceFileEvents
 
 ### Non-browser process reading Chrome/Edge/Opera Login Data or Local State
 
-`UC_685_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_684_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

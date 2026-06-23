@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens
 
-`UC_2851_2` · phase: **exploit** · confidence: **High**
+`UC_2850_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

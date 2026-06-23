@@ -1,3 +1,515 @@
+<article class="card" id="art-29" data-art-slug="2026-06-20-hackers-exploit-gravity-smtp-wordpress-plugin-bug-to-expose-"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1021.001,T1190,T1528,T1555.003"
+  data-sources="The Hacker News"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,network"
+  data-targets="azure,windows"
+  data-uc-count="6" data-llm-uc-count="2"
+  data-search="Hackers Exploit Gravity SMTP WordPress Plugin Bug to Expose API Keys Threat actors are exploiting a recently patched security flaw impacting Gravity SMTP, a WordPress plugin that&#x27;s installed on about 100,000 sites. The vulnerability, tracked as CVE-2026-4020 (CVSS score: 5.3), is a medium-severity information disclosure flaw that can allow unauthenticated attackers to extract sensitive data, such as configuration data, API keys, secrets, and OAuth tokens CVE-2026-4020 T1021.001 T1190 T1528 T1555.003 [LLM] Gravity SMTP CVE-2026-4020 exploit request to unauthenticated mock-data REST endpoint [LLM] Gravity SMTP CVE-2026-4020 successful System Report disclosure (~365 KB response) Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Network connections to article IPs / domains">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-20-hackers-exploit-gravity-smtp-wordpress-plugin-bug-to-expose-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://thehackernews.com/2026/06/hackers-exploit-gravity-smtp-wordpress.html" target="_blank" rel="noopener">Hackers Exploit Gravity SMTP WordPress Plugin Bug to Expose API Keys</a></h2>
+  <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
+  <div class="pubmeta">
+    <span>2026-06-20</span>
+    <span>6 use cases</span>
+    <span>4 techniques</span>
+    <span>6 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Threat actors are exploiting a recently patched security flaw impacting Gravity SMTP, a WordPress plugin that&#x27;s installed on about 100,000 sites. The vulnerability, tracked as CVE-2026-4020 (CVSS score: 5.3), is a medium-severity information disclosure flaw that can allow unauthenticated attackers to extract sensitive data, such as configuration data, API keys, secrets, and OAuth tokens</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-4020</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Desktop Protocol">T1021.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">45.148.10.95</span> <span class="ind ">193.32.162.60</span> <span class="ind ">176.65.148.139</span> <span class="ind ">173.199.90.188</span> <span class="ind ">45.148.10.120</span> <span class="ind ">185.8.107.155</span> <span class="ind ">185.8.106.37</span> <span class="ind ">185.8.106.92</span> <span class="ind ">185.8.106.145</span> <span class="ind ">176.65.148.30</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-29-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-29"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-29-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gravity SMTP CVE-2026-4020 exploit request to unauthenticated mock-data REST endpoint</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Gravity SMTP CVE-2026-4020 successful System Report disclosure (~365 KB response) · Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="6ca2d58b9b" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Gravity SMTP CVE-2026-4020 exploit request to unauthenticated mock-data REST endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="6ca2d58b9b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts unauthenticated HTTP GET requests to the Gravity SMTP plugin REST endpoint /wp-json/gravitysmtp/v1/tests/mock-data, especially carrying the ?page=gravitysmtp-settings parameter that triggers the full System Report disclosure. Article-specific: this exact path+param combination is the documented CVE-2026-4020 weaponization, and Wordfence has blocked 17M+ such requests.
+
+Rationale: Keyed on the exact CVE-2026-4020 path /wp-json/gravitysmtp/v1/tests/mock-data and the ?page=gravitysmtp-settings trigger param, both confirmed by BleepingComputer, CrowdSec and SentinelOne as the documented exploit signature; the 10 source IPs are surfaced as enrichment (KnownAttackerIP) since they originate only from the Wordfence advisory.
+
+Cross-checked against:
+  • https://www.bleepingcomputer.com/news/security/hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpress-plugin/
+  • https://www.crowdsec.net/vulntracking-report/cve-2026-4020-gravity-smtp-information-disclosure
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-4020/
+  • https://www.tenable.com/cve/CVE-2026-4020</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (Wordfence Central, internal pentest tooling) probing the endpoint during scheduled scans</li><li>Managed-WordPress hosting providers running plugin health/diagnostic checks against wp-json routes</li><li>Uptime/synthetic monitoring tools (UptimeRobot, Pingdom, StatusCake) crawling REST routes</li><li>Security researchers re-validating the patch after upgrading to 2.1.5</li><li>Staging/QA traffic from internal CI hitting the same endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(csUserAgent has_any (&quot;UptimeRobot&quot;,&quot;Pingdom&quot;,&quot;StatusCake&quot;,&quot;WordfenceCentral&quot;,&quot;WPScan&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all hits for the path, note cIP and whether ?page=gravitysmtp-settings was present and scStatus/scBytes — a 200 with a large body means data was returned; confirm the site&#x27;s Gravity SMTP version is &lt;2.1.5. 2) Contain: block the offending source IPs at the WAF/edge, update the plugin to 2.1.5+, and immediately rotate ALL configured email-connector credentials (Amazon SES, Google, Mailjet, Resend, Zoho keys/OAuth tokens). 3) Hunt: sweep every web-facing host&#x27;s logs for the same endpoint, check the 10 known attacker IPs across all sites, and review third-party email-service send logs for unauthorized outbound mail using the exposed keys.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-29-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-29-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-29-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-29-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-29-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let AttackerIPs = dynamic([&quot;45.148.10.95&quot;,&quot;193.32.162.60&quot;,&quot;176.65.148.139&quot;,&quot;173.199.90.188&quot;,&quot;45.148.10.120&quot;,&quot;185.8.107.155&quot;,&quot;185.8.106.37&quot;,&quot;185.8.106.92&quot;,&quot;185.8.106.145&quot;,&quot;176.65.148.30&quot;]);
+DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteIP in (AttackerIPs)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| sort by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-29-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let AttackerIPs = dynamic([&quot;45.148.10.95&quot;,&quot;193.32.162.60&quot;,&quot;176.65.148.139&quot;,&quot;173.199.90.188&quot;,&quot;45.148.10.120&quot;,&quot;185.8.107.155&quot;,&quot;185.8.106.37&quot;,&quot;185.8.106.92&quot;,&quot;185.8.106.145&quot;,&quot;176.65.148.30&quot;]);
+W3CIISLog
+| where TimeGenerated &gt; ago(30d)
+| where csUriStem has &quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot;
+| extend ExploitParamPresent = csUriQuery has &quot;gravitysmtp-settings&quot;
+| extend KnownAttackerIP = cIP in (AttackerIPs)
+| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, scStatus, scBytes, csUserAgent, ExploitParamPresent, KnownAttackerIP
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-29-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gravity SMTP CVE-2026-4020 Unauthenticated mock-data REST Endpoint Request
+id: a3f1c2d4-5b6e-4f70-9a8b-1c2d3e4f5a6b
+description: Detects HTTP requests to the Gravity SMTP plugin REST endpoint /wp-json/gravitysmtp/v1/tests/mock-data abused by CVE-2026-4020 to disclose the WordPress System Report and configured email API keys.
+references:
+  - https://thehackernews.com/2026/06/hackers-exploit-gravity-smtp-wordpress.html
+  - https://www.bleepingcomputer.com/news/security/hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpress-plugin/
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-stem|contains: &#x27;/wp-json/gravitysmtp/v1/tests/mock-data&#x27;
+  condition: selection
+falsepositives:
+  - Authorized vulnerability scanners (Wordfence, internal pentest) probing the endpoint
+  - Managed-WordPress host diagnostics
+level: high</code></pre></div>
+    <div class="tab-content" id="art-29-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-29-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-29-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-29-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.src) as src values(Web.http_user_agent) as user_agent from datamodel=Web.Web where Web.url=&quot;*/wp-json/gravitysmtp/v1/tests/mock-data*&quot; by Web.dest Web.uri_query Web.url | `drop_dm_object_name(Web)` | eval exploit_param=if(match(uri_query,&quot;(?i)gravitysmtp-settings&quot;),&quot;yes&quot;,&quot;no&quot;) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-29-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.src) as src values(Web.http_user_agent) as user_agent from datamodel=Web.Web where Web.url=&quot;*/wp-json/gravitysmtp/v1/tests/mock-data*&quot; by Web.dest Web.uri_query Web.url | `drop_dm_object_name(Web)` | eval exploit_param=if(match(uri_query,&quot;(?i)gravitysmtp-settings&quot;),&quot;yes&quot;,&quot;no&quot;) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6253d6269a" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Gravity SMTP CVE-2026-4020 successful System Report disclosure (~365 KB response)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6253d6269a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts successful exploitation of CVE-2026-4020 — an HTTP 200 to /wp-json/gravitysmtp/v1/tests/mock-data returning the ~365 KB JSON System Report that leaks configured email API keys, OAuth tokens and the full software stack. Distinct pivot from the attempt detection: keys on response status + body size to confirm credentials were actually exfiltrated, not just probed.
+
+Rationale: Uses the Wordfence-documented ~365 KB response size as the success discriminator (scBytes &gt; 300000 on a 200 to the vulnerable path) — a patched 2.1.5 install or a blocked request will not return the full report, so a large body is a high-fidelity confirmation that API keys were exfiltrated rather than merely probed.
+
+Cross-checked against:
+  • https://www.bleepingcomputer.com/news/security/hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpress-plugin/
+  • https://www.crowdsec.net/vulntracking-report/cve-2026-4020-gravity-smtp-information-disclosure
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-4020/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials">T1552</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized pentest confirming the disclosure with a real 200/large-body response before remediation</li><li>A legitimately large but benign report body if another route shares the path prefix (mitigated by exact path match)</li><li>CDN/origin cache revalidation re-serving the full body to a monitoring agent</li><li>Internal QA explicitly exercising the unpatched endpoint on a staging mirror</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: this is a confirmed disclosure, not an attempt — identify the requesting cIP, the exact timestamp, and which site/host served the 200; treat all email-connector credentials on that site as compromised. 2) Contain: update Gravity SMTP to 2.1.5+, then rotate every Amazon SES, Google, Mailjet, Resend and Zoho key/token configured in the plugin, and revoke any OAuth grants. 3) Hunt: review the third-party email providers&#x27; send/auth logs for abuse using the leaked keys, check whether the exposed System Report (plugin versions, paths, DB details) was used to stage follow-on attacks, and confirm no other site in the estate returned a large body from the same endpoint.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-29-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-29-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-29-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(30d)
+| where csUriStem has &quot;/wp-json/gravitysmtp/v1/tests/mock-data&quot;
+| where scStatus == 200
+| where scBytes &gt; 300000   // ~365 KB full System Report per Wordfence = successful credential disclosure
+| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, scStatus, scBytes, csUserAgent
+| sort by scBytes desc</code></pre></div>
+    <div class="tab-content" id="art-29-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-29-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-29-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-29-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Web.src) as src values(Web.http_user_agent) as user_agent max(Web.bytes_out) as bytes_out from datamodel=Web.Web where Web.url=&quot;*/wp-json/gravitysmtp/v1/tests/mock-data*&quot; Web.status=200 by Web.dest Web.url _time | `drop_dm_object_name(Web)` | where bytes_out &gt; 300000 | sort - bytes_out</code></pre><pre class="spl-mode-body" id="art-29-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.src) as src values(Web.http_user_agent) as user_agent max(Web.bytes_out) as bytes_out from datamodel=Web.Web where Web.url=&quot;*/wp-json/gravitysmtp/v1/tests/mock-data*&quot; Web.status=200 by Web.dest Web.url _time | `drop_dm_object_name(Web)` | where bytes_out &gt; 300000 | sort - bytes_out</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-29-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-29-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-29-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-29-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-29-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
+                                  @&quot;\Microsoft\Edge\User Data\&quot;,
+                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
+          TargetFilePath, TargetFileName, EventType
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
+status: experimental
+description: |
+    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
+    SQLite databases from Chrome/Edge/Firefox profile directories. Any
+    non-browser process touching these files is a high-fidelity signal.
+references:
+    - https://attack.mitre.org/techniques/T1539/
+    - https://attack.mitre.org/techniques/T1555/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1539
+    - attack.t1555.003
+    - attack.credential-access
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Google\Chrome\User Data\&#x27;
+            - &#x27;\Microsoft\Edge\User Data\&#x27;
+            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
+    selection_file:
+        TargetFilename|endswith:
+            - &#x27;\Login Data&#x27;
+            - &#x27;\Cookies&#x27;
+            - &#x27;\logins.json&#x27;
+            - &#x27;\cookies.sqlite&#x27;
+    filter_browser:
+        Image|endswith:
+            - &#x27;\chrome.exe&#x27;
+            - &#x27;\msedge.exe&#x27;
+            - &#x27;\firefox.exe&#x27;
+            - &#x27;\brave.exe&#x27;
+            - &#x27;\opera.exe&#x27;
+    condition: selection_path and selection_file and not filter_browser
+falsepositives:
+    - Backup utilities reading user profile files
+    - Browser sync agents from non-stock vendors
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-29-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-29-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-29-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-29-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-29-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-29-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-29-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-29-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-4020&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-4020&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-29-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-29-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-29-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-4020&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-29-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-4020&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
+  <summary>
+    <span class="uc-title">OAuth consent / suspicious app grant</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-29-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-29-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-29-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-29-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-29-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent</code></pre></div>
+    <div class="tab-content" id="art-29-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+AuditLogs
+| where TimeGenerated &gt; ago(7d)
+| where OperationName has &quot;Consent to application&quot;
+| where Result =~ &quot;success&quot;
+| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
+         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
+         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
+| project TimeGenerated, OperationName, User, AppName, AppId, Result
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
+status: experimental
+description: |
+    User-driven consent to a third-party OAuth application — illicit-
+    consent attack precursor. Pair with first-time-seen-app heuristic
+    in your SIEM for higher fidelity.
+references:
+    - https://attack.mitre.org/techniques/T1528/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1528
+    - attack.persistence
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        OperationName: &#x27;Consent to application&#x27;
+        Result: &#x27;success&#x27;
+    condition: selection
+falsepositives:
+    - Legitimate first-time SaaS app onboarding
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-29-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-29-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-29-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-29-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-29-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-29-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-29-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-29-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-29-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;45.148.10.95&quot;, &quot;193.32.162.60&quot;, &quot;176.65.148.139&quot;, &quot;173.199.90.188&quot;, &quot;45.148.10.120&quot;, &quot;185.8.107.155&quot;, &quot;185.8.106.37&quot;, &quot;185.8.106.92&quot;, &quot;185.8.106.145&quot;, &quot;176.65.148.30&quot;) or RemoteUrl has_any (&quot;&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-29-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;45.148.10.95&quot;, &quot;193.32.162.60&quot;, &quot;176.65.148.139&quot;, &quot;173.199.90.188&quot;, &quot;45.148.10.120&quot;, &quot;185.8.107.155&quot;, &quot;185.8.106.37&quot;, &quot;185.8.106.92&quot;, &quot;185.8.106.145&quot;, &quot;176.65.148.30&quot;]);
+let BadDomains = dynamic([&quot;&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-29-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-29-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-29-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-29-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;45.148.10.95&quot;, &quot;193.32.162.60&quot;, &quot;176.65.148.139&quot;, &quot;173.199.90.188&quot;, &quot;45.148.10.120&quot;, &quot;185.8.107.155&quot;, &quot;185.8.106.37&quot;, &quot;185.8.106.92&quot;, &quot;185.8.106.145&quot;, &quot;176.65.148.30&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-29-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;45.148.10.95&quot;, &quot;193.32.162.60&quot;, &quot;176.65.148.139&quot;, &quot;173.199.90.188&quot;, &quot;45.148.10.120&quot;, &quot;185.8.107.155&quot;, &quot;185.8.106.37&quot;, &quot;185.8.106.92&quot;, &quot;185.8.106.145&quot;, &quot;176.65.148.30&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-30" data-art-slug="2026-06-20-threat-brief-mitigating-large-scale-credential-attacks"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1566"
@@ -11628,367 +12140,6 @@ DeviceFileEvents
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_name IN (&quot;auth.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-62" data-art-slug="2026-06-18-ghsa-critical-ghsa-hxpf-9xvq-wph8-netlicensing-mcp-rest-path"
-  data-phases="actions,c2,exploit,install" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="5" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Bypasses Token Redaction netlicensing-mcp: REST Path Traversal Bypasses Token Redaction  T1190 [LLM] netlicensing-mcp get_product called with path-traversal product_number (../token) [LLM] NetLicensing REST request URL containing both /product/ and traversal-to-token (wire signature) [LLM] netlicensing-mcp get_product response leaking APIKEY/token fields (redaction bypass) [LLM] First-seen access to NetLicensing /token REST endpoint from MCP egress source Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-18-ghsa-critical-ghsa-hxpf-9xvq-wph8-netlicensing-mcp-rest-path" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-hxpf-9xvq-wph8" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Bypasses Token Redaction</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-18</span>
-    <span>5 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">netlicensing-mcp: REST Path Traversal Bypasses Token Redaction</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-62-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-62"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-62-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] netlicensing-mcp get_product called with path-traversal product_number (../token) · [LLM] NetLicensing REST request URL containing both /product/ and traversal-to-token (wire signature) · Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] netlicensing-mcp get_product response leaking APIKEY/token fields (redaction bypass) · [LLM] First-seen access to NetLicensing /token REST endpoint from MCP egress source</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="1722ca2ea7" data-platforms="datadog,sent,spl" data-targets="linux" open>
-  <summary>
-    <span class="uc-title">netlicensing-mcp get_product called with path-traversal product_number (../token)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1722ca2ea7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts MCP/application-log evidence of the netlicensing_get_product tool being invoked with a product_number containing path-traversal sequences (../, %2e%2e, %2f, %5c). This is the raw attacker input for GHSA-hxpf-9xvq-wph8, captured before httpx normalizes /product/../token into /token.
-
-Rationale: Uses the exact MCP tool name (netlicensing_get_product) plus the article&#x27;s documented traversal payloads (../token and the encoded variants %2e%2e/%2f/%5c the remediation adds regression tests for). A Product-fetch tool receiving path separators in its identifier argument has no legitimate use. Defender/Falcon/CloudWatch empty: the payload is an in-process MCP tool argument, not a Windows process command line or AWS API call.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/netlicensing-mcp/GHSA-hxpf-9xvq-wph8/
-  • https://netlicensing.io/wiki/restful-api
-  • https://github.com/advisories/GHSA-hxpf-9xvq-wph8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security team running the published PoC / regression tests against a non-production MCP instance</li><li>DAST/WAF vulnerability scanner probing the MCP server with traversal fuzz strings</li><li>Developer pasting an encoded URL fragment as a product number by copy-paste error</li><li>Internal red-team validation of the GHSA-hxpf-9xvq-wph8 patch</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SyslogMessage has_any (&quot;regression-test&quot;, &quot;pytest&quot;, &quot;VULN-001&quot;, &quot;scanner&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the full log line — confirm the tool is netlicensing_get_product and the product_number literally contains ../ , %2e%2e, %2f or %5c. Identify the MCP client identity / API key that made the call. 2) CONTAIN: If product is &lt; 0.1.8, treat as confirmed exploit — rotate the NetLicensing API key the MCP server holds, and any APIKEY tokens (especially ROLE_APIKEY_ADMIN) that could have been disclosed; upgrade to &gt;=0.1.8. 3) HUNT: Search the same source for other tool calls from this client and for get_product responses containing tokenType/APIKEY (UC3) to confirm whether a key was actually returned.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-62-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-62-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-62-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-62-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where SyslogMessage has &quot;netlicensing_get_product&quot;
-| where SyslogMessage contains &quot;../&quot; or SyslogMessage contains &quot;..\\&quot; or SyslogMessage contains &quot;%2e%2e&quot; or SyslogMessage contains &quot;%2f&quot; or SyslogMessage contains &quot;%5c&quot;
-| project TimeGenerated, Computer, ProcessName, HostName, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-62-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog netlicensing_get_product AND (&quot;../&quot; OR &quot;%2e%2e&quot; OR &quot;%2f&quot; OR &quot;%5c&quot;)</code></pre></div>
-    <div class="tab-content" id="art-62-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* &quot;netlicensing_get_product&quot; (&quot;../&quot; OR &quot;..\\&quot; OR &quot;%2e%2e&quot; OR &quot;%2f&quot; OR &quot;%5c&quot;)
-| table _time host source _raw
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="88038c56b0" data-platforms="sent,sigma,spl" data-targets="vcs">
-  <summary>
-    <span class="uc-title">NetLicensing REST request URL containing both /product/ and traversal-to-token (wire signature)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="88038c56b0" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts forward-proxy / SWG logs for a single request to go.netlicensing.io (or backup netlicensing.labs64.com) whose URL contains the /product/ segment together with /token or an encoded traversal sequence — the on-the-wire artefact when the percent-encoded GHSA-hxpf-9xvq-wph8 payload survives httpx normalization. Legitimate traffic hits /product OR /token, never both in one URL.
-
-Rationale: Anchors on the confirmed REST base host go.netlicensing.io (+backup netlicensing.labs64.com) and the structural impossibility of a legitimate URL containing both /product/ and a token/traversal segment. Targets the encoded variants (%2e%2e/%2f/%5c) that survive WHATWG normalization to the wire. Datadog empty: no web-proxy source in this tenant&#x27;s source list; Defender/Falcon empty: no HTTP path visibility inside HTTPS to a SaaS endpoint.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/netlicensing-mcp/GHSA-hxpf-9xvq-wph8/
-  • https://netlicensing.io/wiki/restful-api</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>WAF/DAST scanner traversal fuzzing of the NetLicensing integration</li><li>Authorized pentest validating the GHSA-hxpf-9xvq-wph8 fix</li><li>A proxy that pre-normalizes URLs and rewrites %2e%2e (would suppress, not false-positive)</li><li>Manual cURL testing by an engineer reproducing the advisory</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the proxy log shows a single request to go.netlicensing.io with /product/ + token/traversal in the URL; identify the SourceIP (the MCP server host) and any authenticated SourceUserName. 2) CONTAIN: Block/inspect the source if unauthorized; rotate the NetLicensing API key the MCP server uses and any potentially-exposed APIKEY tokens; ensure the package is upgraded to &gt;=0.1.8. 3) HUNT: Pivot to MCP/app logs (UC1) for the originating get_product call and to UC4 for bare /token hits from the same host that the literal ../ form would have produced.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-62-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-62-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-62-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-62-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where DestinationHostName has_any (&quot;go.netlicensing.io&quot;,&quot;netlicensing.labs64.com&quot;)
-| where RequestURL contains &quot;/product/&quot;
-| where RequestURL contains &quot;/token&quot; or RequestURL contains &quot;%2e%2e&quot; or RequestURL contains &quot;%2f&quot; or RequestURL contains &quot;%5c&quot; or RequestURL contains &quot;/../&quot;
-| project TimeGenerated, DeviceVendor, SourceIP, SourceUserName, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-62-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: NetLicensing REST Path Traversal to Token Endpoint via Product Path
-id: a1f3c7e2-5b9d-4e21-9c84-7f2e1d6a8b03
-status: experimental
-description: Detects a forward-proxy request to the NetLicensing REST API whose URL combines the /product/ segment with a traversal/token sequence, the wire artefact of the netlicensing-mcp path-traversal token-redaction bypass (GHSA-hxpf-9xvq-wph8).
-references:
-  - https://github.com/advisories/GHSA-hxpf-9xvq-wph8
-author: SOC Detection Engineering
-date: 2026/06/20
-tags:
-  - attack.t1190
-  - attack.initial_access
-logsource:
-  category: proxy
-detection:
-  selection_host:
-    cs-host|contains:
-      - &#x27;go.netlicensing.io&#x27;
-      - &#x27;netlicensing.labs64.com&#x27;
-  selection_product:
-    c-uri|contains: &#x27;/product/&#x27;
-  selection_traversal:
-    c-uri|contains:
-      - &#x27;/token&#x27;
-      - &#x27;/../&#x27;
-      - &#x27;%2e%2e&#x27;
-      - &#x27;%2f&#x27;
-      - &#x27;%5c&#x27;
-  condition: selection_host and selection_product and selection_traversal
-falsepositives:
-  - Authorized vulnerability scanning of the NetLicensing integration
-level: high</code></pre></div>
-    <div class="tab-content" id="art-62-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-62-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-62-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-62-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.dest IN (&quot;go.netlicensing.io&quot;,&quot;netlicensing.labs64.com&quot;) AND Web.url=&quot;*/product/*&quot; AND (Web.url=&quot;*token*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*%2f*&quot; OR Web.url=&quot;*%5c*&quot; OR Web.url=&quot;*/../*&quot;) by Web.src Web.dest Web.http_method Web.url
-| `drop_dm_object_name(Web)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-62-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.dest IN (&quot;go.netlicensing.io&quot;,&quot;netlicensing.labs64.com&quot;) AND Web.url=&quot;*/product/*&quot; AND (Web.url=&quot;*token*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*%2f*&quot; OR Web.url=&quot;*%5c*&quot; OR Web.url=&quot;*/../*&quot;) by Web.src Web.dest Web.http_method Web.url
-| `drop_dm_object_name(Web)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="55afbac427" data-platforms="datadog,sent,spl" data-targets="linux">
-  <summary>
-    <span class="uc-title">netlicensing-mcp get_product response leaking APIKEY/token fields (redaction bypass)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="55afbac427" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts MCP/application logs for a netlicensing_get_product (Product-typed) tool call whose output contains token-specific fields — tokenType APIKEY, ROLE_APIKEY_ADMIN, or a console_url under /#/tokens/. Per GHSA-hxpf-9xvq-wph8 these are exactly the fields redact_token_read() would mask; a Product tool returning them is direct evidence the traversal reached /token and leaked a plaintext key.
-
-Rationale: Pairs the Product tool name with the exact token-leak markers from the advisory&#x27;s PoC output (tokenType=APIKEY, role ROLE_APIKEY_ADMIN, console_url https://ui.netlicensing.io/#/tokens/&lt;key&gt;). The legitimate token tools (get_token/list_tokens) may emit these too, but a PRODUCT tool emitting them is unambiguous bypass evidence. Hunting tier because it depends on the deployment logging tool responses. Defender/Falcon/CloudWatch empty: app-layer response content unavailable to those platforms.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/netlicensing-mcp/GHSA-hxpf-9xvq-wph8/
-  • https://github.com/advisories/GHSA-hxpf-9xvq-wph8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Credential Access">T1212</span> <span class="ind tech" title="Unsecured Credentials">T1552</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Verbose debug logging that echoes a legitimate get_token response near a get_product log line (correlation artefact)</li><li>Replay of the published PoC output in a test/log-sample dataset</li><li>A custom downstream tool that legitimately enriches product data with token metadata (rare; should be validated)</li><li>Log aggregation that interleaves get_product and get_token messages making string co-occurrence appear in one record</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the record is a get_product RESPONSE (not a get_token call) carrying a real (unmasked) APIKEY number/console_url. Note the MCP client identity and the leaked token&#x27;s role. 2) CONTAIN: Immediately revoke/rotate the disclosed APIKEY token — if ROLE_APIKEY_ADMIN, treat the entire NetLicensing account as compromised (full read/write/delete) and rotate the account owner credential; upgrade to &gt;=0.1.8. 3) HUNT: Enumerate all get_product calls from this client (UC1) to scope which keys were exfiltrated, and review NetLicensing audit/console activity for use of the leaked admin token.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-62-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-62-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-62-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-62-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where SyslogMessage has &quot;netlicensing_get_product&quot;
-| where SyslogMessage has &quot;ROLE_APIKEY_ADMIN&quot; or (SyslogMessage has &quot;tokenType&quot; and SyslogMessage has &quot;APIKEY&quot;) or SyslogMessage contains &quot;/#/tokens/&quot;
-| project TimeGenerated, Computer, ProcessName, HostName, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-62-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog netlicensing_get_product AND (&quot;ROLE_APIKEY_ADMIN&quot; OR &quot;tokenType&quot; OR &quot;/#/tokens/&quot;)</code></pre></div>
-    <div class="tab-content" id="art-62-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* &quot;netlicensing_get_product&quot; (&quot;ROLE_APIKEY_ADMIN&quot; OR &quot;tokenType&quot; OR &quot;/#/tokens/&quot;)
-| table _time host source _raw
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1ef6c147ff" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">First-seen access to NetLicensing /token REST endpoint from MCP egress source</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1ef6c147ff" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Behavioral baseline over proxy logs: flags a source host issuing GET /core/v2/rest/token to go.netlicensing.io when that source has no prior history of token-endpoint access in the baseline window. This covers the GHSA-hxpf-9xvq-wph8 case where the literal ../token payload is normalized by httpx to a bare /token request that carries no traversal artefact on the wire.
-
-Rationale: Catches the literal ../token variant that UC2 misses (httpx collapses /product/../token to a bare /token GET). Because the dedicated token tools also legitimately hit /token, this relies on a 14-day per-source baseline so only newly-token-active sources surface — Medium confidence by design. Anchored on the confirmed REST path /core/v2/rest/token. Datadog empty (no proxy source in tenant list); Defender/Falcon empty (no HTTPS path visibility).
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/netlicensing-mcp/GHSA-hxpf-9xvq-wph8/
-  • https://netlicensing.io/wiki/restful-api</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Credential Access">T1212</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A host legitimately beginning to use netlicensing_get_token / list_tokens for the first time (benign new token-tool adoption)</li><li>New MCP server instance deployed in the baseline-free window</li><li>Proxy NAT change re-mapping an existing token-user to a new SourceIP</li><li>Scheduled token-rotation job running from a host added recently</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&quot;)  // populate with confirmed-benign MCP/token-tool egress IPs after first triage to suppress benign new-adopter sources</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Determine whether the new source&#x27;s /token access correlates with a get_product call in MCP/app logs (UC1/UC3). If the source is the MCP server host and no legitimate token tool was invoked, treat as the normalized traversal. 2) CONTAIN: Rotate any APIKEY tokens the source could have read; confirm package &gt;=0.1.8. 3) HUNT: Add confirmed-benign token-using sources to an allowlist, then widen the window to look for repeated first-seen token access across other hosts.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-62-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-62-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-62-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 14d;
-let baseline = CommonSecurityLog
-    | where TimeGenerated between (ago(lookback) .. ago(1d))
-    | where DestinationHostName has_any (&quot;go.netlicensing.io&quot;,&quot;netlicensing.labs64.com&quot;)
-    | where RequestURL contains &quot;/core/v2/rest/token&quot;
-    | summarize by SourceIP;
-CommonSecurityLog
-| where TimeGenerated &gt; ago(1d)
-| where DestinationHostName has_any (&quot;go.netlicensing.io&quot;,&quot;netlicensing.labs64.com&quot;)
-| where RequestURL contains &quot;/core/v2/rest/token&quot;
-| join kind=leftanti baseline on SourceIP
-| project TimeGenerated, SourceIP, SourceUserName, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-62-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-62-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-62-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-62-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count earliest(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.dest IN (&quot;go.netlicensing.io&quot;,&quot;netlicensing.labs64.com&quot;) AND Web.url=&quot;*/core/v2/rest/token*&quot; by Web.src Web.url
-| `drop_dm_object_name(Web)`
-| where firstTime &gt; relative_time(now(), &quot;-1d&quot;)
-| sort - firstTime</code></pre><pre class="spl-mode-body" id="art-62-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count earliest(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.dest IN (&quot;go.netlicensing.io&quot;,&quot;netlicensing.labs64.com&quot;) AND Web.url=&quot;*/core/v2/rest/token*&quot; by Web.src Web.url
-| `drop_dm_object_name(Web)`
-| where firstTime &gt; relative_time(now(), &quot;-1d&quot;)
-| sort - firstTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="36b301fecd" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="36b301fecd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-62-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-62-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-62-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-62-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;redaction.py&quot;, &quot;server.py&quot;, &quot;client.py&quot;, &quot;poc.py&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/usr/bin/env&quot;) or FileName in~ (&quot;redaction.py&quot;, &quot;server.py&quot;, &quot;client.py&quot;, &quot;poc.py&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-62-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;redaction.py&quot;, &quot;server.py&quot;, &quot;client.py&quot;, &quot;poc.py&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/usr/bin/env&quot;) or FileName in~ (&quot;redaction.py&quot;, &quot;server.py&quot;, &quot;client.py&quot;, &quot;poc.py&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-62-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-62-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-62-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-62-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;redaction.py&quot;,&quot;server.py&quot;,&quot;client.py&quot;,&quot;poc.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_name IN (&quot;redaction.py&quot;,&quot;server.py&quot;,&quot;client.py&quot;,&quot;poc.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-62-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;redaction.py&quot;,&quot;server.py&quot;,&quot;client.py&quot;,&quot;poc.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_name IN (&quot;redaction.py&quot;,&quot;server.py&quot;,&quot;client.py&quot;,&quot;poc.py&quot;))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`

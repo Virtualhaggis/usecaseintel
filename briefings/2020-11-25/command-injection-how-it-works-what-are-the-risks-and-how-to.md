@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Command injection: how it works, what are the risks, and how to prevent it
 
-`UC_2948_0` · phase: **exploit** · confidence: **High**
+`UC_2947_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

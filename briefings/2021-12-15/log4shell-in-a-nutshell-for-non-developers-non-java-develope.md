@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Log4Shell in a nutshell (for non-developers & non-Java developers)
 
-`UC_2515_2` · phase: **install** · confidence: **High**
+`UC_2514_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
