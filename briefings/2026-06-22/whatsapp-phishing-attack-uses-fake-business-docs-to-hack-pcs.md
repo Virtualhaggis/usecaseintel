@@ -11,15 +11,9 @@ By Bill Toulas
 June 22, 2026
 06:42 PM
 0 
-
-
 An ongoing malware campaign is targeting WhatsApp users in multiple countries with deceptive messages that push VBScript files, leading to remote system access.
-
-
 The threat actor is using file names that indicate business and financial documents delivered by the victim's contacts, whose accounts had been compromised.
-
-
-By downloading and executing the malicious attachments, the recipi…
+By downloading and executing the malicious attachments, the recipient starts a…
 
 ## Indicators of Compromise (high-fidelity only)
 
