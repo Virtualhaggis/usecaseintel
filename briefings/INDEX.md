@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,12 +11,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-23
 - [agentic ai the weapon that no longer needs a warrior](./2026-06-23/agentic-ai-the-weapon-that-no-longer-needs-a-warrior.md)
 - [fake ai agent skill passed security scans and reportedly rea](./2026-06-23/fake-ai-agent-skill-passed-security-scans-and-reportedly-rea.md)
+- [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
 - [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)
+- [healthtech firm xolis suffers data breach impacting 1 4 mill](./2026-06-23/healthtech-firm-xolis-suffers-data-breach-impacting-1-4-mill.md)
 - [lastpass confirms data breach in klue supply chain attack](./2026-06-23/lastpass-confirms-data-breach-in-klue-supply-chain-attack.md)
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [new macos clickfix attack silently mounts dmgs to push infos](./2026-06-23/new-macos-clickfix-attack-silently-mounts-dmgs-to-push-infos.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
 - [scattered spider members plead guilty to hacking transport f](./2026-06-23/scattered-spider-members-plead-guilty-to-hacking-transport-f.md)
+- [tata electronics confirms cyberattack as hackers leak data](./2026-06-23/tata-electronics-confirms-cyberattack-as-hackers-leak-data.md)
 - [the exploit doesn t exist you can still prove it works again](./2026-06-23/the-exploit-doesn-t-exist-you-can-still-prove-it-works-again.md)
 - [trump order sets 2030 deadline for federal post quantum cryp](./2026-06-23/trump-order-sets-2030-deadline-for-federal-post-quantum-cryp.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
@@ -42,14 +45,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 - [whatsapp phishing attack uses fake business docs to hack pcs](./2026-06-22/whatsapp-phishing-attack-uses-fake-business-docs-to-hack-pcs.md)
 
-## 2026-06-21
-- [arystinger botnet infected thousands of d link routers world](./2026-06-21/arystinger-botnet-infected-thousands-of-d-link-routers-world.md)
-
 ## 2026-06-20
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-20/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [hackers exploit gravity smtp wordpress plugin bug to expose ](./2026-06-20/hackers-exploit-gravity-smtp-wordpress-plugin-bug-to-expose-.md)
-- [microsoft links mastra ai supply chain attack to north korea](./2026-06-20/microsoft-links-mastra-ai-supply-chain-attack-to-north-korea.md)
-- [new prinz eugen ransomware prioritizes recent files for encr](./2026-06-20/new-prinz-eugen-ransomware-prioritizes-recent-files-for-encr.md)
 - [threat brief mitigating large scale credential attacks](./2026-06-20/threat-brief-mitigating-large-scale-credential-attacks.md)
 
 ## 2026-06-19
@@ -122,7 +120,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a forgotten contributor account compromised the entire mastr](./2026-06-16/a-forgotten-contributor-account-compromised-the-entire-mastr.md)
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
 - [cisa kev cve 2026 48907 widget factory joomla content editor](./2026-06-16/cisa-kev-cve-2026-48907-widget-factory-joomla-content-editor.md)
-- [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
 - [clickfix campaigns expand malware delivery with new loaders ](./2026-06-16/clickfix-campaigns-expand-malware-delivery-with-new-loaders-.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI codeMode sandbox-escape RCE: node process spawning OS shell / recon binaries
 
-`UC_81_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_82_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Vulnerable PraisonAI codeMode component present on host (code-mode.ts/js under praisonai)
 
-`UC_81_3` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_82_3` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceFileEvents
 
 ### PraisonAI node process novel outbound egress (post-escape secret/API-key exfiltration or C2)
 
-`UC_81_4` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_82_4` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p69m-4f92-2v84: PraisonAI: Remote Code Execution via Sand
 
-`UC_81_1` · phase: **exploit** · confidence: **High**
+`UC_82_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

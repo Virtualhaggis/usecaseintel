@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### INC Ransomware BYOVD vulnerable driver drop (filwfp.sys / filnk.sys / fildds.sys)
 
-`UC_83_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_84_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceFileEvents
 
 ### INC Rust encryptor launched with --esxi hypervisor argument
 
-`UC_83_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_84_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### INC Ransomware Rclone cloud exfiltration of staged archives
 
-`UC_83_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_84_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### INC Veeam backup credential dumping (salted DPAPI SQL secret access)
 
-`UC_83_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_84_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -517,7 +517,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — INC Ransomware Emerges as Major RaaS Threat in 2026 with 830+ Victims Since 2023
 
-`UC_83_12` · phase: **exploit** · confidence: **High**
+`UC_84_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

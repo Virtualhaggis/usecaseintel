@@ -11,15 +11,9 @@ By Lawrence Abrams
 June 23, 2026
 02:30 PM
 0 
-
-
 A new macOS ClickFix campaign is using Terminal commands to silently download, mount, and launch info-stealing malware from malicious disk image (DMG) files.
-
-
 The campaign is infecting Mac devices with the Atomic macOS Stealer (AMOS) infostealer, which steals browser credentials, cryptocurrency wallet data, Keychain data, messaging app information, and user documents.
-
-
-Rese…
+Researchers at P…
 
 ## Indicators of Compromise (high-fidelity only)
 
