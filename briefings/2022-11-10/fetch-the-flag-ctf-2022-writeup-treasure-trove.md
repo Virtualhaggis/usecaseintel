@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fetch the Flag CTF 2022 writeup: Treasure Trove
 
-`UC_1821_2` · phase: **exploit** · confidence: **High**
+`UC_1822_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

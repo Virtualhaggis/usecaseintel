@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-23
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
+- [whatsapp vbscript campaign uses fake documents to install ma](./2026-06-23/whatsapp-vbscript-campaign-uses-fake-documents-to-install-ma.md)
+- [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
 
 ## 2026-06-22
 - [29 year old squid proxy bug squidbleed can leak cleartext ht](./2026-06-22/29-year-old-squid-proxy-bug-squidbleed-can-leak-cleartext-ht.md)
@@ -3868,6 +3870,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2018-11-27
 - [malicious code found in npm package event stream downloaded ](./2018-11-27/malicious-code-found-in-npm-package-event-stream-downloaded-.md)
+
+## 2018-10-17
+- [jvm ecosystem report 2018 about your platform and applicatio](./2018-10-17/jvm-ecosystem-report-2018-about-your-platform-and-applicatio.md)
 
 ## 2018-08-15
 - [behind the disclosure the zip slip vulnerability](./2018-08-15/behind-the-disclosure-the-zip-slip-vulnerability.md)

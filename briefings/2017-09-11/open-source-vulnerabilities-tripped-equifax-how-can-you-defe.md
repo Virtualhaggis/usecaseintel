@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Open source vulnerabilities tripped Equifax, how can you defend yourself?
 
-`UC_3332_0` · phase: **exploit** · confidence: **High**
+`UC_3333_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

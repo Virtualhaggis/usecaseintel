@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### Microsoft 365 OAuth device code authentication flow sign-in (EvilTokens)
 
-`UC_152_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_153_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ AADSignInEventsBeta
 
 ### EvilTokens device-code token polling from attacker infra (python-requests UA / C2 IPs)
 
-`UC_152_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_153_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ AADSignInEventsBeta
 
 ### EvilTokens device-code lure email (Acrobat/DocuSign decoy, 'Verify to view')
 
-`UC_152_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_153_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ EmailEvents
 
 ### Post-device-code malicious inbox rule creation (BEC prep)
 
-`UC_152_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_153_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

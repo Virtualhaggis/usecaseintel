@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma/Hades auto-exec editor & AI-tool config files dropped in project tree
 
-`UC_87_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_89_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Phantom Gyp: malicious binding.gyp executing during npm install
 
-`UC_87_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_89_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### Hades on-import payload: Python process spawning Bun JavaScript runtime
 
-`UC_87_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_89_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### Hades PyPI startup hook: malicious -setup.pth dropped in site-packages
 
-`UC_87_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_89_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceFileEvents
 
 ### Worm propagation: burst of npm/PyPI publishes from a developer machine
 
-`UC_87_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_89_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi
 
-`UC_87_3` · phase: **exploit** · confidence: **High**
+`UC_89_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -252,7 +252,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A VBScript campaign distributed through WhatsApp deploying RMM software
 
-`UC_18_7` · phase: **exploit** · confidence: **High**
+`UC_20_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
