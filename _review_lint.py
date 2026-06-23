@@ -283,7 +283,51 @@ def check_feed_cache(_):
     return out
 
 
+def check_llm_health(_):
+    """Detect a stalled LLM backend (expired OAuth / quota) — the failure mode
+    that silently produced zero new AI use cases for ~2 days. Two signals:
+    (a) the newest UC-cache write is stale despite the 2h pipeline, and
+    (b) the latest auto.log run is dominated by `claude CLI rc=1`. FAIL loudly:
+    the fix is to re-auth (re-run setup_dual_account.ps1)."""
+    out = []
+    import time
+    cache = ROOT / "intel" / ".llm_uc_cache"
+    newest = 0.0
+    if cache.exists():
+        for f in cache.rglob("*.json"):
+            try:
+                newest = max(newest, f.stat().st_mtime)
+            except OSError:
+                pass
+    if newest:
+        age_h = (time.time() - newest) / 3600
+        if age_h > 30:
+            out.append(_finding(
+                "llm_stale", "data-quality", "FAIL", "suggest",
+                f"No new AI use cases in ~{age_h:.0f}h",
+                "Newest .llm_uc_cache write is stale despite the 2h pipeline — "
+                "the LLM backend is almost certainly down (expired OAuth / quota). "
+                "Re-authenticate: re-run setup_dual_account.ps1."))
+    log = ROOT / "logs" / "auto.log"
+    if log.exists():
+        try:
+            tail = log.read_text(encoding="utf-8", errors="replace")[-40000:]
+            last_run = tail.rsplit("=== run_once start", 1)[-1]
+            fails = last_run.count("claude CLI rc=1")
+            if fails >= 5:
+                out.append(_finding(
+                    "llm_auth_fail", "data-quality", "FAIL", "suggest",
+                    f"Latest pipeline run had {fails} failing LLM calls",
+                    "Repeated `claude CLI rc=1` in the most recent run — LLM calls "
+                    "are erroring (typically 401 expired OAuth). Re-run "
+                    "setup_dual_account.ps1 to re-authenticate both accounts."))
+        except Exception:
+            pass
+    return out
+
+
 CHECKS = [
+    ("none", check_llm_health),
     ("generate", check_noopener),
     ("index", check_stat_accuracy),
     ("index", check_meta_seo),
