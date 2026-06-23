@@ -155,7 +155,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_162_5` · phase: **exploit** · confidence: **High**
+`UC_163_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### AutoGen Studio browsing agent crosses loopback to MCP WebSocket (AutoJack)
 
-`UC_53_5` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_54_5` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### AutoGen Studio (python) spawns shell or LOLBin child — AutoJack RCE outcome
 
-`UC_53_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_54_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AutoJack: How a single page can RCE the host running your AI agent
 
-`UC_53_4` · phase: **exploit** · confidence: **High**
+`UC_54_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

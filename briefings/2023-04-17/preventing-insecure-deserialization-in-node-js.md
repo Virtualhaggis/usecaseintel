@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Preventing insecure deserialization in Node.js
 
-`UC_1662_1` · phase: **exploit** · confidence: **High**
+`UC_1663_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
