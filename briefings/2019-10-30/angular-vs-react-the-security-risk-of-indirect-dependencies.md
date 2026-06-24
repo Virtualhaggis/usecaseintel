@@ -1,8 +1,8 @@
-# [MED] Angular vs React: security bakeoff 2019
+# [MED] Angular vs React: the security risk of indirect dependencies
 
 **Source:** Snyk
 **Published:** 2019-10-30
-**Article:** https://snyk.io/blog/angular-vs-react-security-bakeoff-2019/
+**Article:** https://snyk.io/blog/angular-vs-react-the-security-risk-of-indirect-dependencies/
 
 ## Threat Profile
 
@@ -28,13 +28,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Article-specific behavioural hunt — Angular vs React: security bakeoff 2019
+### Article-specific behavioural hunt — Angular vs React: the security risk of indirect dependencies
 
-`UC_3160_0` · phase: **exploit** · confidence: **High**
+`UC_3163_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Angular vs React: security bakeoff 2019 ```
+``` Article-specific bespoke detection — Angular vs React: the security risk of indirect dependencies ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("next.js"))
@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Angular vs React: security bakeoff 2019
+// Article-specific bespoke detection — Angular vs React: the security risk of indirect dependencies
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents

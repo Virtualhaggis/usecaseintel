@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### RDP password-guessing burst followed by successful logon on internet-facing host
 
-`UC_130_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_133_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceLogonEvents
 
 ### External access to exposed phpMyAdmin / WordPress admin panel
 
-`UC_130_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_133_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceLogonEvents
 
 ### PLEASE_READ_ME MySQL backdoor user 'mysqlbackups' created after DB brute-force
 
-`UC_130_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_133_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### Internet-facing host vulnerable to MongoBleed (CVE-2025-14847) memory disclosure
 
-`UC_130_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_133_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

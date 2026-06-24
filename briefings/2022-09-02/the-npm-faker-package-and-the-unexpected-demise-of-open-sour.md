@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm faker package and the unexpected demise of open source libraries
 
-`UC_1932_2` · phase: **exploit** · confidence: **High**
+`UC_1934_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

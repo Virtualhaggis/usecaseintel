@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — RPM Package Manager: RPM package security scanning with Snyk
 
-`UC_2957_0` · phase: **exploit** · confidence: **High**
+`UC_2959_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

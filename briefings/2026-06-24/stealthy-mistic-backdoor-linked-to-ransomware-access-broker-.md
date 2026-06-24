@@ -11,12 +11,8 @@ By Bill Toulas
 June 24, 2026
 06:41 AM
 0 
-
-
 A new backdoor dubbed Mistic has been observed in financially motivated attacks targeting organizations in the insurance, education, IT, and professional services sectors.
-
-
-The malware is believed to be linked to KongTuke/Woodgnat, an initial access broker active since at least 2024 that specializes in compromising corporate networks and selling that access to ransomware groups,…
+The malware is believed to be linked to KongTuke/Woodgnat, an initial access broker active since at least 2024 that specializes in compromising corporate networks and selling that access to ransomware groups, includi…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -420,7 +416,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Stealthy Mistic backdoor linked to ransomware access broker KongTuke
 
-`UC_0_11` · phase: **exploit** · confidence: **High**
+`UC_3_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

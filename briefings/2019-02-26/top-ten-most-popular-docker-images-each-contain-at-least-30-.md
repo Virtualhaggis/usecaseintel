@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Top ten most popular docker images each contain at least 30 vulnerabilities
 
-`UC_3253_0` · phase: **exploit** · confidence: **High**
+`UC_3256_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
