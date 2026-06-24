@@ -1,31 +1,26 @@
-# [HIGH] CISA warns of max severity Ubiquiti flaws exploited in attacks
+# [HIGH] CNAPP evolution: How Microsoft aligns with leading cloud risk management platforms
 
-**Source:** BleepingComputer
+**Source:** Microsoft Security Blog
 **Published:** 2026-06-24
-**Article:** https://www.bleepingcomputer.com/news/security/cisa-warns-of-max-severity-ubiquiti-flaws-exploited-in-attacks/
+**Article:** https://www.microsoft.com/en-us/security/blog/2026/06/24/cnapp-evolution-how-microsoft-aligns-with-leading-cloud-risk-management-platforms/
 
 ## Threat Profile
 
-CISA warns of max severity Ubiquiti flaws exploited in attacks 
-By Bill Toulas 
-June 24, 2026
-10:35 AM
-0 
-The U.S. Cybersecurity and Infrastructure Security Agency (CISA) is warning of hackers actively exploiting flaws in Ubiquity UniFi OS and Lantronix serial-to-ethernet servers.
-According to the BOD 26-04 directive , federal agencies have three days to apply available security updates or vendor-recommended mitigations.
- 
-The Ubiquiti flaws that CISA added to its catalog of Known Exploited Vuln…
+Tags CNAPP 
+Content types News 
+Products and services Microsoft Defender 
+Microsoft Defender for Cloud 
+Topics AI and agents 
+Analyst reports 
+Cloud security 
+Cloud security is shifting from visibility to context-aware risk reduction, helping security teams understand which exposures matter most, prioritize what can be exploited, and reduce risk across the application lifecycle. As organizations continue to expand across multicloud environments, Kubernetes, APIs, and AI-powered workloads, securi…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-34908`
-- **CVE:** `CVE-2026-34909`
-- **CVE:** `CVE-2026-34910`
-- **CVE:** `CVE-2025-67038`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
@@ -122,14 +117,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-34908`, `CVE-2026-34909`, `CVE-2026-34910`, `CVE-2025-67038`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

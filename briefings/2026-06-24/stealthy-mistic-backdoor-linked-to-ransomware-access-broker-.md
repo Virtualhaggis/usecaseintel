@@ -416,7 +416,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Stealthy Mistic backdoor linked to ransomware access broker KongTuke
 
-`UC_7_11` · phase: **exploit** · confidence: **High**
+`UC_8_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

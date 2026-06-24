@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Kernel privilege escalation: how Kubernetes container isolation impacts privileg
 
-`UC_2943_1` · phase: **install** · confidence: **High**
+`UC_2942_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

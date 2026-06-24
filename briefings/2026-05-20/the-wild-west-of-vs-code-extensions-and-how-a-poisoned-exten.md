@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Nx Console v18.95.0 compromised extension installed (May 2026 supply-chain attack)
 
-`UC_304_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_303_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### VS Code/Cursor extension host fetches dropper from nrwl/nx orphan commit on GitHub
 
-`UC_304_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_303_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### macOS Python backdoor persistence via kitty-monitor LaunchAgent and cat.py drop
 
-`UC_304_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_303_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceFileEvents
 
 ### Python backdoor self-daemonisation via __DAEMONIZED=1 spawned by VS Code helper or node
 
-`UC_304_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_303_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceProcessEvents
 
 ### VS Code extension host fan-out reads of developer secrets (.ssh, .aws, .npmrc, ~/.claude/settings.json)
 
-`UC_304_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_303_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -393,7 +393,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Wild West of VS Code extensions and how a poisoned extension breached GitHub
 
-`UC_304_8` · phase: **exploit** · confidence: **High**
+`UC_303_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

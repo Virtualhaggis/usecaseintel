@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — JavaScript type confusion: Bypassed input validation (and how to remediate)
 
-`UC_2565_2` · phase: **exploit** · confidence: **High**
+`UC_2564_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### FortiBleed distributed credential stuffing against FortiGate SSL VPN ending in successful auth
 
-`UC_63_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_64_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Successful FortiGate VPN/admin login to default or built-in Fortinet accounts from public IP
 
-`UC_63_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_64_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Post-VPN lateral movement: FortiGate-authenticated account fans out across internal Windows hosts
 
-`UC_63_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_64_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

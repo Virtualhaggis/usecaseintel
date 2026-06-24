@@ -252,7 +252,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — StrikeShark: investigating a new campaign delivering Cobalt Strike through Shark
 
-`UC_8_9` · phase: **exploit** · confidence: **High**
+`UC_9_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
