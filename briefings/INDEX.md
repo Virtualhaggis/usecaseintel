@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,9 +14,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco unified cm flaw exploited after poc reveals file write](./2026-06-24/cisco-unified-cm-flaw-exploited-after-poc-reveals-file-write.md)
 - [cnapp evolution how microsoft aligns with leading cloud risk](./2026-06-24/cnapp-evolution-how-microsoft-aligns-with-leading-cloud-risk.md)
 - [codfish semantic release action github action has been compr](./2026-06-24/codfish-semantic-release-action-github-action-has-been-compr.md)
+- [compromised github action codfish semantic release action st](./2026-06-24/compromised-github-action-codfish-semantic-release-action-st.md)
 - [cordyceps ci cd flaws expose 300 github repositories to supp](./2026-06-24/cordyceps-ci-cd-flaws-expose-300-github-repositories-to-supp.md)
 - [dawn of the apex agentic adversary](./2026-06-24/dawn-of-the-apex-agentic-adversary.md)
 - [doj seizes huione cloud account tied to cyber scam money lau](./2026-06-24/doj-seizes-huione-cloud-account-tied-to-cyber-scam-money-lau.md)
+- [malicious edge extension abuses native messaging as bridge t](./2026-06-24/malicious-edge-extension-abuses-native-messaging-as-bridge-t.md)
+- [mandiant reveals how cisco sd wan zero day attacks gained ro](./2026-06-24/mandiant-reveals-how-cisco-sd-wan-zero-day-attacks-gained-ro.md)
 - [securing the service desk why social engineering attacks kee](./2026-06-24/securing-the-service-desk-why-social-engineering-attacks-kee.md)
 - [stealthy mistic backdoor linked to ransomware access broker ](./2026-06-24/stealthy-mistic-backdoor-linked-to-ransomware-access-broker-.md)
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
@@ -56,7 +59,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [shapedplugin wordpress pro plugins backdoored in supply chai](./2026-06-22/shapedplugin-wordpress-pro-plugins-backdoored-in-supply-chai.md)
 - [stop your legacy infrastructure from hijacking your ai agent](./2026-06-22/stop-your-legacy-infrastructure-from-hijacking-your-ai-agent.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
-- [whatsapp phishing attack uses fake business docs to hack pcs](./2026-06-22/whatsapp-phishing-attack-uses-fake-business-docs-to-hack-pcs.md)
 
 ## 2026-06-20
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-20/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
@@ -684,7 +686,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-01-23
 - [cisa kev cve 2024 37079 broadcom vmware vcenter server out o](./2026-01-23/cisa-kev-cve-2024-37079-broadcom-vmware-vcenter-server-out-o.md)
 - [eset research sandworm behind cyberattack on poland s power ](./2026-01-23/eset-research-sandworm-behind-cyberattack-on-poland-s-power-.md)
-- [g wagon npm package deploys python stealer targeting 100 cry](./2026-01-23/g-wagon-npm-package-deploys-python-stealer-targeting-100-cry.md)
 
 ## 2026-01-22
 - [cisa kev cve 2025 31125 vite vitejs improper access control ](./2026-01-22/cisa-kev-cve-2025-31125-vite-vitejs-improper-access-control-.md)

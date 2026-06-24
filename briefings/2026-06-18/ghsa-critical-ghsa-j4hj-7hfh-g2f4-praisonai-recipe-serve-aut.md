@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable PraisonAI recipe-serve module (fail-open auth middleware) present on host
 
-`UC_99_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_100_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceFileEvents
 
 ### Unauthenticated POST to PraisonAI recipe-serve /runs execution endpoint
 
-`UC_99_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_100_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### PraisonAI recipe-serve agent process spawning command/script interpreter (post-bypass RCE)
 
-`UC_99_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_100_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-j4hj-7hfh-g2f4: praisonai: recipe serve auth middleware s
 
-`UC_99_1` · phase: **exploit** · confidence: **High**
+`UC_100_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
