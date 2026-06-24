@@ -9,11 +9,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-24
+- [amadey stealc malware operations disrupted in operation endg](./2026-06-24/amadey-stealc-malware-operations-disrupted-in-operation-endg.md)
+- [cisa warns of max severity ubiquiti flaws exploited in attac](./2026-06-24/cisa-warns-of-max-severity-ubiquiti-flaws-exploited-in-attac.md)
 - [cisco unified cm flaw exploited after poc reveals file write](./2026-06-24/cisco-unified-cm-flaw-exploited-after-poc-reveals-file-write.md)
+- [cordyceps ci cd flaws expose 300 github repositories to supp](./2026-06-24/cordyceps-ci-cd-flaws-expose-300-github-repositories-to-supp.md)
 - [dawn of the apex agentic adversary](./2026-06-24/dawn-of-the-apex-agentic-adversary.md)
 - [doj seizes huione cloud account tied to cyber scam money lau](./2026-06-24/doj-seizes-huione-cloud-account-tied-to-cyber-scam-money-lau.md)
-- [stealc and amadey breaking down infostealers and the cybercr](./2026-06-24/stealc-and-amadey-breaking-down-infostealers-and-the-cybercr.md)
-- [stealthy mistic backdoor linked to ransomware access broker ](./2026-06-24/stealthy-mistic-backdoor-linked-to-ransomware-access-broker-.md)
+- [securing the service desk why social engineering attacks kee](./2026-06-24/securing-the-service-desk-why-social-engineering-attacks-kee.md)
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
@@ -42,8 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
 - [canada s spy agency used first of its kind warrant to clean ](./2026-06-22/canada-s-spy-agency-used-first-of-its-kind-warrant-to-clean-.md)
-- [ffmpeg fixes pixelsmash flaw in widely used video decoder](./2026-06-22/ffmpeg-fixes-pixelsmash-flaw-in-widely-used-video-decoder.md)
-- [fortibleed campaign used custom fortigate sniffer to steal c](./2026-06-22/fortibleed-campaign-used-custom-fortigate-sniffer-to-steal-c.md)
 - [google sets sept 30 deadline for android developer verificat](./2026-06-22/google-sets-sept-30-deadline-for-android-developer-verificat.md)
 - [guarding ai memory](./2026-06-22/guarding-ai-memory.md)
 - [interpol warns phishing ransomware and ai scams are rising a](./2026-06-22/interpol-warns-phishing-ransomware-and-ai-scams-are-rising-a.md)

@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### BadIIS rogue native module drop in IIS folders (demo.pdb / Chinese path heuristic)
 
-`UC_298_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_296_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ union FileDrops, ModuleLoads
 
 ### Talos weekly prevalent-malware hash hit (Coinminer worm / TunMirror / SECOH-QAD / KMS-Loader)
 
-`UC_298_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_296_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union ExecHits, FileHits, ImageHits
 
 ### BadIIS traffic-hijacking: IIS 503 surge + anomalous external redirect ratio per site/hour
 
-`UC_298_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_296_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ union ExecHits, FileHits, ImageHits
 
 ### Article-specific behavioural hunt — The art of being ungovernable
 
-`UC_298_1` · phase: **exploit** · confidence: **High**
+`UC_296_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

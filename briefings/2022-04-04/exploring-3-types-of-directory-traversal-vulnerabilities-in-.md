@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Exploring 3 types of directory traversal vulnerabilities in C/C++
 
-`UC_2191_1` · phase: **install** · confidence: **High**
+`UC_2189_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

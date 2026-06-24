@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — What makes Verdaccio a successful project?
 
-`UC_2917_0` · phase: **exploit** · confidence: **High**
+`UC_2915_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Exposed PraisonAI MCP SSE listener accepting non-loopback connections
 
-`UC_99_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_98_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### Unauthenticated MCP SSE JSON-RPC tool invocation (/sse + /messages/ no Authorization)
 
-`UC_99_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_98_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### PraisonAI MCP Python server spawning a command shell (unauth tools/call RCE)
 
-`UC_99_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_98_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.
 
-`UC_99_0` · phase: **exploit** · confidence: **High**
+`UC_98_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

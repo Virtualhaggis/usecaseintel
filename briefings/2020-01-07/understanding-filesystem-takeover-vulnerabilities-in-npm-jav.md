@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana
 
-`UC_3140_1` · phase: **exploit** · confidence: **High**
+`UC_3138_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
