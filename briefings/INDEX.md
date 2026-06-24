@@ -8,6 +8,10 @@ _2254 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-24
+- [cisco unified cm flaw exploited after poc reveals file write](./2026-06-24/cisco-unified-cm-flaw-exploited-after-poc-reveals-file-write.md)
+- [doj seizes huione cloud account tied to cyber scam money lau](./2026-06-24/doj-seizes-huione-cloud-account-tied-to-cyber-scam-money-lau.md)
+
 ## 2026-06-23
 - [agentic ai the weapon that no longer needs a warrior](./2026-06-23/agentic-ai-the-weapon-that-no-longer-needs-a-warrior.md)
 - [cisco unified cm flaw cve 2026 20230 now exploited in attack](./2026-06-23/cisco-unified-cm-flaw-cve-2026-20230-now-exploited-in-attack.md)
@@ -120,11 +124,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-16
 - [a forgotten contributor account compromised the entire mastr](./2026-06-16/a-forgotten-contributor-account-compromised-the-entire-mastr.md)
-- [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
 - [cisa kev cve 2026 48907 widget factory joomla content editor](./2026-06-16/cisa-kev-cve-2026-48907-widget-factory-joomla-content-editor.md)
 - [clickfix campaigns expand malware delivery with new loaders ](./2026-06-16/clickfix-campaigns-expand-malware-delivery-with-new-loaders-.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
-- [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [fishmonger s arsenal upgraded sprysocks for windows](./2026-06-16/fishmonger-s-arsenal-upgraded-sprysocks-for-windows.md)
 - [ghsa critical cve 2026 48519 langflow unauthenticated rce in](./2026-06-16/ghsa-critical-cve-2026-48519-langflow-unauthenticated-rce-in.md)
 - [ghsa critical cve 2026 48746 vllm openai auth bypass](./2026-06-16/ghsa-critical-cve-2026-48746-vllm-openai-auth-bypass.md)
