@@ -9,13 +9,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-24
-- [amadey stealc malware operations disrupted in operation endg](./2026-06-24/amadey-stealc-malware-operations-disrupted-in-operation-endg.md)
+- [amadey and stealc malware network disrupted 27m stolen crede](./2026-06-24/amadey-and-stealc-malware-network-disrupted-27m-stolen-crede.md)
 - [cisa warns of max severity ubiquiti flaws exploited in attac](./2026-06-24/cisa-warns-of-max-severity-ubiquiti-flaws-exploited-in-attac.md)
 - [cisco unified cm flaw exploited after poc reveals file write](./2026-06-24/cisco-unified-cm-flaw-exploited-after-poc-reveals-file-write.md)
+- [codfish semantic release action github action has been compr](./2026-06-24/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [cordyceps ci cd flaws expose 300 github repositories to supp](./2026-06-24/cordyceps-ci-cd-flaws-expose-300-github-repositories-to-supp.md)
 - [dawn of the apex agentic adversary](./2026-06-24/dawn-of-the-apex-agentic-adversary.md)
 - [doj seizes huione cloud account tied to cyber scam money lau](./2026-06-24/doj-seizes-huione-cloud-account-tied-to-cyber-scam-money-lau.md)
 - [securing the service desk why social engineering attacks kee](./2026-06-24/securing-the-service-desk-why-social-engineering-attacks-kee.md)
+- [stealthy mistic backdoor linked to ransomware access broker ](./2026-06-24/stealthy-mistic-backdoor-linked-to-ransomware-access-broker-.md)
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
@@ -141,7 +143,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 365w hqf6 vxfg crawl4ai multiple docker a](./2026-06-16/ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a.md)
 - [google vertex ai sdk flaw let attackers hijack model uploads](./2026-06-16/google-vertex-ai-sdk-flaw-let-attackers-hijack-model-uploads.md)
 - [multiple jetbrains ide plugins caught stealing ai keys](./2026-06-16/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys.md)
-- [new rokarolla android malware steals pins sms codes and cryp](./2026-06-16/new-rokarolla-android-malware-steals-pins-sms-codes-and-cryp.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
 
 ## 2026-06-15
@@ -956,9 +957,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-08-18
 - [cisa kev cve 2025 54948 trend micro apex one os command inje](./2025-08-18/cisa-kev-cve-2025-54948-trend-micro-apex-one-os-command-inje.md)
-
-## 2025-08-15
-- [suspicious tag movement in aws s github action what happened](./2025-08-15/suspicious-tag-movement-in-aws-s-github-action-what-happened.md)
 
 ## 2025-08-13
 - [cisa kev cve 2025 8875 n able n central insecure deserializa](./2025-08-13/cisa-kev-cve-2025-8875-n-able-n-central-insecure-deserializa.md)

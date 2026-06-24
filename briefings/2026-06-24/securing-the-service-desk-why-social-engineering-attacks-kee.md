@@ -11,12 +11,8 @@ Sponsored by Specops Software
 June 24, 2026
 10:02 AM
 0 
-
-
 Service desk social engineering remains one of the most effective ways for attackers to gain access to corporate systems. The 2025 attacks against UK retailers Marks & Spencer (M&S), Co-op, and Harrods, carried out by the hacking collective Scattered Spider, brought these tactics into the spotlight, but they are far from isolated incidents.
-
-
-In the case of M&…
+In the case of M&S , Chai…
 
 ## Indicators of Compromise (high-fidelity only)
 
