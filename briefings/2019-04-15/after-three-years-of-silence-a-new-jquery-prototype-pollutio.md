@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — After three years of silence, a new jQuery prototype pollution vulnerability eme
 
-`UC_3238_0` · phase: **exploit** · confidence: **High**
+`UC_3239_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

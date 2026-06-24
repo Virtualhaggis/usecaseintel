@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Better Ruby Gemfile security: A step-by-step guide using Snyk
 
-`UC_2806_0` · phase: **install** · confidence: **High**
+`UC_2807_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

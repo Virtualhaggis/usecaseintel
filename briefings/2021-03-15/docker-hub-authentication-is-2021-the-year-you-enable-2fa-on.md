@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Docker Hub authentication: Is 2021 the year you enable 2FA on Docker Hub?
 
-`UC_2893_3` · phase: **exploit** · confidence: **High**
+`UC_2894_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

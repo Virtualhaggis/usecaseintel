@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Setting up SSL/TLS for Kubernetes Ingress
 
-`UC_1810_2` · phase: **install** · confidence: **High**
+`UC_1811_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

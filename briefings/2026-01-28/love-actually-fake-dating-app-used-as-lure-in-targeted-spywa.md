@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### GhostChat C2/staging infrastructure contact (hitpak.org, buildthenations.info, fkclb.com)
 
-`UC_610_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_611_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ DeviceNetworkEvents
 
 ### GhostChat C2 beacon URL pattern: hitpak.org/page.php?tynor=<host>sss<user>
 
-`UC_610_3` · phase: **exfil** · confidence: **High** · AI-generated for this article
+`UC_611_3` · phase: **exfil** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

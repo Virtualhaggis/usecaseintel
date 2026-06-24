@@ -11,12 +11,8 @@ By Lawrence Abrams
 June 24, 2026
 05:29 PM
 0 
-
-
 New details have been revealed on how hackers exploited a Cisco Catalyst SD-WAN vulnerability tracked as CVE-2026-20245 in zero-day attacks to create rogue root accounts on targeted devices.
-
-
-The CVE-2026-20245 vulnerability is a high-severity command injection flaw in Cisco Catalyst SD-WAN Manager (vManage), Controller (vSmart), and Validator (vBond) that allows authentica…
+The CVE-2026-20245 vulnerability is a high-severity command injection flaw in Cisco Catalyst SD-WAN Manager (vManage), Controller (vSmart), and Validator (vBond) that allows authenticated atta…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -37,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Mandiant reveals how Cisco SD-WAN zero-day attacks gained root access
 
-`UC_0_1` · phase: **install** · confidence: **High**
+`UC_1_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

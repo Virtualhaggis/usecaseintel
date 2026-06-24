@@ -11,12 +11,8 @@ By Bill Toulas
 June 24, 2026
 04:58 PM
 0 
-
-
 A malicious Microsoft Edge extension dubbed ‘Edgecution' has been used in a ransomware attack to escape the browser sandbox and deploy a Python-based backdoor.
-
-
-Access to the local system is obtained by leveraging the Chrome Native Messaging protocol that allows browser extensions to interact with native desktop applications, such as a password manager communicating with the ex…
+Access to the local system is obtained by leveraging the Chrome Native Messaging protocol that allows browser extensions to interact with native desktop applications, such as a password manager communicating with the extension …
 
 ## Indicators of Compromise (high-fidelity only)
 
