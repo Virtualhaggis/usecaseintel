@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Alert: peacenotwar module sabotages npm developers in the node-ipc package to pr
 
-`UC_2296_3` · phase: **exploit** · confidence: **High**
+`UC_2297_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

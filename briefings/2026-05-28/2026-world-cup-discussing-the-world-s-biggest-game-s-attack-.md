@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### NoName057(16) DDoSia client check-in (/client/login, /client/get_targets)
 
-`UC_278_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_279_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### World Cup 2026 themed lookalike / typosquat domain resolution by corporate hosts
 
-`UC_278_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_279_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Tailscale mesh-VPN client install/exec on Windows endpoint (Operation Poisson parallel persistence)
 
-`UC_143_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_144_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### Tailscale WireGuard egress (UDP 41641 / CGNAT 100.64.0.0/10 / *.ts.net) out-of-band C2 channel
 
-`UC_143_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_144_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### OpenSSH Server feature install / sshd service creation on Windows workstation
 
-`UC_143_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_144_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### SSH authorized_keys provisioning / ssh-keygen on Windows endpoint (key-based backdoor)
 
-`UC_143_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_144_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceFileEvents
 
 ### OpenSSH reverse tunnel (ssh -R) to external host — out-of-band C2 fallback
 
-`UC_143_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_144_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceProcessEvents
 
 ### wscript.exe executing .vbs from user staging folder (Poisson VBScript stager)
 
-`UC_143_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_144_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ DeviceProcessEvents
 
 ### Scheduled task at logon with highest privileges launching a script interpreter
 
-`UC_143_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_144_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ DeviceProcessEvents
 
 ### powercfg standby/monitor-timeout set to never (keep host awake for keylogger harvesting)
 
-`UC_143_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_144_17` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,7 +218,7 @@ DeviceProcessEvents
 
 ### DuckDNS dynamic-DNS resolution from endpoint (Havoc/Poisson C2 infrastructure)
 
-`UC_143_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_144_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -468,7 +468,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Junior Hacker Used Tailscale and OpenSSH to Keep Access After His C2 Went Offlin
 
-`UC_143_9` · phase: **exploit** · confidence: **High**
+`UC_144_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

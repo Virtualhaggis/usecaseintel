@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI AgentOS Node server exposed to non-loopback on default port 8000
 
-`UC_103_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_105_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### Unauthenticated PraisonAI AgentOS API hits: GET /api/agents enumeration + POST /api/chat invocation
 
-`UC_103_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_105_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Vulnerable PraisonAI npm package present (dist/os/agentos.js) on managed hosts
 
-`UC_103_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

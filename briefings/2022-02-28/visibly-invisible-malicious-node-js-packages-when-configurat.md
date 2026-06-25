@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Visibly invisible malicious Node.js packages: When configuration niche meets inv
 
-`UC_2391_0` · phase: **exploit** · confidence: **High**
+`UC_2392_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

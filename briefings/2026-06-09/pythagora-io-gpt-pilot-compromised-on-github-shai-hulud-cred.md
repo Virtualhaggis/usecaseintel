@@ -291,7 +291,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 
-`UC_197_7` · phase: **exploit** · confidence: **High**
+`UC_198_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

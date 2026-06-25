@@ -1,22 +1,19 @@
-# [HIGH] ​​Forrester names Microsoft a Leader in the 2026 Extended Detection and Response Platforms Wave™ report
+# [HIGH] Microsoft a Leader in The Forrester Wave™ for Endpoint Management Platforms
 
 **Source:** Microsoft Security Blog
-**Published:** 2026-06-17
-**Article:** https://www.microsoft.com/en-us/security/blog/2026/06/17/forrester-names-microsoft-a-leader-in-the-2026-extended-detection-and-response-platforms-wave-report/
+**Published:** 2026-06-25
+**Article:** https://www.microsoft.com/en-us/security/blog/2026/06/25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-management-platforms/
 
 ## Threat Profile
 
-Tags 
-Forrester Waves 
-Content types 
-News 
-Products and services 
-Microsoft Defender 
-Topics 
-Analyst reports 
-Security management 
-Security operations 
-We are excited to share that Microsoft has been named a Leader in  The Forrester Wave™: Extended Detection and Response Platforms, Q2 2026 . Microsoft ranked the highest of any vendor evaluated in the Strategy category and is the only vendor to receive the highest score in Vision. Microsoft also received the highest possible scores across the c…
+Tags Forrester Waves 
+Content types News 
+Products and services Microsoft Defender 
+Microsoft Entra 
+Microsoft Intune 
+Topics Analyst reports 
+Endpoint security 
+The endpoint management category is being redefined in real time. Organizations no longer need tools that only inventory devices or enforce configuration policies; they need a platform that connects identity, security, compliance, and AI governance across every endpoint where work happens. Microsoft’s recognition as a Leader in The Forr…
 
 ## Indicators of Compromise (high-fidelity only)
 

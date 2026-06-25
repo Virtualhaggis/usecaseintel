@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -16,8 +16,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-06-25/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)
+- [microsoft a leader in the forrester wave for endpoint manage](./2026-06-25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-manage.md)
 - [new gaslight macos malware uses prompt injection to disrupt ](./2026-06-25/new-gaslight-macos-malware-uses-prompt-injection-to-disrupt-.md)
 - [new mistic backdoor linked to kongtuke in clickfix and model](./2026-06-25/new-mistic-backdoor-linked-to-kongtuke-in-clickfix-and-model.md)
+- [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 - [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
 
 ## 2026-06-24
@@ -38,7 +40,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake ai agent skill passed security scans and reportedly rea](./2026-06-23/fake-ai-agent-skill-passed-security-scans-and-reportedly-rea.md)
 - [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
 - [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)
-- [healthtech firm xolis suffers data breach impacting 1 4 mill](./2026-06-23/healthtech-firm-xolis-suffers-data-breach-impacting-1-4-mill.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
@@ -120,7 +121,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [beyond the benchmark advancing security at ai speed](./2026-06-17/beyond-the-benchmark-advancing-security-at-ai-speed.md)
 - [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
-- [forrester names microsoft a leader in the 2026 extended dete](./2026-06-17/forrester-names-microsoft-a-leader-in-the-2026-extended-dete.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
@@ -3745,7 +3745,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-10-30
 - [84 of all websites are impacted by jquery xss vulnerabilitie](./2019-10-30/84-of-all-websites-are-impacted-by-jquery-xss-vulnerabilitie.md)
-- [angular vs react the security risk of indirect dependencies](./2019-10-30/angular-vs-react-the-security-risk-of-indirect-dependencies.md)
+- [angular vs react security bakeoff 2019](./2019-10-30/angular-vs-react-security-bakeoff-2019.md)
 - [javascript frameworks security report 2019](./2019-10-30/javascript-frameworks-security-report-2019.md)
 
 ## 2019-10-09
@@ -3866,6 +3866,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2018-11-27
 - [malicious code found in npm package event stream downloaded ](./2018-11-27/malicious-code-found-in-npm-package-event-stream-downloaded-.md)
+
+## 2018-10-17
+- [jvm ecosystem report 2018 about your platform and applicatio](./2018-10-17/jvm-ecosystem-report-2018-about-your-platform-and-applicatio.md)
 
 ## 2018-08-15
 - [behind the disclosure the zip slip vulnerability](./2018-08-15/behind-the-disclosure-the-zip-slip-vulnerability.md)

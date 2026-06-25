@@ -11,12 +11,8 @@ By Bill Toulas
 June 25, 2026
 11:00 AM
 0 
-
-
 The Bluekit phishing-as-a-service platform continues to evolve with nearly 70 new hostnames identified over the past week, and by adding browser-in-the-middle (BitM) capabilities for improved data theft.
-
-
-First documented in April by Varonis researchers , Bluekit provides an AI assistant that supports multiple large language models (Llama, GPT-4.1, Claude, Gemini, and DeepSeek) for…
+First documented in April by Varonis researchers , Bluekit provides an AI assistant that supports multiple large language models (Llama, GPT-4.1, Claude, Gemini, and DeepSeek) for draftin…
 
 ## Indicators of Compromise (high-fidelity only)
 

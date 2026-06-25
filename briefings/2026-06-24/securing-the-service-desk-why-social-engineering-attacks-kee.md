@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Help-desk password reset immediately followed by MFA security-info (re)registration — Scattered Spider account takeover
 
-`UC_23_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ CloudAppEvents
 
 ### New Entra account created and added to a privileged role within the hour — rogue admin account
 
-`UC_23_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ CloudAppEvents
 
 ### On-demand RMM / remote-access tool launched from browser-download or temp path — Silent Ransom Group fake IT support
 
-`UC_23_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_27_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### WinSCP / Rclone bulk transfer to external destination — Silent Ransom Group data-theft exfiltration
 
-`UC_23_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_27_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

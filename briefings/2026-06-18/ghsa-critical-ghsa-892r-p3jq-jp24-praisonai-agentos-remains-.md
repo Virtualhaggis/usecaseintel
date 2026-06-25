@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI AgentOS unauthenticated POST /api/chat remote agent invocation
 
-`UC_108_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_110_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI AgentOS process bound to 0.0.0.0:8000 / external inbound connections
 
-`UC_108_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_110_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### Vulnerable PraisonAI package inventory (CVE-2026-40151, >= 4.2.1 <= 4.6.57)
 
-`UC_108_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_110_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
