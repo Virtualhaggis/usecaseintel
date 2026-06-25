@@ -43,8 +43,13 @@ REM Dual-account failover enabled: setup_dual_account.ps1 has provisioned
 REM both per-account config dirs. generate.py routes via PRIMARY first and
 REM sticky-switches to SECONDARY on credit/quota exhaustion for the rest
 REM of the run. To revert to default %USERPROFILE%\.claude, re-comment both.
-set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
-set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
+REM 2026-06-26: both per-account sessions (.claude-acct-a/.claude-acct-b)
+REM expired (401) on ~06-21 and silently killed UC generation for 4 days.
+REM Falling back to the default %USERPROFILE%\.claude session (re-authed and
+REM working). Re-run setup_dual_account.ps1 and un-comment the two lines below
+REM to restore dual-account failover.
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 REM `py -u` forces unbuffered stdout. Without this, Python fully buffers
 REM output when redirected to a file (>>"%LOG%"), so progress only lands
