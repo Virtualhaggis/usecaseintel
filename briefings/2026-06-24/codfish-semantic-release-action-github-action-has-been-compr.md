@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — codfish/semantic-release-action GitHub Action has been compromised
 
-`UC_5_6` · phase: **exploit** · confidence: **High**
+`UC_6_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

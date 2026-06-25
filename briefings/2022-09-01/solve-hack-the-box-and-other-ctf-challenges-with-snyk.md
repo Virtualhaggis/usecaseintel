@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Solve Hack the Box and other CTF challenges with Snyk
 
-`UC_1933_1` · phase: **exploit** · confidence: **High**
+`UC_1932_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
