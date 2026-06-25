@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### APT28 MacroMaze: Edge launched off-screen or headless to webhook.site by non-browser parent
 
-`UC_562_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_563_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### APT28 MacroMaze: schtasks creating wscript-launched persistence with 20/30/61-minute repeat
 
-`UC_562_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_563_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### APT28 MacroMaze: Office or Edge HTTP traffic to webhook.site (INCLUDEPICTURE tracker + exfil)
 
-`UC_562_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_563_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -406,7 +406,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Operation MacroMaze: new APT28  campaign using basic tooling and legit infrastru
 
-`UC_562_8` · phase: **exploit** · confidence: **High**
+`UC_563_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

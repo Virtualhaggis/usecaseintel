@@ -11,6 +11,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-25
 - [cisco catalyst sd wan zero day cve 2026 20245 exploited to g](./2026-06-25/cisco-catalyst-sd-wan-zero-day-cve-2026-20245-exploited-to-g.md)
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
+- [mass npm supply chain attack 20 leo platform packages compro](./2026-06-25/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
+- [new mistic backdoor linked to kongtuke in clickfix and model](./2026-06-25/new-mistic-backdoor-linked-to-kongtuke-in-clickfix-and-model.md)
 
 ## 2026-06-24
 - [amadey and stealc malware network disrupted 27m stolen crede](./2026-06-24/amadey-and-stealc-malware-network-disrupted-27m-stolen-crede.md)
@@ -122,7 +124,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-17
 - [145 mastra npm packages compromised via hijacked contributor](./2026-06-17/145-mastra-npm-packages-compromised-via-hijacked-contributor.md)
 - [beyond the benchmark advancing security at ai speed](./2026-06-17/beyond-the-benchmark-advancing-security-at-ai-speed.md)
-- [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
 - [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [forrester names microsoft a leader in the 2026 extended dete](./2026-06-17/forrester-names-microsoft-a-leader-in-the-2026-extended-dete.md)
@@ -929,7 +930,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 38352 linux kernel time of check time of u](./2025-09-04/cisa-kev-cve-2025-38352-linux-kernel-time-of-check-time-of-u.md)
 - [cisa kev cve 2025 48543 android runtime use after free vulne](./2025-09-04/cisa-kev-cve-2025-48543-android-runtime-use-after-free-vulne.md)
 - [cisa kev cve 2025 53690 sitecore multiple products deseriali](./2025-09-04/cisa-kev-cve-2025-53690-sitecore-multiple-products-deseriali.md)
-- [how stepsecurity harden runner detected unexpected microsoft](./2025-09-04/how-stepsecurity-harden-runner-detected-unexpected-microsoft.md)
 - [what an aha moment with an org admin token taught one devsec](./2025-09-04/what-an-aha-moment-with-an-org-admin-token-taught-one-devsec.md)
 
 ## 2025-09-03
