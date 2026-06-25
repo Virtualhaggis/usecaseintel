@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -31,7 +31,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
 - [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)
 - [healthtech firm xolis suffers data breach impacting 1 4 mill](./2026-06-23/healthtech-firm-xolis-suffers-data-breach-impacting-1-4-mill.md)
-- [lastpass confirms data breach in klue supply chain attack](./2026-06-23/lastpass-confirms-data-breach-in-klue-supply-chain-attack.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [new macos clickfix attack silently mounts dmgs to push infos](./2026-06-23/new-macos-clickfix-attack-silently-mounts-dmgs-to-push-infos.md)

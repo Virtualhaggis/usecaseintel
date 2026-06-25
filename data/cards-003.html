@@ -1,438 +1,3 @@
-<article class="card" id="art-56" data-art-slug="2026-06-19-ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitrary file read with RCE exploit Langflow: BaseFileComponent-based nodes arbitrary file read with RCE exploit CVE-2026-55447 T1190 [LLM] Langflow file-ingestion endpoint receives archive/bundle upload (CVE-2026-55447 delivery) [LLM] Langflow worker reads secret_key / credential files via symlink TAR traversal (CVE-2026-55447) [LLM] Langflow Python worker spawns shell / recon child process (CVE-2026-55447 Python Interpreter RCE) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitr">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-19-ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-ccv6-r384-xp75" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitrary file read with RCE exploit</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-19</span>
-    <span>5 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Langflow: BaseFileComponent-based nodes arbitrary file read with RCE exploit</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55447</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-56-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-56"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-56-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Langflow file-ingestion endpoint receives archive/bundle upload (CVE-2026-55447 delivery)</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Langflow worker reads secret_key / credential files via symlink TAR traversal (CVE-2026-55447) · [LLM] Langflow Python worker spawns shell / recon child process (CVE-2026-55447 Python Interpreter RCE)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitr</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="b337d0d467" data-platforms="sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">Langflow file-ingestion endpoint receives archive/bundle upload (CVE-2026-55447 delivery)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="b337d0d467" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts POST uploads to Langflow&#x27;s file-ingestion API (/api/v1/files/upload, /api/v2/files) that feed BaseFileComponent nodes (Read File, Docling, Unstructured, etc.). CVE-2026-55447 is delivered by uploading a TAR bundle whose symlink members point at arbitrary absolute paths, so the upload itself is the first observable step. Reverse-proxy/WAF logs are the only place this inbound request is visible.
-
-Rationale: Uses the concrete Langflow upload endpoints (/api/v1/files/upload, /api/v2/files) from the docs the advisory references; these feed the BaseFileComponent nodes the article lists. Low fidelity alone (legit RAG document uploads look identical at the proxy layer with no body inspection), so it is a delivery-phase pivot to correlate with the host-side UCs.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/langflow/CVE-2026-55447/
-  • https://www.ibm.com/support/pages/node/7273426
-  • https://docs.langflow.org/api-files</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Content Injection">T1659</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate users uploading documents/datasets into RAG ingestion flows</li><li>Automated/scheduled ingestion pipelines or ETL jobs seeding vector stores</li><li>CI/CD or demo seeding of flows via the files API</li><li>Bulk dataset migration uploads by data engineers</li><li>Synthetic monitoring / health-check probes hitting the files endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DestinationServiceName !has &quot;healthcheck&quot; and SourceIP !in (&quot;127.0.0.1&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the SourceIP, user-agent and authenticated principal for the upload; confirm whether the source is an expected internal ingestion service or an unknown/external client. 2) Contain: if the source is untrusted, block it at the WAF/reverse proxy and pivot to the Langflow host to check whether the host-side symlink/sensitive-file-read UC fired in the same window; if confirmed, isolate the host. 3) Hunt: on the Langflow host, look for the worker reading secret_key/etc/shadow/.ssh/.aws (UC2) and the Python worker spawning shells (UC3) within minutes of this upload; rotate LANGFLOW_SECRET_KEY and any exposed credentials and confirm the instance is &gt;= 1.9.2.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-56-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-56-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-56-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-56-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestMethod =~ &quot;POST&quot;
-| where RequestURL has_any (&quot;/api/v1/files/upload&quot;, &quot;/api/v2/files&quot;, &quot;/api/v1/files&quot;)
-| summarize Uploads = count(), Paths = make_set(RequestURL, 20), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), UserAgents = make_set(RequestClientApplication, 10) by SourceIP, DestinationHostName, DestinationServiceName
-| order by Uploads desc</code></pre></div>
-    <div class="tab-content" id="art-56-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow File-Ingestion Endpoint Upload (CVE-2026-55447 delivery)
-id: 7b1e2c4a-3f6d-4a91-bc02-9d51e8a4f110
-status: experimental
-description: POST upload to Langflow BaseFileComponent file-ingestion endpoints, the delivery vector for CVE-2026-55447 symlink-in-TAR arbitrary file read.
-references:
-  - https://github.com/advisories/GHSA-ccv6-r384-xp75
-  - https://advisories.gitlab.com/pypi/langflow/CVE-2026-55447/
-author: SOC Detection Engineering
-date: 2026/06/21
-tags:
-  - attack.t1190
-  - attack.initial_access
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-method: &#x27;POST&#x27;
-    cs-uri-stem|contains:
-      - &#x27;/api/v1/files/upload&#x27;
-      - &#x27;/api/v2/files&#x27;
-  condition: selection
-level: low</code></pre></div>
-    <div class="tab-content" id="art-56-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-56-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-56-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-56-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url=&quot;*/api/v1/files/upload*&quot; OR Web.url=&quot;*/api/v2/files*&quot;) by Web.src Web.dest Web.url Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-56-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url=&quot;*/api/v1/files/upload*&quot; OR Web.url=&quot;*/api/v2/files*&quot;) by Web.src Web.dest Web.url Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d39b7745a3" data-platforms="falcon,sent,sigma,spl" data-targets="linux,vcs">
-  <summary>
-    <span class="uc-title">Langflow worker reads secret_key / credential files via symlink TAR traversal (CVE-2026-55447)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d39b7745a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the Langflow Python worker (python/uvicorn/gunicorn running langflow) reading sensitive files outside its data directory — secret_key, /etc/shadow, /etc/passwd, SSH/AWS keys, private_key.pem. CVE-2026-55447&#x27;s _unpack_bundle follows symlinks inside an uploaded TAR, so the worker opens whatever absolute path the symlink targets and pipes it into the vector store. A web worker reading /etc/shadow or an SSH/AWS key is highly abnormal.
-
-Rationale: Anchors on the article&#x27;s own mechanics: _unpack_bundle in base_file.py following a TAR symlink to read Langflow&#x27;s secret_key (JWT signing secret). secret_key, private_key.pem and config-dir paths confirmed via Langflow docs/DeepWiki; /etc/shadow, SSH and AWS keys are the article&#x27;s &#x27;any file on the file-system by absolute path&#x27; generalisation. A web worker reading these is high-fidelity.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/langflow/CVE-2026-55447/
-  • https://www.ibm.com/support/pages/node/7273426
-  • https://deepwiki.com/langflow-ai/langflow/4.9-file-management-and-storage</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="File and Directory Discovery">T1083</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Langflow legitimately reading its OWN secret_key/private_key.pem from the canonical config dir at process start (filter on the symlink/uploads path or exclude boot window)</li><li>Configuration-management runs (Ansible/Chef) reading /etc as the langflow service user</li><li>Backup agents snapshotting home dirs containing .ssh/.aws</li><li>Vulnerability/file-integrity scanners enumerating /etc and key files</li><li>Admin troubleshooting cat-ing /etc/passwd in the container</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (TargetFilePath endswith &quot;/.cache/langflow/secret_key&quot; or TargetFilePath endswith &quot;/app/langflow/secret_key&quot;) or EventType !in (&quot;FileAccessed&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the TargetFilePath — reads of /etc/shadow, ~/.ssh or ~/.aws by a langflow worker are immediately suspicious; a secret_key read is suspicious mainly when it comes from the uploads/component temp path rather than the canonical config dir. Correlate with a recent files-API upload (UC1). 2) Contain: isolate the host, revoke the Langflow session, and rotate LANGFLOW_SECRET_KEY plus any SSH/AWS credentials that were readable — assume the JWT signing secret is compromised. 3) Hunt: search for forged-JWT-authenticated flow creation and the Python worker spawning shells (UC3); verify the Langflow build and upgrade to &gt;= 1.9.2 (PR #12945).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-56-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-56-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-56-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-56-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-56-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType in (&quot;FileAccessed&quot;, &quot;FileRead&quot;, &quot;FileOpened&quot;)
-| where ActingProcessName has_any (&quot;python&quot;, &quot;uvicorn&quot;, &quot;gunicorn&quot;) or ActingProcessCommandLine has &quot;langflow&quot;
-| where TargetFilePath has_any (&quot;/etc/shadow&quot;, &quot;/etc/passwd&quot;, &quot;/.ssh/&quot;, &quot;id_rsa&quot;, &quot;/.aws/credentials&quot;, &quot;secret_key&quot;, &quot;private_key.pem&quot;)
-| where not(ActingProcessName has_any (&quot;apt&quot;, &quot;dpkg&quot;, &quot;yum&quot;, &quot;sshd&quot;, &quot;cron&quot;, &quot;systemd&quot;))
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, EventType
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-56-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow Worker Reads Credential/Secret Files (CVE-2026-55447 symlink traversal)
-id: a4c9d2e1-8b73-4f50-9a6c-1e2f3b4c5d60
-status: experimental
-description: Langflow Python worker opening secret_key, /etc/shadow, SSH or AWS credential files — the arbitrary-file-read payoff of CVE-2026-55447 symlink-in-TAR extraction.
-references:
-  - https://github.com/advisories/GHSA-ccv6-r384-xp75
-  - https://advisories.gitlab.com/pypi/langflow/CVE-2026-55447/
-author: SOC Detection Engineering
-date: 2026/06/21
-tags:
-  - attack.t1552.001
-  - attack.t1083
-  - attack.credential_access
-logsource:
-  category: file_access
-  product: linux
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/uvicorn&#x27;
-      - &#x27;/gunicorn&#x27;
-  selection_target:
-    TargetFilename|contains:
-      - &#x27;/etc/shadow&#x27;
-      - &#x27;/etc/passwd&#x27;
-      - &#x27;/.ssh/&#x27;
-      - &#x27;id_rsa&#x27;
-      - &#x27;/.aws/credentials&#x27;
-      - &#x27;secret_key&#x27;
-      - &#x27;private_key.pem&#x27;
-  condition: selection_proc and selection_target
-level: high</code></pre></div>
-    <div class="tab-content" id="art-56-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo
-| ContextImageFileName=/\/(python[0-9.]*|uvicorn|gunicorn)$/i
-| TargetFileName=/(\/etc\/shadow|\/etc\/passwd|\/\.ssh\/|id_rsa|\/\.aws\/credentials|secret_key|private_key\.pem)/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())
-| count &gt; 0</code></pre></div>
-    <div class="tab-content" id="art-56-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-56-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-56-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-56-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*/etc/shadow*&quot; OR Filesystem.file_path=&quot;*/etc/passwd*&quot; OR Filesystem.file_path=&quot;*/.ssh/*&quot; OR Filesystem.file_path=&quot;*id_rsa*&quot; OR Filesystem.file_path=&quot;*/.aws/credentials*&quot; OR Filesystem.file_path=&quot;*secret_key*&quot; OR Filesystem.file_path=&quot;*private_key.pem*&quot;) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-56-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*/etc/shadow*&quot; OR Filesystem.file_path=&quot;*/etc/passwd*&quot; OR Filesystem.file_path=&quot;*/.ssh/*&quot; OR Filesystem.file_path=&quot;*id_rsa*&quot; OR Filesystem.file_path=&quot;*/.aws/credentials*&quot; OR Filesystem.file_path=&quot;*secret_key*&quot; OR Filesystem.file_path=&quot;*private_key.pem*&quot;) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d714bd8c50" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Langflow Python worker spawns shell / recon child process (CVE-2026-55447 Python Interpreter RCE)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d714bd8c50" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the Langflow web worker (python/uvicorn/gunicorn with &#x27;langflow&#x27; in its command line) spawning shells or recon/network tooling (sh, bash, curl, wget, nc, whoami, id, base64, crontab). After stealing secret_key and forging a JWT, CVE-2026-55447 escalates to RCE by creating a flow with the &#x27;Python Interpreter&#x27; node and running arbitrary Python — which surfaces as the long-lived server process spawning unexpected children.
-
-Rationale: Targets the article&#x27;s explicit RCE primitive: &#x27;create a new flow with Python Interpreter node, fill it with arbitrary Python code and execute it.&#x27; The Langflow server is a long-lived python/uvicorn/gunicorn process; it spawning /bin/sh or curl/wget/nc is the observable shape of code execution through that node. Parent scoped to &#x27;langflow&#x27; in the cmdline keeps it specific.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/langflow/CVE-2026-55447/
-  • https://www.ibm.com/support/pages/node/7273426</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate data-science use of the Python Interpreter node that shells out (subprocess/os.system) for tooling</li><li>Langflow components that legitimately invoke ffmpeg/curl/git (e.g. Video File, web loaders)</li><li>Runtime pip/package installs spawning sh during component setup</li><li>Container entrypoint or healthcheck scripts run under the same python parent</li><li>Notebook/REPL experimentation by developers on a non-prod Langflow</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;pip install&quot;, &quot;pip3 install&quot;, &quot;/healthcheck&quot;, &quot;ffmpeg&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine — recon (whoami/id/uname), egress (curl/wget/nc) or chmod/crontab from a langflow worker are strong RCE signals; benign data-science shell-outs usually reference project tooling. Check whether the org even permits the Python Interpreter node. 2) Contain: isolate the host, kill the worker, and revoke active Langflow sessions; if UC2 also fired, treat the JWT secret as compromised and rotate it. 3) Hunt: trace the child process tree for persistence (cron, SSH key writes, new users) and outbound C2; review files-API upload logs (UC1) and sensitive-file reads (UC2) on the same host to confirm the full chain, then upgrade to &gt;= 1.9.2.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-56-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-56-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-56-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-56-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-56-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-56-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName has_any (&quot;python&quot;, &quot;python3&quot;, &quot;uvicorn&quot;, &quot;gunicorn&quot;)
-| where InitiatingProcessCommandLine has &quot;langflow&quot; or InitiatingProcessFolderPath has &quot;langflow&quot;
-| where FileName in~ (&quot;sh&quot;, &quot;bash&quot;, &quot;dash&quot;, &quot;zsh&quot;, &quot;curl&quot;, &quot;wget&quot;, &quot;nc&quot;, &quot;ncat&quot;, &quot;netcat&quot;, &quot;whoami&quot;, &quot;id&quot;, &quot;uname&quot;, &quot;hostname&quot;, &quot;base64&quot;, &quot;chmod&quot;, &quot;crontab&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-56-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;python&quot;, &quot;uvicorn&quot;, &quot;gunicorn&quot;)
-| where ParentProcessCommandLine has &quot;langflow&quot;
-| where TargetProcessName has_any (&quot;bash&quot;, &quot;dash&quot;, &quot;zsh&quot;, &quot;curl&quot;, &quot;wget&quot;, &quot;ncat&quot;, &quot;netcat&quot;, &quot;whoami&quot;, &quot;uname&quot;, &quot;hostname&quot;, &quot;base64&quot;, &quot;crontab&quot;) or TargetProcessName endswith &quot;/sh&quot; or TargetProcessName endswith &quot;/nc&quot; or TargetProcessName endswith &quot;/id&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-56-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow Python Worker Spawns Shell or Recon Tool (CVE-2026-55447 Python Interpreter RCE)
-id: c3f5a8b2-1d49-4e67-8a0b-2c4d6e8f9a11
-status: experimental
-description: Langflow web worker spawning a shell or recon/network binary — the RCE stage of CVE-2026-55447 via the Python Interpreter node after JWT forgery.
-references:
-  - https://github.com/advisories/GHSA-ccv6-r384-xp75
-  - https://advisories.gitlab.com/pypi/langflow/CVE-2026-55447/
-author: SOC Detection Engineering
-date: 2026/06/21
-tags:
-  - attack.t1059.006
-  - attack.t1059.004
-  - attack.execution
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/uvicorn&#x27;
-      - &#x27;/gunicorn&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/nc&#x27;
-      - &#x27;/ncat&#x27;
-      - &#x27;/whoami&#x27;
-      - &#x27;/id&#x27;
-      - &#x27;/uname&#x27;
-      - &#x27;/base64&#x27;
-      - &#x27;/chmod&#x27;
-      - &#x27;/crontab&#x27;
-  condition: selection_parent and selection_child
-level: high</code></pre></div>
-    <div class="tab-content" id="art-56-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(python[0-9.]*|uvicorn|gunicorn)$/i
-| ImageFileName=/\/(sh|bash|dash|zsh|curl|wget|nc|ncat|netcat|whoami|id|uname|hostname|base64|chmod|crontab)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
-| count &gt; 0</code></pre></div>
-    <div class="tab-content" id="art-56-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-56-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-56-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-56-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=python* OR Processes.parent_process_name=uvicorn* OR Processes.parent_process_name=gunicorn*) Processes.parent_process=&quot;*langflow*&quot; (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;,&quot;base64&quot;,&quot;chmod&quot;,&quot;crontab&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-56-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=python* OR Processes.parent_process_name=uvicorn* OR Processes.parent_process_name=gunicorn*) Processes.parent_process=&quot;*langflow*&quot; (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;,&quot;base64&quot;,&quot;chmod&quot;,&quot;crontab&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-56-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-56-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-56-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-56-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-55447&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-56-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-55447&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-56-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-56-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-56-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-56-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-55447&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-56-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-55447&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1899c7352f" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitr</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1899c7352f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-56-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-56-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-56-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-56-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitr
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/trip.docx&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-56-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitr
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/trip.docx&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-56-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-56-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-56-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-56-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitr ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/trip.docx*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-56-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55447: Langflow: BaseFileComponent-based nodes arbitr ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/trip.docx*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-57" data-art-slug="2026-06-19-ghsa-critical-cve-2026-55255-langflow-idor-vulnerability-in-"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -11331,6 +10896,399 @@ DeviceFileEvents
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/etc/shadow*&quot; OR Filesystem.file_path=&quot;*/etc/hostname*&quot; OR Filesystem.file_path=&quot;*/tmp/victim_file.txt*&quot; OR Filesystem.file_name IN (&quot;file_tools.py&quot;,&quot;edit_tools.py&quot;,&quot;skill_tools.py&quot;,&quot;write_file.py&quot;,&quot;read_file.py&quot;,&quot;apply_diff.py&quot;,&quot;search_replace.py&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-92" data-art-slug="2026-06-18-ghsa-critical-ghsa-j4f3-55x4-r6q2-npm-praisonai-mcpserver-ex"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
+  data-techs="T1190,T1528"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="azure,vcs,windows"
+  data-uc-count="4" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthenticated HTTP tools/call npm PraisonAI MCPServer exposes unauthenticated HTTP tools/call  T1190 T1528 [LLM] Node.js MCP server reachable from public clients (unauthenticated MCPServer exposure) [LLM] PraisonAI MCP server (node) spawns shell/LOLBin child after external connection OAuth consent / suspicious app grant Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-18-ghsa-critical-ghsa-j4f3-55x4-r6q2-npm-praisonai-mcpserver-ex" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-j4f3-55x4-r6q2" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthenticated HTTP tools/call</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-18</span>
+    <span>4 use cases</span>
+    <span>2 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">npm PraisonAI MCPServer exposes unauthenticated HTTP tools/call</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-92-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-92"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-92-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Node.js MCP server reachable from public clients (unauthenticated MCPServer exposure) · Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] PraisonAI MCP server (node) spawns shell/LOLBin child after external connection · OAuth consent / suspicious app grant</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="18ebcae568" data-platforms="def,falcon,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Node.js MCP server reachable from public clients (unauthenticated MCPServer exposure)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="18ebcae568" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the core PraisonAI MCPServer flaw: startHttp() calls listen(port) with no host arg, binding to the unspecified address (observed &#x27;::&#x27;) so the HTTP JSON-RPC transport is reachable on all interfaces. This surfaces Node listeners accepting inbound connections from public source IPs — the precondition for unauthenticated tools/call.
+
+Rationale: Targets the article&#x27;s root cause — httpServer.listen(port) with no host binds to &#x27;::&#x27; (the PoV&#x27;s observed bindAddress), making the MCP HTTP transport reachable off-host. Inbound-accept on node from a Public RemoteIP is the exposure that unauthenticated tools/call depends on. Cross-checked against GHSA-4qq2-2j2x-x62c and the Network-AI GHSA-fj4g-2p96-q6m3 (same &#x27;0.0.0.0 + no auth&#x27; MCP pattern) plus Censys-reported mass MCP exposure.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/npm/praisonai/GHSA-4qq2-2j2x-x62c/
+  • https://github.com/Jovancoding/Network-AI/security/advisories/GHSA-fj4g-2p96-q6m3
+  • https://www.anvilogic.com/threat-reports/mcp-server-auth-flaws</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate internet-facing Node app (Express/Next.js) intentionally bound to 0.0.0.0 on the host</li><li>Public load-balancer / uptime-monitor health probes hitting the Node port</li><li>Dev server bound to all interfaces in a DMZ or cloud VM with a public IP</li><li>Reverse-proxy host where the Node origin legitimately serves external clients</li><li>Container/k8s node with NodePort service exposing the app publicly by design</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where LocalPort !in (80, 443)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the LocalPort and process — confirm whether it is the PraisonAI MCPServer (check the app&#x27;s startup code for server.start({port}) / node_modules/praisonai) versus a sanctioned web app. Pull the RemoteIPs and check for non-business geographies/ASNs. 2) Contain: if it is an MCP server, restrict the listener to 127.0.0.1 (or firewall the port to trusted CIDRs) and front it with an authenticating reverse proxy; block the offending source IPs at the edge. 3) Hunt: pivot the same DeviceId into UC2 (child-process spawns by that node PID) and UC3 (tools/call request bodies) to determine whether tools were actually invoked.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-92-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-92-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-92-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-92-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-92-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), RemoteIPs=make_set(RemoteIP, 50) by DeviceName, LocalPort, InitiatingProcessId, InitiatingProcessCommandLine
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-92-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(7d)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), ConnCount=count(), RemoteIPs=make_set(RemoteIP, 50) by DeviceName, LocalPort, InitiatingProcessId, InitiatingProcessCommandLine
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-92-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ConnectionDirection=1 ContextImageFileName=/\\node(\.exe)?$/i
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, LocalPort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-92-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-92-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-92-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-92-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction=inbound All_Traffic.process_name=node* by All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,src_ip) OR cidrmatch(&quot;172.16.0.0/12&quot;,src_ip) OR cidrmatch(&quot;192.168.0.0/16&quot;,src_ip) OR cidrmatch(&quot;127.0.0.0/8&quot;,src_ip)) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-92-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction=inbound All_Traffic.process_name=node* by All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,src_ip) OR cidrmatch(&quot;172.16.0.0/12&quot;,src_ip) OR cidrmatch(&quot;192.168.0.0/16&quot;,src_ip) OR cidrmatch(&quot;127.0.0.0/8&quot;,src_ip)) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4aa17b150f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">PraisonAI MCP server (node) spawns shell/LOLBin child after external connection</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="4aa17b150f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts post-exploitation of the unauthenticated tools/call dispatcher: registered MCP tools commonly wrap code execution and run with the server process privileges. This correlates a Node listener accepting an inbound public connection with that same node PID spawning a command interpreter/LOLBin within 5 minutes — i.e. an unauthenticated caller driving server-side tool execution.
+
+Rationale: Maps the article&#x27;s Impact section — tool handlers &#x27;run with the server process privileges&#x27; and an unauthenticated caller can &#x27;drive the same actions&#x27; including &#x27;code execution.&#x27; The Defender variant ties the inbound public reach (server PID owning the socket) to a child spawn by the same PID, turning a noisy node→shell pattern into a high-fidelity unauth-RCE signal. Corroborated by GHSA-6rmh-7xcm-cpxj (unauthenticated workflow execution) and PraisonAI unauth-RCE via tool_override.py.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6rmh-7xcm-cpxj
+  • https://advisories.gitlab.com/pypi/praisonai/CVE-2026-44334/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>node-gyp / native module builds spawning cmd.exe during npm install</li><li>electron-builder or packaging tooling shelling out to powershell/cmd</li><li>CI/build agents running Node test runners that invoke shell scripts</li><li>pm2/forever/nodemon process managers spawning shells</li><li>Legitimately-registered MCP tools that are designed to run shell commands</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has_any (&quot;node-gyp&quot;,&quot;electron-builder&quot;,&quot;npm-cli.js&quot;,&quot;node_modules\\.bin&quot;,&quot;prebuild-install&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine and the correlated RemoteIP/LocalPort — distinguish a build-tool shell (node-gyp/npm) from attacker commands (recon, download, encoded payloads). Confirm the parent node process is an MCP server. 2) Contain: kill the node MCP process, isolate the host, and rotate any server-side credentials/API keys the MCP tools had access to (they ran under the server identity). 3) Hunt: enumerate all tools/resources the server registered, review UC3 for the tools/call bodies that triggered execution, and sweep other hosts running the praisonai package for the same node→shell pattern.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-92-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-92-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-92-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-92-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-92-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-92-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-92-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let Window = 5m;
+let InboundReach = DeviceNetworkEvents
+    | where Timestamp &gt; ago(7d)
+    | where ActionType == &quot;InboundConnectionAccepted&quot;
+    | where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
+    | where RemoteIPType == &quot;Public&quot;
+    | project ConnTime=Timestamp, DeviceId, ServerPid=InitiatingProcessId, RemoteIP, LocalPort;
+DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;)
+| join kind=inner InboundReach on DeviceId
+| where InitiatingProcessId == ServerPid
+| where Timestamp between (ConnTime .. ConnTime + Window)
+| project ConnTime, SpawnTime=Timestamp, DelaySec=datetime_diff(&#x27;second&#x27;, Timestamp, ConnTime), DeviceName, AccountName, RemoteIP, LocalPort, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by ConnTime desc</code></pre></div>
+    <div class="tab-content" id="art-92-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where ParentProcessName endswith &quot;\\node.exe&quot;
+| where NewProcessName has_any (&quot;\\cmd.exe&quot;,&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;,&quot;\\wscript.exe&quot;,&quot;\\cscript.exe&quot;,&quot;\\mshta.exe&quot;,&quot;\\rundll32.exe&quot;,&quot;\\certutil.exe&quot;,&quot;\\curl.exe&quot;,&quot;\\bitsadmin.exe&quot;)
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-92-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Node.js process spawns command interpreter or LOLBin (MCP tools/call execution)
+id: a7f3c2e1-9b4d-4e6a-8c2f-1d5e7a9b3c4f
+description: Detects a node.exe parent spawning a shell/LOLBin child, consistent with an unauthenticated PraisonAI MCP tools/call driving server-side code execution.
+references:
+  - https://github.com/advisories/GHSA-j4f3-55x4-r6q2
+  - https://advisories.gitlab.com/npm/praisonai/GHSA-4qq2-2j2x-x62c/
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1190
+  - attack.t1059
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith: &#x27;\node.exe&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\mshta.exe&#x27;
+      - &#x27;\rundll32.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-92-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\node.exe OR *\\Node.exe OR *\\NODE.EXE) @Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\rundll32.exe OR *\\certutil.exe OR *\\bitsadmin.exe)</code></pre></div>
+    <div class="tab-content" id="art-92-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^node(\.exe)?$/i
+| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|certutil|curl|bitsadmin)\.exe$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-92-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-92-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-92-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-92-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=node.exe (Processes.process_name=cmd.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe OR Processes.process_name=wscript.exe OR Processes.process_name=cscript.exe OR Processes.process_name=mshta.exe OR Processes.process_name=rundll32.exe OR Processes.process_name=certutil.exe OR Processes.process_name=curl.exe OR Processes.process_name=bitsadmin.exe) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-92-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=node.exe (Processes.process_name=cmd.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe OR Processes.process_name=wscript.exe OR Processes.process_name=cscript.exe OR Processes.process_name=mshta.exe OR Processes.process_name=rundll32.exe OR Processes.process_name=certutil.exe OR Processes.process_name=curl.exe OR Processes.process_name=bitsadmin.exe) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
+  <summary>
+    <span class="uc-title">OAuth consent / suspicious app grant</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-92-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-92-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-92-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-92-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-92-uc2-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent</code></pre></div>
+    <div class="tab-content" id="art-92-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+AuditLogs
+| where TimeGenerated &gt; ago(7d)
+| where OperationName has &quot;Consent to application&quot;
+| where Result =~ &quot;success&quot;
+| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
+         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
+         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
+| project TimeGenerated, OperationName, User, AppName, AppId, Result
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-92-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
+status: experimental
+description: |
+    User-driven consent to a third-party OAuth application — illicit-
+    consent attack precursor. Pair with first-time-seen-app heuristic
+    in your SIEM for higher fidelity.
+references:
+    - https://attack.mitre.org/techniques/T1528/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1528
+    - attack.persistence
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        OperationName: &#x27;Consent to application&#x27;
+        Result: &#x27;success&#x27;
+    condition: selection
+falsepositives:
+    - Legitimate first-time SaaS app onboarding
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-92-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-92-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-92-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-92-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-92-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7b63dcc9e1" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7b63dcc9e1" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-92-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-92-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-92-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-92-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-92-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-92-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-92-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-92-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-92-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-92-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`

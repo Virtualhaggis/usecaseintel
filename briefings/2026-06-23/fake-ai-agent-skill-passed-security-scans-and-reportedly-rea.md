@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake AI Agent Skill Passed Security Scans and Reportedly Reached 26,000 Agents
 
-`UC_25_3` · phase: **exploit** · confidence: **High**
+`UC_26_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
