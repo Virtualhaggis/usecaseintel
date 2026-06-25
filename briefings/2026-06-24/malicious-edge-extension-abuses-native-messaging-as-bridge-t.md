@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Edgecution headless Edge launched with --load-extension to sideload unpacked extension
 
-`UC_25_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### Edgecution native messaging host registered under Edge NativeMessagingHosts
 
-`UC_25_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceRegistryEvents
 
 ### Edgecution sandbox escape: msedge.exe spawns cmd/python via native_host.bat
 
-`UC_25_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_26_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Edgecution native_host.bat / extension.log written into Edge User Data profile
 
-`UC_25_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceFileEvents
 
 ### Edgecution deploy: scheduled task created to launch headless Edge with extension
 
-`UC_25_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_26_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceProcessEvents
 
 ### Edgecution C2: headless Edge extension making outbound public connections
 
-`UC_25_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_26_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -21,6 +21,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new gaslight macos malware uses prompt injection to disrupt ](./2026-06-25/new-gaslight-macos-malware-uses-prompt-injection-to-disrupt-.md)
 - [new mistic backdoor linked to kongtuke in clickfix and model](./2026-06-25/new-mistic-backdoor-linked-to-kongtuke-in-clickfix-and-model.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
+- [order tracking app shop abused to push callback phishing att](./2026-06-25/order-tracking-app-shop-abused-to-push-callback-phishing-att.md)
 - [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
 
 ## 2026-06-24
@@ -37,7 +38,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
-- [cisco unified cm flaw cve 2026 20230 now exploited in attack](./2026-06-23/cisco-unified-cm-flaw-cve-2026-20230-now-exploited-in-attack.md)
 - [fake ai agent skill passed security scans and reportedly rea](./2026-06-23/fake-ai-agent-skill-passed-security-scans-and-reportedly-rea.md)
 - [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
 - [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)

@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Mistic backdoor DLL side-load: MpExtMs.exe loading version.dll / EndpointDlp.dll
 
-`UC_33_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_34_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceImageLoadEvents
 
 ### KongTuke finger.exe LOLBin payload retrieval
 
-`UC_33_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_34_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### Mistic / MTLBackdoor C2 IP and domain communication
 
-`UC_33_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_34_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceNetworkEvents
 
 ### KongTuke Run-key persistence masquerading as AnyDesk/Splashtop remote-access tools
 
-`UC_33_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_34_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceRegistryEvents
 
 ### ModeloRAT portable WinPython / Node.js interpreter execution from user-writable path
 
-`UC_33_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_34_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -526,7 +526,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Stealthy Mistic backdoor linked to ransomware access broker KongTuke
 
-`UC_33_11` · phase: **exploit** · confidence: **High**
+`UC_34_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
