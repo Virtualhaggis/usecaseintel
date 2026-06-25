@@ -26,12 +26,120 @@ Per findings from Kaspersky, the active campaign is targeting users of WhatsApp 
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1548.002** — Abuse Elevation Control Mechanism: Bypass User Account Control
+- **T1112** — Modify Registry
+- **T1218.007** — System Binary Proxy Execution: Msiexec
+- **T1566.001** — Phishing: Spearphishing Attachment
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### WhatsApp Desktop (WhatsApp.Root.exe) spawning WScript/CScript
+
+`UC_44_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="WhatsApp.Root.exe" AND (Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "WhatsApp.Root.exe"
+| where FileName in~ ("wscript.exe","cscript.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### WScript/CScript C2 egress to WhatsApp-campaign download infrastructure
+
+`UC_44_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("202.61.160.201","202.61.160.202","202.61.160.208","202.61.160.160","202.61.160.137","38.55.151.63")) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","msiexec.exe") or isnotempty(RemoteUrl))
+| where RemoteIP in ("202.61.160.201","202.61.160.202","202.61.160.208","202.61.160.160","202.61.160.137","38.55.151.63")
+    or RemoteUrl has_any ("baskwms.top","msopsa.top","shoppes.help","baoxis.cc","baolongwes.oss-ap-southeast-1.aliyuncs.com")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### UAC bypass via ConsentPromptBehaviorAdmin set to 0 by script host
+
+`UC_44_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_value_name="ConsentPromptBehaviorAdmin" AND (Registry.registry_value_data="0" OR Registry.registry_value_data="0x00000000")) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where RegistryKey has @"Policies\System"
+| where RegistryValueName =~ "ConsentPromptBehaviorAdmin"
+| where RegistryValueData in ("0","0x0","0x00000000")
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","cmd.exe","reg.exe","powershell.exe")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### ManageEngine Endpoint Central (UEMSAgent.msi) silent install as RMM implant
+
+`UC_44_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="msiexec.exe" AND Processes.process="*UEMSAgent*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "msiexec.exe"
+| where ProcessCommandLine has "UEMSAgent" or ProcessCommandLine has_any ("DCAgentServerInfo","UEMSAgent.mst")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### Financial-lure .vbs written into WhatsApp Desktop session folder
+
+`UC_44_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.vbs" AND (Filesystem.file_path="*WhatsAppDesktop*" OR Filesystem.file_path="*5319275A.WhatsAppDesktop_cv1g1gvanyjgm*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed")
+| where FileName endswith ".vbs"
+| where FolderPath has_any ("5319275A.WhatsAppDesktop_cv1g1gvanyjgm","WhatsAppDesktop")
+    or FileName in~ ("Financial Reports.vbs","Account Statement.vbs","Debt confirmation.vbs","Statement of Debt(30K).vbs","Outstanding Payment List.vbs","Extrato de Conciliação.vbs","Penyata bank.vbs")
+| project Timestamp, DeviceName, InitiatingProcessFileName, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -120,7 +228,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — WhatsApp VBScript Campaign Uses Fake Documents to Install ManageEngine RMM Tool
 
-`UC_37_5` · phase: **exploit** · confidence: **High**
+`UC_44_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,4 +288,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -39,12 +39,122 @@ The malware is believed to be linked to KongTuke/Woodgnat, an initial access bro
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1204.002** — User Execution: Malicious File
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1105** — Ingress Tool Transfer
+- **T1218** — System Binary Proxy Execution
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1571** — Non-Standard Port
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Mistic backdoor DLL side-load: MpExtMs.exe loading version.dll / EndpointDlp.dll
+
+`UC_27_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="version.dll" OR Filesystem.file_name="EndpointDlp.dll" OR Filesystem.file_hash IN ("1e41c7bfaa6aa3b93b6cc024274a10e33f3e12fe7c98c1db387ef8927f9d1984","59e3c4cb06331b4f2d78a9a0592f3747e573bd01c5a7650c26361d1e25520712")) AND NOT (Filesystem.file_path IN ("*\\Windows\\*","*\\Program Files*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where SHA256 in ("1e41c7bfaa6aa3b93b6cc024274a10e33f3e12fe7c98c1db387ef8927f9d1984","59e3c4cb06331b4f2d78a9a0592f3747e573bd01c5a7650c26361d1e25520712")
+   or (FileName =~ "version.dll" and InitiatingProcessFileName =~ "MpExtMs.exe" and FolderPath !startswith @"C:\Windows\")
+   or (FileName =~ "EndpointDlp.dll" and FolderPath !startswith @"C:\Program Files" and FolderPath !startswith @"C:\Windows\")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256, MD5
+| order by Timestamp desc
+```
+
+### KongTuke finger.exe LOLBin payload retrieval
+
+`UC_27_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="finger.exe" AND NOT Processes.user IN ("*$","SYSTEM","LOCAL SERVICE","NETWORK SERVICE") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "finger.exe"
+| where AccountName !endswith "$"
+| where AccountName !in~ ("system","local service","network service")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Mistic / MTLBackdoor C2 IP and domain communication
+
+`UC_27_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("142.93.242.144","144.31.53.78","198.13.159.44","199.91.221.42") OR All_Traffic.dest IN ("authorized-logins.net","thomphon.com","updater-worelos.com","upd-domain-goloro.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("142.93.242.144","144.31.53.78","198.13.159.44","199.91.221.42")
+   or RemoteUrl has_any ("authorized-logins.net","thomphon.com","updater-worelos.com","upd-domain-goloro.com")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### KongTuke Run-key persistence masquerading as AnyDesk/Splashtop remote-access tools
+
+`UC_27_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" AND (Registry.registry_value_data IN ("*MpExtMs.exe*","*version.dll*","*EndpointDlp.dll*") OR (Registry.registry_value_name IN ("AnyDesk","Splashtop","Comms") AND Registry.registry_value_data IN ("*\\Users\\*","*\\AppData\\*","*\\ProgramData\\*","*\\Temp\\*"))) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType == "RegistryValueSet"
+| where RegistryKey has @"\CurrentVersion\Run"
+| where RegistryValueData has_any ("MpExtMs.exe","version.dll","EndpointDlp.dll")
+   or (RegistryValueName has_any ("AnyDesk","Splashtop","Comms") and RegistryValueData has_any (@"\Users\", @"\AppData\", @"\ProgramData\", @"\Temp\"))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### ModeloRAT portable WinPython / Node.js interpreter execution from user-writable path
+
+`UC_27_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("pythonw.exe","python.exe","node.exe") AND (Processes.process_path IN ("*\\Users\\*","*\\AppData\\*","*\\ProgramData\\*","*\\Temp\\*","*\\Public\\*","*\\Downloads\\*")) AND NOT Processes.process_path="*\\Program Files*" AND NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName in~ ("pythonw.exe","python.exe","node.exe")
+| where FolderPath has_any (@"\Users\", @"\AppData\", @"\ProgramData\", @"\Temp\", @"\Public\", @"\Downloads\")
+| where FolderPath !has @"\Program Files"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -416,7 +526,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Stealthy Mistic backdoor linked to ransomware access broker KongTuke
 
-`UC_17_11` · phase: **exploit** · confidence: **High**
+`UC_27_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -466,4 +576,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

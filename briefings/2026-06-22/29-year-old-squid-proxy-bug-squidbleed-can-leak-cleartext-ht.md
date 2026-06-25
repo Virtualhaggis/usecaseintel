@@ -22,12 +22,61 @@ The bug traces to a 1997 FTP-parsing change and is still live in Squid's default
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
+- **T1071.002** — Application Layer Protocol: File Transfer Protocols
+- **T1212** — Exploitation for Credential Access
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Squid proxy initiating outbound FTP control-channel (TCP/21) to external host (Squidbleed precondition)
+
+`UC_52_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=21 (All_Traffic.app=squid OR All_Traffic.process=squid) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "squid"
+| where RemotePort == 21
+| where RemoteIPType == "Public"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count() by DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort
+| order by FirstSeen desc
+```
+
+### High-volume ftp:// listing requests through Squid proxy to single host (Squidbleed memory harvest)
+
+`UC_52_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(Web.dest) as dest_count values(Web.url) as urls from datamodel=Web.Web where Web.url="ftp://*" by Web.src Web.user _time span=10m | `drop_dm_object_name(Web)` | where count > 20 AND dest_count <= 2 | sort - count
+```
+
+### Squid hosts exposed to Squidbleed (CVE-2026-47729) with FTP attack surface
+
+`UC_52_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-47729" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId == "CVE-2026-47729"
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -68,4 +117,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

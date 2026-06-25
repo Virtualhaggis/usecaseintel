@@ -12,8 +12,6 @@ Blog Vulnerabilities & Threats Compromised GitHub action codfish/semantic-releas
 
 - **SHA256:** `9f93d77d32833a515bc406c46da477142bb1ac2babeecb6aa42f98669a6db015`
 - **SHA1:** `5792aba0e2180b9b80b77644370a6889d5817456`
-- **SHA1:** `8f9a58f2acdc190c356f79159b5de2548cdb63cd`
-- **SHA1:** `0c5077e51419868618aeaa5fe8019c62421857d6`
 - **SHA1:** `bcb6b1d409144318e8fad2171d6fe06d02299d1a`
 
 ## MITRE ATT&CK Techniques
@@ -27,12 +25,78 @@ Blog Vulnerabilities & Threats Compromised GitHub action codfish/semantic-releas
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Bun runtime executing codfish/semantic-release-action index.js payload on CI runner
+
+`UC_18_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="bun" OR Processes.process_name="bun.exe") Processes.process="*index.js*" Processes.process="*semantic-release-action*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("bun","bun.exe")
+| where ProcessCommandLine has "index.js"
+| where ProcessCommandLine has "semantic-release-action"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          ParentProcess = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Known Miasma index.js payload hash present on CI runner (codfish action)
+
+`UC_18_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+union DeviceFileEvents, DeviceProcessEvents, DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where SHA256 == "9f93d77d32833a515bc406c46da477142bb1ac2babeecb6aa42f98669a6db015"
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Bun process reaching GitHub commit-search API — Miasma dead-drop C2
+
+`UC_18_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name="bun" OR All_Traffic.process_name="bun.exe") (All_Traffic.dest="*github.com*" OR All_Traffic.dest_host="*github.com*") by All_Traffic.src All_Traffic.process_name All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("bun","bun.exe")
+| where RemoteUrl has "github.com"
+| where RemoteIPType == "Public"
+| where InitiatingProcessCommandLine has "index.js" or InitiatingProcessCommandLine has "semantic-release-action"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -178,7 +242,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised GitHub action codfish/semantic-release-action steals CI/CD secrets
 
-`UC_8_6` · phase: **exploit** · confidence: **High**
+`UC_18_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -230,9 +294,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `9f93d77d32833a515bc406c46da477142bb1ac2babeecb6aa42f98669a6db015`, `5792aba0e2180b9b80b77644370a6889d5817456`, `8f9a58f2acdc190c356f79159b5de2548cdb63cd`, `0c5077e51419868618aeaa5fe8019c62421857d6`, `bcb6b1d409144318e8fad2171d6fe06d02299d1a`
+  - file hash IOC(s): `9f93d77d32833a515bc406c46da477142bb1ac2babeecb6aa42f98669a6db015`, `5792aba0e2180b9b80b77644370a6889d5817456`, `bcb6b1d409144318e8fad2171d6fe06d02299d1a`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

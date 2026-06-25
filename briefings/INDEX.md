@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,10 +9,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-25
+- [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-25/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
+- [bluekit phishing kit adopts browser in the middle for login ](./2026-06-25/bluekit-phishing-kit-adopts-browser-in-the-middle-for-login-.md)
+- [chrome ad blocker with 10m installs found with dormant scrip](./2026-06-25/chrome-ad-blocker-with-10m-installs-found-with-dormant-scrip.md)
 - [cisco catalyst sd wan zero day cve 2026 20245 exploited to g](./2026-06-25/cisco-catalyst-sd-wan-zero-day-cve-2026-20245-exploited-to-g.md)
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-06-25/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
+- [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)
+- [new gaslight macos malware uses prompt injection to disrupt ](./2026-06-25/new-gaslight-macos-malware-uses-prompt-injection-to-disrupt-.md)
 - [new mistic backdoor linked to kongtuke in clickfix and model](./2026-06-25/new-mistic-backdoor-linked-to-kongtuke-in-clickfix-and-model.md)
+- [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
 
 ## 2026-06-24
 - [amadey and stealc malware network disrupted 27m stolen crede](./2026-06-24/amadey-and-stealc-malware-network-disrupted-27m-stolen-crede.md)
@@ -21,8 +27,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cnapp evolution how microsoft aligns with leading cloud risk](./2026-06-24/cnapp-evolution-how-microsoft-aligns-with-leading-cloud-risk.md)
 - [compromised github action codfish semantic release action st](./2026-06-24/compromised-github-action-codfish-semantic-release-action-st.md)
 - [cordyceps ci cd flaws expose 300 github repositories to supp](./2026-06-24/cordyceps-ci-cd-flaws-expose-300-github-repositories-to-supp.md)
-- [dawn of the apex agentic adversary](./2026-06-24/dawn-of-the-apex-agentic-adversary.md)
-- [doj seizes huione cloud account tied to cyber scam money lau](./2026-06-24/doj-seizes-huione-cloud-account-tied-to-cyber-scam-money-lau.md)
 - [malicious edge extension abuses native messaging as bridge t](./2026-06-24/malicious-edge-extension-abuses-native-messaging-as-bridge-t.md)
 - [mandiant reveals how cisco sd wan zero day attacks gained ro](./2026-06-24/mandiant-reveals-how-cisco-sd-wan-zero-day-attacks-gained-ro.md)
 - [securing the service desk why social engineering attacks kee](./2026-06-24/securing-the-service-desk-why-social-engineering-attacks-kee.md)
@@ -30,7 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
-- [agentic ai the weapon that no longer needs a warrior](./2026-06-23/agentic-ai-the-weapon-that-no-longer-needs-a-warrior.md)
 - [cisco unified cm flaw cve 2026 20230 now exploited in attack](./2026-06-23/cisco-unified-cm-flaw-cve-2026-20230-now-exploited-in-attack.md)
 - [fake ai agent skill passed security scans and reportedly rea](./2026-06-23/fake-ai-agent-skill-passed-security-scans-and-reportedly-rea.md)
 - [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
@@ -38,13 +41,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [healthtech firm xolis suffers data breach impacting 1 4 mill](./2026-06-23/healthtech-firm-xolis-suffers-data-breach-impacting-1-4-mill.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
-- [new macos clickfix attack silently mounts dmgs to push infos](./2026-06-23/new-macos-clickfix-attack-silently-mounts-dmgs-to-push-infos.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
 - [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
-- [scattered spider members plead guilty to hacking transport f](./2026-06-23/scattered-spider-members-plead-guilty-to-hacking-transport-f.md)
 - [tata electronics confirms cyberattack as hackers leak data](./2026-06-23/tata-electronics-confirms-cyberattack-as-hackers-leak-data.md)
-- [the exploit doesn t exist you can still prove it works again](./2026-06-23/the-exploit-doesn-t-exist-you-can-still-prove-it-works-again.md)
-- [trump order sets 2030 deadline for federal post quantum cryp](./2026-06-23/trump-order-sets-2030-deadline-for-federal-post-quantum-cryp.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
 - [whatsapp vbscript campaign uses fake documents to install ma](./2026-06-23/whatsapp-vbscript-campaign-uses-fake-documents-to-install-ma.md)
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
@@ -54,18 +53,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
 - [canada s spy agency used first of its kind warrant to clean ](./2026-06-22/canada-s-spy-agency-used-first-of-its-kind-warrant-to-clean-.md)
-- [google sets sept 30 deadline for android developer verificat](./2026-06-22/google-sets-sept-30-deadline-for-android-developer-verificat.md)
 - [guarding ai memory](./2026-06-22/guarding-ai-memory.md)
-- [interpol warns phishing ransomware and ai scams are rising a](./2026-06-22/interpol-warns-phishing-ransomware-and-ai-scams-are-rising-a.md)
 - [new oxloader loader uses malicious google ads to deliver cas](./2026-06-22/new-oxloader-loader-uses-malicious-google-ads-to-deliver-cas.md)
 - [one intrusion two cyberattackers uncovering parallel threat ](./2026-06-22/one-intrusion-two-cyberattackers-uncovering-parallel-threat-.md)
 - [researchers detail difytap flaws in dify that could expose a](./2026-06-22/researchers-detail-difytap-flaws-in-dify-that-could-expose-a.md)
 - [shapedplugin wordpress pro plugins backdoored in supply chai](./2026-06-22/shapedplugin-wordpress-pro-plugins-backdoored-in-supply-chai.md)
-- [stop your legacy infrastructure from hijacking your ai agent](./2026-06-22/stop-your-legacy-infrastructure-from-hijacking-your-ai-agent.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
 ## 2026-06-20
-- [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-20/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [hackers exploit gravity smtp wordpress plugin bug to expose ](./2026-06-20/hackers-exploit-gravity-smtp-wordpress-plugin-bug-to-expose-.md)
 - [threat brief mitigating large scale credential attacks](./2026-06-20/threat-brief-mitigating-large-scale-credential-attacks.md)
 
@@ -122,7 +117,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 
 ## 2026-06-17
-- [145 mastra npm packages compromised via hijacked contributor](./2026-06-17/145-mastra-npm-packages-compromised-via-hijacked-contributor.md)
 - [beyond the benchmark advancing security at ai speed](./2026-06-17/beyond-the-benchmark-advancing-security-at-ai-speed.md)
 - [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
@@ -131,8 +125,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
 - [junior hacker used tailscale and openssh to keep access afte](./2026-06-17/junior-hacker-used-tailscale-and-openssh-to-keep-access-afte.md)
-- [malicious jetbrains plugins steal ai api keys as chrome exte](./2026-06-17/malicious-jetbrains-plugins-steal-ai-api-keys-as-chrome-exte.md)
-- [the top 10 attack surface exposures in 2026](./2026-06-17/the-top-10-attack-surface-exposures-in-2026.md)
+- [over 140 popular mastra npm packages hit by supply chain att](./2026-06-17/over-140-popular-mastra-npm-packages-hit-by-supply-chain-att.md)
 
 ## 2026-06-16
 - [a forgotten contributor account compromised the entire mastr](./2026-06-16/a-forgotten-contributor-account-compromised-the-entire-mastr.md)
@@ -330,7 +323,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-14
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
-- [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 
 ## 2026-05-12
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)

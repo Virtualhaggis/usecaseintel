@@ -25,12 +25,51 @@ The vulnerabilities have been colle…
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
+- **T1213** — Data from Information Repositories
+- **T1530** — Data from Cloud Storage
+- **T1083** — File and Directory Discovery
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Dify cross-tenant file-preview UUID enumeration (CVE-2026-41949)
+
+`UC_53_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as preview_hits, dc(Web.uri_path) as distinct_file_ids, values(Web.uri_path) as paths from datamodel=Web where Web.uri_path="/console/api/files/*/preview" by Web.src, Web.user, _time span=10m
+| `drop_dm_object_name(Web)`
+| where distinct_file_ids >= 15
+| sort - distinct_file_ids
+```
+
+### Dify Plugin Daemon path traversal to internal REST API (CVE-2026-41948)
+
+`UC_53_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(Web.url) as urls, values(Web.http_method) as methods, values(Web.status) as statuses from datamodel=Web where Web.uri_path="*plugin*" (Web.uri_path="*..*" OR Web.uri_query="*..*" OR Web.url="*%2e%2e*" OR Web.url="*%2f..*") by Web.src, Web.user, Web.uri_path
+| `drop_dm_object_name(Web)`
+| sort - count
+```
+
+### Dify mass trace-config hijack across apps (CVE-2026-41947)
+
+`UC_53_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as trace_posts, dc(Web.uri_path) as distinct_apps, values(Web.uri_path) as app_paths from datamodel=Web where Web.http_method=POST Web.uri_path="/console/api/apps/*/trace*" by Web.src, Web.user, _time span=1h
+| `drop_dm_object_name(Web)`
+| where distinct_apps >= 5
+| sort - distinct_apps
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -71,4 +110,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

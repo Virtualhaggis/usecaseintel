@@ -38,12 +38,55 @@ Google Cloud
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1485** — Data Destruction
+- **T1537** — Transfer Data to Cloud Account
+- **T1530** — Data from Cloud Storage
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### GCP empty-then-delete signature on a Cloud Storage bucket (hijack precursor)
+
+`UC_49_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Change.All_Changes where Changes.vendor_product="Google Cloud" (Changes.command="storage.objects.delete" OR Changes.command="storage.buckets.delete") by Changes.user, Changes.command, Changes.object, _time span=10m
+| `drop_dm_object_name(Changes)`
+| stats sum(count) as events, dc(command) as command_types, values(command) as commands, values(object) as buckets by user, _time
+| where command_types=2 AND events>50    /* both object-purge and bucket-delete by same principal in one 10m bin; 50 = noisy-cleanup floor, tune to env */
+| sort - events
+```
+
+### Deletion of a GCS bucket that is an active logging-sink / Pub/Sub export destination
+
+`UC_49_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Change.All_Changes where Changes.vendor_product="Google Cloud" (Changes.command="storage.buckets.delete" OR Changes.command="google.logging.v2.ConfigServiceV2.CreateSink" OR Changes.command="google.logging.v2.ConfigServiceV2.UpdateSink") by Changes.user, Changes.command, Changes.object, _time span=1h
+| `drop_dm_object_name(Changes)`
+| eval bucket=replace(object,"^storage.googleapis.com/","")
+| stats values(command) as commands, values(user) as users, min(_time) as firstTime, max(_time) as lastTime by bucket
+| where mvcount(mvfilter(match(commands,"Sink")))>0 AND mvcount(mvfilter(match(commands,"storage.buckets.delete")))>0    /* same bucket name appears as a sink destination AND is later deleted */
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+### AWS S3 replication-destination bucket deleted (cross-account namespace hijack setup)
+
+`UC_49_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Change.All_Changes where Changes.vendor_product="Amazon Web Services" (Changes.command="DeleteBucket" OR Changes.command="PutBucketReplication") by Changes.user, Changes.command, Changes.object, _time span=1h
+| `drop_dm_object_name(Changes)`
+| stats values(command) as commands, values(user) as users, min(_time) as firstTime, max(_time) as lastTime by object
+| where mvcount(mvfilter(match(commands,"PutBucketReplication")))>0 AND mvcount(mvfilter(match(commands,"DeleteBucket")))>0    /* bucket was a replication target AND later deleted */
+| convert ctime(firstTime) ctime(lastTime)
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -196,4 +239,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

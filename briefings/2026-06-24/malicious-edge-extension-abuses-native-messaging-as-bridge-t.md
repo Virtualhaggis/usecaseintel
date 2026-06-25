@@ -36,12 +36,138 @@ Access to the local system is obtained by leveraging the Chrome Native Messaging
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1564.003** — Hide Artifacts: Hidden Window
+- **T1559** — Inter-Process Communication
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Edgecution headless Edge launched with --load-extension to sideload unpacked extension
+
+`UC_19_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="msedge.exe" Processes.process="*--load-extension*" Processes.process="*--headless*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(user,"\$$")
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "msedge.exe"
+| where ProcessCommandLine has "--load-extension" and ProcessCommandLine has "--headless"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Edgecution native messaging host registered under Edge NativeMessagingHosts
+
+`UC_19_11` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Microsoft\\Edge\\NativeMessagingHosts*" by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("RegistryKeyCreated","RegistryValueSet")
+| where RegistryKey has @"\Microsoft\Edge\NativeMessagingHosts"
+| where InitiatingProcessFileName !in~ ("msiexec.exe","setup.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Edgecution sandbox escape: msedge.exe spawns cmd/python via native_host.bat
+
+`UC_19_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="msedge.exe" (Processes.process_name IN ("cmd.exe","python.exe","pythonw.exe") OR Processes.process="*native_host.bat*") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "msedge.exe"
+| where FileName in~ ("cmd.exe","python.exe","pythonw.exe") or ProcessCommandLine has "native_host.bat"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Edgecution native_host.bat / extension.log written into Edge User Data profile
+
+`UC_19_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="native_host.bat" OR Filesystem.file_name="extension.log") Filesystem.file_path="*\\Microsoft\\Edge\\User Data\\*" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType == "FileCreated"
+| where (FileName =~ "native_host.bat" or FileName =~ "extension.log")
+| where FolderPath has @"\Microsoft\Edge\User Data\"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Edgecution deploy: scheduled task created to launch headless Edge with extension
+
+`UC_19_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*/create*" Processes.process="*msedge*" (Processes.process="*--load-extension*" OR Processes.process="*--headless*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has "msedge" and (ProcessCommandLine has "--load-extension" or ProcessCommandLine has "--headless")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Edgecution C2: headless Edge extension making outbound public connections
+
+`UC_19_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="msedge.exe" All_Traffic.direction="outbound" NOT (All_Traffic.dest_ip IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16")) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "msedge.exe"
+| where InitiatingProcessCommandLine has "--headless" and InitiatingProcessCommandLine has "--load-extension"
+| where RemoteIPType == "Public"
+| summarize ConnCount=count(), DistinctMinutes=dcount(bin(Timestamp,1m)), RemoteIPs=make_set(RemoteIP,25), SampleUrl=any(RemoteUrl) by DeviceName, InitiatingProcessCommandLine
+| order by ConnCount desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -329,4 +455,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

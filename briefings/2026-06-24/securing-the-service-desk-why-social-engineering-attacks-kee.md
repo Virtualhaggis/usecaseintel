@@ -35,12 +35,134 @@ In the case of M&S , Chai…
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
+- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
+- **T1098.005** — Account Manipulation: Device Registration
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1136.003** — Create Account: Cloud Account
+- **T1098.003** — Account Manipulation: Additional Cloud Roles
+- **T1656** — Impersonation
+- **T1078** — Valid Accounts
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1048** — Exfiltration Over Alternative Protocol
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Help-desk password reset immediately followed by MFA security-info (re)registration — Scattered Spider account takeover
+
+`UC_23_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.object_category=user AND (All_Changes.command IN ("Reset password (by admin)","Reset user password","User registered security info","Admin registered security info","User registered all required security info"))) by All_Changes.user All_Changes.object All_Changes.command All_Changes.src All_Changes.dest
+| `drop_dm_object_name(Change)`
+| eval is_reset=if(command IN ("Reset password (by admin)","Reset user password"),1,0), is_reg=if(command IN ("User registered security info","Admin registered security info","User registered all required security info"),1,0)
+| stats sum(is_reset) as resets sum(is_reg) as regs min(firstTime) as firstTime max(lastTime) as lastTime values(command) as commands values(user) as actors by object
+| where resets>0 AND regs>0 AND (lastTime-firstTime)<3600
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let window = 1h;
+let resets = CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("Reset password (by admin).","Reset user password.","Change user password.")
+| extend TargetUpn = tostring(RawEventData.TargetResources[0].userPrincipalName)
+| extend Initiator = tostring(RawEventData.InitiatedBy.user.userPrincipalName)
+| where isnotempty(TargetUpn)
+| project ResetTime = Timestamp, TargetUpn, Initiator, ResetAction = ActionType;
+CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("User registered security info.","Admin registered security info.","User registered all required security info.")
+| extend RegUpn = tostring(RawEventData.TargetResources[0].userPrincipalName)
+| where isnotempty(RegUpn)
+| join kind=inner resets on $left.RegUpn == $right.TargetUpn
+| where Timestamp between (ResetTime .. ResetTime + window)
+| project ResetTime, RegTime = Timestamp, TargetUpn = RegUpn, Initiator, ResetAction, RegAction = ActionType, RegIP = IPAddress
+| order by RegTime desc
+```
+
+### New Entra account created and added to a privileged role within the hour — rogue admin account
+
+`UC_23_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.object_category=user AND All_Changes.command IN ("Add user","Add member to role")) by All_Changes.object All_Changes.command All_Changes.user All_Changes.src
+| `drop_dm_object_name(Change)`
+| eval is_create=if(command="Add user",1,0), is_roleadd=if(command="Add member to role",1,0)
+| stats sum(is_create) as creates sum(is_roleadd) as roleadds min(firstTime) as createTime max(lastTime) as roleTime values(user) as actors by object
+| where creates>0 AND roleadds>0 AND (roleTime-createTime)<3600
+| `security_content_ctime(createTime)` | `security_content_ctime(roleTime)`
+```
+
+**Defender KQL:**
+```kql
+let window = 1h;
+let newUsers = CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType == "Add user."
+| extend NewUpn = tostring(RawEventData.TargetResources[0].userPrincipalName)
+| extend Creator = tostring(RawEventData.InitiatedBy.user.userPrincipalName)
+| where isnotempty(NewUpn)
+| project CreateTime = Timestamp, NewUpn, Creator;
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("Add member to role.","Add eligible member to role.")
+| extend RoleUpn = tostring(RawEventData.TargetResources[0].userPrincipalName)
+| where isnotempty(RoleUpn)
+| join kind=inner newUsers on $left.RoleUpn == $right.NewUpn
+| where Timestamp between (CreateTime .. CreateTime + window)
+| project CreateTime, RoleAddTime = Timestamp, NewUpn = RoleUpn, Creator, RoleAction = ActionType
+| order by RoleAddTime desc
+```
+
+### On-demand RMM / remote-access tool launched from browser-download or temp path — Silent Ransom Group fake IT support
+
+`UC_23_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("AnyDesk.exe","ZohoAssist.exe","Zaservice.exe","Syncro.exe","SyncroLive.exe","Splashtop.exe","SRService.exe","AteraAgent.exe","ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","TeamViewer.exe") AND (Processes.process_path IN ("*\\Downloads\\*","*\\Temp\\*","*\\AppData\\Local\\Temp\\*","*\\Users\\Public\\*") OR Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe","outlook.exe"))) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process_path Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("AnyDesk.exe","ZohoAssist.exe","Zaservice.exe","Syncro.exe","SyncroLive.exe","Splashtop.exe","SRService.exe","AteraAgent.exe","ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","TeamViewer.exe")
+| where FolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\Local\Temp\", @"\Users\Public\")
+    or InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","outlook.exe","teams.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### WinSCP / Rclone bulk transfer to external destination — Silent Ransom Group data-theft exfiltration
+
+`UC_23_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("rclone.exe","winscp.exe","winscp.com") AND Processes.process IN ("*copy*","*sync*","*--config*","*--no-check-certificate*","*sftp*","* ftp *","*mega:*","*b2:*","*s3:*","*--transfers*","*--multi-thread*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("rclone.exe","winscp.exe","winscp.com")
+| where ProcessCommandLine has_any ("copy","sync","--config","--no-check-certificate","sftp","ftp","mega:","b2:","s3:","--transfers","--multi-thread","/upload")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -330,4 +452,4 @@ DeviceEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 12 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

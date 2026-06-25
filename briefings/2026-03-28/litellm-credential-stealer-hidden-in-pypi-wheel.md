@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound DNS/HTTPS to TeamPCP exfil domain models.litellm.cloud (litellm PyPI compromise)
 
-`UC_445_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_446_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ union isfuzzy=true
 
 ### Malicious litellm_init.pth dropped to site-packages by pip (litellm==1.82.8 install artifact)
 
-`UC_445_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_446_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceFileEvents
 
 ### Python spawning python -c with base64.b64decode exec (litellm .pth stage-1 launcher)
 
-`UC_445_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_446_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### Python process spawning shell with TeamPCP recon chain (hostname; whoami; uname; ip addr fallback)
 
-`UC_445_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_446_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceProcessEvents
 
 ### Python process contacting AWS IMDS 169.254.169.254 (litellm stealer IAM credential theft)
 
-`UC_445_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_446_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceNetworkEvents
 
 ### In-cluster Kubernetes secret enumeration with Python user-agent (litellm stealer K8s pivot)
 
-`UC_445_16` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_446_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -524,7 +524,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — litellm: Credential Stealer Hidden in PyPI Wheel
 
-`UC_445_10` · phase: **exploit** · confidence: **High**
+`UC_446_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

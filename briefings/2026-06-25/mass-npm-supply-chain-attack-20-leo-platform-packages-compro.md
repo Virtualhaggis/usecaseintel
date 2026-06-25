@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised
 
-`UC_1_2` · phase: **exploit** · confidence: **High**
+`UC_11_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

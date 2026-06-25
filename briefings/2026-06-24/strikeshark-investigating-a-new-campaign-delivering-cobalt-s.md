@@ -67,12 +67,139 @@ MinHook DLL, API hookin…
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1204.002** — User Execution: Malicious File
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1071.004** — Application Layer Protocol: DNS
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### SystemSettings.exe executing from non-standard path (SharkLoader DLL side-load host)
+
+`UC_28_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="SystemSettings.exe" by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where NOT (like(process_path,"%\\Windows\\ImmersiveControlPanel\\%") OR like(process_path,"%\\Windows\\WinSxS\\%")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime dest user process_name process_path process parent_process_name count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "SystemSettings.exe"
+| where FolderPath !startswith @"C:\Windows\ImmersiveControlPanel\" and FolderPath !has @"\WinSxS\"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### SharkLoader encrypted payload files dropped (DscCoreR.mui + SyncRes.dat + SystemSettings.dll)
+
+`UC_28_11` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("SystemSettings.dll","DscCoreR.mui","SyncRes.dat") (Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\Users\\Public\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | stats dc(file_name) as distinct_components values(file_name) as files values(file_path) as paths min(firstTime) as firstTime by dest process_name | where distinct_components >= 1 | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ ("SystemSettings.dll","DscCoreR.mui","SyncRes.dat")
+| where FolderPath has_any (@"\ProgramData\", @"\AppData\", @"\Users\Public\")
+| where not(FileName =~ "SystemSettings.dll" and FolderPath startswith @"C:\Windows\")
+| summarize Components=make_set(FileName), Paths=make_set(FolderPath), DistinctComponents=dcount(FileName), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by LastSeen desc
+```
+
+### Web server process spawning command shell to relocate SystemSettings.exe (post-webshell staging)
+
+`UC_28_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("w3wp.exe","java.exe","httpd.exe","tomcat9.exe","UMWorkerProcess.exe","MSExchangeFrontEndTransport.exe") Processes.process="*SystemSettings.exe*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | table firstTime dest user parent_process_name process_name process count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("w3wp.exe","java.exe","httpd.exe","tomcat9.exe","UMWorkerProcess.exe","MSExchangeFrontEndTransport.exe")
+| where ProcessCommandLine has "SystemSettings.exe"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### SharkLoader dropper masquerading as Cisco AnyConnect / Google Update installer
+
+`UC_28_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("GoogleUpdateStepup.exe","AutoUpdate.exe") OR Processes.process="*AnyConnect-win-4.10.04071-predeploy-k9*") (Processes.process_path="*\\AppData\\*" OR Processes.process_path="*\\Downloads\\*" OR Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\ProgramData\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | table firstTime dest user process_name process_path process parent_process_name count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("GoogleUpdateStepup.exe","AutoUpdate.exe")) or ProcessCommandLine matches regex @"(?i)AnyConnect-win-4\.10\.04071-predeploy-k9"
+| where FolderPath has_any (@"\AppData\", @"\Downloads\", @"\Temp\", @"\ProgramData\")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### Scheduled task persistence launching relocated SystemSettings.exe (SharkLoader)
+
+`UC_28_14` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*SystemSettings.exe*" Processes.process="*/create*" by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | table firstTime dest user process parent_process_name count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create" and ProcessCommandLine has "SystemSettings.exe"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### SharkLoader / Cobalt Strike C2 egress to StrikeShark lookalike domains
+
+`UC_28_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*connect-microsoft.com" OR DNS.query="*ms-record.com" OR DNS.query="*ms-record.top" OR DNS.query="*ms-tray.top") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | table firstTime src query count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("connect-microsoft.com","ms-record.com","ms-record.top","ms-tray.top")
+    or (InitiatingProcessFileName =~ "SystemSettings.exe" and InitiatingProcessFolderPath !startswith @"C:\Windows\" and RemoteIPType == "Public")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -252,7 +379,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — StrikeShark: investigating a new campaign delivering Cobalt Strike through Shark
 
-`UC_18_9` · phase: **exploit** · confidence: **High**
+`UC_28_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -315,4 +442,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

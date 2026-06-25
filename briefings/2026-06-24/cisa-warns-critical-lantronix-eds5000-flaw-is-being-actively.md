@@ -27,12 +27,61 @@ The vulnerability in question is CVE-2025-67038 (CVSS score: 9.8), a code inject
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### UniFi OS unauthenticated RCE chain exploit attempt via nginx URI-normalization bypass (CVE-2026-34908/9/10)
+
+`UC_21_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/api/auth/validate-sso/*" AND (Web.url="*..%2f*" OR Web.url="*..%2e*" OR Web.url="*%2e%2e*" OR Web.url="*latest_package*")) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+```
+
+### UniFi OS Server post-exploit reverse shell from ucs-update / unifi service account (CVE-2026-34910)
+
+`UC_21_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.process_name IN ("sh","bash","dash","nc","ncat","netcat","python","python3","perl","cmd.exe","powershell.exe") AND (Endpoint.Processes.user IN ("ucs-update","unifi") OR Endpoint.Processes.parent_process_name IN ("unifi","ucs-update","unifi-core")) AND (Endpoint.Processes.process="*/dev/tcp/*" OR Endpoint.Processes.process="*mkfifo*" OR Endpoint.Processes.process="*bash -i*" OR Endpoint.Processes.process="*socket.socket*" OR Endpoint.Processes.process="*nc -e*" OR Endpoint.Processes.process="*-e /bin*" OR Endpoint.Processes.process="*Net.Sockets*")) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName has_any ("ucs-update","unifi") or InitiatingProcessFolderPath has_any ("unifi-core","UniFi OS Server","/usr/lib/unifi")
+| where FileName in~ ("sh","bash","dash","nc","ncat","netcat","python","python3","perl","cmd.exe","powershell.exe")
+| where ProcessCommandLine has_any ("/dev/tcp/","mkfifo","bash -i","sh -i","socket.socket","nc -e","ncat -e","-e /bin","Net.Sockets","Invoke-")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, AccountName
+| order by Timestamp desc
+```
+
+### KEV exposure hunt: UniFi OS and Lantronix EDS5000 actively-exploited CVEs present in fleet
+
+`UC_21_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2026-34908","CVE-2026-34909","CVE-2026-34910","CVE-2025-67038")) by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature, Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | sort - cve
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2026-34908","CVE-2026-34909","CVE-2026-34910","CVE-2025-67038")
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform) by DeviceId) on DeviceId
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, CveId asc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -125,4 +174,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -89,12 +89,145 @@ Author…
 - **T1218** — System Binary Proxy Execution
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
+- **T1566** — Phishing
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1105** — Ingress Tool Transfer
+- **T1036.003** — Masquerading: Rename System Utilities
+- **T1548.002** — Abuse Elevation Control Mechanism: Bypass User Account Control
+- **T1112** — Modify Registry
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1218.007** — System Binary Proxy Execution: Msiexec
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### WhatsApp Desktop spawning WScript executing VBS from attachment Transfers dir
+
+`UC_59_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=wscript.exe OR Processes.process_name=cscript.exe) AND (Processes.parent_process_name="WhatsApp.Root.exe" OR Processes.process="*\\Packages\\5319275A.WhatsAppDesktop_cv1g1gvanyjgm\\LocalState\\Sessions\\*") AND (Processes.process="*.vbs*" OR Processes.process="*.vbe*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("wscript.exe","cscript.exe")
+| where InitiatingProcessFileName =~ "WhatsApp.Root.exe"
+    or ProcessCommandLine has @"\Packages\5319275A.WhatsAppDesktop_cv1g1gvanyjgm\LocalState\Sessions\"
+| where ProcessCommandLine has_any (".vbs", ".vbe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256, FolderPath
+| order by Timestamp desc
+```
+
+### VBScript creating hidden working directory and VBS payloads under C:\Users\Public\Documents
+
+`UC_59_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name=wscript.exe OR Filesystem.process_name=cscript.exe) AND Filesystem.file_path="*\\Users\\Public\\Documents\\*" AND (Filesystem.file_path="*\\Temp_*" OR Filesystem.file_path="*\\MSUpdate_*" OR Filesystem.file_name="*.vbs" OR Filesystem.file_name="*.vbe") by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
+| where FolderPath has @"\Users\Public\Documents\"
+| where FolderPath has_any (@"\Temp_", @"\MSUpdate_") or FileName endswith ".vbs" or FileName endswith ".vbe"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### Renamed curl.exe/bitsadmin.exe running from Public\Documents working directory
+
+`UC_59_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.original_file_name=curl.exe OR Processes.original_file_name=bitsadmin.exe) AND NOT (Processes.process_name=curl.exe OR Processes.process_name=bitsadmin.exe) AND Processes.process_path="*\\Users\\Public\\Documents\\*" by Processes.dest Processes.user Processes.process_name Processes.original_file_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessVersionInfoOriginalFileName in~ ("curl.exe","bitsadmin.exe")
+| where FileName !in~ ("curl.exe","bitsadmin.exe")
+| where FolderPath has @"\Users\Public\Documents\"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessVersionInfoOriginalFileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| order by Timestamp desc
+```
+
+### UAC ConsentPromptBehaviorAdmin disabled (set to 0) by Windows Script Host
+
+`UC_59_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Microsoft\\Windows\\CurrentVersion\\Policies\\System*" AND (Registry.registry_value_name=ConsentPromptBehaviorAdmin OR Registry.registry_value_name=EnableLUA) AND Registry.registry_value_data=0 by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_id | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where RegistryKey has @"\Microsoft\Windows\CurrentVersion\Policies\System"
+| where RegistryValueName in~ ("ConsentPromptBehaviorAdmin","EnableLUA")
+| where RegistryValueData == "0"
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe") or InitiatingProcessFolderPath has @"\Users\Public\Documents\"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### Beacon/download to WhatsApp-VBS campaign C2 infrastructure (202.61.160.0/24 + 38.55.151.63)
+
+`UC_59_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="202.61.160.208" OR All_Traffic.dest_ip="202.61.160.202" OR All_Traffic.dest_ip="202.61.160.201" OR All_Traffic.dest_ip="202.61.160.160" OR All_Traffic.dest_ip="202.61.160.137" OR All_Traffic.dest_ip="38.55.151.63") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let c2ips = dynamic(["202.61.160.208","202.61.160.202","202.61.160.201","202.61.160.160","202.61.160.137","38.55.151.63"]);
+let c2domains = dynamic(["temu.baskwms.top","invoice.msopsa.top","baoxis.cc","sdcwww.oss-ap-southeast-1.aliyuncs.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (c2ips) or RemoteUrl has_any (c2domains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### ManageEngine Endpoint Central (UEMS) agent silently installed as final RMM payload
+
+`UC_59_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=UEMSAgent.msi OR Filesystem.file_name=UEMSAgent.mst OR Filesystem.file_name=DCAgentServerInfo.json) AND (Filesystem.process_name=wscript.exe OR Filesystem.process_name=cscript.exe OR Filesystem.process_name=msiexec.exe OR Filesystem.file_path="*\\Users\\Public\\Documents\\*") by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("UEMSAgent.msi","UEMSAgent.mst","DCAgentServerInfo.json")
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","msiexec.exe","curl.exe","bitsadmin.exe")
+    or InitiatingProcessFolderPath has @"\Users\Public\Documents\"
+    or FolderPath has @"\Users\Public\Documents\"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -252,7 +385,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A VBScript campaign distributed through WhatsApp deploying RMM software
 
-`UC_52_7` · phase: **exploit** · confidence: **High**
+`UC_59_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -331,4 +464,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

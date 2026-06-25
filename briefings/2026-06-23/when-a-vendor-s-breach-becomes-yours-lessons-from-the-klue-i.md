@@ -21,12 +21,120 @@ That's the shape of the incident involving Klue, a market intelligence platform 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1119** — Automated Collection
+- **T1213** — Data from Information Repositories
+- **T1567.002** — Exfiltration to Cloud Storage / Over Web Service
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1090.003** — Proxy: Multi-hop Proxy
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Klue/Icarus: bulk Salesforce CRM record retrieval via connected app (Case/Contact/Account/Opportunity)
+
+`UC_48_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+sourcetype="sfdc:reportexport" OR sourcetype="sfdc:api" OR sourcetype="sfdc:restapi" OR sourcetype="sfdc:bulkapi"
+| eval crm_object=coalesce(ENTITY_NAME, ENTITY)
+| where (crm_object IN ("Case","Contact","Account","Opportunity")) OR (EVENT_TYPE IN ("ReportExport","BulkApi","BulkApiV2"))
+| bin _time span=1h
+| stats count AS RecordOps dc(crm_object) AS DistinctObjects values(crm_object) AS Objects values(USER_AGENT) AS UserAgents dc(CLIENT_IP) AS SrcIPCount values(CLIENT_IP) AS SrcIPs by _time, USER_NAME, USER_ID, CONNECTED_APP_NAME
+| where RecordOps > 1000
+| sort - RecordOps
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Salesforce"
+| where ActionType has_any ("Api","ReportExport","Report exported","Bulk","Mass","Export","Read")
+| where ObjectType in~ ("Case","Contact","Account","Opportunity") or isempty(ObjectType)
+| summarize RecordOps = count(),
+            DistinctRecords = dcount(ObjectId),
+            ObjectsTouched = make_set(ObjectType, 10),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            UserAgents = make_set(UserAgent, 10),
+            SrcIPs = make_set(IPAddress, 15),
+            ISPs = make_set(ISP, 8)
+            by AccountDisplayName, AccountObjectId, AccountType, ApplicationId, bin(Timestamp, 1h)
+| where RecordOps > 1000   // bulk automated pull; productized Klue sync runs far lower, attacker mass-export spikes
+| order by RecordOps desc
+```
+
+### Salesforce API access bearing python-requests/aiohttp automation user-agent (Icarus OAuth abuse)
+
+`UC_48_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+sourcetype="sfdc:api" OR sourcetype="sfdc:restapi" OR sourcetype="sfdc:bulkapi" OR sourcetype="sfdc:reportexport"
+| where like(lower(USER_AGENT),"%python-requests%") OR like(lower(USER_AGENT),"%aiohttp%") OR like(lower(USER_AGENT),"%python-urllib%")
+| stats count AS Hits values(EVENT_TYPE) AS EventTypes values(ENTITY_NAME) AS Objects dc(CLIENT_IP) AS SrcIPCount values(CLIENT_IP) AS SrcIPs min(_time) AS firstSeen max(_time) AS lastSeen by USER_NAME, USER_ID, USER_AGENT, CONNECTED_APP_NAME
+| sort - Hits
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Salesforce"
+| where UserAgent has_any ("python-requests","aiohttp","python-urllib","Python/3")
+| summarize EventCount = count(),
+            Actions = make_set(ActionType, 12),
+            Objects = make_set(ObjectType, 12),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            SrcIPs = make_set(IPAddress, 15),
+            ISPs = make_set(ISP, 8),
+            AnonProxy = make_set(IsAnonymousProxy, 3)
+            by AccountDisplayName, AccountObjectId, AccountType, UserAgent
+| order by EventCount desc
+```
+
+### Salesforce connected-app OAuth access from first-seen ISP / anonymizing proxy (stolen-token reuse)
+
+`UC_48_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) AS firstSeen max(_time) AS lastSeen from datamodel=Authentication where Authentication.app="Salesforce" earliest=-1d by Authentication.user, Authentication.src, Authentication.app
+| `drop_dm_object_name(Authentication)`
+| search NOT
+    [| tstats `summariesonly` count from datamodel=Authentication where Authentication.app="Salesforce" earliest=-30d latest=-1d by Authentication.user, Authentication.src
+     | `drop_dm_object_name(Authentication)`
+     | fields user, src]
+| iplocation src
+| table firstSeen, lastSeen, user, app, src, City, Country, count
+| sort - firstSeen
+```
+
+**Defender KQL:**
+```kql
+let Lookback = 30d;
+let Baseline = CloudAppEvents
+    | where Timestamp between (ago(Lookback) .. ago(1d))
+    | where Application == "Salesforce"
+    | summarize by AccountObjectId, ISP;
+CloudAppEvents
+| where Timestamp > ago(1d)
+| where Application == "Salesforce"
+| where isnotempty(AccountObjectId)
+| join kind=leftanti Baseline on AccountObjectId, ISP
+| summarize EventCount = count(),
+            Actions = make_set(ActionType, 10),
+            Objects = make_set(ObjectType, 10),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            UserAgents = make_set(UserAgent, 8),
+            AnyAnonProxy = max(tobool(IsAnonymousProxy))
+            by AccountDisplayName, AccountObjectId, AccountType, IPAddress, ISP, CountryCode
+| order by AnyAnonProxy desc, FirstSeen desc
+```
 
 ### OAuth consent / suspicious app grant
 
@@ -82,4 +190,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

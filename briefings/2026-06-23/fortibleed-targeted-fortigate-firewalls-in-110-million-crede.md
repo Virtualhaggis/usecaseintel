@@ -27,12 +27,77 @@ The campaign , active since February 2026, involves collecting credential lists,
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
+- **T1040** — Network Sniffing
+- **T1059.008** — Command and Scripting Interpreter: Network Device CLI
+- **T1110.004** — Brute Force: Credential Stuffing
+- **T1133** — External Remote Services
+- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### FortigateSniffer credential capture via native 'diagnose sniffer packet' on FortiGate
+
+`UC_37_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+(sourcetype=fgt_log OR sourcetype=fortigate_event OR sourcetype="fortinet:fortigate") "diagnose sniffer packet" | stats count min(_time) as firstTime max(_time) as lastTime values(msg) as command_text by host src_ip user | convert ctime(firstTime) ctime(lastTime) | sort - count
+```
+
+### FortiGate admin/SSL-VPN credential stuffing burst followed by successful login
+
+`UC_37_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Authentication where Authentication.vendor_product="Fortinet FortiGate" by Authentication.src, Authentication.action, _time span=1h
+| `drop_dm_object_name(Authentication)`
+| stats sum(eval(if(action="failure",count,0))) as failures, sum(eval(if(action="success",count,0))) as successes, min(_time) as firstTime, max(_time) as lastTime by src
+| where failures>=30 AND successes>=1
+| convert ctime(firstTime) ctime(lastTime)
+| sort - failures
+```
+
+### Single FortiGate VPN/admin account authenticating from anomalously many source IPs
+
+`UC_37_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true dc(Authentication.src) as distinct_src, count from datamodel=Authentication where Authentication.vendor_product="Fortinet FortiGate" Authentication.action=success by Authentication.user
+| `drop_dm_object_name(Authentication)`
+| where distinct_src>=20
+| sort - distinct_src
+```
+
+### Mass validation/replay of harvested credentials against Active Directory (NTLM/Kerberos fan-out)
+
+`UC_37_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true dc(Authentication.user) as distinct_users, count from datamodel=Authentication where Authentication.action=failure (Authentication.signature_id=4625 OR Authentication.app=NTLM OR Authentication.app=Kerberos) by Authentication.src, _time span=1h
+| `drop_dm_object_name(Authentication)`
+| where distinct_users>=50
+| sort - distinct_users
+```
+
+**Defender KQL:**
+```kql
+let lookback = 1d;
+let accountFanout = 50;   // one source validating 50+ distinct harvested accounts/hr = credential-validation spray (FortiBleed: 924k NTLM / 130k Kerberos creds replayed)
+IdentityLogonEvents
+| where Timestamp > ago(lookback)
+| where Protocol in ("Ntlm","Kerberos")
+| where isnotempty(IPAddress)
+| summarize DistinctAccounts = dcount(AccountUpn), Failures = countif(ActionType == "LogonFailed"), Successes = countif(ActionType == "LogonSuccess"), SampleAccounts = make_set(AccountName, 20) by IPAddress, bin(Timestamp, 1h)
+| where DistinctAccounts >= accountFanout
+| order by DistinctAccounts desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -238,4 +303,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

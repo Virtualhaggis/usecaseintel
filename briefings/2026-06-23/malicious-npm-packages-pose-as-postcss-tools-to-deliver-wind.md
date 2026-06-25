@@ -35,12 +35,138 @@ All the packages were published over th…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1571** — Non-Standard Port
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1567.002** — Exfiltration to Cloud Storage / Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### npm install JS dropper writes settings.ps1 and executes it via PowerShell
+
+`UC_43_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) AND Processes.process="*settings.ps1*" AND (Processes.parent_process_name=node.exe OR Processes.parent_process_name=npm.exe) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine has "settings.ps1"
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","npm-cli.js","cmd.exe")
+| project Timestamp, DeviceName, AccountName, ParentCmd = InitiatingProcessCommandLine, ChildCmd = ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### PostCSS RAT stager: curl.exe downloads payload from nvidiadriver[.]net
+
+`UC_43_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=curl.exe AND Processes.process="*nvidiadriver.net*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "curl.exe"
+| where ProcessCommandLine has "nvidiadriver.net"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### update.vbs extracted from ZIP and launched via wscript.exe
+
+`UC_43_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=wscript.exe OR Processes.process_name=cscript.exe) AND Processes.process="*update.vbs*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName in~ ("wscript.exe","cscript.exe")
+| where ProcessCommandLine has "update.vbs"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### PostCSS RAT C2 beacon to 95.216.92[.]207 on port 8080
+
+`UC_43_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="95.216.92.207" AND All_Traffic.dest_port=8080 by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "95.216.92.207" and RemotePort == 8080
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### PostCSS RAT Registry Run-key persistence under HKCU CurrentVersion\Run
+
+`UC_43_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" AND (Registry.registry_value_data="*update.vbs*" OR Registry.registry_value_data="*wscript*" OR Registry.registry_value_data="*loader.py*" OR Registry.registry_value_data="*\\python*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"CurrentVersion\Run"
+| where RegistryValueData has_any ("update.vbs","wscript","cscript","loader.py","\\python")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### @withgoogle/stitch-sdk developer-credential exfil to stitch-production[.]org
+
+`UC_43_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*stitch-production.org*" OR All_Traffic.url="*stitch-production.org*") by All_Traffic.src All_Traffic.dest All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "stitch-production.org"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -186,7 +312,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Packages Pose as PostCSS Tools to Deliver Windows RAT
 
-`UC_36_7` · phase: **exploit** · confidence: **High**
+`UC_43_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -246,4 +372,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

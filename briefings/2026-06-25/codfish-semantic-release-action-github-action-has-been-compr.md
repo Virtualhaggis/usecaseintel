@@ -10,8 +10,10 @@ Back to Blog Threat Intel codfish/semantic-release-action GitHub Action has been
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA256:** `bd8035203526735490e4bd5cdcede581b9d3a3f7a5df7725859844d8dcc8eb49`
+- **SHA256:** `9f93d77d32833a515bc406c46da477142bb1ac2babeecb6aa42f98669a6db015`
 - **SHA1:** `6b9501e1889cc45c91726729610cf69c2442b8c5`
+- **SHA1:** `5792aba0e2180b9b80b77644370a6889d5817456`
+- **SHA1:** `bcb6b1d409144318e8fad2171d6fe06d02299d1a`
 
 ## MITRE ATT&CK Techniques
 
@@ -24,12 +26,76 @@ Back to Blog Threat Intel codfish/semantic-release-action GitHub Action has been
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1480.001** — Execution Guardrails: Environmental Keying
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1528** — Steal Application Access Token
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Malicious index.js dropped into codfish/semantic-release-action runner checkout
+
+`UC_14_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*semantic-release-action*" Filesystem.file_name="index.js") OR Filesystem.file_hash="9f93d77d32833a515bc406c46da477142bb1ac2babeecb6aa42f98669a6db015" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FolderPath has "semantic-release-action" and FileName =~ "index.js")
+   or SHA256 =~ "9f93d77d32833a515bc406c46da477142bb1ac2babeecb6aa42f98669a6db015"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, FileSize, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Bun runtime executing payload index.js from semantic-release-action path
+
+`UC_14_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*semantic-release-action*" Processes.process="*index.js*" (Processes.process_name="bun" OR Processes.process="*bun*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "semantic-release-action" and ProcessCommandLine has "index.js"
+| where FileName =~ "bun" or InitiatingProcessFileName =~ "bun" or ProcessCommandLine has "bun run"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### GitHub dead-drop C2 — commit-search for RevokeAndItGoesKaboom / TheBeautifulSandsOfTime
+
+`UC_14_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*RevokeAndItGoesKaboom*" OR Web.url="*TheBeautifulSandsOfTime*" OR Web.url="*search/commits?q=RevokeAndItGoesKaboom*") by Web.src Web.user Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "bun"
+| where RemoteUrl has "github.com" or RemoteUrl has "githubusercontent.com"
+| summarize ConnCount=count(), FirstSeen=min(Timestamp), Urls=make_set(RemoteUrl,20) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP
+| order by FirstSeen desc
+// HTTPS hides the ?q=RevokeAndItGoesKaboom query string at the network layer; this surfaces Bun talking to GitHub for triage. Use ImWebSession/proxy for the verbatim marker.
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -173,7 +239,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — codfish/semantic-release-action GitHub Action has been compromised
 
-`UC_4_6` · phase: **exploit** · confidence: **High**
+`UC_14_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -225,9 +291,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `bd8035203526735490e4bd5cdcede581b9d3a3f7a5df7725859844d8dcc8eb49`, `6b9501e1889cc45c91726729610cf69c2442b8c5`
+  - file hash IOC(s): `9f93d77d32833a515bc406c46da477142bb1ac2babeecb6aa42f98669a6db015`, `6b9501e1889cc45c91726729610cf69c2442b8c5`, `5792aba0e2180b9b80b77644370a6889d5817456`, `bcb6b1d409144318e8fad2171d6fe06d02299d1a`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

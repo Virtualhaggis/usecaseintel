@@ -13,16 +13,54 @@ According to Symantec and Carbon Black's Threat Hunter Team, the backdoor, also 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-11645`
+- **IPv4 (defanged):** `142.93.242.144`
+- **IPv4 (defanged):** `144.31.53.78`
+- **IPv4 (defanged):** `198.13.159.44`
+- **IPv4 (defanged):** `199.91.221.42`
+- **Domain (defanged):** `authorized-logins.net`
+- **Domain (defanged):** `mail.authorized-logins.net`
+- **Domain (defanged):** `php.authorized-logins.net`
+- **Domain (defanged):** `sss.authorized-logins.net`
+- **Domain (defanged):** `updater-worelos.com`
+- **Domain (defanged):** `mails.updater-worelos.com`
+- **Domain (defanged):** `defs.updater-worelos.com`
+- **Domain (defanged):** `upd-domain-goloro.com`
+- **Domain (defanged):** `mailes.upd-domain-goloro.com`
+- **Domain (defanged):** `ftps.upd-domain-goloro.com`
+- **Domain (defanged):** `upscale-kolo.com`
+- **Domain (defanged):** `nano.upscale-kolo.com`
+- **Domain (defanged):** `update-fall.com`
+- **Domain (defanged):** `sql-updater-service.com`
+- **Domain (defanged):** `rotoa-upda-lo.com`
+- **Domain (defanged):** `human-check.top`
+- **Domain (defanged):** `grande-luna.top`
+- **Domain (defanged):** `b6w9m2z5x8q1v3k.top`
+- **Domain (defanged):** `w3xasv14culvnqj.top`
+- **Domain (defanged):** `carrolc.com`
+- **Domain (defanged):** `cwrtwright.com`
+- **Domain (defanged):** `mueleer.com`
+- **Domain (defanged):** `oeannon.com`
+- **Domain (defanged):** `thomphon.com`
+- **Domain (defanged):** `thomphon.com/update.msi`
+- **Domain (defanged):** `cj06y9v4xab.com`
+- **SHA256:** `1e41c7bfaa6aa3b93b6cc024274a10e33f3e12fe7c98c1db387ef8927f9d1984`
+- **SHA256:** `34d798a6c55e57ed0932b6499f4fbcb5454bdfca903307be101a0594b0ac07bc`
+- **SHA256:** `3f797a639bc855bc6d5471f327924b62d10900ddec49b970eca6604142bbb4be`
+- **SHA256:** `59e3c4cb06331b4f2d78a9a0592f3747e573bd01c5a7650c26361d1e25520712`
+- **SHA256:** `8c935feec4bd05d5d918df308be417532fb42608fb989a08eab183e0ae699235`
+- **SHA256:** `afd5f1ed45a9867daf3bc64152cef460a06b164c8183e490db39146d4749a82c`
+- **SHA256:** `db972979d508e75fe730d3b72c2701470fbdaeaf8ebdd674744754fa44438ca5`
+- **SHA256:** `f591275a8f014b29e567529d67c54eb7bb4473db1c38737d6bfd5b3d52c9344e`
+- **SHA256:** `fb3630822b70bacb56aa4cec29b5a0e3e9acb3920809e70310a4003385a6d34a`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1566.004** — Phishing: Spearphishing Voice
@@ -35,13 +73,106 @@ According to Symantec and Carbon Black's Threat Hunter Team, the backdoor, also 
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
+- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1620** — Reflective Code Loading
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Mistic backdoor DLL side-load: MpExtMs.exe loading rogue version.dll / EndpointDlp.dll
+
+`UC_10_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="MpExtMs.exe" NOT (Processes.process_path IN ("*\\Windows Defender\\*","*\\Windows\\System32\\*","*\\WinSxS\\*")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "MpExtMs.exe"
+| where FileName in~ ("version.dll","EndpointDlp.dll")
+| where not(FolderPath has @"\Windows Defender\" or FolderPath has @"\Windows\System32\" or FolderPath has @"\WinSxS\")
+| project Timestamp, DeviceName, InitiatingProcessFolderPath, InitiatingProcessSHA256, LoadedDll = FileName, LoadedDllPath = FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### KongTuke ClickFix DNS staging: nslookup TXT queries to Mistic/ModeloRAT domains
+
+`UC_10_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="nslookup.exe" (Processes.process="*type=txt*" OR Processes.process="*q=txt*" OR Processes.process="*querytype=txt*") (Processes.process="*updater-worelos.com*" OR Processes.process="*upd-domain-goloro.com*" OR Processes.process="*authorized-logins.net*" OR Processes.process="*upscale-kolo.com*" OR Processes.process="*update-fall.com*" OR Processes.process="*sql-updater-service.com*" OR Processes.process="*rotoa-upda-lo.com*" OR Processes.process="*human-check.top*" OR Processes.process="*grande-luna.top*" OR Processes.parent_process_name="explorer.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "nslookup.exe"
+| where ProcessCommandLine has_any ("-type=txt","-q=txt","-querytype=txt","type=txt")
+| where ProcessCommandLine has_any ("updater-worelos.com","upd-domain-goloro.com","authorized-logins.net","upscale-kolo.com","update-fall.com","sql-updater-service.com","rotoa-upda-lo.com","human-check.top","grande-luna.top")
+   or InitiatingProcessFileName in~ ("explorer.exe","cmd.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Mistic / ModeloRAT C2 beacon to KongTuke domains and IPs
+
+`UC_10_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*updater-worelos.com" OR DNS.query="*upd-domain-goloro.com" OR DNS.query="*authorized-logins.net" OR DNS.query="*upscale-kolo.com" OR DNS.query="*update-fall.com" OR DNS.query="*sql-updater-service.com" OR DNS.query="*rotoa-upda-lo.com" OR DNS.query="*human-check.top" OR DNS.query="*grande-luna.top" OR DNS.query="*b6w9m2z5x8q1v3k.top" OR DNS.query="*w3xasv14culvnqj.top" OR DNS.query="*carrolc.com") by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("updater-worelos.com","upd-domain-goloro.com","authorized-logins.net","upscale-kolo.com","update-fall.com","sql-updater-service.com","rotoa-upda-lo.com","human-check.top","grande-luna.top","b6w9m2z5x8q1v3k.top","w3xasv14culvnqj.top","carrolc.com")
+   or RemoteIP in ("142.93.242.144","144.31.53.78","198.13.159.44","199.91.221.42")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Backdoor.Mistic loader/payload file hash sweep
+
+`UC_10_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("1e41c7bfaa6aa3b93b6cc024274a10e33f3e12fe7c98c1db387ef8927f9d1984","34d798a6c55e57ed0932b6499f4fbcb5454bdfca903307be101a0594b0ac07bc","3f797a639bc855bc6d5471f327924b62d10900ddec49b970eca6604142bbb4be","59e3c4cb06331b4f2d78a9a0592f3747e573bd01c5a7650c26361d1e25520712","8c935feec4bd05d5d918df308be417532fb42608fb989a08eab183e0ae699235","afd5f1ed45a9867daf3bc64152cef460a06b164c8183e490db39146d4749a82c","db972979d508e75fe730d3b72c2701470fbdaeaf8ebdd674744754fa44438ca5","f591275a8f014b29e567529d67c54eb7bb4473db1c38737d6bfd5b3d52c9344e","fb3630822b70bacb56aa4cec29b5a0e3e9acb3920809e70310a4003385a6d34a") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let MisticHashes = dynamic(["1e41c7bfaa6aa3b93b6cc024274a10e33f3e12fe7c98c1db387ef8927f9d1984","34d798a6c55e57ed0932b6499f4fbcb5454bdfca903307be101a0594b0ac07bc","3f797a639bc855bc6d5471f327924b62d10900ddec49b970eca6604142bbb4be","59e3c4cb06331b4f2d78a9a0592f3747e573bd01c5a7650c26361d1e25520712","8c935feec4bd05d5d918df308be417532fb42608fb989a08eab183e0ae699235","afd5f1ed45a9867daf3bc64152cef460a06b164c8183e490db39146d4749a82c","db972979d508e75fe730d3b72c2701470fbdaeaf8ebdd674744754fa44438ca5","f591275a8f014b29e567529d67c54eb7bb4473db1c38737d6bfd5b3d52c9344e","fb3630822b70bacb56aa4cec29b5a0e3e9acb3920809e70310a4003385a6d34a"]);
+union
+(DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (MisticHashes) | project Timestamp, DeviceName, Source="Process", FileName, FolderPath, SHA256, InitiatingProcessFileName),
+(DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (MisticHashes) | project Timestamp, DeviceName, Source="File", FileName, FolderPath, SHA256, InitiatingProcessFileName),
+(DeviceImageLoadEvents | where Timestamp > ago(30d) | where SHA256 in (MisticHashes) | project Timestamp, DeviceName, Source="ImageLoad", FileName, FolderPath, SHA256, InitiatingProcessFileName)
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -384,7 +515,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — New Mistic Backdoor Linked to KongTuke in ClickFix and ModeloRAT Campaigns
 
-`UC_0_11` · phase: **exploit** · confidence: **High**
+`UC_10_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -435,10 +566,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-11645`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `142.93.242.144`, `144.31.53.78`, `198.13.159.44`, `199.91.221.42`, `authorized-logins.net`, `mail.authorized-logins.net`, `php.authorized-logins.net`, `sss.authorized-logins.net` _(+22 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `1e41c7bfaa6aa3b93b6cc024274a10e33f3e12fe7c98c1db387ef8927f9d1984`, `34d798a6c55e57ed0932b6499f4fbcb5454bdfca903307be101a0594b0ac07bc`, `3f797a639bc855bc6d5471f327924b62d10900ddec49b970eca6604142bbb4be`, `59e3c4cb06331b4f2d78a9a0592f3747e573bd01c5a7650c26361d1e25520712`, `8c935feec4bd05d5d918df308be417532fb42608fb989a08eab183e0ae699235`, `afd5f1ed45a9867daf3bc64152cef460a06b164c8183e490db39146d4749a82c`, `db972979d508e75fe730d3b72c2701470fbdaeaf8ebdd674744754fa44438ca5`, `f591275a8f014b29e567529d67c54eb7bb4473db1c38737d6bfd5b3d52c9344e` _(+1 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
