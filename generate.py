@@ -3151,6 +3151,11 @@ def _do_claude_cli_call_once(
 # sequential).
 # =============================================================================
 _UC_PARALLELISM = max(1, int(os.environ.get("USECASEINTEL_UC_PARALLELISM", "5")))
+# Fast catch-up mode: skip the WebSearch/WebFetch web-corroboration pass on the
+# IOC + UC calls. The core detection logic is unchanged — only the slow
+# (~3-6 min/call) enrichment is dropped. Cuts a post-outage backfill from hours
+# to minutes; normal scheduler runs leave it OFF for full quality.
+_NO_WEBSEARCH = os.environ.get("USECASEINTEL_NO_WEBSEARCH", "").lower() in ("1", "true", "yes")
 _uc_executor = None  # ThreadPoolExecutor, lazily created
 _uc_futures: dict = {}  # article URL -> Future from _llm_generate_ucs
 
@@ -3218,7 +3223,7 @@ def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
     """
     if _oauth_circuit_open("uc"):
         return None
-    tools = ["WebSearch", "WebFetch"] if enable_search else None
+    tools = ["WebSearch", "WebFetch"] if (enable_search and not _NO_WEBSEARCH) else None
     out = _call_claude_cli(
         prompt,
         model=LLM_UC_MODEL,
@@ -20720,7 +20725,7 @@ def _llm_extract_iocs_pass1(article: dict) -> dict | None:
         raw = _call_claude_cli(
             prompt,
             model=LLM_IOC_MODEL,
-            allowed_tools=["WebSearch", "WebFetch"],
+            allowed_tools=(None if _NO_WEBSEARCH else ["WebSearch", "WebFetch"]),
             system_prompt=_IOC_PROMPT_SYSTEM,
             timeout=_OAUTH_UC_CALL_TIMEOUT_SEC,
             kind="ioc",
