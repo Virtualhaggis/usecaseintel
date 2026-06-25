@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### GCP empty-then-delete signature on a Cloud Storage bucket (hijack precursor)
 
-`UC_51_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_52_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### Deletion of a GCS bucket that is an active logging-sink / Pub/Sub export destination
 
-`UC_51_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_52_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ _(none detected from narrative keywords)_
 
 ### AWS S3 replication-destination bucket deleted (cross-account namespace hijack setup)
 
-`UC_51_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_52_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

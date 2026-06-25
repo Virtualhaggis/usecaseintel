@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Crawl4AI /screenshot or /pdf output_path traversal → arbitrary file write outside output dir
 
-`UC_153_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_154_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceFileEvents
 
 ### Crawl4AI SSRF: crawler process reaching cloud-metadata or RFC1918 internal IPs
 
-`UC_153_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_154_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### Crawl4AI /execute_js sandbox escape: crawler/browser process spawning a shell
 
-`UC_153_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_154_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### Crawl4AI unauthenticated access to /monitor endpoints (auth bypass)
 
-`UC_153_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_154_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### Crawl4AI web-payload abuse: path traversal, XSS, file:// and metadata-IP in crawl requests
 
-`UC_153_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_154_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili
 
-`UC_153_0` · phase: **install** · confidence: **High**
+`UC_154_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

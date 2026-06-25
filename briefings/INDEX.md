@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-25
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-25/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
+- [beyond iocs ai enabled threat intelligence](./2026-06-25/beyond-iocs-ai-enabled-threat-intelligence.md)
 - [bluekit phishing kit adopts browser in the middle for login ](./2026-06-25/bluekit-phishing-kit-adopts-browser-in-the-middle-for-login-.md)
 - [chrome ad blocker with 10m installs found with dormant scrip](./2026-06-25/chrome-ad-blocker-with-10m-installs-found-with-dormant-scrip.md)
 - [cisco catalyst sd wan zero day cve 2026 20245 exploited to g](./2026-06-25/cisco-catalyst-sd-wan-zero-day-cve-2026-20245-exploited-to-g.md)
@@ -44,7 +45,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
 - [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
 - [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
-- [tata electronics confirms cyberattack as hackers leak data](./2026-06-23/tata-electronics-confirms-cyberattack-as-hackers-leak-data.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
 - [whatsapp vbscript campaign uses fake documents to install ma](./2026-06-23/whatsapp-vbscript-campaign-uses-fake-documents-to-install-ma.md)
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
@@ -308,7 +308,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-19
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
-- [from pdb strings to maas tracking a commodity badiis ecosyst](./2026-05-19/from-pdb-strings-to-maas-tracking-a-commodity-badiis-ecosyst.md)
 - [microsoft s durabletask package on pypi compromised mini sha](./2026-05-19/microsoft-s-durabletask-package-on-pypi-compromised-mini-sha.md)
 - [mini shai hulud strikes again npm worm compromises hundreds ](./2026-05-19/mini-shai-hulud-strikes-again-npm-worm-compromises-hundreds-.md)
 - [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)

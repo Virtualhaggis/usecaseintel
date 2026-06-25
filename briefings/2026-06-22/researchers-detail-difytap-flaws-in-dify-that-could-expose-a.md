@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Dify cross-tenant file-preview UUID enumeration (CVE-2026-41949)
 
-`UC_55_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_56_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Dify Plugin Daemon path traversal to internal REST API (CVE-2026-41948)
 
-`UC_55_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_56_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Dify mass trace-config hijack across apps (CVE-2026-41947)
 
-`UC_55_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_56_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
