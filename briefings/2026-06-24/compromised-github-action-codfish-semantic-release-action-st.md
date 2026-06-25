@@ -178,7 +178,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised GitHub action codfish/semantic-release-action steals CI/CD secrets
 
-`UC_4_6` · phase: **exploit** · confidence: **High**
+`UC_5_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

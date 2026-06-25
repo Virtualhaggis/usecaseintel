@@ -1,7 +1,7 @@
 # [HIGH] codfish/semantic-release-action GitHub Action has been compromised
 
 **Source:** StepSecurity
-**Published:** 2026-06-24
+**Published:** 2026-06-25
 **Article:** https://www.stepsecurity.io/blog/supply-chain-compromise-codfish-semantic-release-action
 
 ## Threat Profile
@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — codfish/semantic-release-action GitHub Action has been compromised
 
-`UC_6_6` · phase: **exploit** · confidence: **High**
+`UC_1_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

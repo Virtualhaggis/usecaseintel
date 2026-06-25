@@ -8,12 +8,14 @@ _2255 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-25
+- [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
+
 ## 2026-06-24
 - [amadey and stealc malware network disrupted 27m stolen crede](./2026-06-24/amadey-and-stealc-malware-network-disrupted-27m-stolen-crede.md)
 - [cisa warns critical lantronix eds5000 flaw is being actively](./2026-06-24/cisa-warns-critical-lantronix-eds5000-flaw-is-being-actively.md)
 - [cisco unified cm flaw exploited after poc reveals file write](./2026-06-24/cisco-unified-cm-flaw-exploited-after-poc-reveals-file-write.md)
 - [cnapp evolution how microsoft aligns with leading cloud risk](./2026-06-24/cnapp-evolution-how-microsoft-aligns-with-leading-cloud-risk.md)
-- [codfish semantic release action github action has been compr](./2026-06-24/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [compromised github action codfish semantic release action st](./2026-06-24/compromised-github-action-codfish-semantic-release-action-st.md)
 - [cordyceps ci cd flaws expose 300 github repositories to supp](./2026-06-24/cordyceps-ci-cd-flaws-expose-300-github-repositories-to-supp.md)
 - [dawn of the apex agentic adversary](./2026-06-24/dawn-of-the-apex-agentic-adversary.md)
