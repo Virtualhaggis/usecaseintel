@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Mandiant reveals how Cisco SD-WAN zero-day attacks gained root access
 
-`UC_4_1` · phase: **install** · confidence: **High**
+`UC_5_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

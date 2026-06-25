@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-25
+- [cisco catalyst sd wan zero day cve 2026 20245 exploited to g](./2026-06-25/cisco-catalyst-sd-wan-zero-day-cve-2026-20245-exploited-to-g.md)
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
 
 ## 2026-06-24
@@ -144,7 +145,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 53753 crawl4ai ast sandbox escape via](./2026-06-16/ghsa-critical-cve-2026-53753-crawl4ai-ast-sandbox-escape-via.md)
 - [ghsa critical cve 2026 54157 lobehub unauthenticated ssrf in](./2026-06-16/ghsa-critical-cve-2026-54157-lobehub-unauthenticated-ssrf-in.md)
 - [ghsa critical ghsa 365w hqf6 vxfg crawl4ai multiple docker a](./2026-06-16/ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a.md)
-- [google vertex ai sdk flaw let attackers hijack model uploads](./2026-06-16/google-vertex-ai-sdk-flaw-let-attackers-hijack-model-uploads.md)
 - [multiple jetbrains ide plugins caught stealing ai keys](./2026-06-16/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
 
