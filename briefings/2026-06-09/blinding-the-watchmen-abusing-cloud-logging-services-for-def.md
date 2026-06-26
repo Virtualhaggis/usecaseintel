@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### AWS CloudTrail logging suspended via StopLogging API
 
-`UC_197_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_198_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ CloudAppEvents
 
 ### AWS CloudTrail trail tampering: DeleteTrail / UpdateTrail / PutEventSelectors
 
-`UC_197_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_198_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ CloudAppEvents
 
 ### AWS S3 deletion of CloudTrail log-destination bucket
 
-`UC_197_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_198_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ CloudAppEvents
 
 ### GCP Cloud Logging sink disabled via UpdateSink
 
-`UC_197_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_198_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ CloudAppEvents
 
 ### GCP Cloud Logging bucket deletion via logging.buckets.delete
 
-`UC_197_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_198_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

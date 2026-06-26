@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### REF8372 malvertising delivery domains (prentiva99.info / miloyannopoulos.com) contacted
 
-`UC_61_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_62_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### OXLOADER fake-installer batch spawns PowerShell -Verb RunAs to fetch Storj payload
 
-`UC_61_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_62_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### OXLOADER DLL side-load: Windows dui70.dll loaded from a non-system path
 
-`UC_61_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_62_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceImageLoadEvents
 
 ### CastleStealer C2 beacon to 89.124.95.161 / 89.124.115.82
 
-`UC_61_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_62_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -299,7 +299,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer
 
-`UC_61_6` · phase: **exploit** · confidence: **High**
+`UC_62_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

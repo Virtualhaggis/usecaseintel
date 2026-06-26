@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### axios npm RAT C2 beacon to sfrclak.com:8000 / 142.11.206.73
 
-`UC_182_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_183_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceNetworkEvents
 
 ### axios supply chain: plain-crypto-js phantom dependency postinstall dropper
 
-`UC_182_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_183_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud Bun runtime sideload during npm install (setup_bun.js / bun_environment.js)
 
-`UC_182_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_183_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### Shai-Hulud TruffleHog secret-scan spawned by node/bun/npm
 
-`UC_182_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_183_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceProcessEvents
 
 ### npm/node install lifecycle script spawning download-and-execute LOLBin
 
-`UC_182_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_183_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -395,7 +395,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_182_8` · phase: **exploit** · confidence: **High**
+`UC_183_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

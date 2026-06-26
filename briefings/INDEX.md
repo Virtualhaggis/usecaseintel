@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2246 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -668,7 +668,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-01-27
 - [cisa kev cve 2026 24858 fortinet multiple products authentic](./2026-01-27/cisa-kev-cve-2026-24858-fortinet-multiple-products-authentic.md)
-- [fake clawdbot vs code extension installs screenconnect rat](./2026-01-27/fake-clawdbot-vs-code-extension-installs-screenconnect-rat.md)
 
 ## 2026-01-26
 - [cisa kev cve 2018 14634 linux kernel integer overflow vulner](./2026-01-26/cisa-kev-cve-2018-14634-linux-kernel-integer-overflow-vulner.md)
