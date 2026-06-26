@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### DynoWiper deployment from shared inetpub\pub directory (Sandworm, Poland Dec 2025)
 
-`UC_627_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_629_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union isfuzzy=true
 
 ### rsocx SOCKS5 reverse proxy beacon to 31.172.71.5:8008 (Sandworm Poland C2)
 
-`UC_627_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_629_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union isfuzzy=true
 
 ### DynoWiper PDB-string + vagrant build artefact in loaded modules
 
-`UC_627_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_629_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

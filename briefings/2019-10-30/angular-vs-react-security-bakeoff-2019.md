@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Angular vs React: security bakeoff 2019
 
-`UC_3161_0` · phase: **exploit** · confidence: **High**
+`UC_3163_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

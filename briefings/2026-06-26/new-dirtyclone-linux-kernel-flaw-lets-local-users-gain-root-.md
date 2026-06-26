@@ -64,7 +64,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — New DirtyClone Linux Kernel Flaw Lets Local Users Gain Root via Cloned Packets
 
-`UC_2_2` · phase: **install** · confidence: **High**
+`UC_4_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

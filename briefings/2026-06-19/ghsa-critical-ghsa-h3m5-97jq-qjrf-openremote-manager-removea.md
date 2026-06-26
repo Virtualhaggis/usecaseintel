@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote cross-realm alarm DELETE: single client deleting alarms in >1 realm (IDOR)
 
-`UC_79_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_81_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote high-volume alarm DELETE to /api/*/alarm (mass destruction / scripted abuse)
 
-`UC_79_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_81_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote alarm-endpoint authorization-failure cascade then success (IDOR boundary probing)
 
-`UC_79_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_81_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote alarm-ID enumeration via 404-response probing across realms
 
-`UC_79_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_81_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

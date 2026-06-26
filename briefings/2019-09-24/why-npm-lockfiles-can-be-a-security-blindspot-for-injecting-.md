@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Why npm lockfiles can be a security blindspot for injecting malicious modules
 
-`UC_3175_1` · phase: **install** · confidence: **High**
+`UC_3177_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

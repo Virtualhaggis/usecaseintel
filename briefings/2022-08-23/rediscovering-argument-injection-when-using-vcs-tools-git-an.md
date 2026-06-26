@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Rediscovering argument injection when using VCS tools — git and mercurial
 
-`UC_1955_1` · phase: **exploit** · confidence: **High**
+`UC_1957_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

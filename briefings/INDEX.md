@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-26
+- [amazon q developer flaw could let malicious repos run code v](./2026-06-26/amazon-q-developer-flaw-could-let-malicious-repos-run-code-v.md)
 - [cisa adds exploited ptc windchill rce flaw to kev as web she](./2026-06-26/cisa-adds-exploited-ptc-windchill-rce-flaw-to-kev-as-web-she.md)
 - [google details turla s new stockstay backdoor used in ukrain](./2026-06-26/google-details-turla-s-new-stockstay-backdoor-used-in-ukrain.md)
 - [guardian agents the next layer of identity governance](./2026-06-26/guardian-agents-the-next-layer-of-identity-governance.md)

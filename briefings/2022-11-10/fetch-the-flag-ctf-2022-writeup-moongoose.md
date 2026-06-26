@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Fetch the Flag CTF 2022 writeup: Moongoose
 
-`UC_1826_1` · phase: **exploit** · confidence: **High**
+`UC_1828_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
