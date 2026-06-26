@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### DNS / Network egress to TeamPCP Nx Console C2 domain check.git-service.com
 
-`UC_319_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_321_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ union
 
 ### TeamPCP Nx Console payload SHA256 hash match on developer endpoints
 
-`UC_319_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_321_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union
 
 ### VS Code child process fetching payload from nrwl/nx orphan commit (Nx Console v18.95.0 dropper)
 
-`UC_319_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_321_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### Burst credential-file harvest by VS Code / node process (Nx Console stealer behaviour)
 
-`UC_319_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_321_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — GitHub breached via a malicious VS Code extension: why developer devices are the
 
-`UC_319_3` · phase: **exploit** · confidence: **High**
+`UC_321_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — A year-old dormant malicious remote code execution vulnerability discovered in W
 
-`UC_3189_0` · phase: **install** · confidence: **High**
+`UC_3190_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

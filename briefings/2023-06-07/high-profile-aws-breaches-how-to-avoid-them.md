@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### S3 bucket exposed to public via ACL/policy change or Public Access Block removal
 
-`UC_1603_0` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1604_0` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ CloudAppEvents
 
 ### EC2 instance-role credentials performing S3 recon (Capital One IMDS-SSRF pattern)
 
-`UC_1603_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1604_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ CloudAppEvents
 
 ### RDS DB snapshot shared, copied, restored or exported (Imperva stolen-key pattern)
 
-`UC_1603_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1604_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

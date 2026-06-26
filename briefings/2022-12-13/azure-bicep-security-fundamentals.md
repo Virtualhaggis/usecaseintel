@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Azure Bicep security fundamentals
 
-`UC_1792_0` · phase: **exploit** · confidence: **High**
+`UC_1793_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

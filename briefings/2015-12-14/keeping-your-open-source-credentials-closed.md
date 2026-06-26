@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Keeping your open source credentials closed
 
-`UC_3392_0` · phase: **exploit** · confidence: **High**
+`UC_3393_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

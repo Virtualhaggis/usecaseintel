@@ -58,7 +58,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Security implications of HTTP response headers
 
-`UC_1650_1` · phase: **exploit** · confidence: **High**
+`UC_1651_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

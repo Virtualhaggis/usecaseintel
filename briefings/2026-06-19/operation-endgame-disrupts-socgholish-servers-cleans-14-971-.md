@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### SocGholish fake-update JavaScript (.js) downloaded by a browser to Downloads/Temp
 
-`UC_93_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_97_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceFileEvents
 
 ### wscript.exe/cscript.exe executing a .js from a user download path (SocGholish execution)
 
-`UC_93_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_97_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### SocGholish host/AD reconnaissance spawned by Windows Script Host
 
-`UC_93_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_97_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### wscript.exe (spawned by browser) making external network connections — SocGholish C2
 
-`UC_93_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_97_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

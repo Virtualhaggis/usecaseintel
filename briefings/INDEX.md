@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,12 +12,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [amazon q developer flaw could let malicious repos run code v](./2026-06-26/amazon-q-developer-flaw-could-let-malicious-repos-run-code-v.md)
 - [chinese speaking apt deploys new tinyrct backdoor in southea](./2026-06-26/chinese-speaking-apt-deploys-new-tinyrct-backdoor-in-southea.md)
 - [cisa adds exploited ptc windchill rce flaw to kev as web she](./2026-06-26/cisa-adds-exploited-ptc-windchill-rce-flaw-to-kev-as-web-she.md)
+- [cisa sets urgent deadline to fix cisco flaw exploited in att](./2026-06-26/cisa-sets-urgent-deadline-to-fix-cisco-flaw-exploited-in-att.md)
+- [cybersecurity firms targeted by fraudulent openai organizati](./2026-06-26/cybersecurity-firms-targeted-by-fraudulent-openai-organizati.md)
+- [fbi warns russian intelligence hackers target signal backup ](./2026-06-26/fbi-warns-russian-intelligence-hackers-target-signal-backup-.md)
 - [google details turla s new stockstay backdoor used in ukrain](./2026-06-26/google-details-turla-s-new-stockstay-backdoor-used-in-ukrain.md)
 - [miasma malware targets npm packages and github actions in su](./2026-06-26/miasma-malware-targets-npm-packages-and-github-actions-in-su.md)
 - [multiple immobiliarelabs backstage plugins compromised on np](./2026-06-26/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
 - [new dirtyclone linux kernel flaw lets local users gain root ](./2026-06-26/new-dirtyclone-linux-kernel-flaw-lets-local-users-gain-root-.md)
 - [new linux pedit cow exploit enables root access by poisoning](./2026-06-26/new-linux-pedit-cow-exploit-enables-root-access-by-poisoning.md)
+- [new sharkloader malware deploys cobalt strike in strikeshark](./2026-06-26/new-sharkloader-malware-deploys-cobalt-strike-in-strikeshark.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
+- [polymarket customers lose 3 million in supply chain attack](./2026-06-26/polymarket-customers-lose-3-million-in-supply-chain-attack.md)
+- [threat brief mitigating large scale credential attacks](./2026-06-26/threat-brief-mitigating-large-scale-credential-attacks.md)
+- [top koi alternatives in 2026](./2026-06-26/top-koi-alternatives-in-2026.md)
 
 ## 2026-06-25
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-25/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
@@ -47,8 +54,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cnapp evolution how microsoft aligns with leading cloud risk](./2026-06-24/cnapp-evolution-how-microsoft-aligns-with-leading-cloud-risk.md)
 - [compromised github action codfish semantic release action st](./2026-06-24/compromised-github-action-codfish-semantic-release-action-st.md)
 - [cordyceps ci cd flaws expose 300 github repositories to supp](./2026-06-24/cordyceps-ci-cd-flaws-expose-300-github-repositories-to-supp.md)
-- [malicious edge extension abuses native messaging as bridge t](./2026-06-24/malicious-edge-extension-abuses-native-messaging-as-bridge-t.md)
-- [mandiant reveals how cisco sd wan zero day attacks gained ro](./2026-06-24/mandiant-reveals-how-cisco-sd-wan-zero-day-attacks-gained-ro.md)
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
@@ -77,7 +82,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-20
 - [hackers exploit gravity smtp wordpress plugin bug to expose ](./2026-06-20/hackers-exploit-gravity-smtp-wordpress-plugin-bug-to-expose-.md)
-- [threat brief mitigating large scale credential attacks](./2026-06-20/threat-brief-mitigating-large-scale-credential-attacks.md)
 
 ## 2026-06-19
 - [autojack attack lets one web page hijack ai agent for host c](./2026-06-19/autojack-attack-lets-one-web-page-hijack-ai-agent-for-host-c.md)
@@ -92,7 +96,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa h3m5 97jq qjrf openremote manager removea](./2026-06-19/ghsa-critical-ghsa-h3m5-97jq-qjrf-openremote-manager-removea.md)
 - [ghsa critical ghsa wfqx gjrf g28r crossplane signature verif](./2026-06-19/ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif.md)
 - [operation endgame disrupts socgholish servers cleans 14 971 ](./2026-06-19/operation-endgame-disrupts-socgholish-servers-cleans-14-971-.md)
-- [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
 - [the gentlemen raas uses gentlekiller edr framework targeting](./2026-06-19/the-gentlemen-raas-uses-gentlekiller-edr-framework-targeting.md)
 
 ## 2026-06-18

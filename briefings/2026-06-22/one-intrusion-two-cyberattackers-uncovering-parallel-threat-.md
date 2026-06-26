@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### SharePoint LFI recon via win.ini / web.config requests (Storm-2603 ToolShell precursor)
 
-`UC_72_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_77_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### Velociraptor deployed with SYSTEM privileges (Storm-2603 LOTL tooling)
 
-`UC_72_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_77_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### Cloudflared tunnel established for covert C2 (Storm-2603)
 
-`UC_72_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_77_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### Visual Studio Code remote tunnel abused as SSH/C2 channel (Storm-2603)
 
-`UC_72_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_77_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### BYOVD vulnerable-driver load to disable endpoint protection (Storm-2603 NSecKrnl/ServiceMouse)
 
-`UC_72_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_77_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceFileEvents
 
 ### Zoho Assist unsanctioned remote-support agent on server (Storm-2603)
 
-`UC_72_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_77_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

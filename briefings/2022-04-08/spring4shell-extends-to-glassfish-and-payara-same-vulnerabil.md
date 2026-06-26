@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Spring4Shell extends to Glassfish and Payara: same vulnerability, new exploit
 
-`UC_2184_1` · phase: **install** · confidence: **High**
+`UC_2185_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
