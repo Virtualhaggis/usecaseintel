@@ -15,9 +15,9 @@ Multiple WordPress plugins from ShapedPlugin were compromised in a supply chain 
 
 - **CVE:** `CVE-2026-49777`
 - **CVE:** `CVE-2026-10735`
-- **CVE:** `CVE-2026-11645`
 - **IPv4 (defanged):** `194.76.217.28`
-- **Domain (defanged):** `account.shapedplugin.com`
+- **Domain (defanged):** `2faplugin.org`
+- **Domain (defanged):** `generate.2faplugin.org`
 
 ## MITRE ATT&CK Techniques
 
@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### ShapedPlugin backdoor C2 beacon/exfil to 194.76.217.28:2871 from web server
 
-`UC_55_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### ShapedPlugin backdoor PHP artifacts (LicenseLoader.php / install-persistent.php) dropped in wp-content
 
-`UC_55_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_57_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,10 +143,10 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-49777`, `CVE-2026-10735`, `CVE-2026-11645`
+  - CVE(s): `CVE-2026-49777`, `CVE-2026-10735`
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `194.76.217.28`, `account.shapedplugin.com`
+  - IP / domain IOC(s): `194.76.217.28`, `2faplugin.org`, `generate.2faplugin.org`
 
 
 ## Why this matters

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Cisco SD-WAN CVE-2026-20245 exploit via malicious 'evil_tenant.csv' tenant upload
 
-`UC_27_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_29_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Rogue root account 'troot' created on Cisco SD-WAN appliance
 
-`UC_27_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_29_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### Privilege pivot via 'su' to rogue root account troot on SD-WAN device
 
-`UC_27_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_29_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### Anti-forensic backup of /etc/passwd and /etc/shadow on SD-WAN appliance
 
-`UC_27_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_29_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### Rogue SD-WAN peering / vmanage-admin authentication from unexpected source
 
-`UC_27_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_29_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Mandiant reveals how Cisco SD-WAN zero-day attacks gained root access
 
-`UC_27_1` · phase: **install** · confidence: **High**
+`UC_29_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

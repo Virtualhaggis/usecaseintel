@@ -1,4 +1,4 @@
-# [CRIT] New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer
+# [HIGH] New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer
 
 **Source:** The Hacker News
 **Published:** 2026-06-22
@@ -13,14 +13,21 @@ According to Elastic Security Labs, the campaign leverages malicious Google Ads 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-11645`
+- **IPv4 (defanged):** `89.124.95.161`
+- **IPv4 (defanged):** `89.124.115.82`
 - **Domain (defanged):** `node-js.prentiva99.info`
+- **Domain (defanged):** `app.miloyannopoulos.com`
+- **SHA256:** `fdfc7831e5c24cfa80152860dfe8c056ba079f7df1393bf6bb7b18ed974eda37`
+- **SHA256:** `de4f51649ec1a33071854aefe93ffb3fc225e19f802d8dd914676dd5dfef2615`
+- **SHA256:** `9a9939dff297997732aaade9b243d695632cbd64033c5fbcb9de3d09b7e6c28d`
+- **SHA256:** `c85f2765a6c3c3f3907c17e57df12f8f68826f74bff3bbfd272af50666d065fe`
+- **SHA256:** `4ec9d9d4d10ad78fc6d7bda7cb17d52984878ccd2dd4302fd1cef152313b9741`
+- **SHA256:** `39019279686c820c3af5684012a0085a7e2109f612c9fab886dd0577ace5b5c6`
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -44,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### REF8372 malvertising delivery domains (prentiva99.info / miloyannopoulos.com) contacted
 
-`UC_59_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_61_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +70,7 @@ DeviceNetworkEvents
 
 ### OXLOADER fake-installer batch spawns PowerShell -Verb RunAs to fetch Storj payload
 
-`UC_59_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +91,7 @@ DeviceProcessEvents
 
 ### OXLOADER DLL side-load: Windows dui70.dll loaded from a non-system path
 
-`UC_59_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_61_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +110,7 @@ DeviceImageLoadEvents
 
 ### CastleStealer C2 beacon to 89.124.95.161 / 89.124.115.82
 
-`UC_59_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_61_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -292,7 +299,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New OXLOADER Loader Uses Malicious Google Ads to Deliver CastleStealer
 
-`UC_59_6` · phase: **exploit** · confidence: **High**
+`UC_61_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -343,13 +350,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-11645`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `node-js.prentiva99.info`
+  - IP / domain IOC(s): `89.124.95.161`, `89.124.115.82`, `node-js.prentiva99.info`, `app.miloyannopoulos.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `fdfc7831e5c24cfa80152860dfe8c056ba079f7df1393bf6bb7b18ed974eda37`, `de4f51649ec1a33071854aefe93ffb3fc225e19f802d8dd914676dd5dfef2615`, `9a9939dff297997732aaade9b243d695632cbd64033c5fbcb9de3d09b7e6c28d`, `c85f2765a6c3c3f3907c17e57df12f8f68826f74bff3bbfd272af50666d065fe`, `4ec9d9d4d10ad78fc6d7bda7cb17d52984878ccd2dd4302fd1cef152313b9741`, `39019279686c820c3af5684012a0085a7e2109f612c9fab886dd0577ace5b5c6`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

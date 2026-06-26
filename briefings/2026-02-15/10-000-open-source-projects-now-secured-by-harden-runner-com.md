@@ -19,12 +19,99 @@ CI/CD pipelines h…
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
+- **T1528** — Steal Application Access Token
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
+- **T1529** — System Shutdown/Reboot
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### npm/node post-install (telemetry.js) spawning credential CLIs (gh auth token / npm whoami) — s1ngularity Nx
+
+`UC_560_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node","node.exe","npm","npm.cmd","sh","bash","zsh") AND (Processes.process="*gh auth token*" OR Processes.process="*npm whoami*") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process Processes.process_id
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node","node.exe","npm","npm.cmd","sh","bash","zsh")
+| where (FileName in~ ("gh","gh.exe") and ProcessCommandLine has "auth token")
+     or (FileName in~ ("npm","npm.cmd") and ProcessCommandLine has "whoami")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          Child = FileName,
+          ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Local AI coding agents (claude/gemini/q) launched with permission-bypass flags during package install — s1ngularity
+
+`UC_560_2` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("claude","gemini","q","claude.exe","gemini.exe","q.exe") AND (Processes.process="*--dangerously-skip-permissions*" OR Processes.process="*--yolo*" OR Processes.process="*--trust-all-tools*") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("claude","claude.exe","gemini","gemini.exe","q","q.exe")
+| where ProcessCommandLine has_any ("--dangerously-skip-permissions","--yolo","--trust-all-tools")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          Child = FileName,
+          ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Shell rc files (.bashrc/.zshrc) modified by package-install process — s1ngularity persistence/shutdown
+
+`UC_560_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("modified","created","write") AND Filesystem.file_name IN (".bashrc",".zshrc",".bash_profile",".profile",".zprofile") AND Filesystem.process_name IN ("node","node.exe","npm","npm.cmd","sh","bash","zsh") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileModified","FileCreated","FileRenamed")
+| where FileName in~ (".bashrc",".zshrc",".bash_profile",".profile",".zprofile")
+| where InitiatingProcessFileName in~ ("node","node.exe","npm","npm.cmd","sh","bash","zsh")
+   or InitiatingProcessCommandLine has_any ("telemetry.js","postinstall","npm install","npm ci")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FileName, FolderPath, ActionType
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -53,4 +140,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

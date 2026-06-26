@@ -25,57 +25,26 @@ Author…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `202.61.160.208`
 - **IPv4 (defanged):** `202.61.160.202`
 - **IPv4 (defanged):** `202.61.160.201`
-- **IPv4 (defanged):** `202.61.160.160`
 - **IPv4 (defanged):** `202.61.160.137`
+- **IPv4 (defanged):** `202.61.160.160`
+- **IPv4 (defanged):** `202.61.160.208`
 - **IPv4 (defanged):** `38.55.151.63`
 - **Domain (defanged):** `temu.baskwms.top`
 - **Domain (defanged):** `invoice.msopsa.top`
+- **Domain (defanged):** `qse.shoppes.help`
+- **Domain (defanged):** `shaaslong.one`
 - **Domain (defanged):** `baoxis.cc`
+- **Domain (defanged):** `baolongwes.oss-ap-southeast-1.aliyuncs.com`
 - **Domain (defanged):** `sdcwww.oss-ap-southeast-1.aliyuncs.com`
+- **Domain (defanged):** `caiwuascw.s3.us-east-005.backblazeb2.com`
+- **Domain (defanged):** `facaia.s3.us-east-005.backblazeb2.com`
 - **MD5:** `c7f38cbb99c8b74fa0465293feeba700`
 - **MD5:** `b7cd06c71465038b658a6dc1f273a507`
 - **MD5:** `9f13c7b8ba391b2f597874e54d310648`
 - **MD5:** `993f4c0cadbc769a4b0ed62a918db58d`
 - **MD5:** `7f81c1bc8cfd588e8998968e2621456e`
-- **MD5:** `7403cbcc5a9c32384d431856dc48fcc9`
-- **MD5:** `68c16c46f8afb9e00bbaba0207fb0a46`
-- **MD5:** `66442f2457eca8f47385b1fb2c6fcab8`
-- **MD5:** `6359e6236471cbe434d0ef4c42b7f879`
-- **MD5:** `5b6bbcc06cf08cc99e1afeda486d42fb`
-- **MD5:** `5002eca748205d544618e3bd2dedc223`
-- **MD5:** `4f0593e8e0e8fac49429e9b45ebf7fa1`
-- **MD5:** `4044e4b6471c9de7b0a4ba37d9d9df9a`
-- **MD5:** `20209b3a32769afc6a75694b8d8839dd`
-- **MD5:** `0ba93109757776a44de9d8c88baa4963`
-- **MD5:** `02bb20455cc592a69c080abac770ce90`
-- **MD5:** `6c39900d77dcba158e1d27c7619cb06d`
-- **MD5:** `dad708e050632a4280cabf98ac1376b7`
-- **MD5:** `05d188f071d097f5b6bd8138749b4b14`
-- **MD5:** `2c6f05f1f309d89b2236e6c8b59c88f9`
-- **MD5:** `3b1aba44dd3d9b6339b6f56e2f42034b`
-- **MD5:** `d43fdaa1f0ee09d7e5f0f94ee9df7b6c`
-- **MD5:** `df4fa0369eaca5cec348be293890d4af`
-- **MD5:** `63ac85195b73753333316a889cf5880f`
-- **MD5:** `74fd9f91fc93b6288b4fc253ea5b3e20`
-- **MD5:** `d06333c360b51456f427e616c3c5f8bd`
-- **MD5:** `1d94fbe9cab21278cc3f104bea334d08`
-- **MD5:** `9d9ac85765e4a818a3ccabe2cf4fef82`
-- **MD5:** `6fb6a55424adfb61e31f06aef33273e5`
-- **MD5:** `f90ed4b2d0b67114aa89ddfed658e5c0`
-- **MD5:** `8c3322009b8982663c0cbecd9492e7eb`
-- **MD5:** `66705384a7ad81d14c34fc6c054a0ecf`
-- **MD5:** `8c6d9fc389ad3f20ccbc71d77eb39bfa`
-- **MD5:** `1a3cc75466ffb1971482f7abf7aabc3f`
-- **MD5:** `1c47c63e5ed25060d95359c57c77b107`
-- **MD5:** `31037a42ca048e06e69a78f55bc2eff5`
-- **MD5:** `7f16449cd0c4862d1eadf8a5742bf09a`
-- **MD5:** `79ecd61b09b0f2d54b34586c916c4ec9`
-- **MD5:** `7849061c536a3efb05a56d504694e7e7`
-- **MD5:** `ddaffe9849f7f3c79f8804adb9a6b3d5`
-- **MD5:** `d01cad98dd0d01b75e04e784953c5e2b`
 
 ## MITRE ATT&CK Techniques
 
@@ -107,7 +76,7 @@ _(none detected from narrative keywords)_
 
 ### WhatsApp Desktop spawning WScript executing VBS from attachment Transfers dir
 
-`UC_63_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_65_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +98,7 @@ DeviceProcessEvents
 
 ### VBScript creating hidden working directory and VBS payloads under C:\Users\Public\Documents
 
-`UC_63_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_65_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +118,7 @@ DeviceFileEvents
 
 ### Renamed curl.exe/bitsadmin.exe running from Public\Documents working directory
 
-`UC_63_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_65_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +138,7 @@ DeviceProcessEvents
 
 ### UAC ConsentPromptBehaviorAdmin disabled (set to 0) by Windows Script Host
 
-`UC_63_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_65_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +159,7 @@ DeviceRegistryEvents
 
 ### Beacon/download to WhatsApp-VBS campaign C2 infrastructure (202.61.160.0/24 + 38.55.151.63)
 
-`UC_63_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_65_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -210,7 +179,7 @@ DeviceNetworkEvents
 
 ### ManageEngine Endpoint Central (UEMS) agent silently installed as final RMM payload
 
-`UC_63_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_65_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -385,7 +354,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A VBScript campaign distributed through WhatsApp deploying RMM software
 
-`UC_63_7` · phase: **exploit** · confidence: **High**
+`UC_65_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -456,10 +425,10 @@ DeviceRegistryEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `202.61.160.208`, `202.61.160.202`, `202.61.160.201`, `202.61.160.160`, `202.61.160.137`, `38.55.151.63`, `temu.baskwms.top`, `invoice.msopsa.top` _(+2 more)_
+  - IP / domain IOC(s): `202.61.160.202`, `202.61.160.201`, `202.61.160.137`, `202.61.160.160`, `202.61.160.208`, `38.55.151.63`, `temu.baskwms.top`, `invoice.msopsa.top` _(+7 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `c7f38cbb99c8b74fa0465293feeba700`, `b7cd06c71465038b658a6dc1f273a507`, `9f13c7b8ba391b2f597874e54d310648`, `993f4c0cadbc769a4b0ed62a918db58d`, `7f81c1bc8cfd588e8998968e2621456e`, `7403cbcc5a9c32384d431856dc48fcc9`, `68c16c46f8afb9e00bbaba0207fb0a46`, `66442f2457eca8f47385b1fb2c6fcab8` _(+33 more)_
+  - file hash IOC(s): `c7f38cbb99c8b74fa0465293feeba700`, `b7cd06c71465038b658a6dc1f273a507`, `9f13c7b8ba391b2f597874e54d310648`, `993f4c0cadbc769a4b0ed62a918db58d`, `7f81c1bc8cfd588e8998968e2621456e`
 
 
 ## Why this matters

@@ -22,7 +22,6 @@ The implant self-redact…
 - **SHA256:** `77b4fd46994992f0e57302cfe76ed23c0d90101381d2b89fc2ddf5c4536e77ca`
 - **SHA256:** `baabf249c77bc54c54ab0e66e15af798bd28aa5b4683554456a8b73ab8741239`
 - **SHA256:** `b3c56d689414343589f38394d19ba2fe9a518133281200faa0556ba4e4136394`
-- **SHA1:** `5555494492fc075f441637fb9d894913dde3a2ea`
 
 ## MITRE ATT&CK Techniques
 
@@ -52,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### macOS.Gaslight Telegram Bot API C2 polling from non-browser process
 
-`UC_40_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_42_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +73,7 @@ DeviceNetworkEvents
 
 ### macOS.Gaslight keychain theft + collected_data.zip staging
 
-`UC_40_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_42_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +96,7 @@ DeviceFileEvents
 
 ### macOS.Gaslight LaunchAgent persistence masquerading as com.apple.system.services.activity
 
-`UC_40_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_42_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +119,7 @@ DeviceFileEvents
 
 ### macOS.Gaslight self-staged standalone CPython 3.10.18 fetch (astral-sh python-build-standalone)
 
-`UC_40_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_42_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +142,7 @@ DeviceProcessEvents
 
 ### macOS.Gaslight known-bad file hashes (Mach-O implant, BONZAI sibling, Python/bash stages)
 
-`UC_40_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_42_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -256,7 +255,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6328567511d88fdc2ae0939c5ef17b7a63d2a833881900de018a4f12f4982525`, `77b4fd46994992f0e57302cfe76ed23c0d90101381d2b89fc2ddf5c4536e77ca`, `baabf249c77bc54c54ab0e66e15af798bd28aa5b4683554456a8b73ab8741239`, `b3c56d689414343589f38394d19ba2fe9a518133281200faa0556ba4e4136394`, `5555494492fc075f441637fb9d894913dde3a2ea`
+  - file hash IOC(s): `6328567511d88fdc2ae0939c5ef17b7a63d2a833881900de018a4f12f4982525`, `77b4fd46994992f0e57302cfe76ed23c0d90101381d2b89fc2ddf5c4536e77ca`, `baabf249c77bc54c54ab0e66e15af798bd28aa5b4683554456a8b73ab8741239`, `b3c56d689414343589f38394d19ba2fe9a518133281200faa0556ba4e4136394`
 
 
 ## Why this matters

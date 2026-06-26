@@ -1,4 +1,4 @@
-# [MED] 2025 in Review: The Evolution of Supply Chain Security & What's Next
+# [HIGH] 2025 in Review: The Evolution of Supply Chain Security & What's Next
 
 **Source:** StepSecurity
 **Published:** 2026-01-06
@@ -18,12 +18,81 @@ StepSecurity detected some of the most consequential supply chain attacks of 202
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059** — Command and Scripting Interpreter
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1567** — Exfiltration Over Web Service
+- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Nx s1ngularity: npm postinstall weaponizes AI CLI tools (claude/gemini/q) for credential recon
+
+`UC_649_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("claude","gemini","q","claude.exe","gemini.exe","q.exe")) (Processes.process IN ("*--dangerously-skip-permissions*","*--yolo*","*--trust-all-tools*","*--no-interactive*")) (Processes.parent_process_name IN ("node","npm","npx","sh","bash","zsh","node.exe","npm.cmd","npx.cmd") OR Processes.parent_process IN ("*telemetry.js*","*postinstall*","*nx*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("claude","gemini","q","claude.exe","gemini.exe","q.exe")
+| where ProcessCommandLine has_any ("--dangerously-skip-permissions","--yolo","--trust-all-tools","--no-interactive")
+| where InitiatingProcessFileName in~ ("node","npm","npx","sh","bash","zsh","node.exe","npm.cmd","npx.cmd")
+   or InitiatingProcessCommandLine has_any ("telemetry.js","postinstall","nx")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Nx s1ngularity exfiltration via public GitHub repo 's1ngularity-repository'
+
+`UC_649_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*s1ngularity-repository*" OR Processes.parent_process="*s1ngularity-repository*" OR Processes.process="*/tmp/inventory.txt*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("s1ngularity-repository","/tmp/inventory.txt")
+   or InitiatingProcessCommandLine has "s1ngularity-repository"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### tj-actions/changed-files: CI runner pipes gist memdump.py to python to scrape secrets
+
+`UC_649_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*memdump.py*" OR Processes.process="*gist.githubusercontent.com/nikitastupin/30e525b776c409e03c2d6f328f254965*" OR Processes.process="*0e58ed8671d6b60d0890c21b07f8835ace038e67*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(90d)
+| where ProcessCommandLine has_any ("memdump.py",
+        "gist.githubusercontent.com/nikitastupin/30e525b776c409e03c2d6f328f254965",
+        "0e58ed8671d6b60d0890c21b07f8835ace038e67")
+   or (ProcessCommandLine has "gist.githubusercontent.com" and ProcessCommandLine has "memdump.py")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -52,4 +121,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

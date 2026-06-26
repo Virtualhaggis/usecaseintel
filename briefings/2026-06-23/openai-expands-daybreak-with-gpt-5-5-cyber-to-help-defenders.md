@@ -19,7 +19,6 @@ Calling GPT‑5.5‑Cyber its "strongest model yet for finding and helping patch
 - **CVE:** `CVE-2026-4892`
 - **CVE:** `CVE-2026-5172`
 - **CVE:** `CVE-2026-8390`
-- **CVE:** `CVE-2026-11645`
 
 ## MITRE ATT&CK Techniques
 
@@ -67,7 +66,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-47729`, `CVE-2026-4890`, `CVE-2026-4891`, `CVE-2026-4892`, `CVE-2026-5172`, `CVE-2026-8390`, `CVE-2026-11645`
+  - CVE(s): `CVE-2026-47729`, `CVE-2026-4890`, `CVE-2026-4891`, `CVE-2026-4892`, `CVE-2026-5172`, `CVE-2026-8390`
 
 
 ## Why this matters

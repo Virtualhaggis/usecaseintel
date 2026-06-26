@@ -25,20 +25,13 @@ Th…
 
 - **IPv4 (defanged):** `91.92.242.30`
 - **IPv4 (defanged):** `2.26.75.16`
-- **Domain (defanged):** `glot.io`
 - **Domain (defanged):** `laosji.net`
-- **Domain (defanged):** `letssendit.fun`
-- **Domain (defanged):** `pump.fun`
-- **Domain (defanged):** `download.setup-service.com`
-- **Domain (defanged):** `install.app-distribution.net`
-- **Domain (defanged):** `openclawcli.vercel.app`
-- **Domain (defanged):** `install.app`
+- **Domain (defanged):** `glot.io`
+- **Domain (defanged):** `rentry.co/openclaw-code`
 - **SHA256:** `b6c7e0bf573b1c7d9d3a05eb08d26579199515b847df984862805f44a7af8007`
 - **SHA256:** `818aea6143282b352fdfdc0f3ebf77a36e54eb3befb5cad1a355a99ab97c6aa7`
 - **SHA256:** `b30eaed1f7478c28f4ec50d07ed5ef014ffbc4b2bc5a38d689ba9f7abb5e19c2`
 - **SHA256:** `ebb73dbb5aac1f6fe1a88e8f26126a1e1aa34c9f3345ad4345189b40d9bf1d1d`
-- **SHA256:** `f4e41aa269c88bf11a2022701a9cf41e9a186aa1b224d837c31bf34e0b875d0e`
-- **SHA256:** `881ce5cb124c4d2e814783724cc1388f6a1cbf6eee274c3f3366e77ba3503ad7`
 
 ## MITRE ATT&CK Techniques
 
@@ -69,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### cluw macOS stealer shell dropper fetching payload from ClawHavoc/AMOS C2 IP
 
-`UC_39_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_41_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +81,7 @@ DeviceProcessEvents
 
 ### Network egress to ClawHavoc cluw / AMOS C2 infrastructure
 
-`UC_39_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_41_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +99,7 @@ DeviceNetworkEvents
 
 ### cluw infostealer and malicious ClawHub skill payload hashes on macOS
 
-`UC_39_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_41_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +117,7 @@ DeviceFileEvents
 
 ### OpenClaw paste-site (rentry.co/glot.io) curl-pipe-bash semantic-hijack dropper
 
-`UC_39_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_41_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -373,10 +366,10 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `91.92.242.30`, `2.26.75.16`, `glot.io`, `laosji.net`, `letssendit.fun`, `pump.fun`, `download.setup-service.com`, `install.app-distribution.net` _(+2 more)_
+  - IP / domain IOC(s): `91.92.242.30`, `2.26.75.16`, `laosji.net`, `glot.io`, `rentry.co/openclaw-code`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `b6c7e0bf573b1c7d9d3a05eb08d26579199515b847df984862805f44a7af8007`, `818aea6143282b352fdfdc0f3ebf77a36e54eb3befb5cad1a355a99ab97c6aa7`, `b30eaed1f7478c28f4ec50d07ed5ef014ffbc4b2bc5a38d689ba9f7abb5e19c2`, `ebb73dbb5aac1f6fe1a88e8f26126a1e1aa34c9f3345ad4345189b40d9bf1d1d`, `f4e41aa269c88bf11a2022701a9cf41e9a186aa1b224d837c31bf34e0b875d0e`, `881ce5cb124c4d2e814783724cc1388f6a1cbf6eee274c3f3366e77ba3503ad7`
+  - file hash IOC(s): `b6c7e0bf573b1c7d9d3a05eb08d26579199515b847df984862805f44a7af8007`, `818aea6143282b352fdfdc0f3ebf77a36e54eb3befb5cad1a355a99ab97c6aa7`, `b30eaed1f7478c28f4ec50d07ed5ef014ffbc4b2bc5a38d689ba9f7abb5e19c2`, `ebb73dbb5aac1f6fe1a88e8f26126a1e1aa34c9f3345ad4345189b40d9bf1d1d`
 
 
 ## Why this matters

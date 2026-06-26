@@ -38,12 +38,105 @@ Back to Blog Threat Intel Mass npm Supply Chain Attack: 20 Leo Platform Packages
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1105** — Ingress Tool Transfer
+- **T1003.007** — OS Credential Dumping: Proc Filesystem
+- **T1212** — Exploitation for Credential Access
+- **T1548.003** — Abuse Elevation Control Mechanism: Sudo and Sudo Caching
+- **T1098** — Account Manipulation
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Bun v1.3.13 runtime pulled from GitHub Releases during npm install (Phantom Gyp staging)
+
+`UC_21_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*oven-sh/bun/releases/download/bun-v1.3.13*" OR Web.url="*bun-v1.3.13*") by Web.src Web.dest Web.url Web.http_user_agent Web.site
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has_any ("oven-sh/bun/releases/download/bun-v1.3.13", "bun-v1.3.13")
+| where InitiatingProcessFileName in~ ("node","npm","node-gyp","bun","yarn","pnpm")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### GitHub Actions Runner.Worker memory read via /proc/<pid>/mem (CI secret unmasking)
+
+`UC_21_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process="*/proc/*" AND Endpoint.Processes.process="*/mem*" by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| regex process="/proc/[0-9]+/mem"
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine matches regex @"/proc/[0-9]+/mem"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Passwordless sudo backdoor written for runner account (runner ALL=(ALL) NOPASSWD:ALL)
+
+`UC_21_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process="*NOPASSWD:ALL*" AND Endpoint.Processes.process="*runner*" by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine contains "NOPASSWD:ALL" and ProcessCommandLine has "runner"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Bun executes dropped temp payload /tmp/p*.js (Miasma stealer launch)
+
+`UC_21_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name="bun" AND Endpoint.Processes.process="*/tmp/p*.js*" by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "bun"
+| where ProcessCommandLine matches regex @"/tmp/p[^/ ]*\.js"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -71,7 +164,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised
 
-`UC_20_2` · phase: **exploit** · confidence: **High**
+`UC_21_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,4 +221,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

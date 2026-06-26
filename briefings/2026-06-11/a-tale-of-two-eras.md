@@ -35,12 +35,33 @@ To the surprise of absolutely no one who has seen my face, I’m one of the yo
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1496** — Resource Hijacking
+- **T1055.001** — Process Injection: Dynamic-link Library Injection
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Talos most-prevalent CoinMiner / W32.Injector / Win.Dropper.Miner file-hash watchlist
+
+`UC_180_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let BadSHA256 = dynamic(["9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f"]);
+let BadMD5 = dynamic(["2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98"]);
+union
+(DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in~ (BadSHA256) or MD5 in~ (BadMD5) | project Timestamp, DeviceName, AccountName, Action = "ProcessCreated", FileName, FolderPath, SHA256, MD5, ProcessCommandLine, InitiatingProcessFileName),
+(DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in~ (BadSHA256) or MD5 in~ (BadMD5) | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, Action = ActionType, FileName, FolderPath, SHA256, MD5, ProcessCommandLine = InitiatingProcessCommandLine, InitiatingProcessFileName)
+| order by Timestamp desc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -155,7 +176,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_179_5` · phase: **exploit** · confidence: **High**
+`UC_180_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,4 +233,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

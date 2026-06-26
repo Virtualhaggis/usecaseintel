@@ -26,12 +26,78 @@ Introduction As 2024 comes to a close, we've been reflecting on the state of CI/
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1496** — Resource Hijacking
+- **T1195.001** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### XZ Utils (CVE-2024-3094) build-time backdoor extraction from disguised test corpus
+
+`UC_562_3` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*build-to-host.m4*" OR Processes.process="*bad-3-corrupt_lzma2.xz*" OR Processes.process="*good-large_compressed.lzma*" OR Processes.process="*[[:alnum:]]{5}*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine contains "build-to-host.m4"
+    or ProcessCommandLine contains "bad-3-corrupt_lzma2.xz"
+    or ProcessCommandLine contains "good-large_compressed.lzma"
+    or ProcessCommandLine contains "[[:alnum:]]{5}"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Ultralytics PyPI supply-chain XMRig coinminer execution from /tmp/ultralytics_runner
+
+`UC_562_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path="/tmp/ultralytics_runner" OR Processes.process="*/tmp/ultralytics_runner*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FolderPath =~ "/tmp/ultralytics_runner"
+    or ProcessCommandLine contains "/tmp/ultralytics_runner"
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Ultralytics coinminer C2 — Stratum to connect.consrensys.com:8080 mining pool
+
+`UC_562_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="connect.consrensys.com" OR DNS.query="*.consrensys.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl =~ "connect.consrensys.com" or RemoteUrl endswith ".consrensys.com"
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -70,4 +136,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -29,12 +29,93 @@ Summary On June 8, 2026, version 0.8.101 of the popular graph machine learning p
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1105** — Ingress Tool Transfer
+- **T1003.007** — OS Credential Dumping: Proc Filesystem
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Bun runtime executed from temp dir running _index.js payload (Hades Campaign)
+
+`UC_201_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=bun Processes.process="*run*" Processes.process="*_index.js*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("bun","bun.exe")
+| where ProcessCommandLine has "run" and ProcessCommandLine has "_index.js"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Scripting interpreter downloads Bun v1.3.14 runtime from oven-sh GitHub releases
+
+`UC_201_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*oven-sh/bun*" OR Web.url="*bun-v1.3.14*") by Web.src Web.user Web.url Web.dest Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName has_any ("python","python3","node","bun")
+| where RemoteUrl has_any ("oven-sh/bun","bun-v1.3.14","bun-linux-","bun-darwin-","bun-windows-")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Hades import-hook payload artifacts dropped (_index.js, _hooks.py, _runtime.bin, .bun_ran, b.zip)
+
+`UC_201_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="_hooks.py" OR Filesystem.file_name="_runtime.bin" OR Filesystem.file_name="_index.js" OR Filesystem.file_name=".bun_ran" OR Filesystem.file_name="b.zip") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName in~ ("_hooks.py","_runtime.bin","_index.js",".bun_ran","b.zip")
+| where InitiatingProcessFileName has_any ("python","python3","pip","node","bun","unzip","git")
+| project Timestamp, DeviceName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### CI runner secret theft via /proc/<pid>/mem read of Runner.Worker (Miasma memory scraper)
+
+`UC_201_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="/proc/*/mem" by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -291,7 +372,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 
-`UC_200_7` · phase: **exploit** · confidence: **High**
+`UC_201_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -341,4 +422,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 12 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

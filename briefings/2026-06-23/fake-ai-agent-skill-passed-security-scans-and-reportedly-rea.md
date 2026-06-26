@@ -1,4 +1,4 @@
-# [CRIT] Fake AI Agent Skill Passed Security Scans and Reportedly Reached 26,000 Agents
+# [HIGH] Fake AI Agent Skill Passed Security Scans and Reportedly Reached 26,000 Agents
 
 **Source:** The Hacker News
 **Published:** 2026-06-23
@@ -13,14 +13,14 @@ Every skill security scanner the firm tested it against marked it safe. The payl
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-11645`
+- **Domain (defanged):** `stitch-design.ai`
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### AI agent skill phones home to lookalike Stitch domain stitch-design.ai
 
-`UC_42_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_44_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceNetworkEvents
 
 ### Agent download-and-run install of fake 'Stitch SDK' from stitch-design.ai
 
-`UC_42_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_44_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### On-disk 'brand-landingpage' fake AI agent skill artifact
 
-`UC_42_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_44_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake AI Agent Skill Passed Security Scans and Reportedly Reached 26,000 Agents
 
-`UC_42_3` · phase: **exploit** · confidence: **High**
+`UC_44_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,10 +194,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-11645`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `stitch-design.ai`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

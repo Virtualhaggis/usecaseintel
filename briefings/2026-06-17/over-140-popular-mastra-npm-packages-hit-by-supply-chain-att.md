@@ -25,12 +25,105 @@ Blog Vulnerabilities & Threats Over 140 popular Mastra npm Packages Hit by Suppl
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1195.002** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1070.004** — Indicator Removal: File Deletion
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Sapphire Sleet easy-day-js RAT C2 beacon to Hostwinds 23.254.164.92 / 23.254.164.123
+
+`UC_149_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("23.254.164.92","23.254.164.123") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name 
+| `drop_dm_object_name(All_Traffic)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("23.254.164.92","23.254.164.123")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### easy-day-js postinstall dropper spawning node.exe with C2 IP passed as argument
+
+`UC_149_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*23.254.164.123*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process 
+| `drop_dm_object_name(Processes)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "23.254.164.123"
+| where FileName =~ "node.exe" or InitiatingProcessFileName =~ "node.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Malicious easy-day-js package installed into node_modules
+
+`UC_149_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*node_modules\\easy-day-js*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name 
+| `drop_dm_object_name(Filesystem)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has @"node_modules\easy-day-js"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, ActionType
+| order by Timestamp desc
+```
+
+### Node.js writing a random 24-hex-char .js dropper to the OS temp directory
+
+`UC_149_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Temp\\*" Filesystem.file_name="*.js" Filesystem.process_name="node.exe" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name 
+| `drop_dm_object_name(Filesystem)` 
+| regex file_name="^[0-9a-f]{24}\.js$" 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where FolderPath has @"\Temp\"
+| where FileName matches regex @"^[0-9a-f]{24}\.js$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FileName, FolderPath, ActionType
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -214,4 +307,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -27,12 +27,81 @@ Agent skills are reusable capability packages that instruct AI agents how to int
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Compromise Software Supply Chain: Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1105** — Ingress Tool Transfer
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
+- **T1567.002** — Exfiltration Over Web Service: Exfiltration to Cloud Storage
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Dev endpoint contacts ClawHub / skills.sh agent-skill marketplace
+
+`UC_597_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*clawhub.ai*" OR All_Traffic.dest="*skills.sh*" OR All_Traffic.dest="*skillsmp*") by All_Traffic.src All_Traffic.app All_Traffic.dest_port All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("clawhub.ai","skills.sh","skillsmp")
+| where InitiatingProcessFileName in~ ("node","node.exe","claude","claude.exe","cursor","cursor.exe","openclaw","openclaw.exe","curl","curl.exe","wget","powershell.exe","pwsh")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### AI coding agent spawns remote fetch-and-execute (curl | bash / curl | source)
+
+`UC_597_4` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","claude","claude.exe","cursor","cursor.exe","openclaw","openclaw.exe")) AND (Processes.process="*curl*" OR Processes.process="*wget*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*iwr *") AND (Processes.process="*| bash*" OR Processes.process="*|bash*" OR Processes.process="*| sh*" OR Processes.process="*|sh*" OR Processes.process="*| source*" OR Processes.process="*|source*" OR Processes.process="*| zsh*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*| iex*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node","node.exe","claude","claude.exe","cursor","cursor.exe","openclaw","openclaw.exe")
+| where ProcessCommandLine has_any ("curl","wget","Invoke-WebRequest","iwr ")
+| where ProcessCommandLine has_any ("|bash","| bash","|sh","| sh","| source","|source","| zsh","Invoke-Expression","| iex","|iex")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### AI agent skill exfiltrates GitHub token / env secrets via dynamic-context shell-out
+
+`UC_597_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","claude","claude.exe","cursor","cursor.exe","openclaw","openclaw.exe","bash","sh","zsh","cmd.exe","powershell.exe","pwsh")) AND (Processes.process="*gh auth token*" OR Processes.process="*printenv*" OR Processes.process="*process.env*" OR Processes.process="*os.environ*" OR Processes.process="*cat .env*" OR Processes.process="*type .env*" OR Processes.process="*id_rsa*" OR Processes.process="*id_ed25519*" OR Processes.process="*.aws/credentials*" OR Processes.process="*.aws\\credentials*" OR Processes.process="*wallet.dat*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node","node.exe","claude","claude.exe","cursor","cursor.exe","openclaw","openclaw.exe","bash","sh","zsh","cmd.exe","powershell.exe","pwsh")
+| where ProcessCommandLine has_any ("gh auth token","printenv","process.env","os.environ","cat .env","type .env","id_rsa","id_ed25519",".aws/credentials",".aws\\credentials","wallet.dat","Login Data")
+| where AccountName !endswith "$"
+| extend ExfilContext = iff(ProcessCommandLine has_any ("curl","wget","Invoke-RestMethod","--data-binary","-X POST","nc "), "inline-exfil", "read-only")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, ExfilContext, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -89,7 +158,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu
 
-`UC_596_2` · phase: **exploit** · confidence: **High**
+`UC_597_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,4 +208,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 6 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

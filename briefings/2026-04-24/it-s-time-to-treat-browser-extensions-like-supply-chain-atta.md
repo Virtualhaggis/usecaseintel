@@ -28,12 +28,56 @@ Blog Vulnerabilities & Threats It's time to treat browser extensions like supply
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1195.001** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Context.ai compromised Chrome extension (ID omddlmnhcofjbnbflmjginpjjblphbgk) present on endpoint
+
+`UC_379_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*omddlmnhcofjbnbflmjginpjjblphbgk*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "omddlmnhcofjbnbflmjginpjjblphbgk" or FileName has "omddlmnhcofjbnbflmjginpjjblphbgk"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), FileCount=count(), SampleFile=any(FolderPath) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by LastSeen desc
+```
+
+### Cyberhaven compromised extension C2 beacon to cyberhavenext[.]pro
+
+`UC_379_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*cyberhavenext.pro*" by DNS.src DNS.dest DNS.query
+| `drop_dm_object_name(DNS)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteUrl has "cyberhavenext.pro" or RemoteIP in ("149.248.2.160","149.28.124.84")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -321,4 +365,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

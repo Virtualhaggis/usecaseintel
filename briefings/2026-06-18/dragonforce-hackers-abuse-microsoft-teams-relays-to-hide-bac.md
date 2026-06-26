@@ -82,7 +82,7 @@ _(none detected from narrative keywords)_
 
 ### DragonForce BYOVD: known-vulnerable driver (Huawei HWAuidoOs2Ec.sys et al.) dropped to disk
 
-`UC_118_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_120_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents
 
 ### Backdoor.Turn host: Sysinternals DebugView (DbgView64.exe) making outbound internet connections
 
-`UC_118_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_120_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceNetworkEvents
 
 ### Ghost Calls relay abuse: non-Teams process initiating STUN/TURN (UDP 3478-3481) egress
 
-`UC_118_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_120_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -387,7 +387,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — DragonForce Hackers Abuse Microsoft Teams Relays to Hide Backdoor.Turn C2 Traffi
 
-`UC_118_11` · phase: **exploit** · confidence: **High**
+`UC_120_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

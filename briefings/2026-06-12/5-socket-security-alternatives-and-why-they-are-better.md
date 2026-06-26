@@ -17,12 +17,35 @@ Blog DevSec Tools & Comparisons 5 Socket security alternatives and why they are 
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Package-manager supply-chain control bypass via pnpm minimumReleaseAge=0
+
+`UC_178_2` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name IN ("pnpm.exe","npm.exe","node.exe","yarn.exe","corepack.exe") OR Processes.parent_process_name IN ("pnpm.exe","npm.exe","node.exe","yarn.exe")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)minimumReleaseAge\s*=\s*0(\D|$)" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where ProcessCommandLine has "minimumReleaseAge"
+| where ProcessCommandLine matches regex @"(?i)minimumReleaseAge\s*=\s*0(\D|$)"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -80,4 +103,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

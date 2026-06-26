@@ -17,7 +17,6 @@ The vulnerability in question is CVE-2025-67038 (CVSS score: 9.8), a code inject
 - **CVE:** `CVE-2026-34908`
 - **CVE:** `CVE-2026-34909`
 - **CVE:** `CVE-2026-34910`
-- **CVE:** `CVE-2026-11645`
 
 ## MITRE ATT&CK Techniques
 
@@ -38,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### UniFi OS unauthenticated RCE chain exploit attempt via nginx URI-normalization bypass (CVE-2026-34908/9/10)
 
-`UC_31_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_33_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -47,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### UniFi OS Server post-exploit reverse shell from ucs-update / unifi service account (CVE-2026-34910)
 
-`UC_31_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_33_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +66,7 @@ DeviceProcessEvents
 
 ### KEV exposure hunt: UniFi OS and Lantronix EDS5000 actively-exploited CVEs present in fleet
 
-`UC_31_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_33_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +168,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-67038`, `CVE-2026-34908`, `CVE-2026-34909`, `CVE-2026-34910`, `CVE-2026-11645`
+  - CVE(s): `CVE-2025-67038`, `CVE-2026-34908`, `CVE-2026-34909`, `CVE-2026-34910`
 
 
 ## Why this matters

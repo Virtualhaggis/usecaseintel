@@ -41,15 +41,15 @@ MinHook DLL, API hookin…
 - **Domain (defanged):** `ms-record.com`
 - **Domain (defanged):** `ms-record.top`
 - **Domain (defanged):** `ms-tray.top`
-- **MD5:** `1F65544978B8EA0E745E573B8EE9684B`
-- **MD5:** `24FCEBDEECBA65004FDB0923763D74FD`
-- **MD5:** `D98F568496512E4F98670C61C97CB07A`
-- **MD5:** `AA3086BE652C8B20B0B29B2730D57119`
-- **MD5:** `A514D1BB62D7916475946FE7C07AC0AA`
-- **MD5:** `9CBD560F820C95D7C38342CD558CB5C6`
-- **MD5:** `C559CC68986933200FD5D9E4388E2F58`
-- **MD5:** `B3352B42432DEDC4A519F011DC8B5D5A`
-- **MD5:** `9C872A0D5D5A38950E8B9AC9B488BE3F`
+- **MD5:** `c559cc68986933200fd5d9e4388e2f58`
+- **MD5:** `b3352b42432dedc4a519f011dc8b5d5a`
+- **MD5:** `24fcebdeecba65004fdb0923763d74fd`
+- **MD5:** `9c872a0d5d5a38950e8b9ac9b488be3f`
+- **MD5:** `aa3086be652c8b20b0b29b2730d57119`
+- **MD5:** `a514d1bb62d7916475946fe7c07ac0aa`
+- **MD5:** `9cbd560f820c95d7c38342cd558cb5c6`
+- **MD5:** `d98f568496512e4f98670c61c97cb07a`
+- **MD5:** `1f65544978b8ea0e745e573b8ee9684b`
 
 ## MITRE ATT&CK Techniques
 
@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### SystemSettings.exe executing from non-standard path (SharkLoader DLL side-load host)
 
-`UC_36_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### SharkLoader encrypted payload files dropped (DscCoreR.mui + SyncRes.dat + SystemSettings.dll)
 
-`UC_36_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### Web server process spawning command shell to relocate SystemSettings.exe (post-webshell staging)
 
-`UC_36_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_38_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### SharkLoader dropper masquerading as Cisco AnyConnect / Google Update installer
 
-`UC_36_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_38_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceProcessEvents
 
 ### Scheduled task persistence launching relocated SystemSettings.exe (SharkLoader)
 
-`UC_36_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceProcessEvents
 
 ### SharkLoader / Cobalt Strike C2 egress to StrikeShark lookalike domains
 
-`UC_36_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_38_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -379,7 +379,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — StrikeShark: investigating a new campaign delivering Cobalt Strike through Shark
 
-`UC_36_9` · phase: **exploit** · confidence: **High**
+`UC_38_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -437,7 +437,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - CVE(s): `CVE-2021-26855`, `CVE-2023-32315`, `CVE-2024-36401`, `CVE-2016-4437`, `CVE-2021-36260`, `CVE-2021-27076`, `CVE-2022-27925`, `CVE-2022-41082` _(+5 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `1F65544978B8EA0E745E573B8EE9684B`, `24FCEBDEECBA65004FDB0923763D74FD`, `D98F568496512E4F98670C61C97CB07A`, `AA3086BE652C8B20B0B29B2730D57119`, `A514D1BB62D7916475946FE7C07AC0AA`, `9CBD560F820C95D7C38342CD558CB5C6`, `C559CC68986933200FD5D9E4388E2F58`, `B3352B42432DEDC4A519F011DC8B5D5A` _(+1 more)_
+  - file hash IOC(s): `c559cc68986933200fd5d9e4388e2f58`, `b3352b42432dedc4a519f011dc8b5d5a`, `24fcebdeecba65004fdb0923763d74fd`, `9c872a0d5d5a38950e8b9ac9b488be3f`, `aa3086be652c8b20b0b29b2730d57119`, `a514d1bb62d7916475946fe7c07ac0aa`, `9cbd560f820c95d7c38342cd558cb5c6`, `d98f568496512e4f98670c61c97cb07a` _(+1 more)_
 
 
 ## Why this matters

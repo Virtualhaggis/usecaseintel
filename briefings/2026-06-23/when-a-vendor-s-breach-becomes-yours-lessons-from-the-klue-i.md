@@ -14,13 +14,17 @@ That's the shape of the incident involving Klue, a market intelligence platform 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `138.226.246.94`
+- **IPv4 (defanged):** `212.86.125.24`
+- **IPv4 (defanged):** `213.111.148.90`
+- **IPv4 (defanged):** `94.154.32.160`
 
 ## MITRE ATT&CK Techniques
 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1119** — Automated Collection
 - **T1213** — Data from Information Repositories
 - **T1567.002** — Exfiltration to Cloud Storage / Over Web Service
@@ -36,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Klue/Icarus: bulk Salesforce CRM record retrieval via connected app (Case/Contact/Account/Opportunity)
 
-`UC_52_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_54_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +74,7 @@ CloudAppEvents
 
 ### Salesforce API access bearing python-requests/aiohttp automation user-agent (Icarus OAuth abuse)
 
-`UC_52_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_54_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +103,7 @@ CloudAppEvents
 
 ### Salesforce connected-app OAuth access from first-seen ISP / anonymizing proxy (stolen-token reuse)
 
-`UC_52_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_54_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +191,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `138.226.246.94`, `212.86.125.24`, `213.111.148.90`, `94.154.32.160`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -16,6 +16,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco catalyst sd wan zero day cve 2026 20245 exploited to g](./2026-06-25/cisco-catalyst-sd-wan-zero-day-cve-2026-20245-exploited-to-g.md)
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
+- [gamaredon in 2025 leveraging tunnels workers dead drops and ](./2026-06-25/gamaredon-in-2025-leveraging-tunnels-workers-dead-drops-and-.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-06-25/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [microsoft a leader in the forrester wave for endpoint manage](./2026-06-25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-manage.md)
@@ -24,6 +25,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new mistic backdoor linked to kongtuke in clickfix and model](./2026-06-25/new-mistic-backdoor-linked-to-kongtuke-in-clickfix-and-model.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 - [order tracking app shop abused to push callback phishing att](./2026-06-25/order-tracking-app-shop-abused-to-push-callback-phishing-att.md)
+- [photo zip campaign targeting hospitality industry delivers n](./2026-06-25/photo-zip-campaign-targeting-hospitality-industry-delivers-n.md)
 - [pirlotv sports piracy network disrupted as 44 domains seized](./2026-06-25/pirlotv-sports-piracy-network-disrupted-as-44-domains-seized.md)
 - [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
 
@@ -119,7 +121,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 
 ## 2026-06-17
-- [beyond the benchmark advancing security at ai speed](./2026-06-17/beyond-the-benchmark-advancing-security-at-ai-speed.md)
 - [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
@@ -839,9 +840,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-10-28
 - [cisa kev cve 2025 6204 dassault syst mes delmia apriso code ](./2025-10-28/cisa-kev-cve-2025-6204-dassault-syst-mes-delmia-apriso-code-.md)
-
-## 2025-10-27
-- [how mdr can give msps the edge in a competitive market](./2025-10-27/how-mdr-can-give-msps-the-edge-in-a-competitive-market.md)
 
 ## 2025-10-24
 - [cisa kev cve 2025 54236 adobe commerce and magento improper ](./2025-10-24/cisa-kev-cve-2025-54236-adobe-commerce-and-magento-improper-.md)

@@ -18,7 +18,6 @@ The vulnerabilities have been colle…
 - **CVE:** `CVE-2026-41948`
 - **CVE:** `CVE-2026-41949`
 - **CVE:** `CVE-2026-41950`
-- **CVE:** `CVE-2026-11645`
 
 ## MITRE ATT&CK Techniques
 
@@ -38,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Dify cross-tenant file-preview UUID enumeration (CVE-2026-41949)
 
-`UC_57_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_59_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Dify Plugin Daemon path traversal to internal REST API (CVE-2026-41948)
 
-`UC_57_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_59_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Dify mass trace-config hijack across apps (CVE-2026-41947)
 
-`UC_57_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_59_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +104,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2024-5846`, `CVE-2026-41947`, `CVE-2026-41948`, `CVE-2026-41949`, `CVE-2026-41950`, `CVE-2026-11645`
+  - CVE(s): `CVE-2024-5846`, `CVE-2026-41947`, `CVE-2026-41948`, `CVE-2026-41949`, `CVE-2026-41950`
 
 
 ## Why this matters

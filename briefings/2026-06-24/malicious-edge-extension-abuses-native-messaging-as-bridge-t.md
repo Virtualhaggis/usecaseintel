@@ -16,12 +16,18 @@ Access to the local system is obtained by leveraging the Chrome Native Messaging
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `d3nh8sl98s2554.cloudfront.net`
+- **Domain (defanged):** `d2g6dl71gua1qa.cloudfront.net`
+- **Domain (defanged):** `d1jp293q9tvi92.cloudfront.net`
+- **Domain (defanged):** `d23l50n6ubud7p.cloudfront.net`
+- **SHA256:** `a08d8e63b0cd3638fb40b8e6da546e26da69439597565827f9cec87915f78568`
+- **SHA256:** `3d1158884fb339b3328bd330fcc27598e1f1c94bcac39e75d1a272afa4deee1a`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -52,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Edgecution headless Edge launched with --load-extension to sideload unpacked extension
 
-`UC_29_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_31_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +78,7 @@ DeviceProcessEvents
 
 ### Edgecution native messaging host registered under Edge NativeMessagingHosts
 
-`UC_29_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_31_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +98,7 @@ DeviceRegistryEvents
 
 ### Edgecution sandbox escape: msedge.exe spawns cmd/python via native_host.bat
 
-`UC_29_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_31_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +117,7 @@ DeviceProcessEvents
 
 ### Edgecution native_host.bat / extension.log written into Edge User Data profile
 
-`UC_29_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_31_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +137,7 @@ DeviceFileEvents
 
 ### Edgecution deploy: scheduled task created to launch headless Edge with extension
 
-`UC_29_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_31_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +157,7 @@ DeviceProcessEvents
 
 ### Edgecution C2: headless Edge extension making outbound public connections
 
-`UC_29_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_31_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -452,7 +458,17 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `d3nh8sl98s2554.cloudfront.net`, `d2g6dl71gua1qa.cloudfront.net`, `d1jp293q9tvi92.cloudfront.net`, `d23l50n6ubud7p.cloudfront.net`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `a08d8e63b0cd3638fb40b8e6da546e26da69439597565827f9cec87915f78568`, `3d1158884fb339b3328bd330fcc27598e1f1c94bcac39e75d1a272afa4deee1a`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 18 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

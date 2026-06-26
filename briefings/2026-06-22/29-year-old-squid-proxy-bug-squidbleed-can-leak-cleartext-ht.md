@@ -15,7 +15,6 @@ The bug traces to a 1997 FTP-parsing change and is still live in Squid's default
 
 - **CVE:** `CVE-2026-47729`
 - **CVE:** `CVE-2026-50012`
-- **CVE:** `CVE-2026-11645`
 
 ## MITRE ATT&CK Techniques
 
@@ -33,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Squid proxy initiating outbound FTP control-channel (TCP/21) to external host (Squidbleed precondition)
 
-`UC_56_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_58_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +52,7 @@ DeviceNetworkEvents
 
 ### High-volume ftp:// listing requests through Squid proxy to single host (Squidbleed memory harvest)
 
-`UC_56_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_58_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +61,7 @@ DeviceNetworkEvents
 
 ### Squid hosts exposed to Squidbleed (CVE-2026-47729) with FTP attack surface
 
-`UC_56_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_58_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +111,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-47729`, `CVE-2026-50012`, `CVE-2026-11645`
+  - CVE(s): `CVE-2026-47729`, `CVE-2026-50012`
 
 
 ## Why this matters

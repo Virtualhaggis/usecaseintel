@@ -1,4 +1,4 @@
-# [CRIT] Canada’s Spy Agency Used First-of-Its-Kind Warrant to Clean Botnet-Infected Devices
+# [HIGH] Canada’s Spy Agency Used First-of-Its-Kind Warrant to Clean Botnet-Infected Devices
 
 **Source:** The Hacker News
 **Published:** 2026-06-22
@@ -13,13 +13,12 @@ The Federal Court released a public version of the ruling on June 15. It is the
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-11645`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -56,14 +55,7 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-11645`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

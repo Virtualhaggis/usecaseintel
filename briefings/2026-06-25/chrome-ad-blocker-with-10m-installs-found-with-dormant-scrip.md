@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Risky/removed Chrome ad-block extension IDs present on endpoint (Island 'Adblock for YouTube' set)
 
-`UC_12_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_13_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceFileEvents
 
 ### Browser beacon to Adblock for YouTube config/activation backend (api.adblock-for-youtube.com)
 
-`UC_12_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_13_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

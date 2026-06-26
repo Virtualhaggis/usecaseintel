@@ -19,12 +19,82 @@ Blog Vulnerabilities & Threats Compromised Rust crate onering performs code exfi
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1567** — Exfiltration Over Web Service
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1036** — Masquerading
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Exfiltration to attacker-controlled Sentry ingest endpoint (onering crate)
+
+`UC_193_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.query="o4511539639222272.ingest.de.sentry.io" by Network_Resolution.src Network_Resolution.query Network_Resolution.answer 
+| `drop_dm_object_name(Network_Resolution)` 
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "o4511539639222272.ingest.de.sentry.io" or RemoteUrl has "4511539669368912/envelope"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Rust build script harvesting git commit diff (onering build.rs)
+
+`UC_193_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name="git.exe" Endpoint.Processes.parent_process_name="build-script-build.exe" (Endpoint.Processes.process="*HEAD^ HEAD*" OR Endpoint.Processes.process="*--pretty=format:{\"commit\":\"%H\"*") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process_name Endpoint.Processes.process 
+| `drop_dm_object_name(Endpoint.Processes)` 
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "git.exe"
+| where (ProcessCommandLine has "diff" and ProcessCommandLine contains "HEAD^ HEAD")
+    or ProcessCommandLine contains '--pretty=format:{"commit":"%H"'
+| where InitiatingProcessFileName endswith "build-script-build.exe" or InitiatingProcessFolderPath has @"\target\"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### Rust build script making outbound network connection (build-time exfil)
+
+`UC_193_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where Network_Traffic.process_name="build-script-build.exe" Network_Traffic.dest_category!="internal" by Network_Traffic.src Network_Traffic.dest Network_Traffic.dest_port Network_Traffic.process_name 
+| `drop_dm_object_name(Network_Traffic)` 
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName endswith "build-script-build.exe"
+    or (InitiatingProcessFileName in~ ("curl.exe","powershell.exe") and InitiatingProcessParentFileName endswith "build-script-build.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -114,4 +184,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

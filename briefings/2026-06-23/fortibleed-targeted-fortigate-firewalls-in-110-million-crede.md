@@ -13,7 +13,10 @@ The campaign , active since February 2026, involves collecting credential lists,
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-11645`
+- **CVE:** `CVE-2026-24858`
+- **CVE:** `CVE-2025-59718`
+- **CVE:** `CVE-2025-59719`
+- **SHA256:** `2758f4d71a2a2dfdefab81737c2d776b2a3dafe5844fdd2157e089a28447ca98`
 
 ## MITRE ATT&CK Techniques
 
@@ -27,6 +30,7 @@ The campaign , active since February 2026, involves collecting credential lists,
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
+- **T1027** — Obfuscated Files or Information
 - **T1040** — Network Sniffing
 - **T1059.008** — Command and Scripting Interpreter: Network Device CLI
 - **T1110.004** — Brute Force: Credential Stuffing
@@ -41,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### FortigateSniffer credential capture via native 'diagnose sniffer packet' on FortiGate
 
-`UC_41_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate admin/SSL-VPN credential stuffing burst followed by successful login
 
-`UC_41_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_43_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### Single FortiGate VPN/admin account authenticating from anomalously many source IPs
 
-`UC_41_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_43_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +80,7 @@ _(none detected from narrative keywords)_
 
 ### Mass validation/replay of harvested credentials against Active Directory (NTLM/Kerberos fan-out)
 
-`UC_41_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_43_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -298,9 +302,12 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-11645`
+  - CVE(s): `CVE-2026-24858`, `CVE-2025-59718`, `CVE-2025-59719`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `2758f4d71a2a2dfdefab81737c2d776b2a3dafe5844fdd2157e089a28447ca98`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
