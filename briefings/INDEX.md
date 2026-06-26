@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,10 +10,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-26
 - [amazon q developer flaw could let malicious repos run code v](./2026-06-26/amazon-q-developer-flaw-could-let-malicious-repos-run-code-v.md)
+- [chinese speaking apt deploys new tinyrct backdoor in southea](./2026-06-26/chinese-speaking-apt-deploys-new-tinyrct-backdoor-in-southea.md)
 - [cisa adds exploited ptc windchill rce flaw to kev as web she](./2026-06-26/cisa-adds-exploited-ptc-windchill-rce-flaw-to-kev-as-web-she.md)
 - [google details turla s new stockstay backdoor used in ukrain](./2026-06-26/google-details-turla-s-new-stockstay-backdoor-used-in-ukrain.md)
-- [guardian agents the next layer of identity governance](./2026-06-26/guardian-agents-the-next-layer-of-identity-governance.md)
 - [miasma malware targets npm packages and github actions in su](./2026-06-26/miasma-malware-targets-npm-packages-and-github-actions-in-su.md)
+- [multiple immobiliarelabs backstage plugins compromised on np](./2026-06-26/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
 - [new dirtyclone linux kernel flaw lets local users gain root ](./2026-06-26/new-dirtyclone-linux-kernel-flaw-lets-local-users-gain-root-.md)
 - [new linux pedit cow exploit enables root access by poisoning](./2026-06-26/new-linux-pedit-cow-exploit-enables-root-access-by-poisoning.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
@@ -98,7 +99,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
-- [f5 patches two critical nginx open source flaws enabling rem](./2026-06-18/f5-patches-two-critical-nginx-open-source-flaws-enabling-rem.md)
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
 - [ghsa critical cve 2026 11718 googleapis mcp toolbox authenti](./2026-06-18/ghsa-critical-cve-2026-11718-googleapis-mcp-toolbox-authenti.md)
@@ -2096,6 +2096,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-06-07
 - [cisa kev cve 2023 3079 google chromium v8 type confusion vul](./2023-06-07/cisa-kev-cve-2023-3079-google-chromium-v8-type-confusion-vul.md)
+- [high profile aws breaches how to avoid them](./2023-06-07/high-profile-aws-breaches-how-to-avoid-them.md)
 - [reduce risk to your supply chain with a software bill of mat](./2023-06-07/reduce-risk-to-your-supply-chain-with-a-software-bill-of-mat.md)
 - [snyk welcomes enso enabling security leaders to scale their ](./2023-06-07/snyk-welcomes-enso-enabling-security-leaders-to-scale-their-.md)
 - [snyklaunch june 23 insights and deepcode ai enable faster fi](./2023-06-07/snyklaunch-june-23-insights-and-deepcode-ai-enable-faster-fi.md)

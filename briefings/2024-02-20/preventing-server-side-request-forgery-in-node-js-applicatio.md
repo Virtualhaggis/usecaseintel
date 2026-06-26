@@ -20,12 +20,53 @@ Highly recommended: Take the interactive se…
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Web-app runtime egress to AWS IMDS endpoint (169.254.169.254) — SSRF credential theft
+
+`UC_1323_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("169.254.169.254","fd00:ec2::254") by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP in ("169.254.169.254", "fd00:ec2::254")
+| where InitiatingProcessFileName in~ ("node.exe","python.exe","python3.exe","java.exe","php-cgi.exe","php.exe","w3wp.exe","httpd.exe","nginx.exe","ruby.exe","dotnet.exe","tomcat.exe")
+| where InitiatingProcessFileName !in~ ("amazon-ssm-agent.exe","ssm-agent.exe","amazoncloudwatchagent.exe","awscloudwatchagent.exe","cloud-init.exe","ec2launch.exe")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort
+| order by FirstSeen desc
+```
+
+### SSRF probe via 'instance-data' IMDS alias hostname resolution
+
+`UC_1323_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*instance-data*" by DNS.src, DNS.query, DNS.dest | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl contains "instance-data"
+| where InitiatingProcessFileName !in~ ("amazon-ssm-agent.exe","cloud-init.exe","ec2launch.exe")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count(), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP
+| order by FirstSeen desc
+```
 
 ### Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications
 
@@ -79,4 +120,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

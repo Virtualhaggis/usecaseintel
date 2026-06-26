@@ -4946,11 +4946,11 @@ level: critical
   data-phases="actions,c2,exploit,install" data-sev="high"
   data-techs="T1190"
   data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Preventing server-side request forgery in Node.js applications This article will explore SSRF, its potential risks, and the strategies to mitigate SSRF in Node.js applications.  T1190 Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications">
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="cloud,endpoint,network"
+  data-targets="web-app,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="Preventing server-side request forgery in Node.js applications This article will explore SSRF, its potential risks, and the strategies to mitigate SSRF in Node.js applications.  T1190 [LLM] Web-app runtime egress to AWS IMDS endpoint (169.254.169.254) — SSRF credential theft [LLM] SSRF probe via &#x27;instance-data&#x27; IMDS alias hostname resolution Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2024-02-20-preventing-server-side-request-forgery-in-node-js-applicatio" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -4959,7 +4959,7 @@ level: critical
   <div class="source-badges"><span class="source-badge ">Snyk</span></div>
   <div class="pubmeta">
     <span>2024-02-20</span>
-    <span>1 use case</span>
+    <span>3 use cases</span>
     <span>1 technique</span>
     <span>3 kill-chain phases detected</span>
   </div>
@@ -5012,9 +5012,161 @@ level: critical
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Web-app runtime egress to AWS IMDS endpoint (169.254.169.254) — SSRF credential theft · [LLM] SSRF probe via &#x27;instance-data&#x27; IMDS alias hostname resolution</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="5204bf9bf4" data-platforms="def,sent,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="9988278885" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="web-app,windows" open>
+  <summary>
+    <span class="uc-title">Web-app runtime egress to AWS IMDS endpoint (169.254.169.254) — SSRF credential theft</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="9988278885" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts server-side web/application runtimes (node.exe and other web stacks) making outbound connections to the AWS Instance Metadata Service link-local address 169.254.169.254 / fd00:ec2::254. This is the Capital-One-style SSRF endgame the Snyk article warns about: an attacker pivots a user-controlled URL fetch (Express+Axios in the article) into reading EC2 IAM role credentials from the metadata endpoint.
+
+Rationale: Anchored on the article&#x27;s explicitly named SSRF targets http://169.254.169.254 and the AWS metadata pivot; enriched with the corroborated IPv6 IMDS address fd00:ec2::254 and scoped to web-app runtimes (node.exe matches the article&#x27;s Express/Axios stack). High-fidelity because a public web runtime — not an SDK/agent — reaching link-local metadata is the textbook SSRF credential-theft signal. Images were upload-form screenshots with no detection-grade strings, so not fetched.
+
+Cross-checked against:
+  • https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/
+  • https://securitylabs.datadoghq.com/cloud-security-atlas/attacks/stealing-ec2-instance-role-credentials/
+  • https://krebsonsecurity.com/2019/08/what-we-can-learn-from-the-capital-one-hack/
+  • https://detection.fyi/sigmahq/sigma/cloud/aws/cloudtrail/aws_cloudtrail_imds_malicious_usage/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Application using the AWS SDK to legitimately fetch its instance role credentials from IMDS</li><li>EC2 bootstrap: cloud-init / ec2launch reading user-data and metadata at boot</li><li>SSM Agent, CloudWatch Agent or instance health checks polling the metadata endpoint</li><li>ECS task-metadata sidecars or kube2iam/kiam proxying IMDS to pods</li><li>Config-management tooling (Chef ohai, Puppet facter) reading instance facts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;amazon-ssm-agent.exe&quot;,&quot;ssm-agent.exe&quot;,&quot;amazoncloudwatchagent.exe&quot;,&quot;awscloudwatchagent.exe&quot;,&quot;cloud-init.exe&quot;,&quot;ec2launch.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Identify the connecting process and host; pull the app&#x27;s request logs to see whether a user-supplied URL parameter drove the fetch (SSRF) versus a normal SDK call. Check if IMDSv1 is still enabled on the instance. 2) Contain: Rotate/revoke the EC2 instance IAM role&#x27;s temporary credentials, enforce IMDSv2 (HttpTokens=required) and set the metadata hop limit to 1, and isolate the instance&#x27;s egress if SSRF is confirmed. 3) Hunt: Pivot to CloudTrail for the instance role&#x27;s credentials being used from an external/unexpected sourceIPAddress (existing imds_malicious_usage rule), and look for follow-on S3 ListBucket/GetObject enumeration with those creds.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1323-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1323-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1323-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1323-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1323-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1323-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1323-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;169.254.169.254&quot;, &quot;fd00:ec2::254&quot;)
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;java.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;ruby.exe&quot;,&quot;dotnet.exe&quot;,&quot;tomcat.exe&quot;)
+| where InitiatingProcessFileName !in~ (&quot;amazon-ssm-agent.exe&quot;,&quot;ssm-agent.exe&quot;,&quot;amazoncloudwatchagent.exe&quot;,&quot;awscloudwatchagent.exe&quot;,&quot;cloud-init.exe&quot;,&quot;ec2launch.exe&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-1323-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (&quot;169.254.169.254&quot;, &quot;fd00:ec2::254&quot;)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), ConnCount=count() by DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-1323-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web Runtime Outbound Connection to AWS IMDS Endpoint (SSRF)
+id: 6b3c0f7e-2a4d-4c91-9f1e-2d7a1c5b8e10
+description: Detects a server-side web/application runtime connecting to the AWS instance metadata link-local address, the SSRF-to-IAM-credential-theft pattern described in the Snyk SSRF article and the Capital One breach.
+references:
+  - https://snyk.io/blog/preventing-server-side-request-forgery-node-js/
+  - https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.credential_access
+  - attack.t1552.005
+  - attack.t1190
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection_dst:
+    DestinationIp:
+      - &#x27;169.254.169.254&#x27;
+      - &#x27;fd00:ec2::254&#x27;
+  selection_img:
+    Image|endswith:
+      - &#x27;\node.exe&#x27;
+      - &#x27;\python.exe&#x27;
+      - &#x27;\java.exe&#x27;
+      - &#x27;\php-cgi.exe&#x27;
+      - &#x27;\w3wp.exe&#x27;
+      - &#x27;\ruby.exe&#x27;
+      - &#x27;\dotnet.exe&#x27;
+      - &#x27;\httpd.exe&#x27;
+      - &#x27;\nginx.exe&#x27;
+  condition: selection_dst and selection_img
+falsepositives:
+  - AWS SDK calls legitimately retrieving instance role credentials
+  - Instance bootstrap / cloud-init metadata reads
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-1323-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(&quot;169.254.169.254&quot; OR &quot;fd00:ec2::254&quot;) @Image:(*\\node.exe OR *\\Node.exe OR *\\python.exe OR *\\Python.exe OR *\\java.exe OR *\\php-cgi.exe OR *\\w3wp.exe OR *\\ruby.exe OR *\\dotnet.exe OR *\\httpd.exe OR *\\nginx.exe)</code></pre></div>
+    <div class="tab-content" id="art-1323-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;169.254.169.254&quot;
+| ContextImageFileName=/(node|python3?|java|php-cgi|php|w3wp|httpd|nginx|ruby|dotnet)(\.exe)?$/i
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-1323-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1323-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1323-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1323-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;169.254.169.254&quot;,&quot;fd00:ec2::254&quot;) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime</code></pre><pre class="spl-mode-body" id="art-1323-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;169.254.169.254&quot;,&quot;fd00:ec2::254&quot;) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="082682c68b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="web-app,windows">
+  <summary>
+    <span class="uc-title">SSRF probe via &#x27;instance-data&#x27; IMDS alias hostname resolution</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="082682c68b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts DNS resolution / connections to the &#x27;instance-data&#x27; hostname — the legacy AWS alias for the EC2 metadata endpoint that the Snyk article names as an alternative to the raw 169.254.169.254 IP. Legitimate AWS SDKs and agents resolve the IP directly, so a query for the instance-data name is a low-false-positive indicator that an attacker is probing IMDS via SSRF using the human-readable alias.
+
+Rationale: Uses the article&#x27;s verbatim alternate IMDS target http://instance-data. The alias is rarely resolved by legitimate software (AWS SDKs hit the 169.254.169.254 IP directly), so a DNS query for instance-data is a high-confidence, low-noise SSRF probe indicator distinct from the IP-based UC — a different telemetry layer (name resolution vs network egress).
+
+Cross-checked against:
+  • https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html
+  • https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy AWS scripts/AMIs that reference the instance-data.ec2.internal alias instead of the IP</li><li>Internal hostnames coincidentally containing &#x27;instance-data&#x27; (e.g., a data-pipeline host named instance-data-svc)</li><li>Authorized AppSec/red-team SSRF testing tools resolving the alias during sanctioned tests</li><li>Older cloud-init versions that historically referenced the instance-data hostname</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;amazon-ssm-agent.exe&quot;,&quot;cloud-init.exe&quot;,&quot;ec2launch.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Identify the source host and initiating process; determine whether it is the public web-app runtime (likely SSRF) or an authorized scanner/legacy script. Pull the app request log for the user-supplied URL parameter. 2) Contain: If app-driven, rotate the EC2 instance IAM role credentials, enforce IMDSv2, and block link-local (169.254.0.0/16) egress from the application security group. 3) Hunt: Correlate with UC1 for direct 169.254.169.254 connections from the same host, and review CloudTrail for the role credentials used from an external IP and subsequent S3 enumeration.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1323-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1323-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1323-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1323-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1323-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1323-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1323-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteUrl contains &quot;instance-data&quot;
+| where InitiatingProcessFileName !in~ (&quot;amazon-ssm-agent.exe&quot;,&quot;cloud-init.exe&quot;,&quot;ec2launch.exe&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count(), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-1323-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
+| where TimeGenerated &gt; ago(30d)
+| where DnsQuery contains &quot;instance-data&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Count=count() by DvcHostname, SrcIpAddr, DnsQuery
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-1323-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: DNS Resolution of AWS IMDS &#x27;instance-data&#x27; Alias Hostname
+id: a1f6d2c4-7b8e-4e35-90ad-3c1f9b2e6d44
+description: Detects DNS queries for the AWS &#x27;instance-data&#x27; metadata alias hostname named in the Snyk SSRF article, indicating SSRF probing of the EC2 Instance Metadata Service via its human-readable name.
+references:
+  - https://snyk.io/blog/preventing-server-side-request-forgery-node-js/
+  - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.credential_access
+  - attack.t1552.005
+logsource:
+  category: dns
+  product: windows
+detection:
+  selection:
+    query|contains: &#x27;instance-data&#x27;
+  condition: selection
+falsepositives:
+  - Legacy AWS tooling using the instance-data.ec2.internal alias
+  - Authorized SSRF/AppSec scanning
+level: high</code></pre></div>
+    <div class="tab-content" id="art-1323-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(*instance-data* OR *INSTANCE-DATA* OR *Instance-Data*)</code></pre></div>
+    <div class="tab-content" id="art-1323-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/instance-data/i
+| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-1323-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1323-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1323-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1323-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;*instance-data*&quot; by DNS.src, DNS.query, DNS.dest | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime</code></pre><pre class="spl-mode-body" id="art-1323-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;*instance-data*&quot; by DNS.src, DNS.query, DNS.dest | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="5204bf9bf4" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications</span>
     <span class="uc-phase">Exploitation</span>
@@ -5029,11 +5181,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-1323-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1323-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1323-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-1323-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1323-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1323-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1323-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications
+    <div class="tab-content active" id="art-1323-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -5053,7 +5205,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1323-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-1323-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications
@@ -5076,7 +5228,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1323-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1323-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1323-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1323-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications ```
+    <div class="tab-content" id="art-1323-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1323-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1323-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1323-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
@@ -5092,7 +5244,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-1323-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications ```
+]</code></pre><pre class="spl-mode-body" id="art-1323-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
@@ -5116,11 +5268,11 @@ DeviceFileEvents
   data-phases="c2,exploit,install,recon" data-sev="high"
   data-techs="T1190"
   data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="endpoint"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint,web"
   data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Preventing SQL injection attacks in Node.js In this article, you&#x27;ll learn more about why SQL injection attacks pose a significant threat and how to shield your Node.js applications against them.  T1190 Article-specific behavioural hunt — Preventing SQL injection attacks in Node.js">
+  data-uc-count="2" data-llm-uc-count="1"
+  data-search="Preventing SQL injection attacks in Node.js In this article, you&#x27;ll learn more about why SQL injection attacks pose a significant threat and how to shield your Node.js applications against them.  T1190 [LLM] Boolean-tautology SQL injection against Node.js/Express search endpoint Article-specific behavioural hunt — Preventing SQL injection attacks in Node.js">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2024-02-20-preventing-sql-injection-attacks-in-node-js" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -5129,7 +5281,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">Snyk</span></div>
   <div class="pubmeta">
     <span>2024-02-20</span>
-    <span>1 use case</span>
+    <span>2 use cases</span>
     <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
@@ -5179,12 +5331,94 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Preventing SQL injection attacks in Node.js</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Boolean-tautology SQL injection against Node.js/Express search endpoint · Article-specific behavioural hunt — Preventing SQL injection attacks in Node.js</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="f2d70724e8" data-platforms="def,sent,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="90c2cbb280" data-platforms="sent,sigma,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Boolean-tautology SQL injection against Node.js/Express search endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="90c2cbb280" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the classic always-true SQL injection tautology (e.g. &#x27; OR &#x27;1&#x27;=&#x27;1&#x27;; --) the article demonstrates against an unparameterised Express /search route. Surfaces web requests whose URI/query carries tautology or comment-terminator payloads that coerce a WHERE clause to always evaluate true and dump the table.
+
+Rationale: Anchored on the article&#x27;s exact demonstrated payload &#x27; OR &#x27;1&#x27;=&#x27;1&#x27;; -- and the boolean-tautology / comment-terminator pattern it walks through; matches the unsanitised-input SQLi class the post is about. Web-server logs only capture URI/query, so POST-body injections (as in the article&#x27;s /search JSON) may be missed — hence hunting tier and high FP estimate.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security scanners / DAST tools (Burp, OWASP ZAP, Nessus) probing the app with tautology payloads</li><li>Legitimate search queries containing the literal substring &#x27;or 1=1&#x27; or apostrophes in product/free-text fields</li><li>Penetration-test engagements replaying SQLi test strings</li><li>Bug-bounty researchers fuzzing public endpoints</li><li>WAF in detect-only mode logging blocked-but-passed-through probe traffic</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (UserAgent has_any (&quot;zap&quot;,&quot;nuclei&quot;,&quot;sqlmap&quot;,&quot;nessus&quot;,&quot;burp&quot;,&quot;acunetix&quot;)) and SrcIP !in (dynamic([&quot;10.0.0.0&quot;]))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request line(s) for the offending SrcIP — confirm the tautology is in attacker-controlled input (not a benign free-text search) and check response Status/size to see if the query returned an abnormally large result set (data dump). 2) Contain: block the SrcIP at the WAF/edge, and if the endpoint is confirmed vulnerable, take it offline or enable WAF SQLi signatures while developers move the route to parameterised queries ($1 placeholders). 3) Hunt: pivot on the same SrcIP/User-Agent across all web logs for other injected endpoints, UNION-based or stacked-query payloads, and unusual outbound data volume; review DB logs for full-table SELECTs from the app service account.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1324-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1324-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1324-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1324-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 7d;
+let tautology = dynamic([&quot;&#x27; or &#x27;1&#x27;=&#x27;1&quot;,&quot;%27 or %271%27=%271&quot;,&quot;or 1=1&quot;,&quot;or &#x27;1&#x27;=&#x27;1&quot;,&quot;&#x27; or 1=1&quot;,&quot;%27 or 1=1&quot;,&quot;&#x27; or &#x27;a&#x27;=&#x27;a&quot;]);
+let termin = dynamic([&quot;&#x27;; --&quot;,&quot;&#x27;;--&quot;,&quot;%27;%20--&quot;,&quot;%27;--&quot;,&quot;&#x27; --&quot;]);
+(
+W3CIISLog
+| where TimeGenerated &gt; ago(lookback)
+| extend Probe = tolower(strcat(csUriStem, &quot; &quot;, csUriQuery))
+| project TimeGenerated, Computer, SrcIP = cIP, Method = csMethod, UriStem = csUriStem, UriQuery = csUriQuery, UserAgent = csUserAgent, Status = scStatus, Probe
+)
+| union (
+AppServiceHTTPLogs
+| where TimeGenerated &gt; ago(lookback)
+| extend Probe = tolower(strcat(CsUriStem, &quot; &quot;, CsUriQuery))
+| project TimeGenerated, Computer = CsHost, SrcIP = CIp, Method = CsMethod, UriStem = CsUriStem, UriQuery = CsUriQuery, UserAgent, Status = ScStatus, Probe
+)
+| where Probe has_any (tautology) or Probe has_any (termin) or Probe matches regex @&quot;(?i)(&#x27;|%27)\s*(or|and)\s*(&#x27;|%27)?\s*\d+\s*=\s*\d+&quot;
+| summarize Hits = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Endpoints = make_set(UriStem, 10), SampleQuery = any(UriQuery) by SrcIP, Computer, UserAgent
+| order by Hits desc</code></pre></div>
+    <div class="tab-content" id="art-1324-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SQL Injection Boolean Tautology In Web Request URI
+id: 8f3a1c2e-6b4d-4e9a-9c1f-2a7e5d0b1c34
+description: Detects always-true SQL injection tautology and comment-terminator payloads (e.g. &#x27; OR &#x27;1&#x27;=&#x27;1&#x27;; --) in web request URI/query, as demonstrated against unparameterised Node.js/Express endpoints.
+references:
+  - https://snyk.io/blog/preventing-sql-injection-attacks-node-js/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection_tautology:
+    cs-uri-query|contains:
+      - &quot;&#x27; or &#x27;1&#x27;=&#x27;1&quot;
+      - &quot;%27 or %271%27=%271&quot;
+      - &quot;or 1=1&quot;
+      - &quot;&#x27; or 1=1&quot;
+      - &quot;%27 or 1=1&quot;
+  selection_terminator:
+    cs-uri-query|contains:
+      - &quot;&#x27;; --&quot;
+      - &quot;%27;%20--&quot;
+      - &quot;&#x27;;--&quot;
+  condition: selection_tautology or selection_terminator
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-1324-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1324-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1324-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1324-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_method=&quot;POST&quot; OR Web.http_method=&quot;GET&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| eval probe=lower(url.&quot;&quot;+uri_query+url)
+| eval inspect=lower(url) . &quot; &quot; . lower(uri_query)
+| where match(inspect,&quot;(&#x27;|%27)\s*(or|and)\s*(&#x27;|%27)?\s*\d+(&#x27;|%27)?\s*=\s*(&#x27;|%27)?\s*\d+&quot;) OR match(inspect,&quot;or\s+1\s*=\s*1&quot;) OR match(inspect,&quot;(&#x27;|%27)\s*or\s*(&#x27;|%27)1(&#x27;|%27)\s*=\s*(&#x27;|%27)1&quot;) OR match(inspect,&quot;(--|%2d%2d|;%20--|#)\s*$&quot;)
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime lastTime src dest http_method url uri_query status http_user_agent count
+| sort - count</code></pre><pre class="spl-mode-body" id="art-1324-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_method=&quot;POST&quot; OR Web.http_method=&quot;GET&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| eval probe=lower(url.&quot;&quot;+uri_query+url)
+| eval inspect=lower(url) . &quot; &quot; . lower(uri_query)
+| where match(inspect,&quot;(&#x27;|%27)\s*(or|and)\s*(&#x27;|%27)?\s*\d+(&#x27;|%27)?\s*=\s*(&#x27;|%27)?\s*\d+&quot;) OR match(inspect,&quot;or\s+1\s*=\s*1&quot;) OR match(inspect,&quot;(&#x27;|%27)\s*or\s*(&#x27;|%27)1(&#x27;|%27)\s*=\s*(&#x27;|%27)1&quot;) OR match(inspect,&quot;(--|%2d%2d|;%20--|#)\s*$&quot;)
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime lastTime src dest http_method url uri_query status http_user_agent count
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f2d70724e8" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — Preventing SQL injection attacks in Node.js</span>
     <span class="uc-phase">Exploitation</span>
@@ -5199,11 +5433,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-1324-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1324-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1324-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-1324-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1324-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1324-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1324-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Preventing SQL injection attacks in Node.js
+    <div class="tab-content active" id="art-1324-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Preventing SQL injection attacks in Node.js
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -5223,7 +5457,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1324-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-1324-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Preventing SQL injection attacks in Node.js
@@ -5246,7 +5480,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1324-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1324-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1324-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1324-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing SQL injection attacks in Node.js ```
+    <div class="tab-content" id="art-1324-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1324-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1324-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1324-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing SQL injection attacks in Node.js ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;,&quot;app.js&quot;))
@@ -5262,7 +5496,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-1324-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing SQL injection attacks in Node.js ```
+]</code></pre><pre class="spl-mode-body" id="art-1324-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing SQL injection attacks in Node.js ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;,&quot;app.js&quot;))

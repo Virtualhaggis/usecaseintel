@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound to elementary-data exfil C2 igotnofriendsonlineorirl-imgonnakmslmao.sky
 
-`UC_363_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_364_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ union isfuzzy=true
 
 ### Malicious elementary.pth dropped in Python site-packages
 
-`UC_363_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_364_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceFileEvents
 
 ### Install of trojaned elementary-data 0.23.3 via pip / poetry / uv
 
-`UC_363_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_364_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### Docker / Kubernetes pull of compromised ghcr.io/elementary-data/elementary image
 
-`UC_363_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_364_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceProcessEvents
 
 ### Stage-3 exfil archive trin.tar.gz POST via curl --data-binary
 
-`UC_363_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_364_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -276,7 +276,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A
 
-`UC_363_5` · phase: **install** · confidence: **High**
+`UC_364_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

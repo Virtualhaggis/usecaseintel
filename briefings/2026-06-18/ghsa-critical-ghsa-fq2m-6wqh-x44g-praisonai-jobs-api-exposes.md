@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated POST to PraisonAI Jobs API /api/v1/runs (agent-exec RCE entry)
 
-`UC_123_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_124_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### PraisonAI Jobs API mass enumeration & result harvesting (/api/v1/runs list + read + delete)
 
-`UC_123_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_124_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### PraisonAI jobs server (praisonai.jobs.server) spawning shell / network child process
 
-`UC_123_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_124_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### Exposed PraisonAI jobs server bound to 0.0.0.0 (praisonai.jobs.server --host=0.0.0.0)
 
-`UC_123_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_124_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-fq2m-6wqh-x44g: PraisonAI: Jobs API exposes agent-executi
 
-`UC_123_0` · phase: **exploit** · confidence: **High**
+`UC_124_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated PraisonAI AgentTeam.launch agent invocation via /agents endpoints
 
-`UC_122_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_123_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-facing Python host running PraisonAI Agents.launch bound to 0.0.0.0
 
-`UC_122_2` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_123_2` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x8cv-xmq7-p8xp: PraisonAI AgentTeam.launch exposes unauth
 
-`UC_122_0` · phase: **exploit** · confidence: **High**
+`UC_123_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

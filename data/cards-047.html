@@ -694,6 +694,305 @@ level: medium
   </div>
 </details></div>
 </article>
+<article class="card" id="art-1603" data-art-slug="2023-06-07-high-profile-aws-breaches-how-to-avoid-them"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="cloudwatch,datadog,def,sent,sigma,spl"
+  data-splunk-cats="cloud"
+  data-targets="aws"
+  data-uc-count="3" data-llm-uc-count="3"
+  data-search="High profile AWS breaches &amp; how to avoid them Companies like Capital One, Twilio, and Uber have all suffered from AWS breaches. Learn from their experiences and prevent the next breach from happening to you.  T1190 [LLM] S3 bucket exposed to public via ACL/policy change or Public Access Block removal [LLM] EC2 instance-role credentials performing S3 recon (Capital One IMDS-SSRF pattern) [LLM] RDS DB snapshot shared, copied, restored or exported (Imperva stolen-key pattern)">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2023-06-07-high-profile-aws-breaches-how-to-avoid-them" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/aws-security-breaches/" target="_blank" rel="noopener">High profile AWS breaches &amp; how to avoid them</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2023-06-07</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Companies like Capital One, Twilio, and Uber have all suffered from AWS breaches. Learn from their experiences and prevent the next breach from happening to you.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1603-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1603"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1603-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] S3 bucket exposed to public via ACL/policy change or Public Access Block removal · [LLM] EC2 instance-role credentials performing S3 recon (Capital One IMDS-SSRF pattern) · [LLM] RDS DB snapshot shared, copied, restored or exported (Imperva stolen-key pattern)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="a8267d5ef9" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws" open>
+  <summary>
+    <span class="uc-title">S3 bucket exposed to public via ACL/policy change or Public Access Block removal</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="a8267d5ef9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the root cause behind the Flexbooker, Pegasus Airlines and Twilio breaches: an S3 bucket made world-readable by loosening its ACL/policy or stripping the Public Access Block. Surfaces the actor, source IP and bucket so an analyst can confirm whether the exposure was intentional.
+
+Rationale: Maps the article&#x27;s central thesis (misconfigured public S3 buckets behind Flexbooker/Pegasus/Twilio) to the exact CloudTrail events that create the exposure; corroborated by breaches.cloud&#x27;s incident catalogue. Sentinel left empty - the AWSCloudTrail table is not in this tenant&#x27;s provided schema; Defender uses the MDCA AWS connector (CloudAppEvents).
+
+Cross-checked against:
+  • https://www.breaches.cloud/incidents/imperva-rds-snapshot/
+  • https://snyk.io/blog/aws-security-breaches/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Cloud Storage">T1530</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DevOps intentionally hosting a public static-website bucket via PutBucketPolicy</li><li>Terraform/CloudFormation runs toggling the Public Access Block during stack apply</li><li>CDN origin bucket policy updates granting an internal account (Principal is an account ARN, not *)</li><li>Security team enabling cross-account replication with a scoped policy</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Actor !in (&quot;terraform-deploy&quot;,&quot;cloudformation-exec&quot;) and Bucket !in (&quot;public-website-assets&quot;,&quot;cdn-origin-prod&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the PutBucketPolicy/PutBucketAcl request body - is the grantee AllUsers/AuthenticatedUsers or Principal:* (truly public) vs a specific internal account? Check whether the actor ARN is an approved IaC/admin role and the source IP is corporate. 2) Contain: if genuinely public, re-enable the bucket Public Access Block and revert the policy; snapshot the bucket&#x27;s GetObject data-event log to scope what was read while open. 3) Hunt: list all GetObject/ListObjects on that bucket from external IPs during the exposure window, and review CloudTrail for the same actor touching other buckets.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1603-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1603-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1603-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1603-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1603-uc0-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-1603-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1603-uc0-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;PutBucketAcl&quot;,&quot;PutBucketPolicy&quot;,&quot;DeleteBucketPublicAccessBlock&quot;,&quot;DeletePublicAccessBlock&quot;)
+| project Timestamp, ActionType, Actor=AccountDisplayName, IPAddress, Bucket=ObjectName, RawEventData
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+CloudAppEvents
+| where TimeGenerated &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;PutBucketAcl&quot;,&quot;PutBucketPolicy&quot;,&quot;DeleteBucketPublicAccessBlock&quot;,&quot;DeletePublicAccessBlock&quot;)
+| project TimeGenerated, ActionType, Actor=AccountDisplayName, IPAddress, Bucket=ObjectName, RawEventData
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: S3 Bucket Public-Access Guardrail Weakened or Public Policy Applied
+id: 3e2b1a90-7c44-4d2e-9f01-2a6b8c1d4e55
+status: experimental
+description: Detects S3 API calls that expose a bucket to the public by loosening ACL/policy or removing the Public Access Block - the root cause of the Flexbooker, Pegasus Airlines and Twilio AWS breaches.
+references:
+  - https://snyk.io/blog/aws-security-breaches/
+  - https://www.breaches.cloud/incidents/imperva-rds-snapshot/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.collection
+  - attack.t1530
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: s3.amazonaws.com
+    eventName:
+      - PutBucketAcl
+      - PutBucketPolicy
+      - DeleteBucketPublicAccessBlock
+      - DeletePublicAccessBlock
+  filter_failed:
+    errorCode: &#x27;*&#x27;
+  condition: selection and not filter_failed
+falsepositives:
+  - IaC deployments toggling Public Access Block
+  - Intentional static-website hosting buckets
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-1603-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(PutBucketAcl OR PutBucketPolicy OR DeleteBucketPublicAccessBlock OR DeletePublicAccessBlock) @evt.outcome:success</code></pre></div>
+    <div class="tab-content" id="art-1603-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, requestParameters.bucketName, awsRegion
+| filter eventSource = &quot;s3.amazonaws.com&quot;
+  and eventName in [&quot;PutBucketAcl&quot;,&quot;PutBucketPolicy&quot;,&quot;DeleteBucketPublicAccessBlock&quot;,&quot;DeletePublicAccessBlock&quot;]
+  and not isPresent(errorCode)
+| sort @timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1603-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1603-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1603-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.command IN (&quot;PutBucketAcl&quot;,&quot;PutBucketPolicy&quot;,&quot;DeleteBucketPublicAccessBlock&quot;,&quot;DeletePublicAccessBlock&quot;) by All_Changes.user All_Changes.command All_Changes.object All_Changes.src All_Changes.status | `drop_dm_object_name(All_Changes)` | where status=&quot;success&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1603-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.command IN (&quot;PutBucketAcl&quot;,&quot;PutBucketPolicy&quot;,&quot;DeleteBucketPublicAccessBlock&quot;,&quot;DeletePublicAccessBlock&quot;) by All_Changes.user All_Changes.command All_Changes.object All_Changes.src All_Changes.status | `drop_dm_object_name(All_Changes)` | where status=&quot;success&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ecb16ab684" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
+  <summary>
+    <span class="uc-title">EC2 instance-role credentials performing S3 recon (Capital One IMDS-SSRF pattern)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="ecb16ab684" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the Capital One attack chain: temporary IAM-role credentials minted for an EC2 instance (session name = instance id) being used to enumerate S3. Groups by source IP so an analyst can spot instance credentials being driven from an attacker IP outside the VPC.
+
+Rationale: External corroboration (KrebsOnSecurity, Appsecco) confirms the attacker pulled the WAF instance role from 169.254.169.254 and ran `aws s3 ls`/`aws s3 sync`; the ARN session-name=instance-id pattern plus ListBuckets is the high-fidelity tell, and grouping by source IP surfaces use from outside the instance. Sentinel empty (no AWSCloudTrail table in provided schema); Splunk uses raw cloudtrail as read-only recon has no clean CIM Change mapping.
+
+Cross-checked against:
+  • https://krebsonsecurity.com/2019/08/what-we-can-learn-from-the-capital-one-hack/
+  • https://blog.appsecco.com/an-ssrf-privileged-aws-keys-and-the-capital-one-breach-4c3c2cded3af</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Cloud Storage Object Discovery">T1619</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate application on the EC2 instance calling ListObjects from the instance&#x27;s own private IP</li><li>AWS Backup / Inspector / Config automation using the instance role for inventory</li><li>NAT-gateway egress making several instances share one public source IP</li><li>Blue-team scripts running under the instance profile during testing</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where sourceIPAddress != &quot;&lt;instance-own-ip&gt;&quot; and sourceIPAddress !startswith &quot;10.&quot; and sourceIPAddress !startswith &quot;172.&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: compare sourceIPAddress to the instance&#x27;s own private/public IP and the VPC CIDR - instance credentials used from any other IP (especially non-AWS) is the Capital One signature. Confirm whether GuardDuty raised InstanceCredentialExfiltration for the same role. 2) Contain: revoke the role&#x27;s active sessions (attach an AWSRevokeOlderSessions deny policy / rotate), and quarantine the EC2 instance behind a deny-all SG. 3) Hunt: list every API call made by that role session across all services and regions, focusing on s3:GetObject/sync volume, to scope data accessed.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1603-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1603-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1603-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1603-uc1-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-1603-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1603-uc1-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;ListBuckets&quot;,&quot;ListObjects&quot;,&quot;ListObjectsV2&quot;,&quot;GetBucketAcl&quot;,&quot;DescribeInstances&quot;)
+| where RawEventData has &quot;assumed-role&quot; and RawEventData has &quot;/i-&quot;
+| summarize Calls=count(), Ops=make_set(ActionType) by IPAddress, Arn=tostring(RawEventData.userIdentity.arn)
+| order by Calls desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+CloudAppEvents
+| where TimeGenerated &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;ListBuckets&quot;,&quot;ListObjects&quot;,&quot;ListObjectsV2&quot;,&quot;GetBucketAcl&quot;,&quot;DescribeInstances&quot;)
+| where RawEventData has &quot;assumed-role&quot; and RawEventData has &quot;/i-&quot;
+| summarize Calls=count(), Ops=make_set(ActionType) by IPAddress, Arn=tostring(RawEventData.userIdentity.arn)
+| order by Calls desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @userIdentity.type:AssumedRole @userIdentity.arn:*assumed-role/*/i-* @evt.name:(ListBuckets OR ListObjects OR ListObjectsV2 OR GetBucketAcl OR DescribeInstances) @evt.outcome:success</code></pre></div>
+    <div class="tab-content" id="art-1603-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, awsRegion
+| filter userIdentity.type = &quot;AssumedRole&quot;
+  and userIdentity.arn like /assumed-role.+i-[0-9a-f]{8,}/i
+  and eventName in [&quot;ListBuckets&quot;,&quot;ListObjects&quot;,&quot;ListObjectsV2&quot;,&quot;GetBucketAcl&quot;,&quot;DescribeInstances&quot;]
+  and not isPresent(errorCode)
+| stats count(*) as calls, min(@timestamp) as firstSeen, max(@timestamp) as lastSeen by userIdentity.arn, sourceIPAddress
+| sort calls desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=aws:cloudtrail userIdentity.type=AssumedRole userIdentity.arn=&quot;*assumed-role*i-*&quot; (eventName=ListBuckets OR eventName=ListObjects OR eventName=ListObjectsV2 OR eventName=GetBucketAcl OR eventName=DescribeInstances) | stats count as calls values(eventName) as ops min(_time) as firstTime max(_time) as lastTime by userIdentity.arn sourceIPAddress | sort - calls</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8082d2e983" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws">
+  <summary>
+    <span class="uc-title">RDS DB snapshot shared, copied, restored or exported (Imperva stolen-key pattern)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="8082d2e983" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the Imperva exfiltration path: a stolen AWS API key used to reach an RDS database snapshot. Surfaces snapshot attribute changes (public/cross-account share), copies, restores and S3 exports so an analyst can confirm whether a production snapshot was moved out of its account.
+
+Rationale: breaches.cloud and Trend Micro confirm the Imperva attacker used a stolen API key to access an RDS snapshot of the Incapsula DB; ModifyDBSnapshotAttribute (public/cross-account share), CopyDBSnapshot and StartExportTask are the exact CloudTrail events that move a snapshot&#x27;s data out of its account. Sentinel empty - no AWSCloudTrail table in the provided tenant schema.
+
+Cross-checked against:
+  • https://www.breaches.cloud/incidents/imperva-rds-snapshot/
+  • https://www.trendmicro.com/vinfo/mx/security/news/cybercrime-and-digital-threats/imperva-data-breach-caused-by-stolen-aws-api-key</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Cloud Storage">T1530</span> <span class="ind tech" title="Transfer Data to Cloud Account">T1537</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>AWS Backup service-linked role taking scheduled CreateDBSnapshot/CopyDBSnapshot</li><li>Cross-region DR pipeline copying snapshots nightly</li><li>CI/CD pipeline restoring a prod snapshot into a staging instance for testing</li><li>DBA exporting a snapshot to S3 for an approved analytics load via StartExportTask</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Actor != &quot;AWSBackupDefaultServiceRole&quot; and Actor !in (&quot;ci-cd-deploy&quot;,&quot;dr-replication-role&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: on ModifyDBSnapshotAttribute, read requestParameters.valuesToAdd - a value of &quot;all&quot; (public) or an unknown 12-digit account id is critical; confirm the actor ARN and whether it is a human IAM user vs an automation/AWS Backup role. 2) Contain: revert the snapshot attribute to private (remove the added account/all), rotate the IAM key/role that issued the call, and check whether the snapshot was already copied or exported. 3) Hunt: trace the same principal across CloudTrail for other DescribeDBSnapshots/CopyDBSnapshot/StartExportTask activity and for the original credential-exposure point (public compute instance / leaked key).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1603-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1603-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1603-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1603-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1603-uc2-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-1603-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1603-uc2-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;ModifyDBSnapshotAttribute&quot;,&quot;ModifyDBClusterSnapshotAttribute&quot;,&quot;RestoreDBInstanceFromDBSnapshot&quot;,&quot;RestoreDBClusterFromSnapshot&quot;,&quot;CopyDBSnapshot&quot;,&quot;StartExportTask&quot;)
+| project Timestamp, ActionType, Actor=AccountDisplayName, IPAddress, Snapshot=ObjectName, RawEventData
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+CloudAppEvents
+| where TimeGenerated &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;ModifyDBSnapshotAttribute&quot;,&quot;ModifyDBClusterSnapshotAttribute&quot;,&quot;RestoreDBInstanceFromDBSnapshot&quot;,&quot;RestoreDBClusterFromSnapshot&quot;,&quot;CopyDBSnapshot&quot;,&quot;StartExportTask&quot;)
+| project TimeGenerated, ActionType, Actor=AccountDisplayName, IPAddress, Snapshot=ObjectName, RawEventData
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: RDS Snapshot Shared, Copied, Restored or Exported - Possible DB Snapshot Exfiltration
+id: 9a7c4f12-6b3e-4a8d-bf21-0c5e7d9a2b34
+status: experimental
+description: Detects RDS DB/cluster snapshot attribute changes, copies, exports or restores - the exfiltration path used in the 2019 Imperva breach where a stolen AWS API key accessed an Incapsula database snapshot.
+references:
+  - https://snyk.io/blog/aws-security-breaches/
+  - https://www.breaches.cloud/incidents/imperva-rds-snapshot/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.collection
+  - attack.exfiltration
+  - attack.t1530
+  - attack.t1537
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: rds.amazonaws.com
+    eventName:
+      - ModifyDBSnapshotAttribute
+      - ModifyDBClusterSnapshotAttribute
+      - RestoreDBInstanceFromDBSnapshot
+      - RestoreDBClusterFromSnapshot
+      - CopyDBSnapshot
+      - StartExportTask
+  filter_failed:
+    errorCode: &#x27;*&#x27;
+  condition: selection and not filter_failed
+falsepositives:
+  - Automated backup / DR snapshot copy
+  - CI/CD restoring a prod snapshot to staging
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-1603-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(ModifyDBSnapshotAttribute OR ModifyDBClusterSnapshotAttribute OR RestoreDBInstanceFromDBSnapshot OR RestoreDBClusterFromSnapshot OR CopyDBSnapshot OR StartExportTask) @evt.outcome:success</code></pre></div>
+    <div class="tab-content" id="art-1603-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, userIdentity.arn, userIdentity.type, sourceIPAddress, requestParameters.dBSnapshotIdentifier, requestParameters.valuesToAdd, awsRegion
+| filter eventSource = &quot;rds.amazonaws.com&quot;
+  and eventName in [&quot;ModifyDBSnapshotAttribute&quot;,&quot;ModifyDBClusterSnapshotAttribute&quot;,&quot;RestoreDBInstanceFromDBSnapshot&quot;,&quot;RestoreDBClusterFromSnapshot&quot;,&quot;CopyDBSnapshot&quot;,&quot;StartExportTask&quot;]
+  and not isPresent(errorCode)
+| sort @timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1603-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1603-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1603-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1603-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.command IN (&quot;ModifyDBSnapshotAttribute&quot;,&quot;ModifyDBClusterSnapshotAttribute&quot;,&quot;RestoreDBInstanceFromDBSnapshot&quot;,&quot;RestoreDBClusterFromSnapshot&quot;,&quot;CopyDBSnapshot&quot;,&quot;StartExportTask&quot;) by All_Changes.user All_Changes.command All_Changes.object All_Changes.src All_Changes.status | `drop_dm_object_name(All_Changes)` | where status=&quot;success&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1603-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.command IN (&quot;ModifyDBSnapshotAttribute&quot;,&quot;ModifyDBClusterSnapshotAttribute&quot;,&quot;RestoreDBInstanceFromDBSnapshot&quot;,&quot;RestoreDBClusterFromSnapshot&quot;,&quot;CopyDBSnapshot&quot;,&quot;StartExportTask&quot;) by All_Changes.user All_Changes.command All_Changes.object All_Changes.src All_Changes.status | `drop_dm_object_name(All_Changes)` | where status=&quot;success&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-1604" data-art-slug="2023-06-07-cisa-kev-cve-2023-3079-google-chromium-v8-type-confusion-vul"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -5585,132 +5884,6 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-1635-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2021-3560&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-1636" data-art-slug="2023-05-12-cisa-kev-cve-2014-0196-linux-kernel-race-condition-vulnerabi"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2014-0196 — Linux Kernel Race Condition Vulnerability Linux Kernel contains a race condition vulnerability within the n_tty_write function that allows local users to cause a denial-of-service (DoS) or gain privileges via read and write operations with long strings. Vendor: Linux, Product: Kernel. Federal patch due: 2023-06-02. CVE-2014-0196  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2023-05-12-cisa-kev-cve-2014-0196-linux-kernel-race-condition-vulnerabi" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2014-0196 — Linux Kernel Race Condition Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2023-05-12</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Linux Kernel contains a race condition vulnerability within the n_tty_write function that allows local users to cause a denial-of-service (DoS) or gain privileges via read and write operations with long strings. Vendor: Linux, Product: Kernel. Federal patch due: 2023-06-02.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2014-0196</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1636-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1636"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1636-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1636-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1636-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1636-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1636-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2014-0196&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1636-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2014-0196&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1636-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1636-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1636-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1636-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2014-0196&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-1636-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2014-0196&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

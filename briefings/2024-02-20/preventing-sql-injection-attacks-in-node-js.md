@@ -19,12 +19,29 @@ SQL injection is a malicious attack where nefarious SQL code is injected into a 
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Boolean-tautology SQL injection against Node.js/Express search endpoint
+
+`UC_1324_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_method="POST" OR Web.http_method="GET") by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| eval probe=lower(url.""+uri_query+url)
+| eval inspect=lower(url) . " " . lower(uri_query)
+| where match(inspect,"('|%27)\s*(or|and)\s*('|%27)?\s*\d+('|%27)?\s*=\s*('|%27)?\s*\d+") OR match(inspect,"or\s+1\s*=\s*1") OR match(inspect,"('|%27)\s*or\s*('|%27)1('|%27)\s*=\s*('|%27)1") OR match(inspect,"(--|%2d%2d|;%20--|#)\s*$")
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime lastTime src dest http_method url uri_query status http_user_agent count
+| sort - count
+```
 
 ### Article-specific behavioural hunt — Preventing SQL injection attacks in Node.js
 
@@ -78,4 +95,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,4 +1,4 @@
-# [MED] Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID
+# [HIGH] Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID
 
 **Source:** Snyk
 **Published:** 2023-11-30
@@ -21,12 +21,58 @@ Retrieve the f…
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1190** — Exploit Public-Facing Application
+- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### PHP web-server process initiating outbound TCP (fsockopen reverse shell to attacker)
+
+`UC_1391_1` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="php" All_Traffic.direction="outbound" (All_Traffic.dest_category!="internal" OR All_Traffic.dest_port IN (4444,1337,9001,9999)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "php"
+| where InitiatingProcessCommandLine has "-S"          // built-in dev server mode (e.g. php -S 0:8080)
+| where ActionType in ("ConnectionSuccess","ConnectionRequest")
+| where RemoteIPType == "Public" or RemotePort in (4444, 1337, 9001, 9999)   // a php -S listener should not dial out at all
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### PHP CLI dev server (php -S) spawning a shell or child interpreter (proc_open php -a)
+
+`UC_1391_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process="*php*-S*" Processes.process_name IN ("php","sh","bash","dash","zsh","python","python3","perl","nc","ncat") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "php"
+| where InitiatingProcessCommandLine has "-S"          // parent is a php built-in web server
+| where FileName in~ ("php","sh","bash","dash","zsh","python","python3","perl","nc","ncat")
+| where not (FileName =~ "php" and ProcessCommandLine !has "-a" and ProcessCommandLine !has "-r")  // keep php -a / php -r (interactive/inline), drop benign php worker re-exec
+| project Timestamp, DeviceName, AccountName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID
 
@@ -80,4 +126,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

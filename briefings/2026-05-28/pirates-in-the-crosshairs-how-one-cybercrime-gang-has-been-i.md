@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### HLS Installer.874.exe DLL side-load from pirate-streaming ZIP lure
 
-`UC_289_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_290_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### SilentCryptoMiner-fork: Defender exclusions added for %USERPROFILE%, %PROGRAMDATA%, %WINDIR%, .exe, .dll
 
-`UC_289_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_290_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceRegistryEvents
 
 ### MSRT tampering: HKLM\Software\Policies\Microsoft\MRT DontOfferThroughWUAU = 1
 
-`UC_289_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_290_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ union RegHit, FileHit
 
 ### powercfg sleep/hibernate disable burst (4-command sequence)
 
-`UC_289_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_290_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### SilentCryptoMiner DNS tunneling to *.microsoft.com lookalike and known C2 .space domains
 
-`UC_289_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_290_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -418,7 +418,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pirates in the crosshairs: how one cybercrime gang has been infecting book, movi
 
-`UC_289_7` · phase: **exploit** · confidence: **High**
+`UC_290_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

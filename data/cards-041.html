@@ -3626,15 +3626,15 @@ DeviceTvmSoftwareVulnerabilities
 </details></div>
 </article>
 <article class="card" id="art-1391" data-art-slug="2023-11-30-snyk-fetch-the-flag-ctf-2023-writeup-off-the-setuid"
-  data-phases="actions,c2,exploit,install" data-sev="med"
+  data-phases="actions,c2,exploit,install" data-sev="high"
   data-techs="T1190"
   data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="endpoint"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="endpoint,network"
   data-targets="linux,windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID If you were at Snyk’s 2023 Fetch the Flag and are looking for the answer to the Off the SETUID challenge, you’ve come to the right place. Let’s walk through the solution together!  T1190 Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID">
-  <div class="sev-ribbon med">Medium</div>
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID If you were at Snyk’s 2023 Fetch the Flag and are looking for the answer to the Off the SETUID challenge, you’ve come to the right place. Let’s walk through the solution together!  T1190 [LLM] PHP web-server process initiating outbound TCP (fsockopen reverse shell to attacker) [LLM] PHP CLI dev server (php -S) spawning a shell or child interpreter (proc_open php -a) Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID">
+  <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2023-11-30-snyk-fetch-the-flag-ctf-2023-writeup-off-the-setuid" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
@@ -3642,9 +3642,9 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">Snyk</span></div>
   <div class="pubmeta">
     <span>2023-11-30</span>
-    <span>1 use case</span>
+    <span>3 use cases</span>
     <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
+    <span>3 kill-chain phases detected</span>
   </div>
   <p class="summary">If you were at Snyk’s 2023 Fetch the Flag and are looking for the answer to the Off the SETUID challenge, you’ve come to the right place. Let’s walk through the solution together!</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
@@ -3679,10 +3679,10 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Installation</div>
   <div class="marker">Likely</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 6</div>
   <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 7</div>
@@ -3692,12 +3692,168 @@ DeviceTvmSoftwareVulnerabilities
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] PHP CLI dev server (php -S) spawning a shell or child interpreter (proc_open php -a) · Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] PHP web-server process initiating outbound TCP (fsockopen reverse shell to attacker)</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="d4c17fd350" data-platforms="def,sent,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="e4055925ea" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <summary>
+    <span class="uc-title">PHP web-server process initiating outbound TCP (fsockopen reverse shell to attacker)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e4055925ea" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a `php -S` built-in development web server that initiates an OUTBOUND TCP connection — a dev/test HTTP server should only ever listen, never dial out. In the Off-the-SETUID challenge the injected PHP (`fsockopen(&quot;10.0.2.2&quot;,4444)` + `proc_open([&#x27;php&#x27;,&#x27;-a&#x27;])`) turns the eval&#x27;d web server into a reverse shell, so any egress attributed to the listening php process is the exploitation signal.
+
+Rationale: Anchored on the article&#x27;s exact exploitation primitive: a `php -S 0:8080` listener (init.c) that, after PHP eval injection, runs `fsockopen(&quot;10.0.2.2&quot;,4444)`/`proc_open([&#x27;php&#x27;,&#x27;-a&#x27;])`. A listening dev server emitting outbound TCP is near-zero-FP. Cross-checked the php reverse-shell TTP against GTFOBins.
+
+Cross-checked against:
+  • https://gtfobins.github.io/gtfobins/php/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer using `php -S` as a quick local server for an app that legitimately calls an external API (e.g. composer/Stripe webhook test) — outbound to a known SaaS IP</li><li>CI/CD smoke tests where php -S serves a page that fetches a health-check URL</li><li>php-fpm or php CLI cron jobs misclassified as the listener if process-name normalization is loose</li><li>Internal vulnerability scanners probing the dev server and the app calling back to the scanner</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemotePort in (443,80) and RemoteIPType != &quot;Public&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full InitiatingProcessCommandLine — confirm `-S` listener mode and capture RemoteIP/RemotePort. Geolocate the destination and check whether it&#x27;s a known SaaS endpoint vs raw IP on 4444/1337/9001. 2) Contain: isolate the host; kill the php process tree and any child `php -a`/`sh`; block the remote IP at the egress firewall. Snapshot /var/run and the served webroot for the injected payload. 3) Hunt: on the same host search DeviceProcessEvents for php spawning interpreters/shells (UC2), and for reads of /root/flag.txt or other sensitive files; review web/access logs for the POST that delivered the `eval()` code.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1391-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1391-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1391-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1391-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1391-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1391-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;php&quot;
+| where InitiatingProcessCommandLine has &quot;-S&quot;          // built-in dev server mode (e.g. php -S 0:8080)
+| where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionRequest&quot;)
+| where RemoteIPType == &quot;Public&quot; or RemotePort in (4444, 1337, 9001, 9999)   // a php -S listener should not dial out at all
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1391-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;php&quot;
+| where InitiatingProcessCommandLine has &quot;-S&quot;          // built-in dev server mode (e.g. php -S 0:8080)
+| where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionRequest&quot;)
+| where RemoteIPType == &quot;Public&quot; or RemotePort in (4444, 1337, 9001, 9999)   // a php -S listener should not dial out at all
+| project TimeGenerated, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1391-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: PHP built-in dev server initiating outbound connection
+id: 8f3b1c92-2d4a-4e77-9b1e-7a0c4f6d1a2b
+description: A php -S built-in web server (listener) initiating an outbound TCP connection, consistent with an eval-injection reverse shell (Snyk Fetch-the-Flag Off-the-SETUID).
+references:
+  - https://snyk.io/blog/snyk-fetch-the-flag-ctf-2023-writeup-off-the-setuid/
+  - https://gtfobins.github.io/gtfobins/php/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.t1059.004
+  - attack.t1071.001
+  - attack.command_and_control
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection:
+    Image|endswith: &#x27;/php&#x27;
+    Initiated: &#x27;true&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-1391-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/\/php[0-9.]*$/i
+| ConnectionDirection=1
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())
+| count &gt; 0</code></pre></div>
+    <div class="tab-content" id="art-1391-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1391-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1391-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1391-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=&quot;php&quot; All_Traffic.direction=&quot;outbound&quot; (All_Traffic.dest_category!=&quot;internal&quot; OR All_Traffic.dest_port IN (4444,1337,9001,9999)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1391-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=&quot;php&quot; All_Traffic.direction=&quot;outbound&quot; (All_Traffic.dest_category!=&quot;internal&quot; OR All_Traffic.dest_port IN (4444,1337,9001,9999)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="97a4046a5e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">PHP CLI dev server (php -S) spawning a shell or child interpreter (proc_open php -a)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="97a4046a5e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a `php -S` built-in web server process spawning a child shell or interpreter (php -a, sh/bash, python, perl, nc). In the Off-the-SETUID challenge the eval&#x27;d code calls `proc_open([&#x27;php&#x27;,&#x27;-a&#x27;], ...)` wired to a socket — a classic web-RCE-to-interactive-shell pivot. A dev HTTP server has no legitimate reason to fork an interactive interpreter.
+
+Rationale: Built on the article&#x27;s literal `proc_open([&#x27;php&#x27;,&#x27;-a&#x27;], …)` reverse-shell and the `php -S 0:8080` parent from init.c. Parent=php-server + child=interactive interpreter is a high-fidelity web-RCE chain. Cross-checked the php-as-shell technique against GTFOBins.
+
+Cross-checked against:
+  • https://gtfobins.github.io/gtfobins/php/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A PHP app that legitimately shells out via exec()/shell_exec() to ImageMagick, ffmpeg, or git during request handling under a php -S dev server</li><li>Local developer debugging where php -S serves an app that calls `php -r` helper scripts</li><li>Composer/PHPUnit test runs that fork php subprocesses from a dev server</li><li>Monitoring/health scripts invoked by the app that call /bin/sh</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ActingProcessName in~ (&quot;sh&quot;,&quot;bash&quot;) and ActingProcessCommandLine has_any (&quot;convert&quot;,&quot;ffmpeg&quot;,&quot;git &quot;,&quot;phpunit&quot;,&quot;composer&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture ParentProcessCommandLine + child ProcessCommandLine; confirm the parent is a `-S` listener and whether the child is an interactive shell (php -a, sh) vs a benign tool. Check the child&#x27;s network activity (UC1) and stdin/stdout redirection. 2) Contain: isolate the host, kill the php server and descendant shell, preserve the served webroot and /var/run for the injected `eval()` payload. 3) Hunt: review HTTP/access logs for the POST carrying the `code` parameter, search for reads of /root/flag.txt or credential files, and check for any local privilege-escalation follow-on (unexpected setuid/syscall abuse, uid transitions to 0).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1391-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1391-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1391-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1391-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1391-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1391-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1391-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;php&quot;
+| where InitiatingProcessCommandLine has &quot;-S&quot;          // parent is a php built-in web server
+| where FileName in~ (&quot;php&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+| where not (FileName =~ &quot;php&quot; and ProcessCommandLine !has &quot;-a&quot; and ProcessCommandLine !has &quot;-r&quot;)  // keep php -a / php -r (interactive/inline), drop benign php worker re-exec
+| project Timestamp, DeviceName, AccountName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1391-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has &quot;php&quot;
+| where ParentProcessCommandLine has &quot;-S&quot;
+| where ActingProcessName has_any (&quot;php&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+| where not (ActingProcessName has &quot;php&quot; and ActingProcessCommandLine !has &quot;-a&quot; and ActingProcessCommandLine !has &quot;-r&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1391-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: PHP built-in dev server spawning shell or interpreter
+id: 1c7d4a60-9e2f-4b13-8a55-6f0b2d9c3e41
+description: A php -S built-in web server spawning a child shell/interpreter (php -a, sh, python, perl, nc), consistent with eval-injection RCE pivoting to an interactive shell (Snyk Fetch-the-Flag Off-the-SETUID).
+references:
+  - https://snyk.io/blog/snyk-fetch-the-flag-ctf-2023-writeup-off-the-setuid/
+  - https://gtfobins.github.io/gtfobins/php/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.t1059.004
+  - attack.t1505.003
+  - attack.execution
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    ParentImage|endswith: &#x27;/php&#x27;
+    Image|endswith:
+      - &#x27;/php&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/perl&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-1391-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*&quot;php -a&quot;* OR *&quot;php -r&quot;* OR */bin/sh* OR */bin/bash* OR *&quot;python -c&quot;* OR *&quot;perl -e&quot;*)</code></pre></div>
+    <div class="tab-content" id="art-1391-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^php[0-9.]*$/i
+| ImageFileName=/\/(php[0-9.]*|sh|bash|dash|zsh|python[0-9]?|perl|nc|ncat)$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
+| count &gt; 0</code></pre></div>
+    <div class="tab-content" id="art-1391-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1391-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1391-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1391-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process=&quot;*php*-S*&quot; Processes.process_name IN (&quot;php&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1391-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process=&quot;*php*-S*&quot; Processes.process_name IN (&quot;php&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="d4c17fd350" data-platforms="def,sent,spl" data-targets="linux,windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID</span>
     <span class="uc-phase">Exploitation</span>
@@ -3712,11 +3868,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-1391-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1391-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1391-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-1391-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1391-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1391-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1391-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID
+    <div class="tab-content active" id="art-1391-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -3736,7 +3892,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1391-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-1391-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID
@@ -3759,7 +3915,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1391-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1391-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1391-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1391-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID ```
+    <div class="tab-content" id="art-1391-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1391-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1391-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1391-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;run.sh&quot;))
@@ -3775,7 +3931,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-1391-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID ```
+]</code></pre><pre class="spl-mode-body" id="art-1391-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;run.sh&quot;))
