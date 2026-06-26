@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### AutoGen Studio agent (python) spawns shell/LOLBin as 'MCP server' (AutoJack RCE)
 
-`UC_95_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_98_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Loopback WebSocket to AutoGen MCP control plane carrying server_params (AutoJack)
 
-`UC_95_6` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_98_6` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### AutoJack confused-deputy: agent fetches external page then hits local MCP :8081
 
-`UC_95_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_98_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AutoJack: How a single page can RCE the host running your AI agent
 
-`UC_95_4` · phase: **exploit** · confidence: **High**
+`UC_98_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

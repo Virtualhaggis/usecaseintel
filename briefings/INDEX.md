@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,9 +9,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-26
+- [cisa adds exploited ptc windchill rce flaw to kev as web she](./2026-06-26/cisa-adds-exploited-ptc-windchill-rce-flaw-to-kev-as-web-she.md)
 - [google details turla s new stockstay backdoor used in ukrain](./2026-06-26/google-details-turla-s-new-stockstay-backdoor-used-in-ukrain.md)
+- [guardian agents the next layer of identity governance](./2026-06-26/guardian-agents-the-next-layer-of-identity-governance.md)
 - [miasma malware targets npm packages and github actions in su](./2026-06-26/miasma-malware-targets-npm-packages-and-github-actions-in-su.md)
-- [microsoft warns of photo zip phishing campaign targeting hot](./2026-06-26/microsoft-warns-of-photo-zip-phishing-campaign-targeting-hot.md)
+- [new dirtyclone linux kernel flaw lets local users gain root ](./2026-06-26/new-dirtyclone-linux-kernel-flaw-lets-local-users-gain-root-.md)
+- [new linux pedit cow exploit enables root access by poisoning](./2026-06-26/new-linux-pedit-cow-exploit-enables-root-access-by-poisoning.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
 
 ## 2026-06-25
@@ -117,11 +120,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa vmmj pfw7 fjwp npm praisonai codemode san](./2026-06-18/ghsa-critical-ghsa-vmmj-pfw7-fjwp-npm-praisonai-codemode-san.md)
 - [ghsa critical ghsa x227 pf99 vffg praisonai mcp sse transpor](./2026-06-18/ghsa-critical-ghsa-x227-pf99-vffg-praisonai-mcp-sse-transpor.md)
 - [ghsa critical ghsa x8cv xmq7 p8xp praisonai agentteam launch](./2026-06-18/ghsa-critical-ghsa-x8cv-xmq7-p8xp-praisonai-agentteam-launch.md)
-- [inc ransomware emerges as major raas threat in 2026 with 830](./2026-06-18/inc-ransomware-emerges-as-major-raas-threat-in-2026-with-830.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
-- [microsoft details windows clipper malware campaign using usb](./2026-06-18/microsoft-details-windows-clipper-malware-campaign-using-usb.md)
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 

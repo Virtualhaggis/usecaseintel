@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### WhatsApp Desktop (WhatsApp.Root.exe) spawning WScript/CScript
 
-`UC_55_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_58_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### WScript/CScript C2 egress to WhatsApp-campaign download infrastructure
 
-`UC_55_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_58_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### UAC bypass via ConsentPromptBehaviorAdmin set to 0 by script host
 
-`UC_55_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_58_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceRegistryEvents
 
 ### ManageEngine Endpoint Central (UEMSAgent.msi) silent install as RMM implant
 
-`UC_55_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_58_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### Financial-lure .vbs written into WhatsApp Desktop session folder
 
-`UC_55_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_58_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -228,7 +228,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — WhatsApp VBScript Campaign Uses Fake Documents to Install ManageEngine RMM Tool
 
-`UC_55_5` · phase: **exploit** · confidence: **High**
+`UC_58_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
