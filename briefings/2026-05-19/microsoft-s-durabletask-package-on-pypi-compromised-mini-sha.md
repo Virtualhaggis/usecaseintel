@@ -31,21 +31,14 @@ Blog Vulnerabilities & Threats Microsoft's durabletask package on PyPi Compromis
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
+- **T1195.002** — Compromised Software Supply Chain
 - **T1059.006** — Command and Scripting Interpreter: Python
-- **T1105** — Ingress Tool Transfer
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1102** — Web Service
+- **T1105** — Ingress Tool Transfer
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1609** — Container Administration Command
 - **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1555.005** — Credentials from Password Stores: Password Managers
-- **T1530** — Data from Cloud Storage
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1555.006** — Credentials from Password Stores: Cloud Secrets Management Stores
-- **T1651** — Cloud Administration Command
-- **T1609** — Container Administration Command
-- **T1610** — Deploy Container
-- **T1485** — Data Destruction
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
@@ -53,141 +46,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious durabletask PyPI dropper fetches rope.pyz to /tmp and detaches python3
+### durabletask PyPI dropper launches second-stage zipapp (python3 /tmp/managed.pyz)
 
 `UC_326_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3") AND (Processes.process="*managed.pyz*" OR Processes.process="*rope.pyz*") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name Processes.parent_process 
-| `drop_dm_object_name(Processes)` 
-| convert ctime(firstTime) ctime(lastTime) 
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*/tmp/managed.pyz*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("python","python3")
-| where ProcessCommandLine has_any ("/tmp/managed.pyz","managed.pyz","rope.pyz")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "/tmp/managed.pyz" or FolderPath =~ "/tmp/managed.pyz"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Beaconing to check.git-service.com C2 and FIRESCALE GitHub dead-drop fallback
+### C2 / payload-host resolution to check.git-service.com (durabletask worm)
 
 `UC_326_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("check.git-service.com","git-service.com","t.m-kosche.com") by DNS.src DNS.query 
-| `drop_dm_object_name(DNS)` 
-| convert ctime(firstTime) ctime(lastTime) 
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*git-service.com" OR DNS.query="*m-kosche.com") by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any ("check.git-service.com","git-service.com","t.m-kosche.com")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
+| where Timestamp > ago(30d)
+| where RemoteUrl has "git-service.com" or RemoteUrl has "m-kosche.com"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### rope.pyz mass credential & AI-tooling config harvest by /tmp python process
+### FIRESCALE GitHub dead-drop fallback C2 lookup (api.github.com commit search)
 
-`UC_326_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_326_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(Filesystem.file_path) as sensitive_files values(Filesystem.file_path) as files min(_time) as firstTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("python","python3") AND (Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*/.kube/config" OR Filesystem.file_path="*/.vault-token" OR Filesystem.file_path="*/.npmrc" OR Filesystem.file_path="*/.pypirc" OR Filesystem.file_path="*/.ssh/*" OR Filesystem.file_path="*/.azure/accessTokens.json" OR Filesystem.file_path="*/.cursor/mcp.json" OR Filesystem.file_path="*/.config/claude/claude_desktop_config.json" OR Filesystem.file_path="*/.docker/config.json") by Filesystem.dest Filesystem.process_id Filesystem.process_name 
-| `drop_dm_object_name(Filesystem)` 
-| where sensitive_files >= 5 
-| sort - sensitive_files
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*FIRESCALE*" by Web.src Web.dest_host Web.url Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "FIRESCALE"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Kubernetes propagation via kubectl staged in /tmp (kubectl exec / get secrets)
+
+`UC_326_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*/tmp/kubectl*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FolderPath == "/tmp/kubectl" or ProcessCommandLine has "/tmp/kubectl"
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Single process fan-out reading cloud, Vault, SSH and AI-tool credential files
+
+`UC_326_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(Filesystem.file_path) as DistinctSecrets values(Filesystem.file_path) as files min(_time) as firstTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*/.kube/config" OR Filesystem.file_path="*/.vault-token" OR Filesystem.file_path="*/.azure/accessTokens.json" OR Filesystem.file_path="*/.npmrc" OR Filesystem.file_path="*/.pypirc" OR Filesystem.file_path="*/.ssh/*" OR Filesystem.file_path="*/.cursor/mcp.json" OR Filesystem.file_path="*/.codeium/mcp.json" OR Filesystem.file_path="*claude_desktop_config.json") by Filesystem.dest Filesystem.process_id
+| `drop_dm_object_name(Filesystem)`
+| where DistinctSecrets >= 5
+| sort - DistinctSecrets
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python","python3")
-| where InitiatingProcessFolderPath has "/tmp/" or InitiatingProcessCommandLine has_any ("managed.pyz","rope.pyz")
-| where FolderPath has_any ("/.aws/credentials","/.kube/config","/.vault-token","/.npmrc","/.pypirc","/.ssh/","/.azure/accessTokens.json","/.cursor/mcp.json","/.vscode/mcp.json","/.codeium/mcp.json","/.config/claude/claude_desktop_config.json","/.docker/config.json")
-| summarize SensitiveFiles=dcount(FolderPath), Files=make_set(FolderPath, 60), FirstSeen=min(Timestamp) by DeviceName, InitiatingProcessId, InitiatingProcessCommandLine, bin(Timestamp, 10m)
-| where SensitiveFiles >= 5
-| order by SensitiveFiles desc
-```
-
-### rope.pyz cloud-credential pivot: IMDS theft + multi-region Secrets/SSM enumeration
-
-`UC_326_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="169.254.169.254" AND All_Traffic.process_name IN ("python","python3") by All_Traffic.src All_Traffic.process_name All_Traffic.dest_ip 
-| `drop_dm_object_name(All_Traffic)` 
-| convert ctime(firstTime) ctime(lastTime) 
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP == "169.254.169.254"
-| where InitiatingProcessFileName in~ ("python","python3")
-| where InitiatingProcessFolderPath has "/tmp/" or InitiatingProcessCommandLine has_any ("managed.pyz","rope.pyz")
-| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### rope.pyz Kubernetes propagation: /tmp/kubectl download and kubectl exec worming
-
-`UC_326_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*/tmp/kubectl*") OR (Processes.process_name="kubectl" AND Processes.process="*exec*") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| convert ctime(firstTime) ctime(lastTime) 
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where (FileName =~ "kubectl" and FolderPath has "/tmp/")
-   or ProcessCommandLine has "/tmp/kubectl"
-   or (FileName =~ "kubectl" and ProcessCommandLine has "exec" and ProcessCommandLine has_any ("-- sh","-- bash","/bin/sh","-c"))
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### rope.pyz destructive payload: rm -rf /* wipe on Israeli/Iranian locale hosts
-
-`UC_326_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="rm" AND Processes.process="*-rf*" AND (Processes.process="*rm -rf /*" OR Processes.process="* / *" OR Processes.process="* /*") by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process 
-| `drop_dm_object_name(Processes)` 
-| convert ctime(firstTime) ctime(lastTime) 
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "rm"
-| where ProcessCommandLine has "-rf" and (ProcessCommandLine has "/*" or ProcessCommandLine matches regex @"\s/\s*$")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
+| where FolderPath has_any (".aws/credentials", ".kube/config", ".vault-token", ".azure/accessTokens.json", ".npmrc", ".pypirc", ".ssh/", ".cursor/mcp.json", ".codeium/mcp.json", "claude_desktop_config.json")
+| summarize DistinctSecrets = dcount(FolderPath), Files = make_set(FolderPath, 25), FirstSeen = min(Timestamp) by DeviceName, InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where DistinctSecrets >= 5
+| order by DistinctSecrets desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -397,4 +355,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

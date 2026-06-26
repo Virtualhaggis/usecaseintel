@@ -43,11 +43,10 @@ We’re relieved to hear it. Turning off install scripts is the most useful chan
 - **T1027** — Obfuscated Files or Information
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
-- **T1195.002** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1555** — Credentials from Password Stores
-- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
@@ -55,16 +54,15 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### axios npm RAT C2 beacon to sfrclak.com:8000 / 142.11.206.73
+### axios npm RAT C2 beacon to UNC1069 infra (142.11.206.73 / sfrclak.com)
 
-`UC_184_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_184_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="142.11.206.73" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="142.11.206.73" OR All_Traffic.dest="sfrclak.com") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.app
 | `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -72,59 +70,63 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "142.11.206.73" or RemoteUrl has "sfrclak.com"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### axios supply chain: plain-crypto-js phantom dependency postinstall dropper
+### axios RAT Windows payload drop (6202033.vbs/.ps1, ProgramData\wt) during npm install
 
 `UC_184_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*plain-crypto-js*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has "plain-crypto-js" or InitiatingProcessCommandLine has "plain-crypto-js"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Shai-Hulud Bun runtime sideload during npm install (setup_bun.js / bun_environment.js)
-
-`UC_184_11` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_name="setup_bun.js" OR Endpoint.Filesystem.file_name="bun_environment.js") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name Endpoint.Filesystem.process_id
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="6202033.vbs" OR Filesystem.file_name="6202033.ps1" OR Filesystem.file_path="*\\ProgramData\\wt\\*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid
 | `drop_dm_object_name(Filesystem)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("setup_bun.js","bun_environment.js")
-| where FolderPath has "node_modules"
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| where FileName in~ ("6202033.vbs","6202033.ps1")
+    or SHA256 in ("46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777","dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c","4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a")
+    or (FolderPath has @"\ProgramData\wt\" and InitiatingProcessFileName in~ ("node.exe","npm.exe","bun.exe","cmd.exe","powershell.exe"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Shai-Hulud TruffleHog secret-scan spawned by node/bun/npm
+### Shai-Hulud npm preinstall Bun bootstrap (setup_bun.js / bun_environment.js)
+
+`UC_184_11` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*setup_bun.js*" OR Processes.process="*bun_environment.js*" OR Processes.process="*bun_installer.js*" OR Processes.process="*environment_source.js*" OR (Processes.process_name="bun.exe" AND Processes.parent_process_name IN ("node.exe","npm.exe","cmd.exe"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("setup_bun.js","bun_environment.js","bun_installer.js","environment_source.js")
+   or (FileName =~ "bun.exe" and InitiatingProcessFileName in~ ("node.exe","npm.exe","cmd.exe"))
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### TruffleHog secret-scan spawned by npm/node install (Shai-Hulud credential harvest)
 
 `UC_184_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*trufflehog*" OR Processes.process_name="trufflehog*") AND Processes.parent_process_name IN ("node.exe","bun.exe","npm.exe","cmd.exe","sh","bash") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*trufflehog*" OR Processes.process_name="trufflehog.exe") AND Processes.parent_process_name IN ("node.exe","npm.exe","bun.exe","cmd.exe","powershell.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -132,33 +134,9 @@ DeviceFileEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName has "trufflehog" or ProcessCommandLine has "trufflehog"
-| where InitiatingProcessFileName in~ ("node.exe","bun.exe","npm.exe","cmd.exe","powershell.exe","sh.exe","bash.exe")
-   or InitiatingProcessCommandLine has_any ("node_modules","setup_bun","bun_environment")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### npm/node install lifecycle script spawning download-and-execute LOLBin
-
-`UC_184_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","npm.exe") AND Processes.process_name IN ("curl.exe","wget.exe","powershell.exe","pwsh.exe","certutil.exe","bitsadmin.exe","bun.exe","cmd.exe","cscript.exe","wscript.exe","mshta.exe") AND (Processes.process="*http*" OR Processes.process="*DownloadString*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*-OutFile*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe")
-   or InitiatingProcessCommandLine has_any ("node_modules","preinstall","postinstall","install.js","setup.js")
-| where FileName in~ ("curl.exe","wget.exe","powershell.exe","pwsh.exe","certutil.exe","bitsadmin.exe","bun.exe","cmd.exe","cscript.exe","wscript.exe","mshta.exe")
-| where ProcessCommandLine has_any ("http://","https://","Invoke-WebRequest","DownloadString","-OutFile","iwr ","curl ","wget ")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","bun.exe","cmd.exe","powershell.exe","sh.exe","bash.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
@@ -455,4 +433,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

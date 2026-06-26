@@ -50,94 +50,31 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AWS CloudTrail logging suspended via StopLogging API
+### AWS CloudTrail blinded: StopLogging / DeleteTrail / UpdateTrail / PutEventSelectors
 
 `UC_199_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.command=StopLogging All_Changes.vendor_product="AWS CloudTrail" by All_Changes.user All_Changes.src All_Changes.object All_Changes.command All_Changes.status
-| `drop_dm_object_name("All_Changes")`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where (All_Changes.command IN ("StopLogging","DeleteTrail","UpdateTrail","PutEventSelectors")) AND All_Changes.status="success" by All_Changes.user All_Changes.command All_Changes.object All_Changes.src All_Changes.dest | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where ActionType =~ "StopLogging"
-| where Application has_any ("Amazon","AWS")
-| project Timestamp, ActionType, AccountDisplayName, AccountId, IPAddress, CountryCode, ObjectName, Application, ReportId
-| order by Timestamp desc
-```
+### AWS S3 deletion of CloudTrail log-destination bucket/objects
 
-### AWS CloudTrail trail tampering: DeleteTrail / UpdateTrail / PutEventSelectors
-
-`UC_199_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_199_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where (All_Changes.command=DeleteTrail OR All_Changes.command=UpdateTrail OR All_Changes.command=PutEventSelectors) All_Changes.vendor_product="AWS CloudTrail" by All_Changes.user All_Changes.src All_Changes.object All_Changes.command All_Changes.status
-| `drop_dm_object_name("All_Changes")`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where (All_Changes.command IN ("DeleteBucket","DeleteObject","DeleteObjects")) AND All_Changes.status="success" AND (All_Changes.object IN ("*cloudtrail*","*log*","*audit*","*trail*")) by All_Changes.user All_Changes.command All_Changes.object All_Changes.src | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where ActionType in~ ("DeleteTrail","UpdateTrail","PutEventSelectors")
-| where Application has_any ("Amazon","AWS")
-| project Timestamp, ActionType, AccountDisplayName, AccountId, IPAddress, CountryCode, ObjectName, Application, RawEventData, ReportId
-| order by Timestamp desc
-```
+### GCP Cloud Logging tampering: sink disabled/deleted or log bucket deleted
 
-### AWS S3 deletion of CloudTrail log-destination bucket
-
-`UC_199_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_199_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.command=DeleteBucket All_Changes.vendor_product="AWS CloudTrail" by All_Changes.user All_Changes.src All_Changes.object All_Changes.command All_Changes.status
-| `drop_dm_object_name("All_Changes")`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where ActionType =~ "DeleteBucket"
-| where Application has_any ("Amazon","AWS")
-| project Timestamp, ActionType, AccountDisplayName, AccountId, IPAddress, CountryCode, ObjectName, Application, ReportId
-| order by Timestamp desc
-```
-
-### GCP Cloud Logging sink disabled via UpdateSink
-
-`UC_199_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.command="google.logging.v2.ConfigServiceV2.UpdateSink" by All_Changes.user All_Changes.src All_Changes.object All_Changes.command All_Changes.status
-| `drop_dm_object_name("All_Changes")`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-### GCP Cloud Logging bucket deletion via logging.buckets.delete
-
-`UC_199_8` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.command="google.logging.v2.ConfigServiceV2.DeleteBucket" by All_Changes.user All_Changes.src All_Changes.object All_Changes.command All_Changes.status
-| `drop_dm_object_name("All_Changes")`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where (All_Changes.command IN ("google.logging.v2.ConfigServiceV2.UpdateSink","google.logging.v2.ConfigServiceV2.DeleteSink","google.logging.v2.ConfigServiceV2.DeleteBucket")) AND All_Changes.status="success" by All_Changes.user All_Changes.command All_Changes.object All_Changes.src | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -315,4 +252,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 9 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

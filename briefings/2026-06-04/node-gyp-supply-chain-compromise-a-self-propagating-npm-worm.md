@@ -35,12 +35,101 @@ June 4, 2026
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1105** — Ingress Tool Transfer
+- **T1608.001** — Stage Capabilities: Upload Malware
+- **T1546** — Event Triggered Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Phantom Gyp: node-gyp install-time code execution via weaponized binding.gyp
+
+`UC_233_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*index.js*" Processes.process="*stub.c*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where like(process,"%echo stub.c%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "index.js" and ProcessCommandLine has "stub.c"
+| where ProcessCommandLine has "echo stub.c" or (ProcessCommandLine has "/dev/null" and ProcessCommandLine has "index.js")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Miasma loader fetches standalone Bun v1.3.13 from oven-sh GitHub releases during install
+
+`UC_233_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*oven-sh/bun/releases/download/bun-v1.3.13*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "oven-sh/bun/releases/download/bun-v1.3.13"
+| project Timestamp, DeviceName, AccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Miasma GitHub Actions workflow injection for persistence by node payload
+
+`UC_233_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/.github/workflows/*" (Filesystem.file_name="*.yml" OR Filesystem.file_name="*.yaml") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search process_name IN ("node","node.exe","npm","bun","bun.exe") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "\\.github\\workflows\\" or FolderPath has "/.github/workflows/"
+| where FileName endswith ".yml" or FileName endswith ".yaml"
+| where InitiatingProcessFileName in~ ("node","node.exe","npm","npm.cmd","bun","bun.exe")
+| project Timestamp, DeviceName, FolderPath, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Miasma/Node-gyp loader file hashes present on developer or CI host
+
+`UC_233_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90","5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61","ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108","da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707","e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1","82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a","288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a","8bf051251ec3b973e39a313547e53421a2f8d2f6","608d01124cd6b5b8c55888e984b4c4d9b06fa686","ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let badSha256 = dynamic(["ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90","5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61","ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108","da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707","e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1","82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a","288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a"]);
+let badSha1 = dynamic(["8bf051251ec3b973e39a313547e53421a2f8d2f6","608d01124cd6b5b8c55888e984b4c4d9b06fa686","ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in~ (badSha256) or SHA1 in~ (badSha1)
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -302,4 +391,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

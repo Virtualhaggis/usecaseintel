@@ -26,12 +26,11 @@ PostHog's engineering team is merging roughly as many pull requests through Slac
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
-- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
-- **T1204.002** — User Execution: Malicious File
-- **T1114.003** — Email Collection: Email Forwarding Rule
-- **T1567** — Exfiltration Over Web Service
+- **T1195.002** — Compromise Software Supply Chain: Compromised Software Dependencies and Development Tools
+- **T1114** — Email Collection
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1102** — Web Service
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
@@ -39,59 +38,54 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious 'postmark-mcp' MCP package or known supply-chain payload written to developer device
+### Malicious 'postmark-mcp' MCP server package present/executing on developer endpoints
 
-`UC_192_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_192_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\postmark-mcp\\*" OR Filesystem.file_hash IN ("2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*postmark-mcp*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process 
+| `drop_dm_object_name(Processes)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)` 
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let badHashes = dynamic(["2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766"]);
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath has @"\node_modules\postmark-mcp" or SHA1 in~ (badHashes)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA1,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
+let lookback = 30d;
+union
+(DeviceProcessEvents
+ | where Timestamp > ago(lookback)
+ | where ProcessCommandLine has "postmark-mcp"
+ | where AccountName !endswith "$"
+ | extend Signal="process", Path=FolderPath, Cmd=ProcessCommandLine, Hash=SHA256),
+(DeviceFileEvents
+ | where Timestamp > ago(lookback)
+ | where FolderPath has @"\node_modules\postmark-mcp"
+ | extend Signal="file", Path=FolderPath, Cmd=InitiatingProcessCommandLine, Hash=SHA256, AccountName=InitiatingProcessAccountName)
+| project Timestamp, DeviceName, AccountName, Signal, Path, Cmd, Hash
 | order by Timestamp desc
 ```
 
-### Exfil/C2 callout to postmark-mcp BCC domain giftshop.club
+### GlassWorm Stage-2 C2 beacon to Vultr-hosted command-and-control IPs
 
-`UC_192_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_192_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*giftshop.club*" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="45.32.150.251" OR All_Traffic.dest_ip="45.32.151.157" OR All_Traffic.dest_ip="70.34.242.255" OR All_Traffic.dest_ip="217.69.3.152") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name 
+| `drop_dm_object_name(All_Traffic)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)` 
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "giftshop.club"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### GlassWorm C2 / ZOMBI payload beacon to known Vultr infrastructure
-
-`UC_192_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.32.150.251","217.69.3.218","45.32.151.157","142.11.206.73","70.34.242.255") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let c2 = dynamic(["45.32.150.251","217.69.3.218","45.32.151.157","142.11.206.73","70.34.242.255"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (c2) or RemoteUrl has "get_zombi_payload"
+| where RemoteIP in ("45.32.150.251","45.32.151.157","70.34.242.255","217.69.3.152")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
@@ -133,4 +127,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

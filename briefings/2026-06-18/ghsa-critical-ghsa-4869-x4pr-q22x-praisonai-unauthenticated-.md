@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI Jobs-API RCE: agent server (python) spawns shell/network utility via execute_command
 
-`UC_121_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_123_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### Unauthenticated POST to PraisonAI Jobs API (/api/v1/runs, port 8005)
 
-`UC_121_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_123_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceNetworkEvents
 
 ### Exposure hunt: vulnerable PraisonAI package installed (praisonai <= 4.6.48 / praisonaiagents < 1.6.59)
 
-`UC_121_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_123_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -96,7 +96,7 @@ DeviceTvmSoftwareInventory
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-4869-x4pr-q22x: PraisonAI: Unauthenticated RCE via Jobs A
 
-`UC_121_0` · phase: **exploit** · confidence: **High**
+`UC_123_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -31,12 +31,102 @@ Describing the Windows backdoor as continually developed by the hacking group, �
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1203** — Exploitation for Client Execution
+- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1218.005** — System Binary Proxy Execution: Mshta
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### WinRAR CVE-2025-8088 ADS path-traversal drop into Startup folder (Turla STOCKSTAY delivery)
+
+`UC_4_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" (Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.exe" OR Filesystem.file_name="*.dll" OR Filesystem.file_name="*.hta" OR Filesystem.file_name="*.cmd" OR Filesystem.file_name="*.bat" OR Filesystem.file_name="*.js" OR Filesystem.file_name="*.vbs" OR Filesystem.file_name="*.scr") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("winrar.exe","unrar.exe","rar.exe","7zfm.exe","wzzip.exe")
+| where FolderPath has @"\Microsoft\Windows\Start Menu\Programs\Startup\"
+| where FileName endswith ".lnk" or FileName endswith ".exe" or FileName endswith ".dll" or FileName endswith ".hta" or FileName endswith ".cmd" or FileName endswith ".bat" or FileName endswith ".js" or FileName endswith ".vbs" or FileName endswith ".scr"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Malicious .RDP email attachment opened — mstsc launched from mail/download dir (Turla initial access)
+
+`UC_4_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name=mstsc.exe Endpoint.Processes.process="*.rdp*" (Endpoint.Processes.process="*\\Downloads\\*" OR Endpoint.Processes.process="*\\Temp\\*" OR Endpoint.Processes.process="*Content.Outlook*" OR Endpoint.Processes.process="*INetCache*" OR Endpoint.Processes.process="*\\Olk\\*") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "mstsc.exe"
+| where ProcessCommandLine has ".rdp"
+| where ProcessCommandLine has_any (@"\Downloads\", @"\AppData\Local\Temp\", @"\Content.Outlook\", @"\INetCache\", @"\AppData\Local\Microsoft\Olk\")
+   or InitiatingProcessFileName in~ ("outlook.exe","winrar.exe","chrome.exe","msedge.exe","firefox.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### STOCKSTAY.MARKETMAKER: mshta from RAR archive reaching internet to pull ZIP from compromised WordPress
+
+`UC_4_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name=mshta.exe (Endpoint.Processes.parent_process_name=winrar.exe OR Endpoint.Processes.parent_process_name=unrar.exe OR Endpoint.Processes.parent_process_name=rar.exe OR Endpoint.Processes.parent_process_name=7zfm.exe OR Endpoint.Processes.parent_process_name=explorer.exe) by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "mshta.exe"
+| where RemoteIPType == "Public"
+| where InitiatingProcessParentFileName in~ ("winrar.exe","unrar.exe","rar.exe","7zfm.exe","explorer.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### STOCKSTAY websocket-sharp tunneler (STOCKBROKER) loaded by masqueraded .NET process
+
+`UC_4_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="websocket-sharp.dll" (Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\Temp\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "websocket-sharp.dll"
+| where InitiatingProcessFolderPath has_any (@"\AppData\", @"\Temp\", @"\ProgramData\", @"\Users\Public\")
+   or InitiatingProcessFileName has_any ("pdf","calc","stock","viewer","reader")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -288,4 +378,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

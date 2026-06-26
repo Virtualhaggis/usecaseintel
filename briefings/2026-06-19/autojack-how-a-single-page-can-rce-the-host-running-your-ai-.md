@@ -24,10 +24,12 @@ Ongoing research into AI agent framework security identified an exploit chain in
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1190** — Exploit Public-Facing Application
-- **T1189** — Drive-by Compromise
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059** — Command and Scripting Interpreter
 - **T1203** — Exploitation for Client Execution
+- **T1190** — Exploit Public-Facing Application
+- **T1559** — Inter-Process Communication
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1185** — Browser Session Hijacking
 
 ## Kill chain phases observed
 
@@ -35,51 +37,86 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AutoGen Studio browsing agent crosses loopback to MCP WebSocket (AutoJack)
+### AutoGen Studio agent (python) spawns shell/LOLBin as 'MCP server' (AutoJack RCE)
 
-`UC_93_5` · phase: **exploit** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="127.0.0.1" OR All_Traffic.dest="::1") All_Traffic.dest_port=8081 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where (RemoteUrl has "server_params" and RemoteUrl has "/api/mcp/ws")
-    or (RemoteIP in ("127.0.0.1", "::1") and RemotePort == 8081
-        and InitiatingProcessFileName in~ ("python.exe","pythonw.exe","node.exe","headless_shell.exe","chrome.exe","msedge.exe","msedgewebview2.exe"))
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteIP, RemotePort, RemoteUrl, InitiatingProcessId
-| order by Timestamp desc
-```
-
-### AutoGen Studio (python) spawns shell or LOLBin child — AutoJack RCE outcome
-
-`UC_93_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_95_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="python.exe" OR Processes.parent_process_name="pythonw.exe") Processes.parent_process="*autogenstudio*" (Processes.process_name="cmd.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="calc.exe" OR Processes.process_name="bash.exe" OR Processes.process_name="sh.exe" OR Processes.process_name="wsl.exe" OR Processes.process_name="mshta.exe" OR Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe" OR Processes.process_name="regsvr32.exe" OR Processes.process_name="rundll32.exe" OR Processes.process_name="bitsadmin.exe" OR Processes.process_name="certutil.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*autogenstudio*" OR (Processes.parent_process="*autogen*" AND Processes.parent_process="*mcp*")) AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wsl.exe","calc.exe","mshta.exe","certutil.exe","curl.exe","wget.exe","regsvr32.exe","rundll32.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| search NOT (process="*modelcontextprotocol*" OR process="*mcp-server*")
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
-| where InitiatingProcessCommandLine has "autogenstudio"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","calc.exe","bash.exe","sh.exe","wsl.exe","mshta.exe","wscript.exe","cscript.exe","regsvr32.exe","rundll32.exe","bitsadmin.exe","certutil.exe")
+| where Timestamp > ago(14d)
+| where InitiatingProcessCommandLine has "autogenstudio" or (InitiatingProcessCommandLine has "autogen" and InitiatingProcessCommandLine has "mcp")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wsl.exe","calc.exe","mshta.exe","certutil.exe","curl.exe","wget.exe","regsvr32.exe","rundll32.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          FileName, FolderPath, ProcessCommandLine, SHA256,
-          InitiatingProcessIntegrityLevel
+| where not (ProcessCommandLine has_any ("modelcontextprotocol","mcp-server","@modelcontextprotocol"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildBinary = FileName, ChildCmd = ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
+```
+
+### Loopback WebSocket to AutoGen MCP control plane carrying server_params (AutoJack)
+
+`UC_95_6` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8081 (All_Traffic.dest IN ("127.0.0.1","::1") OR All_Traffic.dest="localhost") (All_Traffic.app IN ("python.exe","pythonw.exe") OR All_Traffic.process_name IN ("python.exe","pythonw.exe")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemotePort == 8081
+| where RemoteIP in ("127.0.0.1","::1") or RemoteUrl has_any ("127.0.0.1","localhost")
+| where InitiatingProcessCommandLine has "autogenstudio" or InitiatingProcessCommandLine has_any ("MultimodalWebSurfer","playwright","fetch_webpage") or InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
+| where RemoteUrl has_any ("server_params","/api/mcp/ws")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### AutoJack confused-deputy: agent fetches external page then hits local MCP :8081
+
+`UC_95_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN ("python.exe","pythonw.exe") OR All_Traffic.process_name IN ("python.exe","pythonw.exe")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port _time span=2m
+| `drop_dm_object_name(All_Traffic)`
+| eval is_loopback=if((dest IN ("127.0.0.1","::1") AND dest_port=8081),1,0)
+| eval is_external=if((NOT (cidrmatch("10.0.0.0/8",dest) OR cidrmatch("192.168.0.0/16",dest) OR cidrmatch("172.16.0.0/12",dest) OR cidrmatch("127.0.0.0/8",dest))) AND dest_port!=8081,1,0)
+| stats sum(is_loopback) as loopback_hits sum(is_external) as external_hits values(dest) as dests by src _time
+| where loopback_hits>0 AND external_hits>0
+| sort - _time
+```
+
+**Defender KQL:**
+```kql
+let Window = 120s;
+let Loopback = DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where RemotePort == 8081 and RemoteIP in ("127.0.0.1","::1")
+    | where InitiatingProcessFileName in~ ("python.exe","pythonw.exe") or InitiatingProcessCommandLine has "autogenstudio"
+    | project LoopbackTime = Timestamp, DeviceId, InitiatingProcessId, AgentCmd = InitiatingProcessCommandLine;
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe") or InitiatingProcessCommandLine has_any ("autogenstudio","MultimodalWebSurfer","playwright","fetch_webpage")
+| join kind=inner Loopback on DeviceId, InitiatingProcessId
+| where LoopbackTime between (Timestamp .. Timestamp + Window)
+| project ExternalFetchTime = Timestamp, LoopbackTime, DelaySec = datetime_diff('second', LoopbackTime, Timestamp), DeviceName, ExternalIP = RemoteIP, ExternalUrl = RemoteUrl, AgentCmd
+| order by ExternalFetchTime desc
 ```
 
 ### Remote service execution — PsExec / SMB lateral movement
@@ -189,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AutoJack: How a single page can RCE the host running your AI agent
 
-`UC_93_4` · phase: **exploit** · confidence: **High**
+`UC_95_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -239,4 +276,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

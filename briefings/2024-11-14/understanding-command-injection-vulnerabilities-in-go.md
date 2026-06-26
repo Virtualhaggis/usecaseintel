@@ -1,4 +1,4 @@
-# [MED] Understanding command injection vulnerabilities in Go
+# [HIGH] Understanding command injection vulnerabilities in Go
 
 **Source:** Snyk
 **Published:** 2024-11-14
@@ -22,12 +22,39 @@ In either ca…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
+- **T1190** — Exploit Public-Facing Application
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### ImageMagick 'convert -resize' command injection via sh -c in Go web app
+
+`UC_1083_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("sh","bash","dash","convert") AND Processes.process="*convert*" AND Processes.process="*-resize*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)convert.*-resize.*([;&|`$]|\$\(|\bwget\b|\bcurl\b|\bnc\b|rm\s+-rf|/etc/passwd)" | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user parent_process_name process_name process count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("sh","bash","dash","convert")
+| where ProcessCommandLine has "convert" and ProcessCommandLine has "-resize"
+| where ProcessCommandLine matches regex @"[;&|$()<>` ]rm\s+-rf|[;&|]|\$\(|\bwget\b|\bcurl\b|\bnc\b|/etc/passwd"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
 
 ### Remote service execution — PsExec / SMB lateral movement
 
@@ -84,4 +111,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

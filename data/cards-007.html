@@ -9356,11 +9356,11 @@ DeviceFileEvents
   data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="high"
   data-techs="T1027,T1190,T1195.002,T1555.003"
   data-sources="Snyk"
-  data-platforms="def,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network,web"
-  data-targets="azure,m365,windows"
-  data-uc-count="7" data-llm-uc-count="0"
-  data-search="Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in binding.gyp A new npm worm is abusing binding.gyp to trigger node-gyp during install, letting malicious packages run code without lifecycle scripts. It steals credentials, persists in GitHub, and self-propagates across maintainers.  T1027 T1190 T1195.002 T1555.003 Beaconing — periodic outbound to small set of destinations Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind">
+  data-targets="azure,linux,m365,windows"
+  data-uc-count="11" data-llm-uc-count="4"
+  data-search="Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in binding.gyp A new npm worm is abusing binding.gyp to trigger node-gyp during install, letting malicious packages run code without lifecycle scripts. It steals credentials, persists in GitHub, and self-propagates across maintainers.  T1027 T1190 T1195.002 T1555.003 [LLM] Phantom Gyp: node-gyp install-time code execution via weaponized binding.gyp [LLM] Miasma loader fetches standalone Bun v1.3.13 from oven-sh GitHub releases during install [LLM] Miasma GitHub Actions workflow injection for persistence by node payload [LLM] Miasma/Node-gyp loader file hashes present on developer or CI host Beaconing — periodic outbound to small set of destinations Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-06-04-node-gyp-supply-chain-compromise-a-self-propagating-npm-worm" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -9369,7 +9369,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">Snyk</span></div>
   <div class="pubmeta">
     <span>2026-06-04</span>
-    <span>7 use cases</span>
+    <span>11 use cases</span>
     <span>4 techniques</span>
     <span>7 kill-chain phases detected</span>
   </div>
@@ -9420,13 +9420,294 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Miasma/Node-gyp loader file hashes present on developer or CI host · Phishing-link click correlated to endpoint execution</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Phantom Gyp: node-gyp install-time code execution via weaponized binding.gyp · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Miasma loader fetches standalone Bun v1.3.13 from oven-sh GitHub releases during install · [LLM] Miasma GitHub Actions workflow injection for persistence by node payload · File hash IOCs — endpoint file/process match</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="b56353f158" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <summary>
+    <span class="uc-title">Phantom Gyp: node-gyp install-time code execution via weaponized binding.gyp</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="b56353f158" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the Miasma/Phantom Gyp install-time execution primitive where a malicious binding.gyp uses gyp command substitution (&lt;!(node index.js &gt; /dev/null 2&gt;&amp;1 &amp;&amp; echo stub.c)) to run node index.js during npm install with no preinstall/postinstall hook. Anchors on the exact, byte-identical shell string shipped in @vapi-ai/server-sdk@1.2.2 and autotel@3.4.3.
+
+Rationale: Anchors on the byte-for-byte 157-byte binding.gyp payload string &#x27;&lt;!(node index.js &gt; /dev/null 2&gt;&amp;1 &amp;&amp; echo stub.c)&#x27; quoted verbatim in the Snyk write-up and confirmed by StepSecurity&#x27;s &#x27;Phantom Gyp&#x27; analysis — the &#x27;echo stub.c&#x27; + &#x27;index.js&#x27; pairing has no benign equivalent.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm
+  • https://socprime.com/active-threats/miasma-supply-chain-attack-spreads-through-the-phantom-gyp-worm/
+  • https://cybersecuritynews.com/binding-gyp-supply-chain-attack-compromises-dozens-of-npm-packages/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate native addon whose binding.gyp coincidentally runs a helper named index.js (rare; would not also echo stub.c)</li><li>Internal build tooling that pipes a node script to /dev/null during CI configure steps</li><li>Security researchers detonating the sample in a sandbox</li><li>Developer testing a custom gyp command-expansion build step</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ChildCmd has &quot;node-sass&quot; or ChildCmd has &quot;\\test\\fixtures\\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ChildCmd and ParentCmd; confirm the parent chain is npm/node-gyp and the command contains both &#x27;index.js&#x27; and &#x27;echo stub.c&#x27;. Identify the package directory under node_modules and the package@version. 2) Contain: isolate the host/CI runner, kill the node process tree, and treat any npm/GitHub/AWS/GCP/Azure/Vault/Kubernetes credential reachable from that context as compromised — rotate immediately. 3) Hunt: search the same host for the Bun download (UC2), .github/workflows injection (UC3), and the loader hashes (UC4); enumerate other hosts that installed the affected package versions via lockfiles.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-233-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-233-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-233-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-233-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-233-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where ProcessCommandLine has &quot;index.js&quot; and ProcessCommandLine has &quot;stub.c&quot;
+| where ProcessCommandLine has &quot;echo stub.c&quot; or (ProcessCommandLine has &quot;/dev/null&quot; and ProcessCommandLine has &quot;index.js&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-233-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessCommandLine has &quot;index.js&quot; and TargetProcessCommandLine has &quot;stub.c&quot;
+| where TargetProcessCommandLine has &quot;echo stub.c&quot; or TargetProcessCommandLine has &quot;/dev/null&quot;
+| project TimeGenerated, DvcHostname, ActorUsername,
+          ParentProcessName, ActingProcessCommandLine,
+          TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-233-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Phantom Gyp node-gyp Install-Time Execution via binding.gyp
+id: 2f1c9b84-6e3a-4d27-9a1e-7c5b0d4e8a11
+description: Detects the Miasma/Phantom Gyp supply chain worm executing node index.js during npm install through gyp command substitution in binding.gyp
+references:
+  - https://snyk.io/blog/node-gyp-supply-chain-compromise-self-propagating-npm-worm-binding-gyp/
+  - https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.t1195.002
+  - attack.t1059.004
+logsource:
+  category: process_creation
+detection:
+  selection:
+    CommandLine|contains|all:
+      - &#x27;index.js&#x27;
+      - &#x27;stub.c&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-233-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*stub.c* AND @process.command_line:*index.js*</code></pre></div>
+    <div class="tab-content" id="art-233-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 | regex(&quot;index\.js.*stub\.c&quot;, field=CommandLine) | groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-233-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*index.js*&quot; Processes.process=&quot;*stub.c*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where like(process,&quot;%echo stub.c%&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-233-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*index.js*&quot; Processes.process=&quot;*stub.c*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where like(process,&quot;%echo stub.c%&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0f45577f8a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Miasma loader fetches standalone Bun v1.3.13 from oven-sh GitHub releases during install</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0f45577f8a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the Miasma second-stage loader that, after binding.gyp triggers index.js, downloads a standalone Bun v1.3.13 binary from the official oven-sh/bun GitHub releases via curl and unzips it to a temp dir to run the next stage. Anchors on the hardcoded release URL path.
+
+Rationale: The Snyk decode of the 907-byte first decrypted blob quotes the literal URL template &#x27;https://github.com/oven-sh/bun/releases/download/bun-v1.3.13/bun-&lt;os&gt;-&lt;a&gt;.zip&#x27;; the pinned &#x27;bun-v1.3.13&#x27; release path inside a curl/install context is a high-fidelity, low-noise anchor.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm
+  • https://socprime.com/active-threats/miasma-supply-chain-attack-spreads-through-the-phantom-gyp-worm/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Stage Capabilities: Upload Malware">T1608.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer legitimately installing Bun v1.3.13 via curl for a real project</li><li>CI pipeline that provisions Bun as a build dependency</li><li>Dockerfile build step pulling that exact Bun release</li><li>Mirror/proxy cache warmers fetching the oven-sh release artifact</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;docker.exe&quot;,&quot;dockerd&quot;,&quot;buildkitd&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the parent process is node/npm (not an interactive shell or Dockerfile RUN) and check whether index.js / binding.gyp execution (UC1) preceded it on the same host within minutes. 2) Contain: isolate the host/runner, block egress to the temp-dir Bun binary, kill the process tree, and rotate all reachable cloud/CI credentials. 3) Hunt: inspect the temp directory for the unzipped bun binary, look for subsequent credential-file reads (~/.npmrc, ~/.aws, ~/.config/gcloud, kube config, Vault tokens) and outbound GitHub API calls used for exfil.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-233-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-233-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-233-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-233-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-233-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where ProcessCommandLine has &quot;oven-sh/bun/releases/download/bun-v1.3.13&quot;
+| project Timestamp, DeviceName, AccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-233-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessCommandLine has &quot;oven-sh/bun/releases/download/bun-v1.3.13&quot;
+| project TimeGenerated, DvcHostname, ActorUsername,
+          ParentProcessName, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-233-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Miasma Worm Downloads Standalone Bun v1.3.13 from oven-sh Releases
+id: a4e7c612-3f9d-4b88-9c14-2d6e1a0f7b33
+description: Detects the Miasma/Phantom Gyp loader fetching a standalone Bun v1.3.13 runtime from the oven-sh GitHub releases CDN as a second-stage execution host
+references:
+  - https://snyk.io/blog/node-gyp-supply-chain-compromise-self-propagating-npm-worm-binding-gyp/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.t1105
+logsource:
+  category: process_creation
+detection:
+  selection:
+    CommandLine|contains: &#x27;oven-sh/bun/releases/download/bun-v1.3.13&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-233-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @process.command_line:*oven-sh/bun/releases/download/bun-v1.3.13*</code></pre></div>
+    <div class="tab-content" id="art-233-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 | regex(&quot;oven-sh/bun/releases/download/bun-v1\.3\.13&quot;, field=CommandLine) | groupBy([aid, ComputerName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-233-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*oven-sh/bun/releases/download/bun-v1.3.13*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-233-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*oven-sh/bun/releases/download/bun-v1.3.13*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="820dfe53b2" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Miasma GitHub Actions workflow injection for persistence by node payload</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="820dfe53b2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the Miasma worm injecting GitHub Actions workflow files (.github/workflows/*.yml) for persistence, written by a node/npm process rather than a developer&#x27;s editor. Targets the persistence step that lets the worm re-trigger and re-exfiltrate from CI.
+
+Rationale: The article and StepSecurity both state the worm &#x27;injects GitHub Actions workflows for persistence&#x27;; constraining the writer to node/npm/bun (the install-time payload host) separates worm injection from a developer authoring workflows in an editor.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm
+  • https://cybersecuritynews.com/binding-gyp-supply-chain-attack-compromises-dozens-of-npm-packages/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Event Triggered Execution">T1546</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A scaffolding tool (e.g. a generator run via node) legitimately creating .github/workflows during project init</li><li>Yeoman/create-* CLIs writing CI templates</li><li>A node-based codemod that rewrites workflow files in bulk</li><li>Renovate/Dependabot-style automation editing workflows locally</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;create-&quot; and InitiatingProcessCommandLine !has &quot;yo &quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the written workflow yaml — look for steps that exfiltrate env/secrets, curl to attacker GitHub repos, or re-run the install payload; correlate with UC1/UC2 on the same host. 2) Contain: revert/remove the injected workflow, revoke the repo&#x27;s Actions tokens and any GITHUB_TOKEN/PAT, and rotate cloud secrets stored as Actions secrets. 3) Hunt: enumerate all repos the compromised maintainer account can push to for the same injected workflow, and review recent npm publish events from that account.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-233-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-233-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-233-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-233-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-233-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where FolderPath has &quot;\\.github\\workflows\\&quot; or FolderPath has &quot;/.github/workflows/&quot;
+| where FileName endswith &quot;.yml&quot; or FileName endswith &quot;.yaml&quot;
+| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;node.exe&quot;,&quot;npm&quot;,&quot;npm.cmd&quot;,&quot;bun&quot;,&quot;bun.exe&quot;)
+| project Timestamp, DeviceName, FolderPath, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-233-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFilePath has &quot;/.github/workflows/&quot; or TargetFilePath has &quot;\\.github\\workflows\\&quot;
+| where TargetFileExtension in~ (&quot;yml&quot;,&quot;yaml&quot;)
+| where ActingProcessName has_any (&quot;node&quot;,&quot;npm&quot;,&quot;bun&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-233-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: GitHub Actions Workflow File Written by Node Process (Miasma Persistence)
+id: b8d3f2a7-91c4-4e6b-8a52-0f7c3d9e1b44
+description: Detects a node/npm/bun process writing a GitHub Actions workflow yml/yaml, matching the Miasma worm&#x27;s CI persistence injection
+references:
+  - https://snyk.io/blog/node-gyp-supply-chain-compromise-self-propagating-npm-worm-binding-gyp/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.t1546
+  - attack.t1195.002
+logsource:
+  category: file_event
+detection:
+  selection:
+    TargetFilename|contains:
+      - &#x27;\.github\workflows\&#x27;
+      - &#x27;/.github/workflows/&#x27;
+    Image|endswith:
+      - &#x27;\node.exe&#x27;
+      - &#x27;/node&#x27;
+      - &#x27;\bun.exe&#x27;
+      - &#x27;/bun&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-233-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\.github\workflows\* OR */.github/workflows/*) @Image:(*\node.exe OR */node OR *\bun.exe)</code></pre></div>
+    <div class="tab-content" id="art-233-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten | regex(&quot;[\\/]\.github[\\/]workflows[\\/].*\.ya?ml$&quot;, field=TargetFileName) | ContextImageFileName=/(node|npm|bun)(\.exe)?$/i | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-233-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*/.github/workflows/*&quot; (Filesystem.file_name=&quot;*.yml&quot; OR Filesystem.file_name=&quot;*.yaml&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;bun.exe&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-233-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*/.github/workflows/*&quot; (Filesystem.file_name=&quot;*.yml&quot; OR Filesystem.file_name=&quot;*.yaml&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;npm&quot;,&quot;bun&quot;,&quot;bun.exe&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="c3fe4af0f5" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Miasma/Node-gyp loader file hashes present on developer or CI host</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="c3fe4af0f5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Alerts on any of the seven published Miasma loader SHA256 (and SHA1) hashes appearing as a written or executed file on endpoints/CI runners. Direct IOC match for the obfuscated index.js loader chain from the Node-gyp Supply Chain Compromise - June 2026.
+
+Rationale: Uses the seven SHA256 and three SHA1 hashes pre-extracted from the article (the Miasma loader chain); a direct hash hit is unambiguous TP and requires no behavioral inference.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm
+  • https://snyk.io/blog/node-gyp-supply-chain-compromise-self-propagating-npm-worm-binding-gyp/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel/sandbox host intentionally storing the sample for analysis</li><li>SOAR enrichment that downloads the IOC file for sandboxing</li><li>Backup/AV quarantine copy of the same file re-hashed on a second host</li><li>Hash collision (negligible for SHA256)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the file path and the npm package@version it belongs to (node_modules/...); confirm whether it was merely written or also executed (correlate with UC1). 2) Contain: isolate the host/runner, delete/quarantine the file, and rotate every credential reachable from that host (npm, GitHub, AWS, GCP, Azure, Vault, Kubernetes). 3) Hunt: pivot on the package versions named in the Snyk advisory (@vapi-ai/server-sdk 0.11.1/0.11.2/1.2.1/1.2.2, ai-sdk-ollama, autotel 2.26.4/3.4.3, awaitly 1.33.3) across all lockfiles and CI caches in the estate.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-233-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-233-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-233-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-233-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-233-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let badSha256 = dynamic([&quot;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&quot;,&quot;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&quot;,&quot;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&quot;,&quot;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&quot;,&quot;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&quot;,&quot;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&quot;,&quot;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&quot;]);
+let badSha1 = dynamic([&quot;8bf051251ec3b973e39a313547e53421a2f8d2f6&quot;,&quot;608d01124cd6b5b8c55888e984b4c4d9b06fa686&quot;,&quot;ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7&quot;]);
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where SHA256 in~ (badSha256) or SHA1 in~ (badSha1)
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-233-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let badSha256 = dynamic([&quot;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&quot;,&quot;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&quot;,&quot;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&quot;,&quot;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&quot;,&quot;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&quot;,&quot;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&quot;,&quot;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&quot;]);
+ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileSHA256 in~ (badSha256)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-233-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Miasma Node-gyp Supply Chain Loader Hashes Observed
+id: c1a9e4d8-72b5-4f31-9e63-5b2d8f0c6a77
+description: File-hash IOC match for the Miasma/Phantom Gyp obfuscated loader from the Node-gyp Supply Chain Compromise June 2026
+references:
+  - https://snyk.io/blog/node-gyp-supply-chain-compromise-self-propagating-npm-worm-binding-gyp/
+author: SOC Detection Engineering
+date: 2026/06/26
+tags:
+  - attack.t1195.002
+logsource:
+  category: file_event
+detection:
+  selection_sha256:
+    SHA256:
+      - &#x27;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&#x27;
+      - &#x27;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&#x27;
+      - &#x27;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&#x27;
+      - &#x27;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&#x27;
+      - &#x27;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&#x27;
+      - &#x27;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&#x27;
+      - &#x27;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&#x27;
+  selection_sha1:
+    SHA1:
+      - &#x27;8bf051251ec3b973e39a313547e53421a2f8d2f6&#x27;
+      - &#x27;608d01124cd6b5b8c55888e984b4c4d9b06fa686&#x27;
+      - &#x27;ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7&#x27;
+  condition: selection_sha256 or selection_sha1
+level: high</code></pre></div>
+    <div class="tab-content" id="art-233-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @Hashes:(*EF641E956F91D501B748085996303C96A64D67F63BFEEF0DDA175E5AA19CCA90* OR *5926B86B642E00672252953EB30D8F75CFB7797FE3118BD6FA2CFBEE92905D61* OR *CEFF7C51D70832C3EC8DD2744B606A23B3C924EF664AE23439B9B742EA154108*)</code></pre></div>
+    <div class="tab-content" id="art-233-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 SHA256HashData=/(ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90|5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61|ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108|da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707|e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1|82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a|288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a)/i | groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-233-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN (&quot;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&quot;,&quot;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&quot;,&quot;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&quot;,&quot;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&quot;,&quot;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&quot;,&quot;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&quot;,&quot;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&quot;,&quot;8bf051251ec3b973e39a313547e53421a2f8d2f6&quot;,&quot;608d01124cd6b5b8c55888e984b4c4d9b06fa686&quot;,&quot;ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-233-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN (&quot;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&quot;,&quot;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&quot;,&quot;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&quot;,&quot;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&quot;,&quot;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&quot;,&quot;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&quot;,&quot;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&quot;,&quot;8bf051251ec3b973e39a313547e53421a2f8d2f6&quot;,&quot;608d01124cd6b5b8c55888e984b4c4d9b06fa686&quot;,&quot;ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
     <span class="uc-phase">Command &amp; Control</span>
@@ -9441,11 +9722,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-233-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-233-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-233-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -9458,7 +9739,7 @@ DeviceFileEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-233-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -9468,7 +9749,7 @@ DeviceFileEvents
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-233-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -9477,7 +9758,7 @@ DeviceFileEvents
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-233-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-233-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -9513,11 +9794,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-233-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-233-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-233-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -9557,7 +9838,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-233-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -9582,7 +9863,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-233-uc5-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -9614,7 +9895,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-233-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-233-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -9664,19 +9945,19 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-233-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-233-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-233-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-233-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-233-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-233-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-233-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -9690,7 +9971,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-233-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -9734,7 +10015,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-233-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -9742,7 +10023,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-233-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-233-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -9768,19 +10049,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-233-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-233-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-233-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-233-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-233-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-233-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-233-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -9791,7 +10072,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
+    <div class="tab-content" id="art-233-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
 status: experimental
 description: |
@@ -9837,7 +10118,7 @@ falsepositives:
       cross-shell escaping
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-233-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -9846,7 +10127,7 @@ level: high
         OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*Net.WebClient*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-233-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-233-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -9873,18 +10154,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-233-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-233-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-233-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-233-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-233-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-233-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-233-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -9904,7 +10185,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-233-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -9946,12 +10227,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-233-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-233-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-233-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
@@ -9974,12 +10255,12 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-233-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-233-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-233-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-233-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+    <div class="tab-content active" id="art-233-uc9-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
 // predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
 // (Initiating only) so column-projection has to differ per side.
 union
@@ -9997,7 +10278,7 @@ union
                   Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+    <div class="tab-content" id="art-233-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
 // Defender version so the engine can push hash predicates per-side.
 let BadHashes = dynamic([&quot;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&quot;, &quot;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&quot;, &quot;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&quot;, &quot;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&quot;, &quot;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&quot;, &quot;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&quot;, &quot;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&quot;, &quot;8bf051251ec3b973e39a313547e53421a2f8d2f6&quot;, &quot;608d01124cd6b5b8c55888e984b4c4d9b06fa686&quot;, &quot;ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7&quot;]);
 union
@@ -10020,7 +10301,7 @@ union
                   Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+    <div class="tab-content" id="art-233-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
 status: experimental
 description: |
@@ -10046,7 +10327,7 @@ falsepositives:
     - None on a true-positive hash match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-233-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-233-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&quot;, &quot;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&quot;, &quot;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&quot;, &quot;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&quot;, &quot;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&quot;, &quot;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&quot;, &quot;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&quot;, &quot;8bf051251ec3b973e39a313547e53421a2f8d2f6&quot;, &quot;608d01124cd6b5b8c55888e984b4c4d9b06fa686&quot;, &quot;ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
@@ -10055,7 +10336,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Endpoint.Processes
         where Processes.process_hash IN (&quot;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&quot;, &quot;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&quot;, &quot;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&quot;, &quot;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&quot;, &quot;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&quot;, &quot;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&quot;, &quot;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&quot;, &quot;8bf051251ec3b973e39a313547e53421a2f8d2f6&quot;, &quot;608d01124cd6b5b8c55888e984b4c4d9b06fa686&quot;, &quot;ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-233-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-233-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90&quot;, &quot;5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61&quot;, &quot;ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108&quot;, &quot;da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707&quot;, &quot;e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1&quot;, &quot;82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a&quot;, &quot;288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a&quot;, &quot;8bf051251ec3b973e39a313547e53421a2f8d2f6&quot;, &quot;608d01124cd6b5b8c55888e984b4c4d9b06fa686&quot;, &quot;ab9903d9edc720d1e11ea7d3d3e7a1c456f44ff7&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
@@ -10082,11 +10363,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-233-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-233-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-233-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-233-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind
+    <div class="tab-content active" id="art-233-uc10-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -10106,7 +10387,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-233-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind
@@ -10129,7 +10410,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind ```
+    <div class="tab-content" id="art-233-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc10-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;index.js&quot;,&quot;node.js&quot;))
@@ -10145,7 +10426,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-233-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind ```
+]</code></pre><pre class="spl-mode-body" id="art-233-uc10-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;index.js&quot;,&quot;node.js&quot;))

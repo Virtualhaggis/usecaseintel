@@ -10,7 +10,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-26
 - [google details turla s new stockstay backdoor used in ukrain](./2026-06-26/google-details-turla-s-new-stockstay-backdoor-used-in-ukrain.md)
-- [russia used cellebrite on jailed activist s iphone months af](./2026-06-26/russia-used-cellebrite-on-jailed-activist-s-iphone-months-af.md)
+- [miasma malware targets npm packages and github actions in su](./2026-06-26/miasma-malware-targets-npm-packages-and-github-actions-in-su.md)
+- [microsoft warns of photo zip phishing campaign targeting hot](./2026-06-26/microsoft-warns-of-photo-zip-phishing-campaign-targeting-hot.md)
+- [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
 
 ## 2026-06-25
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-25/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
@@ -92,7 +94,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
-- [dragonforce hackers abuse microsoft teams relays to hide bac](./2026-06-18/dragonforce-hackers-abuse-microsoft-teams-relays-to-hide-bac.md)
 - [f5 patches two critical nginx open source flaws enabling rem](./2026-06-18/f5-patches-two-critical-nginx-open-source-flaws-enabling-rem.md)
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
@@ -125,7 +126,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 
 ## 2026-06-17
-- [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
