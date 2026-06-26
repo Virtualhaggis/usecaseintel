@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### GentleKiller BYOVD vulnerable/malicious driver load (The Gentlemen RaaS)
 
-`UC_79_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_81_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceImageLoadEvents
 
 ### GentleKiller BYOVD driver service installation (kernel-mode service)
 
-`UC_79_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_81_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceRegistryEvents
 
 ### OxideHarvest Rust stealer multi-browser credential harvesting
 
-`UC_79_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_81_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### The Gentlemen EDR-killer mass security-service termination
 
-`UC_79_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_81_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -260,7 +260,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Gentlemen RaaS Uses GentleKiller EDR Framework Targeting 400 Security Proces
 
-`UC_79_6` · phase: **exploit** · confidence: **High**
+`UC_81_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Sequelize ORM npm library found vulnerable to SQL Injection attacks
 
-`UC_3178_1` · phase: **exploit** · confidence: **High**
+`UC_3179_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

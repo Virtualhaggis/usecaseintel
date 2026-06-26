@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious durabletask PyPI dropper fetches rope.pyz to /tmp and detaches python3
 
-`UC_325_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_326_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### Beaconing to check.git-service.com C2 and FIRESCALE GitHub dead-drop fallback
 
-`UC_325_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_326_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### rope.pyz mass credential & AI-tooling config harvest by /tmp python process
 
-`UC_325_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_326_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceFileEvents
 
 ### rope.pyz cloud-credential pivot: IMDS theft + multi-region Secrets/SSM enumeration
 
-`UC_325_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_326_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceNetworkEvents
 
 ### rope.pyz Kubernetes propagation: /tmp/kubectl download and kubectl exec worming
 
-`UC_325_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_326_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceProcessEvents
 
 ### rope.pyz destructive payload: rm -rf /* wipe on Israeli/Iranian locale hosts
 
-`UC_325_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_326_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -337,7 +337,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft's durabletask package on PyPi Compromised. Mini Shai Hulud attacks aga
 
-`UC_325_7` · phase: **exploit** · confidence: **High**
+`UC_326_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

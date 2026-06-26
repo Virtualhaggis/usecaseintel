@@ -1,12 +1,16 @@
 # Briefings — full archive
 
-_2246 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-26
+- [google details turla s new stockstay backdoor used in ukrain](./2026-06-26/google-details-turla-s-new-stockstay-backdoor-used-in-ukrain.md)
+- [russia used cellebrite on jailed activist s iphone months af](./2026-06-26/russia-used-cellebrite-on-jailed-activist-s-iphone-months-af.md)
 
 ## 2026-06-25
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-25/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
@@ -126,7 +130,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
-- [junior hacker used tailscale and openssh to keep access afte](./2026-06-17/junior-hacker-used-tailscale-and-openssh-to-keep-access-afte.md)
 - [over 140 popular mastra npm packages hit by supply chain att](./2026-06-17/over-140-popular-mastra-npm-packages-hit-by-supply-chain-att.md)
 
 ## 2026-06-16

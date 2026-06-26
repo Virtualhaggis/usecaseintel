@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious 'postmark-mcp' MCP package or known supply-chain payload written to developer device
 
-`UC_191_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_192_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceFileEvents
 
 ### Exfil/C2 callout to postmark-mcp BCC domain giftshop.club
 
-`UC_191_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_192_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceNetworkEvents
 
 ### GlassWorm C2 / ZOMBI payload beacon to known Vultr infrastructure
 
-`UC_191_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_192_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
