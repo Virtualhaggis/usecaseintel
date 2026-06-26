@@ -14,14 +14,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [bluekit phishing kit adopts browser in the middle for login ](./2026-06-25/bluekit-phishing-kit-adopts-browser-in-the-middle-for-login-.md)
 - [chrome ad blocker with 10m installs found with dormant scrip](./2026-06-25/chrome-ad-blocker-with-10m-installs-found-with-dormant-scrip.md)
 - [cisco catalyst sd wan zero day cve 2026 20245 exploited to g](./2026-06-25/cisco-catalyst-sd-wan-zero-day-cve-2026-20245-exploited-to-g.md)
+- [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-06-25/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [microsoft a leader in the forrester wave for endpoint manage](./2026-06-25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-manage.md)
 - [new gaslight macos malware uses prompt injection to disrupt ](./2026-06-25/new-gaslight-macos-malware-uses-prompt-injection-to-disrupt-.md)
+- [new macos malware embeds fake errors to confuse ai analysis ](./2026-06-25/new-macos-malware-embeds-fake-errors-to-confuse-ai-analysis-.md)
 - [new mistic backdoor linked to kongtuke in clickfix and model](./2026-06-25/new-mistic-backdoor-linked-to-kongtuke-in-clickfix-and-model.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 - [order tracking app shop abused to push callback phishing att](./2026-06-25/order-tracking-app-shop-abused-to-push-callback-phishing-att.md)
+- [pirlotv sports piracy network disrupted as 44 domains seized](./2026-06-25/pirlotv-sports-piracy-network-disrupted-as-44-domains-seized.md)
 - [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
 
 ## 2026-06-24
@@ -33,8 +36,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cordyceps ci cd flaws expose 300 github repositories to supp](./2026-06-24/cordyceps-ci-cd-flaws-expose-300-github-repositories-to-supp.md)
 - [malicious edge extension abuses native messaging as bridge t](./2026-06-24/malicious-edge-extension-abuses-native-messaging-as-bridge-t.md)
 - [mandiant reveals how cisco sd wan zero day attacks gained ro](./2026-06-24/mandiant-reveals-how-cisco-sd-wan-zero-day-attacks-gained-ro.md)
-- [securing the service desk why social engineering attacks kee](./2026-06-24/securing-the-service-desk-why-social-engineering-attacks-kee.md)
-- [stealthy mistic backdoor linked to ransomware access broker ](./2026-06-24/stealthy-mistic-backdoor-linked-to-ransomware-access-broker-.md)
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
@@ -285,7 +286,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
-- [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)

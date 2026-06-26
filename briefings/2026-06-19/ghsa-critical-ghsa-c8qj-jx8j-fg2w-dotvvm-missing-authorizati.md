@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable DotVVM version in software inventory (<4.2.11 / <4.3.15 / <5.0.0-preview09)
 
-`UC_77_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_78_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -54,7 +54,7 @@ DeviceTvmSoftwareInventory
 
 ### DotVVM framework assembly deployed/loaded on endpoints — exposure hunt for GHSA-c8qj-jx8j-fg2w
 
-`UC_77_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_78_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

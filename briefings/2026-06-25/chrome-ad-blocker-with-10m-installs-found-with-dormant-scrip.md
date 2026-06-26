@@ -1,4 +1,4 @@
-# [CRIT] Chrome Ad Blocker with 10M+ Installs Found with Dormant Script Injection Capability
+# [HIGH] Chrome Ad Blocker with 10M+ Installs Found with Dormant Script Injection Capability
 
 **Source:** The Hacker News
 **Published:** 2026-06-25
@@ -14,20 +14,64 @@ The extension description sta…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-11645`
+- **Domain (defanged):** `api.adblock-for-youtube.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
+- **T1071** — Application Layer Protocol
+- **T1185** — Browser Session Hijacking
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Risky/removed Chrome ad-block extension IDs present on endpoint (Island 'Adblock for YouTube' set)
+
+`UC_12_3` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*cmedhionkhpnakcndndgjdbohmhepckk*" OR Filesystem.file_path="*onomjaelhagjjojbkcafidnepbfkpnee*" OR Filesystem.file_path="*ogcaehilgakehloljjmajoempaflmdci*" OR Filesystem.file_path="*gekoepiplklhniacchbbgbhilidiojmb*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let extIds = dynamic(["cmedhionkhpnakcndndgjdbohmhepckk","onomjaelhagjjojbkcafidnepbfkpnee","ogcaehilgakehloljjmajoempaflmdci","gekoepiplklhniacchbbgbhilidiojmb"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has_any (extIds)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","chrome_proxy.exe","opera.exe")
+| extend MatchedExtId = extract(@"(cmedhionkhpnakcndndgjdbohmhepckk|onomjaelhagjjojbkcafidnepbfkpnee|ogcaehilgakehloljjmajoempaflmdci|gekoepiplklhniacchbbgbhilidiojmb)", 1, FolderPath)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), FileWrites=count(), SampleFolder=any(FolderPath) by DeviceName, InitiatingProcessAccountName, MatchedExtId
+| order by LastSeen desc
+```
+
+### Browser beacon to Adblock for YouTube config/activation backend (api.adblock-for-youtube.com)
+
+`UC_12_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*adblock-for-youtube.com*" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "adblock-for-youtube.com"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), Hosts=dcount(DeviceName), RemoteIPs=make_set(RemoteIP, 10) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl
+| order by LastSeen desc
+```
 
 ### Suspicious browser extension installation
 
@@ -87,10 +131,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-11645`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `api.adblock-for-youtube.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -11,12 +11,8 @@ By Bill Toulas
 June 25, 2026
 03:45 PM
 0 
-
-
 Threat actors are increasingly abusing Shop, the order-tracking app from Shopify, by adding fake purchase receipts in users' order histories to trick them into providing sensitive data or installing remote access software.
-
-
-The Shop digital shopping assistant serves as a centralized platform where users can track orders from multiple online retailers, access receipts and shipping up…
+The Shop digital shopping assistant serves as a centralized platform where users can track orders from multiple online retailers, access receipts and shipping updates, a…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -13,21 +13,94 @@ For most of the last two years, the loudest supply chain attacks lived in npm an
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `103.127.243.82`
+- **Domain (defanged):** `fasterxml.org`
+- **Domain (defanged):** `m.fasterxml.org`
+- **SHA256:** `8bce95ebfb895537fec243e069d7193980361de9d916339906b11a14ffded94f`
+- **SHA256:** `702161756dfd150ad3c214fbf97ce98fdc960ea7b3970b5300702ed8c953cafd`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Jackson Maven typosquat C2 — beacon to fasterxml.org / 103.127.243.82
+
+`UC_9_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*fasterxml.org*" by DNS.src DNS.dest DNS.query 
+| `drop_dm_object_name("DNS")` 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "fasterxml.org" or RemoteIP == "103.127.243.82"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Java/Spring drops & runs svchosts.exe (svchost masquerade) — Jackson typosquat implant
+
+`UC_9_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="svchosts.exe" OR (Processes.parent_process_name IN ("java.exe","javaw.exe") AND Processes.process_name="svchosts.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path 
+| `drop_dm_object_name("Processes")` 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "svchosts.exe"
+   or SHA256 in ("8bce95ebfb895537fec243e069d7193980361de9d916339906b11a14ffded94f","702161756dfd150ad3c214fbf97ce98fdc960ea7b3970b5300702ed8c953cafd")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### Jackson typosquat Cobalt Strike implant hash sighting (Win + macOS/Linux)
+
+`UC_9_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("8bce95ebfb895537fec243e069d7193980361de9d916339906b11a14ffded94f","702161756dfd150ad3c214fbf97ce98fdc960ea7b3970b5300702ed8c953cafd") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash 
+| `drop_dm_object_name("Filesystem")` 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in ("8bce95ebfb895537fec243e069d7193980361de9d916339906b11a14ffded94f","702161756dfd150ad3c214fbf97ce98fdc960ea7b3970b5300702ed8c953cafd")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -117,7 +190,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `103.127.243.82`, `fasterxml.org`, `m.fasterxml.org`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `8bce95ebfb895537fec243e069d7193980361de9d916339906b11a14ffded94f`, `702161756dfd150ad3c214fbf97ce98fdc960ea7b3970b5300702ed8c953cafd`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
