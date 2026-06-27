@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### FortigateSniffer credential capture via native 'diagnose sniffer packet' on FortiGate
 
-`UC_62_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_64_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate admin/SSL-VPN credential stuffing burst followed by successful login
 
-`UC_62_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_64_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### Single FortiGate VPN/admin account authenticating from anomalously many source IPs
 
-`UC_62_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_64_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ _(none detected from narrative keywords)_
 
 ### Mass validation/replay of harvested credentials against Active Directory (NTLM/Kerberos fan-out)
 
-`UC_62_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_64_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

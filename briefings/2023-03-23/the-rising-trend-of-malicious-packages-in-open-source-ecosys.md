@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### npm/pip lifecycle-script curl exfil of host recon (Hostname:/Whoami:/Pwd: POST)
 
-`UC_1709_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1710_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Outbound connection to malicious-package C2 endpoint 3.72.6.53
 
-`UC_1709_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1710_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### Install of named malicious packages by actor ypvpctpbamdhxtkzdu (django-yauth et al.)
 
-`UC_1709_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1710_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

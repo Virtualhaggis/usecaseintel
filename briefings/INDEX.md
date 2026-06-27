@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-27
 - [openai previews gpt 5 6 sol with restricted access and stron](./2026-06-27/openai-previews-gpt-5-6-sol-with-restricted-access-and-stron.md)
+- [ukraine says russian intelligence used fake support texts to](./2026-06-27/ukraine-says-russian-intelligence-used-fake-support-texts-to.md)
 
 ## 2026-06-26
 - [amazon q developer flaw could let malicious repos run code v](./2026-06-26/amazon-q-developer-flaw-could-let-malicious-repos-run-code-v.md)
@@ -37,6 +38,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco catalyst sd wan zero day cve 2026 20245 exploited to g](./2026-06-25/cisco-catalyst-sd-wan-zero-day-cve-2026-20245-exploited-to-g.md)
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
+- [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
 - [gamaredon in 2025 leveraging tunnels workers dead drops and ](./2026-06-25/gamaredon-in-2025-leveraging-tunnels-workers-dead-drops-and-.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-06-25/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)

@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Open source maintainer pulls the plug on npm packages colors and faker, now what
 
-`UC_2500_1` · phase: **exploit** · confidence: **High**
+`UC_2501_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

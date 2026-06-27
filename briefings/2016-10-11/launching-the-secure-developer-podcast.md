@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Launching "The Secure Developer" Podcast
 
-`UC_3371_0` · phase: **exploit** · confidence: **High**
+`UC_3372_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

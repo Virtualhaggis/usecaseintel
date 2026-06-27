@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### CircleCI breach C2 beacon to potrax[.]com / threat-actor IP set
 
-`UC_1776_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1777_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### PTX-Player.dmg implant dropped (CircleCI breach malware hash)
 
-`UC_1776_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_1777_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ union
 
 ### Use of exfiltrated secrets — AWS API activity from CircleCI breach actor IPs
 
-`UC_1776_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1777_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
