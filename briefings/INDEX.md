@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -2099,7 +2099,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-06-07
 - [cisa kev cve 2023 3079 google chromium v8 type confusion vul](./2023-06-07/cisa-kev-cve-2023-3079-google-chromium-v8-type-confusion-vul.md)
-- [high profile aws breaches how to avoid them](./2023-06-07/high-profile-aws-breaches-how-to-avoid-them.md)
 - [reduce risk to your supply chain with a software bill of mat](./2023-06-07/reduce-risk-to-your-supply-chain-with-a-software-bill-of-mat.md)
 - [snyk welcomes enso enabling security leaders to scale their ](./2023-06-07/snyk-welcomes-enso-enabling-security-leaders-to-scale-their-.md)
 - [snyklaunch june 23 insights and deepcode ai enable faster fi](./2023-06-07/snyklaunch-june-23-insights-and-deepcode-ai-enable-faster-fi.md)

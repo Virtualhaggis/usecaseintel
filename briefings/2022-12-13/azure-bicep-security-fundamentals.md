@@ -19,6 +19,8 @@ Azure Bicep is getting more popular by the day and is rapidly becoming the repla
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
@@ -26,9 +28,22 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Storage account key retrieval (listKeys) inside an ARM/Bicep deployment — secret-in-output leak vector
+
+`UC_1792_1` · phase: **actions** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.command="Microsoft.Storage/storageAccounts/listKeys/action" All_Changes.status="Succeeded" by All_Changes.user All_Changes.src All_Changes.object All_Changes.result
+| `drop_dm_object_name("All_Changes")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
 ### Article-specific behavioural hunt — Azure Bicep security fundamentals
 
-`UC_1793_0` · phase: **exploit** · confidence: **High**
+`UC_1792_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,4 +93,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

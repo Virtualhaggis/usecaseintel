@@ -23,12 +23,102 @@ Supply chain att…
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
+- **T1491.001** — Defacement: Internal Defacement
+- **T1485** — Data Destruction
+- **T1195.001** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
+- **T1105** — Ingress Tool Transfer
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### node-ipc/peacenotwar protestware drops WITH-LOVE-FROM-AMERICA.txt on Desktop/OneDrive
+
+`UC_1832_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="WITH-LOVE-FROM-AMERICA.txt" (Filesystem.file_path="*\\Desktop\\*" OR Filesystem.file_path="*OneDrive*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "WITH-LOVE-FROM-AMERICA.txt"
+| where FolderPath has_any (@"\Desktop\", @"\OneDrive")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### node-ipc destructive wiper component ssl-geospec.js written under node_modules\node-ipc\dao
+
+`UC_1832_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="ssl-geospec.js" Filesystem.file_path="*\\node-ipc\\*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "ssl-geospec.js"
+| where FolderPath has @"\node-ipc\"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Lockfile injection: npm/yarn fetching dependencies from GitHub gist/repo instead of the registry
+
+`UC_1832_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN ("codeload.github.com","gist.githubusercontent.com","raw.githubusercontent.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe")
+   or InitiatingProcessCommandLine has_any ("npm install","npm ci","yarn install","yarn add")
+| where RemoteUrl has_any ("codeload.github.com","gist.githubusercontent.com","raw.githubusercontent.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### npm/yarn install-script (postinstall) spawning download LOLBins for secret theft / payload fetch
+
+`UC_1832_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","yarn.exe")) AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","certutil.exe","bitsadmin.exe","wget.exe","mshta.exe","wscript.exe","cscript.exe")) AND (Processes.process="*http*" OR Processes.process="*DownloadString*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*Net.WebClient*" OR Processes.process="*-urlcache*") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe")
+   or InitiatingProcessCommandLine has_any ("npm install","npm ci","yarn install","postinstall","preinstall")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","certutil.exe","bitsadmin.exe","wget.exe","mshta.exe","wscript.exe","cscript.exe")
+| where ProcessCommandLine has_any ("http://","https://","DownloadString","Invoke-WebRequest","-urlcache","Net.WebClient","iwr ")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -91,7 +181,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — NPM security: preventing supply chain attacks
 
-`UC_1833_3` · phase: **exploit** · confidence: **High**
+`UC_1832_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,4 +238,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

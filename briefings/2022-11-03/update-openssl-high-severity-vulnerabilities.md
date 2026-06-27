@@ -1,4 +1,4 @@
-# [HIGH] Update: OpenSSL high severity vulnerabilities
+# [CRIT] Update: OpenSSL high severity vulnerabilities
 
 **Source:** Snyk
 **Published:** 2022-11-03
@@ -20,12 +20,35 @@ What is Buffer overrun? A buffer overrun/overflow is a specific type of runtime 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Vulnerable OpenSSL 3.0.0–3.0.6 exposure (CVE-2022-3602 / CVE-2022-3786, 'SpookySSL')
+
+`UC_1842_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2022-3602","CVE-2022-3786")) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.category 
+| `drop_dm_object_name(Vulnerabilities)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2022-3602", "CVE-2022-3786")
+    or (SoftwareName has "openssl" and SoftwareVersion in ("3.0.0","3.0.1","3.0.2","3.0.3","3.0.4","3.0.5","3.0.6"))
+| summarize arg_max(Timestamp, *) by DeviceId, CveId, SoftwareVersion
+| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
+```
 
 ### IOC-driven hunts (use shared templates)
 
@@ -37,4 +60,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

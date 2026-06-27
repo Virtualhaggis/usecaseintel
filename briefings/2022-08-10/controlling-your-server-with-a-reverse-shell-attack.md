@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Controlling your server with a reverse shell attack
 
-`UC_1976_1` · phase: **exploit** · confidence: **High**
+`UC_1975_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

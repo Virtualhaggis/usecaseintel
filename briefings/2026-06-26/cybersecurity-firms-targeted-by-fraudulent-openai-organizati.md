@@ -11,16 +11,12 @@ By Lawrence Abrams
 June 26, 2026
 01:49 PM
 0 
-
-
 Threat actors are creating OpenAI tenants that impersonate legitimate companies and inviting employees to join them, in what appears to be a ploy to trick targets into submitting sensitive company information in chats and projects.
-
-
-Push Security discovered what they dub as the "Poisoned Tenant" campaign after multiple employees received invitations to join an OpenAI organ…
+Push Security discovered what they dub as the "Poisoned Tenant" campaign after multiple employees received invitations to join an OpenAI organization …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `tm.openai.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,12 +27,60 @@ Push Security discovered what they dub as the "Poisoned Tenant" campaign after m
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1071** — Application Layer Protocol
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1656** — Impersonation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Inbound OpenAI org-invite email from noreply@tm.openai.com impersonating own company
+
+`UC_5_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.src_user="noreply@tm.openai.com" AND All_Email.subject="*invited to the organization*on OpenAI*" by All_Email.recipient, All_Email.src_user, All_Email.subject
+| `drop_dm_object_name(All_Email)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+EmailEvents
+| where Timestamp > ago(30d)
+| where EmailDirection == "Inbound"
+| where SenderFromAddress =~ "noreply@tm.openai.com" or SenderMailFromDomain =~ "tm.openai.com"
+| where Subject contains "invited to the organization" and Subject contains "on OpenAI"
+| where DeliveryAction in ("Delivered","DeliveredAsSpam")
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, AuthenticationDetails
+| order by Timestamp desc
+```
+
+### Employee clicked OpenAI org-invite accept link from fraudulent tenant invite
+
+`UC_5_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let Invites = EmailEvents
+    | where Timestamp > ago(30d)
+    | where EmailDirection == "Inbound"
+    | where SenderFromAddress =~ "noreply@tm.openai.com" or SenderMailFromDomain =~ "tm.openai.com"
+    | where Subject contains "invited to the organization"
+    | project NetworkMessageId, Subject, SenderFromAddress, RecipientEmailAddress, EmailTime = Timestamp;
+UrlClickEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("ClickAllowed","ClickedThrough")
+| join kind=inner Invites on NetworkMessageId
+| project ClickTime = Timestamp, AccountUpn, Url, ActionType, IsClickedThrough, RecipientEmailAddress, SenderFromAddress, Subject, EmailTime, NetworkMessageId
+| order by ClickTime desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -186,7 +230,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `tm.openai.com`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -11,17 +11,9 @@ By Bill Toulas
 June 26, 2026
 02:04 PM
 0 
-
-
 Polymarket says it will fully reimburse customers who lost an estimated $3 million after hackers injected a malicious script into the platform's frontend following a breach at a third-party vendor.
-
-
 The company states in a brief announcement that the hack was the result of a supply-chain attack that impacted a dependency on its website.
-
-
-
-
-Polymarket is one of the world's largest cr…
+Polymarket is one of the world's largest cryptocurrency-bas…
 
 ## Indicators of Compromise (high-fidelity only)
 

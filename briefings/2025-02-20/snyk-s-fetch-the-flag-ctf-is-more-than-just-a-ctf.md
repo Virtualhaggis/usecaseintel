@@ -23,12 +23,60 @@ Register here But Capture the Flag sometimes gets a bad rap… with the occasion
 
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Apache Spark CVE-2022-33891 doAs command injection — shell spawned by Spark JVM running 'id -Gn' with metacharacters
+
+`UC_999_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*org.apache.spark*" OR Processes.parent_process_name=java) Processes.process_name IN ("bash","sh","dash") Processes.process="*id -Gn*" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| where match(process, "id -Gn.*([`;|&]|\$\()")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has_any ("java","spark-class","spark-submit") or InitiatingProcessCommandLine has "org.apache.spark"
+| where FileName in~ ("bash","sh","dash")
+| where ProcessCommandLine has "id -Gn"
+| where ProcessCommandLine has_any ("`","$(",";","|","&&")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### GitPython CVE-2022-24439 RCE — git 'ext::sh' transport command injection via crafted clone URL
+
+`UC_999_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*ext::sh*" OR (Processes.parent_process_name=git-remote-ext AND Processes.process_name IN ("sh","bash","dash"))) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "ext::sh"
+    or InitiatingProcessCommandLine has "ext::sh"
+    or (InitiatingProcessFileName =~ "git-remote-ext" and FileName in~ ("sh","bash","dash"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -64,4 +112,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

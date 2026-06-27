@@ -151,7 +151,7 @@ _(none detected from narrative keywords)_
 
 ### PowerShell-parented taskkill of winrar.exe (Cloud Atlas LNK anti-forensic cleanup)
 
-`UC_309_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_308_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### PowerShower dropped to user Pictures folder as googleearth.ps1
 
-`UC_309_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_308_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ union
 
 ### SAM/SECURITY registry hives copied from VSS shadow to Public\Documents as .pdf
 
-`UC_309_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_308_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,7 +220,7 @@ DeviceProcessEvents
 
 ### termsrv.dll patched (multi-RDP enabling) - takeown + binary write + TermService restart
 
-`UC_309_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_308_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -247,7 +247,7 @@ union TermsrvProc, TermsrvFileWrite
 
 ### OpenSSH reverse port-forward (-R) launched on a workstation - Cloud Atlas backup C2
 
-`UC_309_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_308_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -567,7 +567,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cloud Atlas activity in the second half of 2025 and early 2026: new tools and a
 
-`UC_309_11` · phase: **exploit** · confidence: **High**
+`UC_308_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

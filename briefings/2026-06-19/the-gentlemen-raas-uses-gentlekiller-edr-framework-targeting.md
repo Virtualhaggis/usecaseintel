@@ -54,10 +54,15 @@ This mature portfolio of EDR-terminating tools is centered around a framework th
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1068** — Exploitation for Privilege Escalation
 - **T1543.003** — Create or Modify System Process: Windows Service
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1005** — Data from Local System
 - **T1489** — Service Stop
+- **T1036.004** — Masquerade Task or Service
+- **T1036.001** — Masquerading: Invalid Code Signature
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1027.002** — Obfuscated Files or Information: Software Packing
 
 ## Kill chain phases observed
 
@@ -65,72 +70,54 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### GentleKiller BYOVD vulnerable/malicious driver load (The Gentlemen RaaS)
+### GentleKiller BYOVD vulnerable-driver staging (named .sys drops + GentlemenCollection dir)
 
-`UC_94_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_93_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("eb.sys","nseckrnl.sys","GameDriverX64.sys","stpm_old.sys","stpm_new.sys","dmx.sys","360netmon_wfp.sys","IMFForceDelete.sys","PoisonX.sys","googleApiUtil64.sys","ThrottleBlood.sys","havoc.sys","hrwfpdrv.sys") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("eb.sys","nseckrnl.sys","GameDriverX64.sys","stpm_old.sys","stpm_new.sys","dmx.sys","360netmon_wfp.sys","IMFForceDelete.sys","IMFForceDelete","PoisonX.sys","PoisonX","googleApiUtil64.sys","ThrottleBlood.sys","havoc.sys","hrwfpdrv.sys") OR Filesystem.file_path="*GentlemenCollection*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.user Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ ("eb.sys","nseckrnl.sys","GameDriverX64.sys","stpm_old.sys","stpm_new.sys","dmx.sys","360netmon_wfp.sys","IMFForceDelete.sys","IMFForceDelete","PoisonX.sys","PoisonX","googleApiUtil64.sys","ThrottleBlood.sys","havoc.sys","hrwfpdrv.sys")
+    or FolderPath has "GentlemenCollection"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### GentleKiller BYOVD kernel driver load / service install (eb.sys, PoisonX, havoc.sys, etc.)
+
+`UC_93_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("eb.sys","nseckrnl.sys","GameDriverX64.sys","stpm_old.sys","stpm_new.sys","dmx.sys","360netmon_wfp.sys","IMFForceDelete.sys","PoisonX.sys","googleApiUtil64.sys","ThrottleBlood.sys","havoc.sys","hrwfpdrv.sys") AND Filesystem.file_path="*\\drivers\\*" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceImageLoadEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("eb.sys","nseckrnl.sys","GameDriverX64.sys","stpm_old.sys","stpm_new.sys","dmx.sys","360netmon_wfp.sys","IMFForceDelete.sys","PoisonX.sys","googleApiUtil64.sys","ThrottleBlood.sys","havoc.sys","hrwfpdrv.sys")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA1, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where FileName in~ ("eb.sys","nseckrnl.sys","GameDriverX64.sys","stpm_old.sys","stpm_new.sys","dmx.sys","360netmon_wfp.sys","IMFForceDelete.sys","IMFForceDelete","PoisonX.sys","PoisonX","googleApiUtil64.sys","ThrottleBlood.sys","havoc.sys","hrwfpdrv.sys")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA1, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### GentleKiller BYOVD driver service installation (kernel-mode service)
+### OxideHarvest (buildx641.exe) Rust browser credential stealer execution
 
-`UC_94_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_value_name="ImagePath" AND Registry.registry_value_data IN ("*eb.sys*","*nseckrnl.sys*","*GameDriverX64.sys*","*stpm_old.sys*","*stpm_new.sys*","*dmx.sys*","*360netmon_wfp.sys*","*IMFForceDelete.sys*","*PoisonX.sys*","*googleApiUtil64.sys*","*ThrottleBlood.sys*","*havoc.sys*","*hrwfpdrv.sys*") by Registry.dest Registry.registry_key_name Registry.registry_value_data Registry.process_id | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where RegistryKey has @"\Services\"
-| where RegistryValueName =~ "ImagePath"
-| where RegistryValueData has_any ("eb.sys","nseckrnl.sys","GameDriverX64.sys","stpm_old.sys","stpm_new.sys","dmx.sys","360netmon_wfp.sys","IMFForceDelete.sys","PoisonX.sys","googleApiUtil64.sys","ThrottleBlood.sys","havoc.sys","hrwfpdrv.sys")
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### OxideHarvest Rust stealer multi-browser credential harvesting
-
-`UC_94_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_93_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count dc(Filesystem.file_path) as store_count values(Filesystem.file_path) as paths min(_time) as firstTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("Login Data","logins.json","key4.db","key3.db","cookies.sqlite","Web Data") by Filesystem.dest Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where store_count >= 3 | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("Login Data","logins.json","key4.db","key3.db","cookies.sqlite","Web Data")
-| where FolderPath has_any (@"\Torch\", @"\Comodo\", @"\Epic Privacy Browser\", @"\Vivaldi\", @"\BraveSoftware\", @"\Opera Software\", @"\Waterfox\", @"\BlackHawk\", @"\IceCat\", @"\Google\Chrome\", @"\Microsoft\Edge\", @"\Mozilla\")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","opera.exe","opera_gx.exe","brave.exe","vivaldi.exe","torch.exe","comodo.exe","epic.exe","waterfox.exe")
-| summarize StoreCount = dcount(FolderPath), Stores = make_set(FolderPath, 20), Files = make_set(FileName, 10), FirstSeen = min(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA1, InitiatingProcessFolderPath, InitiatingProcessAccountName
-| where StoreCount >= 3   // single non-browser process reaching >=3 distinct browser credential stores
-| order by FirstSeen desc
-```
-
-### The Gentlemen EDR-killer mass security-service termination
-
-`UC_94_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Processes.process) as cmds from datamodel=Endpoint.Processes where Processes.process_name IN ("taskkill.exe","sc.exe","net.exe","net1.exe","powershell.exe","pwsh.exe","wmic.exe") AND (Processes.process="*stop*" OR Processes.process="*kill*" OR Processes.process="*terminate*" OR Processes.process="*Stop-Service*" OR Processes.process="*Remove-Service*" OR Processes.process="*delete*") AND (Processes.process="*MsMpEng*" OR Processes.process="*WinDefend*" OR Processes.process="*Sense*" OR Processes.process="*CSFalcon*" OR Processes.process="*CSAgent*" OR Processes.process="*SentinelAgent*" OR Processes.process="*Sophos*" OR Processes.process="*ekrn*" OR Processes.process="*bdservicehost*" OR Processes.process="*avp*" OR Processes.process="*mfemms*" OR Processes.process="*xagt*" OR Processes.process="*ds_agent*" OR Processes.process="*TaniumClient*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("buildx641.exe","buildx64.exe") OR Processes.process="*-i *-u *-p *-o *") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -138,10 +125,58 @@ DeviceFileEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where FileName in~ ("taskkill.exe","sc.exe","net.exe","net1.exe","powershell.exe","pwsh.exe","wmic.exe")
-| where ProcessCommandLine has_any ("stop","kill","terminate","Stop-Service","Remove-Service","delete")
-| where ProcessCommandLine has_any ("MsMpEng","WinDefend","Sense","CSFalcon","CSAgent","SentinelAgent","SentinelOne","Sophos","cyserver","ekrn","egui","bdservicehost","avp","Kaspersky","mfemms","mfevtps","xagt","ds_agent","TaniumClient","NisSrv")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| where FileName in~ ("buildx641.exe","buildx64.exe")
+    or ProcessCommandLine matches regex @"(?i)\s-i\s+\S+\s+-u\s+\S+\s+-p\s+\S+.*\s-o\s+\S+"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### Mass security/EDR process and service termination prior to encryption
+
+`UC_93_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(Processes.process) as DistinctKillCmds values(Processes.process) as cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("taskkill.exe","wmic.exe","net.exe","net1.exe","sc.exe","powershell.exe","pwsh.exe","pskill.exe") AND Processes.process IN ("*MsMpEng*","*MsSense*","*SenseIR*","*windefend*","*CSFalconService*","*csagent*","*SophosHealth*","*SAVService*","*ekrn*","*egui*","*EsetService*","*SentinelAgent*","*SentinelOne*","*xagt*","*CarbonBlack*","*Cylance*","*TmListen*","*ds_agent*","*McAfee*","*MBAMService*","*Sophos*") by Processes.dest Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | where DistinctKillCmds >= 3 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("taskkill.exe","wmic.exe","net.exe","net1.exe","sc.exe","powershell.exe","pwsh.exe","pskill.exe")
+| where ProcessCommandLine has_any ("MsMpEng","MsSense","SenseIR","windefend","CSFalconService","csagent","SophosHealth","SAVService","ekrn","egui","EsetService","SentinelAgent","SentinelOne","xagt","CarbonBlack","Cylance","TmListen","ds_agent","McAfee","MBAMService","Sophos")
+| extend Hits = extract_all(@"(?i)(MsMpEng|MsSense|SenseIR|windefend|CSFalconService|csagent|SophosHealth|SAVService|ekrn|egui|EsetService|SentinelAgent|SentinelOne|xagt|CarbonBlack|Cylance|TmListen|ds_agent|McAfee|MBAMService|Sophos)", ProcessCommandLine)
+| mv-expand Hit = Hits to typeof(string)
+| extend HitL = tolower(Hit)
+| summarize DistinctSecProcs = dcount(HitL), SecTools = make_set(HitL), Commands = make_set(ProcessCommandLine), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, AccountName, InitiatingProcessFileName, bin(Timestamp, 10m)
+| where DistinctSecProcs >= 3   // >=3 distinct security tools targeted within a 10m window = mass disable
+| order by LastSeen desc
+```
+
+### Security-vendor-masquerading binary executing from staging/temp directory
+
+`UC_93_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\AppData\\*" OR Processes.process_path="*GentlemenCollection*" OR Processes.process_path="*\\ProgramData\\*" OR Processes.process_path="*\\Users\\Public\\*") AND Processes.process_name IN ("MsMpEng.exe","ekrn.exe","egui.exe","CSFalconService.exe","SophosUI.exe","SAVService.exe","ccSvcHst.exe","mfemms.exe","SentinelAgent.exe","bdagent.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where ProcessVersionInfoCompanyName has_any ("ESET","Kaspersky","Sophos","CrowdStrike","Bitdefender","McAfee","Symantec","Trend Micro","SentinelOne","Malwarebytes","Cylance","FireEye","Carbon Black","F-Secure")
+    or ProcessVersionInfoProductName has_any ("ESET","Kaspersky","Sophos","CrowdStrike","Bitdefender","SentinelOne","Defender")
+| where FolderPath has_any (@"\Temp\", @"\AppData\", @"\Users\Public\", @"\ProgramData\", "GentlemenCollection", @"\Windows\Temp\")
+| where not(FolderPath has_any (@"\Program Files\", @"\Program Files (x86)\"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, ProcessVersionInfoProductVersion,
+          SHA256, ProcessCommandLine, InitiatingProcessFileName
 | order by Timestamp desc
 ```
 
@@ -260,7 +295,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Gentlemen RaaS Uses GentleKiller EDR Framework Targeting 400 Security Proces
 
-`UC_94_6` · phase: **exploit** · confidence: **High**
+`UC_93_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -320,4 +355,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

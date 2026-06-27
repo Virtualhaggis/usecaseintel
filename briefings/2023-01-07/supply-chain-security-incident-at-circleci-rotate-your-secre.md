@@ -33,12 +33,87 @@ Context around the CircleCI Incident On December 27, security engineer Daniel H�
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1219** — Remote Access Software
+- **T1204.002** — User Execution: Malicious File
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### CircleCI breach C2 beacon to potrax[.]com / threat-actor IP set
+
+`UC_1776_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("178.249.214.10","89.36.78.75","89.36.78.109","89.36.78.135","178.249.214.25","72.18.132.58","188.68.229.52","111.90.149.55") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("178.249.214.10","89.36.78.75","89.36.78.109","89.36.78.135","178.249.214.25","72.18.132.58","188.68.229.52","111.90.149.55")
+   or RemoteUrl has "potrax.com"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### PTX-Player.dmg implant dropped (CircleCI breach malware hash)
+
+`UC_1776_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash="8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf" OR Filesystem.file_name="PTX-Player.dmg" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+union
+(DeviceFileEvents
+  | where Timestamp > ago(90d)
+  | where SHA256 == "8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf" or FileName =~ "PTX-Player.dmg"
+  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName),
+(DeviceProcessEvents
+  | where Timestamp > ago(90d)
+  | where SHA256 == "8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf" or FileName =~ "PTX-Player.dmg"
+  | project Timestamp, DeviceName, ActionType="ProcessCreated", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName=AccountName)
+| order by Timestamp desc
+```
+
+### Use of exfiltrated secrets — AWS API activity from CircleCI breach actor IPs
+
+`UC_1776_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src IN ("178.249.214.10","89.36.78.75","89.36.78.109","89.36.78.135","178.249.214.25","72.18.132.58","188.68.229.52","111.90.149.55") by Authentication.src Authentication.user Authentication.app Authentication.action
+| `drop_dm_object_name(Authentication)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(90d)
+| where IPAddress in ("178.249.214.10","89.36.78.75","89.36.78.109","89.36.78.135","178.249.214.25","72.18.132.58","188.68.229.52","111.90.149.55")
+| project Timestamp, Application, ActionType, AccountDisplayName, AccountId, IPAddress, ISP, CountryCode, IsAdminOperation, ObjectName
+| order by Timestamp desc
+```
 
 ### OAuth consent / suspicious app grant
 
@@ -104,4 +179,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

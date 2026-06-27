@@ -1,6 +1,6 @@
-# [CRIT] FBI Warns Russian Intelligence Hackers Target Signal Backup Recovery Keys
+# [HIGH] FBI Warns Russian Intelligence Hackers Target Signal Backup Recovery Keys
 
-**Source:** The Hacker News
+**Source:** The Hacker News, BleepingComputer
 **Published:** 2026-06-26
 **Article:** https://thehackernews.com/2026/06/fbi-warns-russian-intelligence-hackers.html
 
@@ -13,13 +13,12 @@ Hand it over once, and the attacker can restore the account's backup, read the p
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-20245`
+- **Domain (defanged):** `he5dybnt7sr6cm32x77pazmtm65flqy6irvtfirucjc5ep7eiodiad.onion`
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -31,12 +30,58 @@ Hand it over once, and the attacker can restore the account's backup, read the p
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
+- **T1071** — Application Layer Protocol
+- **T1098.005** — Account Manipulation: Device Registration
+- **T1598.003** — Phishing for Information: Spearphishing Link
+- **T1656** — Impersonation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Signal Desktop linked-device URI (sgnl://linkdevice) invoked from a clicked link (UNC5792)
+
+`UC_0_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*sgnl://linkdevice*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where ProcessCommandLine has "sgnl://linkdevice"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### Inbound email impersonating Signal support requesting Backup Recovery Key / device-link (UNC4221)
+
+`UC_0_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.direction="inbound" (All_Email.subject="*Recovery Key*" OR All_Email.subject="*Data Recovery Needed*" OR All_Email.subject="*Backup Recovery*" OR All_Email.subject="*third-party devices*" OR All_Email.subject="*linked device*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.file_name | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+EmailEvents
+| where Timestamp > ago(30d)
+| where EmailDirection == "Inbound"
+| where (SenderDisplayName has "Signal" or SenderFromDomain has "signal")
+| where Subject has_any ("Recovery Key","Data Recovery Needed","Backup Recovery","third-party devices","linked device","Action Required")
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromDomain, SenderDisplayName,
+          SenderFromDomain, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, UrlCount
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -301,10 +346,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-20245`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `he5dybnt7sr6cm32x77pazmtm65flqy6irvtfirucjc5ep7eiodiad.onion`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
