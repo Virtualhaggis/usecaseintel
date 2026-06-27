@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-27
+- [openai previews gpt 5 6 sol with restricted access and stron](./2026-06-27/openai-previews-gpt-5-6-sol-with-restricted-access-and-stron.md)
 
 ## 2026-06-26
 - [amazon q developer flaw could let malicious repos run code v](./2026-06-26/amazon-q-developer-flaw-could-let-malicious-repos-run-code-v.md)

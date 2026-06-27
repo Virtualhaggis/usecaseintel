@@ -1,3 +1,582 @@
+<article class="card" id="art-336" data-art-slug="2026-05-19-actions-cool-issues-helper-github-action-compromised-all-tag"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="med"
+  data-techs=""
+  data-sources="StepSecurity"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="cloud,endpoint,network"
+  data-targets="linux,vcs,windows"
+  data-uc-count="6" data-llm-uc-count="4"
+  data-search="actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter Commit That Exfiltrates CI/CD Credentials The popular GitHub Action actions-cool/issues-helper has been compromised. Every existing tag in the repository has been moved to point to a single imposter commit that does not appear in the action&#x27;s normal commit history. That commit contains malicious code that exfiltrates credentials from CI/CD pipelines that run the action.   [LLM] Outbound C2 to t.m-kosche.com from CI/CD runner or any endpoint [LLM] python3 reading /proc/&lt;PID&gt;/mem to scrape Runner.Worker secrets [LLM] bun runtime executed on CI runner spawning python3 with sudo escalation [LLM] GitHub workflow references actions-cool/issues-helper or maintain-one-comment by tag Network connections to article IPs / domains Article-specific behavioural hunt — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2026-05-19-actions-cool-issues-helper-github-action-compromised-all-tag" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials" target="_blank" rel="noopener">actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter Commit That Exfiltrates CI/CD Credentials</a></h2>
+  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
+  <div class="pubmeta">
+    <span>2026-05-19</span>
+    <span>6 use cases</span>
+    <span>0 techniques</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">The popular GitHub Action actions-cool/issues-helper has been compromised. Every existing tag in the repository has been moved to point to a single imposter commit that does not appear in the action&#x27;s normal commit history. That commit contains malicious code that exfiltrates credentials from CI/CD pipelines that run the action.</p>
+  <div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">t.m-kosche.com</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-336-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-336"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-336-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] GitHub workflow references actions-cool/issues-helper or maintain-one-comment by tag</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] bun runtime executed on CI runner spawning python3 with sudo escalation</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound C2 to t.m-kosche.com from CI/CD runner or any endpoint · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] python3 reading /proc/&lt;PID&gt;/mem to scrape Runner.Worker secrets</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="88fd8dc557" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Outbound C2 to t.m-kosche.com from CI/CD runner or any endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="88fd8dc557" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the exfiltration callback used by the compromised actions-cool/issues-helper and actions-cool/maintain-one-comment GitHub Actions. Any DNS resolution or HTTPS connection to t.m-kosche.com from a runner, developer workstation, or build agent indicates secrets-in-flight exfiltration.
+
+Rationale: Pure-IOC detection on t.m-kosche.com — the attacker-controlled exfil domain named explicitly in the StepSecurity advisory and corroborated by The Hacker News, GBHackers, and SC Media. The domain is on the Harden-Runner global block list. Cross-checked with the StepSecurity X post and the Mini Shai-Hulud cluster note from coverage.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials
+  • https://thehackernews.com/2026/05/github-actions-supply-chain-attack.html
+  • https://gbhackers.com/compromised-github-action/
+  • https://cybersecuritynews.com/compromised-github-action-exfiltrates-workflow-credentials/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate research traffic from a sandbox / detonation chamber that intentionally resolves IOC domains</li><li>Threat-intel platforms (MISP, ThreatConnect) doing enrichment lookups against the domain</li><li>Security analyst manually browsing the StepSecurity advisory and clicking embedded IOC links</li><li>Harden-Runner audit-mode telemetry that intentionally allows the call so it can be logged before blocking</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;,&quot;detonation&quot;,&quot;misp&quot;,&quot;threatintel&quot;) and InitiatingProcessFileName in~ (&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: identify the source host/runner from DeviceName / ClientIP / aid. Pull the full process tree on the source (parent process of the resolver / connector — look for bun, node, python3). 2. Contain: if a self-hosted runner, pull the runner offline; if a developer workstation, isolate the endpoint. Rotate ANY secrets exposed to recent workflow runs on the affected repository, especially GITHUB_TOKEN, repo secrets, and OIDC-issued cloud credentials. 3. Hunt: enumerate every workflow run in the org that referenced actions-cool/issues-helper or actions-cool/maintain-one-comment in the last 30 days; pin all third-party actions to immutable commit SHAs going forward; search audit logs for unauthorized PRs/commits made with the leaked GITHUB_TOKEN.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-336-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-336-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-336-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-336-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-336-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-336-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-336-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let exfil_domain = &quot;m-kosche.com&quot;;
+union isfuzzy=true
+(DeviceNetworkEvents
+  | where Timestamp &gt; ago(30d)
+  | where RemoteUrl has exfil_domain or RemoteUrl endswith &quot;.m-kosche.com&quot;
+  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort, ActionType),
+(DeviceEvents
+  | where Timestamp &gt; ago(30d)
+  | where ActionType in (&quot;DnsQueryResponse&quot;,&quot;ConnectionSuccess&quot;)
+  | where RemoteUrl has exfil_domain or AdditionalFields has exfil_domain
+  | project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, AdditionalFields)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-336-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let exfil_domain = &quot;m-kosche.com&quot;;
+union isfuzzy=true
+(DnsEvents | where TimeGenerated &gt; ago(30d) | where Name has exfil_domain | project TimeGenerated, Computer, ClientIP, Name, QueryType, ServerIPAddress),
+(CommonSecurityLog | where TimeGenerated &gt; ago(30d) | where DestinationHostName has exfil_domain or RequestURL has exfil_domain or DestinationDnsDomain has exfil_domain | project TimeGenerated, DeviceVendor, SourceIP, DestinationHostName, RequestURL, DestinationIP, DestinationPort, SourceUserName),
+(ImDnsActivity | where TimeGenerated &gt; ago(30d) | where DnsQuery has exfil_domain | project TimeGenerated, SrcIpAddr, SrcHostname, DnsQuery, DnsQueryType, DnsResponseName),
+(ImWebSession | where TimeGenerated &gt; ago(30d) | where Url has exfil_domain or HttpHostName has exfil_domain | project TimeGenerated, SrcIpAddr, SrcHostname, SrcUsername, Url, HttpHostName, HttpMethod, HttpStatusCode)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-336-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: actions-cool issues-helper Exfil Domain Callback (t.m-kosche.com)
+id: 7d3a4e5b-9c1f-4f72-b6a0-6b2f4e9d1c84
+status: experimental
+description: Detects DNS resolution or HTTPS connection to t.m-kosche.com, the exfiltration domain used by the compromised actions-cool/issues-helper and actions-cool/maintain-one-comment GitHub Actions to receive secrets harvested from Runner.Worker memory.
+references:
+  - https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials
+  - https://thehackernews.com/2026/05/github-actions-supply-chain-attack.html
+author: SOC Detection Engineering
+date: 2026/05/20
+tags:
+  - attack.exfiltration
+  - attack.t1071.001
+  - attack.t1567
+  - attack.command_and_control
+logsource:
+  category: dns
+detection:
+  selection:
+    QueryName|endswith:
+      - &#x27;m-kosche.com&#x27;
+      - &#x27;.m-kosche.com&#x27;
+  condition: selection
+falsepositives:
+  - None expected. The domain is attacker-controlled and listed on the Harden-Runner global block list.
+level: high</code></pre></div>
+    <div class="tab-content" id="art-336-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(@dns.question.name:(*m-kosche.com OR *.m-kosche.com) OR @network.destination.name:(*m-kosche.com OR *.m-kosche.com) OR @http.url:(*m-kosche.com* OR *M-KOSCHE.COM*) OR @url.domain:(m-kosche.com OR *.m-kosche.com))</code></pre></div>
+    <div class="tab-content" id="art-336-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=DnsRequest DomainName=/(^|\.)m-kosche\.com$/i) OR (#event_simpleName=NetworkConnectIP4 ContextImageFileName=/(bun|node|python3|curl|wget)/i) | groupBy([aid, ComputerName, ContextImageFileName, DomainName, RemoteAddressIP4], function=count()) | sort(field=_count, order=desc)</code></pre></div>
+    <div class="tab-content" id="art-336-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-336-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-336-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-336-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution.DNS where DNS.query=&quot;*m-kosche.com&quot; by DNS.src DNS.query | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Web.Web where Web.url=&quot;*m-kosche.com*&quot; OR Web.dest=&quot;*m-kosche.com*&quot; by Web.src Web.dest Web.url | `drop_dm_object_name(Web)`] | append [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;*m-kosche.com*&quot; by All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)`]</code></pre><pre class="spl-mode-body" id="art-336-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution.DNS where DNS.query=&quot;*m-kosche.com&quot; by DNS.src DNS.query | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=false count from datamodel=Web.Web where Web.url=&quot;*m-kosche.com*&quot; OR Web.dest=&quot;*m-kosche.com*&quot; by Web.src Web.dest Web.url | `drop_dm_object_name(Web)`] | append [| tstats summariesonly=false count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;*m-kosche.com*&quot; by All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ab024f1e49" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">python3 reading /proc/&lt;PID&gt;/mem to scrape Runner.Worker secrets</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ab024f1e49" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the exact credential-harvesting primitive used by the compromised actions-cool actions: a python3 process opening another process&#x27;s /proc/&lt;PID&gt;/mem to scrape decrypted GitHub Actions secrets from Runner.Worker memory. The behaviour is rare on legitimate CI/CD runners and developer Linux endpoints.
+
+Rationale: Anchors on the exact behaviour the article and StepSecurity Harden-Runner traces describe: python3 reading /proc/&lt;PID&gt;/mem against the Runner.Worker process (PID 2119 in their controlled test) and grep-filtering for `isSecret`:true tokens. Cross-process /proc/&lt;PID&gt;/mem reads by python on Linux are a high-fidelity credential-access signal — this is essentially T1003.007 in script form.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials
+  • https://thehackernews.com/2026/05/github-actions-supply-chain-attack.html
+  • https://attack.mitre.org/techniques/T1003/007/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping: Proc Filesystem">T1003.007</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IR teams running memory acquisition tools (avml, lime, volatility) on Linux endpoints</li><li>Developers debugging their own application by reading /proc/self/mem</li><li>Container security scanners that introspect process memory of running workloads</li><li>Performance-profiling agents (py-spy, pyflame) that attach to other Python processes</li><li>Legitimate use of bun/node memory analysis tooling during CI for performance regression tests</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;avml&quot;,&quot;lime&quot;,&quot;volatility&quot;,&quot;py-spy&quot;,&quot;strace&quot;,&quot;gdb&quot;) and InitiatingProcessParentFileName !in~ (&quot;avml&quot;,&quot;lime&quot;,&quot;strace&quot;,&quot;gdb&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: confirm the python3 invocation&#x27;s parent process tree. If parent is `bun` or the GitHub Actions runner (`Runner.Listener` / `Runner.Worker`), it&#x27;s the attack chain — almost no legitimate workflow shells from bun into python3 reading runner memory. Pull the full command line and resolve the PID being read. 2. Contain: kill the python3 process, take the runner offline, snapshot disk for IR. Rotate every secret that ever touched that runner&#x27;s workflows in the last 30d (GITHUB_TOKEN, OIDC-issued cloud creds, registry credentials, repo / org / environment secrets). 3. Hunt: search org-wide for the same parent→child chain (bun → python3 → /proc/*/mem) and for any callbacks to t.m-kosche.com or related Mini Shai-Hulud infrastructure; audit recent commits and PRs created via affected GITHUB_TOKENs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-336-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-336-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-336-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-336-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-336-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-336-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-336-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName matches regex @&quot;^python3?(\.\d+)?$&quot; or InitiatingProcessFileName matches regex @&quot;^python3?(\.\d+)?$&quot;
+| where ProcessCommandLine matches regex @&quot;/proc/\d+/mem&quot;
+   or ProcessCommandLine has_any (&quot;isSecret&quot;,&quot;Runner.Worker&quot;)
+   or InitiatingProcessCommandLine matches regex @&quot;/proc/\d+/mem&quot;
+| extend ProcMemTarget = extract(@&quot;/proc/(\d+)/mem&quot;, 1, ProcessCommandLine)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcMemTarget, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-336-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 30d;
+union isfuzzy=true
+(Syslog
+  | where TimeGenerated &gt; ago(lookback)
+  | where Facility in (&quot;authpriv&quot;,&quot;auth&quot;,&quot;daemon&quot;,&quot;user&quot;)
+  | where SyslogMessage matches regex @&quot;(?i)python3?[^\s]*\s+[^\n]*/proc/\d+/mem&quot;
+     or SyslogMessage has_any (&quot;isSecret&quot;,&quot;Runner.Worker&quot;)
+  | project TimeGenerated, Computer, HostIP, ProcessName, SyslogMessage),
+(ImProcessCreate
+  | where TimeGenerated &gt; ago(lookback)
+  | where ActingProcessName matches regex @&quot;(?i)python3?(\.\d+)?$&quot;
+  | where ActingProcessCommandLine matches regex @&quot;/proc/\d+/mem&quot;
+     or ActingProcessCommandLine has_any (&quot;isSecret&quot;,&quot;Runner.Worker&quot;)
+  | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-336-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Python Process Reading /proc/&lt;PID&gt;/mem (CI Runner Memory Scrape)
+id: 2b8f1a64-3d97-4d8c-9c0e-1b2af3b6e711
+status: experimental
+description: Detects a python interpreter executed with a /proc/&lt;PID&gt;/mem path in its command line, the credential-dump primitive used by the compromised actions-cool/issues-helper and actions-cool/maintain-one-comment GitHub Actions to scrape Runner.Worker memory and exfiltrate decrypted secrets tagged &quot;isSecret&quot;:true.
+references:
+  - https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials
+  - https://thehackernews.com/2026/05/github-actions-supply-chain-attack.html
+author: SOC Detection Engineering
+date: 2026/05/20
+tags:
+  - attack.credential_access
+  - attack.t1003.007
+  - attack.t1552.001
+  - attack.t1059.006
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_proc:
+    Image|endswith:
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+  selection_cmd:
+    CommandLine|re: &#x27;/proc/\d+/mem&#x27;
+  selection_str:
+    CommandLine|contains:
+      - &#x27;isSecret&#x27;
+      - &#x27;Runner.Worker&#x27;
+  condition: selection_proc and (selection_cmd or selection_str)
+falsepositives:
+  - Forensic / memory-acquisition tooling (volatility, lime, avml) operated by IR teams
+  - Debugging by developers reading their own process memory for diagnostics
+level: high</code></pre></div>
+    <div class="tab-content" id="art-336-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) (@process.executable.path:(*/python3 OR */python OR */python3.* OR */PYTHON3) OR @process.name:(python3 OR python OR PYTHON3)) (@process.command_line:*\/proc\/* AND @process.command_line:*\/mem*) OR @process.command_line:*isSecret* OR @process.command_line:*Runner.Worker*</code></pre></div>
+    <div class="tab-content" id="art-336-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/python3?(\.\d+)?$/i | regex(&quot;/proc/\d+/mem|isSecret|Runner\.Worker&quot;, field=CommandLine) | groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, ParentBaseFileName], function=count()) | sort(field=_count, order=desc)</code></pre></div>
+    <div class="tab-content" id="art-336-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-336-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-336-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-336-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;) AND (Processes.process=&quot;*/proc/*/mem*&quot; OR Processes.process=&quot;*isSecret*&quot; OR Processes.process=&quot;*Runner.Worker*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(cmdline, &quot;(?i)/proc/\d+/mem&quot;) OR match(cmdline, &quot;(?i)isSecret|Runner\.Worker&quot;)</code></pre><pre class="spl-mode-body" id="art-336-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;) AND (Processes.process=&quot;*/proc/*/mem*&quot; OR Processes.process=&quot;*isSecret*&quot; OR Processes.process=&quot;*Runner.Worker*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(cmdline, &quot;(?i)/proc/\d+/mem&quot;) OR match(cmdline, &quot;(?i)isSecret|Runner\.Worker&quot;)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e38abbef2f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">bun runtime executed on CI runner spawning python3 with sudo escalation</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e38abbef2f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the install-stage of the actions-cool/issues-helper compromise: the imposter commit&#x27;s index.js downloads the bun JavaScript runtime onto the runner, which then spawns python3 via sudo to read Runner.Worker memory. The bun→python3→sudo chain is the article&#x27;s signature behaviour.
+
+Rationale: Anchors on the article&#x27;s verbatim chain: `bun` runtime (which the imposter commit explicitly downloads to the runner) spawning python3, sudo, and `gh auth token`. This combination is essentially unique to the attack — bun is a JS runtime, not a Python wrapper, and bun→sudo is anomalous in any normal CI workflow. Cross-checked against StepSecurity Harden-Runner test run capture (linked in advisory) and confirmed by Hacker News + GBHackers coverage.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials
+  • https://thehackernews.com/2026/05/github-actions-supply-chain-attack.html
+  • https://gbhackers.com/compromised-github-action/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Abuse Elevation Control Mechanism: Sudo and Sudo Caching">T1548.003</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A bun-based project&#x27;s postinstall script that legitimately shells out to a Python build helper (rare in practice)</li><li>Developer workstations where bun is used as a general-purpose script runner and the user manually invokes sudo / gh from a bun REPL</li><li>CI workflows that intentionally use bun to orchestrate multi-language builds with Python steps</li><li>Bun&#x27;s own self-update mechanism invoking sudo to install to /usr/local</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessParentFileName =~ &quot;bun&quot; and FileName == &quot;sudo&quot; and ProcessCommandLine has_any (&quot;apt-get&quot;,&quot;dnf&quot;,&quot;yum&quot;,&quot;npm install -g&quot;,&quot;bun upgrade&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: pull the GitHub Actions workflow run identifier from the runner&#x27;s environment and confirm whether the workflow referenced actions-cool/issues-helper or actions-cool/maintain-one-comment (by tag — anything other than a pinned full commit SHA is suspect). Capture the bun binary&#x27;s hash and origin (was it downloaded from bun.sh during the run? from an attacker-controlled URL?). 2. Contain: stop the runner, revoke its registration token, rotate GITHUB_TOKEN and every workflow-accessible secret. If self-hosted, image-rebuild the runner from scratch. 3. Hunt: org-wide search for any workflow file (YAML in .github/workflows/) that uses these two actions by tag rather than by SHA; enforce a Compromised Actions Policy and pinning policy; review last 30d of commits/PRs/releases by the GITHUB_TOKEN actor on affected repos.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-336-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-336-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-336-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-336-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-336-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-336-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-336-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let lookback = 30d;
+let BunHosts = DeviceProcessEvents
+    | where Timestamp &gt; ago(lookback)
+    | where FileName =~ &quot;bun&quot; or FolderPath endswith &quot;/bun&quot; or ProcessCommandLine matches regex @&quot;(?i)(curl|wget)[^\n]*bun\.sh&quot;
+    | project BunTime = Timestamp, DeviceId, DeviceName, BunPid = ProcessId, BunCmd = ProcessCommandLine, BunParent = InitiatingProcessFileName;
+DeviceProcessEvents
+| where Timestamp &gt; ago(lookback)
+| where InitiatingProcessFileName =~ &quot;bun&quot;
+| where FileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;sudo&quot;,&quot;gh&quot;)
+   or ProcessCommandLine has_any (&quot;gh auth token&quot;,&quot;sudo python3&quot;,&quot;/proc/&quot;,&quot;isSecret&quot;)
+| join kind=inner BunHosts on DeviceId
+| where Timestamp between (BunTime .. BunTime + 10m)
+| project Timestamp, DeviceName, AccountName, BunTime, BunCmd, BunParent, ChildImage = FileName, ChildCmd = ProcessCommandLine, ChildSha256 = SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-336-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 30d;
+let BunHosts = ImProcessCreate
+    | where TimeGenerated &gt; ago(lookback)
+    | where ActingProcessName endswith &quot;/bun&quot; or ActingProcessName =~ &quot;bun&quot; or ActingProcessCommandLine matches regex @&quot;(?i)(curl|wget)[^\n]*bun\.sh&quot;
+    | project BunTime = TimeGenerated, DvcHostname, BunPid = ActingProcessId, BunCmd = ActingProcessCommandLine;
+ImProcessCreate
+| where TimeGenerated &gt; ago(lookback)
+| where ParentProcessName endswith &quot;/bun&quot; or ParentProcessName =~ &quot;bun&quot;
+| where ActingProcessName matches regex @&quot;(?i)/(python3?|sudo|gh)$&quot;
+   or ActingProcessCommandLine has_any (&quot;gh auth token&quot;,&quot;sudo python3&quot;,&quot;/proc/&quot;,&quot;isSecret&quot;)
+| join kind=inner BunHosts on DvcHostname
+| where TimeGenerated between (BunTime .. BunTime + 10m)
+| project TimeGenerated, DvcHostname, ActorUsername, BunCmd, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-336-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: bun Runtime Spawning python3/sudo/gh-auth-token on Linux (actions-cool Compromise)
+id: c8a4b2e1-7d61-4c30-9f12-5e3a1c9b4a07
+status: experimental
+description: Detects the bun JavaScript runtime executing python3, sudo, or `gh auth token` as a child process — the exact in-runner chain used by the compromised actions-cool/issues-helper and actions-cool/maintain-one-comment GitHub Actions to harvest Runner.Worker secrets.
+references:
+  - https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials
+  - https://thehackernews.com/2026/05/github-actions-supply-chain-attack.html
+author: SOC Detection Engineering
+date: 2026/05/20
+tags:
+  - attack.execution
+  - attack.t1059.007
+  - attack.t1548.003
+  - attack.t1195.002
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  parent_bun:
+    ParentImage|endswith:
+      - &#x27;/bun&#x27;
+  child_signal:
+    Image|endswith:
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/sudo&#x27;
+      - &#x27;/gh&#x27;
+  cmd_signal:
+    CommandLine|contains:
+      - &#x27;gh auth token&#x27;
+      - &#x27;sudo python3&#x27;
+      - &#x27;/proc/&#x27;
+      - &#x27;isSecret&#x27;
+  condition: parent_bun and (child_signal or cmd_signal)
+falsepositives:
+  - bun-native projects that legitimately shell out to python build scripts (rare — most bun projects are pure JS/TS)
+  - Developer experimentation on a workstation running both bun and python tooling
+level: high</code></pre></div>
+    <div class="tab-content" id="art-336-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) (@process.parent.executable.path:(*/bun OR */BUN) OR @process.parent.name:(bun OR BUN)) AND (@process.name:(python3 OR python OR sudo OR gh) OR @process.command_line:(*&quot;gh auth token&quot;* OR *&quot;sudo python3&quot;* OR *&quot;/proc/&quot;* OR *isSecret*))</code></pre></div>
+    <div class="tab-content" id="art-336-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^bun$/i | regex(&quot;/python3?$|/sudo$|/gh$&quot;, field=ImageFileName) OR regex(&quot;gh auth token|sudo python3|/proc/\d+/mem|isSecret&quot;, field=CommandLine) | groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count()) | sort(field=_count, order=desc)</code></pre></div>
+    <div class="tab-content" id="art-336-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-336-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-336-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-336-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as bun_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=bun OR Processes.process=&quot;*bun*&quot; OR Processes.process=&quot;*/bun *&quot;) by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name=bun (Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;sudo&quot;) OR Processes.process=&quot;*gh auth token*&quot;) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename process as child_cmd process_name as child_name]</code></pre><pre class="spl-mode-body" id="art-336-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as bun_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=bun OR Processes.process=&quot;*bun*&quot; OR Processes.process=&quot;*/bun *&quot;) by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.parent_process_name=bun (Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;sudo&quot;) OR Processes.process=&quot;*gh auth token*&quot;) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename process as child_cmd process_name as child_name]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="921df07578" data-platforms="datadog,sent,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">GitHub workflow references actions-cool/issues-helper or maintain-one-comment by tag</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="921df07578" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts use of the compromised GitHub Actions in any repository referenced by tag (or by a moved-tag SHA) rather than a pinned, audited full commit SHA. Anything other than a pinned SHA on the pre-compromise commit history will pull the imposter commit on next run.
+
+Rationale: Pure-IOC supply-chain detection on the two actions named by StepSecurity and corroborated by The Hacker News (`actions-cool/issues-helper` and `actions-cool/maintain-one-comment` — same actor, identical TTP). GitHub disabled the upstream repos, but any pre-existing pinned reference by tag or by a moved-tag SHA in a workflow YAML still resolves to the imposter commit on the next run until the workflow is patched. Detection should fire at workflow-prepare time (GitHub audit logs) and again on any commit/PR that adds such a reference.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials
+  • https://thehackernews.com/2026/05/github-actions-supply-chain-attack.html
+  • https://cybersecuritynews.com/compromised-github-action-exfiltrates-workflow-credentials/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Trusted Relationship">T1199</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security-team test repository deliberately referencing the compromised action to validate the StepSecurity Compromised Actions Policy is working</li><li>Threat-research fork that retains the upstream reference for analysis purposes (should be sandboxed and offline)</li><li>Pinned full-commit-SHA references that map to KNOWN-GOOD pre-compromise commits (must verify the SHA pre-dates 2026-05-18 17:00 UTC and is reachable from the legitimate default branch — not the imposter dangling commit)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: enumerate every repository in the org that references either action; pull the exact ref (tag, branch, or full commit SHA) used. For SHA references, verify the SHA is reachable from the repository&#x27;s legitimate default-branch history (the imposter commit 1c9e803 is dangling and unreachable). 2. Contain: open emergency PRs to remove or replace the action across all affected workflows; enforce a repository ruleset that requires immutable SHA pinning on third-party actions; enable Harden-Runner or StepSecurity Compromised Actions Policy org-wide. 3. Hunt: rotate GITHUB_TOKENs and downstream secrets for any repo whose workflows ran the action since 2026-05-18 17:00 UTC; correlate against UC1 (t.m-kosche.com callbacks) to see which runners actually exfiltrated; review audit logs for unauthorized git pushes, tag manipulation, or PR creation events made by GITHUB_TOKEN actors during the affected window.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-336-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-336-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-336-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-336-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 30d;
+let compromised_actions = dynamic([&quot;actions-cool/issues-helper&quot;,&quot;actions-cool/maintain-one-comment&quot;]);
+union isfuzzy=true
+(GitHubAuditLog_CL
+  | where TimeGenerated &gt; ago(lookback)
+  | where Action_s has_any (&quot;workflows.completed_workflow_run&quot;,&quot;workflows.created_workflow_run&quot;,&quot;workflows.prepared_workflow_job&quot;)
+  | where RawData_s has_any (compromised_actions) or AdditionalFields_s has_any (compromised_actions)
+  | project TimeGenerated, Actor_s, Repository_s, Action_s, RawData_s),
+(GitHubRepoLogs
+  | where TimeGenerated &gt; ago(lookback)
+  | where AdditionalFields has_any (compromised_actions)
+  | project TimeGenerated, Actor=tostring(AdditionalFields.actor), Repo=tostring(AdditionalFields.repository), Workflow=tostring(AdditionalFields.workflow), Reference=tostring(AdditionalFields.action_ref))
+| order by TimeGenerated desc
+// NOTE: replace GitHubAuditLog_CL / GitHubRepoLogs with the actual custom-log table name in your tenant — common via the GitHub data connector for Sentinel.</code></pre></div>
+    <div class="tab-content" id="art-336-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:github (@workflow.uses:(actions-cool/issues-helper* OR actions-cool/maintain-one-comment*) OR @repository.workflow.uses:(actions-cool/issues-helper* OR actions-cool/maintain-one-comment*) OR @evt.name:workflows.* @rawJSON:(*actions-cool/issues-helper* OR *actions-cool/maintain-one-comment*))</code></pre></div>
+    <div class="tab-content" id="art-336-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-336-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-336-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-336-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.object) as workflow from datamodel=Change.All_Changes where All_Changes.object_category=&quot;file&quot; AND All_Changes.object_path=&quot;*.github/workflows/*&quot; AND (All_Changes.change_type=&quot;modification&quot; OR All_Changes.change_type=&quot;created&quot;) by All_Changes.src All_Changes.object_path | `drop_dm_object_name(All_Changes)` | append [search index=github_audit OR sourcetype=github:* (&quot;actions-cool/issues-helper&quot; OR &quot;actions-cool/maintain-one-comment&quot;) | stats count min(_time) as firstTime max(_time) as lastTime by repo workflow actor action_ref] | search (workflow=&quot;*actions-cool/issues-helper*&quot; OR workflow=&quot;*actions-cool/maintain-one-comment*&quot; OR action_ref=&quot;*actions-cool/issues-helper*&quot; OR action_ref=&quot;*actions-cool/maintain-one-comment*&quot;)</code></pre><pre class="spl-mode-body" id="art-336-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.object) as workflow from datamodel=Change.All_Changes where All_Changes.object_category=&quot;file&quot; AND All_Changes.object_path=&quot;*.github/workflows/*&quot; AND (All_Changes.change_type=&quot;modification&quot; OR All_Changes.change_type=&quot;created&quot;) by All_Changes.src All_Changes.object_path | `drop_dm_object_name(All_Changes)` | append [search index=github_audit OR sourcetype=github:* (&quot;actions-cool/issues-helper&quot; OR &quot;actions-cool/maintain-one-comment&quot;) | stats count min(_time) as firstTime max(_time) as lastTime by repo workflow actor action_ref] | search (workflow=&quot;*actions-cool/issues-helper*&quot; OR workflow=&quot;*actions-cool/maintain-one-comment*&quot; OR action_ref=&quot;*actions-cool/issues-helper*&quot; OR action_ref=&quot;*actions-cool/maintain-one-comment*&quot;)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-336-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-336-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-336-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-336-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-336-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;t.m-kosche.com&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-336-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
+let BadDomains = dynamic([&quot;t.m-kosche.com&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-336-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-336-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-336-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-336-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-336-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;t.m-kosche.com&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;t.m-kosche.com&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-336-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;t.m-kosche.com&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;t.m-kosche.com&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="5e01a57833" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="5e01a57833" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-336-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-336-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-336-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-336-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;index.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;index.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-336-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;index.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;index.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-336-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-336-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-336-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-336-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;index.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;index.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-336-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;index.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;index.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-337" data-art-slug="2026-05-19-active-supply-chain-attack-malicious-node-ipc-versions-publi"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1027,T1190,T1195.002,T1528"
@@ -19033,374 +19612,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-377" data-art-slug="2026-04-30-cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1021.001,T1486"
-  data-sources="CISA KEV"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="windows"
-  data-uc-count="4" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2026-41940 — WebPros cPanel &amp; WHM and WP2 (WordPress Squared) Missing Authentication for Critical Function Vulnerability WebPros cPanel &amp; WHM (WebHost Manager) and WP2 (WordPress Squared) contain an authentication bypass vulnerability in the login flow that allows unauthenticated remote attackers to gain unauthorized access to the control panel. Vendor: WebPros, Product: cPanel &amp; WHM and WP2 (WordPress Squared). Known ransomware use: Known. Federal patch due: 2026-05-03. CVE-2026-41940 T1021.001 T1486 Asset exposure — vulnerability matches article CVE(s) Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-04-30-cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-41940 — WebPros cPanel &amp; WHM and WP2 (WordPress Squared) Missing Authentication for Critical Function Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2026-04-30</span>
-    <span>4 use cases</span>
-    <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">WebPros cPanel &amp; WHM (WebHost Manager) and WP2 (WordPress Squared) contain an authentication bypass vulnerability in the login flow that allows unauthenticated remote attackers to gain unauthorized access to the control panel. Vendor: WebPros, Product: cPanel &amp; WHM and WP2 (WordPress Squared). Known ransomware use: Known. Federal patch due: 2026-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-41940</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Desktop Protocol">T1021.001</span> <span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-377-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-377"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-377-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-377-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-377-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-377-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-377-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-41940&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-41940&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-377-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-377-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-377-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-41940&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-377-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-41940&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="8f76affc05" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Ransomware-style mass file rename / extension change</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8f76affc05" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Threshold detection: many files renamed in short window, often with new extension.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-377-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-377-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-377-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-377-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(1d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where ActionType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files &gt; 200    // empirical: &gt; 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(1d)
-| where ActorUsername !endswith &quot;$&quot;
-| where EventType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| summarize files = dcount(TargetFileName)
-            by DvcHostname, ActorUsername, ActingProcessName, bin(TimeGenerated, 1m)
-| where files &gt; 200    // P99 of legit bulk-tooling per-minute rename volume
-| order by files desc
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-377-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-377-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-377-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files &gt; 200
-| sort - files</code></pre><pre class="spl-mode-body" id="art-377-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files &gt; 200
-| sort - files</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b723485c48" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">LSASS process access / dump (credential theft)</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b723485c48" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="LSASS Memory">T1003.001</span> <span class="ind tech" title="OS Credential Dumping">T1003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-377-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-377-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-377-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-377-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-377-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where ActionType == &quot;OpenProcessApiCall&quot;
-| where FileName =~ &quot;lsass.exe&quot;
-| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MsMpEng.exe&quot;,&quot;csrss.exe&quot;,
-                                          &quot;svchost.exe&quot;,&quot;wininit.exe&quot;,&quot;services.exe&quot;,
-                                          &quot;lsm.exe&quot;,&quot;SearchProtocolHost.exe&quot;)
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-377-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 0x40 / 0x1010
-// indicate read access to lsass.exe — credential-dump signature. Audit
-// Object Access &gt; Audit File System policy required.
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4663
-| where ObjectName endswith &quot;\lsass.exe&quot;
-| where Account !endswith &quot;$&quot;
-| project TimeGenerated, Computer, Account, ObjectName, ProcessName,
-          AccessMask, AccessReason
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: LSASS Process Access Outside Microsoft-Signed Tooling
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d04
-status: experimental
-description: |
-    Anything opening lsass.exe with read-memory access that isn&#x27;t a
-    Microsoft signed component (Defender, csrss, etc.) is suspect.
-    Mimikatz / Pypykatz / nanodump signature.
-references:
-    - https://attack.mitre.org/techniques/T1003/001/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1003.001
-    - attack.credential-access
-logsource:
-    category: process_access
-    product: windows
-detection:
-    selection:
-        TargetImage|endswith: &#x27;\lsass.exe&#x27;
-    filter_known_good:
-        SourceImage|endswith:
-            - &#x27;\MsSense.exe&#x27;
-            - &#x27;\MsMpEng.exe&#x27;
-            - &#x27;\csrss.exe&#x27;
-            - &#x27;\svchost.exe&#x27;
-            - &#x27;\wininit.exe&#x27;
-            - &#x27;\services.exe&#x27;
-            - &#x27;\lsm.exe&#x27;
-            - &#x27;\SearchProtocolHost.exe&#x27;
-    condition: selection and not filter_known_good
-falsepositives:
-    - Third-party EDR / forensic tools — extend the filter list
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-377-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-377-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-377-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
-        OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
-        OR Processes.process=&quot;*procdump*lsass*&quot;)
-       OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-377-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
-        OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
-        OR Processes.process=&quot;*procdump*lsass*&quot;)
-       OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4e3ef9d0b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Remote service execution — PsExec / SMB lateral movement</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4e3ef9d0b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-377-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-377-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-377-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-377-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-377-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-   or (FileName =~ &quot;wmic.exe&quot; and ProcessCommandLine has &quot;/node:&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688            // process-create (audit-policy required)
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\psexec.exe&quot;
-   or NewProcessName endswith &quot;\psexesvc.exe&quot;
-   or NewProcessName endswith &quot;\paexec.exe&quot;
-   or (NewProcessName endswith &quot;\wmic.exe&quot; and CommandLine has &quot;/node:&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
-          ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
-status: experimental
-description: |
-    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
-    pivots over SMB. Pair with `wmic /node:` for the full cluster.
-references:
-    - https://attack.mitre.org/techniques/T1021/002/
-    - https://attack.mitre.org/techniques/T1569/002/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1021.002
-    - attack.t1569.002
-    - attack.lateral-movement
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_psexec:
-        Image|endswith:
-            - &#x27;\psexec.exe&#x27;
-            - &#x27;\psexec64.exe&#x27;
-            - &#x27;\psexesvc.exe&#x27;
-            - &#x27;\paexec.exe&#x27;
-            - &#x27;\csexec.exe&#x27;
-            - &#x27;\remcom.exe&#x27;
-            - &#x27;\smbexec.py&#x27;
-    selection_wmic_remote:
-        Image|endswith:
-            - &#x27;\wmic.exe&#x27;
-        CommandLine|contains:
-            - &#x27;/node:&#x27;
-    condition: selection_psexec or selection_wmic_remote
-falsepositives:
-    - Sysadmins running approved remote-management tooling — wrap with
-      a known-admin-host watchlist
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-377-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-377-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-377-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-377-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-377-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details></div>
 </article>
