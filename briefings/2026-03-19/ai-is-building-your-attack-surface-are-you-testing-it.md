@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### BodySnatcher (CVE-2025-12420) ServiceNow Virtual Agent bot/integration exploit
 
-`UC_487_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_489_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### BodySnatcher post-exploit: backdoor admin account / role grant via ServiceNow AI agent
 
-`UC_487_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_489_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

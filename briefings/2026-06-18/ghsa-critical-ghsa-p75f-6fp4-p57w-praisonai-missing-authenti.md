@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI UI (aiui) server spawns shell/LOLBin child via unauth MCP connect RCE
 
-`UC_122_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_124_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Unauthenticated POST to PraisonAI /api/mcp/connect MCP endpoint
 
-`UC_122_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_124_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### PraisonAI MCP RCE proof-of-concept marker file written to /tmp
 
-`UC_122_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_124_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p75f-6fp4-p57w: PraisonAI: Missing Authentication for Cri
 
-`UC_122_0` · phase: **exploit** · confidence: **High**
+`UC_124_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

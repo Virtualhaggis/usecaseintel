@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### UniFi OS unauthenticated RCE chain exploit attempt via nginx URI-normalization bypass (CVE-2026-34908/9/10)
 
-`UC_49_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_51_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### UniFi OS Server post-exploit reverse shell from ucs-update / unifi service account (CVE-2026-34910)
 
-`UC_49_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_51_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### KEV exposure hunt: UniFi OS and Lantronix EDS5000 actively-exploited CVEs present in fleet
 
-`UC_49_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_51_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
