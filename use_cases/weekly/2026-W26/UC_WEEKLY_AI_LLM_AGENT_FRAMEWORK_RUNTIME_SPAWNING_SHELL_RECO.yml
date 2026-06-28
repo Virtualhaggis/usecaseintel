@@ -1,0 +1,118 @@
+id: UC_WEEKLY_AI_LLM_AGENT_FRAMEWORK_RUNTIME_SPAWNING_SHELL_RECO
+title: "[WEEKLY] AI/LLM Agent Framework Runtime Spawning Shell, Recon, or Egress Child Process"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- splunk
+- sigma
+- datadog
+- falcon
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1203
+  name: Exploitation for Client Execution
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects a public-facing AI/LLM agent-framework runtime (Langflow/uvicorn, PraisonAI AgentOS, LobeHub, Crawl4AI, Rclone rcd, or the npm/Node MCPServer) spawning an OS shell, reconnaissance utility, or network-egress tool — the post-exploitation behaviour that turns an unauthenticated RCE primitive into hands-on-keyboard execution. It matters this fortnight because a cluster of CRITICAL GHSAs landed against these frameworks (CVE-2026-48519 'Langflow Shareable Playground RCE', CVE-2026-55450 'Langflow unauthenticated upload', CVE-2026-49980 'Rclone rcd inline-remote command exec', CVE-2026-54157 'LobeHub /webapi/proxy SSRF', the PraisonAI Jobs-API/AgentOS/MCPServer/AgentTeam.launch unauthenticated-invocation set, and 'Crawl4AI Chromium launch-argument injection') — all exploit T1190 then pivot to T1059, and the IOCs (endpoints, ports) differ per product so only the parent→child execution chain generalises. It spans the exploit and install kill-chain stages: the framework process is the initiating parent, the shell/LOLBin is the child. It fires when one of these runtimes (or a Chromium child launched with --no-zygote plus a subprocess-launcher switch) directly spawns sh/bash/cmd/powershell/curl/wget/nc/whoami and similar; it does NOT fire on normal agent inference, model downloads via the framework's own HTTP client, or interactive developer shells whose parent is a terminal rather than the server runtime. Because these frameworks have no legitimate reason to fork a system shell in production, the parent-child pair is alert-grade.
+  
+  Rationale: Every article is an unauthenticated RCE/command-exec primitive in a different AI/LLM framework whose only shared, IOC-independent signal is the server runtime forking a shell or recon/egress tool — matching on the parent-runtime→child-tool pair catches the joint pattern while staying immune to the per-product endpoints and ports that rotate.
+defender_kql: |-
+  DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where (InitiatingProcessFileName in~ ("python","python3","python.exe","uvicorn","gunicorn","node","node.exe","rclone","rclone.exe","chrome.exe","chromium")
+      or InitiatingProcessCommandLine has_any ("langflow","praisonai","agentos","crawl4ai","lobehub","uvicorn","gunicorn"))
+  | where FileName in~ ("sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh.exe","curl","curl.exe","wget","nc","ncat","socat","whoami","id","perl","ruby","php","certutil.exe","bitsadmin.exe")
+      or (ProcessCommandLine has "--no-zygote" and ProcessCommandLine has_any ("--utility-cmd-prefix","--renderer-cmd-prefix","--gpu-launcher","--browser-subprocess-path"))
+  | where AccountName !endswith "$"
+  | summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count(), SampleChildCmd=any(ProcessCommandLine) by DeviceName, AccountName, InitiatingProcessFileName, FileName
+  | order by LastSeen desc
+sigma_yaml: |-
+  title: AI/LLM Agent Framework Runtime Spawning Shell or Recon/Egress Tool
+  id: 9c2f1e84-7d3a-4b6e-9f1a-2c5d8e6b4a10
+  status: experimental
+  description: Public-facing AI/LLM agent framework runtime (Langflow/uvicorn, PraisonAI, LobeHub, Crawl4AI, Rclone, Node MCPServer) spawning an OS shell, recon, or egress utility - post-exploitation of unauthenticated RCE primitives.
+  logsource:
+    category: process_creation
+  detection:
+    parent_runtime:
+      ParentImage|endswith:
+        - '/python'
+        - '/python3'
+        - '\python.exe'
+        - '/uvicorn'
+        - '/gunicorn'
+        - '/node'
+        - '\node.exe'
+        - '/rclone'
+        - '\rclone.exe'
+        - '/chrome'
+        - '/chromium'
+        - '\chrome.exe'
+    child_tool:
+      Image|endswith:
+        - '/sh'
+        - '/bash'
+        - '/dash'
+        - '/zsh'
+        - '\cmd.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '/curl'
+        - '\curl.exe'
+        - '/wget'
+        - '/nc'
+        - '/ncat'
+        - '/socat'
+        - '/whoami'
+        - '/id'
+        - '/perl'
+        - '/ruby'
+        - '/php'
+        - '\certutil.exe'
+        - '\bitsadmin.exe'
+    condition: parent_runtime and child_tool
+  falsepositives:
+    - Container entrypoint scripts that legitimately shell out at startup
+    - CI/build agents driving these frameworks under test
+  level: high
+  tags:
+    - attack.execution
+    - attack.t1059
+    - attack.t1190
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_name) as child_proc from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","python.exe","uvicorn","gunicorn","node","node.exe","rclone","rclone.exe","chrome","chromium","chrome.exe") OR Processes.parent_process IN ("*langflow*","*praisonai*","*agentos*","*crawl4ai*","*lobehub*","*uvicorn*","*gunicorn*")) AND Processes.process_name IN ("sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh.exe","curl","curl.exe","wget","nc","ncat","socat","whoami","id","perl","ruby","php","certutil.exe","bitsadmin.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\python.exe OR *\\Python.exe OR *\\node.exe OR *\\Node.exe OR *\\rclone.exe OR *\\uvicorn.exe OR *\\gunicorn.exe OR *\\chrome.exe OR *\\chromium.exe) @Image:(*\\cmd.exe OR *\\Cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\curl.exe OR *\\wget.exe OR *\\nc.exe OR *\\ncat.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\whoami.exe)
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2 ParentBaseFileName=/^(python3?|uvicorn|gunicorn|node|rclone|chrome|chromium)(\.exe)?$/i
+  | ImageFileName=/[\\\/](sh|bash|dash|zsh|ksh|cmd|powershell|pwsh|curl|wget|nc|ncat|socat|whoami|id|perl|ruby|php|certutil|bitsadmin)(\.exe)?$/i
+  | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName], function=count())
+  | count > 0
+required_telemetry:
+- Sysmon EID 1
+- Defender DeviceProcessEvents
+- CrowdStrike FDR ProcessRollup2
+- Splunk Endpoint.Processes (Sysmon/EDR)
+kill_chain_phase: execution
+expected_fp_scenarios:
+- Container entrypoints / Dockerfile CMD where python or node shells out to a startup script at boot
+- Developer or CI environments running these frameworks under test that legitimately invoke curl/git/shell
+- "Health-check or readiness probes implemented as 'python -c' or 'node' wrappers calling sh/curl"
+- Plugin/tool installation flows where the framework deliberately runs pip, npm, or apt via a shell
+- Chromium-based crawlers (legit Crawl4AI/Playwright use) launching subprocesses without the injected launcher switches
+response_runbook: |-
+  1) Triage: Pull the full process tree on the host — confirm the parent is the network-facing framework service (uvicorn/gunicorn/node/rclone/chrome) and not an interactive terminal. Inspect the child command line for recon (whoami/id), download (curl/wget/certutil) or reverse-shell (nc/socat/bash -i) intent, and correlate against inbound web hits to the framework's exploit endpoints (/api/v1/build_public_tmp, /api/v1/runs, /webapi/proxy, /api/chat). 2) Contain: Isolate the host, kill the framework process, and block the egress IP/domain the child contacted. Rotate any credentials, API keys, or cloud-instance-metadata tokens reachable from that service account. 3) Hunt: Sweep all hosts running the same framework for the parent→child pair over 30 days, check for added persistence (cron, systemd units, Run keys, dropped binaries) and for the Chromium --no-zygote launcher-injection signature, and patch/auth-gate every internet-exposed instance.
+false_positive_filters: |-
+  | where NOT (Processes.parent_process IN ("*/entrypoint.sh*","*docker-entrypoint*") OR Processes.process IN ("*pip install*","*npm install*","*apt-get*","*health*","*readiness*"))

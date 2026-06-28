@@ -1,0 +1,134 @@
+id: UC_WEEKLY_WEB_FACING_SERVICE_PROCESS_WRITES_TO_RCE_PERSISTEN
+title: "[WEEKLY] Web-Facing Service Process Writes to RCE/Persistence Paths (Path-Traversal File-Write)"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+- falcon
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+- id: T1053.003
+  name: "Scheduled Task/Job: Cron"
+- id: T1098.004
+  name: "Account Manipulation: SSH Authorized Keys"
+- id: T1546.004
+  name: "Event Triggered Execution: Unix Shell Configuration Modification"
+data_models:
+  defender:
+  - Endpoint.Filesystem
+description: |-
+  Detects a public-facing server process (Python web/AI app, Java/Tomcat, Node, nginx/httpd, php-fpm) creating or modifying a file OUTSIDE its expected working directory and INSIDE an RCE- or persistence-enabling location — cron drop-ins, ~/.ssh/authorized_keys, shell rc files, Python site-/dist-packages, or a web-root script (.jsp/.php/.aspx). This fortnight a cluster of arbitrary-file-write / path-traversal flaws in AI and comms tooling drove it: Crawl4AI's /screenshot,/pdf output_path traversal and crawler-download traversal (GHSA-365w-hqf6-vxfg, GHSA-2jq4-q6vv-4cp3), Langflow's unauthenticated upload and BaseFileComponent file primitives (CVE-2026-55450, CVE-2026-55447), PraisonAI's unvalidated multiedit tool (GHSA-29w3-p9w9-wc47), gemini-mcp-tool @file/cmd injection (CVE-2026-0755), and the actively-exploited Cisco Unified CM file-write-to-root chain (CVE-2026-20230) that drops a JSP webshell. It spans the exploit→install/persistence kill-chain stages: the public app is abused for write primitive, then the bytes land where they grant code execution or footholds. It FIRES when a long-lived service identity writes to these high-value paths; it does NOT fire on package managers (apt/pip/dpkg), legitimate deploy/CI agents, or interactive admin shells, which are filtered out. Reference IOCs (`<c2_domain_list>`, `<sha256_list>`) are substitution slots only — the detection keys on the write-target + writing-process behaviour, not on rotating hashes.
+  
+  Rationale: All seven articles share one observable regardless of the specific CVE: an internet-facing service is coerced into writing attacker-controlled bytes to a path that yields code execution or a foothold (cron, ssh keys, shell rc, site-packages, web-root script). Keying on writing-process identity + write-target rather than per-app IOCs catches the joint path-traversal/arbitrary-file-write tradecraft as new affected products land.
+defender_kql: |-
+  DeviceFileEvents
+  | where Timestamp > ago(14d)
+  | where ActionType in ("FileCreated","FileModified")
+  | where InitiatingProcessFileName has_any ("python","python3","java","node","httpd","nginx","tomcat","uwsgi","gunicorn","php-fpm","w3wp.exe")
+  | where FolderPath has_any ("/etc/cron","/var/spool/cron","/.ssh/",".bashrc",".bash_profile",".profile",".zshrc","/site-packages/","/dist-packages/","/webapps/","\\wwwroot\\","/axis2-web/")
+     or FileName endswith "authorized_keys"
+     or FileName has_any (".jsp",".jspx",".php",".aspx")
+  | where InitiatingProcessAccountName !endswith "$"
+  | where not(InitiatingProcessCommandLine has_any ("apt","dpkg","pip install","yum","dnf"))
+  | summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Writes=count(), SampleTarget=any(FolderPath)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, ActionType
+  | order by LastSeen desc
+sentinel_kql: |-
+  DeviceFileEvents
+  | where Timestamp > ago(14d)
+  | where ActionType in ("FileCreated","FileModified")
+  | where InitiatingProcessFileName has_any ("python","python3","java","node","httpd","nginx","tomcat","uwsgi","gunicorn","php-fpm","w3wp.exe")
+  | where FolderPath has_any ("/etc/cron","/var/spool/cron","/.ssh/",".bashrc",".bash_profile",".profile",".zshrc","/site-packages/","/dist-packages/","/webapps/","\\wwwroot\\","/axis2-web/")
+     or FileName endswith "authorized_keys"
+     or FileName has_any (".jsp",".jspx",".php",".aspx")
+  | where InitiatingProcessAccountName !endswith "$"
+  | where not(InitiatingProcessCommandLine has_any ("apt","dpkg","pip install","yum","dnf"))
+  | summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Writes=count(), SampleTarget=any(FolderPath)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, ActionType
+  | order by LastSeen desc
+sigma_yaml: |-
+  title: Web-Facing Service Process Writes to RCE or Persistence Path
+  id: 7c3e1a92-4b6d-4e21-9c0f-2a8b5d61f4aa
+  status: experimental
+  description: Public-facing service process (Python/Java/Node/web server) writes a file into a cron, ssh-key, shell-rc, site-packages or web-root location, indicating path-traversal arbitrary-file-write to RCE/persistence.
+  logsource:
+    category: file_event
+    product: linux
+  detection:
+    selection_proc:
+      Image|endswith:
+        - '/python'
+        - '/python3'
+        - '/java'
+        - '/node'
+        - '/httpd'
+        - '/nginx'
+        - '/uwsgi'
+        - '/gunicorn'
+        - '/php-fpm'
+    selection_path:
+      TargetFilename|contains:
+        - '/etc/cron'
+        - '/var/spool/cron'
+        - '/.ssh/authorized_keys'
+        - '/.bashrc'
+        - '/.bash_profile'
+        - '/.zshrc'
+        - '/site-packages/'
+        - '/dist-packages/'
+        - '/webapps/'
+    selection_ext:
+      TargetFilename|endswith:
+        - '.jsp'
+        - '.jspx'
+        - '.php'
+    filter_pkgmgr:
+      Image|endswith:
+        - '/apt'
+        - '/dpkg'
+        - '/pip'
+        - '/pip3'
+        - '/yum'
+        - '/dnf'
+    condition: selection_proc and (selection_path or selection_ext) and not filter_pkgmgr
+  falsepositives:
+    - Package managers and CI/deploy agents installing into site-packages or web roots
+    - Application self-update routines writing into their own package tree
+  level: high
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified") AND (Filesystem.file_path IN ("/etc/cron.d/*","/etc/cron.daily/*","/etc/cron.hourly/*","/var/spool/cron/*","/etc/crontab","*/.ssh/authorized_keys","*/.bashrc","*/.bash_profile","*/.profile","*/.zshrc","*/.bash_login","*/site-packages/*","*/dist-packages/*","*/webapps/*","*/wwwroot/*","*/axis2-web/*") OR Filesystem.file_name IN ("authorized_keys","crontab") OR Filesystem.file_name="*.jsp" OR Filesystem.file_name="*.jspx" OR Filesystem.file_name="*.php" OR Filesystem.file_name="*.aspx") AND Filesystem.process_name IN ("python","python3","java","node","httpd","nginx","tomcat","uwsgi","gunicorn","php-fpm","w3wp.exe","catalina.sh") AND NOT Filesystem.process_name IN ("apt","apt-get","dpkg","pip","pip3","yum","dnf","rpm") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+datadog_query: |-
+  source:windows.sysmon @EventID:11 @Image:(*\\python.exe OR *\\python3.exe OR *\\java.exe OR *\\node.exe OR *\\php-cgi.exe OR *\\w3wp.exe OR *\\tomcat*.exe) @TargetFilename:(*\\wwwroot\\* OR *\\webapps\\* OR *.jsp OR *.jspx OR *.aspx OR *.php OR *\\.ssh\\authorized_keys)
+falcon_logscale_query: |-
+  #event_simpleName=FileWritten
+  | ContextImageFileName=/(python3?|java|node|httpd|nginx|tomcat|uwsgi|gunicorn|php-fpm|w3wp\.exe)/i
+  | regex("(/etc/cron|/var/spool/cron|/\\.ssh/authorized_keys|/\\.bashrc|/\\.bash_profile|/\\.zshrc|/site-packages/|/dist-packages/|/webapps/|wwwroot|/axis2-web/|\\.jsp$|\\.jspx$|\\.php$|\\.aspx$)", field=TargetFileName)
+  | NOT ContextImageFileName=/(apt|dpkg|pip3?|yum|dnf|rpm)/i
+  | groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())
+  | count > 0
+required_telemetry:
+- Sysmon EID 11 (FileCreate)
+- Defender DeviceFileEvents
+- Falcon FDR FileWritten
+- Linux auditd file watches (/etc/cron, ~/.ssh, web roots)
+- Endpoint.Filesystem (Splunk CIM)
+kill_chain_phase: persistence
+expected_fp_scenarios:
+- Package managers (apt/pip/dpkg/yum) writing into site-packages or dist-packages during legitimate dependency installs
+- CI/CD or config-management agents (Ansible, Puppet, deploy scripts) dropping cron jobs or web-root files run by a service account
+- Application self-update / plugin-install routines that legitimately write into their own package tree
+- Legitimate app features that persist user SSH keys or write generated reports into a web-served directory
+- Web servers compiling and caching JSP/PHP into web-root work directories (Tomcat work dir, opcache) during normal operation
+response_runbook: |-
+  1) Triage: Pull the exact TargetFilename + InitiatingProcess and confirm the writing service is internet-exposed and the write fell OUTSIDE its configured working/output dir. Inspect file contents — webshell markers, attacker SSH pubkey, cron command, or trojanised .py in site-packages = true positive. Correlate timing with a preceding inbound HTTP request (upload/traversal) to the same host. 2) Contain: Isolate the host or kill the service; delete/quarantine the dropped file; remove rogue authorized_keys entries and cron drop-ins; rotate any credentials reachable from the service (it may also have read /etc/shadow, id_rsa, .aws/credentials). Patch the vulnerable app (Crawl4AI, Langflow, PraisonAI, gemini-mcp-tool, Cisco Unified CM) to fixed versions. 3) Hunt: Sweep all hosts running the same service for identical write targets and for outbound to `<c2_domain_list>`; pivot on the service account for follow-on execution, new listeners, or lateral SSH using the planted key.
+false_positive_filters: |-
+  | where InitiatingProcessCommandLine !has_any ("apt","apt-get","dpkg","pip install","pip3 install","yum","dnf","ansible","puppet","chef-client") | where InitiatingProcessAccountName !endswith "$"

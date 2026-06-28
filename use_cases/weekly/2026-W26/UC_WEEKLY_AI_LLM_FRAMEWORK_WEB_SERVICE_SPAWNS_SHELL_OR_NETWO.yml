@@ -1,0 +1,115 @@
+id: UC_WEEKLY_AI_LLM_FRAMEWORK_WEB_SERVICE_SPAWNS_SHELL_OR_NETWO
+title: "[WEEKLY] AI/LLM Framework Web Service Spawns Shell or Network Tool (Agent-Framework Unauthenticated RCE)"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+- falcon
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1203
+  name: Exploitation for Client Execution
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects a web-facing AI/LLM framework runtime (python/uvicorn/gunicorn/node, or a framework-launched Chromium/headless browser) spawning an OS shell, recon binary, or network/download utility — the universal post-exploitation step that every unauthenticated/pre-auth RCE in this fortnight's advisories converges on. It matters now because a cluster of critical AI-tooling RCEs dropped in the last 14 days: Langflow Shareable-Playground and BaseFileComponent RCEs (CVE-2026-48519, CVE-2026-55447), Crawl4AI's AST sandbox escape, path-traversal, and Chromium extra_args injection (CVE-2026-53753 + two GHSAs), PraisonAI's Jobs-API approval bypass, Vitest Browser-Mode CDP abuse (CVE-2026-53633), Microsoft's AutoJack AutoGen Studio MCP chain, and Unit 42's Vertex AI pickle hijack — all chaining T1190 → in-process command execution. The chain spans exploit (public-facing app) and install/execution (interpreter spawns shell). It fires when an LLM-framework parent process forks a shell, recon command (whoami/id/uname), or egress tool (curl/wget/nc/socat); it will NOT fire on the framework simply serving HTTP, importing libraries, or running its own python child workers, keeping it tied to genuine command-execution behaviour rather than normal service activity. Because the framework process is never expected to spawn an interactive shell or netcat, this is alert-grade despite the breadth of covered products.
+  
+  Rationale: Every article describes a distinct CVE/product but the same observable: an attacker-reachable framework interpreter or framework-launched browser executing an OS command it never normally spawns — so anchoring on the parent(framework)→child(shell/recon/egress) edge catches the joint tradecraft without depending on any single advisory's rotating IOCs.
+defender_kql: |-
+  DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where InitiatingProcessFileName in~ ("python","python.exe","python3","uvicorn","gunicorn","node","node.exe","chrome.exe","chromium","headless_shell","msedge.exe")
+      or InitiatingProcessCommandLine has_any ("langflow","crawl4ai","praisonai","autogen","vitest","uvicorn","gunicorn")
+  | where FileName in~ ("sh","bash","dash","zsh","ksh","curl","curl.exe","wget","nc","ncat","netcat","socat","whoami","id","uname","hostname","perl","ruby","cmd.exe","powershell.exe","pwsh.exe")
+  | where AccountName !endswith "$"
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+  | order by Timestamp desc
+sentinel_kql: |-
+  SecurityEvent
+  | where TimeGenerated > ago(14d)
+  | where EventID == 4688
+  | extend ParentName = tolower(tostring(split(ParentProcessName, "\\")[-1]))
+  | extend ChildName = tolower(tostring(split(NewProcessName, "\\")[-1]))
+  | where ParentName in ("python.exe","python3.exe","node.exe","chrome.exe","msedge.exe","headless_shell.exe","uvicorn.exe","gunicorn.exe")
+      or CommandLine has_any ("langflow","crawl4ai","praisonai","autogen","vitest")
+  | where ChildName in ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wsl.exe","curl.exe","wget.exe","whoami.exe","net.exe","nc.exe")
+  | where SubjectUserName !endswith "$"
+  | project TimeGenerated, Computer, SubjectUserName, ParentName, ChildName, NewProcessName, CommandLine
+  | order by TimeGenerated desc
+sigma_yaml: |-
+  title: AI/LLM Framework Web Service Spawns Shell or Network Tool
+  status: experimental
+  description: AI/LLM framework runtime (python/uvicorn/node/headless browser) spawning a shell, recon, or egress binary - post-exploitation of agent-framework unauthenticated RCE.
+  logsource:
+    category: process_creation
+  detection:
+    selection_parent:
+      ParentImage|endswith:
+        - '/python'
+        - '/python3'
+        - '/uvicorn'
+        - '/gunicorn'
+        - '/node'
+        - '/chrome'
+        - '/chromium'
+        - '/headless_shell'
+        - '\python.exe'
+        - '\node.exe'
+        - '\chrome.exe'
+    selection_child:
+      Image|endswith:
+        - '/sh'
+        - '/bash'
+        - '/dash'
+        - '/curl'
+        - '/wget'
+        - '/nc'
+        - '/ncat'
+        - '/socat'
+        - '/whoami'
+        - '/id'
+        - '/uname'
+        - '\cmd.exe'
+        - '\powershell.exe'
+    condition: selection_parent and selection_child
+  falsepositives:
+    - Legitimate subprocess shell-outs by data-processing or build pipelines
+    - CI runners invoking curl/git from a node or python parent
+  level: high
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python","python3","uvicorn","gunicorn","node","chrome","chromium","headless_shell","msedge.exe") AND Processes.process_name IN ("sh","bash","dash","zsh","ksh","curl","wget","nc","ncat","netcat","socat","whoami","id","uname","hostname","perl","ruby","cmd.exe","powershell.exe","pwsh.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\python.exe OR *\\python3.exe OR *\\node.exe OR *\\chrome.exe OR *\\msedge.exe OR *\\headless_shell.exe) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\bash.exe OR *\\sh.exe OR *\\curl.exe OR *\\wget.exe OR *\\whoami.exe OR *\\nc.exe)
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2 ParentBaseFileName=/^(python|python3|uvicorn|gunicorn|node|chrome|chromium|headless_shell)(\.exe)?$/i ImageFileName=/[\\\/](sh|bash|dash|zsh|ksh|curl|wget|nc|ncat|netcat|socat|whoami|id|uname|hostname|perl|ruby|cmd\.exe|powershell\.exe|pwsh\.exe)$/i
+  | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName], function=count(as=execCount))
+  | sort(execCount, order=desc)
+required_telemetry:
+- Sysmon EID 1
+- Defender DeviceProcessEvents
+- Windows Security 4688
+- Linux auditd EXECVE
+- Falcon ProcessRollup2
+kill_chain_phase: execution
+expected_fp_scenarios:
+- Data-science notebooks / Jupyter kernels (python parent) legitimately shelling out to curl, git, or bash for package installs
+- Node-based build tools or test runners spawning sh/curl during CI on developer or build hosts
+- Headless Chromium in legitimate scraping/automation pipelines invoking helper shell scripts
+- Langflow/Crawl4AI/PraisonAI operators running approved workflow steps that intentionally call OS commands
+- Container entrypoint wrappers where uvicorn/gunicorn is started by a shell that re-execs utilities at boot
+response_runbook: |-
+  1) Triage: Pull the full parent command line and confirm the parent is an internet-exposed AI/LLM service (Langflow, Crawl4AI, PraisonAI, AutoGen, Vitest, Vertex worker). Inspect the child cmdline for recon (whoami/id/uname), egress (curl/wget to external IP), or reverse-shell (nc/socat) intent; benign installs/build steps are usually self-contained and on dev/CI hosts. 2) Contain: If the child is a reverse shell or beacons to an untrusted host, isolate the host/container, kill the framework process tree, rotate any secrets/tokens reachable from that service (cloud metadata, .env, API keys), and snapshot for forensics. 3) Hunt: Pivot on the host/aid for follow-on writes to cron.d, authorized_keys, shell rc files, and site-packages, outbound connections to <c2_domain_list>/<c2_ip_list>, and child hashes against <sha256_list>; sweep other hosts running the same framework version for identical parent→child spawns.
+false_positive_filters: |-
+  | where not(InitiatingProcessCommandLine has_any ("jupyter","ipykernel","pip install","npm install","yarn","pnpm","poetry","setup.py")) | where DeviceName !has_any ("build","ci","runner","jenkins")

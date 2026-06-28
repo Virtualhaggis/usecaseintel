@@ -1,0 +1,141 @@
+id: UC_WEEKLY_AI_AGENT_SERVER_PRAISONAI_MCP_SPAWNS_OS_SHELL_OR_R
+title: "[WEEKLY] AI-Agent Server (PraisonAI/MCP) Spawns OS Shell or Recon LOLBin — Unauthenticated RCE Exploitation"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+- falcon
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1133
+  name: External Remote Services
+- id: T1211
+  name: Exploitation for Defense Evasion
+- id: T1204.002
+  name: "User Execution: Malicious File"
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects an LLM/agent-runtime server process (python/uvicorn/gunicorn/node) that is hosting a PraisonAI or MCP service spawning an OS shell, network utility, or reconnaissance LOLBin as a child — the convergent post-exploitation signal across this fortnight's 12 critical PraisonAI advisories (GHSA-4869-x4pr-q22x Jobs-API RCE, GHSA-p75f-6fp4-p57w UI MCP-connect command injection, GHSA-p69m/-vmmj codeMode sandbox escape, GHSA-892r/-9752 unauthenticated AgentOS, GHSA-x227 MCP SSE 0.0.0.0 bind, GHSA-f38v hardcoded JWT). Every one of those bugs ends the same way: a network-reachable, auth-bypassed agent endpoint coerces the host runtime into executing attacker-chosen code, which surfaces as the agent parent process forking a shell/recon binary it would never normally launch. The UC spans exploit→execution of the kill chain: the unauthenticated request is the entry, the anomalous child process is the detection. It FIRES when an agent-runtime parent whose command line references praisonai/agentos/aiui/mcp spawns sh/bash/cmd/powershell/curl/whoami/id/etc.; it does NOT fire on the agent serving normal HTTP, on package-manager subprocess builds (pip/npm/node-gyp), or on shells spawned by non-agent parents. Because it keys on the parent identity + child class rather than any single advisory's IOC, it stays valid as new PraisonAI CVEs and exploit payloads land.
+  
+  Rationale: All 12 advisories differ in entry vector (Jobs API, AgentOS, MCP SSE/HTTP, recipe-serve, codeMode, UI connect) but converge on the same observable: an unauthenticated/auth-bypassed agent runtime executing attacker-controlled OS commands, so keying on the agent-runtime parent + shell/recon child catches the joint TTP independent of which CVE or payload is used.
+defender_kql: |-
+  DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where InitiatingProcessFileName in~ ("python","python3","python.exe","node","node.exe","uvicorn","gunicorn","pwsh","pwsh.exe")
+  | where InitiatingProcessCommandLine has_any ("praisonai","agentos","aiui","recipe serve","jobs.server","praisonai_platform","mcp")
+  | where FileName in~ ("sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh.exe","curl","curl.exe","wget","nc","ncat","socat","whoami","id","uname","certutil.exe","base64","chmod")
+  | where AccountName !endswith "$"
+  | where not(ProcessCommandLine has_any ("pip install","npm install","node-gyp"))   // strip build subprocesses
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessTokenElevation
+  | order by Timestamp desc
+sentinel_kql: |-
+  DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where InitiatingProcessFileName in~ ("python","python3","python.exe","node","node.exe","uvicorn","gunicorn","pwsh","pwsh.exe")
+  | where InitiatingProcessCommandLine has_any ("praisonai","agentos","aiui","recipe serve","jobs.server","praisonai_platform","mcp")
+  | where FileName in~ ("sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh.exe","curl","curl.exe","wget","nc","ncat","socat","whoami","id","uname","certutil.exe","base64","chmod")
+  | where AccountName !endswith "$"
+  | where not(ProcessCommandLine has_any ("pip install","npm install","node-gyp"))
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessTokenElevation
+  | order by Timestamp desc
+sigma_yaml: |-
+  title: AI-Agent Server Spawns OS Shell or Recon LOLBin (PraisonAI/MCP RCE)
+  status: experimental
+  description: Agent-runtime parent (python/node/uvicorn) hosting a PraisonAI/MCP service spawns a shell or recon binary, the convergent post-exploitation signal across the June 2026 PraisonAI critical advisories.
+  logsource:
+    category: process_creation
+  detection:
+    parent_runtime:
+      ParentImage|endswith:
+        - '/python'
+        - '/python3'
+        - '/node'
+        - '/uvicorn'
+        - '/gunicorn'
+        - '\python.exe'
+        - '\node.exe'
+    parent_service:
+      ParentCommandLine|contains:
+        - 'praisonai'
+        - 'agentos'
+        - 'aiui'
+        - 'recipe serve'
+        - 'jobs.server'
+        - 'praisonai_platform'
+        - 'mcp'
+    child_shell:
+      Image|endswith:
+        - '/sh'
+        - '/bash'
+        - '/dash'
+        - '/zsh'
+        - '/nc'
+        - '/ncat'
+        - '/socat'
+        - '/curl'
+        - '/wget'
+        - '/whoami'
+        - '/id'
+        - '/uname'
+        - '\cmd.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\certutil.exe'
+    filter_build:
+      CommandLine|contains:
+        - 'pip install'
+        - 'npm install'
+        - 'node-gyp'
+    condition: parent_runtime and parent_service and child_shell and not filter_build
+  falsepositives:
+    - Agent workflows that legitimately shell out for benign tooling
+    - CI/build subprocesses under an agent parent
+  level: high
+  tags:
+    - attack.execution
+    - attack.t1190
+    - attack.t1059.004
+    - attack.t1059.006
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","python.exe","node","node.exe","uvicorn","gunicorn","pwsh","pwsh.exe")) AND (Processes.parent_process="*praisonai*" OR Processes.parent_process="*agentos*" OR Processes.parent_process="*aiui*" OR Processes.parent_process="*recipe*serve*" OR Processes.parent_process="*jobs*server*" OR Processes.parent_process="*mcp*" OR Processes.parent_process="*praisonai_platform*") AND (Processes.process_name IN ("sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh.exe","curl","curl.exe","wget","nc","ncat","socat","whoami","id","uname","certutil.exe","base64","chmod")) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process Processes.process_id Processes.parent_process_id | `drop_dm_object_name(Processes)` | where NOT (process IN ("*pip install*","*npm install*","*node-gyp*")) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\python.exe OR *\\Python.exe OR *\\node.exe OR *\\Node.exe OR *\\uvicorn.exe OR *\\gunicorn.exe) @ParentCommandLine:(*praisonai* OR *agentos* OR *aiui* OR *mcp* OR *recipe?serve* OR *jobs.server*) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\curl.exe OR *\\whoami.exe OR *\\certutil.exe) -@CommandLine:(*"pip install"* OR *"npm install"* OR *node-gyp*)
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2 ParentBaseFileName=/^(python3?|node|uvicorn|gunicorn)(\.exe)?$/i
+  | ParentCommandLine=/(praisonai|agentos|aiui|mcp|recipe serve|jobs\.server|praisonai_platform)/i
+  | ImageFileName=/(\/(sh|bash|dash|zsh|ksh|nc|ncat|socat|curl|wget|whoami|id|uname|chmod)$)|(\\(cmd|powershell|pwsh|certutil)\.exe$)/i
+  | NOT (CommandLine=/(pip install|npm install|node-gyp)/i)
+  | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
+  | count > 0
+required_telemetry:
+- Sysmon EID 1
+- Defender DeviceProcessEvents
+- Sentinel DeviceProcessEvents
+- CrowdStrike FDR ProcessRollup2
+- Linux auditd EXECVE (via EDR process telemetry)
+kill_chain_phase: execution
+expected_fp_scenarios:
+- An agent workflow legitimately configured to shell out to curl/wget for tool-fetching or webhook callbacks during normal task execution
+- Developer running PraisonAI locally and the agent invoking a code-execution tool against benign user code that calls whoami/uname
+- CI/CD pipeline starting a PraisonAI/MCP server under uvicorn that forks pip/npm during dependency install (mitigated by the build-command filter)
+- Health-check or readiness probes implemented as a shell wrapper spawned by the gunicorn master
+- "Security/test harnesses or red-team validation deliberately exercising the agent's code-execution tools in a sandbox"
+response_runbook: |-
+  1) Triage: Pull the InitiatingProcessCommandLine and child ProcessCommandLine for the alerting host; confirm the parent is a network-listening agent server (uvicorn/gunicorn/node bound to 0.0.0.0) and the child is interactive recon (whoami/id/uname) or egress (curl/nc/socat) rather than a build step. Check InitiatingProcessTokenElevation and whether the listener accepted a recent public inbound connection. 2) Contain: Isolate the host or kill the agent process; block the listening port at the host firewall; if the service is internet-exposed, take it offline and rotate any JWT/MCP secrets and cloud creds reachable from that host (.env, ~/.aws/credentials, SSH keys). 3) Hunt: Sweep all hosts for agent-runtime parents spawning shells in the last 14d, pivot on any C2 domains/IPs the child contacted, and inventory PraisonAI/MCP versions to confirm patched builds and that auth middleware + non-0.0.0.0 binds are enforced.
+false_positive_filters: |-
+  | where not(ProcessCommandLine has_any ("pip install","npm install","node-gyp","--version","healthcheck","readiness")) and InitiatingProcessTokenElevation != ""

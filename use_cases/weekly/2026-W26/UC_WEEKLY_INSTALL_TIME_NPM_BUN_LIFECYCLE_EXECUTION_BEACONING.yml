@@ -1,0 +1,138 @@
+id: UC_WEEKLY_INSTALL_TIME_NPM_BUN_LIFECYCLE_EXECUTION_BEACONING
+title: "[WEEKLY] Install-Time npm/Bun Lifecycle Execution Beaconing Out Within Minutes"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- splunk
+- sigma
+- datadog
+- falcon
+mitre_attack:
+- id: T1195.002
+  name: "Supply Chain Compromise: Compromise Software Dependencies and Development Tools"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1105
+  name: Ingress Tool Transfer
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the joint supply-chain pattern where a package-manager lifecycle hook (npm/pnpm/yarn/npx/node-gyp/Bun postinstall, preinstall, setup.cjs, setup_bun.js, bun_environment.js or binding.gyp install-time exec) spawns a script host that makes an outbound connection to a public host within minutes — the install-then-beacon chain, not any single rotating IOC. It matters this fortnight because the Mini Shai-Hulud / Miasma / Hades family and the Sapphire Sleet easy-day-js typosquat backdoored 140+ @mastra packages, 20 Leo Platform packages, 400+ AUR packages and propagated to Go and GitHub Actions ('Over 140 popular Mastra npm Packages Hit by Supply Chain Attack', 'From package to postinstall payload', 'Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosquat', 'Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised', 'Miasma Malware Targets npm Packages and GitHub Actions', '400+ AUR Packages Hijacked'), all of which weaponise the install lifecycle to drop a second-stage stealer that immediately calls home. It spans install (lifecycle-hook code execution) into command-and-control (the post-install egress that pulls the second stage or exfiltrates secrets). It FIRES when a developer/CI host runs an install whose hook process is followed within five minutes by a public outbound connection; it does NOT fire on package installs with no install-time child egress, on purely registry-bound traffic, or on runtime application network calls long after install. Reference IOCs (`<c2_ip_list>`, `<c2_domain_list>`, `<sha256_list>`) are substitution slots only.
+  
+  Rationale: Every article in this batch weaponises the same install-lifecycle primitive (postinstall/preinstall/binding.gyp/Bun bootstrap) to execute code that immediately reaches the network, so correlating the lifecycle-hook child process with public egress inside a tight window catches the shared TTP regardless of which package, scope, or rotating C2 IOC is in play.
+defender_kql: |-
+  let Window = 5m;
+  let InstallExec = DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where InitiatingProcessFileName in~ ("npm.exe","node.exe","node-gyp.exe","pnpm.exe","yarn.exe","npx.exe","bun.exe","npm","node","node-gyp","pnpm","yarn","npx","bun","sh","bash")
+  | where FileName in~ ("node.exe","bun.exe","node","bun","sh","bash","powershell.exe","pwsh.exe","cmd.exe")
+  | where ProcessCommandLine has_any ("postinstall","preinstall","setup.cjs","setup_bun.js","bun_environment.js","binding.gyp","node-gyp")
+  | where AccountName !endswith "$"
+  | project ProcTime = Timestamp, DeviceId, DeviceName, AccountName, InstallProc = FileName, InstallCmd = ProcessCommandLine;
+  InstallExec
+  | join kind=inner (
+      DeviceNetworkEvents
+      | where Timestamp > ago(14d)
+      | where RemoteIPType == "Public"                       // skip lateral / registry-mirror RFC1918
+      | where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+      | project NetTime = Timestamp, DeviceId, RemoteIP, RemotePort, RemoteUrl, NetProc = InitiatingProcessFileName
+    ) on DeviceId
+  | where NetTime between (ProcTime .. ProcTime + Window)    // egress within 5m of the install hook
+  | project ProcTime, NetTime,
+            DelaySec = datetime_diff('second', NetTime, ProcTime),
+            DeviceName, AccountName, InstallProc, InstallCmd,
+            NetProc, RemoteIP, RemotePort, RemoteUrl
+  | order by ProcTime desc
+sigma_yaml: |-
+  title: Install-Time npm/Bun Lifecycle Hook Spawns Script Host
+  id: 8f2c4d11-7a93-4e2b-9c1a-3d6e5f0b8a21
+  status: experimental
+  description: Package-manager lifecycle hook (postinstall/preinstall/binding.gyp/Bun bootstrap) spawning a script interpreter - the install-time execution anchor of the Mini Shai-Hulud/Miasma/Sapphire Sleet npm supply-chain chain.
+  logsource:
+    category: process_creation
+    product: windows
+  detection:
+    selection_parent:
+      ParentImage|endswith:
+        - '\npm.exe'
+        - '\node.exe'
+        - '\node-gyp.exe'
+        - '\pnpm.exe'
+        - '\yarn.exe'
+        - '\npx.exe'
+        - '\bun.exe'
+    selection_child:
+      Image|endswith:
+        - '\node.exe'
+        - '\bun.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\cmd.exe'
+    selection_marker:
+      CommandLine|contains:
+        - 'postinstall'
+        - 'preinstall'
+        - 'setup.cjs'
+        - 'setup_bun.js'
+        - 'bun_environment.js'
+        - 'binding.gyp'
+        - 'node-gyp'
+    condition: selection_parent and selection_child and selection_marker
+  falsepositives:
+    - Legitimate native-module builds (node-gyp prebuild downloads)
+    - Electron/Playwright/Puppeteer/Cypress postinstall binary fetches
+  level: medium
+  tags:
+    - attack.t1195.002
+    - attack.t1059.007
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as proc_time max(_time) as lastProc from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm","npm.exe","node","node.exe","node-gyp","node-gyp.exe","pnpm","pnpm.exe","yarn","yarn.exe","npx","npx.exe","bun","bun.exe")) AND (Processes.process_name IN ("node","node.exe","bun","bun.exe","sh","bash","powershell.exe","pwsh.exe","cmd.exe")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process 
+  | `drop_dm_object_name(Processes)` 
+  | eval install_marker=if(match(process,"(?i)postinstall|preinstall|setup\.cjs|setup_bun\.js|bun_environment\.js|binding\.gyp|node-gyp"),1,0) 
+  | where install_marker=1 
+  | join type=inner dest [ 
+      | tstats `summariesonly` earliest(_time) as net_time values(All_Traffic.dest) as c2_dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction="outbound" AND All_Traffic.action="allowed" by All_Traffic.src 
+      | `drop_dm_object_name(All_Traffic)` 
+      | rename src as dest ] 
+  | where net_time>=proc_time AND net_time<=(proc_time+300) 
+  | eval delay_sec=net_time-proc_time 
+  | convert ctime(proc_time) ctime(net_time) 
+  | table dest user parent_process_name process_name process proc_time net_time delay_sec c2_dest dest_port count 
+  | sort - net_time
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\npm.exe OR *\\node.exe OR *\\node-gyp.exe OR *\\pnpm.exe OR *\\yarn.exe OR *\\npx.exe OR *\\bun.exe) (@CommandLine:*postinstall* OR @CommandLine:*preinstall* OR @CommandLine:*setup.cjs* OR @CommandLine:*setup_bun.js* OR @CommandLine:*bun_environment.js* OR @CommandLine:*binding.gyp* OR @CommandLine:*node-gyp*)
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2 ParentBaseFileName=/^(npm|node|node-gyp|pnpm|yarn|npx|bun)(\.exe)?$/i
+  | regex("(?i)(postinstall|preinstall|setup\\.cjs|setup_bun\\.js|bun_environment\\.js|binding\\.gyp|node-gyp)", field=CommandLine)
+  | join({#event_simpleName=NetworkConnectIP4
+          | NOT cidr("10.0.0.0/8", field=RemoteAddressIP4)
+          | NOT cidr("172.16.0.0/12", field=RemoteAddressIP4)
+          | NOT cidr("192.168.0.0/16", field=RemoteAddressIP4)}, field=aid, include=[RemoteAddressIP4, RemotePort])
+  | groupBy([aid, ComputerName, ImageFileName, CommandLine, RemoteAddressIP4, RemotePort], function=count())
+required_telemetry:
+- Defender DeviceProcessEvents
+- Defender DeviceNetworkEvents
+- Sysmon EID 1
+- Sysmon EID 3
+- CrowdStrike ProcessRollup2
+- CrowdStrike NetworkConnectIP4
+- Splunk Endpoint.Processes
+- Splunk Network_Traffic.All_Traffic
+kill_chain_phase: execution
+expected_fp_scenarios:
+- node-gyp / prebuild-install legitimately downloading native module binaries during a clean install
+- Electron, Playwright, Puppeteer, Cypress or esbuild postinstall steps fetching platform binaries from their vendor CDNs
+- "CI/CD build agents and developer laptops running bulk `npm ci` that pulls many packages with install scripts"
+- Corporate package proxy / Artifactory mirror egress on first cache-miss for a new dependency
+- Internal tooling whose postinstall hook phones a licensing or telemetry endpoint within minutes
+response_runbook: |-
+  1) Triage: Pull the InstallCmd/CommandLine and the package name + version being installed; resolve RemoteIP/RemoteUrl against threat intel and the known IOC slots (`<c2_ip_list>`, `<c2_domain_list>`). Benign builds egress to vendor CDNs (nodejs.org, github CDNs, electronjs.org); a raw IP, temp.sh, paste/rentry host, or hostwindsdns.com-style dynamic DNS is suspicious. Check whether the egress process is node/bun spawned by the hook vs a separate stealer. 2) Contain: Isolate the host, kill the node/bun child, and quarantine the package from the local cache and any shared registry/mirror; rotate any developer/CI secrets, GitHub tokens, npm tokens and cloud keys reachable from that machine (these campaigns exfiltrate via the victim's own GitHub token). 3) Hunt: Pivot on the package@version across all dev and CI hosts via the same query, pull SHA256 of dropped files for `<sha256_list>` matching, and review GitHub Actions runs and cloud CloudTrail for anomalous AssumeRole / secret access fr
+false_positive_filters: |-
+  | where RemoteUrl !endswith "registry.npmjs.org" and RemoteUrl !endswith "nodejs.org" and RemoteUrl !endswith "github.com" and RemoteUrl !endswith "githubusercontent.com" and RemoteUrl !endswith "yarnpkg.com" and RemoteUrl !endswith "jsdelivr.net" and RemoteUrl !endswith "unpkg.com" and not (RemoteUrl has_any ("electronjs.org","playwright","cypress.io","esbuild","npmmirror.com"))
