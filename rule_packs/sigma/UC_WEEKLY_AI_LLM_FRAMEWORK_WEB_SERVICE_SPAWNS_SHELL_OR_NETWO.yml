@@ -1,0 +1,40 @@
+title: "[WEEKLY] AI/LLM Framework Web Service Spawns Shell or Network Tool (Agent-Framework Unauthenticated RCE)"
+id: 635b2fb4-0892-5bb1-bcb9-c8404ebace8c
+status: experimental
+description: "Detects a web-facing AI/LLM framework runtime (python/uvicorn/gunicorn/node, or a framework-launched Chromium/headless browser) spawning an OS shell, recon binary, or network/download utility \u2014 the universal post-exploitation step that every unauthenticated/pre-auth RCE in this fortnight's advisories converges on. It matters now because a cluster of critical AI-tooling RCEs dropped in the last 14 days: Langflow Shareable-Playground and BaseFileComponent RCEs (CVE-2026-48519, CVE-2026-55447), Crawl4AI's AST sandbox escape, path-traversal, and Chromium extra_args injection (CVE-2026-53753 + two GHSAs), PraisonAI's Jobs-API approval bypass, Vitest Browser-Mode CDP abuse (CVE-2026-53633), Microsoft's AutoJack AutoGen Studio MCP chain, and Unit 42's Vertex AI pickle hijack \u2014 all chaining T1190 \u2192 in-process command execution. The chain spans exploit (public-facing app) and install/execution (interpreter spawns shell). It fires when an LLM-framework parent process forks a shell, recon command (whoami/id/uname), or egress tool (curl/wget/nc/socat); it will NOT fire on the framework simply serving HTTP, importing libraries, or running its own python child workers, keeping it tied to genuine command-execution behaviour rather than normal service activity. Because the framework process is never expected to spawn an interactive shell or netcat, this is alert-grade despite the breadth of covered products."
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_AI_LLM_FRAMEWORK_WEB_SERVICE_SPAWNS_SHELL_OR_NETWO.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059_004
+  - attack.t1059_006
+  - attack.t1203
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'python'
+      - 'python3'
+      - 'uvicorn'
+      - 'gunicorn'
+      - 'node'
+      - 'chrome'
+      - 'chromium'
+      - 'headless_shell'
+      - 'msedge.exe'
+      - 'bash'
+      - 'dash'
+      - 'zsh'
+      - 'ksh'
+      - 'curl'
+      - 'wget'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

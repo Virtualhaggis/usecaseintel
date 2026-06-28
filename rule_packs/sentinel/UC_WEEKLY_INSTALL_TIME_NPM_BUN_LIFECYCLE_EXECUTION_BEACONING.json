@@ -1,0 +1,41 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_INSTALL_TIME_NPM_BUN_LIFECYCLE_EXECUTION_BEACONING')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Install-Time npm/Bun Lifecycle Execution Beaconing Out Within Minutes",
+        "description": "Detects the joint supply-chain pattern where a package-manager lifecycle hook (npm/pnpm/yarn/npx/node-gyp/Bun postinstall, preinstall, setup.cjs, setup_bun.js, bun_environment.js or binding.gyp install-time exec) spawns a script host that makes an outbound connection to a public host within minutes \u2014 the install-then-beacon chain, not any single rotating IOC. It matters this fortnight because the Mini Shai-Hulud / Miasma / Hades family and the Sapphire Sleet easy-day-js typosquat backdoored 140+ @mastra packages, 20 Leo Platform packages, 400+ AUR packages and propagated to Go and GitHub Actions ('Over 140 popular Mastra npm Packages Hit by Supply Chain Attack', 'From package to postinstall payload', 'Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosquat', 'Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised', 'Miasma Malware Targets npm Packages and GitHub Actions', '400+ AUR Packages Hijacked'), all of which weaponise the install lifecycle to drop a second-stage stealer that immediately calls home. It spans install (lifecycle-hook code execution) into command-and-control (the post-install egress that pulls the second stage or exfiltrates secrets). It FIRES when a developer/CI host runs an install whose hook process is followed within five minutes by a public outbound connection; it does NOT fire on package installs with no install-time child egress, on purely registry-bound traffic, or on runtime application network calls long after install. Reference IOCs (`<c2_ip_list>`, `<c2_domain_list>`, `<sha256_list>`) are substitution slots only.\n\nRationale: Every article in this batch weaponises the same install-lifecycle primitive (postinstall/preinstall/binding.gyp/Bun bootstrap) to execute code that immediately reaches the network, so correlating the lifecycle-hook child process with public egress inside a tight window catches the shared TTP regardless of which package, scope, or rotating C2 IOC is in play.",
+        "severity": "High",
+        "enabled": false,
+        "query": "// Microsoft Sentinel \u2014 auto-derived from the Defender XDR hunt.\n// Requires the Microsoft 365 Defender data connector (streams the\n// advanced-hunting tables into Sentinel; Timestamp \u2192 TimeGenerated).\nlet Window = 5m;\nlet InstallExec = DeviceProcessEvents\n| where TimeGenerated > ago(14d)\n| where InitiatingProcessFileName in~ (\"npm.exe\",\"node.exe\",\"node-gyp.exe\",\"pnpm.exe\",\"yarn.exe\",\"npx.exe\",\"bun.exe\",\"npm\",\"node\",\"node-gyp\",\"pnpm\",\"yarn\",\"npx\",\"bun\",\"sh\",\"bash\")\n| where FileName in~ (\"node.exe\",\"bun.exe\",\"node\",\"bun\",\"sh\",\"bash\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\")\n| where ProcessCommandLine has_any (\"postinstall\",\"preinstall\",\"setup.cjs\",\"setup_bun.js\",\"bun_environment.js\",\"binding.gyp\",\"node-gyp\")\n| where AccountName !endswith \"$\"\n| project ProcTime = TimeGenerated, DeviceId, DeviceName, AccountName, InstallProc = FileName, InstallCmd = ProcessCommandLine;\nInstallExec\n| join kind=inner (\n    DeviceNetworkEvents\n    | where TimeGenerated > ago(14d)\n    | where RemoteIPType == \"Public\"                       // skip lateral / registry-mirror RFC1918\n    | where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n    | project NetTime = TimeGenerated, DeviceId, RemoteIP, RemotePort, RemoteUrl, NetProc = InitiatingProcessFileName\n  ) on DeviceId\n| where NetTime between (ProcTime .. ProcTime + Window)    // egress within 5m of the install hook\n| project ProcTime, NetTime,\n          DelaySec = datetime_diff('second', NetTime, ProcTime),\n          DeviceName, AccountName, InstallProc, InstallCmd,\n          NetProc, RemoteIP, RemotePort, RemoteUrl\n| order by ProcTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1105",
+          "T1071.001"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_INSTALL_TIME_NPM_BUN_LIFECYCLE_EXECUTION_BEACONING",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_INSTALL_TIME_NPM_BUN_LIFECYCLE_EXECUTION_BEACONING.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+title: "[WEEKLY] AI/LLM Agent Framework Runtime Spawning Shell, Recon, or Egress Child Process"
+id: 155e1a8b-4df1-581c-a6e0-e2bce514f81d
+status: experimental
+description: "Detects a public-facing AI/LLM agent-framework runtime (Langflow/uvicorn, PraisonAI AgentOS, LobeHub, Crawl4AI, Rclone rcd, or the npm/Node MCPServer) spawning an OS shell, reconnaissance utility, or network-egress tool \u2014 the post-exploitation behaviour that turns an unauthenticated RCE primitive into hands-on-keyboard execution. It matters this fortnight because a cluster of CRITICAL GHSAs landed against these frameworks (CVE-2026-48519 'Langflow Shareable Playground RCE', CVE-2026-55450 'Langflow unauthenticated upload', CVE-2026-49980 'Rclone rcd inline-remote command exec', CVE-2026-54157 'LobeHub /webapi/proxy SSRF', the PraisonAI Jobs-API/AgentOS/MCPServer/AgentTeam.launch unauthenticated-invocation set, and 'Crawl4AI Chromium launch-argument injection') \u2014 all exploit T1190 then pivot to T1059, and the IOCs (endpoints, ports) differ per product so only the parent\u2192child execution chain generalises. It spans the exploit and install kill-chain stages: the framework process is the initiating parent, the shell/LOLBin is the child. It fires when one of these runtimes (or a Chromium child launched with --no-zygote plus a subprocess-launcher switch) directly spawns sh/bash/cmd/powershell/curl/wget/nc/whoami and similar; it does NOT fire on normal agent inference, model downloads via the framework's own HTTP client, or interactive developer shells whose parent is a terminal rather than the server runtime. Because these frameworks have no legitimate reason to fork a system shell in production, the parent-child pair is alert-grade."
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_AI_LLM_AGENT_FRAMEWORK_RUNTIME_SPAWNING_SHELL_RECO.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059
+  - attack.t1059_004
+  - attack.t1059_006
+  - attack.t1203
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'python'
+      - 'python3'
+      - 'python.exe'
+      - 'uvicorn'
+      - 'gunicorn'
+      - 'node'
+      - 'node.exe'
+      - 'rclone'
+      - 'rclone.exe'
+      - 'chrome'
+      - 'chromium'
+      - 'chrome.exe'
+      - 'bash'
+      - 'dash'
+      - 'zsh'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

@@ -1,0 +1,42 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_NPM_NODE_GYP_INSTALL_HOOK_SPAWN_CHAINED_TO_OUTBOUN')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] npm/node-gyp Install-Hook Spawn Chained to Outbound Egress",
+        "description": "Detects a package-manager lifecycle hook (npm/yarn/pnpm postinstall or a node-gyp binding.gyp build step) spawning a script host or freshly-downloaded runtime \u2014 node executing setup.cjs/bun_environment.js, a dropped bun binary, or powershell \u2014 that then makes an outbound network connection to non-corporate infrastructure within a 5-minute window on the same host. This fortnight a single Bun/JavaScript stealer family drove a wave of mass npm compromises: the @mastra scope republished with the easy-day-js typosquat (Snyk, Aikido, Microsoft 'From package to postinstall payload', StepSecurity), the Miasma/Mini Shai-Hulud/Hades worm hitting Leo Platform, RStreams and @immobiliarelabs Backstage plugins via binding.gyp hooks (The Hacker News 'Miasma Malware Targets npm Packages', StepSecurity), and PostCSS-lookalike packages dropping a Windows RAT (The Hacker News, CVE-2026-11645). It spans install (T1195.002/T1059.007 lifecycle execution) into command-and-control/exfil (T1071.001/T1105) and is the connective tissue across all twelve articles regardless of which IP or hash rotates in. It FIRES when an install-time process tree (npm/node/node-gyp parent \u2192 bun/powershell/node-script child) is immediately followed by egress from that host; it does NOT fire on a developer manually running node, on package installs with no subsequent outbound call, or on builds whose only network traffic is to a baselined registry/CDN \u2014 keeping it alert-grade rather than a raw install-hook dashboard.\n\nRationale: Every article in this batch shares one invariant the IOCs don't: an npm/node-gyp install-time hook spawning a script host or dropped runtime that immediately reaches out to attacker infra \u2014 so correlating the install-hook process tree with a tight egress window catches the Mastra, Miasma/Shai-Hulud, Leo Platform, Backstage and PostCSS-RAT compromises with one technique-level rule instead of chasing rotating hashes and IPs.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let Lookback = 14d;\nSecurityEvent\n| where TimeGenerated > ago(Lookback)\n| where EventID == 4688\n| where NewProcessName has_any (\"bun.exe\",\"powershell.exe\",\"pwsh.exe\",\"node.exe\",\"curl.exe\",\"wget.exe\")\n    or CommandLine has_any (\"setup.cjs\",\"bun_environment.js\",\"setup_bun.js\",\"binding.gyp\",\"postinstall\")\n| extend ParentLeaf = tostring(split(ParentProcessName, \"\\\\\")[-1])\n| where ParentLeaf in~ (\"node.exe\",\"npm.exe\",\"node-gyp.exe\",\"yarn.exe\",\"pnpm.exe\")\n| where Account !endswith \"$\"\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine, ProcessId\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1546",
+          "T1105",
+          "T1071.001"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_NPM_NODE_GYP_INSTALL_HOOK_SPAWN_CHAINED_TO_OUTBOUN",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_NPM_NODE_GYP_INSTALL_HOOK_SPAWN_CHAINED_TO_OUTBOUN.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

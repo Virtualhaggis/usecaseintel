@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_AI_AGENT_SERVER_PRAISONAI_MCP_SPAWNS_OS_SHELL_OR_R')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] AI-Agent Server (PraisonAI/MCP) Spawns OS Shell or Recon LOLBin \u2014 Unauthenticated RCE Exploitation",
+        "description": "Detects an LLM/agent-runtime server process (python/uvicorn/gunicorn/node) that is hosting a PraisonAI or MCP service spawning an OS shell, network utility, or reconnaissance LOLBin as a child \u2014 the convergent post-exploitation signal across this fortnight's 12 critical PraisonAI advisories (GHSA-4869-x4pr-q22x Jobs-API RCE, GHSA-p75f-6fp4-p57w UI MCP-connect command injection, GHSA-p69m/-vmmj codeMode sandbox escape, GHSA-892r/-9752 unauthenticated AgentOS, GHSA-x227 MCP SSE 0.0.0.0 bind, GHSA-f38v hardcoded JWT). Every one of those bugs ends the same way: a network-reachable, auth-bypassed agent endpoint coerces the host runtime into executing attacker-chosen code, which surfaces as the agent parent process forking a shell/recon binary it would never normally launch. The UC spans exploit\u2192execution of the kill chain: the unauthenticated request is the entry, the anomalous child process is the detection. It FIRES when an agent-runtime parent whose command line references praisonai/agentos/aiui/mcp spawns sh/bash/cmd/powershell/curl/whoami/id/etc.; it does NOT fire on the agent serving normal HTTP, on package-manager subprocess builds (pip/npm/node-gyp), or on shells spawned by non-agent parents. Because it keys on the parent identity + child class rather than any single advisory's IOC, it stays valid as new PraisonAI CVEs and exploit payloads land.\n\nRationale: All 12 advisories differ in entry vector (Jobs API, AgentOS, MCP SSE/HTTP, recipe-serve, codeMode, UI connect) but converge on the same observable: an unauthenticated/auth-bypassed agent runtime executing attacker-controlled OS commands, so keying on the agent-runtime parent + shell/recon child catches the joint TTP independent of which CVE or payload is used.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName in~ (\"python\",\"python3\",\"python.exe\",\"node\",\"node.exe\",\"uvicorn\",\"gunicorn\",\"pwsh\",\"pwsh.exe\")\n| where InitiatingProcessCommandLine has_any (\"praisonai\",\"agentos\",\"aiui\",\"recipe serve\",\"jobs.server\",\"praisonai_platform\",\"mcp\")\n| where FileName in~ (\"sh\",\"bash\",\"dash\",\"zsh\",\"ksh\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"curl\",\"curl.exe\",\"wget\",\"nc\",\"ncat\",\"socat\",\"whoami\",\"id\",\"uname\",\"certutil.exe\",\"base64\",\"chmod\")\n| where AccountName !endswith \"$\"\n| where not(ProcessCommandLine has_any (\"pip install\",\"npm install\",\"node-gyp\"))\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessTokenElevation\n| order by Timestamp desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059.004",
+          "T1059.006",
+          "T1059.007",
+          "T1133",
+          "T1211",
+          "T1204.002"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_AI_AGENT_SERVER_PRAISONAI_MCP_SPAWNS_OS_SHELL_OR_R",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_AI_AGENT_SERVER_PRAISONAI_MCP_SPAWNS_OS_SHELL_OR_R.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

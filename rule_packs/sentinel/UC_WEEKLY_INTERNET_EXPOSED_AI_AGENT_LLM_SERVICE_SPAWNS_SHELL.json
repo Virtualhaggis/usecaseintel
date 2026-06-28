@@ -1,0 +1,41 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_INTERNET_EXPOSED_AI_AGENT_LLM_SERVICE_SPAWNS_SHELL')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Internet-Exposed AI Agent/LLM Service Spawns Shell or LOLBin After Inbound Connection",
+        "description": "Detects an interpreter-hosted AI/LLM/MCP service (python, uvicorn, gunicorn, node) that accepts an inbound connection from a public/non-loopback source and then spawns a Unix shell or LOLBin child within a short window \u2014 the post-auth-bypass remote-code-execution chain. This matters this fortnight because a cluster of critical advisories all describe unauthenticated reach into agent-execution or management surfaces that the same process then turns into command execution: PraisonAI's Jobs API and unauth MCP connect/SSE endpoints (GHSA-fq2m-6wqh-x44g, GHSA-p75f-6fp4-p57w, GHSA-x227-pf99-vffg), LiteLLM's Host-header auth bypass on management routes (CVE-2026-49468), googleapis/mcp-toolbox's opaque-token bypass (CVE-2026-11718), and @acastellon/auth's spoofable-header bypass (GHSA-gfj5-979r-92pw). The chain spans delivery (exposed 0.0.0.0 listener), exploit (missing/bypassed auth on a critical function), and execution (shell/LOLBin spawned by the service). It fires when the AI service process is the direct parent of an OS command interpreter shortly after a public inbound connection \u2014 the signature of agent-exec/command-injection RCE \u2014 and does NOT fire on local-loopback agent calls, on the service's own normal subprocess use that isn't a shell/LOLBin, or on shells spawned by non-AI parents. IOC slots (`<c2_domain_list>`, `<sha256_list>`) are placeholders for enrichment, not the detection logic.\n\nRationale: Every article in scope describes an unauthenticated path into an interpreter-hosted AI/LLM/MCP service that ends in command execution; correlating a public inbound connection to that service with the same process spawning a shell/LOLBin captures the shared exploit\u2192execution chain rather than any one product's IOCs or endpoint paths.",
+        "severity": "High",
+        "enabled": false,
+        "query": "// Microsoft Sentinel \u2014 auto-derived from the Defender XDR hunt.\n// Requires the Microsoft 365 Defender data connector (streams the\n// advanced-hunting tables into Sentinel; Timestamp \u2192 TimeGenerated).\nlet LookbackDays = 7d;\nlet WindowSeconds = 300;   // 300s = service-RCE spawn is near-immediate; >5m is almost always unrelated\nlet Inbound = DeviceNetworkEvents\n    | where TimeGenerated > ago(LookbackDays)\n    | where ActionType == \"InboundConnectionAccepted\"\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName has_any (\"python\",\"python3\",\"python.exe\",\"pythonw.exe\",\"uvicorn\",\"gunicorn\",\"node\",\"node.exe\")\n    | where InitiatingProcessCommandLine has_any (\"praison\",\"litellm\",\"mcp\",\"uvicorn\",\"fastapi\",\"toolbox\",\"aiui\",\"agent\")\n    | project InboundTime = TimeGenerated, DeviceId, DeviceName, RemoteIP, LocalPort, ServiceCmd = InitiatingProcessCommandLine;\nDeviceProcessEvents\n| where TimeGenerated > ago(LookbackDays)\n| where InitiatingProcessFileName has_any (\"python\",\"python3\",\"python.exe\",\"pythonw.exe\",\"uvicorn\",\"gunicorn\",\"node\",\"node.exe\")\n| where FileName in~ (\"sh\",\"bash\",\"dash\",\"zsh\",\"ksh\",\"busybox\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"nc\",\"ncat\",\"socat\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami\",\"whoami.exe\",\"id\",\"chmod\",\"base64\")\n| where AccountName !endswith \"$\"\n| join kind=inner Inbound on DeviceId\n| where TimeGenerated between (InboundTime .. InboundTime + WindowSeconds * 1s)\n| project TimeGenerated, InboundTime, DelaySec = datetime_diff('second', TimeGenerated, InboundTime), DeviceName, RemoteIP, LocalPort, AccountName, ParentImage = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, ChildProc = FileName, ChildCmd = ProcessCommandLine, SHA256\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059",
+          "T1059.004",
+          "T1133"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_INTERNET_EXPOSED_AI_AGENT_LLM_SERVICE_SPAWNS_SHELL",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_INTERNET_EXPOSED_AI_AGENT_LLM_SERVICE_SPAWNS_SHELL.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

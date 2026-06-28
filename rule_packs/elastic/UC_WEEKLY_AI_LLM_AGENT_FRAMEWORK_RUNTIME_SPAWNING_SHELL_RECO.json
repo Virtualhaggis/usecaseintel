@@ -1,0 +1,31 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_AI_LLM_AGENT_FRAMEWORK_RUNTIME_SPAWNING_SHELL_RECO",
+  "name": "[WEEKLY] AI/LLM Agent Framework Runtime Spawning Shell, Recon, or Egress Child Process",
+  "description": "Detects a public-facing AI/LLM agent-framework runtime (Langflow/uvicorn, PraisonAI AgentOS, LobeHub, Crawl4AI, Rclone rcd, or the npm/Node MCPServer) spawning an OS shell, reconnaissance utility, or network-egress tool \u2014 the post-exploitation behaviour that turns an unauthenticated RCE primitive into hands-on-keyboard execution. It matters this fortnight because a cluster of CRITICAL GHSAs landed against these frameworks (CVE-2026-48519 'Langflow Shareable Playground RCE', CVE-2026-55450 'Langflow unauthenticated upload', CVE-2026-49980 'Rclone rcd inline-remote command exec', CVE-2026-54157 'LobeHub /webapi/proxy SSRF', the PraisonAI Jobs-API/AgentOS/MCPServer/AgentTeam.launch unauthenticated-invocation set, and 'Crawl4AI Chromium launch-argument injection') \u2014 all exploit T1190 then pivot to T1059, and the IOCs (endpoints, ports) differ per product so only the parent\u2192child execution chain generalises. It spans the exploit and install kill-chain stages: the framework process is the initiating parent, the shell/LOLBin is the child. It fires when one of these runtimes (or a Chromium child launched with --no-zygote plus a subprocess-launcher switch) directly spawns sh/bash/cmd/powershell/curl/wget/nc/whoami and similar; it does NOT fire on normal agent inference, model downloads via the framework's own HTTP client, or interactive developer shells whose parent is a terminal rather than the server runtime. Because these frameworks have no legitimate reason to fork a system shell in production, the parent-child pair is alert-grade.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*python* OR *python3* OR *python.exe* OR *uvicorn* OR *gunicorn* OR *node* OR *node.exe* OR *rclone* OR *rclone.exe* OR *chrome* OR *chromium* OR *chrome.exe* OR *bash* OR *dash* OR *zsh*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1190",
+    "attack.T1059",
+    "attack.T1059.004",
+    "attack.T1059.006",
+    "attack.T1203"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_AI_LLM_AGENT_FRAMEWORK_RUNTIME_SPAWNING_SHELL_RECO.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

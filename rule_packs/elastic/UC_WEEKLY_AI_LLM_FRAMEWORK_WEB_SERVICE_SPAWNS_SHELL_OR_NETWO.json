@@ -1,0 +1,30 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_AI_LLM_FRAMEWORK_WEB_SERVICE_SPAWNS_SHELL_OR_NETWO",
+  "name": "[WEEKLY] AI/LLM Framework Web Service Spawns Shell or Network Tool (Agent-Framework Unauthenticated RCE)",
+  "description": "Detects a web-facing AI/LLM framework runtime (python/uvicorn/gunicorn/node, or a framework-launched Chromium/headless browser) spawning an OS shell, recon binary, or network/download utility \u2014 the universal post-exploitation step that every unauthenticated/pre-auth RCE in this fortnight's advisories converges on. It matters now because a cluster of critical AI-tooling RCEs dropped in the last 14 days: Langflow Shareable-Playground and BaseFileComponent RCEs (CVE-2026-48519, CVE-2026-55447), Crawl4AI's AST sandbox escape, path-traversal, and Chromium extra_args injection (CVE-2026-53753 + two GHSAs), PraisonAI's Jobs-API approval bypass, Vitest Browser-Mode CDP abuse (CVE-2026-53633), Microsoft's AutoJack AutoGen Studio MCP chain, and Unit 42's Vertex AI pickle hijack \u2014 all chaining T1190 \u2192 in-process command execution. The chain spans exploit (public-facing app) and install/execution (interpreter spawns shell). It fires when an LLM-framework parent process forks a shell, recon command (whoami/id/uname), or egress tool (curl/wget/nc/socat); it will NOT fire on the framework simply serving HTTP, importing libraries, or running its own python child workers, keeping it tied to genuine command-execution behaviour rather than normal service activity. Because the framework process is never expected to spawn an interactive shell or netcat, this is alert-grade despite the breadth of covered products.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*python* OR *python3* OR *uvicorn* OR *gunicorn* OR *node* OR *chrome* OR *chromium* OR *headless_shell* OR *msedge.exe* OR *bash* OR *dash* OR *zsh* OR *ksh* OR *curl* OR *wget*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1190",
+    "attack.T1059.004",
+    "attack.T1059.006",
+    "attack.T1203"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_AI_LLM_FRAMEWORK_WEB_SERVICE_SPAWNS_SHELL_OR_NETWO.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

@@ -1,0 +1,41 @@
+title: "[WEEKLY] Web-Facing Service Process Writes to RCE/Persistence Paths (Path-Traversal File-Write)"
+id: 1aefc158-59ad-5bc5-8f0a-19915c7c1475
+status: experimental
+description: "Detects a public-facing server process (Python web/AI app, Java/Tomcat, Node, nginx/httpd, php-fpm) creating or modifying a file OUTSIDE its expected working directory and INSIDE an RCE- or persistence-enabling location \u2014 cron drop-ins, ~/.ssh/authorized_keys, shell rc files, Python site-/dist-packages, or a web-root script (.jsp/.php/.aspx). This fortnight a cluster of arbitrary-file-write / path-traversal flaws in AI and comms tooling drove it: Crawl4AI's /screenshot,/pdf output_path traversal and crawler-download traversal (GHSA-365w-hqf6-vxfg, GHSA-2jq4-q6vv-4cp3), Langflow's unauthenticated upload and BaseFileComponent file primitives (CVE-2026-55450, CVE-2026-55447), PraisonAI's unvalidated multiedit tool (GHSA-29w3-p9w9-wc47), gemini-mcp-tool @file/cmd injection (CVE-2026-0755), and the actively-exploited Cisco Unified CM file-write-to-root chain (CVE-2026-20230) that drops a JSP webshell. It spans the exploit\u2192install/persistence kill-chain stages: the public app is abused for write primitive, then the bytes land where they grant code execution or footholds. It FIRES when a long-lived service identity writes to these high-value paths; it does NOT fire on package managers (apt/pip/dpkg), legitimate deploy/CI agents, or interactive admin shells, which are filtered out. Reference IOCs (`<c2_domain_list>`, `<sha256_list>`) are substitution slots only \u2014 the detection keys on the write-target + writing-process behaviour, not on rotating hashes."
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_WEB_FACING_SERVICE_PROCESS_WRITES_TO_RCE_PERSISTEN.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1190
+  - attack.t1505_003
+  - attack.t1053_003
+  - attack.t1098_004
+  - attack.t1546_004
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'created'
+      - 'modified'
+      - '/etc/crontab'
+      - 'authorized_keys'
+      - 'crontab'
+      - 'python'
+      - 'python3'
+      - 'java'
+      - 'node'
+      - 'httpd'
+      - 'nginx'
+      - 'tomcat'
+      - 'uwsgi'
+      - 'gunicorn'
+      - 'php-fpm'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

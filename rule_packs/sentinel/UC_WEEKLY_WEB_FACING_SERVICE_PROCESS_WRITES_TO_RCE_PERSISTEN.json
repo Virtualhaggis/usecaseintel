@@ -1,0 +1,42 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_WEB_FACING_SERVICE_PROCESS_WRITES_TO_RCE_PERSISTEN')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Web-Facing Service Process Writes to RCE/Persistence Paths (Path-Traversal File-Write)",
+        "description": "Detects a public-facing server process (Python web/AI app, Java/Tomcat, Node, nginx/httpd, php-fpm) creating or modifying a file OUTSIDE its expected working directory and INSIDE an RCE- or persistence-enabling location \u2014 cron drop-ins, ~/.ssh/authorized_keys, shell rc files, Python site-/dist-packages, or a web-root script (.jsp/.php/.aspx). This fortnight a cluster of arbitrary-file-write / path-traversal flaws in AI and comms tooling drove it: Crawl4AI's /screenshot,/pdf output_path traversal and crawler-download traversal (GHSA-365w-hqf6-vxfg, GHSA-2jq4-q6vv-4cp3), Langflow's unauthenticated upload and BaseFileComponent file primitives (CVE-2026-55450, CVE-2026-55447), PraisonAI's unvalidated multiedit tool (GHSA-29w3-p9w9-wc47), gemini-mcp-tool @file/cmd injection (CVE-2026-0755), and the actively-exploited Cisco Unified CM file-write-to-root chain (CVE-2026-20230) that drops a JSP webshell. It spans the exploit\u2192install/persistence kill-chain stages: the public app is abused for write primitive, then the bytes land where they grant code execution or footholds. It FIRES when a long-lived service identity writes to these high-value paths; it does NOT fire on package managers (apt/pip/dpkg), legitimate deploy/CI agents, or interactive admin shells, which are filtered out. Reference IOCs (`<c2_domain_list>`, `<sha256_list>`) are substitution slots only \u2014 the detection keys on the write-target + writing-process behaviour, not on rotating hashes.\n\nRationale: All seven articles share one observable regardless of the specific CVE: an internet-facing service is coerced into writing attacker-controlled bytes to a path that yields code execution or a foothold (cron, ssh keys, shell rc, site-packages, web-root script). Keying on writing-process identity + write-target rather than per-app IOCs catches the joint path-traversal/arbitrary-file-write tradecraft as new affected products land.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceFileEvents\n| where Timestamp > ago(14d)\n| where ActionType in (\"FileCreated\",\"FileModified\")\n| where InitiatingProcessFileName has_any (\"python\",\"python3\",\"java\",\"node\",\"httpd\",\"nginx\",\"tomcat\",\"uwsgi\",\"gunicorn\",\"php-fpm\",\"w3wp.exe\")\n| where FolderPath has_any (\"/etc/cron\",\"/var/spool/cron\",\"/.ssh/\",\".bashrc\",\".bash_profile\",\".profile\",\".zshrc\",\"/site-packages/\",\"/dist-packages/\",\"/webapps/\",\"\\\\wwwroot\\\\\",\"/axis2-web/\")\n   or FileName endswith \"authorized_keys\"\n   or FileName has_any (\".jsp\",\".jspx\",\".php\",\".aspx\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| where not(InitiatingProcessCommandLine has_any (\"apt\",\"dpkg\",\"pip install\",\"yum\",\"dnf\"))\n| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Writes=count(), SampleTarget=any(FolderPath)\n          by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, ActionType\n| order by LastSeen desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1505.003",
+          "T1053.003",
+          "T1098.004",
+          "T1546.004"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_WEB_FACING_SERVICE_PROCESS_WRITES_TO_RCE_PERSISTEN",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_WEB_FACING_SERVICE_PROCESS_WRITES_TO_RCE_PERSISTEN.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

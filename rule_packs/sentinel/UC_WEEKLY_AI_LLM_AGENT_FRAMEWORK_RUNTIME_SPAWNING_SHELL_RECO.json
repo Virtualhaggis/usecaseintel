@@ -1,0 +1,42 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_AI_LLM_AGENT_FRAMEWORK_RUNTIME_SPAWNING_SHELL_RECO')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] AI/LLM Agent Framework Runtime Spawning Shell, Recon, or Egress Child Process",
+        "description": "Detects a public-facing AI/LLM agent-framework runtime (Langflow/uvicorn, PraisonAI AgentOS, LobeHub, Crawl4AI, Rclone rcd, or the npm/Node MCPServer) spawning an OS shell, reconnaissance utility, or network-egress tool \u2014 the post-exploitation behaviour that turns an unauthenticated RCE primitive into hands-on-keyboard execution. It matters this fortnight because a cluster of CRITICAL GHSAs landed against these frameworks (CVE-2026-48519 'Langflow Shareable Playground RCE', CVE-2026-55450 'Langflow unauthenticated upload', CVE-2026-49980 'Rclone rcd inline-remote command exec', CVE-2026-54157 'LobeHub /webapi/proxy SSRF', the PraisonAI Jobs-API/AgentOS/MCPServer/AgentTeam.launch unauthenticated-invocation set, and 'Crawl4AI Chromium launch-argument injection') \u2014 all exploit T1190 then pivot to T1059, and the IOCs (endpoints, ports) differ per product so only the parent\u2192child execution chain generalises. It spans the exploit and install kill-chain stages: the framework process is the initiating parent, the shell/LOLBin is the child. It fires when one of these runtimes (or a Chromium child launched with --no-zygote plus a subprocess-launcher switch) directly spawns sh/bash/cmd/powershell/curl/wget/nc/whoami and similar; it does NOT fire on normal agent inference, model downloads via the framework's own HTTP client, or interactive developer shells whose parent is a terminal rather than the server runtime. Because these frameworks have no legitimate reason to fork a system shell in production, the parent-child pair is alert-grade.\n\nRationale: Every article is an unauthenticated RCE/command-exec primitive in a different AI/LLM framework whose only shared, IOC-independent signal is the server runtime forking a shell or recon/egress tool \u2014 matching on the parent-runtime\u2192child-tool pair catches the joint pattern while staying immune to the per-product endpoints and ports that rotate.",
+        "severity": "High",
+        "enabled": false,
+        "query": "// Microsoft Sentinel \u2014 auto-derived from the Defender XDR hunt.\n// Requires the Microsoft 365 Defender data connector (streams the\n// advanced-hunting tables into Sentinel; Timestamp \u2192 TimeGenerated).\nDeviceProcessEvents\n| where TimeGenerated > ago(14d)\n| where (InitiatingProcessFileName in~ (\"python\",\"python3\",\"python.exe\",\"uvicorn\",\"gunicorn\",\"node\",\"node.exe\",\"rclone\",\"rclone.exe\",\"chrome.exe\",\"chromium\")\n    or InitiatingProcessCommandLine has_any (\"langflow\",\"praisonai\",\"agentos\",\"crawl4ai\",\"lobehub\",\"uvicorn\",\"gunicorn\"))\n| where FileName in~ (\"sh\",\"bash\",\"dash\",\"zsh\",\"ksh\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"curl\",\"curl.exe\",\"wget\",\"nc\",\"ncat\",\"socat\",\"whoami\",\"id\",\"perl\",\"ruby\",\"php\",\"certutil.exe\",\"bitsadmin.exe\")\n    or (ProcessCommandLine has \"--no-zygote\" and ProcessCommandLine has_any (\"--utility-cmd-prefix\",\"--renderer-cmd-prefix\",\"--gpu-launcher\",\"--browser-subprocess-path\"))\n| where AccountName !endswith \"$\"\n| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Count=count(), SampleChildCmd=any(ProcessCommandLine) by DeviceName, AccountName, InitiatingProcessFileName, FileName\n| order by LastSeen desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059",
+          "T1059.004",
+          "T1059.006",
+          "T1203"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_AI_LLM_AGENT_FRAMEWORK_RUNTIME_SPAWNING_SHELL_RECO",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_AI_LLM_AGENT_FRAMEWORK_RUNTIME_SPAWNING_SHELL_RECO.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

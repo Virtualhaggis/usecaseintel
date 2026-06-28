@@ -1,0 +1,30 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_INTERNET_EXPOSED_AI_AGENT_LLM_SERVICE_SPAWNS_SHELL",
+  "name": "[WEEKLY] Internet-Exposed AI Agent/LLM Service Spawns Shell or LOLBin After Inbound Connection",
+  "description": "Detects an interpreter-hosted AI/LLM/MCP service (python, uvicorn, gunicorn, node) that accepts an inbound connection from a public/non-loopback source and then spawns a Unix shell or LOLBin child within a short window \u2014 the post-auth-bypass remote-code-execution chain. This matters this fortnight because a cluster of critical advisories all describe unauthenticated reach into agent-execution or management surfaces that the same process then turns into command execution: PraisonAI's Jobs API and unauth MCP connect/SSE endpoints (GHSA-fq2m-6wqh-x44g, GHSA-p75f-6fp4-p57w, GHSA-x227-pf99-vffg), LiteLLM's Host-header auth bypass on management routes (CVE-2026-49468), googleapis/mcp-toolbox's opaque-token bypass (CVE-2026-11718), and @acastellon/auth's spoofable-header bypass (GHSA-gfj5-979r-92pw). The chain spans delivery (exposed 0.0.0.0 listener), exploit (missing/bypassed auth on a critical function), and execution (shell/LOLBin spawned by the service). It fires when the AI service process is the direct parent of an OS command interpreter shortly after a public inbound connection \u2014 the signature of agent-exec/command-injection RCE \u2014 and does NOT fire on local-loopback agent calls, on the service's own normal subprocess use that isn't a shell/LOLBin, or on shells spawned by non-AI parents. IOC slots (`<c2_domain_list>`, `<sha256_list>`) are placeholders for enrichment, not the detection logic.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*python* OR *python3* OR *python.exe* OR *pythonw.exe* OR *uvicorn* OR *gunicorn* OR *node* OR *node.exe* OR *bash* OR *dash* OR *zsh* OR *ksh* OR *busybox* OR *cmd.exe* OR *powershell.exe*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1190",
+    "attack.T1059",
+    "attack.T1059.004",
+    "attack.T1133"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_INTERNET_EXPOSED_AI_AGENT_LLM_SERVICE_SPAWNS_SHELL.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

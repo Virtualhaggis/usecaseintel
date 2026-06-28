@@ -1,0 +1,40 @@
+title: "[WEEKLY] Install-Time npm/Bun Lifecycle Execution Beaconing Out Within Minutes"
+id: 9e1e4e06-27d8-5dcd-919e-30b5ee90a116
+status: experimental
+description: "Detects the joint supply-chain pattern where a package-manager lifecycle hook (npm/pnpm/yarn/npx/node-gyp/Bun postinstall, preinstall, setup.cjs, setup_bun.js, bun_environment.js or binding.gyp install-time exec) spawns a script host that makes an outbound connection to a public host within minutes \u2014 the install-then-beacon chain, not any single rotating IOC. It matters this fortnight because the Mini Shai-Hulud / Miasma / Hades family and the Sapphire Sleet easy-day-js typosquat backdoored 140+ @mastra packages, 20 Leo Platform packages, 400+ AUR packages and propagated to Go and GitHub Actions ('Over 140 popular Mastra npm Packages Hit by Supply Chain Attack', 'From package to postinstall payload', 'Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosquat', 'Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised', 'Miasma Malware Targets npm Packages and GitHub Actions', '400+ AUR Packages Hijacked'), all of which weaponise the install lifecycle to drop a second-stage stealer that immediately calls home. It spans install (lifecycle-hook code execution) into command-and-control (the post-install egress that pulls the second stage or exfiltrates secrets). It FIRES when a developer/CI host runs an install whose hook process is followed within five minutes by a public outbound connection; it does NOT fire on package installs with no install-time child egress, on purely registry-bound traffic, or on runtime application network calls long after install. Reference IOCs (`<c2_ip_list>`, `<c2_domain_list>`, `<sha256_list>`) are substitution slots only."
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_INSTALL_TIME_NPM_BUN_LIFECYCLE_EXECUTION_BEACONING.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1195_002
+  - attack.t1059_007
+  - attack.t1105
+  - attack.t1071_001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm'
+      - 'npm.exe'
+      - 'node'
+      - 'node.exe'
+      - 'node-gyp'
+      - 'node-gyp.exe'
+      - 'pnpm'
+      - 'pnpm.exe'
+      - 'yarn'
+      - 'yarn.exe'
+      - 'npx'
+      - 'npx.exe'
+      - 'bun'
+      - 'bun.exe'
+      - 'bash'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

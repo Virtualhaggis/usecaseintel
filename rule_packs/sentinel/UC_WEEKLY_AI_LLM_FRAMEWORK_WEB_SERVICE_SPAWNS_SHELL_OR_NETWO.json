@@ -1,0 +1,41 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_AI_LLM_FRAMEWORK_WEB_SERVICE_SPAWNS_SHELL_OR_NETWO')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] AI/LLM Framework Web Service Spawns Shell or Network Tool (Agent-Framework Unauthenticated RCE)",
+        "description": "Detects a web-facing AI/LLM framework runtime (python/uvicorn/gunicorn/node, or a framework-launched Chromium/headless browser) spawning an OS shell, recon binary, or network/download utility \u2014 the universal post-exploitation step that every unauthenticated/pre-auth RCE in this fortnight's advisories converges on. It matters now because a cluster of critical AI-tooling RCEs dropped in the last 14 days: Langflow Shareable-Playground and BaseFileComponent RCEs (CVE-2026-48519, CVE-2026-55447), Crawl4AI's AST sandbox escape, path-traversal, and Chromium extra_args injection (CVE-2026-53753 + two GHSAs), PraisonAI's Jobs-API approval bypass, Vitest Browser-Mode CDP abuse (CVE-2026-53633), Microsoft's AutoJack AutoGen Studio MCP chain, and Unit 42's Vertex AI pickle hijack \u2014 all chaining T1190 \u2192 in-process command execution. The chain spans exploit (public-facing app) and install/execution (interpreter spawns shell). It fires when an LLM-framework parent process forks a shell, recon command (whoami/id/uname), or egress tool (curl/wget/nc/socat); it will NOT fire on the framework simply serving HTTP, importing libraries, or running its own python child workers, keeping it tied to genuine command-execution behaviour rather than normal service activity. Because the framework process is never expected to spawn an interactive shell or netcat, this is alert-grade despite the breadth of covered products.\n\nRationale: Every article describes a distinct CVE/product but the same observable: an attacker-reachable framework interpreter or framework-launched browser executing an OS command it never normally spawns \u2014 so anchoring on the parent(framework)\u2192child(shell/recon/egress) edge catches the joint tradecraft without depending on any single advisory's rotating IOCs.",
+        "severity": "High",
+        "enabled": false,
+        "query": "SecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4688\n| extend ParentName = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| extend ChildName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ParentName in (\"python.exe\",\"python3.exe\",\"node.exe\",\"chrome.exe\",\"msedge.exe\",\"headless_shell.exe\",\"uvicorn.exe\",\"gunicorn.exe\")\n    or CommandLine has_any (\"langflow\",\"crawl4ai\",\"praisonai\",\"autogen\",\"vitest\")\n| where ChildName in (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"bash.exe\",\"sh.exe\",\"wsl.exe\",\"curl.exe\",\"wget.exe\",\"whoami.exe\",\"net.exe\",\"nc.exe\")\n| where SubjectUserName !endswith \"$\"\n| project TimeGenerated, Computer, SubjectUserName, ParentName, ChildName, NewProcessName, CommandLine\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059.004",
+          "T1059.006",
+          "T1203"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_AI_LLM_FRAMEWORK_WEB_SERVICE_SPAWNS_SHELL_OR_NETWO",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_AI_LLM_FRAMEWORK_WEB_SERVICE_SPAWNS_SHELL_OR_NETWO.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

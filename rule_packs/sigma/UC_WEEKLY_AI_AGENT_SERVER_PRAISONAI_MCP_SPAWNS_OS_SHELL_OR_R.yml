@@ -1,0 +1,43 @@
+title: "[WEEKLY] AI-Agent Server (PraisonAI/MCP) Spawns OS Shell or Recon LOLBin \u2014 Unauthenticated RCE Exploitation"
+id: 35fd16cd-a984-509e-a4cb-f78ab51ba31d
+status: experimental
+description: "Detects an LLM/agent-runtime server process (python/uvicorn/gunicorn/node) that is hosting a PraisonAI or MCP service spawning an OS shell, network utility, or reconnaissance LOLBin as a child \u2014 the convergent post-exploitation signal across this fortnight's 12 critical PraisonAI advisories (GHSA-4869-x4pr-q22x Jobs-API RCE, GHSA-p75f-6fp4-p57w UI MCP-connect command injection, GHSA-p69m/-vmmj codeMode sandbox escape, GHSA-892r/-9752 unauthenticated AgentOS, GHSA-x227 MCP SSE 0.0.0.0 bind, GHSA-f38v hardcoded JWT). Every one of those bugs ends the same way: a network-reachable, auth-bypassed agent endpoint coerces the host runtime into executing attacker-chosen code, which surfaces as the agent parent process forking a shell/recon binary it would never normally launch. The UC spans exploit\u2192execution of the kill chain: the unauthenticated request is the entry, the anomalous child process is the detection. It FIRES when an agent-runtime parent whose command line references praisonai/agentos/aiui/mcp spawns sh/bash/cmd/powershell/curl/whoami/id/etc.; it does NOT fire on the agent serving normal HTTP, on package-manager subprocess builds (pip/npm/node-gyp), or on shells spawned by non-agent parents. Because it keys on the parent identity + child class rather than any single advisory's IOC, it stays valid as new PraisonAI CVEs and exploit payloads land."
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_AI_AGENT_SERVER_PRAISONAI_MCP_SPAWNS_OS_SHELL_OR_R.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059_004
+  - attack.t1059_006
+  - attack.t1059_007
+  - attack.t1133
+  - attack.t1211
+  - attack.t1204_002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'python'
+      - 'python3'
+      - 'python.exe'
+      - 'node'
+      - 'node.exe'
+      - 'uvicorn'
+      - 'gunicorn'
+      - 'pwsh'
+      - 'pwsh.exe'
+      - 'bash'
+      - 'dash'
+      - 'zsh'
+      - 'ksh'
+      - 'cmd.exe'
+      - 'powershell.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high
