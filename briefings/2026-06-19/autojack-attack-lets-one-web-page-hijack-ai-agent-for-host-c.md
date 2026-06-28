@@ -32,13 +32,13 @@ No credentials, no sign-in scree…
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1203** — Exploitation for Client Execution
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1106** — Native API
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1203** — Exploitation for Client Execution
 - **T1189** — Drive-by Compromise
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
 
@@ -46,61 +46,59 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AutoGen Studio (Python) process spawns shell/LOLBin — AutoJack MCP host code execution
+### AutoGen Studio (AutoJack) host code execution: agent Python process spawns shell/LOLBin
 
 `UC_100_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*autogenstudio*" OR Processes.parent_process_name IN ("autogenstudio.exe","python.exe","pythonw.exe")) AND Processes.process_name IN ("calc.exe","cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process="*autogenstudio*" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","calc.exe","CalculatorApp.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","bash.exe","wsl.exe","net.exe","whoami.exe") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessCommandLine has "autogenstudio" or InitiatingProcessFileName =~ "autogenstudio.exe" or InitiatingProcessFolderPath has "autogenstudio"
-| where FileName in~ ("calc.exe","cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe")
+| where InitiatingProcessCommandLine has "autogenstudio"
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","uvicorn.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","calc.exe","CalculatorApp.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","bash.exe","wsl.exe","net.exe","net1.exe","whoami.exe")
 | where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### AutoGen Studio agent fetches untrusted web page then spawns host process (AutoJack drive-by)
+### AutoGen Studio browsing agent reaches untrusted public web destination (AutoJack delivery)
 
 `UC_100_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as proc_time from datamodel=Endpoint.Processes where Processes.parent_process="*autogenstudio*" AND Processes.process_name IN ("calc.exe","cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","bash.exe") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats `summariesonly` count min(_time) as net_time from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN ("autogenstudio.exe","python.exe","pythonw.exe") AND All_Traffic.direction="outbound" by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | rename src as dest] | where proc_time >= net_time AND proc_time <= net_time+180 | table dest user net_time proc_time process_name process
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process="*autogenstudio*" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | search NOT (dest=10.0.0.0/8 OR dest=172.16.0.0/12 OR dest=192.168.0.0/16 OR dest=127.0.0.0/8) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
-let Window = 180s;
-let AgentNet = DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessCommandLine has "autogenstudio" or InitiatingProcessFileName =~ "autogenstudio.exe" or InitiatingProcessFolderPath has "autogenstudio"
-    | where RemoteIPType == "Public"
-    | project NetTime = Timestamp, DeviceId, RemoteUrl, RemoteIP, RemotePort;
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessCommandLine has "autogenstudio" or InitiatingProcessFileName =~ "autogenstudio.exe" or InitiatingProcessFolderPath has "autogenstudio"
-| where FileName in~ ("calc.exe","cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","bash.exe")
-| where AccountName !endswith "$"
-| join kind=inner AgentNet on DeviceId
-| where Timestamp between (NetTime .. NetTime + Window)
-| project NetTime, ProcTime = Timestamp, DelaySec = datetime_diff('second', Timestamp, NetTime), DeviceName, AccountName, RemoteUrl, RemoteIP, ChildProcess = FileName, ProcessCommandLine
-| order by ProcTime desc
+let Baseline = DeviceNetworkEvents
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where InitiatingProcessCommandLine has "autogenstudio"
+    | where RemoteIPType == "Public" and isnotempty(RemoteUrl)
+    | summarize by RemoteUrl;
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessCommandLine has "autogenstudio"
+| where RemoteIPType == "Public" and isnotempty(RemoteUrl)
+| join kind=leftanti Baseline on RemoteUrl
+| summarize FirstSeen=min(Timestamp), Connections=count(), Hosts=dcount(DeviceName), SampleIP=any(RemoteIP) by RemoteUrl, DeviceName, InitiatingProcessFileName, InitiatingProcessId
+| order by FirstSeen desc
 ```
 
-### Installation of vulnerable AutoGen Studio pre-release 0.4.3.dev1/.dev2 (AutoJack exposure)
+### Vulnerable AutoGen Studio pre-release (0.4.3.dev1/dev2) install — AutoJack exposure
 
-`UC_100_9` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_100_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*autogenstudio*" AND (Processes.process="*0.4.3.dev1*" OR Processes.process="*0.4.3.dev2*" OR Processes.process="*--pre*") AND (Processes.process="*pip*" OR Processes.process="*install*" OR Processes.process="*uv *") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*autogenstudio*" AND (Processes.process="*--pre*" OR Processes.process="*0.4.3.dev1*" OR Processes.process="*0.4.3.dev2*") AND Processes.process IN ("*pip*","*install*","*uv *") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
 ```
 
 **Defender KQL:**
@@ -108,30 +106,10 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where ProcessCommandLine has "autogenstudio"
-| where ProcessCommandLine has_any ("0.4.3.dev1","0.4.3.dev2","--pre")
-| where ProcessCommandLine has_any ("pip install","pip3 install","python -m pip","uv pip","uv add")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### AutoGen Studio agent spawns persistence binary (post-AutoJack RCE follow-on)
-
-`UC_100_10` · phase: **install** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*autogenstudio*" OR Processes.parent_process_name IN ("autogenstudio.exe","python.exe","pythonw.exe")) AND Processes.process_name IN ("schtasks.exe","reg.exe","sc.exe","at.exe") AND (Processes.process="*create*" OR Processes.process="*Run*" OR Processes.process="*RunOnce*" OR Processes.process="* add *") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessCommandLine has "autogenstudio" or InitiatingProcessFileName =~ "autogenstudio.exe" or InitiatingProcessFolderPath has "autogenstudio"
-| where FileName in~ ("schtasks.exe","reg.exe","sc.exe","at.exe")
-| where ProcessCommandLine has_any ("/create","schtasks","Register-ScheduledTask","New-ScheduledTask","reg add","sc create","RunOnce","CurrentVersion")
+| where ProcessCommandLine has_any ("pip","install","uv ")
+| where ProcessCommandLine has_any ("--pre","0.4.3.dev1","0.4.3.dev2","0.4.3.dev")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -349,4 +327,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

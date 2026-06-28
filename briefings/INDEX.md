@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-27
-- [openai previews gpt 5 6 sol with restricted access and stron](./2026-06-27/openai-previews-gpt-5-6-sol-with-restricted-access-and-stron.md)
 - [ukraine says russian intelligence used fake support texts to](./2026-06-27/ukraine-says-russian-intelligence-used-fake-support-texts-to.md)
 
 ## 2026-06-26

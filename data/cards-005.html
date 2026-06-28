@@ -1,271 +1,3 @@
-<article class="card" id="art-134" data-art-slug="2026-06-18-ghsa-critical-cve-2026-55742-cotonti-cross-site-request-forg"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="vcs,windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-55742: Cotonti: Cross-Site Request Forgery in the administration rights handler Cotonti: Cross-Site Request Forgery in the administration rights handler CVE-2026-55742 T1190 [LLM] Cotonti CVE-2026-55742 CSRF rights update missing anti-CSRF token (x=) [LLM] Cotonti web-server process spawning shell after CVE-2026-55742 admin takeover Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-18-ghsa-critical-cve-2026-55742-cotonti-cross-site-request-forg" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-7g3p-35vc-mgjr" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-55742: Cotonti: Cross-Site Request Forgery in the administration rights handler</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-18</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Cotonti: Cross-Site Request Forgery in the administration rights handler</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55742</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-134-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-134"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-134-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Cotonti CVE-2026-55742 CSRF rights update missing anti-CSRF token (x=)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Cotonti web-server process spawning shell after CVE-2026-55742 admin takeover</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="f1f57d2506" data-platforms="sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">Cotonti CVE-2026-55742 CSRF rights update missing anti-CSRF token (x=)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f1f57d2506" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts forged state-changing requests to the Cotonti admin rights handler (admin.php?m=rights&amp;a=update) that lack the cot_check_xg anti-CSRF token (the x= parameter). Because the &#x27;update&#x27; action never calls cot_check_xg(), a request that reaches a=update without a valid x= token is the exploitation signature for CVE-2026-55742 granting elevated group rights.
-
-Rationale: Anchored on the article&#x27;s exact vulnerable endpoint (system/admin/admin.rights.php → admin.php?m=rights with a=update) and the named CSRF validator cot_check_xg, which is bypassed; cross-checked against Cotonti docs confirming admin.php?m=&lt;module&gt; routing and that the anti-CSRF token rides as the x= parameter ($sys[&#x27;xk&#x27;]). Absence of x= on a successful a=update is high-fidelity because the legitimate admin UI always emits the token.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-7g3p-35vc-mgjr
-  • https://www.cotonti.com/docs/en/admin/url_modification
-  • https://www.cotonti.com/docs/ext/extensions/global_vars</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation">T1098</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized DAST/pentest tooling (Burp, OWASP ZAP, Nikto) replaying admin.php?m=rights&amp;a=update without the token</li><li>Bookmarked or hand-edited admin URL that omits the x= token</li><li>Browser prefetch/extension re-issuing a stripped URL</li><li>Uptime/monitoring crawlers hitting admin paths</li><li>Log pipeline that drops or normalises the x query parameter</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HttpStatusCode !in (&quot;401&quot;,&quot;403&quot;,&quot;404&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the src IP, Referer and User-Agent for the flagged a=update request; confirm whether it returned 200/302 (succeeded) and whether the source IP matches a known admin workstation or an external/unknown host. 2) Contain: if external or unrecognised, force-logout the targeted admin session, reset that admin&#x27;s credentials, and audit cot group rights for unexpected grants (especially additions via cot_auth_add_group) — revert any unauthorised group privilege changes. 3) Hunt: review subsequent activity from the same admin/session for template or config edits and for web-server processes spawning interpreters (see paired RCE UC); patch Cotonti above 1.0.0 / commit f43f1fc3.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-134-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-134-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-134-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-134-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url contains &quot;admin.php&quot; and Url contains &quot;m=rights&quot; and Url contains &quot;a=update&quot;
-| where not(Url contains &quot;&amp;x=&quot; or Url contains &quot;?x=&quot;)   // forged request lacks cot_check_xg token
-| where HttpStatusCode !in (&quot;401&quot;,&quot;403&quot;,&quot;404&quot;)          // keep requests that actually reached the handler
-| project TimeGenerated, SrcIpAddr, DvcHostname, Url, HttpMethod, HttpStatusCode, Referer = HttpRequestHeaderReferer, UserAgent = HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-134-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cotonti CVE-2026-55742 CSRF Rights Update Without Anti-CSRF Token
-id: 7a1c3e9d-2b54-4f18-9c6a-1d2e3f4a5b60
-status: experimental
-description: Detects forged state-changing requests to the Cotonti admin rights handler (m=rights&amp;a=update) that lack the cot_check_xg anti-CSRF token (x= parameter), indicating exploitation of CVE-2026-55742.
-references:
-  - https://github.com/advisories/GHSA-7g3p-35vc-mgjr
-author: SOC Detection Engineering
-date: 2026/06/20
-tags:
-  - attack.t1098
-  - attack.t1068
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-uri-query|contains|all:
-      - &#x27;m=rights&#x27;
-      - &#x27;a=update&#x27;
-  filter_token:
-    cs-uri-query|contains:
-      - &#x27;&amp;x=&#x27;
-      - &#x27;?x=&#x27;
-  condition: selection and not filter_token
-level: high</code></pre></div>
-    <div class="tab-content" id="art-134-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-134-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-134-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-134-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.http_referrer) as http_referrer values(Web.http_user_agent) as http_user_agent values(Web.http_method) as http_method values(Web.status) as status from datamodel=Web where Web.url=&quot;*admin.php*&quot; Web.url=&quot;*m=rights*&quot; Web.url=&quot;*a=update*&quot; NOT (Web.url=&quot;*&amp;x=*&quot; OR Web.url=&quot;*?x=*&quot;) by Web.dest Web.uri_path | `drop_dm_object_name(Web)` | where status!=&quot;403&quot; AND status!=&quot;404&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-134-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.http_referrer) as http_referrer values(Web.http_user_agent) as http_user_agent values(Web.http_method) as http_method values(Web.status) as status from datamodel=Web where Web.url=&quot;*admin.php*&quot; Web.url=&quot;*m=rights*&quot; Web.url=&quot;*a=update*&quot; NOT (Web.url=&quot;*&amp;x=*&quot; OR Web.url=&quot;*?x=*&quot;) by Web.dest Web.uri_path | `drop_dm_object_name(Web)` | where status!=&quot;403&quot; AND status!=&quot;404&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="29ca9d8c6e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">Cotonti web-server process spawning shell after CVE-2026-55742 admin takeover</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="29ca9d8c6e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts PHP/web-server processes (php, php-cgi, w3wp, httpd, nginx) spawning a command interpreter or recon utility — the code-execution stage the advisory warns about once an attacker uses the CSRF privilege escalation to reach the admin template/config editor. Distinct pivot from the web-log CSRF detection: this fires on endpoint process telemetry.
-
-Rationale: Grounded in the advisory&#x27;s explicit statement that admin compromise &#x27;can be further leveraged toward remote code execution&#x27; via template/config modification; the highest-fidelity host signal of that outcome is the Cotonti PHP/web-server runtime spawning a shell or recon binary, which never happens in normal Cotonti operation. Process names (php, php-cgi, w3wp, httpd, nginx) are the standard hosts for composer:cotonti/cotonti.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-7g3p-35vc-mgjr</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>PHP legitimately shelling out for image processing (ImageMagick convert/magick) or PDF/thumbnail generation</li><li>Web user running sendmail/mail wrappers for outbound notifications</li><li>Deployment or update tooling (composer, git pull) executing under the web-server account</li><li>Cron/backup scripts running as the web user that spawn sh/cmd</li><li>Monitoring or APM agents injecting helper processes into the web runtime</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(FileName in~ (&quot;convert.exe&quot;,&quot;magick.exe&quot;,&quot;sendmail.exe&quot;,&quot;git.exe&quot;)) and ProcessCommandLine !has &quot;composer&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: examine the child ProcessCommandLine and the web-server parent command line — benign image/mail helpers (convert, sendmail) are obvious; recon (whoami/net) or download (certutil) commands are not. Correlate the host/time against the paired CSRF rights-update detection. 2) Contain: isolate the web host, kill the spawned process tree, and snapshot the Cotonti webroot for newly written/modified .php and template files. 3) Hunt: review web-server file writes for dropped webshells, audit Cotonti group rights and admin sessions for the CSRF privesc that preceded this, rotate web-app and DB credentials, and upgrade Cotonti past 1.0.0 / commit f43f1fc3.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-134-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-134-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-134-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-134-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-134-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-134-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-134-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;caddy.exe&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;net.exe&quot;,&quot;whoami.exe&quot;,&quot;certutil.exe&quot;,&quot;bash.exe&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-134-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where ParentProcessName has_any (&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;caddy.exe&quot;)
-| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;net.exe&quot;,&quot;whoami.exe&quot;,&quot;certutil.exe&quot;)
-| where not(SubjectUserName endswith &quot;$&quot;)
-| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-134-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cotonti Web Server Process Spawning Command Interpreter (Post-CVE-2026-55742 RCE)
-id: c4d5e6f7-8a90-4b12-9c34-5d6e7f8a9b01
-status: experimental
-description: Detects a PHP/web-server process (php, php-cgi, w3wp, httpd, nginx) spawning a command interpreter or recon utility, consistent with code execution following admin takeover via CVE-2026-55742.
-references:
-  - https://github.com/advisories/GHSA-7g3p-35vc-mgjr
-author: SOC Detection Engineering
-date: 2026/06/20
-tags:
-  - attack.t1505.003
-  - attack.t1059
-logsource:
-  category: process_creation
-detection:
-  selection:
-    ParentImage|endswith:
-      - &#x27;\php.exe&#x27;
-      - &#x27;\php-cgi.exe&#x27;
-      - &#x27;\w3wp.exe&#x27;
-      - &#x27;\httpd.exe&#x27;
-      - &#x27;\nginx.exe&#x27;
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\wscript.exe&#x27;
-      - &#x27;\cscript.exe&#x27;
-      - &#x27;\net.exe&#x27;
-      - &#x27;\whoami.exe&#x27;
-      - &#x27;\certutil.exe&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-134-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\php.exe OR *\php-cgi.exe OR *\w3wp.exe OR *\httpd.exe OR *\nginx.exe OR *\PHP.exe OR *\W3WP.exe) @Image:(*\cmd.exe OR *\powershell.exe OR *\pwsh.exe OR *\wscript.exe OR *\cscript.exe OR *\net.exe OR *\whoami.exe OR *\certutil.exe OR *\CMD.exe OR *\PowerShell.exe)</code></pre></div>
-    <div class="tab-content" id="art-134-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php|php-cgi|w3wp|httpd|nginx|caddy)\.exe$/i
-| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|net|whoami|certutil)\.exe$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-134-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-134-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-134-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-134-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;caddy.exe&quot;)) (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;net.exe&quot;,&quot;whoami.exe&quot;,&quot;certutil.exe&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-134-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;caddy.exe&quot;)) (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;net.exe&quot;,&quot;whoami.exe&quot;,&quot;certutil.exe&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-134-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-134-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-134-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-134-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-55742&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-134-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-55742&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-134-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-134-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-134-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-134-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-55742&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-134-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-55742&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-135" data-art-slug="2026-06-18-mastra-npm-supply-chain-attack-140-packages-backdoored-via-e"
   data-phases="actions,c2,delivery,exploit,install" data-sev="high"
   data-techs="T1027,T1190,T1195.002"
@@ -8200,11 +7932,11 @@ level: medium
   data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network,web"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,web"
   data-targets="linux,vcs,windows"
-  data-uc-count="5" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-49980: Rclone: Unauthenticated command execution in `rclone rcd --rc-serve` via inline remote instantiation, bypassing CVE-2026-41179 fix Rclone: Unauthenticated command execution in `rclone rcd --rc-serve` via inline remote instantiation, bypassing CVE-2026-41179 fix CVE-2026-49980 CVE-2026-41179 T1190 [LLM] rclone rcd process spawning shell or LOLBin child (CVE-2026-49980 RCE) [LLM] Unauthenticated inline-remote GET/HEAD to rclone RC endpoint (CVE-2026-49980 delivery) [LLM] rclone RC listener launched with --rc-serve and no HTTP authentication [LLM] Inbound connection to rclone RC port 5572 from a public address Asset exposure — vulnerability matches article CVE(s)">
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-49980: Rclone: Unauthenticated command execution in `rclone rcd --rc-serve` via inline remote instantiation, bypassing CVE-2026-41179 fix Rclone: Unauthenticated command execution in `rclone rcd --rc-serve` via inline remote instantiation, bypassing CVE-2026-41179 fix CVE-2026-49980 CVE-2026-41179 T1190 [LLM] rclone process spawning child command (CVE-2026-49980 inline-remote RCE) [LLM] Inline-remote connection-string injection in request to rclone rc (bearer_token_command) [LLM] Exposed unauthenticated rclone rc deployment (rcd --rc-serve without auth) Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-16-ghsa-critical-cve-2026-49980-rclone-unauthenticated-command-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -8213,7 +7945,7 @@ level: medium
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-16</span>
-    <span>5 use cases</span>
+    <span>4 use cases</span>
     <span>1 technique</span>
     <span>3 kill-chain phases detected</span>
   </div>
@@ -8261,35 +7993,36 @@ level: medium
   <div class="name">Actions on Objectives</div>
   <div class="marker">—</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] rclone RC listener launched with --rc-serve and no HTTP authentication · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Exposed unauthenticated rclone rc deployment (rcd --rc-serve without auth) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Unauthenticated inline-remote GET/HEAD to rclone RC endpoint (CVE-2026-49980 delivery) · [LLM] Inbound connection to rclone RC port 5572 from a public address</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] rclone rcd process spawning shell or LOLBin child (CVE-2026-49980 RCE)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Inline-remote connection-string injection in request to rclone rc (bearer_token_command)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] rclone process spawning child command (CVE-2026-49980 inline-remote RCE)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="f2a41cf7a4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="c3c657ffc0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
   <summary>
-    <span class="uc-title">rclone rcd process spawning shell or LOLBin child (CVE-2026-49980 RCE)</span>
+    <span class="uc-title">rclone process spawning child command (CVE-2026-49980 inline-remote RCE)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="f2a41cf7a4" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="c3c657ffc0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the command-execution payload of CVE-2026-49980, where an unauthenticated GET/HEAD to a `rclone rcd --rc-serve` listener instantiates an inline remote whose backend options execute a local command during initialization. rclone is a file-sync binary that never legitimately spawns interpreters or network LOLBins, so any such child of rclone is high-fidelity RCE.
+    <div class="uc-desc">Hunts the command-execution payload of CVE-2026-49980 / CVE-2026-41179: rclone shells out a local command during backend initialization when an unauthenticated request supplies an inline remote with a command-bearing backend option (webdav bearer_token_command or sftp ssh=). rclone is not a normal parent of arbitrary shells/binaries, so any non-rclone child of rclone on an rcd/--rc-serve host is high-fidelity.
 
-Rationale: Anchored on the named vulnerable binary &#x27;rclone&#x27; as parent and a curated child-interpreter/LOLBin set — rclone has no legitimate reason to fork an interpreter, so the parent→child pair is the article&#x27;s RCE outcome (&quot;backend options that execute local commands during initialization&quot;). CVSS 9.8 and version range corroborated.
+Rationale: Pivots on rclone-as-parent of any non-rclone, non-helper child — the observable end of the CVE-2026-49980 chain where a single unauthenticated GET/HEAD forces backend init to exec a local command. The PoC (bearer_token_command=&#x27;/usr/bin/touch ...&#x27;) confirms rclone forks an arbitrary attacker-named binary, so child name is variable but the parent is fixed; ssh/fusermount excluded as legitimate rclone backend/mount helpers.
 
 Cross-checked against:
   • https://github.com/rclone/rclone/security/advisories/GHSA-qw24-gh76-8rvv
-  • https://securityonline.info/rclone-command-execution/
-  • https://ccb.belgium.be/advisories/warning-two-critical-unauthenticated-code-execution-vulnerabilities-rclone-patch</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Windows Command Shell">T1059.003</span> <span class="ind tech" title="Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  • https://github.com/advisories/GHSA-jfwf-28xr-xw6q
+  • https://www.endorlabs.com/vulnerability/cve-2026-41179
+  • https://advisories.gitlab.com/golang/github.com/rclone/rclone/CVE-2026-49980/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin wrapper scripts that legitimately shell out to rclone and then run a post-sync command tree where rclone is mis-attributed as parent</li><li>rclone mount/serve health-check scripts invoking curl against the local endpoint launched as a child</li><li>Backup tooling that uses rclone&#x27;s --post-command style hooks (rare; baseline per host)</li><li>Container entrypoints where rclone is PID 1 and forks sh for orchestration</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;--check&quot; and InitiatingProcessCommandLine has_any (&quot;rcd&quot;,&quot;--rc-serve&quot;,&quot;--rc &quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree for the rclone PID and inspect InitiatingProcessCommandLine — confirm rclone was running as &#x27;rcd&#x27;/&#x27;--rc-serve&#x27;. Capture the child ProcessCommandLine; a base64/curl/whoami payload confirms RCE. 2) Contain: isolate the host, kill the rclone listener, and block inbound to its RC port (default 5572) at the firewall; rotate any credentials reachable by the rclone process user. 3) Hunt: review web/proxy logs for the triggering GET/HEAD with bracketed inline-remote syntax, and sweep other hosts for rclone launched with --rc-serve minus --rc-user/--rc-pass.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>rclone configured with an sftp backend that uses an external ssh binary (ssh= option) for a legitimate remote — spawns ssh</li><li>rclone mount/serve teardown invoking fusermount/fusermount3 to unmount a FUSE volume</li><li>Admin-run rclone with a backend hook or wrapper script that legitimately shells out</li><li>Backup automation where rclone is wrapped to call a post-transfer notify command</li><li>Container entrypoints where rclone is PID 1 and legitimately execs a sidecar</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FileName !in~ (&quot;ssh&quot;,&quot;ssh.exe&quot;,&quot;fusermount&quot;,&quot;fusermount3&quot;,&quot;scp&quot;,&quot;scp.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full child ProcessCommandLine and the rclone InitiatingProcessCommandLine — confirm the rclone instance is running `rcd`/`--rc-serve` without `--rc-user`/`--rc-pass`/`--rc-htpasswd`, and check whether the child is a shell/recon binary (sh, bash, id, whoami, curl) vs a known backend helper. 2) Contain: isolate the host or kill the rclone process and block inbound to its rc port (default 5572); rotate any credentials readable by the rclone process user. 3) Hunt: search the same host&#x27;s web/proxy logs for inbound requests containing `bearer_token_command`/`vendor=other`, enumerate other internet-reachable rclone rc listeners, and confirm patched to &gt;=1.74.3.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-161-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-161-uc0-sentinel">Sentinel KQL</button>
@@ -8300,147 +8033,150 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-161-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;rclone.exe&quot;,&quot;rclone&quot;) or InitiatingProcessFolderPath has &quot;rclone&quot;
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;curl.exe&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256, InitiatingProcessParentFileName
+| where InitiatingProcessFileName in~ (&quot;rclone&quot;,&quot;rclone.exe&quot;)
+| where FileName !in~ (&quot;rclone&quot;,&quot;rclone.exe&quot;,&quot;ssh&quot;,&quot;ssh.exe&quot;,&quot;fusermount&quot;,&quot;fusermount3&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-161-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-161-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where ParentProcessName has &quot;rclone&quot;
-| where NewProcessName has_any (&quot;\\cmd.exe&quot;,&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;,&quot;\\wscript.exe&quot;,&quot;\\cscript.exe&quot;,&quot;\\mshta.exe&quot;,&quot;\\rundll32.exe&quot;,&quot;\\regsvr32.exe&quot;,&quot;\\bash&quot;,&quot;/bin/sh&quot;,&quot;\\curl.exe&quot;,&quot;\\certutil.exe&quot;,&quot;\\bitsadmin.exe&quot;)
-| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| where ActingProcessName has &quot;rclone&quot;
+| where ActingProcessName endswith &quot;rclone&quot; or ActingProcessName endswith &quot;rclone.exe&quot;
+| where not(TargetProcessName endswith &quot;rclone&quot; or TargetProcessName endswith &quot;rclone.exe&quot; or TargetProcessName endswith &quot;ssh&quot; or TargetProcessName endswith &quot;ssh.exe&quot; or TargetProcessName endswith &quot;fusermount&quot; or TargetProcessName endswith &quot;fusermount3&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-161-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: rclone rcd Spawning Shell or LOLBin Child (CVE-2026-49980)
-id: 8f2a1c4e-7b3d-4e6a-9c1f-2d5b8a0e7f31
-description: Detects rclone (a file-sync binary) spawning a command interpreter or network LOLBin, the command-execution outcome of CVE-2026-49980 inline-remote RCE via rclone rcd --rc-serve.
+    <div class="tab-content" id="art-161-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: rclone Process Spawning Unexpected Child (CVE-2026-49980 Inline-Remote RCE)
+id: 6f3a2c14-9b7e-4d21-8a55-2e9d0c4b71aa
+description: Detects rclone spawning a non-rclone child process, the command-execution result of CVE-2026-49980/CVE-2026-41179 inline backend option injection (bearer_token_command / ssh=).
 references:
-  - https://github.com/advisories/GHSA-qw24-gh76-8rvv
   - https://github.com/rclone/rclone/security/advisories/GHSA-qw24-gh76-8rvv
+  - https://github.com/advisories/GHSA-jfwf-28xr-xw6q
 author: SOC Detection Engineering
-date: 2026/06/27
+date: 2026/06/28
 tags:
-  - attack.t1059
-  - attack.t1059.003
-  - attack.t1059.004
   - attack.t1190
+  - attack.t1059.004
+  - attack.t1059.003
 logsource:
   category: process_creation
 detection:
-  selection_parent:
+  selection:
     ParentImage|endswith:
       - &#x27;\rclone.exe&#x27;
       - &#x27;/rclone&#x27;
-  selection_child:
+  filter_self:
     Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\wscript.exe&#x27;
-      - &#x27;\cscript.exe&#x27;
-      - &#x27;\mshta.exe&#x27;
-      - &#x27;\rundll32.exe&#x27;
-      - &#x27;\regsvr32.exe&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;\certutil.exe&#x27;
-      - &#x27;\bitsadmin.exe&#x27;
-  condition: selection_parent and selection_child
+      - &#x27;\rclone.exe&#x27;
+      - &#x27;/rclone&#x27;
+  filter_helpers:
+    Image|endswith:
+      - &#x27;/ssh&#x27;
+      - &#x27;\ssh.exe&#x27;
+      - &#x27;/fusermount&#x27;
+      - &#x27;/fusermount3&#x27;
+  condition: selection and not (filter_self or filter_helpers)
 level: high</code></pre></div>
-    <div class="tab-content" id="art-161-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\rclone.exe OR *\Rclone.exe OR *\RCLONE.EXE) @Image:(*\cmd.exe OR *\powershell.exe OR *\pwsh.exe OR *\wscript.exe OR *\cscript.exe OR *\mshta.exe OR *\rundll32.exe OR *\regsvr32.exe OR *\curl.exe OR *\certutil.exe OR *\bitsadmin.exe)</code></pre></div>
+    <div class="tab-content" id="art-161-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\rclone.exe OR *\\Rclone.exe OR *\\RCLONE.EXE) -@Image:(*\\rclone.exe OR *\\Rclone.exe OR *\\RCLONE.EXE OR *\\ssh.exe OR *\\SSH.EXE)</code></pre></div>
     <div class="tab-content" id="art-161-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^rclone(\.exe)?$/i
-| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32|curl|certutil|bitsadmin)\.exe$/i OR ImageFileName=/\/(bash|sh|dash|curl|wget|nc|ncat|socat)$/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-161-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;rclone.exe&quot; OR Processes.parent_process_name=&quot;rclone&quot;) (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;curl.exe&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-161-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;rclone.exe&quot; OR Processes.parent_process_name=&quot;rclone&quot;) (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;curl.exe&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+| NOT ImageFileName=/(rclone(\.exe)?|ssh(\.exe)?|fusermount3?)$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine, UserName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-161-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;rclone&quot; OR Processes.parent_process_name=&quot;rclone.exe&quot;) AND NOT (Processes.process_name=&quot;rclone&quot; OR Processes.process_name=&quot;rclone.exe&quot; OR Processes.process_name=&quot;ssh&quot; OR Processes.process_name=&quot;ssh.exe&quot; OR Processes.process_name=&quot;fusermount&quot; OR Processes.process_name=&quot;fusermount3&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_id
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-161-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;rclone&quot; OR Processes.parent_process_name=&quot;rclone.exe&quot;) AND NOT (Processes.process_name=&quot;rclone&quot; OR Processes.process_name=&quot;rclone.exe&quot; OR Processes.process_name=&quot;ssh&quot; OR Processes.process_name=&quot;ssh.exe&quot; OR Processes.process_name=&quot;fusermount&quot; OR Processes.process_name=&quot;fusermount3&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_id
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="b512fcba9d" data-platforms="sent,sigma,spl" data-targets="vcs">
+<details class="uc" data-uc-slug="4c41af2c61" data-platforms="datadog,sent,sigma,spl" data-targets="linux,vcs">
   <summary>
-    <span class="uc-title">Unauthenticated inline-remote GET/HEAD to rclone RC endpoint (CVE-2026-49980 delivery)</span>
+    <span class="uc-title">Inline-remote connection-string injection in request to rclone rc (bearer_token_command)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b512fcba9d" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="4c41af2c61" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the exploit request itself: an unauthenticated GET/HEAD to a `rclone rcd --rc-serve` listener whose URL carries the bracketed inline-remote form `/[remote:path]/object` (or URL-encoded `%5B`), optionally mutating `global.http_proxy`. Requires HTTP telemetry from a reverse proxy / WAF / IIS fronting rclone, since rclone&#x27;s embedded server does not ship to EDR.
+    <div class="uc-desc">Hunts the actual CVE-2026-49980 exploit request: an unauthenticated GET/HEAD to the rclone rc listener whose URL embeds an inline remote with a command-executing backend option. The strings bearer_token_command, vendor=other and sftp,ssh= inside an HTTP request URI are not produced by normal rclone clients and are the exploit signature.
 
-Rationale: Uses the article&#x27;s confirmed URL grammar `/[remote:path]/object` (bracket literal and URL-encoded %5B), the rclone RC default port 5572 (corroborated via rclone.org/commands/rclone_rcd and forum), and the named impact token global.http_proxy. Defender/Falcon left empty — rclone&#x27;s embedded HTTP server is not in EDR process/network-content telemetry; W3CIISLog/AppServiceHTTPLogs are valid alternates to CommonSecurityLog.
+Rationale: The string bearer_token_command (webdav backend) and sftp,ssh= are the exact inline backend options the GHSA/Endor PoC plants to gain code execution (fs=:webdav,...,bearer_token_command=&#x27;...&#x27;:). Seeing them in a request URI to the rc port (default 5572) is an unambiguous exploit attempt with essentially no benign source. Defender AH has no web-request table, so defender_kql is intentionally empty.
 
 Cross-checked against:
-  • https://github.com/rclone/rclone/security/advisories/GHSA-qw24-gh76-8rvv
-  • https://rclone.org/commands/rclone_rcd/
-  • https://forum.rclone.org/t/rclone-release-1-74-3/53880</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+  • https://github.com/advisories/GHSA-jfwf-28xr-xw6q
+  • https://www.endorlabs.com/vulnerability/cve-2026-41179
+  • https://github.com/rclone/rclone/security/advisories/GHSA-qw24-gh76-8rvv</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate RcloneView / rclone-webui clients that pass remote:path in the URL during file browsing</li><li>Internal automation hitting the RC with bracketed paths over an authenticated session logged by the same proxy</li><li>Security scanners / vuln assessment probing port 5572 with benign payloads</li><li>URL-encoded square brackets in unrelated application paths fronted by the same WAF</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where isempty(RequestContext) or RequestContext !has &quot;Authorization&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the destination is an rclone RC listener (port 5572 or known rclone vhost) and that the request carried no Authorization header; decode the bracketed remote to read the intended backend/command. 2) Contain: front the RC with --rc-user/--rc-pass auth or remove --rc-serve; block the source IP and the listener port from untrusted networks. 3) Hunt: pivot to that host&#x27;s DeviceProcessEvents for an rclone child shell within seconds of the request (UC1), and check for global.http_proxy mutation redirecting subsequent rclone egress.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (Tenable/Qualys/Nuclei) firing a CVE-2026-49980 template against the rc listener</li><li>Internal red-team / pentest engagement validating the patch</li><li>WAF or reverse proxy logging a blocked exploit attempt (still worth surfacing)</li><li>Security researchers replaying the public PoC in a lab that ships logs to prod SIEM</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestClientApplication !has_any (&quot;Nuclei&quot;, &quot;Nessus&quot;, &quot;Qualys&quot;, &quot;zgrab&quot;) and SourceIP !in (&quot;10.0.0.0/8 scanner range — replace with your authorized scanner IPs&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract SourceIP and full RequestURL — decode the inline remote to read the command in bearer_token_command/ssh=, and determine if the rc target actually responded 200/206 (HEAD/GET serving) vs blocked. 2) Contain: block the SourceIP at the proxy/WAF, take the rc listener off the network or enable `--rc-user`/`--rc-pass`, and treat the host as compromised if the request reached an unpatched (&lt;1.74.3) rclone. 3) Hunt: pivot to that host&#x27;s process telemetry for an rclone-parented child (UC1) within seconds of the request, and sweep all proxy logs for the same SourceIP hitting other internal hosts on 5572.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-161-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-161-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-161-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-161-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-161-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(7d)
-| where RequestMethod in (&quot;GET&quot;,&quot;HEAD&quot;)
-| where DestinationPort == 5572 or RequestURL has_any (&quot;/[&quot;, &quot;%5B&quot;, &quot;%5b&quot;)
-| where RequestURL has_any (&quot;/[&quot;, &quot;%5B&quot;, &quot;%5b&quot;)
-| where RequestURL has_any (&quot;://&quot;, &quot;:&quot;, &quot;global.http_proxy&quot;, &quot;config_is_local&quot;)
-| project TimeGenerated, SourceIP, DestinationIP, DestinationPort, RequestMethod, RequestURL, RequestClientApplication, DeviceProduct
+| where RequestURL has_any (&quot;bearer_token_command&quot;, &quot;vendor=other&quot;, &quot;sftp,ssh=&quot;, &quot;:webdav,&quot;, &quot;:sftp,&quot;, &quot;:local,&quot;)
+| project TimeGenerated, SourceIP, DestinationIP, DestinationPort, RequestMethod, RequestURL, RequestClientApplication, DeviceVendor, DeviceProduct, DeviceAction
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-161-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: rclone RC Inline-Remote Exploit Request (CVE-2026-49980)
-id: 3c9d7e21-5a48-4b6c-8d2e-1f7a90b4c6d2
-description: Detects an unauthenticated GET/HEAD to an rclone rcd --rc-serve listener carrying the bracketed inline-remote URL form used by CVE-2026-49980.
+    <div class="tab-content" id="art-161-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: rclone rc Inline-Remote Command-Option Injection in HTTP Request (CVE-2026-49980)
+id: b21d77e9-4c3a-4f08-9e6b-1a7c5d2f0e44
+description: Detects an HTTP request to a web/proxy tier whose URI carries an rclone inline-remote connection string with a command-executing backend option (bearer_token_command, sftp ssh=), the CVE-2026-49980 exploit signature.
 references:
-  - https://github.com/advisories/GHSA-qw24-gh76-8rvv
+  - https://github.com/rclone/rclone/security/advisories/GHSA-qw24-gh76-8rvv
+  - https://www.endorlabs.com/vulnerability/cve-2026-41179
 author: SOC Detection Engineering
-date: 2026/06/27
+date: 2026/06/28
 tags:
   - attack.t1190
-  - attack.t1059
+  - attack.t1059.004
 logsource:
   category: proxy
 detection:
-  selection_method:
-    cs-method:
-      - &#x27;GET&#x27;
-      - &#x27;HEAD&#x27;
-  selection_bracket:
+  selection:
     c-uri|contains:
-      - &#x27;/[&#x27;
-      - &#x27;%5B&#x27;
-      - &#x27;%5b&#x27;
-  selection_remote:
-    c-uri|contains:
-      - &#x27;://&#x27;
-      - &#x27;global.http_proxy&#x27;
-      - &#x27;config_is_local&#x27;
-  condition: selection_method and selection_bracket and selection_remote
+      - &#x27;bearer_token_command&#x27;
+      - &#x27;vendor=other&#x27;
+      - &#x27;sftp,ssh=&#x27;
+      - &#x27;:webdav,&#x27;
+      - &#x27;:sftp,&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-161-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest_port=5572 OR Web.url=&quot;*%5B*&quot; OR Web.url=&quot;*/[*&quot;) (Web.http_method=&quot;GET&quot; OR Web.http_method=&quot;HEAD&quot;) (Web.url=&quot;*://*&quot; OR Web.url=&quot;*global.http_proxy*&quot; OR Web.url=&quot;*config_is_local*&quot;) by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-161-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest_port=5572 OR Web.url=&quot;*%5B*&quot; OR Web.url=&quot;*/[*&quot;) (Web.http_method=&quot;GET&quot; OR Web.http_method=&quot;HEAD&quot;) (Web.url=&quot;*://*&quot; OR Web.url=&quot;*global.http_proxy*&quot; OR Web.url=&quot;*config_is_local*&quot;) by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-161-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (&quot;bearer_token_command&quot; OR &quot;vendor=other&quot; OR &quot;sftp,ssh=&quot;)</code></pre></div>
+    <div class="tab-content" id="art-161-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*bearer_token_command*&quot; OR Web.url=&quot;*vendor=other*&quot; OR Web.url=&quot;*sftp,ssh=*&quot; OR Web.uri_query=&quot;*bearer_token_command*&quot;) OR (Web.dest_port=5572 AND (Web.http_method=&quot;GET&quot; OR Web.http_method=&quot;HEAD&quot;)) by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.uri_path Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| search url=&quot;*bearer_token_command*&quot; OR url=&quot;*vendor=other*&quot; OR url=&quot;*sftp,ssh=*&quot; OR uri_path=&quot;*:webdav,*&quot; OR uri_path=&quot;*:sftp,*&quot;
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-161-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*bearer_token_command*&quot; OR Web.url=&quot;*vendor=other*&quot; OR Web.url=&quot;*sftp,ssh=*&quot; OR Web.uri_query=&quot;*bearer_token_command*&quot;) OR (Web.dest_port=5572 AND (Web.http_method=&quot;GET&quot; OR Web.http_method=&quot;HEAD&quot;)) by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.uri_path Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| search url=&quot;*bearer_token_command*&quot; OR url=&quot;*vendor=other*&quot; OR url=&quot;*sftp,ssh=*&quot; OR uri_path=&quot;*:webdav,*&quot; OR uri_path=&quot;*:sftp,*&quot;
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="984679d399" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+<details class="uc" data-uc-slug="6a0bcf5891" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
   <summary>
-    <span class="uc-title">rclone RC listener launched with --rc-serve and no HTTP authentication</span>
+    <span class="uc-title">Exposed unauthenticated rclone rc deployment (rcd --rc-serve without auth)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="984679d399" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="6a0bcf5891" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces the vulnerable deployment precondition for CVE-2026-49980: rclone started as `rcd`/`--rc` with `--rc-serve` but without any of `--rc-user`/`--rc-pass`/`--rc-htpasswd`, and flags instances bound beyond localhost via `--rc-addr`. Proactive exposure hunt to find and harden affected hosts before exploitation.
+    <div class="uc-desc">Hunts the CVE-2026-49980 preconditions in your own estate: rclone launched with the rc enabled (rcd/--rc-serve) and bound to a non-localhost address (--rc-addr) but missing --rc-user/--rc-pass/--rc-htpasswd. These are the exact unauthenticated, network-reachable, file-serving deployments the advisory says are exploitable.
 
-Rationale: Built from the article&#x27;s explicit precondition list — &#x27;--rc-serve flag must be in use&#x27;, &#x27;deployed without --rc-user/--rc-pass/--rc-htpasswd&#x27;, and reachability via &#x27;--rc-addr&#x27;. All are concrete CLI tokens, so this is an exact exposure inventory with near-zero ambiguity.
+Rationale: Encodes the advisory&#x27;s stated preconditions verbatim (--rc-serve + rc reachable via --rc-addr + no --rc-user/--rc-pass/--rc-htpasswd), surfacing exploitable hosts before an attacker finds them. Localhost binds are filtered out because default rclone only serves the rc to localhost and is not remotely reachable.
 
 Cross-checked against:
+  • https://rclone.org/commands/rclone_rcd/
   • https://github.com/rclone/rclone/security/advisories/GHSA-qw24-gh76-8rvv
-  • https://rclone.org/rc/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  • https://advisories.gitlab.com/golang/github.com/rclone/rclone/CVE-2026-49980/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Intentionally localhost-only RC servers (ExposedBeyondLocalhost=false) that rely on loopback isolation — still a risk via browser subresource attack but lower priority</li><li>Hosts already upgraded to 1.74.3+ where the flag combo is present but no longer exploitable (cross-check DeviceTvmSoftwareInventory version)</li><li>Dev/test rclone instances behind a separate authenticating reverse proxy not visible in the command line</li><li>rclone GUI launches that auto-enable the RC for local webui use</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: sort by ExposedBeyondLocalhost=true first; for each host confirm rclone version (DeviceTvmSoftwareInventory) and whether a fronting proxy enforces auth. 2) Contain: add --rc-user/--rc-pass (or --rc-htpasswd), or drop --rc-serve if file serving isn&#x27;t needed; restrict --rc-addr to 127.0.0.1 and firewall port 5572. 3) Hunt: for any exposed host, retro-hunt proxy logs (UC2) and rclone child processes (UC1) over the full retention window to rule out prior exploitation; prioritize upgrade to 1.74.3+.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>rclone bound to a trusted internal-only interface protected by an external firewall/security group (reachable in cmdline but not from untrusted networks)</li><li>Deployments that supply rc credentials via the config file or RCLONE_RC_USER/RCLONE_RC_PASS env vars instead of CLI flags (auth present but invisible to this query)</li><li>Short-lived rclone rcd test runs by an admin during troubleshooting</li><li>Hosts already patched to &gt;=1.74.3 where the deployment is no longer exploitable</li><li>--rc-addr bound to a unix socket path rather than a TCP IP (not network-exposed)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has &quot;--rc-addr 127.0.0.1&quot; or ProcessCommandLine has &quot;--rc-addr localhost&quot; or ProcessCommandLine has &quot;--rc-addr unix://&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the --rc-addr value resolves to a non-loopback, internet- or untrusted-network-reachable interface and that auth is genuinely absent (check config file and RCLONE_RC_* env vars before declaring exposed). 2) Contain: add --rc-user/--rc-pass or --rc-htpasswd, or drop --rc-serve if file serving is not needed, and restrict the listener with host firewall rules; schedule upgrade to &gt;=1.74.3. 3) Hunt: cross-reference these hosts against UC1 (rclone-parented child) and UC2 (bearer_token_command in proxy logs) to determine whether any exposed instance was already exploited.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-161-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-161-uc2-sentinel">Sentinel KQL</button>
@@ -8451,30 +8187,33 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-161-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where FileName in~ (&quot;rclone.exe&quot;,&quot;rclone&quot;)
-| where ProcessCommandLine has &quot;--rc-serve&quot;
+| where FileName in~ (&quot;rclone&quot;,&quot;rclone.exe&quot;)
+| where ProcessCommandLine has &quot;--rc-serve&quot; or ProcessCommandLine has &quot;rcd&quot;
+| where ProcessCommandLine has &quot;--rc-addr&quot;
 | where not(ProcessCommandLine has_any (&quot;--rc-user&quot;,&quot;--rc-pass&quot;,&quot;--rc-htpasswd&quot;))
-| extend ExposedBeyondLocalhost = ProcessCommandLine has &quot;--rc-addr&quot; and not(ProcessCommandLine has_any (&quot;127.0.0.1&quot;,&quot;localhost&quot;))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, ExposedBeyondLocalhost
-| order by ExposedBeyondLocalhost desc, Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-161-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where not(ProcessCommandLine has &quot;--rc-addr 127.0.0.1&quot; or ProcessCommandLine has &quot;--rc-addr localhost&quot;)
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-161-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where NewProcessName has &quot;rclone&quot;
-| where CommandLine has &quot;--rc-serve&quot;
-| where not(CommandLine has_any (&quot;--rc-user&quot;,&quot;--rc-pass&quot;,&quot;--rc-htpasswd&quot;))
-| extend ExposedBeyondLocalhost = CommandLine has &quot;--rc-addr&quot; and not(CommandLine has_any (&quot;127.0.0.1&quot;,&quot;localhost&quot;))
-| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ExposedBeyondLocalhost
-| order by ExposedBeyondLocalhost desc, TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-161-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: rclone RC Server Started Without HTTP Authentication (CVE-2026-49980 Precondition)
-id: a1b6f0d3-2e74-4c19-9a85-6c0d3b7e2f44
-description: Detects rclone launched with --rc-serve but no --rc-user/--rc-pass/--rc-htpasswd, the unauthenticated deployment required for CVE-2026-49980 exploitation.
+| where TargetProcessName endswith &quot;rclone&quot; or TargetProcessName endswith &quot;rclone.exe&quot;
+| where TargetProcessCommandLine has_any (&quot;--rc-serve&quot;,&quot;rcd&quot;)
+| where TargetProcessCommandLine has &quot;--rc-addr&quot;
+| where not(TargetProcessCommandLine has_any (&quot;--rc-user&quot;,&quot;--rc-pass&quot;,&quot;--rc-htpasswd&quot;))
+| where not(TargetProcessCommandLine has &quot;--rc-addr 127.0.0.1&quot; or TargetProcessCommandLine has &quot;--rc-addr localhost&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-161-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Exposed Unauthenticated rclone rc Deployment (CVE-2026-49980 Precondition)
+id: c0e4a8d2-7f16-4b93-9c2a-5d81b6e3f70c
+description: Detects rclone launched with the remote-control API enabled and bound to a non-localhost address but without HTTP authentication flags - the exact exploitable configuration for CVE-2026-49980.
 references:
-  - https://github.com/advisories/GHSA-qw24-gh76-8rvv
+  - https://github.com/rclone/rclone/security/advisories/GHSA-qw24-gh76-8rvv
+  - https://rclone.org/commands/rclone_rcd/
 author: SOC Detection Engineering
-date: 2026/06/27
+date: 2026/06/28
 tags:
   - attack.t1190
+  - attack.t1133
 logsource:
   category: process_creation
 detection:
@@ -8482,104 +8221,32 @@ detection:
     Image|endswith:
       - &#x27;\rclone.exe&#x27;
       - &#x27;/rclone&#x27;
-    CommandLine|contains: &#x27;--rc-serve&#x27;
+    CommandLine|contains|all:
+      - &#x27;--rc-serve&#x27;
+      - &#x27;--rc-addr&#x27;
   filter_auth:
     CommandLine|contains:
       - &#x27;--rc-user&#x27;
       - &#x27;--rc-pass&#x27;
       - &#x27;--rc-htpasswd&#x27;
-  condition: selection and not filter_auth
+  filter_local:
+    CommandLine|contains:
+      - &#x27;--rc-addr 127.0.0.1&#x27;
+      - &#x27;--rc-addr localhost&#x27;
+  condition: selection and not (filter_auth or filter_local)
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-161-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4688 @Image:(*\rclone.exe OR *\Rclone.exe OR *\RCLONE.EXE) @CommandLine:*--rc-serve* NOT (@CommandLine:*--rc-user* OR @CommandLine:*--rc-pass* OR @CommandLine:*--rc-htpasswd*)</code></pre></div>
-    <div class="tab-content" id="art-161-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\rclone(\.exe)?$/i
-| regex(&quot;--rc-serve&quot;, field=CommandLine)
-| NOT (regex(&quot;--rc-(user|pass|htpasswd)&quot;, field=CommandLine))
-| groupBy([aid, ComputerName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-161-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;rclone.exe&quot; OR Processes.process_name=&quot;rclone&quot;) Processes.process=&quot;*--rc-serve*&quot; NOT (Processes.process=&quot;*--rc-user*&quot; OR Processes.process=&quot;*--rc-pass*&quot; OR Processes.process=&quot;*--rc-htpasswd*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | eval exposed_beyond_localhost=if(match(process,&quot;--rc-addr&quot;) AND NOT match(process,&quot;127\.0\.0\.1|localhost&quot;),&quot;yes&quot;,&quot;no&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-161-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;rclone.exe&quot; OR Processes.process_name=&quot;rclone&quot;) Processes.process=&quot;*--rc-serve*&quot; NOT (Processes.process=&quot;*--rc-user*&quot; OR Processes.process=&quot;*--rc-pass*&quot; OR Processes.process=&quot;*--rc-htpasswd*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | eval exposed_beyond_localhost=if(match(process,&quot;--rc-addr&quot;) AND NOT match(process,&quot;127\.0\.0\.1|localhost&quot;),&quot;yes&quot;,&quot;no&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="3433b2447a" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">Inbound connection to rclone RC port 5572 from a public address</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="3433b2447a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects external/public-source connections accepted by an rclone process on its RC port (default 5572), i.e. the network exposure that makes CVE-2026-49980 remotely reachable. Pairs with UC2 (request content) and UC3 (config) to confirm an internet-facing unauthenticated listener.
-
-Rationale: Pivots on the rclone RC default port 5572 (corroborated via rclone.org and forum release notes) bound to a public-source connection — the article states the RC is only reachable when --rc-addr exposes it beyond localhost, so a public inbound to 5572 on an rclone process is the exploitable surface. Multi-platform on network 5-tuple, distinct from UC1-3.
-
-Cross-checked against:
-  • https://github.com/rclone/rclone/security/advisories/GHSA-qw24-gh76-8rvv
-  • https://rclone.org/commands/rclone_rcd/
-  • https://forum.rclone.org/t/rclone-release-1-74-3/53880</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate remote rclone GUI/WebUI clients (RcloneView) connecting over 5572 across a flat network</li><li>Internal monitoring or health-check probes from a NAT&#x27;d public-looking egress IP</li><li>Port 5572 reused by an unrelated service on the same host (validate InitiatingProcessFileName is rclone)</li><li>Pen-test or ASM scanners cataloguing the exposed port</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName !has &quot;rclone&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the listening process is rclone and the source IP is genuinely external/untrusted; correlate timestamps with UC2 request-content hits. 2) Contain: block inbound 5572 at the perimeter, rebind rclone to 127.0.0.1, and add RC HTTP auth. 3) Hunt: on the same host, look for an rclone child shell (UC1) within the connection window and review egress for global.http_proxy-redirected traffic; check whether the host is on the affected version range 1.55.0–1.74.2.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-161-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-161-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-161-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-161-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-161-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-161-uc3-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-161-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-161-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName has &quot;rclone&quot;
-| where LocalPort == 5572
-| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionAccepted&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-161-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where DestinationPort == 5572
-| where CommunicationDirection in~ (&quot;inbound&quot;,&quot;0&quot;) or isempty(CommunicationDirection)
-| where ipv4_is_private(SourceIP) == false
-| project TimeGenerated, SourceIP, DestinationIP, DestinationPort, DeviceVendor, DeviceProduct, DeviceAction, ApplicationProtocol
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-161-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Inbound Connection to rclone RC Port 5572 (CVE-2026-49980 Exposure)
-id: d4e8b9a2-6c31-4f07-bb52-9a1e0c7d3f68
-description: Detects rclone accepting an inbound connection on its remote-control port 5572, the network reachability precondition for CVE-2026-49980.
-references:
-  - https://github.com/advisories/GHSA-qw24-gh76-8rvv
-author: SOC Detection Engineering
-date: 2026/06/27
-tags:
-  - attack.t1190
-  - attack.t1071.001
-logsource:
-  category: network_connection
-  product: windows
-detection:
-  selection:
-    Image|endswith:
-      - &#x27;\rclone.exe&#x27;
-      - &#x27;/rclone&#x27;
-    DestinationPort: 5572
-    Initiated: &#x27;false&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-161-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\rclone.exe OR *\Rclone.exe OR *\RCLONE.EXE) @DestinationPort:5572</code></pre></div>
-    <div class="tab-content" id="art-161-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\\rclone(\.exe)?$/i
-| LocalPort=5572
-| ConnectionDirection=1
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| groupBy([aid, ComputerName, RemoteAddressIP4, LocalPort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-161-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
-| filter dstPort = 5572 and action = &quot;ACCEPT&quot;
-| filter not (srcAddr like /^10\./ or srcAddr like /^192\.168\./ or srcAddr like /^172\.(1[6-9]|2[0-9]|3[0-1])\./ or srcAddr like /^127\./)
-| stats count(*) as flows, sum(bytes) as totalBytes by srcAddr, dstAddr, dstPort
-| sort flows desc</code></pre></div>
-    <div class="tab-content" id="art-161-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=5572 All_Traffic.direction=&quot;inbound&quot; (All_Traffic.process_name=&quot;rclone.exe&quot; OR All_Traffic.process_name=&quot;rclone&quot; OR All_Traffic.app=&quot;rclone&quot;) by All_Traffic.dest All_Traffic.src All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | iplocation src | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16 OR src=127.0.0.0/8) | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-161-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=5572 All_Traffic.direction=&quot;inbound&quot; (All_Traffic.process_name=&quot;rclone.exe&quot; OR All_Traffic.process_name=&quot;rclone&quot; OR All_Traffic.app=&quot;rclone&quot;) by All_Traffic.dest All_Traffic.src All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | iplocation src | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16 OR src=127.0.0.0/8) | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-161-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @process.name:rclone @process.command_line:*--rc-serve* @process.command_line:*--rc-addr* -@process.command_line:(*--rc-user* OR *--rc-pass* OR *--rc-htpasswd* OR *127.0.0.1* OR *localhost*)</code></pre></div>
+    <div class="tab-content" id="art-161-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/rclone(\.exe)?$/i
+| CommandLine=/--rc-serve/i
+| CommandLine=/--rc-addr/i
+| NOT CommandLine=/--rc-(user|pass|htpasswd)/i
+| NOT CommandLine=/--rc-addr\s+(127\.0\.0\.1|localhost)/i
+| table([aid, ComputerName, ImageFileName, CommandLine, UserName])</code></pre></div>
+    <div class="tab-content" id="art-161-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;rclone&quot; OR Processes.process_name=&quot;rclone.exe&quot;) AND (Processes.process=&quot;*--rc-serve*&quot; OR Processes.process=&quot;* rcd *&quot;) AND Processes.process=&quot;*--rc-addr*&quot; AND NOT (Processes.process=&quot;*--rc-user*&quot; OR Processes.process=&quot;*--rc-pass*&quot; OR Processes.process=&quot;*--rc-htpasswd*&quot; OR Processes.process=&quot;*--rc-addr 127.0.0.1*&quot; OR Processes.process=&quot;*--rc-addr localhost*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path
+| `drop_dm_object_name(Processes)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-161-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;rclone&quot; OR Processes.process_name=&quot;rclone.exe&quot;) AND (Processes.process=&quot;*--rc-serve*&quot; OR Processes.process=&quot;* rcd *&quot;) AND Processes.process=&quot;*--rc-addr*&quot; AND NOT (Processes.process=&quot;*--rc-user*&quot; OR Processes.process=&quot;*--rc-pass*&quot; OR Processes.process=&quot;*--rc-htpasswd*&quot; OR Processes.process=&quot;*--rc-addr 127.0.0.1*&quot; OR Processes.process=&quot;*--rc-addr localhost*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path
+| `drop_dm_object_name(Processes)`
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -8597,11 +8264,11 @@ fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-161-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-161-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-161-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-161-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-161-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-161-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-161-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-161-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -8610,7 +8277,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-161-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-161-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -8622,12 +8289,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-161-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-161-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-161-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-161-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-161-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-49980&quot;, &quot;CVE-2026-41179&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-161-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-161-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-49980&quot;, &quot;CVE-2026-41179&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -15640,6 +15307,565 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-173" data-art-slug="2026-06-16-fishmonger-s-arsenal-upgraded-sprysocks-for-windows"
+  data-phases="actions,c2,exploit,install,recon" data-sev="med"
+  data-techs=""
+  data-sources="ESET WeLiveSecurity"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="windows"
+  data-uc-count="6" data-llm-uc-count="3"
+  data-search="FishMonger’s arsenal upgraded: SprySOCKS for Windows ESET researchers have discovered SprySOCKS for Windows, FishMonger’s backdoor weaponizing a kernel driver for advanced stealthiness CVE-2023-24932  [LLM] SprySOCKS (FishMonger/I-SOON) C2 beacon to hardcoded Vultr IPs 207.148.78.36 / 207.148.75.122 [LLM] SprySOCKS WIN_DRV/WIN_PLUS backdoor binary by ESET SHA1 hash [LLM] SprySOCKS WIN_DRV BlackLotus-style Secure Boot downgrade / EFI bootkit (CVE-2023-24932) Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2026-06-16-fishmonger-s-arsenal-upgraded-sprysocks-for-windows" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.welivesecurity.com/en/eset-research/fishmongers-arsenal-upgraded-sprysocks-windows/" target="_blank" rel="noopener">FishMonger’s arsenal upgraded: SprySOCKS for Windows</a></h2>
+  <div class="source-badges"><span class="source-badge eset">ESET WeLiveSecurity</span></div>
+  <div class="pubmeta">
+    <span>2026-06-16</span>
+    <span>6 use cases</span>
+    <span>0 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">ESET researchers have discovered SprySOCKS for Windows, FishMonger’s backdoor weaponizing a kernel driver for advanced stealthiness</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2023-24932</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">207.148.78.36</span> <span class="ind ">207.148.75.122</span></div>
+<div class="ind-group"><span class="ind-label">SHA1</span><span class="ind ">955BFC3DCC867256…</span> <span class="ind ">44DC4A08C5EB0972…</span> <span class="ind ">AB87B29B6F79487C…</span> <span class="ind ">6490B8E4AADE25A3…</span> <span class="ind ">E7484C24B88A1A24…</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-173-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-173"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-173-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] SprySOCKS WIN_DRV/WIN_PLUS backdoor binary by ESET SHA1 hash · [LLM] SprySOCKS WIN_DRV BlackLotus-style Secure Boot downgrade / EFI bootkit (CVE-2023-24932) · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] SprySOCKS (FishMonger/I-SOON) C2 beacon to hardcoded Vultr IPs 207.148.78.36 / 207.148.75.122 · Network connections to article IPs / domains</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="cfc932dfcf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">SprySOCKS (FishMonger/I-SOON) C2 beacon to hardcoded Vultr IPs 207.148.78.36 / 207.148.75.122</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="cfc932dfcf" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts outbound connections to the two hardcoded SprySOCKS infrastructure IPs ESET attributed to FishMonger: WIN_PLUS C&amp;C 207.148.78.36 (TCP/UDP/WebSocket on 443/53/80) and delivery server 207.148.75.122. These are hard IOCs confirmed by multiple vendors, so any egress to them is high-fidelity regardless of the initiating binary (the WIN_DRV variant diverts C2 over a random TCP port, so do not pin on a fixed listening port).
+
+Rationale: Uses the two ESET-published hardcoded IPs (207.148.78.36 C&amp;C and 207.148.75.122 delivery server), each confirmed by Security Affairs and gbhackers. Matching on exact IP rather than the broader shared Vultr /20 keeps FP near zero.
+
+Cross-checked against:
+  • https://www.welivesecurity.com/en/eset-research/fishmongers-arsenal-upgraded-sprysocks-windows/
+  • https://securityaffairs.com/193728/apt/china-linked-fishmonger-ports-sprysocks-to-windows-with-kernel-level-stealth-and-uefi-bootkit-hints.html
+  • https://gbhackers.com/sprysocks-windows-backdoor-uses-kernel/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span> <span class="ind tech" title="Non-Application Layer Protocol">T1095</span> <span class="ind tech" title="Non-Standard Port">T1571</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A different, benign tenant workload legitimately rents the same recycled Vultr IP after the campaign infrastructure was torn down (Vultr IPs are reassigned)</li><li>Security researcher / sandbox detonation host in your environment deliberately contacting the IOC</li><li>Threat-intel enrichment tooling or IOC-validation scanner probing the address</li><li>NAT/proxy egress IP making the source attribution ambiguous (confirm the real internal host)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the internal host and the InitiatingProcessFileName/SHA1 making the connection; pull the process tree and check whether the binary SHA1 matches the SprySOCKS hash list (UC2). 2) Contain: network-isolate the host, block 207.148.78.36, 207.148.75.122 and review the wider 207.148.64.0/20 Vultr range at the perimeter; preserve memory for the kernel-driver rootkit. 3) Hunt: pivot on the host for unsigned/hidden kernel driver loads, hidden listening ports, EFI System Partition tampering (UC3), and any other host beaconing to the same /20.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-173-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-173-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-173-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-173-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-173-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-173-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-173-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteIP in (&quot;207.148.78.36&quot;, &quot;207.148.75.122&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol, InitiatingProcessSHA1
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-173-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(30d)
+| where DstIpAddr in (&quot;207.148.78.36&quot;, &quot;207.148.75.122&quot;)
+| project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername, DstIpAddr, DstPortNumber, NetworkProtocol, NetworkApplicationProtocol, DstHostname
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-173-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SprySOCKS C2 Connection to FishMonger Hardcoded Vultr IPs
+id: 6f1c2d8a-9b34-4e57-a1c2-7d9e3f0b21a4
+description: Detects outbound network connection to the two hardcoded SprySOCKS (FishMonger/I-SOON) infrastructure IPs reported by ESET.
+references:
+  - https://www.welivesecurity.com/en/eset-research/fishmongers-arsenal-upgraded-sprysocks-windows/
+  - https://securityaffairs.com/193728/apt/china-linked-fishmonger-ports-sprysocks-to-windows-with-kernel-level-stealth-and-uefi-bootkit-hints.html
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1071
+  - attack.t1095
+  - attack.command_and_control
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection:
+    DestinationIp:
+      - &#x27;207.148.78.36&#x27;
+      - &#x27;207.148.75.122&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-173-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(207.148.78.36 OR 207.148.75.122)</code></pre></div>
+    <div class="tab-content" id="art-173-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| RemoteAddressIP4=/^207\.148\.(78\.36|75\.122)$/
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-173-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-173-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-173-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-173-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;207.148.78.36&quot;,&quot;207.148.75.122&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-173-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;207.148.78.36&quot;,&quot;207.148.75.122&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="df5a307701" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">SprySOCKS WIN_DRV/WIN_PLUS backdoor binary by ESET SHA1 hash</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="df5a307701" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects execution, file write, or image load of any of the 11 SprySOCKS Windows binaries (WIN_DRV / WIN_PLUS variants and loaders) by their ESET-published SHA1 hashes. WIN_DRV ships a kernel driver that hides its own processes, files, registry keys and network connections, so on-host hash matching at write/load time is the most reliable surface before the rootkit engages.
+
+Rationale: All 11 SHA1 values are the ESET-published SprySOCKS sample hashes from the article IOC block, cross-checked against the ESET blog mirror and Security Affairs. Hash matching is exact and survives the rootkit&#x27;s process/file hiding because it fires at write/load time.
+
+Cross-checked against:
+  • https://www.welivesecurity.com/en/eset-research/fishmongers-arsenal-upgraded-sprysocks-windows/
+  • https://www.esetngblog.com/post/fishmonger-s-arsenal-upgraded-sprysocks-for-windows
+  • https://securityaffairs.com/193728/apt/china-linked-fishmonger-ports-sprysocks-to-windows-with-kernel-level-stealth-and-uefi-bootkit-hints.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Rootkit">T1014</span> <span class="ind tech" title="Create or Modify System Process: Windows Service">T1543.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>AV/EDR quarantine copies or VirusTotal-uploaded sample handling on an analyst/sandbox host re-surfacing the same hash</li><li>Threat-intel platform storing the sample on disk during enrichment</li><li>Re-used hash from a generic packer producing a benign-file collision (extremely unlikely for SHA1, but verify file path/signer)</li><li>Purple-team or detection-validation exercise intentionally dropping the IOC</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the hit is on a production endpoint (not a sandbox/IR jump box); capture FolderPath, signer, and the InitiatingProcess that wrote/loaded it. 2) Contain: isolate the host immediately, collect a memory image before the kernel driver can re-hide artifacts, and submit the binary for analysis. 3) Hunt: search the org for any of the other 10 hashes, for connections to the UC1 C2 IPs, for service installations and EFI/boot tampering (UC3), and scope FishMonger lateral movement to other government/high-value hosts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-173-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-173-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-173-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-173-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-173-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-173-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-173-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let SprySOCKS = dynamic([&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;,&quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;,&quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;,&quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;,&quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;,&quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;,&quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;,&quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;,&quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;,&quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;,&quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;]);
+union DeviceProcessEvents, DeviceFileEvents, DeviceImageLoadEvents
+| where Timestamp &gt; ago(30d)
+| where SHA1 in~ (SprySOCKS) or InitiatingProcessSHA1 in~ (SprySOCKS)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA1, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-173-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let SprySOCKS = dynamic([&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;,&quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;,&quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;,&quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;,&quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;,&quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;,&quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;,&quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;,&quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;,&quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;,&quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;]);
+ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileSHA1 in~ (SprySOCKS)
+| project TimeGenerated, DvcHostname, ActorUsername, DvcAction, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA1
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-173-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: SprySOCKS Windows Backdoor File Hash (FishMonger/I-SOON)
+id: b2e7a410-3c61-4f0d-9a88-2c5e1f6d4477
+description: Detects creation or execution of SprySOCKS WIN_DRV/WIN_PLUS Windows backdoor binaries by ESET-published SHA1 hashes.
+references:
+  - https://www.welivesecurity.com/en/eset-research/fishmongers-arsenal-upgraded-sprysocks-windows/
+  - https://www.esetngblog.com/post/fishmonger-s-arsenal-upgraded-sprysocks-for-windows
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1014
+  - attack.t1543.003
+  - attack.persistence
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    Hashes|contains:
+      - &#x27;SHA1=955BFC3DCC867256F9F46A606DEB0779FA3416D8&#x27;
+      - &#x27;SHA1=44DC4A08C5EB0972C8E18B0E01284E06F09006BB&#x27;
+      - &#x27;SHA1=AB87B29B6F79487C75CA08D102E79001E536F083&#x27;
+      - &#x27;SHA1=6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&#x27;
+      - &#x27;SHA1=E7484C24B88A1A2407A8F09D734F9A993670285B&#x27;
+      - &#x27;SHA1=621D1952839BE4B0A1B0E66E87BCE5062CA368ED&#x27;
+      - &#x27;SHA1=2457EED2AB28E37741F10914EF929DAD2C8079D4&#x27;
+      - &#x27;SHA1=D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&#x27;
+      - &#x27;SHA1=5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&#x27;
+      - &#x27;SHA1=C793CA31E3F6628B5C8986146953BF66232E9A30&#x27;
+      - &#x27;SHA1=037DB2445F3D72388CB2CF8510563148E5A184BE&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-173-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:(1 OR 7 OR 11) @Hashes:(*955BFC3DCC867256F9F46A606DEB0779FA3416D8* OR *44DC4A08C5EB0972C8E18B0E01284E06F09006BB* OR *AB87B29B6F79487C75CA08D102E79001E536F083* OR *6490B8E4AADE25A3EE2DA9A47F312DB2122470BC* OR *E7484C24B88A1A2407A8F09D734F9A993670285B* OR *621D1952839BE4B0A1B0E66E87BCE5062CA368ED* OR *2457EED2AB28E37741F10914EF929DAD2C8079D4* OR *D2C706B1EAF662BF0CE124B5032F73ED84BDA24A* OR *5F3B87CEF56683D9A9E19186E0FD0D8019B559C4* OR *C793CA31E3F6628B5C8986146953BF66232E9A30* OR *037DB2445F3D72388CB2CF8510563148E5A184BE*)</code></pre></div>
+    <div class="tab-content" id="art-173-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^(ProcessRollup2|FileWritten)$/
+| SHA1HashData=/^(955bfc3dcc867256f9f46a606deb0779fa3416d8|44dc4a08c5eb0972c8e18b0e01284e06f09006bb|ab87b29b6f79487c75ca08d102e79001e536f083|6490b8e4aade25a3ee2da9a47f312db2122470bc|e7484c24b88a1a2407a8f09d734f9a993670285b|621d1952839be4b0a1b0e66e87bce5062ca368ed|2457eed2ab28e37741f10914ef929dad2c8079d4|d2c706b1eaf662bf0ce124b5032f73ed84bda24a|5f3b87cef56683d9a9e19186e0fd0d8019b559c4|c793ca31e3f6628b5c8986146953bf66232e9a30|037db2445f3d72388cb2cf8510563148e5a184be)$/i
+| groupBy([aid, ComputerName, ImageFileName, TargetFileName, SHA1HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-173-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-173-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-173-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-173-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;,&quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;,&quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;,&quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;,&quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;,&quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;,&quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;,&quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;,&quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;,&quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;,&quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-173-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;,&quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;,&quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;,&quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;,&quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;,&quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;,&quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;,&quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;,&quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;,&quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;,&quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="57ec688158" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">SprySOCKS WIN_DRV BlackLotus-style Secure Boot downgrade / EFI bootkit (CVE-2023-24932)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="57ec688158" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for the UEFI bootkit component ESET reports as a &#x27;limited indication&#x27; in some SprySOCKS attacks: a CVE-2023-24932 BlackLotus-style downgrade that writes a revoked/older boot manager (bootmgfw.efi/bootmgr.efi/bootx64.efi) onto the EFI System Partition. Flags .efi writes to boot paths by processes other than the Windows servicing stack — the EDR-blind firmware persistence this campaign may layer on top of the kernel rootkit.
+
+Rationale: Targets the article&#x27;s CVE-2023-24932 UEFI bootkit lead by detecting the BlackLotus-style core action — writing a (revoked/downgraded) boot manager to the EFI System Partition — excluding the Windows servicing stack that legitimately updates these files. Confidence is Low because ESET itself frames the bootkit as a &#x27;limited indication&#x27;.
+
+Cross-checked against:
+  • https://www.welivesecurity.com/en/eset-research/fishmongers-arsenal-upgraded-sprysocks-windows/
+  • https://support.microsoft.com/en-us/topic/how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d
+  • https://www.huntress.com/threat-library/vulnerabilities/cve-2023-24932</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Pre-OS Boot: Bootkit">T1542.003</span> <span class="ind tech" title="Subvert Trust Controls: Code Signing Policy Modification">T1553.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Windows cumulative/feature update or KB5025885 Secure Boot servicing applying the boot manager (TrustedInstaller/TiWorker — filtered, but third-party servicing tools may not be)</li><li>OEM/IT imaging and BCD repair via bcdboot.exe / dism during provisioning</li><li>BitLocker recovery or bootrec /rebuildbcd troubleshooting by a sysadmin</li><li>Endpoint backup/restore agents touching the ESP</li><li>Dual-boot or Linux bootloader (e.g. shim/grub) installation writing .efi files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;bcdboot.exe&quot;,&quot;dism.exe&quot;,&quot;setuphost.exe&quot;,&quot;reagentc.exe&quot;) and not (InitiatingProcessFolderPath has @&quot;\Windows\WinSxS\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the writing process and its signer; confirm whether it is a sanctioned servicing/imaging tool and whether the dropped .efi is Microsoft-signed and current (compare hash/version against a known-good). 2) Contain: if non-servicing, isolate the host, verify Secure Boot state and DBX revocation status, and treat as firmware-level compromise — reimage may be insufficient; rebuild the ESP from trusted media. 3) Hunt: correlate the host with UC1 C2 beacons and UC2 SprySOCKS hashes, review for Memory Integrity/HVCI or BitLocker being disabled, unrecognized .efi files, BCD edits, and apply CVE-2023-24932 DBX revocations fleet-wide.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-173-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-173-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-173-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-173-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-173-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-173-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-173-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where FileName endswith &quot;.efi&quot;
+| where FileName in~ (&quot;bootmgfw.efi&quot;,&quot;bootmgr.efi&quot;,&quot;bootx64.efi&quot;) or FolderPath has @&quot;\EFI\&quot; or FolderPath has &quot;HarddiskVolume&quot;
+| where InitiatingProcessFileName !in~ (&quot;TiWorker.exe&quot;,&quot;TrustedInstaller.exe&quot;,&quot;poqexec.exe&quot;,&quot;MoUsoCoreWorker.exe&quot;,&quot;CompatTelRunner.exe&quot;,&quot;wuauclt.exe&quot;,&quot;setup.exe&quot;)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-173-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileName endswith &quot;.efi&quot;
+| where TargetFileName in~ (&quot;bootmgfw.efi&quot;,&quot;bootmgr.efi&quot;,&quot;bootx64.efi&quot;) or TargetFilePath has @&quot;\EFI\&quot; or TargetFilePath has &quot;HarddiskVolume&quot;
+| where ActingProcessName !has &quot;TrustedInstaller.exe&quot; and ActingProcessName !has &quot;TiWorker.exe&quot; and ActingProcessName !has &quot;poqexec.exe&quot; and ActingProcessName !has &quot;CompatTelRunner.exe&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, DvcAction, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA1
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-173-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Boot Manager EFI Write to EFI System Partition (CVE-2023-24932 Bootkit Downgrade)
+id: 9d4a1f72-08be-4c63-bb15-7a2e6c0f9b31
+description: Detects writes of bootmgfw.efi/bootmgr.efi/bootx64.efi to the EFI System Partition by a non-servicing process, consistent with a CVE-2023-24932 BlackLotus-style downgrade observed alongside SprySOCKS WIN_DRV.
+references:
+  - https://www.welivesecurity.com/en/eset-research/fishmongers-arsenal-upgraded-sprysocks-windows/
+  - https://support.microsoft.com/en-us/topic/how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1542.003
+  - attack.t1553.006
+  - attack.persistence
+  - attack.defense_evasion
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    TargetFilename|endswith:
+      - &#x27;\bootmgfw.efi&#x27;
+      - &#x27;\bootmgr.efi&#x27;
+      - &#x27;\bootx64.efi&#x27;
+  filter_servicing:
+    Image|endswith:
+      - &#x27;\TrustedInstaller.exe&#x27;
+      - &#x27;\TiWorker.exe&#x27;
+      - &#x27;\poqexec.exe&#x27;
+      - &#x27;\CompatTelRunner.exe&#x27;
+  condition: selection and not filter_servicing
+level: high</code></pre></div>
+    <div class="tab-content" id="art-173-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\\bootmgfw.efi OR *\\bootmgr.efi OR *\\bootx64.efi OR *\\EFI\\* OR *\\bootmgfw.EFI OR *\\BOOTMGFW.EFI) -@Image:(*\\TrustedInstaller.exe OR *\\TiWorker.exe OR *\\poqexec.exe OR *\\CompatTelRunner.exe)</code></pre></div>
+    <div class="tab-content" id="art-173-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/\\(bootmgfw|bootmgr|bootx64)\.efi$/i
+| NOT (ContextImageFileName=/\\(TrustedInstaller|TiWorker|poqexec|CompatTelRunner|wuauclt)\.exe$/i)
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-173-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-173-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-173-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-173-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (&quot;bootmgfw.efi&quot;,&quot;bootmgr.efi&quot;,&quot;bootx64.efi&quot;) OR Filesystem.file_path=&quot;*\\EFI\\*&quot;) AND Filesystem.file_name=&quot;*.efi&quot; AND NOT Filesystem.process_name IN (&quot;TiWorker.exe&quot;,&quot;TrustedInstaller.exe&quot;,&quot;poqexec.exe&quot;,&quot;MoUsoCoreWorker.exe&quot;,&quot;CompatTelRunner.exe&quot;,&quot;wuauclt.exe&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-173-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (&quot;bootmgfw.efi&quot;,&quot;bootmgr.efi&quot;,&quot;bootx64.efi&quot;) OR Filesystem.file_path=&quot;*\\EFI\\*&quot;) AND Filesystem.file_name=&quot;*.efi&quot; AND NOT Filesystem.process_name IN (&quot;TiWorker.exe&quot;,&quot;TrustedInstaller.exe&quot;,&quot;poqexec.exe&quot;,&quot;MoUsoCoreWorker.exe&quot;,&quot;CompatTelRunner.exe&quot;,&quot;wuauclt.exe&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-173-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-173-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-173-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-173-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2023-24932&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-173-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2023-24932&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-173-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-173-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-173-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-173-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2023-24932&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-173-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2023-24932&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-173-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-173-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-173-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-173-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-173-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;207.148.78.36&quot;, &quot;207.148.75.122&quot;) or RemoteUrl has_any (&quot;&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-173-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;207.148.78.36&quot;, &quot;207.148.75.122&quot;]);
+let BadDomains = dynamic([&quot;&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-173-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-173-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-173-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-173-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-173-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;207.148.78.36&quot;, &quot;207.148.75.122&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-173-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;207.148.78.36&quot;, &quot;207.148.75.122&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-173-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-173-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-173-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-173-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-173-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+// (Initiating only) so column-projection has to differ per side.
+union
+    ( DeviceFileEvents
+        | where Timestamp &gt; ago(7d)
+        | where InitiatingProcessAccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;) or SHA1 in~ (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;) or MD5 in~ (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
+    ( DeviceProcessEvents
+        | where Timestamp &gt; ago(7d)
+        | where AccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;) or SHA1 in~ (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;) or MD5 in~ (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-173-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+// Defender version so the engine can push hash predicates per-side.
+let BadHashes = dynamic([&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;]);
+union
+    ( ImFileEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where TargetFileSHA256 in~ (BadHashes)
+           or TargetFileSHA1 in~ (BadHashes)
+           or TargetFileMD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType,
+                  TargetFileName, TargetFilePath, TargetFileSHA256,
+                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
+    ( ImProcessCreate
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
+                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
+                  TargetFileSHA256 = SHA256,
+                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-173-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-173-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-173-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-173-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-173-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-173-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;955BFC3DCC867256F9F46A606DEB0779FA3416D8&quot;, &quot;44DC4A08C5EB0972C8E18B0E01284E06F09006BB&quot;, &quot;AB87B29B6F79487C75CA08D102E79001E536F083&quot;, &quot;6490B8E4AADE25A3EE2DA9A47F312DB2122470BC&quot;, &quot;E7484C24B88A1A2407A8F09D734F9A993670285B&quot;, &quot;621D1952839BE4B0A1B0E66E87BCE5062CA368ED&quot;, &quot;2457EED2AB28E37741F10914EF929DAD2C8079D4&quot;, &quot;D2C706B1EAF662BF0CE124B5032F73ED84BDA24A&quot;, &quot;5F3B87CEF56683D9A9E19186E0FD0D8019B559C4&quot;, &quot;C793CA31E3F6628B5C8986146953BF66232E9A30&quot;, &quot;037DB2445F3D72388CB2CF8510563148E5A184BE&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -1,177 +1,3 @@
-<article class="card" id="art-1774" data-art-slug="2023-01-11-snyk-s-appsec-journey-in-2022"
-  data-phases="c2,delivery,exploit,install,recon" data-sev="med"
-  data-techs="T1190,T1195.002"
-  data-sources="Snyk"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Snyk&#x27;s AppSec journey in 2022 Learn about key AppSec investments Snyk made in 2022 to improve performance, add new ecosystems, and support the enterprise.  T1190 T1195.002 Trusted vendor binary / installer launching unusual children">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2023-01-11-snyk-s-appsec-journey-in-2022" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/snyks-appsec-2022-review/" target="_blank" rel="noopener">Snyk&#x27;s AppSec journey in 2022</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2023-01-11</span>
-    <span>1 use case</span>
-    <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Learn about key AppSec investments Snyk made in 2022 to improve performance, add new ecosystems, and support the enterprise.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1774-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1774"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1774-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1774-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1774-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1774-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1774-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1774-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-1774-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-1774-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-1774-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1774-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1774-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1774-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-1774-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-1775" data-art-slug="2023-01-10-cisa-kev-cve-2022-41080-microsoft-exchange-server-privilege-"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1486"
@@ -942,9 +768,9 @@ level: medium
   data-sources="Snyk"
   data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,cloud,endpoint,network"
-  data-targets="aws,azure,windows"
+  data-targets="aws,azure,macos,windows"
   data-uc-count="7" data-llm-uc-count="3"
-  data-search="Supply chain security incident at CircleCI: Rotate your secrets On January 4, CircleCI, an automated CI/CD pipeline setup tool, reported a security incident in their product by sharing an advisory.Learn about this incident, next steps, and about supply chain security.  T1190 T1195.002 T1528 [LLM] CircleCI breach C2 beacon to potrax[.]com / threat-actor IP set [LLM] PTX-Player.dmg implant dropped (CircleCI breach malware hash) [LLM] Use of exfiltrated secrets — AWS API activity from CircleCI breach actor IPs OAuth consent / suspicious app grant Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  data-search="Supply chain security incident at CircleCI: Rotate your secrets On January 4, CircleCI, an automated CI/CD pipeline setup tool, reported a security incident in their product by sharing an advisory.Learn about this incident, next steps, and about supply chain security.  T1190 T1195.002 T1528 [LLM] CircleCI breach C2 egress to potrax[.]com and 8 hardcoded attacker IPs [LLM] PTX-Player macOS infostealer artifacts (SHA256 + dropped /private/tmp logs) [LLM] Reuse of CircleCI-exfiltrated secrets / stolen SSO session from breach attacker IPs OAuth consent / suspicious app grant Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2023-01-07-supply-chain-security-incident-at-circleci-rotate-your-secre" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1005,74 +831,64 @@ level: medium
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] PTX-Player.dmg implant dropped (CircleCI breach malware hash)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] CircleCI breach C2 beacon to potrax[.]com / threat-actor IP set · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Use of exfiltrated secrets — AWS API activity from CircleCI breach actor IPs · OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] PTX-Player macOS infostealer artifacts (SHA256 + dropped /private/tmp logs) · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] CircleCI breach C2 egress to potrax[.]com and 8 hardcoded attacker IPs · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Reuse of CircleCI-exfiltrated secrets / stolen SSO session from breach attacker IPs · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="de760874fb" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="fc713172aa" data-platforms="cloudwatch,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">CircleCI breach C2 beacon to potrax[.]com / threat-actor IP set</span>
+    <span class="uc-title">CircleCI breach C2 egress to potrax[.]com and 8 hardcoded attacker IPs</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="de760874fb" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="fc713172aa" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts outbound connections to the command-and-control infrastructure used in the January 2023 CircleCI supply-chain compromise: the domain potrax[.]com and eight threat-actor IPs that the PTX-Player.dmg implant beaconed to. Any internal host contacting this infrastructure indicates the same actor&#x27;s implant is present.
+    <div class="uc-desc">Hunts endpoint or network egress to the CircleCI January-2023 breach command-and-control domain potrax[.]com and the eight attacker IP addresses published in CircleCI&#x27;s incident report. Article-specific because it pins the exact named C2 infrastructure rather than generic beaconing heuristics.
 
-Rationale: Uses the CircleCI incident-report C2 domain potrax[.]com and the eight threat-actor IPs (89.36.78.75 / 178.249.214.25 etc.) confirmed by both CircleCI&#x27;s post-mortem and SOCRadar. These are hardcoded malicious IOCs, so any match is high-fidelity.
+Rationale: Uses the exact C2 domain (potrax[.]com) and all eight attacker IPs published in CircleCI&#x27;s incident report; these are dedicated attacker infra with no legitimate business use, making any hit high-fidelity. Cross-checked against CircleCI&#x27;s incident report and SOCRadar&#x27;s write-up.
 
 Cross-checked against:
   • https://circleci.com/blog/jan-4-2023-incident-report/
   • https://socradar.io/attackers-infected-a-circleci-employee-with-malware-to-steal-customer-session-tokens/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Remote Access Software">T1219</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A host legitimately using a Mullvad VPN exit node that was reassigned one of these IPs after the incident window</li><li>Shared-hosting/datacenter IP reuse (Datacamp/Handy Networks) by an unrelated benign service post-2023</li><li>Threat-intel scanning appliance or sandbox detonating samples that beacon to potrax[.]com</li><li>Researcher/red-team replaying the CircleCI IOCs in a lab segment</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Identify the internal host and the initiating process/account for the connection; confirm the IP/domain is still current malicious infra and not benign IP reuse via passive DNS. 2) Contain: Network-isolate the host, block potrax[.]com and all eight IPs at the egress firewall/EDR, and suspend the user&#x27;s sessions/tokens. 3) Hunt: Pivot on the host for PTX-Player.dmg (UC2 hash), Splashtop/ScreenConnect installs, and review any CircleCI/cloud secrets accessible from that host for rotation — then sweep all hosts for the same C2 set.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security researcher or threat-intel team intentionally sandboxing the sample and resolving potrax[.]com for analysis</li><li>Mullvad VPN / Datacamp datacenter IP ranges later reassigned to a benign service a user legitimately reaches</li><li>Threat-intel enrichment platform performing passive DNS lookups against the domain</li><li>A proxy/firewall sinkhole that resolves the domain to a blocked-page IP, generating apparent connection logs</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify the internal host/src_ip and the initiating process. Confirm the destination is potrax[.]com or one of the eight IOC IPs and not a sandbox/researcher host. Pull the full process tree for the connecting process. 2) CONTAIN: Network-isolate the host, block potrax[.]com and all eight IPs at egress/DNS, and treat the endpoint as compromised by the PTX-Player infostealer. 3) HUNT: On the same host search DeviceFileEvents/Endpoint.Filesystem for the PTX-Player.dmg hash and dropped files .svx856.log / .ptslog (UC2), and pivot to any SaaS/cloud secrets that lived on that host — rotate and hunt for reuse from the attacker IPs (UC3).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-1778-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-1778-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-1778-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1778-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-1778-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-1778-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-1778-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1778-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-1778-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let c2ips = dynamic([&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;]);
+DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteIP in (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;)
-   or RemoteUrl has &quot;potrax.com&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
+| where RemoteIP in (c2ips) or RemoteUrl has &quot;potrax.com&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1778-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let TA_IPs = dynamic([&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;]);
-union isfuzzy=true
-(ImNetworkSession
-  | where TimeGenerated &gt; ago(30d)
-  | where DstIpAddr in (TA_IPs)
-  | project TimeGenerated, SrcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, Url),
-(ImDnsActivity
-  | where TimeGenerated &gt; ago(30d)
-  | where DnsQuery has &quot;potrax.com&quot;
-  | project TimeGenerated, SrcHostname, SrcIpAddr, DnsQuery, DstIpAddr=DnsResponseName)
+    <div class="tab-content" id="art-1778-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let c2ips = dynamic([&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;]);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(30d)
+| where DestinationIP in (c2ips) or DestinationHostName has &quot;potrax.com&quot; or RequestURL has &quot;potrax.com&quot;
+| project TimeGenerated, DeviceVendor, SourceIP, SourceHostName, DestinationIP, DestinationHostName, RequestURL, DestinationPort, ApplicationProtocol
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1778-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: CircleCI Breach C2 Infrastructure Connection (potrax.com / TA IPs)
-id: 3f1c8a52-7b4e-4d09-9a2f-1e6b0c2d44a1
-status: experimental
-description: Detects network connections to the command-and-control infrastructure (potrax.com and associated IPs) used in the January 2023 CircleCI supply-chain breach.
+    <div class="tab-content" id="art-1778-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: CircleCI Breach C2 Connection to potrax.com or Attacker IPs
+id: a1f3c2d4-5e6b-47a8-9c01-1b2c3d4e5f60
+description: Detects network connections to the CircleCI Jan-2023 incident C2 domain potrax.com or its eight published attacker IP addresses.
 references:
   - https://circleci.com/blog/jan-4-2023-incident-report/
-  - https://socradar.io/attackers-infected-a-circleci-employee-with-malware-to-steal-customer-session-tokens/
 author: SOC Detection Engineering
-date: 2026/06/27
+date: 2026/06/28
 tags:
-  - attack.command_and_control
   - attack.t1071.001
-  - attack.t1219
+  - attack.command_and_control
 logsource:
   category: network_connection
-  product: windows
 detection:
   selection_ip:
     DestinationIp:
@@ -1086,157 +902,150 @@ detection:
       - &#x27;111.90.149.55&#x27;
   selection_dns:
     DestinationHostname|contains: &#x27;potrax.com&#x27;
-  condition: selection_ip or selection_dns
+  condition: 1 of selection_*
 level: high</code></pre></div>
-    <div class="tab-content" id="art-1778-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationIp:(178.249.214.10 OR 89.36.78.75 OR 89.36.78.109 OR 89.36.78.135 OR 178.249.214.25 OR 72.18.132.58 OR 188.68.229.52 OR 111.90.149.55) OR @DestinationHostname:(*potrax.com OR *Potrax.com))</code></pre></div>
     <div class="tab-content" id="art-1778-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| RemoteAddressIP4=/^(178\.249\.214\.10|89\.36\.78\.75|89\.36\.78\.109|89\.36\.78\.135|178\.249\.214\.25|72\.18\.132\.58|188\.68\.229\.52|111\.90\.149\.55)$/
+| in(RemoteAddressIP4, values=[&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;])
 | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
     <div class="tab-content" id="art-1778-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
-| filter dstAddr in [&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;] or srcAddr in [&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;]
+fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
+| filter dstAddr in [&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;]
 | sort @timestamp desc</code></pre></div>
     <div class="tab-content" id="art-1778-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1778-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1778-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1778-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1778-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| `drop_dm_object_name(&quot;All_Traffic&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1778-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user
+| `drop_dm_object_name(&quot;All_Traffic&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="5e3f2018fc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="809d788b7c" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows">
   <summary>
-    <span class="uc-title">PTX-Player.dmg implant dropped (CircleCI breach malware hash)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">PTX-Player macOS infostealer artifacts (SHA256 + dropped /private/tmp logs)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="5e3f2018fc" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="809d788b7c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the malicious macOS application PTX-Player.dmg — masquerading as a raw-image viewer — used to compromise the CircleCI engineer&#x27;s laptop and steal SSO session tokens. Matches on the exact SHA256 and the distinctive filename across endpoint file/process telemetry.
+    <div class="uc-desc">Hunts the CircleCI breach root-cause malware: the PTX-Player.dmg / PTX.app macOS infostealer (SHA256 8913e3…35bf) and its two dropped artifacts /private/tmp/.svx856.log and /private/tmp/.ptslog. This infostealer performed the session-cookie theft that enabled the breach, so the detection targets credential access at the source.
 
-Rationale: Pivots on the exact SHA256 8913e385…ff35bf and the unique masquerading filename PTX-Player.dmg named in CircleCI&#x27;s incident report and SOCRadar. A fixed hash plus a non-generic filename makes this near-zero-FP and alerting-grade.
+Rationale: Pins the exact CircleCI-published SHA256 of PTX-Player.dmg plus the two malware-specific dropped log files (.svx856.log, .ptslog) in /private/tmp — values an infostealer-specific detection can key on with near-zero ambiguity. Confirmed against CircleCI&#x27;s incident report which lists the hash and both file paths.
 
 Cross-checked against:
   • https://circleci.com/blog/jan-4-2023-incident-report/
-  • https://socradar.io/attackers-infected-a-circleci-employee-with-malware-to-steal-customer-session-tokens/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="Remote Access Software">T1219</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher/IR analyst intentionally storing the sample for analysis on a managed host</li><li>Threat-intel/EDR sample-sync replicating the hash into a quarantine path</li><li>An unrelated benign file coincidentally named PTX-Player.dmg without the matching hash (filename-only clause)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the SHA256 matches (not just the filename) and identify the host, user, and download source/path of the .dmg. 2) Contain: Isolate the host, quarantine the file, and revoke the user&#x27;s SSO sessions plus any CircleCI Personal/Project API and OAuth tokens reachable from that machine. 3) Hunt: On the host look for Splashtop/ScreenConnect installation and C2 beacons to potrax[.]com (UC1); enumerate every secret/env-var the user could access in CircleCI and force rotation per the advisory.</div></details>
+  • https://www.infosecurity-magazine.com/news/circleci-breach-caused-by/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Password Stores">T1555</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Malware analyst detonating the PTX-Player sample in a corporate macOS analysis VM</li><li>EDR/AV quarantine engine re-writing the DMG to a quarantine path, generating a FileWritten event for the hash</li><li>Threat-hunt team intentionally staging the IOC file to validate this very detection</li><li>A benign unrelated file coincidentally named .ptslog (low likelihood; pair with /private/tmp path to suppress)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;mdworker&quot;,&quot;mds&quot;,&quot;XProtectService&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the host is a real production endpoint (not a sandbox) and identify the user. Verify which artifact fired — hash match on PTX-Player.dmg/PTX.app is definitive; dropped-file match confirms execution. 2) CONTAIN: Isolate the macOS host, kill PTX.app, and assume all browser session cookies, SSO tokens, and locally stored secrets are compromised. Force-rotate that user&#x27;s SSO session and any credentials the user could access. 3) HUNT: Pull this host&#x27;s outbound connections for potrax[.]com / the eight C2 IPs (UC1), and pivot to cloud/identity logs for reuse of that user&#x27;s tokens from attacker infra (UC3). Enumerate every secret stored in CircleCI by that user&#x27;s pipelines and rotate.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-1778-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-1778-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-1778-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1778-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-1778-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-1778-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1778-uc1-kql"><pre><button class="copy-btn">COPY</button><code>union
-(DeviceFileEvents
-  | where Timestamp &gt; ago(90d)
-  | where SHA256 == &quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot; or FileName =~ &quot;PTX-Player.dmg&quot;
-  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName),
-(DeviceProcessEvents
-  | where Timestamp &gt; ago(90d)
-  | where SHA256 == &quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot; or FileName =~ &quot;PTX-Player.dmg&quot;
-  | project Timestamp, DeviceName, ActionType=&quot;ProcessCreated&quot;, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName=AccountName)
+    <div class="tab-content active" id="art-1778-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let badhash = &quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot;;
+DeviceFileEvents
+| where Timestamp &gt; ago(90d)
+| where SHA256 == badhash
+    or FileName in~ (&quot;PTX-Player.dmg&quot;,&quot;PTX.app&quot;,&quot;.svx856.log&quot;,&quot;.ptslog&quot;)
+    or FolderPath has_any (&quot;.svx856.log&quot;,&quot;.ptslog&quot;)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1778-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-1778-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let badhash = &quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot;;
+ImFileEvent
 | where TimeGenerated &gt; ago(90d)
-| where TargetFileSHA256 =~ &quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot;
-   or TargetFileName has &quot;PTX-Player.dmg&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetFilePath, TargetFileName, TargetFileSHA256
+| where TargetFileSHA256 == badhash
+    or TargetFileName in~ (&quot;PTX-Player.dmg&quot;,&quot;PTX.app&quot;,&quot;.svx856.log&quot;,&quot;.ptslog&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256, EventType
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1778-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: CircleCI Breach Malware PTX-Player.dmg Dropped
-id: b8e2d4a1-6c33-4f7a-8d51-2a90f7c1e0b2
-status: experimental
-description: Detects creation of the malicious PTX-Player.dmg implant (fake raw-image viewer) used in the January 2023 CircleCI supply-chain breach, by SHA256 or filename.
+    <div class="tab-content" id="art-1778-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: PTX-Player macOS Infostealer Artifacts (CircleCI Breach)
+id: b2e4d3c5-6f70-48b9-ad12-2c3d4e5f6071
+description: Detects the PTX-Player.dmg/PTX.app macOS infostealer by hash, or its dropped artifacts .svx856.log and .ptslog in /private/tmp, as reported in the CircleCI Jan-2023 incident.
 references:
   - https://circleci.com/blog/jan-4-2023-incident-report/
-  - https://socradar.io/attackers-infected-a-circleci-employee-with-malware-to-steal-customer-session-tokens/
 author: SOC Detection Engineering
-date: 2026/06/27
+date: 2026/06/28
 tags:
-  - attack.execution
   - attack.t1204.002
-  - attack.t1036.005
+  - attack.t1539
+  - attack.credential_access
 logsource:
   category: file_event
   product: macos
 detection:
-  selection_name:
-    TargetFilename|endswith: &#x27;PTX-Player.dmg&#x27;
   selection_hash:
     Hashes|contains: &#x27;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&#x27;
-  condition: selection_name or selection_hash
+  selection_name:
+    TargetFilename|endswith:
+      - &#x27;PTX-Player.dmg&#x27;
+      - &#x27;/PTX.app&#x27;
+      - &#x27;.svx856.log&#x27;
+      - &#x27;.ptslog&#x27;
+  condition: 1 of selection_*
 level: high</code></pre></div>
-    <div class="tab-content" id="art-1778-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*PTX-Player.dmg OR *PTX-PLAYER.DMG OR *ptx-player.dmg) OR @Hashes:*8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf*)</code></pre></div>
-    <div class="tab-content" id="art-1778-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/PTX-Player\.dmg$/i
+    <div class="tab-content" id="art-1778-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| (TargetFileName=/PTX-Player\.dmg$/i OR TargetFileName=/PTX\.app/i OR TargetFileName=/\.svx856\.log$/i OR TargetFileName=/\.ptslog$/i)
 | groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-1778-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1778-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1778-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1778-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash=&quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot; OR Filesystem.file_name=&quot;PTX-Player.dmg&quot; by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1778-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash=&quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot; OR Filesystem.file_name=&quot;PTX-Player.dmg&quot; by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-1778-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1778-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1778-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1778-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash=&quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot;) OR (Filesystem.file_name IN (&quot;PTX-Player.dmg&quot;,&quot;PTX.app&quot;,&quot;.svx856.log&quot;,&quot;.ptslog&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash
+| `drop_dm_object_name(&quot;Filesystem&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1778-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash=&quot;8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf&quot;) OR (Filesystem.file_name IN (&quot;PTX-Player.dmg&quot;,&quot;PTX.app&quot;,&quot;.svx856.log&quot;,&quot;.ptslog&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash
+| `drop_dm_object_name(&quot;Filesystem&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="44566d9544" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws">
+<details class="uc" data-uc-slug="66ddb84fb3" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="aws,azure">
   <summary>
-    <span class="uc-title">Use of exfiltrated secrets — AWS API activity from CircleCI breach actor IPs</span>
+    <span class="uc-title">Reuse of CircleCI-exfiltrated secrets / stolen SSO session from breach attacker IPs</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="44566d9544" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="66ddb84fb3" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">For CircleCI customers: detects AWS CloudTrail activity originating from the eight threat-actor source IPs tied to the breach, indicating an attacker is using stolen CircleCI-stored secrets (access keys, env vars) against your cloud. Pairs with the AWS CanaryToken trigger that first surfaced the intrusion.
+    <div class="uc-desc">Hunts authentication and cloud-API activity originating from the eight CircleCI-breach attacker IPs, indicating downstream reuse of exfiltrated customer secrets (AWS keys, OAuth/SSO tokens, API tokens stored in CircleCI env vars). This is the customer-impact pivot: detecting the stolen credentials being USED against your tenant/cloud from the named attacker infrastructure.
 
-Rationale: The article opens with an AWS CanaryToken (decoy key) tripping on the attacker, and CircleCI stored customer AWS keys/env-vars that were exfiltrated; matching CloudTrail sourceIPAddress against the confirmed actor IP set surfaces real use of those stolen creds. Medium confidence because some IPs are VPN/datacenter ranges.
+Rationale: CircleCI&#x27;s report names these eight IPs as the attacker infrastructure (Datacamp, Globalaxs, Handy Networks, Mullvad VPN) used to impersonate the employee and exfiltrate/use customer secrets; any of your AWS CloudTrail or SSO sign-ins from them strongly implies your CircleCI-stored secrets were used. Cross-checked against CircleCI&#x27;s incident report.
 
 Cross-checked against:
   • https://circleci.com/blog/jan-4-2023-incident-report/
-  • https://socradar.io/attackers-infected-a-circleci-employee-with-malware-to-steal-customer-session-tokens/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate employee/admin accessing AWS through a Mullvad VPN exit that shares one of these IPs</li><li>Datacenter IP reassignment (Datacamp/Handy Networks) to a benign SaaS integration post-incident</li><li>A CI/CD runner or monitoring service coincidentally egressing from one of the listed ranges</li><li>Penetration test or BAS tool configured to source from a flagged VPN provider</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| filter not (userIdentity.arn like /break-glass/ or userIdentity.arn like /corp-vpn-egress/)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Identify which IAM principal/access key made the calls and whether the key was ever stored in CircleCI; review eventName set for sensitive actions (CreateUser, AttachUserPolicy, GetSecretValue, data reads). 2) Contain: Immediately disable/rotate the implicated access keys and any CircleCI-stored secrets, and add the eight IPs to an SCP/WAF deny. 3) Hunt: Expand CloudTrail to all activity by that principal during Dec 21 2022–Jan 4 2023 (and since), check for new IAM users/keys, persistence, and exfil; cross-reference with on-host UC1/UC2 hits.</div></details>
+  • https://www.helpnetsecurity.com/2023/01/16/circleci-breach/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate employee using Mullvad VPN whose exit-node IP overlaps with the historic attacker IP</li><li>Datacamp/datacenter IP later reassigned to a SaaS vendor or CI runner you legitimately use</li><li>Penetration-test or red-team engagement that happens to route through the same VPN provider</li><li>Threat-intel enrichment service authenticating to your tenant from a flagged datacenter range</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: For each hit identify the principal (UserPrincipalName / IAM ARN), what was accessed (eventName/Application), and whether the action succeeded. Cross-reference whether that identity&#x27;s credentials were ever stored in CircleCI env vars or contexts. 2) CONTAIN: Immediately revoke (not delete) and rotate the affected secret/token, invalidate the user&#x27;s active SSO sessions, and add the eight IPs to a Conditional Access / SCP block. For AWS, disable the exposed access key and review its recent activity. 3) HUNT: Enumerate all actions from those IPs across CloudTrail/SigninLogs, look for new IAM users/keys, OAuth grants, or resource changes made by the impersonated principal, and complete the full CircleCI secret-rotation inventory (Context- and Project-level).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-1778-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-1778-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-1778-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-1778-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1778-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-1778-uc2-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-1778-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1778-uc2-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-1778-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let attackerips = dynamic([&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;]);
+AADSignInEventsBeta
 | where Timestamp &gt; ago(90d)
-| where IPAddress in (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;)
-| project Timestamp, Application, ActionType, AccountDisplayName, AccountId, IPAddress, ISP, CountryCode, IsAdminOperation, ObjectName
+| where IPAddress in (attackerips)
+| project Timestamp, AccountUpn, Application, ApplicationId, IPAddress, Country, ErrorCode, ClientAppUsed, IsInteractive, ResourceDisplayName
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1778-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-CloudAppEvents
+    <div class="tab-content" id="art-1778-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let attackerips = dynamic([&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;]);
+union SigninLogs, AADNonInteractiveUserSignInLogs
 | where TimeGenerated &gt; ago(90d)
-| where IPAddress in (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;)
-| project TimeGenerated, Application, ActionType, AccountDisplayName, AccountId, IPAddress, ISP, CountryCode, IsAdminOperation, ObjectName
+| where IPAddress in (attackerips)
+| project TimeGenerated, UserPrincipalName, AppDisplayName, IPAddress, ResultType, ClientAppUsed, Location
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1778-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS Activity From CircleCI Breach Threat-Actor IPs
-id: c4a7f6d9-2e18-4b6c-9f3a-7d05e1b8c233
-status: experimental
-description: Detects AWS CloudTrail API calls sourced from the threat-actor IPs of the January 2023 CircleCI breach, indicating use of exfiltrated CircleCI-stored secrets.
+    <div class="tab-content" id="art-1778-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: CircleCI Breach Attacker-IP Authentication / Token Reuse (AWS CloudTrail)
+id: c3f5e4d6-7081-49ca-be23-3d4e5f607182
+description: Detects AWS CloudTrail API activity sourced from the eight CircleCI Jan-2023 breach attacker IPs, indicating reuse of secrets exfiltrated from CircleCI environment variables.
 references:
   - https://circleci.com/blog/jan-4-2023-incident-report/
-  - https://socradar.io/attackers-infected-a-circleci-employee-with-malware-to-steal-customer-session-tokens/
 author: SOC Detection Engineering
-date: 2026/06/27
+date: 2026/06/28
 tags:
+  - attack.t1078
   - attack.initial_access
-  - attack.t1078.004
 logsource:
   product: aws
   service: cloudtrail
@@ -1254,17 +1063,18 @@ detection:
   condition: selection
 level: high</code></pre></div>
     <div class="tab-content" id="art-1778-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail CIDR(@network.client.ip, 178.249.214.10/32, 89.36.78.75/32, 89.36.78.109/32, 89.36.78.135/32, 178.249.214.25/32, 72.18.132.58/32, 188.68.229.52/32, 111.90.149.55/32)</code></pre></div>
+    <div class="tab-content" id="art-1778-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=UserLogon
+| in(RemoteAddressIP4, values=[&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;])
+| groupBy([aid, ComputerName, UserName, RemoteAddressIP4, LogonType], function=count())</code></pre></div>
     <div class="tab-content" id="art-1778-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, eventSource, userIdentity.type, userIdentity.arn, sourceIPAddress, awsRegion, errorCode
+fields @timestamp, eventName, eventSource, userIdentity.type, userIdentity.arn, userIdentity.userName, sourceIPAddress, awsRegion
 | filter sourceIPAddress in [&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;]
 | sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1778-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1778-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1778-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1778-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src IN (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;) by Authentication.src Authentication.user Authentication.app Authentication.action
-| `drop_dm_object_name(Authentication)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1778-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src IN (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;) by Authentication.src Authentication.user Authentication.app Authentication.action
-| `drop_dm_object_name(Authentication)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-1778-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1778-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1778-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1778-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.src IN (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;) by Authentication.user Authentication.src Authentication.app Authentication.action Authentication.dest
+| `drop_dm_object_name(&quot;Authentication&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1778-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.src IN (&quot;178.249.214.10&quot;,&quot;89.36.78.75&quot;,&quot;89.36.78.109&quot;,&quot;89.36.78.135&quot;,&quot;178.249.214.25&quot;,&quot;72.18.132.58&quot;,&quot;188.68.229.52&quot;,&quot;111.90.149.55&quot;) by Authentication.user Authentication.src Authentication.app Authentication.action Authentication.dest
+| `drop_dm_object_name(&quot;Authentication&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
@@ -5928,6 +5738,132 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-1807-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2022-24441&quot;, &quot;CVE-2022-22984&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1811" data-art-slug="2022-11-28-cisa-kev-cve-2021-35587-oracle-fusion-middleware-unspecified"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2021-35587 — Oracle Fusion Middleware Unspecified Vulnerability Oracle Fusion Middleware Access Manager allows an unauthenticated attacker with network access via HTTP to takeover the Access Manager product. Vendor: Oracle, Product: Fusion Middleware. Federal patch due: 2022-12-19. CVE-2021-35587  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2022-11-28-cisa-kev-cve-2021-35587-oracle-fusion-middleware-unspecified" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-35587 — Oracle Fusion Middleware Unspecified Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2022-11-28</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Oracle Fusion Middleware Access Manager allows an unauthenticated attacker with network access via HTTP to takeover the Access Manager product. Vendor: Oracle, Product: Fusion Middleware. Federal patch due: 2022-12-19.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-35587</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1811-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1811"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1811-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1811-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1811-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1811-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1811-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-35587&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1811-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-35587&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1811-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1811-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1811-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1811-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-35587&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1811-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-35587&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

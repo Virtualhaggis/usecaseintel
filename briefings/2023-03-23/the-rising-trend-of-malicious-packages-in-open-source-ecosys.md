@@ -28,12 +28,12 @@ Snyk is prioritizing the addition of malicious packages to its database that hav
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1082** — System Information Discovery
 - **T1033** — System Owner/User Discovery
-- **T1041** — Exfiltration Over C2 Channel
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
 
@@ -41,36 +41,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### npm/pip lifecycle-script curl exfil of host recon (Hostname:/Whoami:/Pwd: POST)
+### npm/PyPI install-script beacon to hardcoded C2 3.72.6.53 (django-yauth supply chain)
 
-`UC_1711_5` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("curl","wget")) Processes.process="*Hostname:*" Processes.process="*Whoami:*" Processes.process="*Pwd:*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("curl","wget")
-| where ProcessCommandLine has "Hostname:" and ProcessCommandLine has "Whoami:" and ProcessCommandLine has "Pwd:"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, RemoteUrlSeen=ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Outbound connection to malicious-package C2 endpoint 3.72.6.53
-
-`UC_1711_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1711_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="3.72.6.53" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="3.72.6.53" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
 | `drop_dm_object_name(All_Traffic)`
 | convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
@@ -81,29 +58,64 @@ DeviceProcessEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "3.72.6.53"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Install of named malicious packages by actor ypvpctpbamdhxtkzdu (django-yauth et al.)
+### Package-manager install hook spawning host-recon curl/wget exfil (pre.sh pattern)
 
-`UC_1711_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1711_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*django-yauth*","*ticket-parser2-py3*","*qb2-core*","*python-statface-client*","*yandex-meteo-flow*","*yb-mongoengine*","*yandex-text-processing*","*yb-trust-butils*","*yandex-passport-vault-client*")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("curl","curl.exe","wget","wget.exe")) AND (Processes.process="*3.72.6.53*" OR (Processes.process="*Hostname:*" AND Processes.process="*Whoami:*" AND Processes.process="*Pwd:*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
 | convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FolderPath has_any ("django-yauth","ticket-parser2-py3","qb2-core","python-statface-client","yandex-meteo-flow","yb-mongoengine","yandex-text-processing","yb-trust-butils","yandex-passport-vault-client")
-| where InitiatingProcessFileName in~ ("node","npm","pip","pip3","python","python3","yarn","pnpm","sh","bash")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName
+| where FileName in~ ("curl","curl.exe","wget","wget.exe")
+| where ProcessCommandLine has "3.72.6.53"
+     or (ProcessCommandLine has "Hostname:" and ProcessCommandLine has "Whoami:" and ProcessCommandLine has "Pwd:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Install of ypvpctpbamdhxtkzdu malicious package set (django-yauth + siblings)
+
+`UC_1711_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*django-yauth*","*ticket-parser2-py3*","*qb2-core*","*python-statface-client*","*yandex-meteo-flow*","*yb-mongoengine*","*yandex-text-processing*","*yb-trust-butils*","*yandex-passport-vault-client*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let pkgs = dynamic(["django-yauth","ticket-parser2-py3","qb2-core","python-statface-client","yandex-meteo-flow","yb-mongoengine","yandex-text-processing","yb-trust-butils","yandex-passport-vault-client"]);
+union
+( DeviceProcessEvents
+  | where Timestamp > ago(90d)
+  | where InitiatingProcessFileName in~ ("npm.exe","npm","node.exe","node","pip.exe","pip","pip3","python.exe","python","python3") or FileName in~ ("npm.exe","npm","pip","pip3")
+  | where ProcessCommandLine has_any (pkgs)
+  | project Timestamp, DeviceName, AccountName, Kind="process",
+            Name=FileName, Detail=ProcessCommandLine ),
+( DeviceFileEvents
+  | where Timestamp > ago(90d)
+  | where FolderPath has_any (pkgs)
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Kind="file",
+            Name=FileName, Detail=FolderPath )
 | order by Timestamp desc
 ```
 

@@ -25,13 +25,12 @@ Dutch law enforcement authorities, along with counterparts from Canada , Germany
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1189** — Drive-by Compromise
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1036.008** — Masquerading: Masquerade File Type
 - **T1204.002** — User Execution: Malicious File
-- **T1033** — System Owner/User Discovery
-- **T1482** — Domain Trust Discovery
-- **T1087.002** — Account Discovery: Domain Account
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1219** — Remote Access Software
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 
 ## Kill chain phases observed
 
@@ -39,104 +38,89 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### SocGholish fake-update JavaScript (.js) downloaded by a browser to Downloads/Temp
+### SocGholish fake browser-update JavaScript executed by Windows Script Host from a download path
 
 `UC_102_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.js" (Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid 
-| `drop_dm_object_name(Filesystem)` 
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where ActionType == "FileCreated"
-| where FileName endswith ".js"
-| where FolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\Local\Temp\")
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe")
-| where isnotempty(FileOriginUrl)
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, SHA256
-| order by Timestamp desc
-```
-
-### wscript.exe/cscript.exe executing a .js from a user download path (SocGholish execution)
-
-`UC_102_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe") (Processes.parent_process_name="explorer.exe" OR Processes.parent_process_name="chrome.exe" OR Processes.parent_process_name="msedge.exe" OR Processes.parent_process_name="firefox.exe" OR Processes.parent_process_name="brave.exe" OR Processes.parent_process_name="opera.exe") Processes.process="*.js*" (Processes.process="*\\Downloads\\*" OR Processes.process="*\\Temp\\*" OR Processes.process="*\\AppData\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash 
-| `drop_dm_object_name(Processes)` 
-| convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("wscript.exe","cscript.exe")) AND (Processes.parent_process_name IN ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","winrar.exe","7zFM.exe","7zG.exe")) AND (Processes.process="*.js*") AND (Processes.process IN ("*\\Downloads\\*","*\\Temp\\*","*\\AppData\\*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where FileName in~ ("wscript.exe","cscript.exe")
-| where ProcessCommandLine contains ".js"
-| where ProcessCommandLine has_any (@"\Downloads\", @"\Temp\", @"\AppData\")
-| where InitiatingProcessFileName in~ ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, FolderPath, SHA256
+| where FileName in~ ('wscript.exe','cscript.exe')
+| where ProcessCommandLine has '.js'
+| where ProcessCommandLine has_any (@'\Downloads\', @'\Temp\', @'\AppData\')
+| where InitiatingProcessFileName in~ ('explorer.exe','chrome.exe','msedge.exe','firefox.exe','brave.exe','opera.exe','winrar.exe','7zFM.exe','7zG.exe')
+| where AccountName !endswith '$'
+| project Timestamp, DeviceName, AccountName, ParentProcess=InitiatingProcessFileName, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### SocGholish host/AD reconnaissance spawned by Windows Script Host
+### SocGholish second stage: Windows Script Host spawning PowerShell
 
-`UC_102_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_102_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="wscript.exe" OR Processes.parent_process_name="cscript.exe") (Processes.process_name="whoami.exe" OR Processes.process_name="net.exe" OR Processes.process_name="net1.exe" OR Processes.process_name="nltest.exe" OR Processes.process_name="systeminfo.exe" OR Processes.process_name="ipconfig.exe" OR Processes.process_name="wmic.exe" OR Processes.process_name="tasklist.exe" OR Processes.process_name="reg.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process 
-| `drop_dm_object_name(Processes)` 
-| stats values(process_name) as recon_tools values(process) as recon_cmds dc(process_name) as distinct_tools min(firstTime) as firstTime max(lastTime) as lastTime by dest, user, parent_process_name 
-| where distinct_tools >= 2 
-| convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("wscript.exe","cscript.exe")) AND (Processes.process_name IN ("powershell.exe","pwsh.exe")) AND (Processes.parent_process="*.js*") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
-| where FileName in~ ("whoami.exe","net.exe","net1.exe","nltest.exe","systeminfo.exe","ipconfig.exe","wmic.exe","tasklist.exe","reg.exe","cmd.exe")
-| where AccountName !endswith "$"
-| summarize ReconTools=make_set(FileName), SampleCmds=make_set(ProcessCommandLine, 8), DistinctTools=dcount(FileName), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| where DistinctTools >= 2   // SocGholish chains several recon utilities under one WSH parent
-| order by LastSeen desc
+| where InitiatingProcessFileName in~ ('wscript.exe','cscript.exe')
+| where FileName in~ ('powershell.exe','pwsh.exe')
+| where InitiatingProcessCommandLine has '.js'
+| where AccountName !endswith '$'
+| project Timestamp, DeviceName, AccountName, ParentCmd=InitiatingProcessCommandLine, ChildCmd=ProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
-### wscript.exe (spawned by browser) making external network connections — SocGholish C2
+### SocGholish-delivered NetSupport RAT (client32.exe) executing from a non-standard directory
 
-`UC_102_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe") (Processes.parent_process_name="chrome.exe" OR Processes.parent_process_name="msedge.exe" OR Processes.parent_process_name="firefox.exe" OR Processes.parent_process_name="brave.exe" OR Processes.parent_process_name="opera.exe" OR Processes.parent_process_name="vivaldi.exe") by Processes.dest Processes.process_guid Processes.process_name Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| join type=inner process_guid [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction=outbound NOT (All_Traffic.dest_ip=10.0.0.0/8 OR All_Traffic.dest_ip=172.16.0.0/12 OR All_Traffic.dest_ip=192.168.0.0/16 OR All_Traffic.dest_ip=127.0.0.0/8 OR All_Traffic.dest_ip=169.254.0.0/16) by All_Traffic.dest All_Traffic.process_guid All_Traffic.dest_ip All_Traffic.dest_port 
-| `drop_dm_object_name(All_Traffic)`] 
-| table firstTime, dest, parent_process_name, process_name, dest_ip, dest_port 
-| convert ctime(firstTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="client32.exe" OR Processes.original_file_name="client32.exe") AND (Processes.process_path IN ("*\\ProgramData\\*","*\\Users\\Public\\*","*\\AppData\\*","*\\Windows\\Temp\\*","*\\Downloads\\*")) by Processes.dest Processes.user Processes.process_name Processes.original_file_name Processes.process_path Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
-| where InitiatingProcessParentFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe")
-| where RemoteIPType == "Public"
-| where InitiatingProcessAccountName !endswith "$"
-| summarize Connections=count(), RemoteIPs=make_set(RemoteIP, 20), RemoteUrls=make_set(RemoteUrl, 20), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by LastSeen desc
+| where FileName =~ 'client32.exe' or ProcessVersionInfoOriginalFileName =~ 'client32.exe' or ProcessVersionInfoProductName has 'NetSupport'
+| where FolderPath has_any (@'\ProgramData\', @'\Users\Public\', @'\AppData\', @'\Windows\Temp\', @'\Downloads\')
+| where AccountName !endswith '$'
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, ProcessVersionInfoOriginalFileName, ProcessVersionInfoProductName
+| order by Timestamp desc
+```
+
+### SocGholish/NetSupport Run-key persistence pointing to a user-writable executable
+
+`UC_102_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run*") AND (Registry.registry_value_data IN ("*\\ProgramData\\*","*\\Users\\Public\\*","*\\AppData\\Roaming\\*","*\\AppData\\Local\\*","*\\Windows\\Temp\\*")) AND (Registry.registry_value_data="*.exe*") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(14d)
+| where ActionType == 'RegistryValueSet'
+| where RegistryKey has @'\CurrentVersion\Run'
+| where RegistryValueData has_any (@'\ProgramData\', @'\Users\Public\', @'\AppData\Roaming\', @'\AppData\Local\', @'\Windows\Temp\')
+| where RegistryValueData has '.exe'
+| where InitiatingProcessAccountName !endswith '$'
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -255,4 +239,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

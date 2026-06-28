@@ -19,12 +19,109 @@ Open something like Claude Cowork, type "build me a tool that cleans up this spr
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1571** — Non-Standard Port
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1543.001** — Create or Modify System Process: Launch Agent
+- **T1543.002** — Create or Modify System Process: Systemd Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### easy-day-js npm postinstall dropper: node executing setup.cjs --no-warnings
+
+`UC_51_3` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("node.exe","node") Processes.process="*setup.cjs*" Processes.process="*--no-warnings*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("node.exe","node")
+| where ProcessCommandLine has "setup.cjs" and ProcessCommandLine has "--no-warnings"
+| project Timestamp, DeviceName, AccountName,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildCmd = ProcessCommandLine,
+          FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### easy-day-js stealer C2 beacon to Hostwinds 23.254.164.0/24 (ports 8000/443)
+
+`UC_51_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="23.254.164.92" OR All_Traffic.dest_ip="23.254.164.123" OR All_Traffic.dest="teams.onweblive.org" OR All_Traffic.dest="maskasd.com") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("23.254.164.92","23.254.164.123")
+   or RemoteUrl has_any ("teams.onweblive.org","maskasd.com","onweblive.org","hwsrv-1327786.hostwindsdns.com","hwsrv-1327785.hostwindsdns.com")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### easy-day-js Windows persistence: Run key 'NvmProtocal' / protocal.cjs autostart
+
+`UC_51_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_value_name="NvmProtocal" OR Registry.registry_value_data="*protocal.cjs*" OR Registry.registry_value_data="*NodePackages*" OR Registry.registry_value_data="*com.nvm.protocal*") by Registry.dest Registry.registry_key_name Registry.registry_value_name Registry.registry_value_data Registry.process_name
+| `drop_dm_object_name(Registry)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where (RegistryKey has @"\CurrentVersion\Run" and RegistryValueName =~ "NvmProtocal")
+   or RegistryValueData has_any ("protocal.cjs","NodePackages","com.nvm.protocal")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### easy-day-js implant artifacts dropped: protocal.cjs / NodePackages / cross-OS persistence files
+
+`UC_51_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="protocal.cjs" OR Filesystem.file_name="nvmconf.service" OR Filesystem.file_name="com.nvm.protocal.plist" OR Filesystem.file_name=".pkg_history" OR Filesystem.file_name=".pkg_logs" OR Filesystem.file_path="*\\NodePackages\\*" OR Filesystem.file_path="*/NodePackages/*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("protocal.cjs","nvmconf.service","com.nvm.protocal.plist",".pkg_history",".pkg_logs")
+   or FolderPath has "NodePackages"
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -112,4 +209,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

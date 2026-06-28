@@ -34,46 +34,32 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable DotVVM version in software inventory (<4.2.11 / <4.3.15 / <5.0.0-preview09)
+### Anonymous HTTP 200 to DotVVM endpoints (AuthorizeActionFilter bypass exploitation)
 
-`UC_101_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-// GHSA-c8qj-jx8j-fg2w: DotVVM AuthorizeActionFilter does nothing. Fixed in 4.2.11, 4.3.15, 5.0.0-preview09.
-DeviceTvmSoftwareInventory
-| where SoftwareName has "dotvvm" or SoftwareVendor has "dotvvm"
-| extend BaseVer = tostring(split(SoftwareVersion, "-")[0])
-| extend PreviewNum = toint(extract(@"preview0*(\d+)", 1, tolower(SoftwareVersion)))
-| where (parse_version(BaseVer) < parse_version("4.2.11"))                                              // entire <4.2.11 lineage
-     or (parse_version(BaseVer) >= parse_version("4.3.0") and parse_version(BaseVer) < parse_version("4.3.15")) // 4.3.0-preview01 .. 4.3.15
-     or (BaseVer == "5.0.0" and isnotnull(PreviewNum) and PreviewNum < 9)                                  // 5.0.0-preview01 .. preview09
-| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion
-| sort by DeviceName asc
-```
-
-### DotVVM framework assembly deployed/loaded on endpoints — exposure hunt for GHSA-c8qj-jx8j-fg2w
-
-`UC_101_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_101_0` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="DotVVM*.dll" by Filesystem.dest Filesystem.file_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats `summariesonly` count, values(Web.uri_path) as uri_path, values(Web.http_method) as http_method, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.status=200 (Web.url="*.dothtml*" OR Web.url="*dotvvm*" OR Web.uri_path="*.dothtml*" OR Web.uri_path="*dotvvm*") (Web.user="-" OR Web.user="" OR Web.user="anonymous") by Web.src, Web.dest, Web.user, Web.status | `drop_dm_object_name(Web)` | where count > 0 | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
+
+### Vulnerable DotVVM framework version present on host (GHSA-c8qj-jx8j-fg2w)
+
+`UC_101_1` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-// Identify hosts running DotVVM by the framework assembly loaded into the web host process.
-DeviceImageLoadEvents
-| where Timestamp > ago(7d)
-| where FileName has "dotvvm" and FileName endswith ".dll"
-| where InitiatingProcessFileName in~ ("w3wp.exe","dotnet.exe","iisexpress.exe")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Modules=make_set(FileName,20), Paths=make_set(FolderPath,20) by DeviceName, InitiatingProcessFileName
-| sort by LastSeen desc
+DeviceTvmSoftwareInventory
+| where SoftwareName has "dotvvm" or SoftwareVendor has "dotvvm" or SoftwareVendor has "riganti"
+| extend VerCore = extract(@"^(\d+\.\d+\.\d+)", 1, SoftwareVersion)
+| where isnotempty(VerCore)
+| extend V = parse_version(VerCore)
+| extend PreviewNum = toint(extract(@"preview0*(\d+)", 1, SoftwareVersion))
+| where (V < parse_version("4.2.11"))                                                  // whole 4.2.x and earlier line
+     or (V >= parse_version("4.3.0") and V < parse_version("4.3.15"))                   // 4.3.0-preview01..4.3.14
+     or (V == parse_version("5.0.0") and SoftwareVersion has "preview" and PreviewNum < 9) // 5.0.0-preview01..08
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion
+| sort by DeviceName asc
 ```
 
 
