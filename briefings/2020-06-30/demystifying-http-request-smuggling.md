@@ -184,7 +184,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Demystifying HTTP request smuggling
 
-`UC_3037_4` · phase: **exploit** · confidence: **High**
+`UC_3038_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

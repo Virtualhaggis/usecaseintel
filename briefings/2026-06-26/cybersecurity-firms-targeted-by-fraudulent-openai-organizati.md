@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound OpenAI org-invite email from noreply@tm.openai.com impersonating own company
 
-`UC_9_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ EmailEvents
 
 ### Employee clicked OpenAI org-invite accept link from fraudulent tenant invite
 
-`UC_9_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_10_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

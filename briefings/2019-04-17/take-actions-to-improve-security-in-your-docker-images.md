@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Take actions to improve security in your Docker images
 
-`UC_3242_0` · phase: **exploit** · confidence: **High**
+`UC_3243_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

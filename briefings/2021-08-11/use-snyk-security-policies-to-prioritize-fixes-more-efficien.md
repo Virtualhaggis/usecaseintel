@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Use Snyk security policies to prioritize fixes more efficiently
 
-`UC_2809_2` · phase: **exploit** · confidence: **High**
+`UC_2810_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

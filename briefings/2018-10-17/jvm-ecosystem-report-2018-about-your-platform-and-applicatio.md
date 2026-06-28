@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — JVM Ecosystem report 2018 - About your Platform and Application
 
-`UC_3291_0` · phase: **exploit** · confidence: **High**
+`UC_3292_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Crossplane package installed by mutable tag instead of immutable digest
 
-`UC_95_0` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_96_0` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ sourcetype="kube:apiserver:audit" objectRef.apiGroup="pkg.crossplane.io" (object
 
 ### Crossplane ImageConfig signature-verification policy deleted or weakened
 
-`UC_95_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_96_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

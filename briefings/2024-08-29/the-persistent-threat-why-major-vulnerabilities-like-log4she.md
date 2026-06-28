@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Log4Shell JNDI exploitation string in inbound HTTP requests (CVE-2021-44228)
 
-`UC_1171_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1172_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Log4Shell outbound JNDI callback from Java process to LDAP/RMI (CVE-2021-44228)
 
-`UC_1171_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1172_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### Spring4Shell classLoader payload in inbound HTTP request (CVE-2022-22965)
 
-`UC_1171_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1172_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### Spring4Shell JSP webshell drop by Tomcat/Java into webapps (CVE-2022-22965)
 
-`UC_1171_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1172_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

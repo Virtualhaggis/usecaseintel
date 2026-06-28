@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### npm install JS dropper writes settings.ps1 and executes it via PowerShell
 
-`UC_70_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_71_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### PostCSS RAT stager: curl.exe downloads payload from nvidiadriver[.]net
 
-`UC_70_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_71_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### update.vbs extracted from ZIP and launched via wscript.exe
 
-`UC_70_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_71_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### PostCSS RAT C2 beacon to 95.216.92[.]207 on port 8080
 
-`UC_70_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_71_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceNetworkEvents
 
 ### PostCSS RAT Registry Run-key persistence under HKCU CurrentVersion\Run
 
-`UC_70_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_71_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ DeviceRegistryEvents
 
 ### @withgoogle/stitch-sdk developer-credential exfil to stitch-production[.]org
 
-`UC_70_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_71_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -312,7 +312,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Packages Pose as PostCSS Tools to Deliver Windows RAT
 
-`UC_70_7` · phase: **exploit** · confidence: **High**
+`UC_71_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
