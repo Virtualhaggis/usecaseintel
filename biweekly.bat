@@ -24,12 +24,12 @@ if errorlevel 1 (
 REM Dual-account failover. See run_once.bat. biweekly_review.py delegates
 REM to generate._llm_call_via_oauth → _call_claude_cli, so the same switch
 REM logic applies without any per-script change.
-REM Dual-account failover enabled: setup_dual_account.ps1 has provisioned
-REM both per-account config dirs. biweekly_review.py delegates to
-REM generate._llm_call_via_oauth -> _call_claude_cli so the same switch
-REM logic applies. To revert to default %USERPROFILE%\.claude, re-comment.
-set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
-set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
+REM 2026-06-28: both per-account sessions (.claude-acct-a/.claude-acct-b)
+REM expired (401) on ~06-21. Falling back to the default %USERPROFILE%\.claude
+REM session (re-authed and working). Re-run setup_dual_account.ps1 and
+REM un-comment the two lines below to restore dual-account failover.
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 py biweekly_review.py --apply 1>>"%LOG%" 2>>&1
 if errorlevel 1 (

@@ -30,12 +30,13 @@ if errorlevel 1 (
 REM Dual-account failover. See run_once.bat for the protocol. Review-pass
 REM LLM calls (Haiku reviewer via gen._call_claude_cli) also honour the
 REM sticky switch because the failover lives inside _call_claude_cli.
-REM Dual-account failover enabled: setup_dual_account.ps1 has provisioned
-REM both per-account config dirs. Review-pass LLM calls (Haiku reviewer)
-REM honour the sticky switch via _call_claude_cli. To revert to default
-REM %USERPROFILE%\.claude, re-comment both lines.
-set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
-set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
+REM 2026-06-28: both per-account sessions (.claude-acct-a/.claude-acct-b)
+REM expired (401) on ~06-21 and silently produced 0 review suggestions for a
+REM week. Falling back to the default %USERPROFILE%\.claude session (re-authed
+REM and working). Re-run setup_dual_account.ps1 and un-comment the two lines
+REM below to restore dual-account failover.
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 REM `py -u` forces unbuffered stdout so progress lands in the log
 REM immediately, same convention as the main pipeline.
