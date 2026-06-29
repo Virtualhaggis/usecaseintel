@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Browser traffic to Perplexity look-alike domain perplexity-ai[.]online
 
-`UC_0_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### Malicious 'Search for perplexity ai' Chrome extension install (ID flkebkiofojicogddingbdmcmkpbplcd)
 
-`UC_0_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### S3 bucket enumeration fan-out by a single principal (Capital One recon pattern)
 
-`UC_2565_0` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2564_0` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ sourcetype=aws:cloudtrail eventSource="s3.amazonaws.com" (eventName="ListBuckets
 
 ### S3 mass object download / 's3 sync' exfiltration from a single bucket
 
-`UC_2565_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2564_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ sourcetype=aws:cloudtrail eventSource="s3.amazonaws.com" eventName="GetObject"
 
 ### IAM role trust policy allows all principals (Principal '*' + sts:AssumeRole)
 
-`UC_2565_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2564_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ sourcetype=aws:cloudtrail eventSource="iam.amazonaws.com" (eventName="CreateRole
 
 ### IAM policy grants full administrative '*:*' privileges or attaches AdministratorAccess
 
-`UC_2565_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2564_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ sourcetype=aws:cloudtrail eventSource="iam.amazonaws.com"
 
 ### Successful AWS console login without MFA
 
-`UC_2565_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2564_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

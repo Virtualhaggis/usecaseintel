@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Plugins to put Node.js application security and observability in your IDE
 
-`UC_2804_0` · phase: **exploit** · confidence: **High**
+`UC_2803_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Squid proxy initiating outbound FTP control-channel (TCP/21) to external host (Squidbleed precondition)
 
-`UC_91_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_90_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceNetworkEvents
 
 ### High-volume ftp:// listing requests through Squid proxy to single host (Squidbleed memory harvest)
 
-`UC_91_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_90_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceNetworkEvents
 
 ### Squid hosts exposed to Squidbleed (CVE-2026-47729) with FTP attack surface
 
-`UC_91_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_90_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
