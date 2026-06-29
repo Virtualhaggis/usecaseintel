@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Talos most-prevalent CoinMiner / W32.Injector / Win.Dropper.Miner file-hash watchlist
 
-`UC_190_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_191_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +176,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_190_5` · phase: **exploit** · confidence: **High**
+`UC_191_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

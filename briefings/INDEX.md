@@ -12,6 +12,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hijacked npm and go packages use vs code tasks to deploy pyt](./2026-06-29/hijacked-npm-and-go-packages-use-vs-code-tasks-to-deploy-pyt.md)
 - [microsoft removes 119 edge extensions that hid malware in im](./2026-06-29/microsoft-removes-119-edge-extensions-that-hid-malware-in-im.md)
 - [public poc released for critical libssh2 cve 2026 55200 clie](./2026-06-29/public-poc-released-for-critical-libssh2-cve-2026-55200-clie.md)
+- [the gentlemen are knocking ustom backdoors and evolving tact](./2026-06-29/the-gentlemen-are-knocking-ustom-backdoors-and-evolving-tact.md)
 
 ## 2026-06-27
 - [ukraine says russian intelligence used fake support texts to](./2026-06-27/ukraine-says-russian-intelligence-used-fake-support-texts-to.md)
@@ -298,7 +299,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-22
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
-- [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
 
