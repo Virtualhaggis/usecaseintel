@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Type Manipulation: Escaping Template Sandboxes
 
-`UC_3354_0` · phase: **exploit** · confidence: **High**
+`UC_3352_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

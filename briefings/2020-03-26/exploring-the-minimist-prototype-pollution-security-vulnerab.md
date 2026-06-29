@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Exploring the minimist prototype pollution security vulnerability
 
-`UC_3098_1` · phase: **exploit** · confidence: **High**
+`UC_3096_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

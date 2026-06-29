@@ -11,40 +11,13 @@ By Bill Toulas
 June 29, 2026
 11:09 AM
 0 
-
-
 The U.S. Department of State is offering up to $10 million for information that helps identify or locate members of the UNC5792 and UNC4221 hacker groups, which are linked to Russia's intelligence and military services.
-
-
-The bounty is part of the ‘Rewards for Justice’ (RFJ) program, which targets foreign state actors carrying out cyberattacks against U.S. critical infrastructure…
+The bounty is part of the ‘Rewards for Justice’ (RFJ) program, which targets foreign state actors carrying out cyberattacks against U.S. critical infrastructure.
+“RFJ i…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `add-signal-group.com`
-- **Domain (defanged):** `add-signal-groups.com`
-- **Domain (defanged):** `group-signal.com`
-- **Domain (defanged):** `groups-signal.site`
-- **Domain (defanged):** `signal-device-off.online`
-- **Domain (defanged):** `signal-group-add.com`
-- **Domain (defanged):** `signal-group.site`
-- **Domain (defanged):** `signal-group.tech`
-- **Domain (defanged):** `signal-groups-add.com`
-- **Domain (defanged):** `signal-groups.site`
-- **Domain (defanged):** `signal-groups.tech`
-- **Domain (defanged):** `signal-security.online`
-- **Domain (defanged):** `signal-security.site`
-- **Domain (defanged):** `signalgroup.site`
-- **Domain (defanged):** `signals-group.com`
-- **Domain (defanged):** `signal-confirm.site`
-- **Domain (defanged):** `confirm-signal.site`
-- **Domain (defanged):** `signal-protect.host`
-- **Domain (defanged):** `teneta.join-group.online`
-- **Domain (defanged):** `teneta.add-group.site`
-- **Domain (defanged):** `group-teneta.online`
-- **Domain (defanged):** `helperanalytics.ru`
-- **Domain (defanged):** `teneta.group`
-- **Domain (defanged):** `group.kropyva.site`
-- **MD5:** `e078778b62796bab2d7ab2b04d6b01bf`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -55,8 +28,6 @@ The bounty is part of the ‘Rewards for Justice’ (RFJ) program, which targets
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1071** — Application Layer Protocol
-- **T1027** — Obfuscated Files or Information
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1656** — Impersonation
 - **T1598** — Phishing for Information
@@ -71,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### UNC5792/UNC4221 Signal & WhatsApp typosquat lure-domain resolution
 
-`UC_0_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_4_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +65,7 @@ DeviceNetworkEvents
 
 ### Inbound mail delivering UNC5792 Signal recovery-key lure domains
 
-`UC_0_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_4_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -113,7 +84,7 @@ EmailEvents
 
 ### Signal linked-device hijack URI (sgnl://linkdevice) & recovery-key lure pages
 
-`UC_0_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -282,17 +253,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `add-signal-group.com`, `add-signal-groups.com`, `group-signal.com`, `groups-signal.site`, `signal-device-off.online`, `signal-group-add.com`, `signal-group.site`, `signal-group.tech` _(+16 more)_
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `e078778b62796bab2d7ab2b04d6b01bf`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

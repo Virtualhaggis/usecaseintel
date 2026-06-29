@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### Endpoint egress to named DCloud Uni-App crypto-scam / wallet-drainer domains
 
-`UC_6_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceNetworkEvents
 
 ### Access to WhatsApp 'Security Help Center' lookalike credential-harvest domains
 
-`UC_6_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

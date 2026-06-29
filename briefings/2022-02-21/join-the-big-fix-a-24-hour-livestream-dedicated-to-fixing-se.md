@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Join The Big Fix: a 24-hour livestream dedicated to fixing security vulnerabilit
 
-`UC_2408_1` · phase: **exploit** · confidence: **High**
+`UC_2406_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

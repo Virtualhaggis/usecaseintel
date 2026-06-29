@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### rundll32.exe spawned by Node/npm loading node-gyp.dll or crashreporter.dll (CVE-2025-54313)
 
-`UC_678_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_676_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### DNS / outbound connection to npnjs[.]com phishing infrastructure
 
-`UC_678_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_676_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ union isfuzzy=true
 
 ### node-gyp.dll or crashreporter.dll created under node_modules by package-manager process
 
-`UC_678_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_676_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -309,7 +309,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Supply Chain Security Alert: eslint-config-prettier Package Shows Signs of Compr
 
-`UC_678_7` · phase: **exploit** · confidence: **High**
+`UC_676_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

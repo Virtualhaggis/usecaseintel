@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Attacking an FTP Client: MGETting more than you bargained for
 
-`UC_3317_1` · phase: **exploit** · confidence: **High**
+`UC_3315_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

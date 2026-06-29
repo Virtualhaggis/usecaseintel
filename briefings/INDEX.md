@@ -10,10 +10,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-29
 - [236 000 dcloud uni app sites used in crypto scams phishing a](./2026-06-29/236-000-dcloud-uni-app-sites-used-in-crypto-scams-phishing-a.md)
+- [chromium extension uses ai related branding to redirect brow](./2026-06-29/chromium-extension-uses-ai-related-branding-to-redirect-brow.md)
 - [critical simplehelp flaw exploited to deploy new stealer mal](./2026-06-29/critical-simplehelp-flaw-exploited-to-deploy-new-stealer-mal.md)
 - [gamaredon expands ukraine attacks with new malware and cloud](./2026-06-29/gamaredon-expands-ukraine-attacks-with-new-malware-and-cloud.md)
 - [hackers now exploit critical oracle e business flaw in attac](./2026-06-29/hackers-now-exploit-critical-oracle-e-business-flaw-in-attac.md)
 - [hijacked npm and go packages use vs code tasks to deploy pyt](./2026-06-29/hijacked-npm-and-go-packages-use-vs-code-tasks-to-deploy-pyt.md)
+- [malicious perplexity chrome extension intercepted searches a](./2026-06-29/malicious-perplexity-chrome-extension-intercepted-searches-a.md)
 - [microsoft removes 119 edge extensions that hid malware in im](./2026-06-29/microsoft-removes-119-edge-extensions-that-hid-malware-in-im.md)
 - [public poc released for critical libssh2 cve 2026 55200 clie](./2026-06-29/public-poc-released-for-critical-libssh2-cve-2026-55200-clie.md)
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
@@ -83,8 +85,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-22
 - [29 year old squid proxy bug squidbleed can leak cleartext ht](./2026-06-22/29-year-old-squid-proxy-bug-squidbleed-can-leak-cleartext-ht.md)
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
-- [arystinger malware infects 4 300 legacy routers to build rec](./2026-06-22/arystinger-malware-infects-4-300-legacy-routers-to-build-rec.md)
-- [canada s spy agency used first of its kind warrant to clean ](./2026-06-22/canada-s-spy-agency-used-first-of-its-kind-warrant-to-clean-.md)
 - [guarding ai memory](./2026-06-22/guarding-ai-memory.md)
 - [new oxloader loader uses malicious google ads to deliver cas](./2026-06-22/new-oxloader-loader-uses-malicious-google-ads-to-deliver-cas.md)
 - [one intrusion two cyberattackers uncovering parallel threat ](./2026-06-22/one-intrusion-two-cyberattackers-uncovering-parallel-threat-.md)
@@ -136,7 +136,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 
 ## 2026-06-17
-- [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
@@ -3234,6 +3233,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2021-11-10
 - [scanning arm templates for misconfigurations with the snyk c](./2021-11-10/scanning-arm-templates-for-misconfigurations-with-the-snyk-c.md)
+
+## 2021-11-05
+- [6 big aws iam vulnerabilities and how to avoid them](./2021-11-05/6-big-aws-iam-vulnerabilities-and-how-to-avoid-them.md)
 
 ## 2021-11-04
 - [exploring extensions of dependency confusion attacks via npm](./2021-11-04/exploring-extensions-of-dependency-confusion-attacks-via-npm.md)

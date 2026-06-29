@@ -29,12 +29,84 @@ May 1, 2022:…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1048.003** — Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1546.016** — Event Triggered Execution: Installer Packages
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### npm dependency-confusion DNS exfiltration to pkgio.com (gxm-reference campaign)
+
+`UC_2137_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query="*pkgio.com" by DNS.src DNS.query DNS.dest DNS.record_type 
+| `drop_dm_object_name(DNS)` 
+| eval campaign="gxm-reference npm dependency confusion" 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType == "DnsQueryResponse"
+| where RemoteUrl endswith "pkgio.com"
+| project Timestamp, DeviceName, AccountName, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### Malicious npm postinstall executing node confsettingsaaa.js (gxm-reference dropper)
+
+`UC_2137_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*confsettingsaaa.js*" OR Processes.process="*obfusc.enc.js*" OR Processes.process="*mac.dec.js*" OR Processes.process="*ldtzstxwzpntxqn*" OR Processes.process="*lznfjbhurpjsqmr*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process 
+| `drop_dm_object_name(Processes)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("confsettingsaaa.js","obfusc.enc.js","mac.dec.js","ldtzstxwzpntxqn","lznfjbhurpjsqmr")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### gxm-reference npm dropper file artifacts written to disk
+
+`UC_2137_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("confsettingsaaa.js","obfusc.enc.js","mac.enc.js","mac.dec.js") OR Filesystem.file_path="*\\node_modules\\ldtzstxwzpntxqn\\*" OR Filesystem.file_path="*\\node_modules\\lznfjbhurpjsqmr\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name 
+| `drop_dm_object_name(Filesystem)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where FileName in~ ("confsettingsaaa.js","obfusc.enc.js","mac.enc.js","mac.dec.js")
+   or FolderPath has_any (@"\node_modules\ldtzstxwzpntxqn", @"\node_modules\lznfjbhurpjsqmr")
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -239,7 +311,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Targeted npm dependency confusion attack caught red-handed
 
-`UC_2139_6` · phase: **exploit** · confidence: **High**
+`UC_2137_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -296,4 +368,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

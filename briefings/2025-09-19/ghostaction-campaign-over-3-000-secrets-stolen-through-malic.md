@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### GhostAction malicious workflow file added with curl POST to Plesk infrastructure
 
-`UC_802_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_800_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### GhostAction C2 egress to Plesk-hosted exfiltration infrastructure
 
-`UC_802_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_800_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceNetworkEvents
 
 ### GhostAction curl/wget POST of CI/CD secret token to Plesk endpoint
 
-`UC_802_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_800_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### GitHub Actions self-hosted runner spawning curl/wget POST to non-allowlisted egress
 
-`UC_802_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_800_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceProcessEvents
 
 ### GhostAction GitHub workflow secret-enumeration commit pattern
 
-`UC_802_6` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_800_6` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

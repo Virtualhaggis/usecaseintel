@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### DNS/HTTP egress to CanisterWorm ICP canister C2 (tdtqy-oyaaa-aaaae-af2dq-cai)
 
-`UC_480_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_478_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceNetworkEvents
 
 ### Cloudflare-tunnel curl-piped Python stager (kamikaze.sh / kube.py)
 
-`UC_480_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_478_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Malicious privileged DaemonSet apply in kube-system (host-provisioner-iran / host-provisioner-std / kamikaze)
 
-`UC_480_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_478_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### Host-root mount wiper: chroot /mnt/host reboot -f or rm -rf / --no-preserve-root
 
-`UC_480_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_478_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceProcessEvents
 
 ### CanisterWorm persistence: pglog/pg_state/internal-monitor systemd unit and /tmp/pglog drop
 
-`UC_480_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_478_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -333,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CanisterWorm Gets Teeth: TeamPCP's Kubernetes Wiper Targets Iran
 
-`UC_480_7` · phase: **exploit** · confidence: **High**
+`UC_478_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

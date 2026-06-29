@@ -20,12 +20,56 @@ December 9, 2021
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1041** — Exfiltration Over C2 Channel
+- **T1552** — Unsecured Credentials
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### CodeCov Bash Uploader CI env-var exfiltration via curl (<<<<<< ENV marker)
+
+`UC_2541_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=curl AND Processes.process="*<<<<<< ENV*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "curl"
+| where ProcessCommandLine contains "<<<<<< ENV"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### CodeCov uploader egress to non-CodeCov host (surfaces exfil server IP)
+
+`UC_2541_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as exfil_ip values(All_Traffic.dest_port) as exfil_ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction=outbound NOT (All_Traffic.dest="*.codecov.io" OR All_Traffic.dest="*.storage.googleapis.com") by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | search [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name=curl Processes.process="*<<<<<< ENV*" by Processes.dest | `drop_dm_object_name(Processes)` | rename dest as src | fields src | format] | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "curl"
+| where InitiatingProcessCommandLine contains "<<<<<< ENV"
+| where RemoteIPType == "Public"
+| where not(RemoteUrl endswith "codecov.io" or RemoteUrl endswith "storage.googleapis.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### OAuth consent / suspicious app grant
 
@@ -81,4 +125,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

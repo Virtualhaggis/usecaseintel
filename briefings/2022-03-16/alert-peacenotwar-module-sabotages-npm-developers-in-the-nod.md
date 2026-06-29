@@ -23,12 +23,76 @@ This security incident involves destructive acts of corrupting files on disk by 
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
+- **T1614** — System Location Discovery
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1485** — Data Destruction
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### node-ipc/peacenotwar geolocation beacon to api.ipgeolocation.io from Node runtime
+
+`UC_2301_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*ipgeolocation.io*" Web.url="*ae511e1627824a968aaaa758a5309154*" by Web.src, Web.dest, Web.url, Web.http_user_agent, Web.app | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where RemoteUrl has "ipgeolocation.io"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFolderPath, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Mass file overwrite by Node runtime (node-ipc heart-emoji data destruction)
+
+`UC_2301_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(Filesystem.file_path) as distinct_files min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=modified by Filesystem.dest, _time span=5m | `drop_dm_object_name(Filesystem)` | where distinct_files > 200 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType == "FileModified"
+| where InitiatingProcessFileName =~ "node.exe"
+| where InitiatingProcessAccountName !endswith "$"
+| summarize FilesModified = count(), DistinctFolders = dcount(FolderPath), SampleFiles = make_set(FolderPath, 10), StartTime = min(Timestamp), EndTime = max(Timestamp) by DeviceName, InitiatingProcessId, InitiatingProcessCommandLine, bin(Timestamp, 5m)
+| where FilesModified > 100
+| order by FilesModified desc
+```
+
+### Vulnerable node-ipc / peacenotwar package present (CVE-2022-23812)
+
+`UC_2301_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2022-23812" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(30d)
+| where CveId == "CVE-2022-23812"
+   or (SoftwareName has "node-ipc" and SoftwareVersion in ("10.1.1","10.1.2","9.2.2"))
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -56,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Alert: peacenotwar module sabotages npm developers in the node-ipc package to pr
 
-`UC_2303_3` · phase: **exploit** · confidence: **High**
+`UC_2301_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,4 +180,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

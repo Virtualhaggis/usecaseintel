@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — A (soft) introduction to Python dependency management
 
-`UC_2791_0` · phase: **exploit** · confidence: **High**
+`UC_2789_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

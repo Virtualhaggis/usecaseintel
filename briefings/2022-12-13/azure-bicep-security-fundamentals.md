@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Storage account key retrieval (listKeys) inside an ARM/Bicep deployment — secret-in-output leak vector
 
-`UC_1795_1` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_1793_1` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Azure Bicep security fundamentals
 
-`UC_1795_0` · phase: **exploit** · confidence: **High**
+`UC_1793_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -30,6 +30,7 @@ One of the main goals for this research was to explore (in the JavaScript ecosys
 - **T1190** — Exploit Public-Facing Application
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
@@ -37,9 +38,21 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Prototype pollution / type-confusion payload in web request (__proto__, constructor[prototype])
+
+`UC_2569_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query="*__proto__*" OR Web.uri_query="*%5f%5f*proto*" OR Web.uri_query="*constructor[prototype]*" OR Web.uri_query="*constructor%5bprototype%5d*" OR Web.uri_query="*[constructor][prototype]*" OR Web.uri_query="*[__proto__]*" OR Web.uri_path="*__proto__*") by Web.src Web.dest Web.site Web.http_method Web.uri_path Web.uri_query Web.status Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
 ### Article-specific behavioural hunt — JavaScript type confusion: Bypassed input validation (and how to remediate)
 
-`UC_2571_2` · phase: **exploit** · confidence: **High**
+`UC_2569_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,4 +112,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
