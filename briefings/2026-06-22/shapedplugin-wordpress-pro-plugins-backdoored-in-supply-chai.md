@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### ShapedPlugin backdoor C2 beacon/exfil to 194.76.217.28:2871 from web server
 
-`UC_80_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_82_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### ShapedPlugin backdoor PHP artifacts (LicenseLoader.php / install-persistent.php) dropped in wp-content
 
-`UC_80_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_82_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
