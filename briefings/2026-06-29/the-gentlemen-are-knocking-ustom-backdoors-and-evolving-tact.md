@@ -295,7 +295,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Gentlemen are knocking: сustom backdoors and evolving tactics
 
-`UC_1_9` · phase: **exploit** · confidence: **High**
+`UC_5_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

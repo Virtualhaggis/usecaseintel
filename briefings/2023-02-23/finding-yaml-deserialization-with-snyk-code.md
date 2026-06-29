@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Ruby/Rails app server spawning a Unix shell (post-deserialization RCE)
 
-`UC_1737_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1738_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

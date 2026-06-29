@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### GCS bucket deletion of a logging-sink / data-stream destination (bucket-hijack precursor)
 
-`UC_81_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_85_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ index=* sourcetype="google:gcp:platform:audit" "protoPayload.methodName"="storag
 
 ### AWS S3 DeleteBucket on a replication / log-delivery destination (bucket-hijack precursor)
 
-`UC_81_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_85_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ sourcetype=aws:cloudtrail eventSource="s3.amazonaws.com" eventName=DeleteBucket
 
 ### AWS S3 bucket DeleteBucket then CreateBucket of the SAME name across accounts (hijack signature)
 
-`UC_81_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_85_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

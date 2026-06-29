@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Breaking out of message brokers
 
-`UC_3025_2` · phase: **install** · confidence: **High**
+`UC_3026_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

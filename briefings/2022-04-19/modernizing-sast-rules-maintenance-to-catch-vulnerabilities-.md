@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Modernizing SAST rules maintenance to catch vulnerabilities faster
 
-`UC_2156_1` · phase: **exploit** · confidence: **High**
+`UC_2157_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

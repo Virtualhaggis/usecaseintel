@@ -1,18 +1,16 @@
-# [MED] Angular vs React: security bakeoff 2019
+# [MED] Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?
 
 **Source:** Snyk
-**Published:** 2019-10-30
-**Article:** https://snyk.io/blog/angular-vs-react-security-bakeoff-2019/
+**Published:** 2026-06-29
+**Article:** https://snyk.io/blog/snyk-vulnbench-js-1-0-llm-security-review-repeatability/
 
 ## Threat Profile
 
 Snyk Blog In this article
 Written by Liran Tal 
-October 30, 2019
-0 mins read Welcome to Snyk's State of JavaScript frameworks security report 2019.
-In this section, we review the security risk of the indirect independencies for both Angular and React, and then we also review the direct dependencies, first for Angular and then for React.
-Download the Report here !
-The modules reviewed in this part do not represent a complete list of vulnerable React and Angular modules; some modules may have spec…
+June 29, 2026
+0 mins read We ran 300 vulnerability-finding scans to measure how repeatable an agentic LLM security review is on the same code, prompt, and harness. The headline result is not that one scanner "wins" a self-referential leaderboard. It is that LLM security findings are unevenly repeatable: reference-matched findings were stable, but extra-model reports varied widely from run to run.
+In plain terms, when Claude reported bugs outside th…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -28,16 +26,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Article-specific behavioural hunt — Angular vs React: security bakeoff 2019
+### Article-specific behavioural hunt — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?
 
-`UC_3165_0` · phase: **exploit** · confidence: **High**
+`UC_9_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Angular vs React: security bakeoff 2019 ```
+``` Article-specific bespoke detection — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice? ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("next.js"))
+    where (Processes.process_name IN ("server.js"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -46,7 +44,7 @@ _(none detected from narrative keywords)_
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("next.js"))
+      AND (Filesystem.file_path="*/var/app/public/*" OR Filesystem.file_name IN ("server.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -55,12 +53,12 @@ _(none detected from narrative keywords)_
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Angular vs React: security bakeoff 2019
+// Article-specific bespoke detection — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("next.js"))
+| where (FileName in~ ("server.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -70,7 +68,7 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("next.js"))
+| where (FolderPath has_any ("/var/app/public/") or FileName in~ ("server.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine

@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### node-ipc protestware dropper file 'ssl-geospec.js' written under node_modules\node-ipc
 
-`UC_1937_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_1938_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceFileEvents
 
 ### node-ipc geofencing beacon: node.exe resolving/contacting api.ipgeolocation.io during install
 
-`UC_1937_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_1938_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### peacenotwar payload: creation of WITH-LOVE-FROM-AMERICA.txt protest file
 
-`UC_1937_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1938_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm faker package and the unexpected demise of open source libraries
 
-`UC_1937_2` · phase: **exploit** · confidence: **High**
+`UC_1938_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

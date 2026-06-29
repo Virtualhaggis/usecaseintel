@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### service-brother identity reaching admin/protected or mutating endpoints (post-bypass abuse)
 
-`UC_114_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_115_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable @acastellon/auth (<2.3.0) package present on host
 
-`UC_114_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_115_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-gfj5-979r-92pw: @acastellon/auth: Authentication bypass v
 
-`UC_114_0` · phase: **exploit** · confidence: **High**
+`UC_115_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
