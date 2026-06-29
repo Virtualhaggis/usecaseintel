@@ -13,15 +13,17 @@ Cybersecurity researchers have uncovered two hijacked npm packages and a cluster
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-20245`
+- **IPv4 (defanged):** `166.88.134.62`
+- **IPv4 (defanged):** `198.105.127.210`
+- **IPv4 (defanged):** `23.27.202.27`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1566.002** — Spearphishing Link
@@ -30,12 +32,133 @@ Cybersecurity researchers have uncovered two hijacked npm packages and a cluster
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1204.002** — User Execution: Malicious File
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1005** — Data from Local System
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1560** — Archive Collected Data
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### VS Code/Cursor folder-open task auto-runs Node against fake .woff2 font (Fake Font / Contagious Interview)
+
+`UC_13_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=node.exe (Processes.process="*fa-solid-400.woff2*" OR Processes.process="*.woff2*") (Processes.parent_process_name=Code.exe OR Processes.parent_process_name=Cursor.exe OR Processes.parent_process_name=node.exe) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id
+| `drop_dm_object_name(Processes)`
+| where like(process,"%.woff2%")
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "node.exe"
+| where ProcessCommandLine has ".woff2"
+| where ProcessCommandLine has "fa-solid-400.woff2" or ProcessCommandLine has @"\public\fonts\" or ProcessCommandLine has "/public/fonts/"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Node.js process resolves blockchain dead-drop (TronGrid/Aptos/BSC RPC) — Fake Font Stage-2 C2 retrieval
+
+`UC_13_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*api.trongrid.io*" OR DNS.query="*fullnode.mainnet.aptoslabs.com*" OR DNS.query="*bsc-dataseed.binance.org*" OR DNS.query="*bsc-rpc.publicnode.com*") by DNS.src DNS.query
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe","Code.exe","Cursor.exe")
+| where RemoteUrl has_any ("api.trongrid.io","fullnode.mainnet.aptoslabs.com","bsc-dataseed.binance.org","bsc-rpc.publicnode.com")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Fake Font socket.io C2 — connections to hardcoded IPs and /$/boot //snv //d/python.zip endpoints
+
+`UC_13_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="166.88.134.62" OR All_Traffic.dest_ip="198.105.127.210" OR All_Traffic.dest_ip="23.27.202.27") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("166.88.134.62","198.105.127.210","23.27.202.27")
+    or RemoteUrl has_any ("/$/boot","/verify-human/","/d/python.zip","/d/python.7z","/d/7zr.exe","/snv")
+| where InitiatingProcessFileName in~ ("node.exe","Code.exe","Cursor.exe")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### Fake Font Stage-4 Python toolchain staging — node drops python.zip/7zr.exe/get-pip.py into .npm
+
+`UC_13_11` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name IN ("python.zip","python.7z","7zr.exe","get-pip.py") (Endpoint.Filesystem.process_name=node.exe OR Endpoint.Filesystem.file_path="*\\.npm\\*" OR Endpoint.Filesystem.file_path="*/.npm/*") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName in~ ("python.zip","python.7z","7zr.exe","get-pip.py")
+| where InitiatingProcessFileName =~ "node.exe" or FolderPath has @"\.npm\" or FolderPath has "/.npm/" or FolderPath has @"\Programs\Python\Python3127"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### InvisibleFerret stealer — Python harvests dev creds/wallets and stages ZIP into .npm exfil dir
+
+`UC_13_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.process_name=python.exe (Endpoint.Filesystem.file_path="*\\.npm\\*" OR Endpoint.Filesystem.file_path="*/.npm/*") (Endpoint.Filesystem.file_name="*.zip" OR Endpoint.Filesystem.file_name="*.7z") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where InitiatingProcessFileName =~ "python.exe"
+| where (FolderPath has @"\.npm\" or FolderPath has "/.npm/") and (FileName endswith ".zip" or FileName endswith ".7z")
+    or InitiatingProcessCommandLine has_any ("hosts.yml",@"\Login Data","globalStorage","Local State")
+| project Timestamp, DeviceName, InitiatingProcessFolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -296,10 +419,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-20245`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `166.88.134.62`, `198.105.127.210`, `23.27.202.27`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

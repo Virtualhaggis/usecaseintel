@@ -83,12 +83,140 @@ Scanning tools …
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
+- **T1040** — Network Sniffing
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1571** — Non-Standard Port
+- **T1090** — Proxy
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1068** — Exploitation for Privilege Escalation
+- **T1484.001** — Domain or Tenant Policy Modification: Group Policy Modification
+- **T1570** — Lateral Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### The Gentlemen network sniffing via netsh trace capture redirected to ADMIN$ share
+
+`UC_10_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*netsh*" Processes.process="*trace*" (Processes.process="*capture=yes*" OR Processes.process="*ADMIN$*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where ProcessCommandLine has "netsh" and ProcessCommandLine has "trace"
+| where ProcessCommandLine has_any ("capture=yes", @"\ADMIN$\")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### The Gentlemen Go backdoor C2 beacon to 81.177.215.15 on TCP/9443
+
+`UC_10_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="81.177.215.15" All_Traffic.dest_port=9443 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "81.177.215.15" and RemotePort == 9443
+| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### The Gentlemen BYOVD vulnerable driver drop/load (EDR-killer drivers)
+
+`UC_10_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("ProcessMonitorDriver.sys","wamsdk.sys","gamedriverx64.sys","biontdrv.sys","inpoutx64.sys","wsftprm.sys","Havoc.sys") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("ProcessMonitorDriver.sys","wamsdk.sys","gamedriverx64.sys","biontdrv.sys","inpoutx64.sys","wsftprm.sys","Havoc.sys")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### The Gentlemen impair defenses via Set-MpPreference exclusions and AV-removal tooling
+
+`UC_10_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("kavrmvr.exe","OpenArk64.exe","PowerRun.exe","Allpatch2.exe") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*MpPreference*" AND (Processes.process="*DisableRealtimeMonitoring*" OR Processes.process="*EnableControlledFolderAccess Disabled*" OR Processes.process="*ExclusionProcess*" OR Processes.process="*ExclusionPath*"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where (FileName in~ ("kavrmvr.exe","OpenArk64.exe","PowerRun.exe","Allpatch2.exe"))
+    or (FileName in~ ("powershell.exe","pwsh.exe")
+        and ProcessCommandLine has "MpPreference"
+        and ProcessCommandLine has_any ("DisableRealtimeMonitoring","EnableControlledFolderAccess Disabled","ExclusionProcess","ExclusionPath"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### The Gentlemen Windows Defender disabled via Policy registry keys
+
+`UC_10_14` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Policies\\Microsoft\\Windows Defender*" Registry.registry_value_name IN ("DisableAntiSpyware","DisableBehaviorMonitoring","DisableOnAccessProtection","DisableScanOnRealtimeEnable") Registry.registry_value_data="0x1" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Policies\Microsoft\Windows Defender"
+| where RegistryValueName in~ ("DisableAntiSpyware","DisableBehaviorMonitoring","DisableOnAccessProtection","DisableScanOnRealtimeEnable")
+| where RegistryValueData == "1"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### The Gentlemen ransomware deployment via deploy_gpo.ps1 / NETLOGON staging
+
+`UC_10_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*deploy_gpo.ps1*" OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*\\NETLOGON\\*" AND Processes.process="*.exe*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where ProcessCommandLine has "deploy_gpo.ps1"
+    or (ProcessCommandLine has @"\NETLOGON\" and ProcessCommandLine has ".exe")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -295,7 +423,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Gentlemen are knocking: сustom backdoors and evolving tactics
 
-`UC_5_9` · phase: **exploit** · confidence: **High**
+`UC_10_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -374,4 +502,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -19,12 +19,60 @@ While security issues with GraphQL are widely known, there’s little informatio
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1571** — Non-Standard Port
+- **T1190** — Exploit Public-Facing Application
+- **T1554** — Compromise Host Software Binary
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Reverse shell via ncat -e spawned by Node.js app (SonicJS GraphQL path-traversal RCE)
+
+`UC_2179_1` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="ncat" OR Processes.process_name="nc" OR Processes.process_name="netcat") Processes.process="*-e*" (Processes.process="*/bin/bash*" OR Processes.process="*/bin/sh*" OR Processes.process="*/bin/dash*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("ncat","nc","netcat")
+| where ProcessCommandLine has "-e" and ProcessCommandLine has_any ("/bin/bash","/bin/sh","/bin/dash")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### Node.js web process overwriting application .js service file (GraphQL path-traversal file write)
+
+`UC_2179_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action="created" OR Filesystem.action="modified") Filesystem.file_name="*.js" Filesystem.file_path="*/services/*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where NOT match(file_path,"node_modules") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node","nodejs")
+| where ActionType in ("FileCreated","FileModified")
+| where FileName endswith ".js"
+| where FolderPath has "/services/"
+| where FolderPath !has "/node_modules/"
+| where not(InitiatingProcessCommandLine has_any ("npm","yarn","webpack","babel","tsc","rollup","nodemon","install"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — Improving GraphQL security with static analysis and Snyk Code
 
@@ -78,4 +126,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

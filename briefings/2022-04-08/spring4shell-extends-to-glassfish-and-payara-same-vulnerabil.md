@@ -20,12 +20,38 @@ April 8, 2022
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1083** — File and Directory Discovery
+- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Spring4Shell classLoader property injection via dirContext.docBase (Glassfish/Payara/Tomcat)
+
+`UC_2187_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*class.module.classLoader*" OR Web.url="*dirContext.docBase*" OR Web.http_user_agent="*class.module.classLoader*") by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+### Spring4Shell post-exploitation arbitrary file read (/etc/passwd via relocated docBase)
+
+`UC_2187_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*/etc/passwd" OR Web.url="*/etc/shadow" OR Web.url="*/etc/passwd*" OR Web.url="*/WEB-INF/web.xml" OR Web.url="*/etc/hosts") by Web.src Web.dest Web.http_method Web.url Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
 
 ### Article-specific behavioural hunt — Spring4Shell extends to Glassfish and Payara: same vulnerability, new exploit
 
@@ -70,4 +96,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

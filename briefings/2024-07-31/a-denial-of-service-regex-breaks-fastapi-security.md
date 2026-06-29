@@ -19,12 +19,46 @@ July 31, 2024
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
+- **T1499** — Endpoint Denial of Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Exposure: hosts running python-multipart ≤0.0.6 / FastAPI ≤0.109.0 vulnerable to CVE-2024-24762 ReDoS
+
+`UC_1203_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2024-24762" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId == "CVE-2024-24762"
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc
+```
+
+### CVE-2024-24762 ReDoS exploitation: overlong Content-Type header / stalled POST to FastAPI form endpoint
+
+`UC_1203_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.response_time) as response_time values(Web.status) as status from datamodel=Web.Web where Web.http_method=POST by Web.dest Web.src Web.uri_path Web.http_content_type
+| `drop_dm_object_name(Web)`
+| eval ct_len=len(http_content_type)
+| where ct_len>200
+| sort - ct_len
+```
 
 ### Article-specific behavioural hunt — A denial of service Regex breaks FastAPI security
 
@@ -85,4 +119,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

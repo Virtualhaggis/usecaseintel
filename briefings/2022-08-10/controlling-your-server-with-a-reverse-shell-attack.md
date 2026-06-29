@@ -22,12 +22,80 @@ Creating and running an application in your favorite language is usually pretty 
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1571** — Non-Standard Port
+- **T1095** — Non-Application Layer Protocol
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Bash reverse shell via /dev/tcp file-descriptor redirection
+
+`UC_1978_2` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process="*/dev/tcp/*" OR Processes.process="*/dev/udp/*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine contains "/dev/tcp/" or ProcessCommandLine contains "/dev/udp/"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### Interactive shell process initiating outbound network connection (reverse-shell C2)
+
+`UC_1978_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where (All_Traffic.app="bash" OR All_Traffic.app="sh" OR All_Traffic.app="dash" OR All_Traffic.app="zsh" OR All_Traffic.app="ksh") AND All_Traffic.direction="outbound" AND All_Traffic.dest!="127.0.0.1" by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType == "ConnectionSuccess"
+| where InitiatingProcessFileName in~ ("bash","sh","dash","zsh","ksh")
+| where RemoteIPType == "Public"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Server application runtime spawning shell with /dev/tcp redirection (RCE to reverse shell)
+
+`UC_1978_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java","node","python","python3","php","php-fpm","ruby","httpd","nginx","catalina.sh")) AND (Processes.process_name IN ("bash","sh","dash","zsh","ksh")) AND (Processes.process="*/dev/tcp/*" OR Processes.process="*/dev/udp/*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("java","node","python","python3","php","php-fpm","ruby","httpd","nginx","catalina.sh")
+| where FileName in~ ("bash","sh","dash","zsh","ksh")
+| where ProcessCommandLine contains "/dev/tcp/" or ProcessCommandLine contains "/dev/udp/"
+| project Timestamp, DeviceName, AccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — Controlling your server with a reverse shell attack
 
@@ -88,4 +156,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -32,12 +32,78 @@ The targets for this research are web applications and libr…
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Git argument injection via --upload-pack option spawned by web-app runtime
+
+`UC_1960_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("git","git.exe")) AND (Processes.process="*--upload-pack*") AND (Processes.parent_process_name IN ("node","node.exe","python","python3","python.exe","ruby","ruby.exe","java","java.exe","php","php-fpm","php-cgi.exe","w3wp.exe","gunicorn","uwsgi","puma","unicorn")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | search NOT process="*git-upload-pack*" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("git","git.exe")
+| where ProcessCommandLine has "--upload-pack"
+| where ProcessCommandLine has_any ("ls-remote","fetch","pull","clone","fetch-pack")
+| where InitiatingProcessFileName in~ ("node","node.exe","python","python3","python.exe","ruby","ruby.exe","java","java.exe","php","php-fpm","php-cgi.exe","w3wp.exe","gunicorn","uwsgi","puma","unicorn")
+| where AccountName !endswith "$"
+| where not(ProcessCommandLine has "git-upload-pack")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Mercurial argument injection via --config alias/hooks or --debugger from app runtime
+
+`UC_1960_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("hg","hg.exe")) AND ((Processes.process="*--config*" AND (Processes.process="*alias.*=!*" OR Processes.process="*hooks.pre-*" OR Processes.process="*hooks.post-*")) OR Processes.process="*--debugger*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("hg","hg.exe")
+| where (ProcessCommandLine has "--config" and (ProcessCommandLine matches regex @"(?i)alias\.[a-z0-9_-]+\s*=\s*!" or ProcessCommandLine has_any ("hooks.pre-","hooks.post-"))) or ProcessCommandLine has "--debugger"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### git/hg spawning a shell as child of a web-app runtime (argument-injection RCE evidence)
+
+`UC_1960_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("git","git.exe","hg","hg.exe")) AND (Processes.process_name IN ("sh","sh.exe","bash","bash.exe","dash","zsh","cmd.exe","powershell.exe","pwsh")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("git","git.exe","hg","hg.exe")
+| where FileName in~ ("sh","sh.exe","bash","bash.exe","dash","zsh","cmd.exe","powershell.exe","pwsh")
+| where InitiatingProcessParentFileName in~ ("node","node.exe","python","python3","python.exe","ruby","ruby.exe","java","java.exe","php","php-fpm","php-cgi.exe","w3wp.exe","gunicorn","uwsgi","puma","unicorn")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, GrandParent=InitiatingProcessParentFileName, Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, Child=FileName, ChildCmd=ProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — Rediscovering argument injection when using VCS tools — git and mercurial
 
@@ -98,4 +164,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

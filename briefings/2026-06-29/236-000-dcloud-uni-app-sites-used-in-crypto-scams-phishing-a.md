@@ -1,4 +1,4 @@
-# [CRIT] 236,000 DCloud Uni-App Sites Used in Crypto Scams, Phishing, and Wallet Drainers
+# [HIGH] 236,000 DCloud Uni-App Sites Used in Crypto Scams, Phishing, and Wallet Drainers
 
 **Source:** The Hacker News
 **Published:** 2026-06-29
@@ -13,16 +13,42 @@ The templates power bogus cryptocurrency exchanges, multi-language pig-butcherin
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-20245`
 - **Domain (defanged):** `whats-zwp.vip`
 - **Domain (defanged):** `faq-whatsapp-center.com`
+- **Domain (defanged):** `rainbowex.cc`
+- **Domain (defanged):** `nasdaqpro.top`
+- **Domain (defanged):** `futureblockchain.net`
+- **Domain (defanged):** `kirbycoco.cc`
+- **Domain (defanged):** `clintile.com`
+- **Domain (defanged):** `datashareclub.com`
+- **Domain (defanged):** `hkxiu.com`
+- **Domain (defanged):** `bepviews.com`
+- **Domain (defanged):** `lsscapp.com`
+- **Domain (defanged):** `lssc-canada.ca`
+- **Domain (defanged):** `lsscol.com`
+- **Domain (defanged):** `lssc.ltd`
+- **Domain (defanged):** `lightacer.com`
+- **Domain (defanged):** `ystl03106.top`
+- **Domain (defanged):** `ys904.top`
+- **Domain (defanged):** `aqy.dot02ig.cfd`
+- **Domain (defanged):** `xaai3xj.com`
+- **Domain (defanged):** `xaaitbb.com`
+- **Domain (defanged):** `polymk.com`
+- **Domain (defanged):** `mango-cleopatrapg.com`
+- **Domain (defanged):** `deepseekpg.bet`
+- **Domain (defanged):** `verify-what.com`
+- **Domain (defanged):** `whats-zrs.vip`
+- **Domain (defanged):** `correoargentino-comarr.top`
+- **Domain (defanged):** `k-usdt.com`
+- **Domain (defanged):** `usdtflow.net`
+- **Domain (defanged):** `allegro-stroe.com`
+- **Domain (defanged):** `m0vrsq6.top`
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1005** — Data from Local System
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -35,12 +61,66 @@ The templates power bogus cryptocurrency exchanges, multi-language pig-butcherin
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1598.003** — Phishing for Information: Spearphishing Link
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Endpoint egress to named DCloud Uni-App crypto-scam / wallet-drainer domains
+
+`UC_6_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("whats-zwp.vip","*.whats-zwp.vip","faq-whatsapp-center.com","*.faq-whatsapp-center.com","rainbowex.cc","nasdaqpro.top","futureblockchain.net","kirbycoco.cc","clintile.com","datashareclub.com","hkxiu.com","bepviews.com","lsscapp.com","lssc-canada.ca","lsscol.com","lssc.ltd","lightacer.com","ystl03106.top","ys904.top","aqy.dot02ig.cfd","xaai3xj.com","xaaitbb.com") by DNS.src DNS.dest DNS.query 
+| `drop_dm_object_name(DNS)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let scamDomains = dynamic(["whats-zwp.vip","faq-whatsapp-center.com","rainbowex.cc","nasdaqpro.top","futureblockchain.net","kirbycoco.cc","clintile.com","datashareclub.com","hkxiu.com","bepviews.com","lsscapp.com","lssc-canada.ca","lsscol.com","lssc.ltd","lightacer.com","ystl03106.top","ys904.top","aqy.dot02ig.cfd","xaai3xj.com","xaaitbb.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has_any (scamDomains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Access to WhatsApp 'Security Help Center' lookalike credential-harvest domains
+
+`UC_6_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*whats-zwp.vip*" OR Web.url="*faq-whatsapp-center.com*" OR Web.dest="whats-zwp.vip" OR Web.dest="faq-whatsapp-center.com" OR Web.dest="whats-*.vip" OR Web.dest="whats-*.cfd" OR Web.dest="whats-*.top") AND NOT (Web.dest="*.whatsapp.com" OR Web.dest="*.whatsapp.net") by Web.src Web.dest Web.url Web.http_user_agent 
+| `drop_dm_object_name(Web)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let legitWhatsApp = dynamic(["whatsapp.com","whatsapp.net"]);
+let knownBad = dynamic(["whats-zwp.vip","faq-whatsapp-center.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where isnotempty(RemoteUrl)
+| extend host = tolower(RemoteUrl)
+| where host has_any (knownBad)
+    or (host matches regex @"whats[\-_a-z0-9]+\.(vip|cfd|top|icu|xyz)")
+    or (host has "whatsapp" and host has_any ("center","help","secur","verify"))
+| where not(host endswith "whatsapp.com") and not(host endswith "whatsapp.net") and not(host has_any (legitWhatsApp) and host endswith "whatsapp.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -335,13 +415,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-20245`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `whats-zwp.vip`, `faq-whatsapp-center.com`
+  - IP / domain IOC(s): `whats-zwp.vip`, `faq-whatsapp-center.com`, `rainbowex.cc`, `nasdaqpro.top`, `futureblockchain.net`, `kirbycoco.cc`, `clintile.com`, `datashareclub.com` _(+22 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

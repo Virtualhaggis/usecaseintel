@@ -1,223 +1,3 @@
-<article class="card" id="art-103" data-art-slug="2026-06-19-ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif"
-  data-phases="actions,c2,install" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,sent,sigma,spl"
-  data-splunk-cats="cloud"
-  data-targets="kubernetes,vcs"
-  data-uc-count="2" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] GHSA-wfqx-gjrf-g28r: Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag   [LLM] Crossplane package installed by mutable tag instead of immutable digest [LLM] Crossplane ImageConfig signature-verification policy deleted or weakened">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-19-ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-wfqx-gjrf-g28r" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-wfqx-gjrf-g28r: Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-19</span>
-    <span>2 use cases</span>
-    <span>0 techniques</span>
-    <span>1 kill-chain phase detected</span>
-  </div>
-  <p class="summary">Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag</p>
-  
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-103-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-103"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-103-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line "><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Crossplane package installed by mutable tag instead of immutable digest · [LLM] Crossplane ImageConfig signature-verification policy deleted or weakened</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4af92502f5" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
-  <summary>
-    <span class="uc-title">Crossplane package installed by mutable tag instead of immutable digest</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4af92502f5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts Kubernetes API audit logs for pkg.crossplane.io Provider/Configuration/Function installs whose spec.package references a version tag rather than an @sha256 digest. This is the exact precondition GHSA-wfqx-gjrf-g28r requires: when a package is pulled by tag, a malicious/compromised OCI registry can serve a correctly-signed image for cosign verification and then swap in unsigned content for the actual pull.
-
-Rationale: Built directly on the advisory&#x27;s stated exploit precondition #2 (&#x27;Install packages using tag references rather than digests&#x27;). The detection keys on the real Crossplane API (pkg.crossplane.io Provider/Configuration/Function, spec.package) and the digest sentinel &#x27;@sha256:&#x27; that the fix mandates; absence of the digest is exactly what makes an install TOCTOU-exposed. Corroborated against the GHSA, the GitLab advisory mirror, and Crossplane&#x27;s ImageConfig/package docs.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  • https://advisories.gitlab.com/golang/github.com/crossplane/crossplane/v2/GHSA-wfqx-gjrf-g28r/
-  • https://docs.crossplane.io/latest/packages/image-configs/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate GitOps/Argo/Flux pipelines that pin Crossplane packages to a semantic-version tag (e.g. provider-aws:v1.20.0) rather than a digest — common and benign in many shops</li><li>Platform-team installs from the org&#x27;s own trusted internal registry where tag mutability is acceptable</li><li>Dev/sandbox clusters where engineers iterate on packages by floating tag</li><li>Initial cluster bootstrap installing first-party Upbound/Crossplane marketplace packages by tag</li><li>Renovate/Dependabot-style bots bumping a package tag during routine upgrades</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (PackageRef startswith &quot;xpkg.upbound.io/upbound/&quot; or PackageRef startswith &quot;xpkg.crossplane.io/&quot;)   // keep third-party / org-uncontrolled registries (advisory precondition #3), drop trusted first-party marketplace</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the offending Provider/Configuration object and its spec.package. Confirm whether the registry host is one the org controls (advisory precondition #3) and whether an ImageConfig with cosign verification matches that image. A tag-pinned package from a third-party registry under cosign verification is the high-risk case. 2) Contain: re-pin the package to the resolved immutable digest (spec.package: repo@sha256:...) and ensure Crossplane is on a fixed build (v2.3.3 / v2.2.3 or later); for vulnerable builds, prefer digest references org-wide until upgraded. 3) Hunt: inventory all pkg.crossplane.io resources still on tags, review the installed package revisions&#x27; Verified condition for skipped/incomplete status, and check whether the registry served differing digests for verify vs pull around the install time.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| where Verb in (&quot;create&quot;, &quot;update&quot;, &quot;patch&quot;)
-| extend ObjRef = todynamic(ObjectRef)
-| where tostring(ObjRef.apiGroup) == &quot;pkg.crossplane.io&quot;
-| where tostring(ObjRef.resource) in (&quot;providers&quot;, &quot;configurations&quot;, &quot;functions&quot;)
-| extend ReqObj = todynamic(RequestObject)
-| extend PackageRef = tostring(ReqObj.spec.package)
-| where isnotempty(PackageRef) and PackageRef !contains &quot;@sha256:&quot;   // not digest-pinned =&gt; mutable tag =&gt; TOCTOU-exposed
-| extend Actor = tostring(todynamic(User).username)
-| project TimeGenerated, Actor, Verb, Kind = tostring(ObjRef.resource), ObjectName = tostring(ObjRef.name), PackageRef, UserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane Package Installed By Mutable Tag Without Digest Pin
-id: 7a3c1e8b-2f4d-4c9a-b6e1-9d2f5a1c3e47
-description: Detects creation/update of a Crossplane Provider, Configuration or Function whose spec.package uses a mutable tag rather than an immutable @sha256 digest, the precondition for the GHSA-wfqx-gjrf-g28r signature-verification TOCTOU.
-references:
-  - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  - https://docs.crossplane.io/latest/packages/image-configs/
-author: SOC Detection Engineering
-date: 2026/06/21
-tags:
-  - attack.t1195.002
-logsource:
-  product: kubernetes
-  service: audit
-detection:
-  selection:
-    verb:
-      - create
-      - update
-      - patch
-    objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
-    objectRef.resource:
-      - &#x27;providers&#x27;
-      - &#x27;configurations&#x27;
-      - &#x27;functions&#x27;
-  filter_digest:
-    requestObject.spec.package|contains: &#x27;@sha256:&#x27;
-  condition: selection and not filter_digest
-level: low</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:(providers OR configurations OR functions) @verb:(create OR update OR patch) -@requestObject.spec.package:*sha256*</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;pkg.crossplane.io&quot; (objectRef.resource=&quot;providers&quot; OR objectRef.resource=&quot;configurations&quot; OR objectRef.resource=&quot;functions&quot;) (verb=&quot;create&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
-| rename requestObject.spec.package as package_ref, objectRef.name as object_name, objectRef.resource as kind, user.username as username
-| where isnotnull(package_ref) AND NOT match(package_ref, &quot;@sha256:&quot;)
-| stats min(_time) as firstTime, max(_time) as lastTime, values(username) as username, values(sourceIPs{}) as src_ips by package_ref, kind, object_name
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="200c047e5a" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
-  <summary>
-    <span class="uc-title">Crossplane ImageConfig signature-verification policy deleted or weakened</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="200c047e5a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Alerts on delete/update/patch operations against imageconfigs.pkg.crossplane.io in the Kubernetes audit stream. Crossplane enforces cosign signature verification only for images matched by an ImageConfig (spec.verification.cosign); removing or editing that resource silently disables verification, the defense the GHSA-wfqx-gjrf-g28r TOCTOU already partially undermines. Surfaces whether the post-change object still carries a verification block.
-
-Rationale: Grounded in the advisory&#x27;s statement that &#x27;package signature verification [is] configured via the ImageConfig mechanism&#x27; and Crossplane docs confirming the real resource (imageconfigs.pkg.crossplane.io, spec.verification.cosign). Detects the defense-evasion precursor — tearing down or weakening the cosign policy — using only verifiable API/resource names (no skipSignatureVerification field exists in the schema, so that reviewer suggestion was dropped as ungrounded).
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  • https://docs.crossplane.io/latest/packages/image-configs/
-  • https://docs.upbound.io/providers/signature-verification</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Platform engineers legitimately rotating cosign authorities/keys inside an ImageConfig during key rollover</li><li>GitOps reconciliation re-applying an unchanged ImageConfig (server-side apply &#x27;update&#x27; with no real diff)</li><li>Decommissioning an ImageConfig for a registry the org no longer uses</li><li>Migrating verification config between ImageConfig objects (delete old + create new)</li><li>Cert-manager or admission-controller status writes touching the resource</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Verb in (&quot;delete&quot;, &quot;deletecollection&quot;) or VerificationSpecPresent == false   // alert on removal/teardown of verification; suppress edits that retain a verification block</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: diff the ImageConfig before/after the operation — confirm whether spec.verification.cosign authorities were removed, loosened, or the whole object deleted, and identify the actor (human vs service account) and source IP. A delete or removal of the verification block by a non-platform identity is high-confidence malicious. 2) Contain: restore the ImageConfig from source-of-truth/GitOps, and pause new package installs (or require digest pins) until verification is re-established; rotate credentials of the actor if unauthorized. 3) Hunt: list any package revisions installed while the ImageConfig was absent/weakened and check their Verified condition; cross-reference with the mutable-tag install detection to find packages that may have been pulled without enforced verification.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| extend ObjRef = todynamic(ObjectRef)
-| where tostring(ObjRef.apiGroup) == &quot;pkg.crossplane.io&quot;
-| where tostring(ObjRef.resource) == &quot;imageconfigs&quot;
-| where Verb in (&quot;delete&quot;, &quot;deletecollection&quot;, &quot;update&quot;, &quot;patch&quot;)
-| extend ReqObj = todynamic(RequestObject)
-| extend VerificationSpecPresent = isnotempty(tostring(ReqObj.spec.verification))
-| extend Actor = tostring(todynamic(User).username)
-| project TimeGenerated, Actor, Verb, ImageConfigName = tostring(ObjRef.name), UserAgent, VerificationSpecPresent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane ImageConfig Signature Verification Deleted Or Modified
-id: b8f2d6a4-1c3e-4f7b-9a2d-6e4c8b1f0a52
-description: Detects delete or modify operations against Crossplane ImageConfig resources, which configure cosign package signature verification. Removing or weakening an ImageConfig disables verification for matching package images (GHSA-wfqx-gjrf-g28r).
-references:
-  - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  - https://docs.crossplane.io/latest/packages/image-configs/
-author: SOC Detection Engineering
-date: 2026/06/21
-tags:
-  - attack.t1562.001
-logsource:
-  product: kubernetes
-  service: audit
-detection:
-  selection:
-    objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
-    objectRef.resource: &#x27;imageconfigs&#x27;
-    verb:
-      - delete
-      - deletecollection
-      - update
-      - patch
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:imageconfigs @verb:(delete OR deletecollection OR update OR patch)</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;pkg.crossplane.io&quot; objectRef.resource=&quot;imageconfigs&quot; (verb=&quot;delete&quot; OR verb=&quot;deletecollection&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
-| rename objectRef.name as imageconfig_name, user.username as username, verb as action, userAgent as user_agent
-| spath input=_raw path=requestObject.spec.verification output=verification_spec
-| eval verification_present=if(isnull(verification_spec) OR verification_spec=&quot;&quot;, &quot;no&quot;, &quot;yes&quot;)
-| table _time, username, action, imageconfig_name, user_agent, verification_present, sourceIPs{}
-| sort - _time</code></pre></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-105" data-art-slug="2026-06-19-ghsa-critical-ghsa-c8qj-jx8j-fg2w-dotvvm-missing-authorizati"
   data-phases="c2,exploit,install" data-sev="crit"
   data-techs=""
@@ -9032,6 +8812,368 @@ DeviceFileEvents
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_name IN (&quot;yaml_parser.py&quot;,&quot;workflows.py&quot;,&quot;shell_tools.py&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-134" data-art-slug="2026-06-18-ghsa-critical-ghsa-x227-pf99-vffg-praisonai-mcp-sse-transpor"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="endpoint,network,web"
+  data-targets="vcs,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.0 with no authentication and no Origin validation; bundled SecurityConfig is never wired in PraisonAI: MCP SSE transport binds 0.0.0.0 with no authentication and no Origin validation; bundled SecurityConfig is never wired in  T1190 [LLM] Exposed PraisonAI MCP SSE listener accepting non-loopback connections [LLM] Unauthenticated MCP SSE JSON-RPC tool invocation (/sse + /messages/ no Authorization) [LLM] PraisonAI MCP Python server spawning a command shell (unauth tools/call RCE) Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-18-ghsa-critical-ghsa-x227-pf99-vffg-praisonai-mcp-sse-transpor" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-x227-pf99-vffg" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.0 with no authentication and no Origin validation; bundled SecurityConfig is never wired in</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-18</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">PraisonAI: MCP SSE transport binds 0.0.0.0 with no authentication and no Origin validation; bundled SecurityConfig is never wired in</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-134-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-134"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-134-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Exposed PraisonAI MCP SSE listener accepting non-loopback connections</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unauthenticated MCP SSE JSON-RPC tool invocation (/sse + /messages/ no Authorization) · Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] PraisonAI MCP Python server spawning a command shell (unauth tools/call RCE)</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="60bff3535e" data-platforms="def,falcon,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Exposed PraisonAI MCP SSE listener accepting non-loopback connections</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="60bff3535e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a PraisonAI Python/uvicorn MCP server (run_sse / launch_tools_mcp_server) that bound to 0.0.0.0 and is accepting inbound TCP connections from anything other than localhost. Per GHSA-x227-pf99-vffg the SSE transport ships with no auth and no Origin check, so any non-loopback reachability is the exploitable exposure precondition.
+
+Rationale: Anchors on the article&#x27;s exact exposure: a praisonai-tagged Python/uvicorn process (InitiatingProcessCommandLine has &#x27;praisonai&#x27;) accepting inbound connections from a non-loopback peer — exactly the 0.0.0.0 default + no-auth condition GHSA-x227-pf99-vffg flags. Falcon variant can only anchor on python (no parent-cmdline field in FDR) so it is broader.
+
+Cross-checked against:
+  • https://cybersecuritynews.com/praisonai-vulnerability-exploited/
+  • https://www.csoonline.com/article/4171215/praisonai-vulnerability-gets-scanned-within-4-hours-of-disclosure.html
+  • https://www.ibm.com/support/pages/node/7268889
+  • https://attack.mitre.org/techniques/T1190/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Intentional internal deployment where the MCP server is reachable on the LAN for legitimate multi-host agent orchestration</li><li>Container/k8s networking where the peer IP is a sidecar or service-mesh proxy rather than localhost</li><li>Local health-check/monitoring agent probing the port from the host&#x27;s primary NIC IP instead of 127.0.0.1</li><li>Developer testing the SSE endpoint from a second machine on the same subnet</li><li>Reverse proxy on a separate host fronting the MCP server (auth may be enforced at the proxy)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ipv4_is_match(RemoteIP, &quot;10.0.0.0/8&quot;) or ipv4_is_match(RemoteIP, &quot;172.16.0.0/12&quot;) or ipv4_is_match(RemoteIP, &quot;192.168.0.0/16&quot;))  // keep only non-RFC1918 peers if internal LAN reach is sanctioned</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the process is a PraisonAI MCP SSE server and check the bind address and version (praisonaiagents &lt; 1.6.59 is vulnerable); enumerate the RemoteIPs that reached it and whether they are expected operators. 2) Contain: firewall the listening port to localhost / trusted CIDRs, restart the server bound to 127.0.0.1, and upgrade praisonaiagents to &gt;= 1.6.59 (which wires in SecurityConfig). 3) Hunt: pivot on the same host for tools/call traffic (UC2) and for the MCP Python process spawning shells/file writes (UC3) indicating the exposure was already exploited.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-134-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-134-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-134-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-134-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-134-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where InitiatingProcessFileName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;python.exe&quot;,&quot;uvicorn&quot;)
+| where InitiatingProcessCommandLine has &quot;praisonai&quot;
+| where not(ipv4_is_match(RemoteIP, &quot;127.0.0.0/8&quot;)) and RemoteIP != &quot;::1&quot;
+| summarize Connections=count(), RemoteIPs=make_set(RemoteIP,20), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalPort
+| order by Connections desc</code></pre></div>
+    <div class="tab-content" id="art-134-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ASCDeviceEvents
+| where TimeGenerated &gt; ago(7d)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where InitiatingProcessFileName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;)
+| where InitiatingProcessCommandLine has &quot;praisonai&quot;
+| where isnotempty(RemoteIP) and RemoteIP !startswith &quot;127.&quot; and RemoteIP != &quot;::1&quot;
+| summarize Connections=count(), RemoteIPs=make_set(RemoteIP,20), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Connections desc</code></pre></div>
+    <div class="tab-content" id="art-134-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ConnectionDirection=1
+| ContextImageFileName=/(python|python3|uvicorn)/i
+| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, ContextImageFileName, LocalPort, RemoteAddressIP4], function=count())</code></pre></div>
+    <div class="tab-content" id="art-134-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-134-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-134-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-134-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, values(All_Traffic.src) as src, values(All_Traffic.transport) as transport, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.direction=&quot;inbound&quot; AND All_Traffic.process=&quot;*python*&quot; AND NOT All_Traffic.src IN (&quot;127.0.0.1&quot;,&quot;::1&quot;)) by All_Traffic.dest, All_Traffic.dest_port, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | where dest_port!=0</code></pre><pre class="spl-mode-body" id="art-134-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.src) as src, values(All_Traffic.transport) as transport, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.direction=&quot;inbound&quot; AND All_Traffic.process=&quot;*python*&quot; AND NOT All_Traffic.src IN (&quot;127.0.0.1&quot;,&quot;::1&quot;)) by All_Traffic.dest, All_Traffic.dest_port, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | where dest_port!=0</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ecff7fa0a9" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">Unauthenticated MCP SSE JSON-RPC tool invocation (/sse + /messages/ no Authorization)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ecff7fa0a9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the GHSA-x227-pf99-vffg exploitation traffic: an SSE handshake on /sse followed by JSON-RPC POSTs to /messages/?session_id=&lt;sid&gt; carrying no Authorization header. This is the unauthenticated tools/list + tools/call path that yields RCE on PraisonAI servers exposing file/shell/code-exec tools.
+
+Rationale: Uses the exact PoC URIs from the advisory (/sse handshake then /messages/?session_id=) plus the article&#x27;s &#x27;No Authorization header anywhere&#x27; invariant (ImWebSession HttpRequestHeaderAuthorization is empty) — a highly specific, low-FP signature. Defender has no inbound HTTP-URL/header table for a server, so defender_kql is intentionally empty; Datadog/Falcon/CloudWatch omitted as they don&#x27;t ship this reverse-proxy URL+header telemetry.
+
+Cross-checked against:
+  • https://cybersecuritynews.com/praisonai-vulnerability-exploited/
+  • https://www.ibm.com/support/pages/node/7268889
+  • https://www.vulncheck.com/advisories/microsoft-playwright-mcp-server-dns-rebinding-via-missing-origin-header-validation
+  • https://attack.mitre.org/techniques/T1190/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Drive-by Compromise">T1189</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate MCP client (e.g. an internal agent orchestrator) that genuinely doesn&#x27;t send Authorization because the deployment intentionally runs without auth on a trusted segment</li><li>Uptime/synthetic monitoring hitting /sse to verify the endpoint is alive</li><li>Security scanner or internal pentest probing the MCP endpoints</li><li>An MCP client that authenticates via a cookie or query-string token rather than the Authorization header</li><li>Another product unrelated to PraisonAI that happens to expose a /sse path (filter by DstHostname/port)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;10.0.0.5&quot;)  // exclude sanctioned internal MCP orchestrator/monitoring source IPs once identified during tuning</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm DstHostname/port is a PraisonAI MCP server and inspect the request sequence — an initialize -&gt; tools/list -&gt; tools/call progression from an external SrcIpAddr with no auth is a live exploit. 2) Contain: block the source IP at the proxy/WAF, take the MCP server offline or rebind to 127.0.0.1, and upgrade praisonaiagents to &gt;= 1.6.59. 3) Hunt: on the server host look for shell/code-exec children of the MCP Python process (UC3), new files written by it, and outbound C2; review which tools were registered to scope blast radius.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-134-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-134-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-134-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-134-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where (Url has &quot;/messages/&quot; and Url has &quot;session_id=&quot;) or (Url has &quot;/sse&quot;)
+| where isempty(HttpRequestHeaderAuthorization)
+| summarize Requests=count(), Methods=make_set(HttpMethod,5), StatusCodes=make_set(HttpStatusCode,5), Urls=make_set(Url,10), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by SrcIpAddr, DstIpAddr, DstHostname
+| where Requests &gt; 1
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-134-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unauthenticated PraisonAI MCP SSE tool-invocation request
+id: 7c2e9b14-3f6a-4d21-8b0c-2a1e5d9f4c77
+description: HTTP requests to the PraisonAI MCP SSE endpoints (/sse and /messages/?session_id=) with no Authorization header, matching the unauthenticated tools/call path in GHSA-x227-pf99-vffg.
+references:
+  - https://github.com/advisories/GHSA-x227-pf99-vffg
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1190
+  - attack.t1189
+logsource:
+  category: webserver
+detection:
+  selection_uri:
+    c-uri|contains:
+      - &#x27;/messages/?session_id=&#x27;
+      - &#x27;/sse&#x27;
+  filter_auth:
+    cs-method: &#x27;POST&#x27;
+  condition: selection_uri
+level: high</code></pre></div>
+    <div class="tab-content" id="art-134-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-134-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-134-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-134-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, values(Web.http_method) as http_method, values(Web.status) as status, values(Web.http_user_agent) as user_agent, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/messages/*session_id=*&quot; OR Web.url=&quot;*/sse*&quot;) by Web.src, Web.dest, Web.dest_port, Web.url | `drop_dm_object_name(Web)`</code></pre><pre class="spl-mode-body" id="art-134-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Web.http_method) as http_method, values(Web.status) as status, values(Web.http_user_agent) as user_agent, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/messages/*session_id=*&quot; OR Web.url=&quot;*/sse*&quot;) by Web.src, Web.dest, Web.dest_port, Web.url | `drop_dm_object_name(Web)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7b4d2bfef6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">PraisonAI MCP Python server spawning a command shell (unauth tools/call RCE)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="7b4d2bfef6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the RCE realization of GHSA-x227-pf99-vffg: a PraisonAI Python/uvicorn MCP process (parent command line contains &#x27;praisonai&#x27;) spawning an OS shell (sh/bash/cmd/powershell). With file/shell/code-exec tools registered, an unauthenticated tools/call executes commands as a child of the agent process.
+
+Rationale: Anchors on the article&#x27;s RCE statement (&#x27;with file/shell/code-exec tools this is RCE&#x27;) by tying a praisonai-tagged Python/uvicorn parent (InitiatingProcessCommandLine/ParentProcessCommandLine has &#x27;praisonai&#x27;) to a shell child. Falcon FDR lacks a parent-cmdline field so its variant is python-&gt;shell only (broader); Datadog windows.sysmon covers Windows only, so Linux agent hosts need the Defender/ImProcessCreate variants.
+
+Cross-checked against:
+  • https://cybersecuritynews.com/praisonai-vulnerability-exploited/
+  • https://www.ibm.com/support/pages/node/7268889
+  • https://attack.mitre.org/techniques/T1059/004/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>PraisonAI agents that legitimately use a code-interpreter or shell tool as part of their designed workflow</li><li>A python agent launching git/build subcommands via a shell wrapper during normal operation</li><li>Data-science notebooks or scripts under a path containing &#x27;praisonai&#x27; invoking shell utilities</li><li>Operator running maintenance commands from the same venv whose argv contains &#x27;praisonai&#x27;</li><li>CI jobs executing the praisonai CLI that shell out to test harnesses</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine has_any (&quot;whoami&quot;,&quot;/bin/sh -c&quot;,&quot;-c &quot;,&quot;curl &quot;,&quot;wget &quot;,&quot;bash -i&quot;,&quot;nc &quot;,&quot;/dev/tcp/&quot;,&quot;powershell -e&quot;,&quot;Invoke-WebRequest&quot;)  // focus on shell children carrying recon/download/reverse-shell intent</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine — recon (whoami/id/curl), download, or reverse-shell strings against a server-side agent that should not be running interactive shells is a strong true positive; correlate timing with UC2 tools/call traffic. 2) Contain: isolate the host, kill the MCP server process tree, rotate any credentials/tokens accessible to the agent&#x27;s service account, and rebind/upgrade praisonaiagents to &gt;= 1.6.59. 3) Hunt: enumerate files written and network connections by the python parent, check for persistence (cron/systemd/Run keys) and lateral movement from the host, and review all registered MCP tools to bound capability abuse.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-134-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-134-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-134-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-134-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-134-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-134-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-134-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;python.exe&quot;,&quot;uvicorn&quot;)
+| where InitiatingProcessCommandLine has &quot;praisonai&quot;
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-134-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;)
+| where ParentProcessCommandLine has &quot;praisonai&quot;
+| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-134-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: PraisonAI MCP Python process spawning OS shell
+id: 1d8f4a62-9c03-47e5-b1aa-6f2c0e7b3a18
+description: A Python/uvicorn process whose command line references praisonai spawns a command shell, indicating unauthenticated MCP tools/call code execution per GHSA-x227-pf99-vffg.
+references:
+  - https://github.com/advisories/GHSA-x227-pf99-vffg
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1190
+  - attack.t1059.004
+  - attack.t1059.001
+logsource:
+  category: process_creation
+detection:
+  selection:
+    ParentImage|endswith:
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;\python.exe&#x27;
+      - &#x27;/uvicorn&#x27;
+      - &#x27;\uvicorn.exe&#x27;
+    ParentCommandLine|contains: &#x27;praisonai&#x27;
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-134-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\python.exe OR *\Python.exe OR *\pythonw.exe OR *\uvicorn.exe) @ParentCommandLine:(*praisonai* OR *PraisonAI*) @Image:(*\cmd.exe OR *\CMD.EXE OR *\powershell.exe OR *\PowerShell.exe OR *\pwsh.exe OR *\sh.exe OR *\bash.exe)</code></pre></div>
+    <div class="tab-content" id="art-134-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(python|python3|uvicorn)/i
+| ImageFileName=/(\/(sh|bash|dash|zsh)$)|(\\(cmd|powershell|pwsh)\.exe$)/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-134-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-134-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-134-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-134-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, values(Processes.process) as process, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;python.exe&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;uvicorn&quot;) AND Processes.parent_process=&quot;*praisonai*&quot; AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)) by Processes.dest, Processes.user, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-134-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Processes.process) as process, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;python.exe&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;uvicorn&quot;) AND Processes.parent_process=&quot;*praisonai*&quot; AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)) by Processes.dest, Processes.user, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6b6787c661" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6b6787c661" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-134-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-134-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-134-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-134-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;mcp_security.py&quot;, &quot;mcp_websocket.py&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;mcp_security.py&quot;, &quot;mcp_websocket.py&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-134-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;mcp_security.py&quot;, &quot;mcp_websocket.py&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;mcp_security.py&quot;, &quot;mcp_websocket.py&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-134-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-134-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-134-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-134-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0. ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;mcp_security.py&quot;,&quot;mcp_websocket.py&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;mcp_security.py&quot;,&quot;mcp_websocket.py&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-134-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0. ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;mcp_security.py&quot;,&quot;mcp_websocket.py&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;mcp_security.py&quot;,&quot;mcp_websocket.py&quot;))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`

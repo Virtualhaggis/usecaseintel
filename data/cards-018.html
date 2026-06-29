@@ -1,561 +1,3 @@
-<article class="card" id="art-573" data-art-slug="2026-02-15-2024-in-review-the-evolution-of-ci-cd-security-what-s-next"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190,T1195.002"
-  data-sources="StepSecurity"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network"
-  data-targets="linux,windows"
-  data-uc-count="6" data-llm-uc-count="3"
-  data-search="2024 in Review: The Evolution of CI/CD Security &amp; What&#x27;s Next Discover the key developments in CI/CD security in 2024, including major incidents, real-world case studies, and emerging trends for 2025. Learn how StepSecurity is driving innovation to secure CI/CD pipelines with proactive solutions. CVE-2024-3094 T1190 T1195.002 [LLM] XZ Utils (CVE-2024-3094) build-time backdoor extraction from disguised test corpus [LLM] Ultralytics PyPI supply-chain XMRig coinminer execution from /tmp/ultralytics_runner [LLM] Ultralytics coinminer C2 — Stratum to connect.consrensys.com:8080 mining pool Asset exposure — vulnerability matches article CVE(s) Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-02-15-2024-in-review-the-evolution-of-ci-cd-security-what-s-next" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.stepsecurity.io/blog/2024-in-review-the-evolution-of-ci-cd-security-whats-next" target="_blank" rel="noopener">2024 in Review: The Evolution of CI/CD Security &amp; What&#x27;s Next</a></h2>
-  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
-  <div class="pubmeta">
-    <span>2026-02-15</span>
-    <span>6 use cases</span>
-    <span>2 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Discover the key developments in CI/CD security in 2024, including major incidents, real-world case studies, and emerging trends for 2025. Learn how StepSecurity is driving innovation to secure CI/CD pipelines with proactive solutions.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2024-3094</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">319feb5a9cddd819…</span> <span class="ind ">605861f833fc181c…</span> <span class="ind ">8fa641c454c3e0f7…</span> <span class="ind ">b418bfd34aa246b2…</span> <span class="ind ">cbeef92e67bf41ca…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-573-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-573"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-573-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] XZ Utils (CVE-2024-3094) build-time backdoor extraction from disguised test corpus · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Ultralytics coinminer C2 — Stratum to connect.consrensys.com:8080 mining pool</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Ultralytics PyPI supply-chain XMRig coinminer execution from /tmp/ultralytics_runner</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4ec4f78620" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">XZ Utils (CVE-2024-3094) build-time backdoor extraction from disguised test corpus</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4ec4f78620" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the liblzma malicious build stage where build-to-host.m4 greps the xz test corpus for the &#x27;####&lt;5-alnum&gt;####&#x27; payload marker and de-obfuscates the embedded backdoor object from bad-3-corrupt_lzma2.xz / good-large_compressed.lzma via tr. Article-specific to the CI/CD build-time injection StepSecurity observed with Harden-Runner.
-
-Rationale: Uses the article&#x27;s CVE-2024-3094 description (&#x27;build process extracts a disguised test file ... to modify liblzma&#x27;) anchored on the corroborated build-to-host.m4 marker-grep &#x27;[[:alnum:]]{5}&#x27; and the test-corpus filenames bad-3-corrupt_lzma2.xz / good-large_compressed.lzma that hid the payload. Cross-checked against Datadog Security Labs and Akamai XZ write-ups.
-
-Cross-checked against:
-  • https://securitylabs.datadoghq.com/articles/xz-backdoor-cve-2024-3094/
-  • https://www.akamai.com/blog/security-research/critical-linux-backdoor-xz-utils-discovered-what-to-know
-  • https://www.crowdstrike.com/en-us/blog/cve-2024-3094-xz-upstream-supply-chain-attack/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Deobfuscate/Decode Files or Information">T1140</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate xz-utils test suite execution that reads bad-3-corrupt_lzma2.xz / good-large_compressed.lzma as normal test corpus</li><li>Malware-analysis sandboxes or honeypots deliberately building xz 5.6.0/5.6.1</li><li>Security researchers reproducing the CVE-2024-3094 PoC in a lab</li><li>Internal package-mirroring/rebuild pipelines compiling pinned xz versions for forensic comparison</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine contains &quot;[[:alnum:]]{5}&quot; or ProcessCommandLine contains &quot;build-to-host.m4&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree on the host — confirm the parent is a configure/make/autoconf build chain and that the same session greps the test corpus AND pipes through tr (deobfuscation), not just a benign test read. Capture the installed xz/liblzma version. 2) Contain: isolate the build runner/host, freeze the produced artifacts, and quarantine any liblzma.so.5.6.0/5.6.1 it emitted; revoke build credentials and SSH keys reachable from that host (backdoor enables sshd RCE). 3) Hunt: search the org for liblzma 5.6.0/5.6.1 deployment, anomalous sshd child processes, and any downstream package built on the affected runner.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-573-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-573-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-573-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-573-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-573-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-573-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-573-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where ProcessCommandLine contains &quot;build-to-host.m4&quot;
-    or ProcessCommandLine contains &quot;bad-3-corrupt_lzma2.xz&quot;
-    or ProcessCommandLine contains &quot;good-large_compressed.lzma&quot;
-    or ProcessCommandLine contains &quot;[[:alnum:]]{5}&quot;
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-573-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessCommandLine contains &quot;build-to-host.m4&quot;
-    or ActingProcessCommandLine contains &quot;bad-3-corrupt_lzma2.xz&quot;
-    or ActingProcessCommandLine contains &quot;good-large_compressed.lzma&quot;
-    or ActingProcessCommandLine contains &quot;[[:alnum:]]{5}&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-573-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: XZ Utils Backdoor Build-Time Payload Extraction (CVE-2024-3094)
-id: 6f3b2c1a-9d4e-4a7b-8c12-2e5f7a9b1c34
-status: experimental
-description: Detects the liblzma build-time deobfuscation stage that extracts the backdoor from the xz test corpus via build-to-host.m4 / tr.
-references:
-  - https://securitylabs.datadoghq.com/articles/xz-backdoor-cve-2024-3094/
-  - https://www.akamai.com/blog/security-research/critical-linux-backdoor-xz-utils-discovered-what-to-know
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1195.002
-  - attack.t1140
-  - attack.t1027
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    CommandLine|contains:
-      - &#x27;build-to-host.m4&#x27;
-      - &#x27;bad-3-corrupt_lzma2.xz&#x27;
-      - &#x27;good-large_compressed.lzma&#x27;
-      - &#x27;[[:alnum:]]{5}&#x27;
-  condition: selection
-falsepositives:
-  - Legitimate xz test-suite runs referencing the same corpus file names
-  - Security researchers reproducing the CVE-2024-3094 proof of concept
-level: high</code></pre></div>
-    <div class="tab-content" id="art-573-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:*build-to-host.m4* OR @process.command_line:*bad-3-corrupt_lzma2.xz* OR @process.command_line:*good-large_compressed.lzma*)</code></pre></div>
-    <div class="tab-content" id="art-573-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/(build-to-host\.m4|bad-3-corrupt_lzma2\.xz|good-large_compressed\.lzma)/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-573-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-573-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-573-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-573-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*build-to-host.m4*&quot; OR Processes.process=&quot;*bad-3-corrupt_lzma2.xz*&quot; OR Processes.process=&quot;*good-large_compressed.lzma*&quot; OR Processes.process=&quot;*[[:alnum:]]{5}*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-573-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*build-to-host.m4*&quot; OR Processes.process=&quot;*bad-3-corrupt_lzma2.xz*&quot; OR Processes.process=&quot;*good-large_compressed.lzma*&quot; OR Processes.process=&quot;*[[:alnum:]]{5}*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="bb18ed020f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Ultralytics PyPI supply-chain XMRig coinminer execution from /tmp/ultralytics_runner</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="bb18ed020f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts execution of the XMRig coinminer dropped by the compromised ultralytics 8.3.41/8.3.42/8.3.45/8.3.46 PyPI packages at /tmp/ultralytics_runner, typically spawned by a python/pip process after pip install. Article-specific to the Ultralytics CI/CD cryptominer injection.
-
-Rationale: Anchored on the corroborated, attacker-specific drop path /tmp/ultralytics_runner (the XMRig binary the compromised package installs and launches) confirmed by ReversingLabs and Wiz; the article names the cryptominer injection but not the path, so external sources supplied the high-fidelity pivot.
-
-Cross-checked against:
-  • https://www.reversinglabs.com/blog/compromised-ultralytics-pypi-package-delivers-crypto-coinminer
-  • https://www.wiz.io/blog/ultralytics-ai-library-hacked-via-github-for-cryptomining
-  • https://hiddenlayer.com/innovation-hub/ultralytics-python-package-compromise-deploys-cryptominer/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Resource Hijacking">T1496</span> <span class="ind tech" title="Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer with a legitimately-named local tool also writing to /tmp/ultralytics_runner (extremely unlikely)</li><li>Forensic/IR responders replaying the sample in a sandbox</li><li>Threat-intel detonation environments executing the malicious package on purpose</li><li>EDR/AV test harnesses validating coinminer signatures</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the parent chain — python3/pip/uv installing ultralytics, then /tmp/ultralytics_runner launching. Capture the installed ultralytics version (8.3.41/8.3.42/8.3.45/8.3.46 are malicious) and the binary hash. 2) Contain: kill the runner process, isolate the host/CI runner, and remove the malicious ultralytics version; rotate any secrets/tokens exposed to that build environment (GitHub Actions cache and PyPI tokens were abused in this campaign). 3) Hunt: pivot to outbound connections to the mining pool (see companion C2 UC), check other hosts that pip-installed ultralytics in the exposure window, and audit PyPI install logs across the fleet.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-573-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-573-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-573-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-573-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-573-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-573-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-573-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FolderPath =~ &quot;/tmp/ultralytics_runner&quot;
-    or ProcessCommandLine contains &quot;/tmp/ultralytics_runner&quot;
-| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-573-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessName contains &quot;/tmp/ultralytics_runner&quot;
-    or ActingProcessCommandLine contains &quot;/tmp/ultralytics_runner&quot;
-    or TargetProcessName contains &quot;/tmp/ultralytics_runner&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-573-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Ultralytics Supply-Chain XMRig Coinminer Execution (/tmp/ultralytics_runner)
-id: c81d4e2f-7a36-4b59-9f0c-3a1b6d8e2f47
-status: experimental
-description: Detects execution of the XMRig miner dropped by the compromised ultralytics PyPI package at /tmp/ultralytics_runner.
-references:
-  - https://www.reversinglabs.com/blog/compromised-ultralytics-pypi-package-delivers-crypto-coinminer
-  - https://www.wiz.io/blog/ultralytics-ai-library-hacked-via-github-for-cryptomining
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1496
-  - attack.t1195.001
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    Image|contains: &#x27;/tmp/ultralytics_runner&#x27;
-  selection_cmd:
-    CommandLine|contains: &#x27;/tmp/ultralytics_runner&#x27;
-  condition: selection or selection_cmd
-falsepositives:
-  - Unlikely; the /tmp/ultralytics_runner path is attacker-specific
-level: high</code></pre></div>
-    <div class="tab-content" id="art-573-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.executable.path:/tmp/ultralytics_runner OR @process.command_line:*/tmp/ultralytics_runner*)</code></pre></div>
-    <div class="tab-content" id="art-573-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/\/tmp\/ultralytics_runner/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-573-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-573-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-573-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-573-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path=&quot;/tmp/ultralytics_runner&quot; OR Processes.process=&quot;*/tmp/ultralytics_runner*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-573-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path=&quot;/tmp/ultralytics_runner&quot; OR Processes.process=&quot;*/tmp/ultralytics_runner*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d13a1f6e13" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Ultralytics coinminer C2 — Stratum to connect.consrensys.com:8080 mining pool</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d13a1f6e13" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts DNS resolution and outbound connections to the Monero mining pool connect.consrensys.com:8080 that the Ultralytics-dropped XMRig miner beacons to. Article-specific C2/impact pivot for the cryptominer campaign.
-
-Rationale: Anchored on the corroborated mining-pool endpoint connect.consrensys[.]com:8080 (Stratum) the Ultralytics XMRig miner beacons to, confirmed across ReversingLabs/Wiz reporting; the domain is attacker-controlled and not seen in benign traffic, making DNS resolution a high-fidelity signal. Datadog left empty: no clean Linux DNS source in this tenant&#x27;s schema.
-
-Cross-checked against:
-  • https://www.reversinglabs.com/blog/compromised-ultralytics-pypi-package-delivers-crypto-coinminer
-  • https://www.wiz.io/blog/ultralytics-ai-library-hacked-via-github-for-cryptomining
-  • https://www.bleepingcomputer.com/news/security/ultralytics-ai-model-hijacked-to-infect-thousands-with-cryptominer/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Resource Hijacking">T1496</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security tool or sandbox proactively resolving the IOC domain for threat-intel enrichment</li><li>DNS sinkhole infrastructure logging the lookup after redirecting it</li><li>Passive-DNS / scanning vendors on the network resolving the indicator</li><li>Analyst manually nslookup-ing the domain during triage</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath has &quot;/tmp/ultralytics_runner&quot; or InitiatingProcessFileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;ultralytics_runner&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the resolving/connecting host and the initiating process — confirm it is /tmp/ultralytics_runner or a python child (links this to the package compromise) and check RemotePort 8080. 2) Contain: block connect.consrensys.com and its resolved IPs at egress/DNS, isolate the host, and terminate the miner; rotate credentials reachable from the build environment. 3) Hunt: sweep the fleet for any other host resolving *.consrensys.com or holding sustained Stratum-style egress, and correlate with hosts that installed the malicious ultralytics versions.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-573-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-573-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-573-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-573-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-573-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-573-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl =~ &quot;connect.consrensys.com&quot; or RemoteUrl endswith &quot;.consrensys.com&quot;
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-573-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
-| where TimeGenerated &gt; ago(30d)
-| where DnsQuery has &quot;consrensys.com&quot;
-| project TimeGenerated, SrcIpAddr, SrcHostname, DnsQuery, DnsResponseName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-573-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Ultralytics XMRig Mining-Pool C2 (connect.consrensys.com)
-id: 4d2a9b6e-1c87-4f53-a0d9-7e6b3c4a8f12
-status: experimental
-description: Detects DNS lookups to the mining pool the Ultralytics-dropped XMRig miner connects to.
-references:
-  - https://www.reversinglabs.com/blog/compromised-ultralytics-pypi-package-delivers-crypto-coinminer
-  - https://www.wiz.io/blog/ultralytics-ai-library-hacked-via-github-for-cryptomining
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1496
-  - attack.t1071.001
-logsource:
-  category: dns
-detection:
-  selection:
-    query|contains: &#x27;consrensys.com&#x27;
-  condition: selection
-falsepositives:
-  - DNS sinkhole/threat-intel scanners resolving the IOC for enrichment
-level: high</code></pre></div>
-    <div class="tab-content" id="art-573-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| DomainName=/consrensys\.com$/i
-| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-573-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-573-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-573-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-573-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=&quot;connect.consrensys.com&quot; OR DNS.query=&quot;*.consrensys.com&quot;) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-573-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=&quot;connect.consrensys.com&quot; OR DNS.query=&quot;*.consrensys.com&quot;) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-573-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-573-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-573-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-573-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2024-3094&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-573-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2024-3094&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-573-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-573-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-573-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-573-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2024-3094&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-573-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2024-3094&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-573-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-573-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-573-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-573-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-573-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-573-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-573-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-573-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-573-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-573-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-573-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-573-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-573-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-573-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-573-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-573-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-573-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;) or SHA1 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;) or MD5 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;) or SHA1 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;) or MD5 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-573-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-573-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-573-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-573-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-573-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-573-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-573-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-577" data-art-slug="2026-02-13-operation-macromaze-new-apt28-campaign-using-basic-tooling-a"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1027,T1053.005,T1190,T1566"
@@ -9549,6 +8991,243 @@ level: medium
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-612-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-614" data-art-slug="2026-02-03-the-prescriptive-path-to-operationalizing-ai-security"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
+  data-techs="T1190,T1195.002"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint,network"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="The Prescriptive Path to Operationalizing AI Security Learn how to move from vision to practice with the Prescriptive Path, a framework for operationalizing AI security at scale. By replacing fragmented tools with a unified platform, you can build trust and secure AI-native applications at machine speed.  T1190 T1195.002 Beaconing — periodic outbound to small set of destinations Trusted vendor binary / installer launching unusual children">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2026-02-03-the-prescriptive-path-to-operationalizing-ai-security" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/prescriptive-path/" target="_blank" rel="noopener">The Prescriptive Path to Operationalizing AI Security</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2026-02-03</span>
+    <span>2 use cases</span>
+    <span>2 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Learn how to move from vision to practice with the Prescriptive Path, a framework for operationalizing AI security at scale. By replacing fragmented tools with a unified platform, you can build trust and secure AI-native applications at machine speed.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-614-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-614"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-614-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="0bf69215de" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">C2 channel detection via inter-beacon-time stddev / fan-out to single dest.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-614-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-614-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-614-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-614-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(1d)
+| where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff(&#x27;second&#x27;, Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
+| order by conn_count desc</code></pre></div>
+    <div class="tab-content" id="art-614-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(2h)
+| where DvcAction != &quot;Block&quot;
+| where ipv4_is_private(DstIpAddr) == false
+| summarize ConnCount = count(),
+            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
+            by DvcHostname, DstIpAddr, DstPortNumber
+| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
+| order by ConnCount desc
+</code></pre></div>
+    <div class="tab-content" id="art-614-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-614-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-614-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-614-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
+| sort - count</code></pre><pre class="spl-mode-body" id="art-614-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-614-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-614-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-614-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-614-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-614-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-614-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-614-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-614-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-614-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-614-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-614-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-614-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)

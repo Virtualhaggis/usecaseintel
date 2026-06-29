@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,13 +10,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-29
 - [236 000 dcloud uni app sites used in crypto scams phishing a](./2026-06-29/236-000-dcloud-uni-app-sites-used-in-crypto-scams-phishing-a.md)
+- [critical simplehelp flaw exploited to deploy new stealer mal](./2026-06-29/critical-simplehelp-flaw-exploited-to-deploy-new-stealer-mal.md)
 - [gamaredon expands ukraine attacks with new malware and cloud](./2026-06-29/gamaredon-expands-ukraine-attacks-with-new-malware-and-cloud.md)
+- [hackers now exploit critical oracle e business flaw in attac](./2026-06-29/hackers-now-exploit-critical-oracle-e-business-flaw-in-attac.md)
 - [hijacked npm and go packages use vs code tasks to deploy pyt](./2026-06-29/hijacked-npm-and-go-packages-use-vs-code-tasks-to-deploy-pyt.md)
 - [microsoft removes 119 edge extensions that hid malware in im](./2026-06-29/microsoft-removes-119-edge-extensions-that-hid-malware-in-im.md)
 - [public poc released for critical libssh2 cve 2026 55200 clie](./2026-06-29/public-poc-released-for-critical-libssh2-cve-2026-55200-clie.md)
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
 - [the gentlemen are knocking ustom backdoors and evolving tact](./2026-06-29/the-gentlemen-are-knocking-ustom-backdoors-and-evolving-tact.md)
-- [why post quantum cryptography starts with credentials](./2026-06-29/why-post-quantum-cryptography-starts-with-credentials.md)
+- [u s offers 10 million for hackers targeting whatsapp signal ](./2026-06-29/u-s-offers-10-million-for-hackers-targeting-whatsapp-signal-.md)
 
 ## 2026-06-27
 - [ukraine says russian intelligence used fake support texts to](./2026-06-27/ukraine-says-russian-intelligence-used-fake-support-texts-to.md)
@@ -52,12 +54,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [microsoft a leader in the forrester wave for endpoint manage](./2026-06-25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-manage.md)
 - [new gaslight macos malware uses prompt injection to disrupt ](./2026-06-25/new-gaslight-macos-malware-uses-prompt-injection-to-disrupt-.md)
-- [new macos malware embeds fake errors to confuse ai analysis ](./2026-06-25/new-macos-malware-embeds-fake-errors-to-confuse-ai-analysis-.md)
 - [new mistic backdoor linked to kongtuke in clickfix and model](./2026-06-25/new-mistic-backdoor-linked-to-kongtuke-in-clickfix-and-model.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
-- [order tracking app shop abused to push callback phishing att](./2026-06-25/order-tracking-app-shop-abused-to-push-callback-phishing-att.md)
 - [photo zip campaign targeting hospitality industry delivers n](./2026-06-25/photo-zip-campaign-targeting-hospitality-industry-delivers-n.md)
-- [pirlotv sports piracy network disrupted as 44 domains seized](./2026-06-25/pirlotv-sports-piracy-network-disrupted-as-44-domains-seized.md)
 - [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
 
 ## 2026-06-24

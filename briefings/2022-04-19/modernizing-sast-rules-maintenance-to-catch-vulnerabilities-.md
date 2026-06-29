@@ -20,12 +20,26 @@ In this post, we’ll …
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Prototype pollution attempt via __proto__ in URL query string (CVE-2021-23682, litespeed.js/appwrite)
+
+`UC_2157_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_query="*__proto__*" OR Web.uri_query="*constructor[prototype]*" OR Web.uri_query="*constructor%5Bprototype%5D*" OR Web.url="*__proto__[*" OR Web.url="*__proto__%5B*") by Web.src, Web.dest, Web.site, Web.http_user_agent, Web.uri_path, Web.uri_query, Web.status, Web.http_method
+| `drop_dm_object_name(Web)`
+| eval is_signup=if(like(uri_path,"%/auth/signup%"),1,0)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
 
 ### Article-specific behavioural hunt — Modernizing SAST rules maintenance to catch vulnerabilities faster
 
@@ -86,4 +100,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

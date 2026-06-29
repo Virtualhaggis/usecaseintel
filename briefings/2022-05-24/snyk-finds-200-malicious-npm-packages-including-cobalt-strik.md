@@ -24,12 +24,62 @@ In this post, instead of explaining what …
 - **T1071** — Application Layer Protocol
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1041** — Exfiltration Over C2 Channel
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### npm install-time script executing 'node .' postinstall payload
+
+`UC_2083_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="node.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_id | `drop_dm_object_name(Processes)` | regex process="(?i)\bnode(\.exe)?\b\S*\s+\.(\s|$)" | search (parent_process_name IN ("node.exe","npm.cmd","npm.exe","cmd.exe","powershell.exe","yarn.cmd","pnpm.cmd") OR parent_process="*install*") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "node.exe"
+| where ProcessCommandLine matches regex @"(?i)\bnode(\.exe)?\b\S*\s+\.(\s|$)"
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd","npm.exe","cmd.exe","powershell.exe","yarn.cmd","pnpm.cmd")
+   or InitiatingProcessCommandLine has_any ("npm install","npm i ","yarn","pnpm install","node-gyp","preinstall","postinstall")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### npm dropper exfiltration to pkgio.com telemetry server
+
+`UC_2083_5` · phase: **exfil** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*pkgio.com" OR DNS.query="pkgio.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let dns = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | where RemoteUrl has "pkgio.com" or AdditionalFields has "pkgio.com"
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, Indicator="DNS";
+let net = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has "pkgio.com"
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, Indicator="Network";
+union dns, net
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -149,4 +199,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
