@@ -8,6 +8,9 @@ _2254 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-29
+- [hijacked npm and go packages use vs code tasks to deploy pyt](./2026-06-29/hijacked-npm-and-go-packages-use-vs-code-tasks-to-deploy-pyt.md)
+
 ## 2026-06-27
 - [ukraine says russian intelligence used fake support texts to](./2026-06-27/ukraine-says-russian-intelligence-used-fake-support-texts-to.md)
 
@@ -90,7 +93,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-19
 - [autojack attack lets one web page hijack ai agent for host c](./2026-06-19/autojack-attack-lets-one-web-page-hijack-ai-agent-for-host-c.md)
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
-- [cisa warns fortinet customers as fortibleed hits 86 644 fort](./2026-06-19/cisa-warns-fortinet-customers-as-fortibleed-hits-86-644-fort.md)
 - [ghsa critical cve 2026 48814 network ai cve 2026 46701 fix i](./2026-06-19/ghsa-critical-cve-2026-48814-network-ai-cve-2026-46701-fix-i.md)
 - [ghsa critical cve 2026 54051 network ai improper neutralizat](./2026-06-19/ghsa-critical-cve-2026-54051-network-ai-improper-neutralizat.md)
 - [ghsa critical cve 2026 55255 langflow idor vulnerability in ](./2026-06-19/ghsa-critical-cve-2026-55255-langflow-idor-vulnerability-in-.md)

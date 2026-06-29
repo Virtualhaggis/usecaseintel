@@ -1,41 +1,35 @@
-# [CRIT] FortiBleed Targeted FortiGate Firewalls in 110 Million-Credential Harvesting Operation
+# [CRIT] Hijacked npm and Go Packages Use VS Code Tasks to Deploy Python Infostealer
 
 **Source:** The Hacker News
-**Published:** 2026-06-23
-**Article:** https://thehackernews.com/2026/06/fortibleed-targeted-fortigate-firewalls.html
+**Published:** 2026-06-29
+**Article:** https://thehackernews.com/2026/06/hijacked-npm-and-go-packages-use-vs.html
 
 ## Threat Profile
 
-FortiBleed Targeted FortiGate Firewalls in 110 Million-Credential Harvesting Operation 
- Ravie Lakshmanan  Jun 23, 2026 Initial Access Broker / Firewall Security 
-A Russian-speaking initial access broker (IAB) driven by financial gain is assessed to be behind a large-scale credential-harvesting operation known as FortiBleed that has targeted over 430,000 FortiGate firewalls globally.
-The campaign , active since February 2026, involves collecting credential lists, searching for exposed services…
+Hijacked npm and Go Packages Use VS Code Tasks to Deploy Python Infostealer 
+ Ravie Lakshmanan  Jun 29, 2026 Supply Chain Attack / Cryptocurrency 
+Cybersecurity researchers have uncovered two hijacked npm packages and a cluster of Go packages that are designed to deploy a Python-based information stealer on compromised Windows, Linux, and macOS hosts.
+"This attack avoids the most common npm execution paths through lifecycle scripts, perhaps in an attempt to remain 'compatible' with npm v12's s…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-24858`
-- **CVE:** `CVE-2025-59718`
-- **CVE:** `CVE-2025-59719`
-- **SHA256:** `2758f4d71a2a2dfdefab81737c2d776b2a3dafe5844fdd2157e089a28447ca98`
+- **CVE:** `CVE-2026-20245`
 
 ## MITRE ATT&CK Techniques
 
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
+- **T1528** — Steal Application Access Token
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1027** — Obfuscated Files or Information
-- **T1040** — Network Sniffing
-- **T1059.008** — Command and Scripting Interpreter: Network Device CLI
-- **T1110.004** — Brute Force: Credential Stuffing
-- **T1133** — External Remote Services
-- **T1078** — Valid Accounts
+- **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -43,64 +37,39 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FortigateSniffer credential capture via native 'diagnose sniffer packet' on FortiGate
+### Beaconing — periodic outbound to small set of destinations
 
-`UC_66_7` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-(sourcetype=fgt_log OR sourcetype=fortigate_event OR sourcetype="fortinet:fortigate") "diagnose sniffer packet" | stats count min(_time) as firstTime max(_time) as lastTime values(msg) as command_text by host src_ip user | convert ctime(firstTime) ctime(lastTime) | sort - count
-```
-
-### FortiGate admin/SSL-VPN credential stuffing burst followed by successful login
-
-`UC_66_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Authentication where Authentication.vendor_product="Fortinet FortiGate" by Authentication.src, Authentication.action, _time span=1h
-| `drop_dm_object_name(Authentication)`
-| stats sum(eval(if(action="failure",count,0))) as failures, sum(eval(if(action="success",count,0))) as successes, min(_time) as firstTime, max(_time) as lastTime by src
-| where failures>=30 AND successes>=1
-| convert ctime(firstTime) ctime(lastTime)
-| sort - failures
-```
-
-### Single FortiGate VPN/admin account authenticating from anomalously many source IPs
-
-`UC_66_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true dc(Authentication.src) as distinct_src, count from datamodel=Authentication where Authentication.vendor_product="Fortinet FortiGate" Authentication.action=success by Authentication.user
-| `drop_dm_object_name(Authentication)`
-| where distinct_src>=20
-| sort - distinct_src
-```
-
-### Mass validation/replay of harvested credentials against Active Directory (NTLM/Kerberos fan-out)
-
-`UC_66_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true dc(Authentication.user) as distinct_users, count from datamodel=Authentication where Authentication.action=failure (Authentication.signature_id=4625 OR Authentication.app=NTLM OR Authentication.app=Kerberos) by Authentication.src, _time span=1h
-| `drop_dm_object_name(Authentication)`
-| where distinct_users>=50
-| sort - distinct_users
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let lookback = 1d;
-let accountFanout = 50;   // one source validating 50+ distinct harvested accounts/hr = credential-validation spray (FortiBleed: 924k NTLM / 130k Kerberos creds replayed)
-IdentityLogonEvents
-| where Timestamp > ago(lookback)
-| where Protocol in ("Ntlm","Kerberos")
-| where isnotempty(IPAddress)
-| summarize DistinctAccounts = dcount(AccountUpn), Failures = countif(ActionType == "LogonFailed"), Successes = countif(ActionType == "LogonSuccess"), SampleAccounts = make_set(AccountName, 20) by IPAddress, bin(Timestamp, 1h)
-| where DistinctAccounts >= accountFanout
-| order by DistinctAccounts desc
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -132,29 +101,31 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### Remote service execution — PsExec / SMB lateral movement
+### OAuth consent / suspicious app grant
 
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success"
+      AND Authentication.signature IN (
+        "Consent to application",
+        "Add app role assignment grant to user",
+        "Add OAuth2PermissionGrant",
+        "Add delegated permission grant")
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+CloudAppEvents
 | where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
+| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -297,17 +268,38 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
+### Trusted vendor binary / installer launching unusual children
+
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-24858`, `CVE-2025-59718`, `CVE-2025-59719`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `2758f4d71a2a2dfdefab81737c2d776b2a3dafe5844fdd2157e089a28447ca98`
+  - CVE(s): `CVE-2026-20245`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

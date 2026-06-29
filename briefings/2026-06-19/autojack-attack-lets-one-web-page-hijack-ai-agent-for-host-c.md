@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### AutoGen Studio (AutoJack) host code execution: agent Python process spawns shell/LOLBin
 
-`UC_100_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_101_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### AutoGen Studio browsing agent reaches untrusted public web destination (AutoJack delivery)
 
-`UC_100_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_101_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### Vulnerable AutoGen Studio pre-release (0.4.3.dev1/dev2) install — AutoJack exposure
 
-`UC_100_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_101_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

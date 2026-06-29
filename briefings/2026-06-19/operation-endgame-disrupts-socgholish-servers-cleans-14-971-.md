@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### SocGholish fake browser-update JavaScript executed by Windows Script Host from a download path
 
-`UC_102_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_103_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### SocGholish second stage: Windows Script Host spawning PowerShell
 
-`UC_102_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_103_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### SocGholish-delivered NetSupport RAT (client32.exe) executing from a non-standard directory
 
-`UC_102_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_103_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### SocGholish/NetSupport Run-key persistence pointing to a user-writable executable
 
-`UC_102_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_103_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -76,7 +76,7 @@ _(none detected from narrative keywords)_
 
 ### WhatsApp Desktop spawning WScript executing VBS from attachment Transfers dir
 
-`UC_87_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_88_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### VBScript creating hidden working directory and VBS payloads under C:\Users\Public\Documents
 
-`UC_87_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_88_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceFileEvents
 
 ### Renamed curl.exe/bitsadmin.exe running from Public\Documents working directory
 
-`UC_87_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_88_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### UAC ConsentPromptBehaviorAdmin disabled (set to 0) by Windows Script Host
 
-`UC_87_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_88_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceRegistryEvents
 
 ### Beacon/download to WhatsApp-VBS campaign C2 infrastructure (202.61.160.0/24 + 38.55.151.63)
 
-`UC_87_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_88_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceNetworkEvents
 
 ### ManageEngine Endpoint Central (UEMS) agent silently installed as final RMM payload
 
-`UC_87_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_88_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -354,7 +354,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A VBScript campaign distributed through WhatsApp deploying RMM software
 
-`UC_87_7` · phase: **exploit** · confidence: **High**
+`UC_88_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

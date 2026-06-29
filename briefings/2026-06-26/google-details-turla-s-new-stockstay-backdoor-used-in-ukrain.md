@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### WinRAR CVE-2025-8088 ADS path-traversal drop into Startup folder (Turla STOCKSTAY delivery)
 
-`UC_24_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_25_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceFileEvents
 
 ### Malicious .RDP email attachment opened — mstsc launched from mail/download dir (Turla initial access)
 
-`UC_24_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_25_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### STOCKSTAY.MARKETMAKER: mshta from RAR archive reaching internet to pull ZIP from compromised WordPress
 
-`UC_24_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_25_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### STOCKSTAY websocket-sharp tunneler (STOCKBROKER) loaded by masqueraded .NET process
 
-`UC_24_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_25_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
