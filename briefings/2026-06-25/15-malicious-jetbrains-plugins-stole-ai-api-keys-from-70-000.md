@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### JetBrains IDE process beaconing to malicious plugin C2 39.107.60.51
 
-`UC_62_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_66_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### Install of known-malicious JetBrains Marketplace plugin (15 trojanized plugin IDs)
 
-`UC_62_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_66_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceFileEvents
 
 ### JetBrains IDE JVM plaintext HTTP POST to AI-key stealer endpoint /api/software/
 
-`UC_62_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_66_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -214,7 +214,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 15 Malicious JetBrains Plugins Stole AI API Keys from 70,000 Developers
 
-`UC_62_5` · phase: **install** · confidence: **High**
+`UC_66_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

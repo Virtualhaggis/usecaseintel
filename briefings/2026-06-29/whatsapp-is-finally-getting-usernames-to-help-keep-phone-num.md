@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Browser traffic to fake-Perplexity search-hijack domains (perplexity-ai.online / extension.tilda.ws)
 
-`UC_23_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_27_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### Malicious 'Search for perplexity ai' extension ID present in Chrome/Chromium profile (flkebkiofojicogddingbdmcmkpbplcd)
 
-`UC_23_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

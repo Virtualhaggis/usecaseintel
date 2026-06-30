@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2265 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2267 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -17,11 +17,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [guardfall exposes open source ai coding agents to decades ol](./2026-06-30/guardfall-exposes-open-source-ai-coding-agents-to-decades-ol.md)
 - [insurance giant aflac discloses data breach after subsidiary](./2026-06-30/insurance-giant-aflac-discloses-data-breach-after-subsidiary.md)
 - [langflow rce exploited to deploy monero miner on exposed ai ](./2026-06-30/langflow-rce-exploited-to-deploy-monero-miner-on-exposed-ai-.md)
+- [microsoft warns poisoned mcp tool descriptions can make ai a](./2026-06-30/microsoft-warns-poisoned-mcp-tool-descriptions-can-make-ai-a.md)
 - [new bioshocking attack tricks ai browsers into leaking user ](./2026-06-30/new-bioshocking-attack-tricks-ai-browsers-into-leaking-user-.md)
 - [oracle e business suite flaw cve 2026 46817 actively exploit](./2026-06-30/oracle-e-business-suite-flaw-cve-2026-46817-actively-exploit.md)
 - [progress kemp loadmaster flaw could let attackers run root c](./2026-06-30/progress-kemp-loadmaster-flaw-could-let-attackers-run-root-c.md)
+- [rustduck botnet rebuilds in rust to hijack routers and serve](./2026-06-30/rustduck-botnet-rebuilds-in-rust-to-hijack-routers-and-serve.md)
+- [securing ai agents when ai tools move from reading to acting](./2026-06-30/securing-ai-agents-when-ai-tools-move-from-reading-to-acting.md)
 - [silent swap crypto clipper uses fake google notes extension ](./2026-06-30/silent-swap-crypto-clipper-uses-fake-google-notes-extension-.md)
 - [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
+- [what s new in microsoft security june 2026](./2026-06-30/what-s-new-in-microsoft-security-june-2026.md)
 - [what the numbers say about fifa 2026 cyber risk](./2026-06-30/what-the-numbers-say-about-fifa-2026-cyber-risk.md)
 
 ## 2026-06-29
@@ -87,7 +91,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
-- [fake ai agent skill passed security scans and reportedly rea](./2026-06-23/fake-ai-agent-skill-passed-security-scans-and-reportedly-rea.md)
 - [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
 - [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
@@ -115,7 +118,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
-- [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
 - [ghsa critical cve 2026 11718 googleapis mcp toolbox authenti](./2026-06-18/ghsa-critical-cve-2026-11718-googleapis-mcp-toolbox-authenti.md)
 - [ghsa critical cve 2026 54003 kirby external initialization o](./2026-06-18/ghsa-critical-cve-2026-54003-kirby-external-initialization-o.md)

@@ -1,3 +1,816 @@
+<article class="card" id="art-168" data-art-slug="2026-06-16-ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="cloud,endpoint,web"
+  data-targets="linux,vcs,web-app,windows"
+  data-uc-count="6" data-llm-uc-count="5"
+  data-search="[GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabilities - File Write, SSRF, Auth Bypass, XSS, JS Execution Crawl4AI: Multiple Docker API Vulnerabilities - File Write, SSRF, Auth Bypass, XSS, JS Execution  T1190 [LLM] Crawl4AI /screenshot or /pdf output_path traversal → arbitrary file write outside output dir [LLM] Crawl4AI SSRF: crawler process reaching cloud-metadata or RFC1918 internal IPs [LLM] Crawl4AI /execute_js sandbox escape: crawler/browser process spawning a shell [LLM] Crawl4AI unauthenticated access to /monitor endpoints (auth bypass) [LLM] Crawl4AI web-payload abuse: path traversal, XSS, file:// and metadata-IP in crawl requests Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-16-ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-365w-hqf6-vxfg" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabilities - File Write, SSRF, Auth Bypass, XSS, JS Execution</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-16</span>
+    <span>6 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Crawl4AI: Multiple Docker API Vulnerabilities - File Write, SSRF, Auth Bypass, XSS, JS Execution</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-168-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-168"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-168-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Crawl4AI web-payload abuse: path traversal, XSS, file:// and metadata-IP in crawl requests</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Crawl4AI SSRF: crawler process reaching cloud-metadata or RFC1918 internal IPs · [LLM] Crawl4AI /execute_js sandbox escape: crawler/browser process spawning a shell · [LLM] Crawl4AI unauthenticated access to /monitor endpoints (auth bypass)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Crawl4AI /screenshot or /pdf output_path traversal → arbitrary file write outside output dir · Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="0fa6dae73f" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">Crawl4AI /screenshot or /pdf output_path traversal → arbitrary file write outside output dir</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0fa6dae73f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the CWE-22 arbitrary-file-write in Crawl4AI&#x27;s /screenshot and /pdf endpoints, where an unvalidated output_path lets an attacker drop files outside /tmp/crawl4ai-outputs. Detects the crawl4ai server process (python/uvicorn/gunicorn) creating files in sensitive locations (cron, .ssh, shell rc files, /etc, /root) it should never write to.
+
+Rationale: Anchored on the article&#x27;s named endpoints (/screenshot, /pdf), the named safe directory (/tmp/crawl4ai-outputs), and the server process identity. A web crawler writing to cron/.ssh/.bashrc is near-zero-FP. Datadog left empty — provided linux.auditd schema lacks a target-file-path field.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/crawl4ai/GHSA-365w-hqf6-vxfg/
+  • https://www.vulncheck.com/advisories/crawl4ai-docker-api-local-file-inclusion-via-file-url-handling</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Crawl4AI configured with a custom CRAWL4AI_OUTPUT_DIR pointing at /app or /usr/local (operator misconfig)</li><li>Admin/CI process running inside the container as the same python interpreter doing legitimate package installs into /usr/local</li><li>Browser engine (chromium) writing cache under /home/appuser/.cache if process attribution rolls up to python</li><li>Init/entrypoint scripts seeding config into /app on first boot</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath startswith &quot;/usr/local/lib/python&quot; and InitiatingProcessCommandLine has_any (&quot;pip&quot;,&quot;setup.py&quot;,&quot;wheel&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full FolderPath/FileName and the InitiatingProcessCommandLine — confirm the write landed outside /tmp/crawl4ai-outputs and inspect the dropped file&#x27;s content (web shell, cron entry, authorized_keys). Correlate with web logs for the /screenshot or /pdf request carrying output_path. 2) Contain: isolate the container/host, kill the crawl4ai worker, and revoke any keys/creds present in the written path; if a cron or authorized_keys entry was added, remove it. 3) Hunt: search all crawl4ai hosts for other writes outside the output dir, and pivot on the source IP across /screenshot, /pdf, /execute_js. Upgrade Crawl4AI to &gt;=0.8.7.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-168-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-168-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-168-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-168-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-168-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-168-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;FileCreated&quot;
+| where InitiatingProcessFileName matches regex @&quot;(?i)^(python[0-9.]*|uvicorn|gunicorn)$&quot;
+| where FolderPath !startswith &quot;/tmp/crawl4ai-outputs&quot;
+| where FolderPath has_any (&quot;/etc/&quot;,&quot;/root/&quot;,&quot;/etc/cron&quot;,&quot;/.ssh&quot;,&quot;authorized_keys&quot;,&quot;/.bashrc&quot;,&quot;/.profile&quot;,&quot;/usr/local/&quot;,&quot;/app/&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType == &quot;FileCreated&quot;
+| where ActingProcessName matches regex @&quot;(?i)(python|uvicorn|gunicorn)&quot;
+| where TargetFilePath !startswith &quot;/tmp/crawl4ai-outputs&quot;
+| where TargetFilePath has_any (&quot;/etc/&quot;,&quot;/root/&quot;,&quot;/etc/cron&quot;,&quot;/.ssh&quot;,&quot;authorized_keys&quot;,&quot;/.bashrc&quot;,&quot;/.profile&quot;,&quot;/usr/local/&quot;,&quot;/app/&quot;)
+| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crawl4AI Server Process Writing Files Outside Output Directory
+id: 9d2b1f5a-7c44-4e9a-b1c2-3f0a6d8e1b22
+description: Detects the Crawl4AI Docker server (python/uvicorn/gunicorn) creating files in sensitive locations, indicating exploitation of the /screenshot or /pdf output_path path-traversal (GHSA-365w-hqf6-vxfg, CWE-22).
+references:
+  - https://github.com/advisories/GHSA-365w-hqf6-vxfg
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1190
+  - attack.t1053.003
+  - attack.t1098.004
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection_proc:
+    Image|endswith:
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/uvicorn&#x27;
+      - &#x27;/gunicorn&#x27;
+  selection_path:
+    TargetFilename|contains:
+      - &#x27;/etc/&#x27;
+      - &#x27;/root/&#x27;
+      - &#x27;/etc/cron&#x27;
+      - &#x27;/.ssh/&#x27;
+      - &#x27;authorized_keys&#x27;
+      - &#x27;/.bashrc&#x27;
+      - &#x27;/.profile&#x27;
+  condition: selection_proc and selection_path
+level: high</code></pre></div>
+    <div class="tab-content" id="art-168-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| ContextImageFileName=/(python[0-9.]*|uvicorn|gunicorn)/i
+| TargetFileName=/(\/etc\/|\/root\/|\/etc\/cron|\/\.ssh\/|authorized_keys|\/\.bashrc|\/\.profile|\/usr\/local\/|\/app\/)/i
+| NOT TargetFileName=/\/tmp\/crawl4ai-outputs\//i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-168-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-168-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-168-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-168-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path IN (&quot;/etc/*&quot;,&quot;/root/*&quot;,&quot;/etc/cron*&quot;,&quot;*/.ssh/*&quot;,&quot;*authorized_keys*&quot;,&quot;*/.bashrc&quot;,&quot;*/.profile&quot;,&quot;/usr/local/*&quot;,&quot;/app/*&quot;)) AND NOT Filesystem.file_path=&quot;/tmp/crawl4ai-outputs/*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-168-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path IN (&quot;/etc/*&quot;,&quot;/root/*&quot;,&quot;/etc/cron*&quot;,&quot;*/.ssh/*&quot;,&quot;*authorized_keys*&quot;,&quot;*/.bashrc&quot;,&quot;*/.profile&quot;,&quot;/usr/local/*&quot;,&quot;/app/*&quot;)) AND NOT Filesystem.file_path=&quot;/tmp/crawl4ai-outputs/*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b31d460a74" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,web-app,windows">
+  <summary>
+    <span class="uc-title">Crawl4AI SSRF: crawler process reaching cloud-metadata or RFC1918 internal IPs</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="b31d460a74" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the SSRF chain across Crawl4AI&#x27;s /crawl, /md, /llm, /execute_js and webhook endpoints (CWE-918), where attacker-supplied URLs make the server fetch internal services and the 169.254.169.254 cloud-metadata endpoint — including the IPv6-mapped bypass (CVE-2026-53754). Flags the crawl4ai/browser process connecting to metadata or private ranges, which a public-web crawler should never do.
+
+Rationale: Cloud-metadata IP 169.254.169.254 (and its ::ffff: mapped form, the CVE-2026-53754 bypass) is essentially never a legitimate destination for a public-web crawler, making it a high-fidelity SSRF anchor; RFC1918 hits are the broader hunting tier. Process-scoped to the named crawl4ai runtimes. CloudWatch left empty — IMDS access is host-network, not visible in CloudTrail.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/crawl4ai/GHSA-365w-hqf6-vxfg/
+  • https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53754/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Network Service Discovery">T1046</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Crawl4AI legitimately connecting to an internal Redis (6379) / Postgres (5432) backend on the Docker bridge network</li><li>Crawl4AI calling a self-hosted LLM/embedding endpoint on a private IP (Ollama, vLLM)</li><li>Health-check or service-mesh sidecar traffic from the same container to private ranges</li><li>Crawling an explicitly allowed internal staging site during QA</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemotePort in (6379, 5432, 11434) and not MetadataHit)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the destination — a hit on 169.254.169.254 is a confirmed SSRF/credential-theft attempt; for RFC1918 hits, check RemotePort/RemoteUrl and whether it matches a known internal service. Pull the matching /crawl, /md, /llm or webhook request from web logs. 2) Contain: if metadata was reached, rotate the instance role / IMDS credentials immediately and enforce IMDSv2 (hop limit 1); block the source IP and disable /execute_js (CRAWL4AI_EXECUTE_JS_ENABLED). 3) Hunt: review CloudTrail/Activity logs for any API calls made with the instance role shortly after the metadata hit, and pivot on the source IP for internal-range fan-out (port scanning). Upgrade to &gt;=0.8.7.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-168-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-168-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-168-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-168-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-168-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-168-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-168-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;ConnectionSuccess&quot;
+| where InitiatingProcessFileName matches regex @&quot;(?i)^(python[0-9.]*|uvicorn|gunicorn|chromium|chrome|headless_shell|node)$&quot;
+| extend MetadataHit = (RemoteIP == &quot;169.254.169.254&quot; or RemoteIP == &quot;::ffff:169.254.169.254&quot;)
+| where MetadataHit or ipv4_is_private(RemoteIP) or ipv4_is_in_range(RemoteIP, &quot;169.254.0.0/16&quot;)
+| extend Severity = iff(MetadataHit, &quot;CRITICAL-cloud-metadata&quot;, &quot;internal-SSRF&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Severity
+| order by Severity asc, Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr == &quot;169.254.169.254&quot; or DstIpAddr == &quot;::ffff:169.254.169.254&quot; or ipv4_is_private(DstIpAddr) or ipv4_is_in_range(DstIpAddr, &quot;169.254.0.0/16&quot;)
+| where DstPortNumber in (80, 443, 8000, 8080) or NetworkApplicationProtocol has_any (&quot;http&quot;,&quot;https&quot;)
+| extend Severity = iff(DstIpAddr == &quot;169.254.169.254&quot; or DstIpAddr == &quot;::ffff:169.254.169.254&quot;, &quot;CRITICAL-cloud-metadata&quot;, &quot;internal-SSRF&quot;)
+| project TimeGenerated, SrcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, Url, NetworkApplicationProtocol, Severity
+| order by Severity asc, TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crawl4AI Process Connecting to Cloud Metadata or Internal IP (SSRF)
+id: 4a7e2c19-6b03-49d1-8a7f-2c5b9e441a07
+description: Detects the Crawl4AI server/browser process connecting to 169.254.169.254 or RFC1918 ranges, indicating SSRF exploitation of /crawl, /md, /llm or webhook endpoints (GHSA-365w-hqf6-vxfg, CVE-2026-53754).
+references:
+  - https://github.com/advisories/GHSA-365w-hqf6-vxfg
+  - https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53754/
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1190
+  - attack.t1552.005
+  - attack.t1046
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection_proc:
+    Image|endswith:
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/uvicorn&#x27;
+      - &#x27;/gunicorn&#x27;
+      - &#x27;/chromium&#x27;
+      - &#x27;/node&#x27;
+  selection_dst:
+    DestinationIp|cidr:
+      - &#x27;169.254.0.0/16&#x27;
+      - &#x27;10.0.0.0/8&#x27;
+      - &#x27;172.16.0.0/12&#x27;
+      - &#x27;192.168.0.0/16&#x27;
+  condition: selection_proc and selection_dst
+level: high</code></pre></div>
+    <div class="tab-content" id="art-168-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @process.name:(python* OR uvicorn OR gunicorn OR chromium OR node) (@network.destination.ip:169.254.169.254 OR CIDR(@network.destination.ip, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16))</code></pre></div>
+    <div class="tab-content" id="art-168-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/(python[0-9.]*|uvicorn|gunicorn|chromium|chrome|node)/i
+| (RemoteAddressIP4=&quot;169.254.169.254&quot; OR cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) OR cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4) OR cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4) OR cidr(&quot;169.254.0.0/16&quot;, field=RemoteAddressIP4))
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-168-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-168-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-168-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-168-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;169.254.169.254&quot;,&quot;::ffff:169.254.169.254&quot;) AND All_Traffic.app IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;chromium&quot;,&quot;chrome&quot;,&quot;node&quot;) by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-168-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;169.254.169.254&quot;,&quot;::ffff:169.254.169.254&quot;) AND All_Traffic.app IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;chromium&quot;,&quot;chrome&quot;,&quot;node&quot;) by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="d2a300074f" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Crawl4AI /execute_js sandbox escape: crawler/browser process spawning a shell</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d2a300074f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the arbitrary-JavaScript-execution / hook-sandbox-escape vulnerability (CWE-94) in Crawl4AI&#x27;s /execute_js endpoint, where attacker JS (or the asyncio/hook bypass) breaks out to OS command execution. Detects the python/uvicorn/gunicorn server or its headless-chromium/node children spawning an interactive shell — behaviour a web crawler never exhibits.
+
+Rationale: Process-tree pivot on the article&#x27;s named runtime (python/uvicorn/gunicorn + the playwright headless-chromium it drives) spawning a shell directly maps the /execute_js RCE and hook sandbox-escape outcome. Datadog left empty — the provided linux.auditd schema exposes no parent-process field, so the parent→child constraint cannot be expressed.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/crawl4ai/GHSA-365w-hqf6-vxfg/
+  • https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53754/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Crawl4AI legitimately shelling out to a PDF/image post-processing tool (wkhtmltopdf, ghostscript) via subprocess</li><li>Container entrypoint or healthcheck script invoking sh from the gunicorn master</li><li>Operator running &#x27;docker exec ... bash&#x27; attributed to the server process tree</li><li>A debugging hook intentionally enabled in non-prod that runs shell commands</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;wkhtmltopdf&quot;,&quot;ghostscript&quot;,&quot;/usr/bin/gs&quot;,&quot;libreoffice&quot;) )</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the child ProcessCommandLine — benign post-processing (ghostscript/wkhtmltopdf) vs reverse shell / curl|sh / recon (id, uname, whoami). Correlate timing with a POST to /execute_js in web logs. 2) Contain: kill the shell and parent worker, isolate the container, and disable /execute_js via CRAWL4AI_EXECUTE_JS_ENABLED=false (and remove --disable-web-security if present). 3) Hunt: from the same host pivot to UC2 (SSRF egress) and UC1 (file writes), and search DeviceNetworkEvents for outbound C2 from the shell PID. Upgrade to &gt;=0.8.7.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-168-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-168-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-168-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-168-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-168-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-168-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName matches regex @&quot;(?i)^(python[0-9.]*|uvicorn|gunicorn|node|chromium|chrome|headless_shell)$&quot;
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName matches regex @&quot;(?i)/(python[0-9.]*|uvicorn|gunicorn|node|chromium|chrome|headless_shell)$&quot;
+| where ActingProcessName matches regex @&quot;(?i)/(sh|bash|dash|zsh|ash)$&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crawl4AI Crawler/Browser Process Spawning a Shell (execute_js sandbox escape)
+id: c81f0d6e-2a3b-4f70-9e15-7a4b8d2c9f31
+description: Detects the Crawl4AI server or its browser children spawning an interactive shell, indicating exploitation of the /execute_js arbitrary JS / hook sandbox escape (GHSA-365w-hqf6-vxfg, CWE-94).
+references:
+  - https://github.com/advisories/GHSA-365w-hqf6-vxfg
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.t1190
+  - attack.t1059.007
+  - attack.t1059.004
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/uvicorn&#x27;
+      - &#x27;/gunicorn&#x27;
+      - &#x27;/node&#x27;
+      - &#x27;/chromium&#x27;
+      - &#x27;/chrome&#x27;
+      - &#x27;/headless_shell&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;/ash&#x27;
+  condition: selection_parent and selection_child
+level: high</code></pre></div>
+    <div class="tab-content" id="art-168-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(python[0-9.]*|uvicorn|gunicorn|node|chromium|chrome|headless_shell)$/i
+| ImageFileName=/\/(sh|bash|dash|zsh|ash)$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-168-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-168-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-168-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-168-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;node&quot;,&quot;chromium&quot;,&quot;chrome&quot;,&quot;headless_shell&quot;)) AND (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-168-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;node&quot;,&quot;chromium&quot;,&quot;chrome&quot;,&quot;headless_shell&quot;)) AND (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="fcc616b8df" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Crawl4AI unauthenticated access to /monitor endpoints (auth bypass)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="fcc616b8df" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the CWE-306 missing-authentication flaw where Crawl4AI&#x27;s monitor router was mounted without token_dep, exposing destructive endpoints like /monitor/actions/cleanup and the /monitor/ws WebSocket with no auth. Detects successful requests to /monitor paths that carry no Authorization header.
+
+Rationale: Uses the article&#x27;s exact vulnerable paths (/monitor/actions/cleanup, /monitor/ws) plus the auth-bypass signature — a successful response with an empty Authorization header. Defender/Falcon/Datadog/CloudWatch left empty: this needs HTTP request-header visibility that only the reverse-proxy/WAF (Sentinel ImWebSession / CIM Web) carries; Sigma skipped because &#x27;webserver&#x27; is outside the allowed logsource categories.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/crawl4ai/GHSA-365w-hqf6-vxfg/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Destruction">T1485</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate internal monitoring/uptime check polling /monitor without a token (pre-patch, by design)</li><li>An ops dashboard reverse-proxy that strips the Authorization header before the app tier (header invisible to upstream logger)</li><li>Health probes from Kubernetes/Docker hitting /monitor/* and returning 200</li><li>Internal load-balancer keep-alive traffic to the monitor WebSocket</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SrcIpAddr in (&quot;127.0.0.1&quot;,&quot;::1&quot;) or HttpRequestHeaderUserAgent has_any (&quot;kube-probe&quot;,&quot;ELB-HealthChecker&quot;,&quot;Datadog&quot;,&quot;Pingdom&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: determine whether the request reached a destructive endpoint (/monitor/actions/cleanup) vs read-only monitor views, and whether the source IP is internal/expected. Check for a burst of /monitor/* enumeration from one IP. 2) Contain: put the monitor router behind auth (deploy &gt;=0.8.7 / set CRAWL4AI_API_TOKEN) and restrict network access to the Docker API; block the offending source IP at the proxy. 3) Hunt: from the same source IP, pivot to /screenshot, /pdf, /execute_js and /crawl activity (UC1/UC2/UC3/UC5) and review whether cleanup actually deleted job/output data.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-168-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-168-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-168-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where Url has &quot;/monitor/&quot;
+| where Url has_any (&quot;/monitor/actions/cleanup&quot;,&quot;/monitor/actions&quot;,&quot;/monitor/ws&quot;,&quot;/monitor/&quot;)
+| where isempty(HttpRequestHeaderAuthorization)
+| where HttpStatusCode in (&quot;200&quot;,&quot;101&quot;,&quot;204&quot;)
+| project TimeGenerated, SrcIpAddr, SrcHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent, DstHostname
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-168-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-168-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-168-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*/monitor/actions/cleanup*&quot;,&quot;*/monitor/actions*&quot;,&quot;*/monitor/ws*&quot;,&quot;*/monitor/*&quot;)) AND Web.status IN (&quot;200&quot;,&quot;101&quot;,&quot;204&quot;) by Web.src Web.http_method Web.url Web.status Web.http_user_agent Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-168-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*/monitor/actions/cleanup*&quot;,&quot;*/monitor/actions*&quot;,&quot;*/monitor/ws*&quot;,&quot;*/monitor/*&quot;)) AND Web.status IN (&quot;200&quot;,&quot;101&quot;,&quot;204&quot;) by Web.src Web.http_method Web.url Web.status Web.http_user_agent Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="172794464e" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Crawl4AI web-payload abuse: path traversal, XSS, file:// and metadata-IP in crawl requests</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="172794464e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts malicious payloads sent to Crawl4AI&#x27;s exposed endpoints (/screenshot, /pdf, /crawl, /md, /llm, /execute_js, /markdown_extraction, /llm_extraction): output_path traversal sequences, stored-XSS markup (CWE-79), file:// LFI URLs, and literal cloud-metadata / IPv6-mapped targets used for SSRF. A single web-log pivot that surfaces exploitation attempts before they succeed.
+
+Rationale: Combines the article&#x27;s full endpoint inventory with concrete exploit signatures it names: output_path traversal, XSS markup, the file:// LFI vector (VulnCheck-confirmed) and the ::ffff: IPv6-mapped metadata bypass (CVE-2026-53754). Hunting tier because many payloads ride in POST bodies that not all proxies log into the URL field — pairs with the behavioural UCs (1/2/3) for confirmation.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-365w-hqf6-vxfg
+  • https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53754/
+  • https://www.vulncheck.com/advisories/crawl4ai-docker-api-local-file-inclusion-via-file-url-handling</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate crawl target whose URL genuinely contains &#x27;../&#x27; in its query string or path</li><li>Security scanners / pentest tooling (Burp, Nuclei) probing the endpoints during authorized testing</li><li>A crawled page URL that legitimately references file:// in a parameter value</li><li>Crawling a security blog whose URL contains &#x27;&lt;script&#x27; or &#x27;onerror=&#x27; as article-content text</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (HttpRequestHeaderUserAgent has_any (&quot;Nuclei&quot;,&quot;Burp&quot;,&quot;sqlmap&quot;,&quot;Nessus&quot;) or SrcIpAddr in (&quot;127.0.0.1&quot;,&quot;::1&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: classify the payload type (traversal vs XSS vs file:// vs metadata-IP) and check the HTTP status — a 200 on /screenshot+output_path traversal or /crawl+file:// suggests success. Cross-reference the source IP with UC1/UC2/UC3 host telemetry for an actual file write, SSRF egress, or shell. 2) Contain: block the source IP at the proxy/WAF, disable /execute_js, and ensure the patched SSRF/path validators are deployed (&gt;=0.8.7). 3) Hunt: enumerate every distinct payload that IP sent across all endpoints, and confirm whether any stored XSS persisted in the monitor dashboard (escapeHtml present?).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-168-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-168-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-168-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where Url has_any (&quot;/screenshot&quot;,&quot;/pdf&quot;,&quot;/crawl&quot;,&quot;/md&quot;,&quot;/llm&quot;,&quot;/execute_js&quot;,&quot;/markdown_extraction&quot;,&quot;/llm_extraction&quot;)
+| where Url has_any (&quot;../&quot;,&quot;..%2f&quot;,&quot;..%2F&quot;,&quot;%2e%2e&quot;,&quot;&lt;script&quot;,&quot;onerror=&quot;,&quot;onclick=&quot;,&quot;onload=&quot;,&quot;file://&quot;,&quot;169.254.169.254&quot;,&quot;::ffff:&quot;,&quot;metadata.google.internal&quot;,&quot;output_path=&quot;)
+| project TimeGenerated, SrcIpAddr, SrcHostname, HttpMethod, Url, UrlOriginal, HttpStatusCode, HttpRequestHeaderUserAgent, DstHostname
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-168-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-168-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-168-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*/screenshot*&quot;,&quot;*/pdf*&quot;,&quot;*/crawl*&quot;,&quot;*/md*&quot;,&quot;*/llm*&quot;,&quot;*/execute_js*&quot;,&quot;*/markdown_extraction*&quot;,&quot;*/llm_extraction*&quot;)) AND (Web.url IN (&quot;*../*&quot;,&quot;*..%2f*&quot;,&quot;*%2e%2e*&quot;,&quot;*&lt;script*&quot;,&quot;*onerror=*&quot;,&quot;*onclick=*&quot;,&quot;*file://*&quot;,&quot;*169.254.169.254*&quot;,&quot;*::ffff:*&quot;,&quot;*metadata.google*&quot;,&quot;*output_path=*&quot;)) by Web.src Web.http_method Web.url Web.status Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-168-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*/screenshot*&quot;,&quot;*/pdf*&quot;,&quot;*/crawl*&quot;,&quot;*/md*&quot;,&quot;*/llm*&quot;,&quot;*/execute_js*&quot;,&quot;*/markdown_extraction*&quot;,&quot;*/llm_extraction*&quot;)) AND (Web.url IN (&quot;*../*&quot;,&quot;*..%2f*&quot;,&quot;*%2e%2e*&quot;,&quot;*&lt;script*&quot;,&quot;*onerror=*&quot;,&quot;*onclick=*&quot;,&quot;*file://*&quot;,&quot;*169.254.169.254*&quot;,&quot;*::ffff:*&quot;,&quot;*metadata.google*&quot;,&quot;*output_path=*&quot;)) by Web.src Web.http_method Web.url Web.status Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a9e67257aa" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a9e67257aa" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-168-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-168-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-168-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-168-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/tmp/crawl4ai-outputs&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/tmp/crawl4ai-outputs&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-168-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-168-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-168-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-168-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/tmp/crawl4ai-outputs*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-168-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/tmp/crawl4ai-outputs*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-169" data-art-slug="2026-06-16-ghsa-critical-cve-2026-53753-crawl4ai-ast-sandbox-escape-via"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-53753: Crawl4AI: AST Sandbox Escape via gi_frame.f_back Chain - Pre-Auth RCE in Docker API Crawl4AI: AST Sandbox Escape via gi_frame.f_back Chain - Pre-Auth RCE in Docker API CVE-2026-53753 T1190 [LLM] Crawl4AI CVE-2026-53753 sandbox-escape payload (gi_frame/f_back/f_builtins) in POST /crawl body [LLM] Crawl4AI/uvicorn post-RCE: Python web service spawning shell or recon binaries [LLM] Crawl4AI post-RCE credential &amp; cloud-metadata enumeration via Python-spawned subprocess Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-16-ghsa-critical-cve-2026-53753-crawl4ai-ast-sandbox-escape-via" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-qxjp-w3pj-48m7" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-53753: Crawl4AI: AST Sandbox Escape via gi_frame.f_back Chain - Pre-Auth RCE in Docker API</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-16</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Crawl4AI: AST Sandbox Escape via gi_frame.f_back Chain - Pre-Auth RCE in Docker API</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-53753</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-169-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-169"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-169-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Crawl4AI CVE-2026-53753 sandbox-escape payload (gi_frame/f_back/f_builtins) in POST /crawl body</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Crawl4AI/uvicorn post-RCE: Python web service spawning shell or recon binaries</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Crawl4AI post-RCE credential &amp; cloud-metadata enumeration via Python-spawned subprocess</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="112e06b8cc" data-platforms="sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Crawl4AI CVE-2026-53753 sandbox-escape payload (gi_frame/f_back/f_builtins) in POST /crawl body</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="112e06b8cc" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts unauthenticated exploitation of the Crawl4AI Docker API AST sandbox escape by matching the frame-introspection chain (gi_frame, f_back, f_builtins, __import__) inside a JsonCssExtractionStrategy computed-field expression POSTed to /crawl. These Python generator/frame attribute names have zero benign reason to appear in crawl-extraction schemas, making them a high-fidelity exploit signature.
+
+Rationale: Uses the article&#x27;s verbatim exploit primitives gi_frame/f_back/f_builtins/__import__ plus the JsonCssExtractionStrategy schema key and the /crawl endpoint. The frame-attribute chain is the literal sandbox-escape technique named by the advisory and has no benign occurrence in extraction schemas. Cross-checked against the GitLab Advisory Database (CVSS 9.8, fixed 0.8.7) which confirms the gi_frame.f_back computed-field eval() escape.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53753/
+  • https://github.com/unclecode/crawl4ai/security</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security scanners / pentest tooling (Nuclei, Burp) replaying the public PoC against an internal Crawl4AI instance during authorised testing</li><li>Internal red-team validation of the patch on a staging Crawl4AI container</li><li>A developer pasting the advisory PoC into a request while reproducing the bug for the 0.8.7 upgrade</li><li>WAF that mirrors blocked-request bodies into the same log index (action=blocked rows — still worth reviewing but not a live compromise)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceAction !in~ (&quot;blocked&quot;,&quot;denied&quot;,&quot;reset&quot;)  // keep only requests that actually reached the app; drop WAF-blocked replays during triage tuning</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request for the SourceIP+RequestClientApplication; confirm the body carries a gi_frame/f_back chain inside a JsonCssExtractionStrategy schema, and check the running Crawl4AI version (&lt;=0.8.6 vulnerable) and whether CRAWL4AI_API_TOKEN/JWT auth is set. 2) Contain: block the SourceIP at the WAF, remove the container from public network exposure, and rotate any secrets the container can reach (env vars, mounted files, instance role). 3) Hunt: on the affected host run the post-RCE process-tree and credential-enumeration detections from first-seen time, and review egress from the uvicorn/python process to attacker infrastructure.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-169-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-169-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-169-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod == &quot;POST&quot;
+| where RequestURL has &quot;/crawl&quot;
+| where Message has_any (&quot;gi_frame&quot;,&quot;f_back&quot;,&quot;f_builtins&quot;,&quot;JsonCssExtractionStrategy&quot;,&quot;__import__&quot;)
+   or RequestContext has_any (&quot;gi_frame&quot;,&quot;f_back&quot;,&quot;f_builtins&quot;,&quot;__import__&quot;)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, RequestMethod, RequestURL, DeviceAction, RequestClientApplication, Message
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-169-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>(sourcetype=&quot;*nginx*&quot; OR sourcetype=&quot;*apache*&quot; OR sourcetype=&quot;*waf*&quot; OR sourcetype=&quot;*proxy*&quot;) &quot;/crawl&quot; (&quot;gi_frame&quot; OR &quot;f_back&quot; OR &quot;f_builtins&quot; OR &quot;JsonCssExtractionStrategy&quot; OR &quot;__import__&quot;)
+| stats count min(_time) as firstTime max(_time) as lastTime by host, source, sourcetype, clientip
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="de7c6dbdb8" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Crawl4AI/uvicorn post-RCE: Python web service spawning shell or recon binaries</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="de7c6dbdb8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the post-exploitation footprint of CVE-2026-53753: the Crawl4AI Python/uvicorn/gunicorn process spawning interactive shells (sh, bash, dash) or reconnaissance utilities (curl, wget, nc, socat, whoami, id, uname). A crawler web service has no legitimate reason to fork these, so this is a high-confidence signal that the AST sandbox escape achieved code execution.
+
+Rationale: Anchors on the article&#x27;s stated impact (&#x27;execute arbitrary system commands&#x27;) by pivoting on the exact server stack named in the advisory (Crawl4AI Docker API served by uvicorn/Python) spawning shells or recon tools — a tree that never occurs in normal crawler operation. The pip/pytest/playwright exclusion strips the only routine python-spawns-shell cases. Corroborated via GitLab GLAD entry for CVE-2026-53753.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53753/
+  • https://github.com/unclecode/crawl4ai/security</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Container build/CI steps where python runs &#x27;pip install&#x27; which forks sh (covered by the filter)</li><li>Crawl4AI/Playwright bootstrapping that shells out to install browser dependencies on first run</li><li>A devops entrypoint script that uses python to wrap curl/wget for healthchecks</li><li>Operator debugging the container interactively via &#x27;docker exec&#x27; producing python-&gt;bash (verify it was a human shell, not the web worker)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;pip install&quot;,&quot;-m pip&quot;,&quot;setup.py&quot;,&quot;pytest&quot;,&quot;jupyter&quot;,&quot;playwright install&quot;,&quot;conda&quot;)) and AccountName !in~ (&quot;root&quot;)  // optionally drop root-context build steps if the service runs as a non-root crawl user</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child command line and the parent uvicorn/python tree; confirm this is the Crawl4AI web worker (not a CI/pip/playwright bootstrap or an interactive docker exec). 2) Contain: isolate the container/host from the network, kill the offending process tree, and snapshot the container filesystem and memory for IR. 3) Hunt: pivot to the /crawl WAF detection to find the originating exploit request, and to the credential-enumeration detection to see whether secrets or the metadata endpoint were touched; review all egress from the worker process.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-169-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-169-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-169-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-169-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-169-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-169-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;socat&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;)
+| where not(ProcessCommandLine has_any (&quot;pip install&quot;,&quot;-m pip&quot;,&quot;setup.py&quot;,&quot;pytest&quot;,&quot;jupyter&quot;,&quot;playwright install&quot;))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-169-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;)
+| where TargetProcessName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;socat&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;)
+| where not(TargetProcessCommandLine has_any (&quot;pip install&quot;,&quot;setup.py&quot;,&quot;pytest&quot;,&quot;jupyter&quot;,&quot;playwright install&quot;))
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-169-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crawl4AI Python Service Spawning Shell or Recon Binary (CVE-2026-53753 Post-RCE)
+id: 7c3f1a92-5d44-4e8b-9b21-0f6a2c8e4d17
+status: experimental
+description: Detects uvicorn/gunicorn/python (Crawl4AI Docker API) spawning shells or reconnaissance utilities, consistent with post-exploitation of the CVE-2026-53753 AST sandbox escape.
+references:
+  - https://github.com/advisories/GHSA-qxjp-w3pj-48m7
+  - https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53753/
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.execution
+  - attack.t1190
+  - attack.t1059.004
+  - attack.t1059.006
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    ParentImage|endswith:
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/uvicorn&#x27;
+      - &#x27;/gunicorn&#x27;
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/netcat&#x27;
+      - &#x27;/socat&#x27;
+      - &#x27;/whoami&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/uname&#x27;
+  filter:
+    CommandLine|contains:
+      - &#x27;pip install&#x27;
+      - &#x27;setup.py&#x27;
+      - &#x27;pytest&#x27;
+      - &#x27;jupyter&#x27;
+      - &#x27;playwright install&#x27;
+  condition: selection and not filter
+level: high</code></pre></div>
+    <div class="tab-content" id="art-169-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/(python3?|uvicorn|gunicorn)$/i
+| ImageFileName=/\/(sh|bash|dash|curl|wget|nc|ncat|netcat|socat|whoami|id|uname)$/i
+| NOT (CommandLine=/pip install|setup\.py|pytest|jupyter|playwright install/i)
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-169-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-169-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-169-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-169-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;socat&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-169-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;socat&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b14cfc851e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Crawl4AI post-RCE credential &amp; cloud-metadata enumeration via Python-spawned subprocess</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="b14cfc851e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts post-exploitation credential theft following CVE-2026-53753: a Crawl4AI Python/shell process reading /etc/passwd, /etc/shadow, the process environment (/proc/self/environ, printenv), or the cloud instance metadata service (169.254.169.254). The advisory explicitly calls out &#x27;exfiltrate secrets&#x27;, and a web crawler reaching these paths is a strong indicator the sandbox escape was used to harvest credentials.
+
+Rationale: Grounded in the advisory&#x27;s &#x27;read/write files, and exfiltrate secrets&#x27; impact statement and the listed T1552.001 technique. Anchors the well-known secret targets (/etc/shadow, /etc/passwd, /proc/self/environ, IMDS 169.254.169.254) to the Crawl4AI Python/shell parent chain so it fires on attacker harvesting rather than routine admin reads. Corroborated via the GitLab Advisory Database entry for CVE-2026-53753.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53753/
+  • https://github.com/unclecode/crawl4ai/security</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="File and Directory Discovery">T1083</span> <span class="ind tech" title="System Information Discovery">T1082</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A container entrypoint/healthcheck script reading /etc/passwd to resolve a uid before dropping privileges</li><li>Legitimate app code calling printenv/env for config diagnostics under the python worker</li><li>Monitoring agents (Datadog/aws-otel) querying 169.254.169.254 for instance identity — verify the parent is the agent, not the crawl worker</li><li>An operator running &#x27;cat /etc/passwd&#x27; via docker exec while troubleshooting (interactive, not web-worker-spawned)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessFileName in~ (&quot;datadog-agent&quot;,&quot;aws-otel-collector&quot;,&quot;cloud-init&quot;)) and not(ProcessCommandLine has_any (&quot;getent passwd&quot;,&quot;id -u&quot;))  // drop monitoring agents and benign uid lookups while keeping shadow/environ/IMDS reads</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify which secret was touched (/etc/shadow vs environ vs IMDS) and confirm the parent chain traces to the Crawl4AI uvicorn/python worker rather than a sidecar/monitoring agent; check whether 169.254.169.254 actually returned IAM/role credentials. 2) Contain: rotate every credential reachable from the container — env-var secrets, mounted files, and any cloud instance-profile/role credentials — and isolate the host. 3) Hunt: in CloudTrail, search for AssumeRole and API activity using the container&#x27;s instance-profile role from new source IPs since first-seen, and pivot to the /crawl exploit and shell-spawn detections to scope the full intrusion.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-169-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-169-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-169-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-169-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-169-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-169-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-169-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
+| where ProcessCommandLine has_any (&quot;/etc/shadow&quot;,&quot;/etc/passwd&quot;,&quot;/proc/self/environ&quot;,&quot;/proc/self/cmdline&quot;,&quot;169.254.169.254&quot;,&quot;latest/meta-data&quot;)
+   or FileName in~ (&quot;printenv&quot;,&quot;env&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-169-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
+| where TargetProcessCommandLine has_any (&quot;/etc/shadow&quot;,&quot;/etc/passwd&quot;,&quot;/proc/self/environ&quot;,&quot;/proc/self/cmdline&quot;,&quot;169.254.169.254&quot;,&quot;latest/meta-data&quot;)
+   or TargetProcessName in~ (&quot;printenv&quot;,&quot;env&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-169-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crawl4AI Post-RCE Credential / Metadata Enumeration (CVE-2026-53753)
+id: b9e21d6f-8a3c-4f72-bc15-2d7e9a401c83
+status: experimental
+description: Detects a Crawl4AI Python/shell process reading credential files, the process environment, or the cloud instance metadata endpoint, consistent with post-exploitation of CVE-2026-53753.
+references:
+  - https://github.com/advisories/GHSA-qxjp-w3pj-48m7
+  - https://advisories.gitlab.com/pypi/crawl4ai/CVE-2026-53753/
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.credential_access
+  - attack.t1552.001
+  - attack.t1552.005
+  - attack.t1083
+  - attack.t1082
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/uvicorn&#x27;
+      - &#x27;/gunicorn&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+  selection_target:
+    CommandLine|contains:
+      - &#x27;/etc/shadow&#x27;
+      - &#x27;/etc/passwd&#x27;
+      - &#x27;/proc/self/environ&#x27;
+      - &#x27;/proc/self/cmdline&#x27;
+      - &#x27;169.254.169.254&#x27;
+      - &#x27;latest/meta-data&#x27;
+  condition: selection_parent and selection_target
+level: high</code></pre></div>
+    <div class="tab-content" id="art-169-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:(*/etc/shadow* OR */etc/passwd* OR */proc/self/environ* OR */proc/self/cmdline* OR *169.254.169.254* OR *latest/meta-data*) OR @process.name:(printenv OR env))</code></pre></div>
+    <div class="tab-content" id="art-169-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/(python3?|uvicorn|gunicorn|sh|bash|dash)$/i
+| (CommandLine=/(\/etc\/shadow|\/etc\/passwd|\/proc\/self\/environ|\/proc\/self\/cmdline|169\.254\.169\.254|latest\/meta-data)/i OR ImageFileName=/\/(printenv|env)$/i)
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-169-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-169-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-169-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-169-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) AND (Processes.process IN (&quot;*/etc/shadow*&quot;,&quot;*/etc/passwd*&quot;,&quot;*/proc/self/environ*&quot;,&quot;*/proc/self/cmdline*&quot;,&quot;*169.254.169.254*&quot;,&quot;*latest/meta-data*&quot;) OR Processes.process_name IN (&quot;printenv&quot;,&quot;env&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-169-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) AND (Processes.process IN (&quot;*/etc/shadow*&quot;,&quot;*/etc/passwd*&quot;,&quot;*/proc/self/environ*&quot;,&quot;*/proc/self/cmdline*&quot;,&quot;*169.254.169.254*&quot;,&quot;*latest/meta-data*&quot;) OR Processes.process_name IN (&quot;printenv&quot;,&quot;env&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-169-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-169-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-169-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-169-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-53753&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-169-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-53753&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-169-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-169-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-169-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-169-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-53753&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-169-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-53753&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-170" data-art-slug="2026-06-16-multiple-jetbrains-ide-plugins-caught-stealing-ai-keys"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1176,T1190,T1195.002"
@@ -13095,259 +13908,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-200" data-art-slug="2026-06-11-cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2026-10520 — Ivanti Sentry OS Command Injection Vulnerability Ivanti Sentry (formerly known as MobileIron Sentry) contains an OS command injection vulnerability which could allow a remote unauthenticated user to achieve root-level remote code execution. This vulnerability can be successfully exploited in cases where the Sentry appliance is in an unmanaged state with its endpoints externally reachable. The use of mTLS with EPMM or restricted HTTPS access through Neurons for MDM makes interfaces inaccessible to external actors. Vendor: Ivanti, Product: Sentry. Federal patch due: 2026-06-14. CVE-2026-10520 CVE-2026-10523 T1190 Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-11-cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-10520 — Ivanti Sentry OS Command Injection Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2026-06-11</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Ivanti Sentry (formerly known as MobileIron Sentry) contains an OS command injection vulnerability which could allow a remote unauthenticated user to achieve root-level remote code execution. This vulnerability can be successfully exploited in cases where the Sentry appliance is in an unmanaged state with its endpoints externally reachable. The use of mTLS with EPMM or restricted HTTPS access through Neurons for MDM makes interfaces inaccessible to external actors. Vendor: Ivanti, Product: Sentry. Federal patch due: 2026-06-14.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-10520</span> <span class="ind cve">CVE-2026-10523</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-200-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-200"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-200-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-200-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-200-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-200-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-200-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-10520&quot;, &quot;CVE-2026-10523&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-200-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-10520&quot;, &quot;CVE-2026-10523&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-200-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-200-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-200-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-200-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-10520&quot;, &quot;CVE-2026-10523&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-200-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-10520&quot;, &quot;CVE-2026-10523&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-201" data-art-slug="2026-06-10-ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="[GHSA / CRITICAL] CVE-2026-48063: Baileys has message upsert / hist sync spoofing and app state corruption when using maliciously crafted protocolMessage payload Baileys has message upsert / hist sync spoofing and app state corruption when using maliciously crafted protocolMessage payload CVE-2026-48063  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-10-ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-qvv5-jq5g-4cgg" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-48063: Baileys has message upsert / hist sync spoofing and app state corruption when using maliciously crafted protocolMessage payload</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-10</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Baileys has message upsert / hist sync spoofing and app state corruption when using maliciously crafted protocolMessage payload</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48063</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-201-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-201"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-201-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-201-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-201-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-201-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-201-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-48063&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-201-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-48063&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-201-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-48063&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-201-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-48063&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

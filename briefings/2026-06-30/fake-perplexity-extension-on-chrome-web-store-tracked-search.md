@@ -11,21 +11,15 @@ By Bill Toulas
 June 30, 2026
 11:46 AM
 0 
-
-
 A malicious extension in the Chrome Web Store is masquerading as the Perplexity AI answer engine, intercepting search traffic and collecting browsing information.
-
-
 Called "Search for perplexity ai," the extension routed search queries and real-time suggestions through its infrastructure before redirecting users to the legitimate search services.
-
-
-Microsoft Threat Intelligence resea…
+Microsoft Threat Intelligence researchers said …
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `perplexity-ai.online`
-- **Domain (defanged):** `oda.digital`
 - **Domain (defanged):** `extension.tilda.ws`
+- **Domain (defanged):** `oda.digital`
 
 ## MITRE ATT&CK Techniques
 
@@ -44,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious 'Perplexity AI' Chromium extension flkebkiofojicogddingbdmcmkpbplcd written to browser profile
 
-`UC_1_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +57,7 @@ DeviceFileEvents
 
 ### Browser egress to fake-Perplexity interception infra (perplexity-ai.online / oda.digital / extension.tilda.ws)
 
-`UC_1_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +133,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `perplexity-ai.online`, `oda.digital`, `extension.tilda.ws`
+  - IP / domain IOC(s): `perplexity-ai.online`, `extension.tilda.ws`, `oda.digital`
 
 
 ## Why this matters

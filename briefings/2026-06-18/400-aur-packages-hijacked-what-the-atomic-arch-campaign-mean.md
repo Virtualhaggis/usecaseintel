@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### AUR build pulls malicious npm/Bun dependency (atomic-lockfile / js-digest / lockfile-js)
 
-`UC_140_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_141_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### Atomic Arch payload execution: JS runtime spawning shell/network tooling under AUR build (or known payload hash)
 
-`UC_140_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_141_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Atomic Arch infostealer: build-spawned process harvesting SSH keys, dev tokens and browser/Electron sessions
 
-`UC_140_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_141_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceFileEvents
 
 ### Atomic Arch persistence: systemd unit, cron or shell-rc written by AUR build / JS runtime
 
-`UC_140_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_141_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceFileEvents
 
 ### Atomic Arch C2/exfil: build-spawned egress to temp.sh and github.com/fardewoak/nodejs-argo
 
-`UC_140_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_141_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

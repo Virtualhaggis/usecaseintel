@@ -1,3 +1,256 @@
+<article class="card" id="art-200" data-art-slug="2026-06-11-cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2026-10520 — Ivanti Sentry OS Command Injection Vulnerability Ivanti Sentry (formerly known as MobileIron Sentry) contains an OS command injection vulnerability which could allow a remote unauthenticated user to achieve root-level remote code execution. This vulnerability can be successfully exploited in cases where the Sentry appliance is in an unmanaged state with its endpoints externally reachable. The use of mTLS with EPMM or restricted HTTPS access through Neurons for MDM makes interfaces inaccessible to external actors. Vendor: Ivanti, Product: Sentry. Federal patch due: 2026-06-14. CVE-2026-10520 CVE-2026-10523 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-11-cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-10520 — Ivanti Sentry OS Command Injection Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-06-11</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Ivanti Sentry (formerly known as MobileIron Sentry) contains an OS command injection vulnerability which could allow a remote unauthenticated user to achieve root-level remote code execution. This vulnerability can be successfully exploited in cases where the Sentry appliance is in an unmanaged state with its endpoints externally reachable. The use of mTLS with EPMM or restricted HTTPS access through Neurons for MDM makes interfaces inaccessible to external actors. Vendor: Ivanti, Product: Sentry. Federal patch due: 2026-06-14.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-10520</span> <span class="ind cve">CVE-2026-10523</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-200-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-200"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-200-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-200-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-200-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-200-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-200-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-10520&quot;, &quot;CVE-2026-10523&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-200-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-10520&quot;, &quot;CVE-2026-10523&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-200-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-200-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-200-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-200-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-10520&quot;, &quot;CVE-2026-10523&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-200-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-10520&quot;, &quot;CVE-2026-10523&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-201" data-art-slug="2026-06-10-ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="[GHSA / CRITICAL] CVE-2026-48063: Baileys has message upsert / hist sync spoofing and app state corruption when using maliciously crafted protocolMessage payload Baileys has message upsert / hist sync spoofing and app state corruption when using maliciously crafted protocolMessage payload CVE-2026-48063  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-10-ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-qvv5-jq5g-4cgg" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-48063: Baileys has message upsert / hist sync spoofing and app state corruption when using maliciously crafted protocolMessage payload</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-10</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Baileys has message upsert / hist sync spoofing and app state corruption when using maliciously crafted protocolMessage payload</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48063</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-201-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-201"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-201-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-201-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-201-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-201-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-201-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48063&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-201-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48063&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-201-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48063&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-201-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48063&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-202" data-art-slug="2026-06-10-code-is-being-written-everywhere-and-the-device-is-the-only-"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1195.002"
@@ -11733,807 +11986,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-231" data-art-slug="2026-06-05-ghsa-critical-cve-2026-47731-nasa-ammos-instrument-toolkit-p"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal resulting in arbitrary file append (can be triggered over the network by unauthenticated attacker) NASA AMMOS Instrument Toolkit: Path traversal resulting in arbitrary file append (can be triggered over the network by unauthenticated attacker) CVE-2026-47731 T1190 [LLM] Unauthenticated POST to AIT-BSC /&lt;name&gt;/start with path-traversal form fields (CVE-2026-47731) [LLM] ait-bsc outbound TCP to public/non-baseline destination (attacker-supplied loc port) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-05-ghsa-critical-cve-2026-47731-nasa-ammos-instrument-toolkit-p" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-p462-prxw-mjx4" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal resulting in arbitrary file append (can be triggered over the network by unauthenticated attacker)</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-05</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">NASA AMMOS Instrument Toolkit: Path traversal resulting in arbitrary file append (can be triggered over the network by unauthenticated attacker)</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47731</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-231-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-231"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-231-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unauthenticated POST to AIT-BSC /&lt;name&gt;/start with path-traversal form fields (CVE-2026-47731) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] ait-bsc outbound TCP to public/non-baseline destination (attacker-supplied loc port)</em></div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="03c00449ff" data-platforms="datadog,def,sent,sigma,spl" data-targets="vcs,windows" open>
-  <summary>
-    <span class="uc-title">Unauthenticated POST to AIT-BSC /&lt;name&gt;/start with path-traversal form fields (CVE-2026-47731)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="03c00449ff" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the actual exploit shape against the AIT-Core BSC HTTP API: POST to /&lt;name&gt;/start carrying attacker-controlled log_dir_path, file_name_pattern, or path form fields with path-traversal indicators (../, %2e%2e, absolute paths like /etc, /home, /root). Pre-patch AIT-Core &lt;3.1.1 and &lt;2.6.1 lets an unauthenticated remote caller use these fields to redirect log_file writes anywhere ait-bsc can write — corruption of .py modules then yields RCE on next restart.
-
-Rationale: Targets the exact REST shape from the article (the Bottle route `/&lt;name&gt;/start` registered in `StreamCaptureManagerServer._route()`) plus the three attacker-influenced form fields named in the bug write-up (log_dir_path, file_name_pattern, path) combined with traversal markers (../ %2e%2e absolute /etc /root /home). The article confirms there is no auth on the route and these fields go straight into `os.path.join` without realpath canonicalisation. Cross-checked against the GHSA-p462-prxw-mjx4 advisory and the AIT-Core 3.1.1/2.6.1 patch notes which scope the same parameter list. Falcon FDR doesn&#x27;t natively ship HTTP request bodies so falcon_logscale_query is empty; the same telemetry is covered by NetworkConnectIP4 in UC2.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-p462-prxw-mjx4
-  • https://github.com/NASA-AMMOS/AIT-Core/releases/tag/3.1.1</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Manipulation: Stored Data Manipulation">T1565.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal vulnerability scanners (Tenable, Qualys, Burp Pro) probing the BSC endpoint as part of a sanctioned scan</li><li>Mission-ops engineers running `python_poc.py` from the AIT-Core test harness against a lab BSC instance</li><li>Custom ground-system tooling that legitimately passes log_dir_path to relocate captures between mission phases</li><li>Health-check probes that POST malformed bodies to /start to verify the route is alive (yields 400 but trips URL pattern)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (SrcIp in (&quot;10.&quot;, &quot;172.16.&quot;, &quot;192.168.&quot;) and UA has_any (&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Tenable&quot;,&quot;Burp&quot;,&quot;Acunetix&quot;,&quot;Nmap&quot;)) and not (Uri endswith &quot;/healthcheck/start&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: pull the full POST body from the proxy/WAF capture, decode the form fields, and verify whether log_dir_path / path resolves outside the configured `root_log_directory` from bsc.yaml. Pivot on `source IP` to see whether the same caller hit /stats or other handler names. Contain: block the source IP at the perimeter and stop the ait-bsc systemd unit (`systemctl stop ait-bsc`) — do NOT just kill the process because gevent greenlets can keep writing in an infinite-loop bug mentioned in the advisory. Hunt: review DeviceFileEvents for writes by python/ait-bsc into /etc, /root, /home/*/.ssh, site-packages/ait/, or any *.py outside the project tree in the previous 24h; verify SHA256 of any AIT-Core .py against the package wheel hashes; check for outbound TCP from ait-bsc to non-baseline destinations (see related UC2).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-231-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-231-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-231-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-231-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-231-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-231-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionFound&quot;,&quot;ListeningConnectionCreated&quot;)
-| where InitiatingProcessFileName matches regex @&quot;(?i)^(python(3(\.\d+)?)?|ait-bsc)(\.exe)?$&quot;
-| where InitiatingProcessCommandLine has_any (&quot;ait-bsc&quot;,&quot;ait.core.bsc&quot;,&quot;ait_bsc&quot;,&quot;StreamCaptureManagerServer&quot;,&quot;bsc.yaml&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Sessions=count(), AnyLocalPort=any(LocalPort) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-231-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let TraversalTokens = dynamic([&quot;log_dir_path&quot;,&quot;file_name_pattern&quot;,&quot;..%2F&quot;,&quot;..%2f&quot;,&quot;..%5C&quot;,&quot;..%5c&quot;,&quot;%2e%2e&quot;,&quot;path=%2F&quot;,&quot;path=/etc&quot;,&quot;path=/root&quot;,&quot;path=/home&quot;,&quot;path=/var&quot;,&quot;path=/tmp&quot;,&quot;log_dir_path=/&quot;]);
-let IISHits = W3CIISLog
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where csMethod =~ &quot;POST&quot;
-    | where csUriStem matches regex @&quot;(?i)^/[^/]+/start$&quot;
-    | where csUriQuery has_any (TraversalTokens) or csUriStem has_any (&quot;%2e%2e&quot;, &quot;..&quot;)
-    | project TimeGenerated, Host=Computer, SrcIp=tostring(cIP), DstPort=tostring(sPort), Uri=csUriStem, Detail=csUriQuery, UA=csUserAgent, Source=&quot;W3CIIS&quot;;
-let CEFHits = CommonSecurityLog
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where RequestMethod =~ &quot;POST&quot;
-    | where RequestURL matches regex @&quot;(?i)/[^/]+/start(\?|$)&quot;
-    | where Message has_any (TraversalTokens) or RequestURL has_any (&quot;%2e%2e&quot;, &quot;..&quot;)
-    | project TimeGenerated, Host=coalesce(DestinationHostName, DestinationDnsDomain, DeviceExternalID), SrcIp=SourceIP, DstPort=tostring(DestinationPort), Uri=RequestURL, Detail=Message, UA=RequestClientApplication, Source=&quot;CEF&quot;;
-let SyslogHits = Syslog
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where ProcessName has_any (&quot;ait-bsc&quot;,&quot;ait_bsc&quot;,&quot;bsc&quot;,&quot;python&quot;,&quot;python3&quot;)
-    | where SyslogMessage has &quot;/start&quot; and SyslogMessage has_any (TraversalTokens)
-    | project TimeGenerated, Host=Computer, SrcIp=HostIP, DstPort=&quot;&quot;, Uri=&quot;/&lt;name&gt;/start&quot;, Detail=SyslogMessage, UA=&quot;&quot;, Source=&quot;Syslog&quot;;
-union IISHits, CEFHits, SyslogHits
-| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Hits=count(), SampleDetail=any(Detail) by Host, SrcIp, Uri, Source
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-231-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: AIT-Core BSC Unauthenticated Path-Traversal POST (CVE-2026-47731)
-id: 8f3b1a2c-9d4e-4f5a-b6c7-d8e9f0a1b2c3
-description: Detects exploitation of CVE-2026-47731 — unauthenticated POST to the AIT-Core Binary Stream Capture /&lt;name&gt;/start endpoint carrying path-traversal-indicative form fields (log_dir_path, file_name_pattern, path) or %2e%2e/../ sequences that redirect the log_file write outside the configured root_log_directory.
-references:
-    - https://github.com/advisories/GHSA-p462-prxw-mjx4
-author: Threat Hunter Notebooks
-date: 2026/06/05
-tags:
-    - attack.t1190
-    - attack.initial_access
-    - cve.2026.47731
-logsource:
-    category: webserver
-detection:
-    selection_method:
-        cs-method: POST
-    selection_uri:
-        cs-uri-stem|re: &#x27;(?i)^/[^/]+/start$&#x27;
-    selection_payload:
-        cs-uri-query|contains:
-            - &#x27;log_dir_path&#x27;
-            - &#x27;file_name_pattern&#x27;
-            - &#x27;..%2F&#x27;
-            - &#x27;..%2f&#x27;
-            - &#x27;..%5C&#x27;
-            - &#x27;%2e%2e&#x27;
-            - &#x27;path=%2F&#x27;
-            - &#x27;path=/etc&#x27;
-            - &#x27;path=/root&#x27;
-            - &#x27;path=/home&#x27;
-            - &#x27;path=/var&#x27;
-    condition: selection_method and selection_uri and selection_payload
-falsepositives:
-    - Internal pen-test or vuln-scanner traffic (Tenable, Nessus, Burp Suite Pro)
-    - Legitimate ait-bsc admin testing with unusual log_dir_path values
-level: high</code></pre></div>
-    <div class="tab-content" id="art-231-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:nginx.access OR source:apache.access) @http.method:POST @http.url_details.path:*/start (@http.url_details.queryString:(*log_dir_path* OR *file_name_pattern* OR *%2e%2e* OR *path%3D%2Fetc* OR *path%3D%2Froot* OR *path%3D%2Fhome*) OR @http.url:(*%2e%2e* OR *..%2F* OR *..%5C*))</code></pre></div>
-    <div class="tab-content" id="art-231-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-231-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-231-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-231-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen values(Web.url) as urls values(Web.http_user_agent) as user_agents from datamodel=Web where Web.http_method=POST AND (Web.uri_path=&quot;*/start&quot; OR Web.url=&quot;*/start*&quot;) by Web.src Web.dest Web.uri_path Web.uri_query Web.url
-| `drop_dm_object_name(Web)`
-| where match(uri_path, &quot;(?i)^/[^/]+/start$&quot;) AND (match(uri_query, &quot;(?i)(log_dir_path|file_name_pattern|path)=&quot;) AND (match(uri_query, &quot;(?i)(\.\.|%2e%2e|=%2[Ff]|=/etc/|=/home/|=/root/|=/var/|=/tmp/|=/usr/)&quot;) OR match(url, &quot;(?i)(\.\.|%2e%2e)&quot;)))
-| stats values(urls) as urls values(user_agents) as user_agents min(first_seen) as first_seen max(last_seen) as last_seen sum(count) as hits by src dest uri_path
-| sort - last_seen</code></pre><pre class="spl-mode-body" id="art-231-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as first_seen max(_time) as last_seen values(Web.url) as urls values(Web.http_user_agent) as user_agents from datamodel=Web where Web.http_method=POST AND (Web.uri_path=&quot;*/start&quot; OR Web.url=&quot;*/start*&quot;) by Web.src Web.dest Web.uri_path Web.uri_query Web.url
-| `drop_dm_object_name(Web)`
-| where match(uri_path, &quot;(?i)^/[^/]+/start$&quot;) AND (match(uri_query, &quot;(?i)(log_dir_path|file_name_pattern|path)=&quot;) AND (match(uri_query, &quot;(?i)(\.\.|%2e%2e|=%2[Ff]|=/etc/|=/home/|=/root/|=/var/|=/tmp/|=/usr/)&quot;) OR match(url, &quot;(?i)(\.\.|%2e%2e)&quot;)))
-| stats values(urls) as urls values(user_agents) as user_agents min(first_seen) as first_seen max(last_seen) as last_seen sum(count) as hits by src dest uri_path
-| sort - last_seen</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="df055b105c" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">ait-bsc outbound TCP to public/non-baseline destination (attacker-supplied loc port)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="df055b105c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects ait-bsc / python processes running the ait.core.bsc StreamCaptureManager opening outbound TCP/UDP sessions to non-RFC1918, non-baseline destinations. Per CVE-2026-47731 the unauth /&lt;name&gt;/start endpoint lets a remote caller supply arbitrary `loc` + `port` form values which BSC dutifully `gevent.spawn`s a socket against — making BSC initiate egress to attacker-controlled infrastructure that then streams attacker-chosen bytes back into the file append sink.
-
-Rationale: Anchors directly on the article-confirmed primitive: the attacker controls `loc` and `port` in the form body and BSC `gevent.spawn`s a SocketStreamCapturer at that endpoint — i.e. BSC initiates the egress under attacker direction. Process-context match uses the exact module path (`ait.core.bsc`), class name (`StreamCaptureManagerServer`), and config file (`bsc.yaml`) shown in the source excerpt. Sentinel query splits process-context resolution onto ImProcessCreate (which carries ActingProcessCommandLine) and joins by DvcHostname into ImNetworkSession (which does not) — the schema-correct way to express the same logic the Defender query expresses inline. Cross-checked against GHSA-p462-prxw-mjx4 patch diff which restricts socket creation to validated paths only.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-p462-prxw-mjx4
-  • https://github.com/NASA-AMMOS/AIT-Core/blob/main/ait/core/bsc.py</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Content Injection">T1659</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate ground-station configurations where BSC connects to a public-IP downlink receiver (rare, but check bsc.yaml first)</li><li>Mission-ops sites running ait-bsc against a cloud-hosted relay (AWS Ground Station, Azure Orbital) which presents as a public IP</li><li>Engineer testing against a remote development BSC server over a tunnel that egresses to the tunnel endpoint&#x27;s public IP</li><li>Updates / pip installs run from the same venv where ait-bsc is installed (mitigated by the process-name filter, but pip can shell into python entrypoints)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DstIpAddr in (&quot;&lt;known_ground_station_ip_1&gt;&quot;,&quot;&lt;known_ground_station_ip_2&gt;&quot;)) and not (DstPortNumber in (8080, 8443) and BscCommandLine has &quot;--allow-public-relay&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: pull bsc.yaml from the host and confirm the destination IP+port is NOT in the configured handler list — any unrecognised loc is high-fidelity evil. Capture the BSC handler stats endpoint output (`GET /stats`) to enumerate every currently registered logger and their loc/port/path. Contain: stop the ait-bsc service and revoke any open TCP socket — note the advisory warns of an infinite-loop write bug on close, so plan disk-space monitoring during teardown. Hunt: search DeviceFileEvents for writes by the same ait-bsc PID within the same window, especially to .py / .sh / authorized_keys / cron paths; verify all AIT-Core site-packages files match the wheel hash; pivot the remote IP across DNS / proxy logs to find other internal hosts that reached out to it.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-231-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-231-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-231-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-231-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-231-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-231-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName matches regex @&quot;(?i)^(python(3(\.\d+)?)?|ait-bsc)(\.exe)?$&quot;
-| where InitiatingProcessCommandLine has_any (&quot;ait-bsc&quot;,&quot;ait.core.bsc&quot;,&quot;ait_bsc&quot;,&quot;StreamCaptureManagerServer&quot;,&quot;bsc.yaml&quot;)
-| where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionAttempt&quot;,&quot;ConnectionRequest&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Sessions=count(), DistinctRemotes=dcount(RemoteIP) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-231-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let BscHosts = ImProcessCreate
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where ActingProcessName matches regex @&quot;(?i)(python(3)?(\.\d+)?|ait-bsc)(\.exe)?$&quot;
-    | where ActingProcessCommandLine has_any (&quot;ait-bsc&quot;,&quot;ait.core.bsc&quot;,&quot;ait_bsc&quot;,&quot;StreamCaptureManagerServer&quot;,&quot;bsc.yaml&quot;)
-    | summarize Cmd=any(ActingProcessCommandLine) by DvcHostname;
-ImNetworkSession
-| where TimeGenerated &gt; ago(LookbackDays)
-| where NetworkDirection =~ &quot;Outbound&quot;
-| where NetworkProtocol in~ (&quot;TCP&quot;,&quot;UDP&quot;)
-| where DvcHostname in ((BscHosts | project DvcHostname))
-| where not(ipv4_is_private(DstIpAddr))
-| where DstIpAddr !startswith &quot;127.&quot; and DstIpAddr !startswith &quot;169.254.&quot;
-| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Sessions=count(), Bytes=sum(NetworkBytes) by DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkProtocol
-| join kind=leftouter BscHosts on DvcHostname
-| project FirstSeen, LastSeen, DvcHostname, BscCommandLine=Cmd, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkProtocol, Sessions, Bytes
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-231-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@Image:(*\\python.exe OR *\\Python.exe OR *\\python3.exe OR *\\PYTHON.EXE OR *\\ait-bsc.exe OR *\\ait-bsc OR *\\AIT-BSC.EXE)) (@CommandLine:(*ait-bsc* OR *ait.core.bsc* OR *AIT-BSC* OR *AIT.CORE.BSC* OR *StreamCaptureManagerServer* OR *bsc.yaml*)) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 169.254.0.0/16)</code></pre></div>
-    <div class="tab-content" id="art-231-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| ConnectionDirection=1
-| ContextImageFileName=/(python(3(\.\d+)?)?|ait-bsc)(\.exe)?$/i
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;169.254.0.0/16&quot;, field=RemoteAddressIP4)
-| join({#event_simpleName=ProcessRollup2 | regex(&quot;ait[-_.]?bsc|ait\\.core\\.bsc|StreamCaptureManagerServer&quot;, field=CommandLine) | groupBy([aid, TargetProcessId], function=count(as=hits))}, field=[aid, ContextProcessId], include=[CommandLine])
-| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-231-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-231-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-231-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-231-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen sum(All_Traffic.bytes_out) as bytes_out values(All_Traffic.process) as processes from datamodel=Network_Traffic where (All_Traffic.process_name=&quot;python*&quot; OR All_Traffic.process_name=&quot;ait-bsc*&quot; OR All_Traffic.app=&quot;ait-bsc&quot;) AND All_Traffic.direction=&quot;outbound&quot; AND NOT (All_Traffic.dest=&quot;10.0.0.0/8&quot; OR All_Traffic.dest=&quot;172.16.0.0/12&quot; OR All_Traffic.dest=&quot;192.168.0.0/16&quot; OR All_Traffic.dest=&quot;127.0.0.0/8&quot; OR All_Traffic.dest=&quot;169.254.0.0/16&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| where match(mvjoin(processes, &quot; &quot;), &quot;(?i)ait[-_.]?bsc|ait\.core\.bsc|StreamCaptureManager&quot;)
-| stats min(first_seen) as first_seen max(last_seen) as last_seen sum(count) as sessions sum(bytes_out) as bytes_out values(processes) as processes by src dest dest_port transport process_name
-| sort - first_seen</code></pre><pre class="spl-mode-body" id="art-231-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as first_seen max(_time) as last_seen sum(All_Traffic.bytes_out) as bytes_out values(All_Traffic.process) as processes from datamodel=Network_Traffic where (All_Traffic.process_name=&quot;python*&quot; OR All_Traffic.process_name=&quot;ait-bsc*&quot; OR All_Traffic.app=&quot;ait-bsc&quot;) AND All_Traffic.direction=&quot;outbound&quot; AND NOT (All_Traffic.dest=&quot;10.0.0.0/8&quot; OR All_Traffic.dest=&quot;172.16.0.0/12&quot; OR All_Traffic.dest=&quot;192.168.0.0/16&quot; OR All_Traffic.dest=&quot;127.0.0.0/8&quot; OR All_Traffic.dest=&quot;169.254.0.0/16&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| where match(mvjoin(processes, &quot; &quot;), &quot;(?i)ait[-_.]?bsc|ait\.core\.bsc|StreamCaptureManager&quot;)
-| stats min(first_seen) as first_seen max(last_seen) as last_seen sum(count) as sessions sum(bytes_out) as bytes_out values(processes) as processes by src dest dest_port transport process_name
-| sort - first_seen</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-231-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-231-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-231-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-231-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47731&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-231-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47731&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-231-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-231-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-231-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-231-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47731&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-231-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47731&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d0a65bf29d" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d0a65bf29d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-231-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-231-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-231-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-231-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;python_poc.py&quot;, &quot;attacker_tcp.py&quot;, &quot;dmc.py&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/home/user/...&quot;, &quot;/home/elias/ait-venv/...&quot;, &quot;/home/elias/ait-venv/.../dmc.py&quot;, &quot;/var/opt/ait-bsc/logs&quot;, &quot;/usr/bin/env&quot;, &quot;/home/elias/ait-venv/lib/python3.10/site-packages/ait/core/&quot;) or FileName in~ (&quot;python_poc.py&quot;, &quot;attacker_tcp.py&quot;, &quot;dmc.py&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-231-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;python_poc.py&quot;, &quot;attacker_tcp.py&quot;, &quot;dmc.py&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/home/user/...&quot;, &quot;/home/elias/ait-venv/...&quot;, &quot;/home/elias/ait-venv/.../dmc.py&quot;, &quot;/var/opt/ait-bsc/logs&quot;, &quot;/usr/bin/env&quot;, &quot;/home/elias/ait-venv/lib/python3.10/site-packages/ait/core/&quot;) or FileName in~ (&quot;python_poc.py&quot;, &quot;attacker_tcp.py&quot;, &quot;dmc.py&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-231-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-231-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-231-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-231-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;python_poc.py&quot;,&quot;attacker_tcp.py&quot;,&quot;dmc.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/home/user/...*&quot; OR Filesystem.file_path=&quot;*/home/elias/ait-venv/...*&quot; OR Filesystem.file_path=&quot;*/home/elias/ait-venv/.../dmc.py*&quot; OR Filesystem.file_path=&quot;*/var/opt/ait-bsc/logs*&quot; OR Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/home/elias/ait-venv/lib/python3.10/site-packages/ait/core/*&quot; OR Filesystem.file_name IN (&quot;python_poc.py&quot;,&quot;attacker_tcp.py&quot;,&quot;dmc.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-231-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;python_poc.py&quot;,&quot;attacker_tcp.py&quot;,&quot;dmc.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/home/user/...*&quot; OR Filesystem.file_path=&quot;*/home/elias/ait-venv/...*&quot; OR Filesystem.file_path=&quot;*/home/elias/ait-venv/.../dmc.py*&quot; OR Filesystem.file_path=&quot;*/var/opt/ait-bsc/logs*&quot; OR Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/home/elias/ait-venv/lib/python3.10/site-packages/ait/core/*&quot; OR Filesystem.file_name IN (&quot;python_poc.py&quot;,&quot;attacker_tcp.py&quot;,&quot;dmc.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-232" data-art-slug="2026-06-05-ghsa-critical-cve-2026-47670-authenticated-remote-code-execu"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadReader functionName code injection in DbGate Authenticated Remote Code Execution via loadReader functionName code injection in DbGate CVE-2026-47670 T1190 [LLM] DbGate loadReader functionName code injection (CVE-2026-47670) [LLM] DbGate node process spawning shell child (post-exploit RCE) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadRe">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-05-ghsa-critical-cve-2026-47670-authenticated-remote-code-execu" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-wm5r-5qp3-5vxf" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadReader functionName code injection in DbGate</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-05</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Authenticated Remote Code Execution via loadReader functionName code injection in DbGate</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47670</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-232-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-232"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-232-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] DbGate loadReader functionName code injection (CVE-2026-47670) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadRe</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] DbGate node process spawning shell child (post-exploit RCE)</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="659288d8d3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
-  <summary>
-    <span class="uc-title">DbGate loadReader functionName code injection (CVE-2026-47670)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="659288d8d3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP POST requests to the DbGate /runners/load-reader endpoint carrying an injection-shaped functionName (newline + import(&#x27;child_process&#x27;) + execSync). Article-specific to the unsanitized template interpolation in packages/api/src/controllers/runners.js.
-
-Rationale: Targets the article-specific URI path /runners/load-reader together with the bypass primitives the writeup names verbatim (child_process import, execSync, require=null bypass). The newline (%0A) is the structural injection marker the PoC requires to break out of the template literal.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal red-team or vulnerability scanner explicitly testing CVE-2026-47670</li><li>DbGate developer integration tests that include the literal endpoint and a benign functionName (allowlist by source IP)</li><li>Legitimate WAF / DAST tooling (Burp, ZAP, Nuclei) probing the host</li><li>Backups/exports tooling that proxies through DbGate but never sends child_process strings</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not SourceIP in (&quot;&lt;scanner-cidr&gt;&quot;, &quot;&lt;redteam-ip&gt;&quot;) and not csUserName in~ (&quot;dbgate-ci&quot;, &quot;dast-bot&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request body for the matching session, decode any URL-encoded newlines, and confirm functionName contains a newline plus child_process/import/execSync. Identify the authenticated DbGate user from the JWT and the source IP. 2) Contain: revoke the DbGate user&#x27;s credentials, rotate any DB connection passwords referenced in DbGate config, block the source IP at the proxy, and snapshot the DbGate container for forensics before restart. 3) Hunt: from the same source IP and same authenticated user, pivot to UC2 (node spawning shell), egress connections from the DbGate container, and any FileWritten events under /tmp/_rce_* or other UUID-suffixed paths that match the PoC&#x27;s jslout pattern.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-232-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-232-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-232-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-232-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-232-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-232-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-232-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteUrl has &quot;/runners/load-reader&quot; or InitiatingProcessCommandLine has &quot;/runners/load-reader&quot;
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let SuspectMarkers = dynamic([&quot;child_process&quot;,&quot;execSync&quot;,&quot;await import&quot;,&quot;%0A&quot;,&quot;\\nvar &quot;,&quot;\\nawait&quot;]);
-union isfuzzy=true
-(W3CIISLog
-  | where TimeGenerated &gt; ago(7d)
-  | where csMethod == &quot;POST&quot; and csUriStem endswith &quot;/runners/load-reader&quot;
-  | extend Payload = strcat(csUriQuery, &quot; &quot;, csUserAgent)
-  | where Payload has_any (SuspectMarkers)
-  | project TimeGenerated, sSiteName, cIP, csUserName, csUriStem, csUriQuery, csUserAgent, scStatus),
-(CommonSecurityLog
-  | where TimeGenerated &gt; ago(7d)
-  | where RequestMethod =~ &quot;POST&quot; and RequestURL has &quot;/runners/load-reader&quot;
-  | where RequestURL has_any (SuspectMarkers) or Message has_any (SuspectMarkers)
-  | project TimeGenerated, DeviceVendor, SourceIP, SourceUserName, RequestURL, RequestClientApplication, Message),
-(ImWebSession
-  | where TimeGenerated &gt; ago(7d)
-  | where HttpMethod =~ &quot;POST&quot; and Url has &quot;/runners/load-reader&quot;
-  | where Url has_any (SuspectMarkers)
-  | project TimeGenerated, SrcIpAddr, SrcUsername, Url, HttpRequestHeaderUserAgent, HttpStatusCode)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: DbGate loadReader functionName Code Injection (CVE-2026-47670)
-id: 7a0c7c9d-a4b1-4e3e-9b3f-2c1a5d6a9e21
-description: Detects exploitation of CVE-2026-47670 — code injection via the functionName parameter in DbGate /runners/load-reader, breaking out of the JS template via newline and importing child_process to bypass the require=null mitigation.
-references:
-  - https://github.com/advisories/GHSA-wm5r-5qp3-5vxf
-author: SOC Detection Engineering
-date: 2026/06/05
-tags:
-  - attack.t1190
-  - attack.t1059.007
-  - attack.initial_access
-logsource:
-  category: webserver
-detection:
-  selection_endpoint:
-    cs-method: POST
-    cs-uri-stem|endswith: &#x27;/runners/load-reader&#x27;
-  selection_payload:
-    cs-uri-query|contains:
-      - &#x27;child_process&#x27;
-      - &#x27;execSync&#x27;
-      - &#x27;await import&#x27;
-      - &#x27;%0A&#x27;
-  condition: selection_endpoint and selection_payload
-level: high</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:haproxy OR source:cloudflare OR source:iis OR source:apache) @http.method:POST @http.url_details.path:*/runners/load-reader (@http.url:(*child_process* OR *execSync* OR *await\ import* OR *%0A* OR *%0Aawait*) OR @http.useragent:(*child_process* OR *execSync*))</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/(node|dbgate)/i
-| regex(&quot;(child_process|execSync|await import|/runners/load-reader)&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.user) as user from datamodel=Web.Web where Web.http_method=POST Web.uri_path=&quot;*/runners/load-reader&quot; (Web.http_user_agent=* OR Web.url=*) by Web.dest Web.uri_path Web.src Web.user | `drop_dm_object_name(Web)` | search url=&quot;*child_process*&quot; OR url=&quot;*import(*&quot; OR url=&quot;*execSync*&quot; OR url=&quot;*\nvar*&quot; OR url=&quot;*%0Avar*&quot; OR url=&quot;*%0Aawait*&quot; | rename firstTime as earliest lastTime as latest | convert ctime(earliest) ctime(latest)</code></pre><pre class="spl-mode-body" id="art-232-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.user) as user from datamodel=Web.Web where Web.http_method=POST Web.uri_path=&quot;*/runners/load-reader&quot; (Web.http_user_agent=* OR Web.url=*) by Web.dest Web.uri_path Web.src Web.user | `drop_dm_object_name(Web)` | search url=&quot;*child_process*&quot; OR url=&quot;*import(*&quot; OR url=&quot;*execSync*&quot; OR url=&quot;*\nvar*&quot; OR url=&quot;*%0Avar*&quot; OR url=&quot;*%0Aawait*&quot; | rename firstTime as earliest lastTime as latest | convert ctime(earliest) ctime(latest)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="fd3c6328db" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">DbGate node process spawning shell child (post-exploit RCE)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="fd3c6328db" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for the dbgate / node.js process spawning a shell or command interpreter, which is the post-exploitation footprint of CVE-2026-47670&#x27;s child_process.execSync call. The legitimate DbGate runtime does not spawn /bin/sh or cmd.exe as children, so any such child is suspicious in container or host context.
-
-Rationale: DbGate&#x27;s normal runtime never spawns a POSIX shell or Windows command interpreter — the article explicitly states the bypass is `(await import(&#x27;child_process&#x27;)).execSync(...)`, so child-process creation under a node parent named dbgate is the direct execution-time signal. Pairs with UC1 to give one network-side and one host-side detection of the same chain.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DbGate plugin or admin shell-out feature in a customized fork (verify against vendor binary)</li><li>DbGate container&#x27;s entrypoint script invoking sh at startup (filter on container start time)</li><li>Backup / cron sidecars that exec sh inside the dbgate container&#x27;s PID namespace</li><li>Developer attaching to the dbgate pod via kubectl exec (filter by InitiatingProcessCommandLine containing &#x27;docker-exec&#x27; or by interactive TTY)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (InitiatingProcessCommandLine has_any (&quot;docker-entrypoint.sh&quot;,&quot;yarn start&quot;,&quot;npm start&quot;) and ProcessCommandLine has_any (&quot;-c&quot;,&quot;node &quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full child cmdline and walk back to the parent node process. If the cmdline matches recon (id, whoami, uname -a) or contains base64/curl/wget, treat as confirmed RCE. Correlate with UC1 within the same 60s window from the same DbGate instance. 2) Contain: kill the dbgate container/pod, isolate the host, rotate the DbGate admin password and any DB credentials in DbGate&#x27;s connection store (LOGIN_PASSWORD_*, PASSWORD_con*). 3) Hunt: pivot on the dbgate host&#x27;s outbound network connections in the prior hour, look for /tmp/_rce_*.jsonl style file writes referenced in the PoC, search for newly created users / SSH keys, and check the DB engines DbGate had connections to for follow-on activity from the dbgate host&#x27;s IP.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-232-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-232-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-232-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-232-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-232-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-232-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-232-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;node.exe&quot;,&quot;dbgate&quot;,&quot;dbgate.exe&quot;)
-   or InitiatingProcessFolderPath has_any (&quot;/app/packages/api&quot;, &quot;/dbgate&quot;, &quot;dbgate&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;,&quot;busybox&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;,&quot;pwsh.exe&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessIntegrityLevel
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(ImProcessCreate
-  | where TimeGenerated &gt; ago(7d)
-  | where ActingProcessName matches regex @&quot;(?i)(^|/|\\)(node|dbgate)(\.exe)?$&quot; or ActingProcessCommandLine has &quot;dbgate&quot;
-  | where TargetProcessName matches regex @&quot;(?i)(^|/|\\)(sh|bash|dash|zsh|ash|busybox|cmd\.exe|powershell\.exe|pwsh(\.exe)?)$&quot;
-  | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine),
-(SecurityEvent
-  | where TimeGenerated &gt; ago(7d)
-  | where EventID == 4688
-  | where ParentProcessName has_any (&quot;node.exe&quot;,&quot;dbgate.exe&quot;) 
-  | where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-  | project TimeGenerated, Computer, Account = SubjectUserName, ParentProcessName, NewProcessName, CommandLine),
-(Syslog
-  | where TimeGenerated &gt; ago(7d)
-  | where ProcessName in~ (&quot;auditd&quot;,&quot;audit&quot;)
-  | where SyslogMessage has &quot;type=EXECVE&quot; and SyslogMessage has_any (&quot;/bin/sh&quot;,&quot;/bin/bash&quot;,&quot;/bin/dash&quot;)
-  | where SyslogMessage has_any (&quot;node&quot;,&quot;dbgate&quot;)
-  | project TimeGenerated, HostName, SyslogMessage)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: DbGate Node Process Spawning Shell (CVE-2026-47670 Post-Exploit)
-id: 1d5f43c2-8b7e-4f5a-9c2b-3a4d6e7f0c12
-description: Detects a node.js / dbgate process spawning /bin/sh, bash, cmd.exe or powershell, which is the post-exploitation footprint of CVE-2026-47670 child_process import injection.
-references:
-  - https://github.com/advisories/GHSA-wm5r-5qp3-5vxf
-author: SOC Detection Engineering
-date: 2026/06/05
-tags:
-  - attack.t1190
-  - attack.t1059.004
-  - attack.t1059.003
-  - attack.execution
-logsource:
-  category: process_creation
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;/node&#x27;
-      - &#x27;\node.exe&#x27;
-      - &#x27;/dbgate&#x27;
-      - &#x27;\dbgate.exe&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/ash&#x27;
-      - &#x27;/busybox&#x27;
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-  condition: selection_parent and selection_child
-level: high</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:linux.auditd) (@ParentImage:(*\node.exe OR *\node OR *\dbgate OR *\dbgate.exe) OR @process.parent.executable.path:(*/node OR */dbgate)) (@Image:(*\sh OR */sh OR */bash OR */dash OR *\cmd.exe OR *\powershell.exe OR *\pwsh.exe) OR @process.executable.path:(*/sh OR */bash OR */dash OR */busybox))</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(node(\.exe)?|dbgate(\.exe)?)$/i
-| ImageFileName=/(\/|\\)(sh|bash|dash|zsh|ash|busybox|cmd\.exe|powershell\.exe|pwsh(\.exe)?)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=node OR Processes.parent_process_name=node.exe OR Processes.parent_process_name=dbgate OR Processes.parent_process_path=&quot;*dbgate*&quot;) (Processes.process_name=sh OR Processes.process_name=bash OR Processes.process_name=dash OR Processes.process_name=cmd.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh OR Processes.process_name=busybox) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | rename firstTime as earliest lastTime as latest | convert ctime(earliest) ctime(latest)</code></pre><pre class="spl-mode-body" id="art-232-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=node OR Processes.parent_process_name=node.exe OR Processes.parent_process_name=dbgate OR Processes.parent_process_path=&quot;*dbgate*&quot;) (Processes.process_name=sh OR Processes.process_name=bash OR Processes.process_name=dash OR Processes.process_name=cmd.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh OR Processes.process_name=busybox) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | rename firstTime as earliest lastTime as latest | convert ctime(earliest) ctime(latest)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-232-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-232-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-232-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-232-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47670&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-232-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47670&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-232-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47670&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-232-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47670&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0fa79d684a" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadRe</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0fa79d684a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-232-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-232-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-232-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-232-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadRe
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;poc.py&quot;, &quot;bundle.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/usr/bin/env&quot;, &quot;/tmp/_rce_&quot;, &quot;/etc/shadow&quot;, &quot;/root/.dbgate&quot;) or FileName in~ (&quot;poc.py&quot;, &quot;bundle.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadRe
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;poc.py&quot;, &quot;bundle.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/usr/bin/env&quot;, &quot;/tmp/_rce_&quot;, &quot;/etc/shadow&quot;, &quot;/root/.dbgate&quot;) or FileName in~ (&quot;poc.py&quot;, &quot;bundle.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadRe ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;poc.py&quot;,&quot;bundle.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/tmp/_rce_*&quot; OR Filesystem.file_path=&quot;*/etc/shadow*&quot; OR Filesystem.file_path=&quot;*/root/.dbgate*&quot; OR Filesystem.file_name IN (&quot;poc.py&quot;,&quot;bundle.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-232-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47670: Authenticated Remote Code Execution via loadRe ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;poc.py&quot;,&quot;bundle.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/tmp/_rce_*&quot; OR Filesystem.file_path=&quot;*/etc/shadow*&quot; OR Filesystem.file_path=&quot;*/root/.dbgate*&quot; OR Filesystem.file_name IN (&quot;poc.py&quot;,&quot;bundle.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>
