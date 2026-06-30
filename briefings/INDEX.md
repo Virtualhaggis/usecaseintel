@@ -10,14 +10,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-30
 - [airdrop and quick share flaws let nearby attackers trigger c](./2026-06-30/airdrop-and-quick-share-flaws-let-nearby-attackers-trigger-c.md)
-- [apple patches 30 ios macos safari flaws including ai discove](./2026-06-30/apple-patches-30-ios-macos-safari-flaws-including-ai-discove.md)
 - [attackers exploit simplehelp cve 2026 48558 to deploy taskwe](./2026-06-30/attackers-exploit-simplehelp-cve-2026-48558-to-deploy-taskwe.md)
 - [blackfield ransomware asks nidec corporation for 2 million r](./2026-06-30/blackfield-ransomware-asks-nidec-corporation-for-2-million-r.md)
 - [cisa windows bluehammer flaw now exploited by ransomware gan](./2026-06-30/cisa-windows-bluehammer-flaw-now-exploited-by-ransomware-gan.md)
+- [guardfall exposes open source ai coding agents to decades ol](./2026-06-30/guardfall-exposes-open-source-ai-coding-agents-to-decades-ol.md)
 - [insurance giant aflac discloses data breach after subsidiary](./2026-06-30/insurance-giant-aflac-discloses-data-breach-after-subsidiary.md)
+- [microsoft adds smarter bot protection to teams meetings](./2026-06-30/microsoft-adds-smarter-bot-protection-to-teams-meetings.md)
 - [new bioshocking attack tricks ai browsers into leaking user ](./2026-06-30/new-bioshocking-attack-tricks-ai-browsers-into-leaking-user-.md)
+- [oracle e business suite flaw cve 2026 46817 actively exploit](./2026-06-30/oracle-e-business-suite-flaw-cve-2026-46817-actively-exploit.md)
 - [progress kemp loadmaster flaw could let attackers run root c](./2026-06-30/progress-kemp-loadmaster-flaw-could-let-attackers-run-root-c.md)
 - [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
+- [what the numbers say about fifa 2026 cyber risk](./2026-06-30/what-the-numbers-say-about-fifa-2026-cyber-risk.md)
 
 ## 2026-06-29
 - [236 000 dcloud uni app sites used in crypto scams phishing a](./2026-06-29/236-000-dcloud-uni-app-sites-used-in-crypto-scams-phishing-a.md)
@@ -27,13 +30,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers now exploit critical oracle e business flaw in attac](./2026-06-29/hackers-now-exploit-critical-oracle-e-business-flaw-in-attac.md)
 - [hijacked npm and go packages use vs code tasks to deploy pyt](./2026-06-29/hijacked-npm-and-go-packages-use-vs-code-tasks-to-deploy-pyt.md)
 - [inside the inbox why cybercriminals want to break into your ](./2026-06-29/inside-the-inbox-why-cybercriminals-want-to-break-into-your-.md)
-- [malicious perplexity chrome extension intercepted searches a](./2026-06-29/malicious-perplexity-chrome-extension-intercepted-searches-a.md)
 - [microsoft removes 119 edge extensions that hid malware in im](./2026-06-29/microsoft-removes-119-edge-extensions-that-hid-malware-in-im.md)
 - [nissan discloses employee data breach linked to oracle zero ](./2026-06-29/nissan-discloses-employee-data-breach-linked-to-oracle-zero-.md)
 - [public poc released for critical libssh2 cve 2026 55200 clie](./2026-06-29/public-poc-released-for-critical-libssh2-cve-2026-55200-clie.md)
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
 - [the gentlemen are knocking ustom backdoors and evolving tact](./2026-06-29/the-gentlemen-are-knocking-ustom-backdoors-and-evolving-tact.md)
 - [u s offers 10 million for hackers targeting whatsapp signal ](./2026-06-29/u-s-offers-10-million-for-hackers-targeting-whatsapp-signal-.md)
+- [whatsapp is finally getting usernames to help keep phone num](./2026-06-29/whatsapp-is-finally-getting-usernames-to-help-keep-phone-num.md)
 
 ## 2026-06-27
 - [ukraine says russian intelligence used fake support texts to](./2026-06-27/ukraine-says-russian-intelligence-used-fake-support-texts-to.md)
@@ -85,11 +88,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
 - [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
-- [malicious npm packages pose as postcss tools to deliver wind](./2026-06-23/malicious-npm-packages-pose-as-postcss-tools-to-deliver-wind.md)
-- [openai expands daybreak with gpt 5 5 cyber to help defenders](./2026-06-23/openai-expands-daybreak-with-gpt-5-5-cyber-to-help-defenders.md)
 - [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
-- [whatsapp vbscript campaign uses fake documents to install ma](./2026-06-23/whatsapp-vbscript-campaign-uses-fake-documents-to-install-ma.md)
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
 
 ## 2026-06-22
@@ -659,9 +659,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 11953 react native community cli os comman](./2026-02-05/cisa-kev-cve-2025-11953-react-native-community-cli-os-comman.md)
 - [cisa kev cve 2026 24423 smartertools smartermail missing aut](./2026-02-05/cisa-kev-cve-2026-24423-smartertools-smartermail-missing-aut.md)
 - [snyk finds prompt injection in 36 1467 malicious payloads in](./2026-02-05/snyk-finds-prompt-injection-in-36-1467-malicious-payloads-in.md)
-
-## 2026-02-04
-- [npx confusion packages that forgot to claim their own name](./2026-02-04/npx-confusion-packages-that-forgot-to-claim-their-own-name.md)
 
 ## 2026-02-03
 - [cisa kev cve 2019 19006 sangoma freepbx improper authenticat](./2026-02-03/cisa-kev-cve-2019-19006-sangoma-freepbx-improper-authenticat.md)
@@ -3969,6 +3966,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2017-03-21
 - [type manipulation escaping template sandboxes](./2017-03-21/type-manipulation-escaping-template-sandboxes.md)
+
+## 2017-03-14
+- [fixing a prototype override protection bypass vulnerability ](./2017-03-14/fixing-a-prototype-override-protection-bypass-vulnerability-.md)
 
 ## 2017-01-17
 - [regular expression denial of service redos and catastrophic ](./2017-01-17/regular-expression-denial-of-service-redos-and-catastrophic-.md)

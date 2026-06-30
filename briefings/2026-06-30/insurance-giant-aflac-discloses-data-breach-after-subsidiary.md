@@ -11,15 +11,9 @@ By Sergiu Gatlan
 June 30, 2026
 07:12 AM
 0 
-
-
 American insurance giant Aflac has disclosed a new data breach after attackers breached its Japan subsidiary's systems and stole personal and bank account information.
-
-
 Aflac (short for American Family Life Assurance Company) is a Fortune 500 company and the largest supplemental insurance provider in the United States, serving millions of customers in the U.S. and Japan.
-
-
-In a…
+In a filing with…
 
 ## Indicators of Compromise (high-fidelity only)
 

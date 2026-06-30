@@ -50,9 +50,9 @@ We continue to share details on the malicious techniques and toolsets used by th
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
 - **T1036.004** — Masquerading: Masquerade Task or Service
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1185** — Browser Session Hijacking
-- **T1539** — Steal Web Session Cookie
 - **T1134.003** — Access Token Manipulation: Make and Impersonate Token
+- **T1185** — Browser Session Hijacking
+- **T1114.002** — Email Collection: Remote Email Collection
 
 ## Kill chain phases observed
 
@@ -60,98 +60,113 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ToddyCat Umbrij scheduled task masquerading as Kaspersky EDR (KasperskyEndpointSecurityEDRAvp)
+### Masquerading scheduled task 'KasperskyEndpointSecurityEDRAvp' launching a signed binary
 
-`UC_3_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-(index=* source="WinEventLog:Security") EventCode=4698 Task_Name="*KasperskyEndpointSecurityEDRAvp*"
-| table _time, host, Task_Name, Caller_User_Name, Account_Name, Command
-| sort - _time
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*KasperskyEndpointSecurityEDRAvp*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceEvents
-| where Timestamp > ago(30d)
-| where ActionType == "ScheduledTaskCreated"
-| where AdditionalFields has "KasperskyEndpointSecurityEDRAvp"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, AdditionalFields
+union
+(DeviceProcessEvents | where Timestamp > ago(30d) | where ProcessCommandLine has "KasperskyEndpointSecurityEDRAvp" | project Timestamp, DeviceName, AccountName, Evidence=ProcessCommandLine, InitiatingProcessFileName),
+(DeviceRegistryEvents | where Timestamp > ago(30d) | where RegistryKey has @"\TaskCache\" and RegistryKey has "KasperskyEndpointSecurityEDRAvp" | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Evidence=RegistryKey, InitiatingProcessFileName)
 | order by Timestamp desc
 ```
 
-### ToddyCat Umbrij DLL sideload — signed host EXE loading attacker DLL from writable path
+### ToddyCat Umbrij DLL side-loading: signed host loading malicious log.dll/GoogleServices.dll from writable path
 
-`UC_3_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-(index=* source="*WinEventLog:*Sysmon*") EventCode=7
-((Image="*\\BDSubWiz.exe" ImageLoaded="*\\log.dll") OR (Image="*\\VSTestVideoRecorder.exe" ImageLoaded="*\\Microsoft.VisualStudio.QualityTools.VideoRecorderEngine.dll") OR (Image="*\\GoogleDesktop.exe" ImageLoaded="*\\GoogleServices.dll"))
-| search (ImageLoaded="*\\Users\\Public\\*" OR ImageLoaded="*\\Windows\\vss\\*" OR Image="*\\Users\\Public\\*" OR Image="*\\Windows\\vss\\*")
-| table _time, host, Image, ImageLoaded, Signed, SignatureStatus
-| sort - _time
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="BDSubWiz.exe" OR Processes.process_name="bds.exe" OR Processes.process_name="VSTestVideoRecorder.exe" OR Processes.process_name="GoogleDesktop.exe") AND (Processes.process_path="*\\Users\\Public\\*" OR Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\Windows\\Temp\\*" OR Processes.process_path="*\\Windows\\vss\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceImageLoadEvents
 | where Timestamp > ago(30d)
-| where (InitiatingProcessFileName =~ "BDSubWiz.exe" and FileName =~ "log.dll")
+| where (InitiatingProcessFileName in~ ("BDSubWiz.exe","bds.exe") and FileName =~ "log.dll")
      or (InitiatingProcessFileName =~ "VSTestVideoRecorder.exe" and FileName =~ "Microsoft.VisualStudio.QualityTools.VideoRecorderEngine.dll")
      or (InitiatingProcessFileName =~ "GoogleDesktop.exe" and FileName =~ "GoogleServices.dll")
-| where InitiatingProcessFolderPath has_any (@"\Users\Public\", @"\Windows\vss\") or FolderPath has_any (@"\Users\Public\", @"\Windows\vss\")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256
+| where FolderPath has_any (@"\Users\Public\", @"\AppData\Local\Temp\", @"\Windows\Temp\", @"\Windows\vss\")
+     or MD5 in~ ("4C39087E5229A70F0215AFB8B7083091","22AAEB4946BA6D2F2E27FEB7DBB295DE")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFolderPath, Dll=FileName, DllPath=FolderPath, MD5, SHA256
 | order by Timestamp desc
 ```
 
-### ToddyCat STRD — Chromium browser launched with --remote-debugging-port by non-browser parent
+### Umbrij command-line switches (-deepsearch / -runas-currentuser / -debugport / -domainAd / -savepdf)
 
-`UC_3_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("chrome.exe","msedge.exe","brave.exe")) Processes.process="*--remote-debugging-port*" NOT (Processes.parent_process_name IN ("explorer.exe","chrome.exe","msedge.exe","brave.exe","userinit.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*-deepsearch*" OR Processes.process="*-runas-currentuser*" OR Processes.process="*-domainAd*" OR Processes.process="*-savepdf*" OR (Processes.process="*-debugport*" AND Processes.process="*-browser*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
-| sort - lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("chrome.exe","msedge.exe","brave.exe")
-| where ProcessCommandLine has "--remote-debugging-port"
-| where InitiatingProcessFileName in~ ("BDSubWiz.exe","VSTestVideoRecorder.exe","GoogleDesktop.exe","bds.exe")
-     or InitiatingProcessFileName !in~ ("explorer.exe","chrome.exe","msedge.exe","brave.exe","userinit.exe","svchost.exe")
-| extend Headless = ProcessCommandLine has_any ("--headless","--remote-debugging-pipe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, Headless
-| order by Timestamp desc
-```
-
-### ToddyCat Umbrij command-line parameters (-deepsearch/-regex/-debugport/-browser/-domainAd)
-
-`UC_3_9` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process="*-deepsearch*" AND Processes.process="*-regex*") OR (Processes.process="*-debugport*" AND Processes.process="*-browser*") OR Processes.process="*-runas-currentuser*" OR Processes.process="*-domainAd*" OR Processes.process="*-savepdf*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (ProcessCommandLine has "-deepsearch" and ProcessCommandLine has "-regex")
-     or (ProcessCommandLine has "-debugport" and ProcessCommandLine has "-browser")
-     or (ProcessCommandLine has "-browser" and ProcessCommandLine has "-path" and ProcessCommandLine has_any ("both","msedge","chrome"))
-     or ProcessCommandLine has "-runas-currentuser"
-     or ProcessCommandLine has "-domainAd"
-     or ProcessCommandLine has "-savepdf"
+| where AccountName !endswith "$"
+| where ProcessCommandLine has_any ("-deepsearch","-runas-currentuser","-domainAd","-savepdf")
+   or (ProcessCommandLine has "-debugport" and ProcessCommandLine has "-browser")
 | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| order by Timestamp desc
+```
+
+### Chromium browser launched headless with --remote-debugging-port by a non-browser parent (STRD)
+
+`UC_8_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="chrome.exe" OR Processes.process_name="msedge.exe" OR Processes.process_name="chromium.exe") AND Processes.process="*--remote-debugging-port*" AND (Processes.process="*--headless*" OR Processes.parent_process_name="BDSubWiz.exe" OR Processes.parent_process_name="bds.exe" OR Processes.parent_process_name="VSTestVideoRecorder.exe" OR Processes.parent_process_name="GoogleDesktop.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName in~ ("chrome.exe","msedge.exe","chromium.exe","brave.exe")
+| where ProcessCommandLine has "--remote-debugging-port"
+| where InitiatingProcessFileName in~ ("BDSubWiz.exe","bds.exe","VSTestVideoRecorder.exe","GoogleDesktop.exe")
+     or ProcessCommandLine has "--headless"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### Sideload-host binary connecting to Google OAuth/Gmail API endpoints (token exchange)
+
+`UC_8_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name="BDSubWiz.exe" OR All_Traffic.process_name="bds.exe" OR All_Traffic.process_name="VSTestVideoRecorder.exe" OR All_Traffic.process_name="GoogleDesktop.exe") AND (All_Traffic.dest="*googleapis.com*" OR All_Traffic.dest="*accounts.google.com*") by All_Traffic.src All_Traffic.dest All_Traffic.process_name All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("BDSubWiz.exe","bds.exe","VSTestVideoRecorder.exe","GoogleDesktop.exe")
+| where RemoteUrl has_any ("oauth2.googleapis.com","accounts.google.com","www.googleapis.com","gmail.googleapis.com","googleapis.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
@@ -268,7 +283,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ToddyCat: your hidden email assistant. Part 2
 
-`UC_3_5` · phase: **exploit** · confidence: **High**
+`UC_8_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -344,4 +359,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

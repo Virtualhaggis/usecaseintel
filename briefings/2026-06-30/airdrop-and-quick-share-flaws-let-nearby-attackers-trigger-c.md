@@ -28,6 +28,7 @@ An attacker within wireless range, with just a laptop and no prior connection, c
 - **T1219** — Remote Access Software
 - **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 - **T1203** — Exploitation for Client Execution
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
@@ -35,30 +36,57 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Repeated crashes of Google Quick Share for Windows (nearby_share.exe) — V6 use-after-free probing
+### Google Quick Share for Windows (nearby_share.exe) repeated crash/restart loop — UAF DoS
 
-`UC_6_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=WerFault.exe Processes.parent_process_name=nearby_share.exe by Processes.dest Processes.parent_process_name Processes.process_name
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="nearby_share.exe" by Processes.dest, Processes.user, _time span=10m
 | `drop_dm_object_name(Processes)`
-| where count>=2
+| where count>=5
 | `security_content_ctime(firstTime)`
 | `security_content_ctime(lastTime)`
-| sort - count
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+// Google Quick Share for Windows (nearby_share.exe) crash-restart loop — sustained proximity/LAN UAF DoS
+DeviceProcessEvents
+| where Timestamp > ago(1d)
+| where FileName =~ "nearby_share.exe"
+| summarize LaunchCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            SampleFolder = any(FolderPath), SampleCompany = any(ProcessVersionInfoCompanyName)
+        by DeviceName, AccountName, bin(Timestamp, 10m)
+| where LaunchCount >= 5   // >=5 (re)starts of the Quick Share tray app in 10 min = crash loop; normal lifecycle is 1 start per logon
+| order by LastSeen desc
+```
+
+### Google Quick Share for Windows (nearby_share.exe) spawning shell or LOLBin — UAF code execution
+
+`UC_11_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="nearby_share.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+// nearby_share.exe (Quick Share for Windows) spawning a shell/LOLBin child — possible UAF -> code execution
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where FileName =~ "WerFault.exe"
-| where InitiatingProcessFileName =~ "nearby_share.exe" or InitiatingProcessFolderPath has @"\Google\Nearby Share"
-| summarize CrashCount = count(), FirstCrash = min(Timestamp), LastCrash = max(Timestamp), SampleCmd = any(ProcessCommandLine)
-    by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
-| where CrashCount >= 2   // 1 crash = benign app bug; >=2 crashes of a network-facing sharing service => likely V6 UAF probing
-| order by CrashCount desc
+| where InitiatingProcessFileName =~ "nearby_share.exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -260,4 +288,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

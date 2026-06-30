@@ -36,7 +36,7 @@ Progress  pu…
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
+- **T1036.008** — Masquerading: Masquerade File Type
 
 ## Kill chain phases observed
 
@@ -44,28 +44,42 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Kemp LoadMaster pre-auth RCE: command-injection POST to /accessv2 (CVE-2026-8037)
+### Kemp LoadMaster CVE-2026-8037 pre-auth RCE via /accessv2 heap-overflow command injection
 
-`UC_9_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url="*/accessv2*" by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_user_agent, Web.status
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*/accessv2*" Web.http_method=POST by Web.src Web.dest _time span=5m
 | `drop_dm_object_name(Web)`
-| sort - lastTime
-| eval note="Body inspection requires raw WAF/ADC logs - confirm presence of apiuser='''' and 'AAAA...; <cmd> #' spray keys g0-g60"
+| where count > 20
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+| comment("20+ unauthenticated POSTs to /accessv2 from one source in 5m = post-PoC mass exploitation/probing wave; single-shot exploitation needs raw WAF body inspection for the g0..g60 / '; cat /etc/passwd # markers")
 ```
 
-### LoadMaster 'access' binary spawning root shell commands (CVE-2026-8037 post-exploit)
+### Root command execution on Kemp LoadMaster appliance following /accessv2 exploitation
 
-`UC_9_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_14_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name=access by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process
-| `drop_dm_object_name(Processes)`
-| search process="*/etc/passwd*" OR process="*; cat *" OR process="*; id*" OR process="*; whoami*" OR process="*'; *" OR process="*nc *" OR process="*/bin/sh*"
-| sort - lastTime
+index=* sourcetype=syslog (host=*loadmaster* OR host=*lmos* OR host=*kemp*) ("/etc/passwd" OR "/dev/tcp/" OR "bash -i" OR "/bin/sh -c" OR "/bin/bash -c")
+| table _time host process syslog_message
+| sort - _time
+| comment("LoadMaster forwards to a non-CIM syslog sourcetype; raw search. Scope host to your appliance naming convention.")
+```
+
+### Kemp LoadMaster CVE-2026-33691 WAF bypass via whitespace-padded upload filename extension
+
+`UC_14_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*%20.php*" OR Web.url="*%20.cgi*" OR Web.url="*%20.sh*" OR Web.url="*%20.pl*" OR Web.url="*.php%20*" OR Web.url="*.cgi%20*" OR Web.url="*.sh%20*") by Web.src Web.dest Web.url Web.http_method
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -358,4 +372,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

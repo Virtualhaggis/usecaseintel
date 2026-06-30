@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### UNC5792/UNC4221 Signal & WhatsApp typosquat lure-domain resolution
 
-`UC_16_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_21_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Inbound mail delivering UNC5792 Signal recovery-key lure domains
 
-`UC_16_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_21_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -84,7 +84,7 @@ EmailEvents
 
 ### Signal linked-device hijack URI (sgnl://linkdevice) & recovery-key lure pages
 
-`UC_16_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_21_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

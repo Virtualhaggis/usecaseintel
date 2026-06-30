@@ -11,20 +11,13 @@ By Bill Toulas
 June 30, 2026
 05:41 AM
 0 
-
-
 The Blackfield ransomware gang is asking for a $2 million ransom from Nidec Corporation, a large Japanese manufacturer of electronic components for automotive and computing applications.
-
-
 Nidec is a leader in producing motors of all sizes, from micro-precision ones used in phones and hard drives to heavy-duty motors for robotics,  elevators, and large HVAC systems.
-
-
-The company…
+The company also design…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `ccic.com.tw`
-- **Domain (defanged):** `send.exploit.in`
 
 ## MITRE ATT&CK Techniques
 
@@ -45,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Blackfield (BlackFL) ransomware encryption: .BlackFL extension + BlackField_ReadMe.txt note drop
 
-`UC_5_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +67,7 @@ DeviceFileEvents
 
 ### Blackfield ransomware Volume Shadow Copy deletion via WMIC (inhibit recovery)
 
-`UC_5_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +175,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `ccic.com.tw`, `send.exploit.in`
+  - IP / domain IOC(s): `ccic.com.tw`
 
 
 ## Why this matters
