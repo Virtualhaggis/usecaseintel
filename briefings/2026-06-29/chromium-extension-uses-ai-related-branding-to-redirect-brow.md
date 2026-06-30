@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Search-interception traffic to Perplexity typosquat domain perplexity-ai[.]online
 
-`UC_5_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### Malicious Perplexity-spoofing extension ID flkebkiofojicogddingbdmcmkpbplcd written to disk
 
-`UC_5_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -318,7 +318,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chromium extension uses AI‑related branding to redirect browser search
 
-`UC_5_7` · phase: **exploit** · confidence: **High**
+`UC_8_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

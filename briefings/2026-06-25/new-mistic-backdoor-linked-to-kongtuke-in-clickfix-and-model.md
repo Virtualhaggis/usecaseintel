@@ -89,7 +89,7 @@ _(none detected from narrative keywords)_
 
 ### Mistic backdoor DLL side-load: MpExtMs.exe loading rogue version.dll / EndpointDlp.dll
 
-`UC_57_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_59_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceImageLoadEvents
 
 ### KongTuke ClickFix DNS staging: nslookup TXT queries to Mistic/ModeloRAT domains
 
-`UC_57_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_59_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceProcessEvents
 
 ### Mistic / ModeloRAT C2 beacon to KongTuke domains and IPs
 
-`UC_57_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_59_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### Backdoor.Mistic loader/payload file hash sweep
 
-`UC_57_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_59_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -515,7 +515,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — New Mistic Backdoor Linked to KongTuke in ClickFix and ModeloRAT Campaigns
 
-`UC_57_12` · phase: **exploit** · confidence: **High**
+`UC_59_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

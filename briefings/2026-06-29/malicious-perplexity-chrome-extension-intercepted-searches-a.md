@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Browser traffic to Perplexity look-alike domain perplexity-ai.online (search interception)
 
-`UC_2_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceNetworkEvents
 
 ### Malicious 'Search for perplexity ai' extension files written (ID flkebkiofojicogddingbdmcmkpbplcd)
 
-`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

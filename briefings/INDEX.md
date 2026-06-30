@@ -10,6 +10,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-30
 - [apple patches 30 ios macos safari flaws including ai discove](./2026-06-30/apple-patches-30-ios-macos-safari-flaws-including-ai-discove.md)
+- [cisa windows bluehammer flaw now exploited by ransomware gan](./2026-06-30/cisa-windows-bluehammer-flaw-now-exploited-by-ransomware-gan.md)
+- [new bioshocking attack tricks ai browsers into leaking user ](./2026-06-30/new-bioshocking-attack-tricks-ai-browsers-into-leaking-user-.md)
+- [progress kemp loadmaster flaw could let attackers run root c](./2026-06-30/progress-kemp-loadmaster-flaw-could-let-attackers-run-root-c.md)
 
 ## 2026-06-29
 - [236 000 dcloud uni app sites used in crypto scams phishing a](./2026-06-29/236-000-dcloud-uni-app-sites-used-in-crypto-scams-phishing-a.md)
@@ -43,7 +46,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new linux pedit cow exploit enables root access by poisoning](./2026-06-26/new-linux-pedit-cow-exploit-enables-root-access-by-poisoning.md)
 - [new sharkloader malware deploys cobalt strike in strikeshark](./2026-06-26/new-sharkloader-malware-deploys-cobalt-strike-in-strikeshark.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
-- [polymarket customers lose 3 million in supply chain attack](./2026-06-26/polymarket-customers-lose-3-million-in-supply-chain-attack.md)
 - [threat brief mitigating large scale credential attacks](./2026-06-26/threat-brief-mitigating-large-scale-credential-attacks.md)
 - [top koi alternatives in 2026](./2026-06-26/top-koi-alternatives-in-2026.md)
 
@@ -90,9 +92,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [29 year old squid proxy bug squidbleed can leak cleartext ht](./2026-06-22/29-year-old-squid-proxy-bug-squidbleed-can-leak-cleartext-ht.md)
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [guarding ai memory](./2026-06-22/guarding-ai-memory.md)
-- [new oxloader loader uses malicious google ads to deliver cas](./2026-06-22/new-oxloader-loader-uses-malicious-google-ads-to-deliver-cas.md)
 - [one intrusion two cyberattackers uncovering parallel threat ](./2026-06-22/one-intrusion-two-cyberattackers-uncovering-parallel-threat-.md)
-- [researchers detail difytap flaws in dify that could expose a](./2026-06-22/researchers-detail-difytap-flaws-in-dify-that-could-expose-a.md)
 - [shapedplugin wordpress pro plugins backdoored in supply chai](./2026-06-22/shapedplugin-wordpress-pro-plugins-backdoored-in-supply-chai.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 

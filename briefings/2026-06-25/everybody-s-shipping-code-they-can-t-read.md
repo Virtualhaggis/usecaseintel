@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### easy-day-js npm postinstall dropper: node executing setup.cjs --no-warnings
 
-`UC_63_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_65_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### easy-day-js stealer C2 beacon to Hostwinds 23.254.164.0/24 (ports 8000/443)
 
-`UC_63_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_65_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### easy-day-js Windows persistence: Run key 'NvmProtocal' / protocal.cjs autostart
 
-`UC_63_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_65_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceRegistryEvents
 
 ### easy-day-js implant artifacts dropped: protocal.cjs / NodePackages / cross-OS persistence files
 
-`UC_63_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_65_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
