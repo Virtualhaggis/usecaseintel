@@ -28,9 +28,9 @@ Microsoft says Google removed it from the store after responsi…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
+- **T1185** — Browser Session Hijacking
 - **T1041** — Exfiltration Over C2 Channel
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1056.004** — Input Capture: Credential API Hooking
 
 ## Kill chain phases observed
 
@@ -38,13 +38,37 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Browser traffic to Perplexity look-alike domain perplexity-ai.online (search interception)
+### Malicious 'Search for perplexity ai' Chrome/Edge extension install by ID flkebkiofojicogddingbdmcmkpbplcd
 
-`UC_5_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_12_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query="*perplexity-ai.online*" by DNS.src, DNS.dest, DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*flkebkiofojicogddingbdmcmkpbplcd*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "flkebkiofojicogddingbdmcmkpbplcd" or FileName has "flkebkiofojicogddingbdmcmkpbplcd"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Browser search/suggest traffic to Perplexity look-alike C2 domain perplexity-ai.online
+
+`UC_12_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*perplexity-ai.online*" by DNS.src DNS.dest DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -52,26 +76,8 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteUrl has "perplexity-ai.online"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe","vivaldi.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Malicious 'Search for perplexity ai' extension files written (ID flkebkiofojicogddingbdmcmkpbplcd)
-
-`UC_5_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*flkebkiofojicogddingbdmcmkpbplcd*" by Filesystem.dest, Filesystem.file_path, Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath has "flkebkiofojicogddingbdmcmkpbplcd"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","chrome_proxy.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 

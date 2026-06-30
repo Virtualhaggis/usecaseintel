@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Log4Shell JNDI lookup injection string in HTTP requests / process cmdline (${jndi:ldap})
 
-`UC_2518_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2519_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Java process making outbound LDAP/RMI connection (Log4Shell second-stage class fetch)
 
-`UC_2518_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2519_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### Java/Tomcat process spawning OS shell (Log4Shell Runtime.exec post-exploitation)
 
-`UC_2518_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2519_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Log4Shell in a nutshell (for non-developers & non-Java developers)
 
-`UC_2518_2` · phase: **install** · confidence: **High**
+`UC_2519_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

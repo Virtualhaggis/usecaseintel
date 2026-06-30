@@ -25,9 +25,10 @@ UPDATE: August 26, 2019 Since posting this, AWS has made some public statements 
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1619** — Cloud Storage Object Discovery
 - **T1530** — Data from Cloud Storage
+- **T1580** — Cloud Infrastructure Discovery
 
 ## Kill chain phases observed
 
@@ -35,55 +36,49 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### EC2 instance-metadata credential theft via curl to 169.254.169.254 IAM endpoint
+### EC2 instance IMDS credential theft via curl/wget to security-credentials path
 
-`UC_3195_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3196_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where Processes.process="*169.254.169.254*" Processes.process="*iam/security-credentials*" by Processes.dest Processes.user Processes.process_name
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("curl","wget","python","python3","curl.exe","wget.exe")) (Processes.process="*169.254.169.254*" Processes.process="*security-credentials*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 | `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where ProcessCommandLine has "169.254.169.254"
-| where ProcessCommandLine has "iam/security-credentials"
-| where FileName in~ ("curl","wget","python","python3","perl","ruby","php","node","bash","sh")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FileName in~ ("curl","wget","curl.exe","wget.exe","python","python3")
+| where ProcessCommandLine has "169.254.169.254" and ProcessCommandLine has "security-credentials"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### EC2 instance-role temporary credentials used from non-AWS public IP (exfiltrated creds)
+### WAF-Role EC2 instance credentials used from external IP (instance credential exfiltration)
 
-`UC_3195_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3196_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* sourcetype=aws:cloudtrail userIdentity.type=AssumedRole NOT errorCode=*
-| eval src=sourceIPAddress
-| where src!="AWS Internal" AND NOT cidrmatch("10.0.0.0/8", src) AND NOT cidrmatch("172.16.0.0/12", src) AND NOT cidrmatch("192.168.0.0/16", src) AND NOT cidrmatch("100.64.0.0/10", src)
-| stats count min(_time) as firstTime max(_time) as lastTime dc(eventName) as distinctActions values(eventName) as actions values(eventSource) as services by userIdentity.arn userIdentity.sessionContext.sessionIssuer.userName src userAgent
-| where count > 0
-| sort - count
+index=* sourcetype=aws:cloudtrail userIdentity.type=AssumedRole "userIdentity.sessionContext.sessionIssuer.userName"=*WAF-Role*
+| stats dc(sourceIPAddress) as distinct_ips values(sourceIPAddress) as src_ips earliest(_time) as firstSeen latest(_time) as lastSeen count as api_calls by userIdentity.arn
+| where distinct_ips>1
+| sort - distinct_ips
 ```
 
-### Single principal mass S3 bucket enumeration and object duplication (700+ buckets)
+### WAF-Role mass S3 bucket enumeration and object download
 
-`UC_3195_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3196_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* sourcetype=aws:cloudtrail eventSource="s3.amazonaws.com" (eventName=GetObject OR eventName=ListObjects OR eventName=ListBucket OR eventName=ListBuckets) NOT errorCode=*
-| bin _time span=1h
-| stats dc(requestParameters.bucketName) as distinctBuckets count as s3Calls values(eventName) as ops by _time userIdentity.arn sourceIPAddress userAgent
-| where distinctBuckets >= 50
-| sort - distinctBuckets
+index=* sourcetype=aws:cloudtrail eventSource=s3.amazonaws.com "userIdentity.sessionContext.sessionIssuer.userName"=*WAF-Role* (eventName=GetObject OR eventName=ListObjects OR eventName=ListObjectsV2 OR eventName=HeadObject)
+| stats dc('requestParameters.bucketName') as distinct_buckets count as object_ops earliest(_time) as firstSeen latest(_time) as lastSeen by userIdentity.arn sourceIPAddress
+| where distinct_buckets>=50
+| sort - distinct_buckets
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -176,4 +171,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

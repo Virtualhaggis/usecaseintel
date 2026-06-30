@@ -18,6 +18,10 @@ September 11, 2017
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
@@ -25,9 +29,44 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Apache Struts web app (java/Tomcat) spawning OS shell or recon — post-exploit RCE (CVE-2017-5638 / CVE-2017-9805)
+
+`UC_3338_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java.exe","javaw.exe","tomcat9.exe","tomcat8.exe","tomcat7.exe","catalina.exe","httpd.exe","w3wp.exe","java") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","net.exe","net1.exe","ipconfig.exe","systeminfo.exe","hostname.exe","nltest.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","sh","bash","whoami","id")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT match(parent_process, "(?i)jenkins|buildagent|teamcity|bamboo") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("java.exe","javaw.exe","tomcat9.exe","tomcat8.exe","tomcat7.exe","catalina.exe","httpd.exe","w3wp.exe","java")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","net.exe","net1.exe","ipconfig.exe","systeminfo.exe","hostname.exe","nltest.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","sh","bash","whoami","id")
+| where AccountName !endswith "$"
+| where InitiatingProcessFolderPath !has "jenkins" and InitiatingProcessFolderPath !has "buildagent" and InitiatingProcessFolderPath !has "teamcity"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### Apache Struts OGNL / XStream exploit payload in WAF & web logs (CVE-2017-5638 + CVE-2017-9805)
+
+`UC_3338_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*java.lang.ProcessBuilder*","*@java.lang.Runtime@getRuntime*","*#cmd=*","*#cmds=*","*(#_memberAccess*","*DEFAULT_MEMBER_ACCESS*","*ognl.OgnlContext*","*<command><string>*") OR Web.http_user_agent IN ("*java.lang.ProcessBuilder*","*#cmd=*")) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status Web.action | `drop_dm_object_name(Web)` | where NOT match(http_user_agent, "(?i)Nessus|Qualys|Nuclei|Rapid7|Acunetix") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
 ### Article-specific behavioural hunt — Open source vulnerabilities tripped Equifax, how can you defend yourself?
 
-`UC_3337_0` · phase: **exploit** · confidence: **High**
+`UC_3338_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,4 +116,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

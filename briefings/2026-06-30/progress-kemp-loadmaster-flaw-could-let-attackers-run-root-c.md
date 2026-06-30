@@ -17,7 +17,6 @@ Progress  pu…
 - **CVE:** `CVE-2026-8037`
 - **CVE:** `CVE-2026-33691`
 - **CVE:** `CVE-2024-1212`
-- **CVE:** `CVE-2026-20245`
 
 ## MITRE ATT&CK Techniques
 
@@ -36,12 +35,38 @@ Progress  pu…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Kemp LoadMaster pre-auth RCE: command-injection POST to /accessv2 (CVE-2026-8037)
+
+`UC_9_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url="*/accessv2*" by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| sort - lastTime
+| eval note="Body inspection requires raw WAF/ADC logs - confirm presence of apiuser='''' and 'AAAA...; <cmd> #' spray keys g0-g60"
+```
+
+### LoadMaster 'access' binary spawning root shell commands (CVE-2026-8037 post-exploit)
+
+`UC_9_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name=access by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process
+| `drop_dm_object_name(Processes)`
+| search process="*/etc/passwd*" OR process="*; cat *" OR process="*; id*" OR process="*; whoami*" OR process="*'; *" OR process="*nc *" OR process="*/bin/sh*"
+| sort - lastTime
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -328,9 +353,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-8037`, `CVE-2026-33691`, `CVE-2024-1212`, `CVE-2026-20245`
+  - CVE(s): `CVE-2026-8037`, `CVE-2026-33691`, `CVE-2024-1212`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

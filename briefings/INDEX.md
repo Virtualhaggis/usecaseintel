@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2263 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,10 +9,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-30
+- [airdrop and quick share flaws let nearby attackers trigger c](./2026-06-30/airdrop-and-quick-share-flaws-let-nearby-attackers-trigger-c.md)
 - [apple patches 30 ios macos safari flaws including ai discove](./2026-06-30/apple-patches-30-ios-macos-safari-flaws-including-ai-discove.md)
+- [attackers exploit simplehelp cve 2026 48558 to deploy taskwe](./2026-06-30/attackers-exploit-simplehelp-cve-2026-48558-to-deploy-taskwe.md)
+- [blackfield ransomware asks nidec corporation for 2 million r](./2026-06-30/blackfield-ransomware-asks-nidec-corporation-for-2-million-r.md)
 - [cisa windows bluehammer flaw now exploited by ransomware gan](./2026-06-30/cisa-windows-bluehammer-flaw-now-exploited-by-ransomware-gan.md)
+- [insurance giant aflac discloses data breach after subsidiary](./2026-06-30/insurance-giant-aflac-discloses-data-breach-after-subsidiary.md)
 - [new bioshocking attack tricks ai browsers into leaking user ](./2026-06-30/new-bioshocking-attack-tricks-ai-browsers-into-leaking-user-.md)
 - [progress kemp loadmaster flaw could let attackers run root c](./2026-06-30/progress-kemp-loadmaster-flaw-could-let-attackers-run-root-c.md)
+- [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
 
 ## 2026-06-29
 - [236 000 dcloud uni app sites used in crypto scams phishing a](./2026-06-29/236-000-dcloud-uni-app-sites-used-in-crypto-scams-phishing-a.md)
@@ -37,7 +42,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [amazon q developer flaw could let malicious repos run code v](./2026-06-26/amazon-q-developer-flaw-could-let-malicious-repos-run-code-v.md)
 - [chinese speaking apt deploys new tinyrct backdoor in southea](./2026-06-26/chinese-speaking-apt-deploys-new-tinyrct-backdoor-in-southea.md)
 - [cisa adds exploited ptc windchill rce flaw to kev as web she](./2026-06-26/cisa-adds-exploited-ptc-windchill-rce-flaw-to-kev-as-web-she.md)
-- [cisa sets urgent deadline to fix cisco flaw exploited in att](./2026-06-26/cisa-sets-urgent-deadline-to-fix-cisco-flaw-exploited-in-att.md)
 - [fbi warns russian intelligence hackers target signal backup ](./2026-06-26/fbi-warns-russian-intelligence-hackers-target-signal-backup-.md)
 - [google details turla s new stockstay backdoor used in ukrain](./2026-06-26/google-details-turla-s-new-stockstay-backdoor-used-in-ukrain.md)
 - [miasma malware targets npm packages and github actions in su](./2026-06-26/miasma-malware-targets-npm-packages-and-github-actions-in-su.md)
@@ -89,11 +93,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
 
 ## 2026-06-22
-- [29 year old squid proxy bug squidbleed can leak cleartext ht](./2026-06-22/29-year-old-squid-proxy-bug-squidbleed-can-leak-cleartext-ht.md)
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [guarding ai memory](./2026-06-22/guarding-ai-memory.md)
 - [one intrusion two cyberattackers uncovering parallel threat ](./2026-06-22/one-intrusion-two-cyberattackers-uncovering-parallel-threat-.md)
-- [shapedplugin wordpress pro plugins backdoored in supply chai](./2026-06-22/shapedplugin-wordpress-pro-plugins-backdoored-in-supply-chai.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
 ## 2026-06-19
@@ -279,7 +281,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
-- [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
 - [what mdm can t protect on developer machines and what to do ](./2026-05-28/what-mdm-can-t-protect-on-developer-machines-and-what-to-do-.md)
 
 ## 2026-05-27
@@ -3823,6 +3824,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2019-05-16
 - [scoring security vulnerabilities 101 introducing cvss for cv](./2019-05-16/scoring-security-vulnerabilities-101-introducing-cvss-for-cv.md)
 
+## 2019-05-15
+- [crlf injection found in popular python dependency urllib3](./2019-05-15/crlf-injection-found-in-popular-python-dependency-urllib3.md)
+
 ## 2019-05-10
 - [understanding amazon s3 security and compliance on aws](./2019-05-10/understanding-amazon-s3-security-and-compliance-on-aws.md)
 
@@ -3899,6 +3903,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2018-06-27
 - [the most common vulnerabilities in maven central and npm](./2018-06-27/the-most-common-vulnerabilities-in-maven-central-and-npm.md)
+
+## 2018-06-05
+- [public disclosure of a critical arbitrary file overwrite vul](./2018-06-05/public-disclosure-of-a-critical-arbitrary-file-overwrite-vul.md)
 
 ## 2018-04-11
 - [javascript and node js security the common pitfalls](./2018-04-11/javascript-and-node-js-security-the-common-pitfalls.md)
@@ -3989,6 +3996,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2016-07-20
 - [https adoption doubled this year](./2016-07-20/https-adoption-doubled-this-year.md)
+
+## 2016-05-15
+- [fixing marked xss vulnerability](./2016-05-15/fixing-marked-xss-vulnerability.md)
 
 ## 2016-05-09
 - [architecting a serverless web application in aws](./2016-05-09/architecting-a-serverless-web-application-in-aws.md)

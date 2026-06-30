@@ -1,6 +1,6 @@
 # [HIGH] FBI Warns Russian Intelligence Hackers Target Signal Backup Recovery Keys
 
-**Source:** The Hacker News, BleepingComputer
+**Source:** The Hacker News
 **Published:** 2026-06-26
 **Article:** https://thehackernews.com/2026/06/fbi-warns-russian-intelligence-hackers.html
 
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Signal Desktop linked-device URI (sgnl://linkdevice) invoked from a clicked link (UNC5792)
 
-`UC_29_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_34_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Inbound email impersonating Signal support requesting Backup Recovery Key / device-link (UNC4221)
 
-`UC_29_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_34_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

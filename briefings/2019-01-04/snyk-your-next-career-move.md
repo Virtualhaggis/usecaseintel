@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk - Your Next Career Move!
 
-`UC_3275_0` · phase: **exploit** · confidence: **High**
+`UC_3276_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

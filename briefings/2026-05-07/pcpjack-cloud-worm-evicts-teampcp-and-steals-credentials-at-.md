@@ -428,7 +428,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PCPJack | Cloud Worm Evicts TeamPCP and Steals Credentials at Scale
 
-`UC_356_12` · phase: **exploit** · confidence: **High**
+`UC_357_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

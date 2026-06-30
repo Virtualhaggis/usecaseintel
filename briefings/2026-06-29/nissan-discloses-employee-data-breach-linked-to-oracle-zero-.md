@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-facing Oracle PeopleSoft exposed/exploited via CVE-2026-35273 PSEMHUB SSRF (ShinyHunters)
 
-`UC_4_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Oracle PeopleSoft Java/app-server process spawning shell or recon binary (CVE-2026-35273 post-exploit)
 
-`UC_4_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_11_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### PeopleSoft host beaconing to ShinyHunters MeshCentral C2 (azurenetfiles.net / 142.11.200.184-29 / 176.120.22.24)
 
-`UC_4_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_11_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### zstd data-staging archives written on PeopleSoft host (ShinyHunters exfil prep)
 
-`UC_4_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceFileEvents
 
 ### Known ShinyHunters PeopleSoft payload/staging file hashes on disk (CVE-2026-35273)
 
-`UC_4_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_11_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

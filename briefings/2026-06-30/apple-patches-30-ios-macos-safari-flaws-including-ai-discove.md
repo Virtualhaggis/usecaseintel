@@ -36,12 +36,36 @@ CVE-2026-43707 - A memory …
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
+- **T1189** — Drive-by Compromise
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Endpoints exposed to Apple Jun-2026 WebKit/kernel CVE batch (pre-26.5.2)
+
+`UC_10_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2026-43707","CVE-2026-43716","CVE-2026-43745","CVE-2026-43715","CVE-2026-43720","CVE-2026-43725","CVE-2026-43722","CVE-2026-43724","CVE-2026-39868")) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
+| `drop_dm_object_name(Vulnerabilities)`
+| stats values(cve) as exposed_cves dc(cve) as cve_count values(severity) as severity values(signature) as signature by dest
+| sort - cve_count
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in~ ("CVE-2026-43707","CVE-2026-43716","CVE-2026-43745","CVE-2026-43715","CVE-2026-43720","CVE-2026-43725","CVE-2026-43722","CVE-2026-43724","CVE-2026-39868")
+| where OSPlatform has_any ("macOS","iOS","iPadOS")
+| summarize ExposedCves = make_set(CveId), CveCount = dcount(CveId), arg_max(Timestamp, OSVersion, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate) by DeviceId, DeviceName, OSPlatform
+| order by CveCount desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -249,4 +273,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
