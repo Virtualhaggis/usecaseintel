@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2263 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2265 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,12 +13,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [attackers exploit simplehelp cve 2026 48558 to deploy taskwe](./2026-06-30/attackers-exploit-simplehelp-cve-2026-48558-to-deploy-taskwe.md)
 - [blackfield ransomware asks nidec corporation for 2 million r](./2026-06-30/blackfield-ransomware-asks-nidec-corporation-for-2-million-r.md)
 - [cisa windows bluehammer flaw now exploited by ransomware gan](./2026-06-30/cisa-windows-bluehammer-flaw-now-exploited-by-ransomware-gan.md)
+- [fake perplexity extension on chrome web store tracked search](./2026-06-30/fake-perplexity-extension-on-chrome-web-store-tracked-search.md)
 - [guardfall exposes open source ai coding agents to decades ol](./2026-06-30/guardfall-exposes-open-source-ai-coding-agents-to-decades-ol.md)
 - [insurance giant aflac discloses data breach after subsidiary](./2026-06-30/insurance-giant-aflac-discloses-data-breach-after-subsidiary.md)
-- [microsoft adds smarter bot protection to teams meetings](./2026-06-30/microsoft-adds-smarter-bot-protection-to-teams-meetings.md)
+- [langflow rce exploited to deploy monero miner on exposed ai ](./2026-06-30/langflow-rce-exploited-to-deploy-monero-miner-on-exposed-ai-.md)
 - [new bioshocking attack tricks ai browsers into leaking user ](./2026-06-30/new-bioshocking-attack-tricks-ai-browsers-into-leaking-user-.md)
 - [oracle e business suite flaw cve 2026 46817 actively exploit](./2026-06-30/oracle-e-business-suite-flaw-cve-2026-46817-actively-exploit.md)
 - [progress kemp loadmaster flaw could let attackers run root c](./2026-06-30/progress-kemp-loadmaster-flaw-could-let-attackers-run-root-c.md)
+- [silent swap crypto clipper uses fake google notes extension ](./2026-06-30/silent-swap-crypto-clipper-uses-fake-google-notes-extension-.md)
 - [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
 - [what the numbers say about fifa 2026 cyber risk](./2026-06-30/what-the-numbers-say-about-fifa-2026-cyber-risk.md)
 
@@ -52,6 +54,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new dirtyclone linux kernel flaw lets local users gain root ](./2026-06-26/new-dirtyclone-linux-kernel-flaw-lets-local-users-gain-root-.md)
 - [new linux pedit cow exploit enables root access by poisoning](./2026-06-26/new-linux-pedit-cow-exploit-enables-root-access-by-poisoning.md)
 - [new sharkloader malware deploys cobalt strike in strikeshark](./2026-06-26/new-sharkloader-malware-deploys-cobalt-strike-in-strikeshark.md)
+- [npm now freezes high impact accounts after risky account cha](./2026-06-26/npm-now-freezes-high-impact-accounts-after-risky-account-cha.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
 - [threat brief mitigating large scale credential attacks](./2026-06-26/threat-brief-mitigating-large-scale-credential-attacks.md)
 - [top koi alternatives in 2026](./2026-06-26/top-koi-alternatives-in-2026.md)
@@ -86,7 +89,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-23
 - [fake ai agent skill passed security scans and reportedly rea](./2026-06-23/fake-ai-agent-skill-passed-security-scans-and-reportedly-rea.md)
 - [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
-- [github updates actions checkout to block common pwn request ](./2026-06-23/github-updates-actions-checkout-to-block-common-pwn-request-.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
 - [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)

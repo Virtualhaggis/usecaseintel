@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### AI agent skill phones home to lookalike Stitch domain stitch-design.ai
 
-`UC_88_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_90_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceNetworkEvents
 
 ### Agent download-and-run install of fake 'Stitch SDK' from stitch-design.ai
 
-`UC_88_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_90_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### On-disk 'brand-landingpage' fake AI agent skill artifact
 
-`UC_88_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_90_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake AI Agent Skill Passed Security Scans and Reportedly Reached 26,000 Agents
 
-`UC_88_3` · phase: **exploit** · confidence: **High**
+`UC_90_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

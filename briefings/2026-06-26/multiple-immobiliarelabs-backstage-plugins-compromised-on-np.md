@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Phantom Gyp binding.gyp install-time payload execution (Miasma npm worm)
 
-`UC_44_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_46_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### Bun runtime executing a temp payload spawned by node (Miasma Node.js-monitoring evasion)
 
-`UC_44_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_46_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Miasma infectHost persistence in AI coding assistant configs
 
-`UC_44_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_46_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceFileEvents
 
 ### Cloud instance-metadata harvesting from npm/node install context (Miasma credential theft)
 
-`UC_44_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_46_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceNetworkEvents
 
 ### Compromised @immobiliarelabs Backstage plugin on disk (binding.gyp + index.js / known hashes)
 
-`UC_44_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_46_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -314,7 +314,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple @immobiliarelabs Backstage Plugins Compromised on npm
 
-`UC_44_6` · phase: **exploit** · confidence: **High**
+`UC_46_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
