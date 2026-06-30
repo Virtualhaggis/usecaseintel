@@ -29,12 +29,104 @@ May 1, 2022:…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1048** — Exfiltration Over Alternative Protocol
+- **T1082** — System Information Discovery
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1041** — Exfiltration Over C2 Channel
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### npm dropper DNS exfil to pkgio.com / game-note.com (gxm-reference campaign)
+
+`UC_2136_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*.pkgio.com" OR DNS.query="pkgio.com" OR DNS.query="*.game-note.com") by DNS.query, DNS.src, DNS.dest 
+| `drop_dm_object_name("DNS")` 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl endswith ".pkgio.com" or RemoteUrl =~ "pkgio.com" or RemoteUrl endswith ".game-note.com"
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","npm.cmd")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### npm post-install spawns node confsettingsaaa.js (gxm-reference dropper execution)
+
+`UC_2136_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*confsettingsaaa.js*" by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name, Processes.parent_process 
+| `drop_dm_object_name("Processes")` 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "confsettingsaaa.js"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### gxm-reference encrypted-payload artifacts written to disk (obfusc/mac/win/lin .enc.js)
+
+`UC_2136_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="confsettingsaaa.js" OR Filesystem.file_name="obfusc.enc.js" OR Filesystem.file_name="mac.enc.js" OR Filesystem.file_name="win.enc.js" OR Filesystem.file_name="lin.enc.js") by Filesystem.dest, Filesystem.file_name, Filesystem.file_path, Filesystem.user 
+| `drop_dm_object_name("Filesystem")` 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName in~ ("confsettingsaaa.js","obfusc.enc.js","mac.enc.js","win.enc.js","lin.enc.js")
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
+
+### gxm-reference second-stage backdoor C2 to 82.196.7.23 / 82.196.15.238 (/callbackupload)
+
+`UC_2136_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="82.196.7.23" OR All_Traffic.dest_ip="82.196.15.238") by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.user 
+| `drop_dm_object_name("All_Traffic")` 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("82.196.7.23","82.196.15.238")
+   or RemoteUrl has_any ("/callbackupload","/callbacknode","/updateinfosnodejs")
+   or RemoteUrl endswith "game-note.com"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -296,4 +388,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

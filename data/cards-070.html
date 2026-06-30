@@ -1,3 +1,227 @@
+<article class="card" id="art-2377" data-art-slug="2022-03-03-cisa-kev-cve-2013-1347-microsoft-internet-explorer-remote-co"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,network"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2013-1347 — Microsoft Internet Explorer Remote Code Execution Vulnerability This vulnerability may corrupt memory in a way that could allow an attacker to execute arbitrary code in the context of the current user within Internet Explorer. Vendor: Microsoft, Product: Internet Explorer. Federal patch due: 2022-03-24. CVE-2013-1347 T1190 Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2013-1347-microsoft-internet-explorer-remote-co" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2013-1347 — Microsoft Internet Explorer Remote Code Execution Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2022-03-03</span>
+    <span>2 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">This vulnerability may corrupt memory in a way that could allow an attacker to execute arbitrary code in the context of the current user within Internet Explorer. Vendor: Microsoft, Product: Internet Explorer. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2013-1347</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">dol.ns01.us</span> <span class="ind ">microsoftupdate.ns1.name</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">96.44.136.115</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-2377-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-2377"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-2377-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2377-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2377-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2377-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2377-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2013-1347&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2377-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2013-1347&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2377-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2377-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2377-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2377-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2013-1347&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-2377-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2013-1347&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2377-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2377-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2377-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-2377-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2377-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;96.44.136.115&quot;) or RemoteUrl has_any (&quot;dol.ns01.us&quot;, &quot;microsoftupdate.ns1.name&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-2377-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;96.44.136.115&quot;]);
+let BadDomains = dynamic([&quot;dol.ns01.us&quot;, &quot;microsoftupdate.ns1.name&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-2377-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-2377-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2377-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2377-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2377-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;96.44.136.115&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;dol.ns01.us&quot;, &quot;microsoftupdate.ns1.name&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;dol.ns01.us&quot;, &quot;microsoftupdate.ns1.name&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-2377-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;96.44.136.115&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;dol.ns01.us&quot;, &quot;microsoftupdate.ns1.name&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;dol.ns01.us&quot;, &quot;microsoftupdate.ns1.name&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-2378" data-art-slug="2022-03-03-cisa-kev-cve-2013-0641-adobe-reader-buffer-overflow-vulnerab"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -4966,10 +5190,10 @@ DeviceFileEvents
   data-techs="T1190"
   data-sources="Snyk"
   data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network,web"
-  data-targets="linux,windows"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="CVE-2022-24086 Vulnerability alert for websites using Magento Ecommerce Snyk’s developerSteve shares insight on understanding and fixing the CVE-2022-24086 Magento Ecommerce vulneratbility. CVE-2022-24086 CVE-2022-24087 T1190 [LLM] CVE-2022-24086 Magento checkout template-injection exploitation in web/WAF logs [LLM] Magento RCE callback / exploitation traffic to known CVE-2022-24086 IP 45.134.20.11 [LLM] Magento CVE-2022-24086 web shell drop (health_check.php / backdoored Interceptor.php) [LLM] Magento web/PHP process spawning shell — CVE-2022-24086 RCE execution Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains">
+  data-splunk-cats="application,cloud,endpoint,network"
+  data-targets="windows"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="CVE-2022-24086 Vulnerability alert for websites using Magento Ecommerce Snyk’s developerSteve shares insight on understanding and fixing the CVE-2022-24086 Magento Ecommerce vulneratbility. CVE-2022-24086 CVE-2022-24087 T1190 [LLM] Magento CVE-2022-24086 template-directive injection in web requests (getTemplateFilter RCE) [LLM] Magento web process (w3wp/php-fpm/php-cgi) spawning OS shell — CVE-2022-24086 RCE [LLM] Network activity involving CVE-2022-24086 attacker IP 45.134.20.11 Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2022-02-17-cve-2022-24086-vulnerability-alert-for-websites-using-magent" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -4978,9 +5202,9 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">Snyk</span></div>
   <div class="pubmeta">
     <span>2022-02-17</span>
-    <span>6 use cases</span>
+    <span>5 use cases</span>
     <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
+    <span>4 kill-chain phases detected</span>
   </div>
   <p class="summary">Snyk’s developerSteve shares insight on understanding and fixing the CVE-2022-24086 Magento Ecommerce vulneratbility.</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2022-24086</span> <span class="ind cve">CVE-2022-24087</span></div>
@@ -5012,10 +5236,10 @@ DeviceFileEvents
   <div class="name">Exploitation</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell inferred">
   <div class="num">Phase 5</div>
   <div class="name">Installation</div>
-  <div class="marker">Detected</div>
+  <div class="marker">Likely</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 6</div>
@@ -5030,279 +5254,223 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] CVE-2022-24086 Magento checkout template-injection exploitation in web/WAF logs · [LLM] Magento web/PHP process spawning shell — CVE-2022-24086 RCE execution</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Magento CVE-2022-24086 web shell drop (health_check.php / backdoored Interceptor.php)</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Magento RCE callback / exploitation traffic to known CVE-2022-24086 IP 45.134.20.11 · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Magento CVE-2022-24086 template-directive injection in web requests (getTemplateFilter RCE) · [LLM] Magento web process (w3wp/php-fpm/php-cgi) spawning OS shell — CVE-2022-24086 RCE</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Network activity involving CVE-2022-24086 attacker IP 45.134.20.11 · Network connections to article IPs / domains</em></div>
 <div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="60a0fa1022" data-platforms="sent,sigma,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="88aa34b83e" data-platforms="sent,sigma,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">CVE-2022-24086 Magento checkout template-injection exploitation in web/WAF logs</span>
+    <span class="uc-title">Magento CVE-2022-24086 template-directive injection in web requests (getTemplateFilter RCE)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="60a0fa1022" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="88aa34b83e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests to Magento checkout/cart REST endpoints carrying server-side template-injection markers (getTemplateFilter / addAfterFilterCallback / {{var|block|trans directives) used to weaponise CVE-2022-24086. Also surfaces any request from the known attack source 45.134.20.11. Article-specific because it anchors on the exact Magento email-template directives the patch (Filter.php transDirective / VarDirective.php) was built to block.
+    <div class="uc-desc">Hunts inbound HTTP requests carrying the CVE-2022-24086/24087 Magento template-engine injection payload (the {{var this.getTemplateFilter().addAfterFilterCallback(system).filter(...)}} pattern) against checkout/wishlist endpoints. Article-specific because it anchors on the exact directive method names the exploit abuses rather than generic SSTI.
 
-Rationale: Anchors on the exact Magento template directives (getTemplateFilter/addAfterFilterCallback/{{var/{{trans) the CVE-2022-24086 patch added regex catches for in Filter.php transDirective and VarDirective.php, combined with the checkout REST endpoints Sansec confirmed as the live exploitation vector.
+Rationale: Anchored on the exact exploit method names (getTemplateFilter / addAfterFilterCallback / resetAfterFilterCallbacks) from the public CVE-2022-24086 PoC, confirmed by Sansec and Synacktiv — these strings appear in no legitimate Magento HTTP traffic, giving very low FP.
 
 Cross-checked against:
   • https://sansec.io/research/magento-2-cve-2022-24086
-  • https://labs.watchtowr.com/adobe-commerce-magento-rce-cve-2022-24086/
-  • https://www.synacktiv.com/en/publications/magento-template-engine-a-story-of-cve-2022-24086</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  • https://www.synacktiv.com/en/publications/magento-template-engine-a-story-of-cve-2022-24086
+  • https://labs.watchtowr.com/adobe-commerce-magento-rce-cve-2022-24086/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Magento transactional emails containing {{var}}/{{trans}} directives logged by an inline proxy that captures rendered template bodies</li><li>Security scanners / pentest tooling (Nessus, Acunetix, Burp) probing the same endpoints during authorised testing</li><li>Magento extension or theme that legitimately passes {{block}} markup through a checkout customisation field</li><li>Backup/monitoring agents replaying checkout flows for synthetic transaction monitoring</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (csUserAgent has_any (&quot;Nessus&quot;,&quot;Acunetix&quot;,&quot;Nikto&quot;,&quot;Burp&quot;) and cIP startswith &quot;10.&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request (and POST body if WAF captures it) for the flagged cIP/csUriQuery; confirm the directive is an injection (references getTemplateFilter/system) vs a benign template token, and check the Magento version against 2.4.3-p1 / 2.3.7-p2. 2) Contain: block the source IP (and 45.134.20.11) at the WAF/edge, force-apply Adobe patches MDVA-43395 + MDVA-43443, and reset admin sessions. 3) Hunt: search var/generated/code and pub/ for health_check.php and a modified Interceptor.php, and review web-server process tree for shell spawns in the same time window.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (Snyk, Qualys, Nessus) replaying CVE-2022-24086 test payloads</li><li>Internal pentest / red-team validation of Magento patch status</li><li>Security researchers&#x27; PoC repos being curl-tested from a corporate jump box</li><li>WAF in detection-only mode logging blocked-but-passed-through probe traffic</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where cIP !in (&quot;&lt;vuln-scanner-ips&gt;&quot;) // maintain scanner allowlist; remove if not applicable</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the targeted host runs Magento/Adobe Commerce and check its version against the patched 2.4.3-p1 / 2.3.7-p2 baseline; pull the full request body and scStatus (200 vs 4xx/5xx indicates success vs block). 2) Contain: block the source cIP at the WAF/edge, and if a 2xx response was returned to an injection request, isolate the web host pending RCE review. 3) Hunt: pivot to UC2 (php/w3wp spawning shells) on the same host and timeframe, and to UC3 (45.134.20.11) for related infrastructure; review newly written files in pub/, var/, and any PHP under web-accessible dirs for webshells.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-2407-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-2407-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-2407-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-2407-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(30d)
-| where csUriStem has_any (&quot;guest-carts&quot;,&quot;estimate-shipping-methods&quot;,&quot;payment-information&quot;,&quot;checkout&quot;)
-| where csUriQuery has_any (&quot;getTemplateFilter&quot;,&quot;addAfterFilterCallback&quot;,&quot;{{var&quot;,&quot;{{block&quot;,&quot;{{trans&quot;,&quot;{{config&quot;,&quot;system(&quot;) or cIP == &quot;45.134.20.11&quot;
+| where TimeGenerated &gt; ago(7d)
+| where csUriStem has_any (&quot;getTemplateFilter&quot;,&quot;addAfterFilterCallback&quot;,&quot;resetAfterFilterCallbacks&quot;)
+   or csUriQuery has_any (&quot;getTemplateFilter&quot;,&quot;addAfterFilterCallback&quot;,&quot;resetAfterFilterCallbacks&quot;,&quot;%7B%7Bvar&quot;,&quot;{{var&quot;)
 | project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, scStatus, csUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2407-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Magento CVE-2022-24086 Template Injection in Checkout Request
-id: 6f2a1c44-7b3e-4d2a-9f51-2a0c8e5d1b90
-description: Detects HTTP requests to Magento checkout/cart endpoints containing server-side template-injection directives used to exploit CVE-2022-24086
+    <div class="tab-content" id="art-2407-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Magento CVE-2022-24086 Template Directive Injection in Web Request
+id: 6f2a1c84-3b7e-4f9a-9d21-2c4e7a1b8e30
+description: Detects CVE-2022-24086/24087 Magento template-engine injection payloads referencing getTemplateFilter/addAfterFilterCallback in inbound web requests.
 references:
-  - https://sansec.io/research/magento-2-cve-2022-24086
   - https://snyk.io/blog/vulnerability-alert-for-websites-using-magento-ecommerce/
+  - https://sansec.io/research/magento-2-cve-2022-24086
+  - https://www.synacktiv.com/en/publications/magento-template-engine-a-story-of-cve-2022-24086
 author: SOC Detection Engineering
-date: 2026/06/29
+date: 2026/06/30
 tags:
   - attack.t1190
-  - attack.initial_access
+  - attack.t1059
 logsource:
   category: webserver
 detection:
-  endpoint:
-    cs-uri-stem|contains:
-      - &#x27;guest-carts&#x27;
-      - &#x27;estimate-shipping-methods&#x27;
-      - &#x27;payment-information&#x27;
-      - &#x27;checkout&#x27;
-  injection:
+  selection:
     cs-uri-query|contains:
       - &#x27;getTemplateFilter&#x27;
       - &#x27;addAfterFilterCallback&#x27;
-      - &#x27;{{var&#x27;
-      - &#x27;{{block&#x27;
-      - &#x27;{{trans&#x27;
-      - &#x27;system(&#x27;
-  condition: endpoint and injection
+      - &#x27;resetAfterFilterCallbacks&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-2407-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*guest-carts*&quot;,&quot;*estimate-shipping-methods*&quot;,&quot;*payment-information*&quot;,&quot;*checkout*&quot;) AND (Web.url IN (&quot;*getTemplateFilter*&quot;,&quot;*addAfterFilterCallback*&quot;,&quot;*{{var*&quot;,&quot;*{{block*&quot;,&quot;*{{trans*&quot;,&quot;*{{config*&quot;,&quot;*system(*&quot;))) OR Web.src=&quot;45.134.20.11&quot; by Web.src Web.dest Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-2407-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*guest-carts*&quot;,&quot;*estimate-shipping-methods*&quot;,&quot;*payment-information*&quot;,&quot;*checkout*&quot;) AND (Web.url IN (&quot;*getTemplateFilter*&quot;,&quot;*addAfterFilterCallback*&quot;,&quot;*{{var*&quot;,&quot;*{{block*&quot;,&quot;*{{trans*&quot;,&quot;*{{config*&quot;,&quot;*system(*&quot;))) OR Web.src=&quot;45.134.20.11&quot; by Web.src Web.dest Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-2407-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*getTemplateFilter*&quot; OR Web.url=&quot;*addAfterFilterCallback*&quot; OR Web.url=&quot;*resetAfterFilterCallbacks*&quot; OR Web.http_user_agent=&quot;*getTemplateFilter*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2407-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*getTemplateFilter*&quot; OR Web.url=&quot;*addAfterFilterCallback*&quot; OR Web.url=&quot;*resetAfterFilterCallbacks*&quot; OR Web.http_user_agent=&quot;*getTemplateFilter*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="aef920daed" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="f2eebe5144" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Magento RCE callback / exploitation traffic to known CVE-2022-24086 IP 45.134.20.11</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="aef920daed" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Magento web process (w3wp/php-fpm/php-cgi) spawning OS shell — CVE-2022-24086 RCE</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f2eebe5144" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on any network connection to or from 45.134.20.11, the IP Sansec attributed to in-the-wild CVE-2022-24086 / CVE-2022-24087 exploitation against Magento 2. Article-specific because it ships the single attacker IOC named in the campaign rather than a generic C2 heuristic.
+    <div class="uc-desc">Detects the post-exploitation stage of CVE-2022-24086 where the injected template callback executes a system command, causing the Magento web/PHP worker to spawn a command interpreter or recon binary (the PoC runs system(id)). Article-specific via the PHP/web-server parent → shell child chain on a Magento host.
 
-Rationale: 45.134.20.11 is the discrete attacker IP Sansec published for the CVE-2022-24086/24087 attack wave; a single-value IOC match is high-fidelity and warrants direct alerting.
+Rationale: The published PoC runs system(id) via the template callback, so a Magento web/PHP worker parenting a shell or id/whoami/uname is the direct execution artifact of CVE-2022-24086 — w3wp/php-fpm legitimately never spawn interactive shells.
 
 Cross-checked against:
   • https://sansec.io/research/magento-2-cve-2022-24086
-  • https://securityaffairs.com/136112/hacking/magento-2-cve-2022-24086.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IP later reassigned to a benign hoster and now serving legitimate content (verify current WHOIS/ownership before alerting long after Feb 2022)</li><li>Threat-intel enrichment appliance or sandbox detonation host deliberately reaching the IOC</li><li>Internal security scanner validating block-list efficacy by probing the IP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;MsSense.exe&quot;,&quot;sandbox.exe&quot;) )</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the internal host and the process (InitiatingProcessFileName / ContextImageFileName) that touched 45.134.20.11; if it is a web-server/php process, treat as confirmed exploitation. 2) Contain: isolate the host, block the IP at perimeter, and snapshot the Magento webroot for forensics. 3) Hunt: pivot on the host for health_check.php drops, modified generated/code Interceptor.php, and php-fpm-spawned shells in the surrounding window.</div></details>
+  • https://vovohelo.medium.com/reversing-a-magento-rce-cve-2022-24086-e991ead4d8af</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Composer/Magento CLI deploy jobs (bin/magento) invoking php that shells out to git/curl during build</li><li>Cron-driven Magento maintenance tasks launching sh wrappers</li><li>Monitoring agents (New Relic, Datadog) instrumenting php-fpm and forking shell health checks</li><li>Sysadmin running php-based diagnostics from the web user account</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;bin/magento&quot;,&quot;setup:upgrade&quot;,&quot;composer&quot;,&quot;deploy&quot;) and InitiatingProcessCommandLine has &quot;cron&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine — id/whoami/uname/curl with no scheduled-task or deploy-pipeline parent is high-confidence RCE; correlate the timestamp with UC1 injection hits in W3CIISLog. 2) Contain: isolate the web host, kill the offending process tree, and rotate any DB/admin credentials reachable from app config (env.php). 3) Hunt: enumerate files written by the web user in pub/media, var/, app/ for dropped webshells; check for new admin users, cron entries, and outbound connections to 45.134.20.11 (UC3).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-2407-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-2407-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-2407-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-2407-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-2407-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2407-uc1-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-2407-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-2407-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP == &quot;45.134.20.11&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
+    <div class="tab-content active" id="art-2407-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;apache2&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2407-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(30d)
-| where DestinationIP == &quot;45.134.20.11&quot; or SourceIP == &quot;45.134.20.11&quot;
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, RequestURL, DeviceAction
+    <div class="tab-content" id="art-2407-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where ParentProcessName has_any (&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;)
+| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;curl.exe&quot;,&quot;certutil.exe&quot;)
+| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2407-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: CVE-2022-24086 Magento Exploitation IP 45.134.20.11 Network Connection
-id: 1c9d7e22-44a8-4b6f-8a31-9b6e0f3d2c77
-description: Detects network traffic to or from 45.134.20.11, attributed to in-the-wild CVE-2022-24086 Magento 2 exploitation
+    <div class="tab-content" id="art-2407-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Magento PHP/Web Worker Spawns OS Shell (CVE-2022-24086 RCE)
+id: c1d8e4f2-9a6b-4c3d-8e71-5b2f0a9c7d44
+description: Detects a Magento web/PHP worker process spawning a command interpreter or recon binary, the post-exploitation signature of CVE-2022-24086 system() callback execution.
 references:
+  - https://snyk.io/blog/vulnerability-alert-for-websites-using-magento-ecommerce/
   - https://sansec.io/research/magento-2-cve-2022-24086
 author: SOC Detection Engineering
-date: 2026/06/29
+date: 2026/06/30
 tags:
   - attack.t1190
-  - attack.command_and_control
-logsource:
-  category: network_connection
-  product: linux
-detection:
-  selection:
-    DestinationIp: &#x27;45.134.20.11&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2407-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:45.134.20.11</code></pre></div>
-    <div class="tab-content" id="art-2407-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;45.134.20.11&quot;
-| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-2407-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
-| filter srcAddr = &quot;45.134.20.11&quot; or dstAddr = &quot;45.134.20.11&quot;
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2407-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;45.134.20.11&quot; OR All_Traffic.src=&quot;45.134.20.11&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.direction | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-2407-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;45.134.20.11&quot; OR All_Traffic.src=&quot;45.134.20.11&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.direction | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e25b3d862c" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Magento CVE-2022-24086 web shell drop (health_check.php / backdoored Interceptor.php)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e25b3d862c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects creation of the health_check.php POST-command backdoor or overwrite of generated/code/Magento/Framework/App/FrontController/Interceptor.php — the two file-system artefacts Sansec documented as CVE-2022-24086 post-exploitation persistence. Article-specific via exact malicious filenames/paths not present in generic web-shell rules.
-
-Rationale: health_check.php and the FrontController Interceptor.php overwrite are the precise persistence artefacts Sansec attributed to CVE-2022-24086 abuse of the same transDirective/VarDirective template engine the article describes patching.
-
-Cross-checked against:
-  • https://sansec.io/research/magento-2-cve-2022-24086
-  • https://labs.watchtowr.com/adobe-commerce-magento-rce-cve-2022-24086/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Magento bin/magento setup:di:compile or deploy regenerating generated/code/.../Interceptor.php during a code release</li><li>A genuine application health-check script named health_check.php deployed by ops (verify path is webroot vs generated/code and check writer process)</li><li>CI/CD pipeline or container image build writing the Interceptor.php during warm-up</li><li>Backup-restore operation re-laying generated/code files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;setup:di:compile&quot;,&quot;setup:upgrade&quot;,&quot;deploy&quot;) or InitiatingProcessFileName =~ &quot;magento&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the writing process — a web-server/php-fpm process writing health_check.php is malicious; if the writer is php bin/magento during a known deploy window it is likely benign. Read the file contents for POST/eval handlers. 2) Contain: remove the backdoor, isolate the host, rotate Magento admin and integration secrets. 3) Hunt: pivot to network connections to 45.134.20.11 and to inbound template-injection requests on checkout endpoints from the same source.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2407-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2407-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2407-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2407-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2407-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2407-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;health_check.php&quot; or FolderPath has &quot;generated/code/Magento/Framework/App/FrontController/Interceptor.php&quot;
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2407-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where TargetFileName =~ &quot;health_check.php&quot; or TargetFilePath has &quot;generated/code/Magento/Framework/App/FrontController/Interceptor.php&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2407-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Magento CVE-2022-24086 Backdoor File Write (health_check.php / Interceptor.php)
-id: 2d4b6f81-9c0a-4e7d-b2a3-5f1e8c9a0d44
-description: Detects the health_check.php POST backdoor or backdoored FrontController Interceptor.php written during CVE-2022-24086 exploitation
-references:
-  - https://sansec.io/research/magento-2-cve-2022-24086
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1505.003
-  - attack.persistence
-logsource:
-  category: file_event
-  product: linux
-detection:
-  shell:
-    TargetFilename|endswith: &#x27;/health_check.php&#x27;
-  interceptor:
-    TargetFilename|endswith: &#x27;/generated/code/Magento/Framework/App/FrontController/Interceptor.php&#x27;
-  condition: shell or interceptor
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2407-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/(health_check\.php|generated.code.Magento.Framework.App.FrontController.Interceptor\.php)$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-2407-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;health_check.php&quot;) OR (Filesystem.file_path=&quot;*generated/code/Magento/Framework/App/FrontController/Interceptor.php&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-2407-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;health_check.php&quot;) OR (Filesystem.file_path=&quot;*generated/code/Magento/Framework/App/FrontController/Interceptor.php&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e31bc373af" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Magento web/PHP process spawning shell — CVE-2022-24086 RCE execution</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="e31bc373af" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects php-fpm/httpd/apache2/nginx spawning sh/bash/curl/wget/python — the RCE chain after CVE-2022-24086 template injection, where decoded template code downloads and runs a Linux executable. Article-specific in that it pins the parent to the Magento web stack rather than a generic LOLBin hunt.
-
-Rationale: Sansec documented CVE-2022-24086 template payloads decoding to commands that download and background a Linux executable; a web/PHP parent spawning a shell or downloader is the highest-fidelity host signal of that RCE chain.
-
-Cross-checked against:
-  • https://sansec.io/research/magento-2-cve-2022-24086
-  • https://www.synacktiv.com/en/publications/magento-template-engine-a-story-of-cve-2022-24086</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Magento cron (php bin/magento cron:run) legitimately invoking sh wrappers or curl for cache warmers</li><li>Deploy/build scripts where php triggers shell helpers during composer or setup:upgrade</li><li>Monitoring plugins that shell out to curl for synthetic health checks</li><li>Image-processing or PDF pipelines where PHP spawns helper binaries via sh</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;cron:run&quot;,&quot;setup:upgrade&quot;,&quot;setup:di:compile&quot;,&quot;composer&quot;) or ProcessCommandLine has &quot;bin/magento&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the child ProcessCommandLine — curl/wget to an external host or piping to sh/bash is malicious; cron:run or composer context is likely benign. Identify the downloaded artefact path. 2) Contain: isolate the host, kill the process tree, capture and remove any dropped executable, rotate secrets. 3) Hunt: correlate to inbound checkout template-injection requests, connections to 45.134.20.11, and health_check.php/Interceptor.php writes on the same host.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2407-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2407-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2407-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2407-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2407-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2407-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2407-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
-| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2407-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Magento Web Process Spawns Shell - CVE-2022-24086 RCE
-id: 3a7c9e10-6b2d-4f88-9c14-7e0a5d2b1f63
-description: Detects Magento web/PHP processes spawning shell or download utilities, indicating CVE-2022-24086 remote code execution
-references:
-  - https://sansec.io/research/magento-2-cve-2022-24086
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
   - attack.t1059.004
-  - attack.execution
+  - attack.t1059.003
 logsource:
   category: process_creation
-  product: linux
 detection:
   selection:
     ParentImage|endswith:
+      - &#x27;\w3wp.exe&#x27;
+      - &#x27;\php-cgi.exe&#x27;
+      - &#x27;\php.exe&#x27;
       - &#x27;/php-fpm&#x27;
-      - &#x27;/php&#x27;
       - &#x27;/httpd&#x27;
       - &#x27;/apache2&#x27;
       - &#x27;/nginx&#x27;
     Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
       - &#x27;/sh&#x27;
       - &#x27;/bash&#x27;
       - &#x27;/dash&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/uname&#x27;
+      - &#x27;/whoami&#x27;
       - &#x27;/curl&#x27;
       - &#x27;/wget&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/perl&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-2407-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|php|httpd|apache2|nginx)/i
-| ImageFileName=/\/(sh|bash|dash|curl|wget|python3?|perl)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-2407-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-2407-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-2407-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\w3wp.exe OR *\W3WP.EXE OR *\php-cgi.exe OR *\php.exe OR *\PHP.EXE) @Image:(*\cmd.exe OR *\CMD.EXE OR *\powershell.exe OR *\PowerShell.exe OR *\pwsh.exe OR *\whoami.exe OR *\curl.exe OR *\certutil.exe)</code></pre></div>
+    <div class="tab-content" id="art-2407-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(w3wp\.exe|php-cgi\.exe|php\.exe|php-fpm|httpd|apache2|nginx)$/i | ImageFileName=/(cmd\.exe|powershell\.exe|pwsh\.exe|whoami(\.exe)?|\/(sh|bash|dash|id|uname|curl|wget))$/i | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-2407-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;apache2&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2407-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;apache2&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="17f3f5d7d2" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network activity involving CVE-2022-24086 attacker IP 45.134.20.11</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="17f3f5d7d2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Alerts on any inbound or outbound network/web activity involving 45.134.20.11, the source IP Sansec attributed to in-the-wild CVE-2022-24086 Magento exploitation. Narrow, high-fidelity IOC pivot for confirming the campaign touched the estate.
+
+Rationale: 45.134.20.11 is the discrete attacker source IP both the article IOC set and Sansec independently tie to active CVE-2022-24086 exploitation; a single named IPv4 is a clean, low-FP alerting pivot.
+
+Cross-checked against:
+  • https://sansec.io/research/magento-2-cve-2022-24086
+  • https://www.wiz.io/vulnerability-database/cve/cve-2022-24086</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IP later re-allocated to benign hosting after the 2022 campaign (verify the hit timeframe)</li><li>Threat-intel platform or honeypot deliberately connecting to the IOC for enrichment</li><li>Security team running their own connectivity test against the indicator</li><li>Shared-hosting NAT egress causing an unrelated tenant to reuse the address</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: determine direction — inbound to an internet-facing Magento host implies exploitation attempt; outbound from a web host implies post-compromise callback (more severe). Correlate with UC1/UC2 hits on the same asset. 2) Contain: block 45.134.20.11 at the perimeter in both directions and snapshot the involved host before remediation. 3) Hunt: sweep all web logs for the UC1 injection strings from this IP, review for dropped webshells and new admin accounts, and confirm the host&#x27;s Magento version is patched to 2.4.3-p1/2.3.7-p2 with both MDVA-43395 and MDVA-43443 applied.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2407-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2407-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2407-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-2407-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-2407-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-2407-uc2-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-2407-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2407-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteIP == &quot;45.134.20.11&quot; or LocalIP == &quot;45.134.20.11&quot;
+| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-2407-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+(CommonSecurityLog
+ | where TimeGenerated &gt; ago(30d)
+ | where SourceIP == &quot;45.134.20.11&quot; or DestinationIP == &quot;45.134.20.11&quot;
+ | project TimeGenerated, DeviceVendor, SourceIP, DestinationIP, DestinationPort, RequestURL, DeviceAction),
+(W3CIISLog
+ | where TimeGenerated &gt; ago(30d)
+ | where cIP == &quot;45.134.20.11&quot;
+ | project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, scStatus, csUserAgent)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-2407-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: CVE-2022-24086 Magento Attacker IP 45.134.20.11 Network Activity
+id: a47b2e90-6c1d-4f88-b3e2-9f0a4c6d2b15
+description: Detects network connections to or from 45.134.20.11, the IP Sansec attributed to in-the-wild CVE-2022-24086 Magento exploitation.
+references:
+  - https://snyk.io/blog/vulnerability-alert-for-websites-using-magento-ecommerce/
+  - https://sansec.io/research/magento-2-cve-2022-24086
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1071.001
+logsource:
+  category: network_connection
+detection:
+  selection:
+    DestinationIp: &#x27;45.134.20.11&#x27;
+  selection_src:
+    SourceIp: &#x27;45.134.20.11&#x27;
+  condition: selection or selection_src
+level: high</code></pre></div>
+    <div class="tab-content" id="art-2407-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationIp:45.134.20.11 OR @SourceIp:45.134.20.11)</code></pre></div>
+    <div class="tab-content" id="art-2407-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^NetworkConnectIP(4|6)$/ RemoteAddressIP4=&quot;45.134.20.11&quot; | groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-2407-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
+fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
+| filter srcAddr = &quot;45.134.20.11&quot; or dstAddr = &quot;45.134.20.11&quot;
+| sort @timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-2407-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src=&quot;45.134.20.11&quot; OR All_Traffic.dest=&quot;45.134.20.11&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2407-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src=&quot;45.134.20.11&quot; OR All_Traffic.dest=&quot;45.134.20.11&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -5320,11 +5488,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-2407-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2407-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2407-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-2407-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2407-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2407-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-2407-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-2407-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -5333,7 +5501,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-2407-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-2407-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -5345,12 +5513,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-2407-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-2407-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2022-24086&quot;, &quot;CVE-2022-24087&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-2407-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-2407-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2022-24086&quot;, &quot;CVE-2022-24087&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -5373,17 +5541,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-2407-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2407-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2407-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2407-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-2407-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2407-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2407-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-2407-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-2407-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-2407-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;45.134.20.11&quot;) or RemoteUrl has_any (&quot;&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-2407-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;45.134.20.11&quot;]);
+    <div class="tab-content" id="art-2407-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;45.134.20.11&quot;]);
 let BadDomains = dynamic([&quot;&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -5392,7 +5560,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-2407-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-2407-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -5422,7 +5590,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-2407-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-2407-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2407-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2407-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2407-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;45.134.20.11&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -5436,7 +5604,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-2407-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-2407-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;45.134.20.11&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -5575,133 +5743,6 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2409-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2014-2570&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-2410" data-art-slug="2022-02-16-teaming-up-with-sysdig-to-deliver-developer-and-runtime-kube"
-  data-phases="c2,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Teaming up with Sysdig to deliver developer and runtime Kubernetes security Snyk has partnered with Sysdig to build a combined solution that addresses security across the DevOps process, from code to Kubernetes cluster. CVE-2021-44228 T1190 Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2022-02-16-teaming-up-with-sysdig-to-deliver-developer-and-runtime-kube" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/snyk-teaming-up-with-sysdig/" target="_blank" rel="noopener">Teaming up with Sysdig to deliver developer and runtime Kubernetes security</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2022-02-16</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Snyk has partnered with Sysdig to build a combined solution that addresses security across the DevOps process, from code to Kubernetes cluster.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-44228</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-2410-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-2410"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-2410-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2410-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2410-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2410-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2410-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-44228&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2410-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-44228&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2410-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2410-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2410-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2410-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-44228&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-2410-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-44228&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

@@ -28,10 +28,10 @@ Microsoft says Google removed it from the store after responsi…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1176.001** — Browser Extensions
+- **T1185** — Browser Session Hijacking
+- **T1056.004** — Input Capture: Credential API Hooking
+- **T1041** — Exfiltration Over C2 Channel
 
 ## Kill chain phases observed
 
@@ -39,13 +39,32 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Browser traffic to Perplexity look-alike domain perplexity-ai[.]online
+### Malicious 'Search for perplexity ai' Chrome/Edge extension installed by ID flkebkiofojicogddingbdmcmkpbplcd
 
-`UC_1_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*perplexity-ai.online*" by DNS.src, DNS.dest, DNS.query | `drop_dm_object_name("DNS")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*flkebkiofojicogddingbdmcmkpbplcd*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(90d)
+| where FolderPath has "flkebkiofojicogddingbdmcmkpbplcd"
+| where InitiatingProcessFileName !endswith "$"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), FileCount=count(), SampleFile=any(FileName) by DeviceName, InitiatingProcessAccountName, FolderPath, InitiatingProcessFileName
+| order by FirstSeen desc
+```
+
+### Browser traffic to look-alike search-hijack domain perplexity-ai.online
+
+`UC_1_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*perplexity-ai.online*" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -53,27 +72,9 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteUrl has "perplexity-ai.online"
-| where InitiatingProcessFileName has_any ("chrome.exe","msedge.exe","brave.exe","opera.exe","vivaldi.exe","chrome_proxy.exe")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), SampleUrl=any(RemoteUrl) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP
-| order by LastSeen desc
-```
-
-### Malicious 'Search for perplexity ai' Chrome extension install (ID flkebkiofojicogddingbdmcmkpbplcd)
-
-`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*flkebkiofojicogddingbdmcmkpbplcd*" by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name | `drop_dm_object_name("Filesystem")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath has "flkebkiofojicogddingbdmcmkpbplcd"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Files=dcount(FileName), SamplePath=any(FolderPath) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
-| order by LastSeen desc
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe","chrome_proxy.exe","vivaldi.exe")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), RemoteIPs=make_set(RemoteIP,10) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl
+| order by FirstSeen desc
 ```
 
 ### Suspicious browser extension installation

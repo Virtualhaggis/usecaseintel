@@ -19,12 +19,58 @@ What are the risks of command injections? Depending on the setup of the applicat
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### systeminformation inetChecksite curl argument injection (CVE-2020-7752)
+
+`UC_2952_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*--connect-timeout 5 -m 5*" (Processes.process="* -o *" OR Processes.process="* -O *" OR Processes.process="* --output *" OR Processes.process="* -T *" OR Processes.process="* --upload-file *" OR Processes.process="* -K *" OR Processes.process="* --config *" OR Processes.process="* -d *" OR Processes.process="* --data *") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine contains "--connect-timeout 5 -m 5"   // systeminformation inetChecksite hardcoded curl args
+| where ProcessCommandLine matches regex @"(?i)(?:^|\s)(?:-o|-O|-T|-K|--output|--upload-file|--config|-d|--data)\b"   // injected curl flag absent from the legitimate command
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Arbitrary child process from systeminformation inetChecksite shell pipeline
+
+`UC_2952_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process="*--connect-timeout 5 -m 5*" NOT (Processes.process_name IN ("curl","head","cut","sh","bash","dash")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessCommandLine contains "--connect-timeout 5 -m 5"   // parent shell = inetChecksite curl pipeline
+| where FileName !in~ ("curl","head","cut","sh","bash","dash")           // expected pipeline members; any other child = injected command
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — Command injection: how it works, what are the risks, and how to prevent it
 
@@ -78,4 +124,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

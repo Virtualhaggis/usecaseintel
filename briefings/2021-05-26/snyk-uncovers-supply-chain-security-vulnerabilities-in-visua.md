@@ -21,12 +21,65 @@ May 26, 2021
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Node.js debugger/inspector launched bound to all network interfaces (CVE-2018-12120/-13567)
+
+`UC_2855_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=node.exe (Processes.process="*--inspect*" OR Processes.process="*--debug*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| search (process="*0.0.0.0*" OR process="*--debug *" OR process="*--debug" OR process="*--debug-brk*")
+| search NOT (process="*--debug=localhost*" OR process="*--debug=127.0.0.1*" OR process="*--inspect=localhost*" OR process="*--inspect=127.0.0.1*")
+| `ctime(firstTime)` | `ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "node.exe"
+| extend Cmd = tolower(ProcessCommandLine)
+| where Cmd has_any ("--inspect","--debug")
+| where (Cmd has "0.0.0.0") or (Cmd matches regex @"--debug(-brk)?(=|\s|$)")   // 0.0.0.0 = explicit all-interface bind; bare --debug defaults to 0.0.0.0:5858 (CVE-2018-12120)
+| where not (Cmd matches regex @"--(inspect|debug)(-brk)?=(localhost|127\.0\.0\.1)")  // drop explicit loopback binds (safe)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Remote (non-loopback) connection to an exposed Node.js debug/inspect port 5858/9229
+
+`UC_2855_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (5858, 9229) All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| search src!="127.0.0.1" AND src!="::1" AND src!=dest
+| `ctime(firstTime)` | `ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where ActionType == "InboundConnectionAccepted"
+| where LocalPort in (5858, 9229)
+| where InitiatingProcessFileName in~ ("node.exe","Code.exe")
+| where RemoteIPType != "Loopback" and RemoteIP !startswith "127." and RemoteIP != "::1"
+| project Timestamp, DeviceName, RemoteIP, RemoteIPType, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -111,4 +164,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

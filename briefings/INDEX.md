@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,6 +15,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [gamaredon expands ukraine attacks with new malware and cloud](./2026-06-29/gamaredon-expands-ukraine-attacks-with-new-malware-and-cloud.md)
 - [hackers now exploit critical oracle e business flaw in attac](./2026-06-29/hackers-now-exploit-critical-oracle-e-business-flaw-in-attac.md)
 - [hijacked npm and go packages use vs code tasks to deploy pyt](./2026-06-29/hijacked-npm-and-go-packages-use-vs-code-tasks-to-deploy-pyt.md)
+- [inside the inbox why cybercriminals want to break into your ](./2026-06-29/inside-the-inbox-why-cybercriminals-want-to-break-into-your-.md)
 - [malicious perplexity chrome extension intercepted searches a](./2026-06-29/malicious-perplexity-chrome-extension-intercepted-searches-a.md)
 - [microsoft removes 119 edge extensions that hid malware in im](./2026-06-29/microsoft-removes-119-edge-extensions-that-hid-malware-in-im.md)
 - [nissan discloses employee data breach linked to oracle zero ](./2026-06-29/nissan-discloses-employee-data-breach-linked-to-oracle-zero-.md)
@@ -3234,9 +3235,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2021-11-10
 - [scanning arm templates for misconfigurations with the snyk c](./2021-11-10/scanning-arm-templates-for-misconfigurations-with-the-snyk-c.md)
 
-## 2021-11-05
-- [6 big aws iam vulnerabilities and how to avoid them](./2021-11-05/6-big-aws-iam-vulnerabilities-and-how-to-avoid-them.md)
-
 ## 2021-11-04
 - [exploring extensions of dependency confusion attacks via npm](./2021-11-04/exploring-extensions-of-dependency-confusion-attacks-via-npm.md)
 
@@ -3544,6 +3542,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2021-04-09
 - [securing cloud native applications activecampaign s vp infor](./2021-04-09/securing-cloud-native-applications-activecampaign-s-vp-infor.md)
+
+## 2021-03-30
+- [preventing yaml parsing vulnerabilities with snakeyaml in ja](./2021-03-30/preventing-yaml-parsing-vulnerabilities-with-snakeyaml-in-ja.md)
 
 ## 2021-03-26
 - [developer driven workflows dockerfile image scanning priorit](./2021-03-26/developer-driven-workflows-dockerfile-image-scanning-priorit.md)

@@ -1,3 +1,130 @@
+<article class="card" id="art-2538" data-art-slug="2021-12-10-cisa-kev-cve-2019-10758-mongodb-mongo-express-remote-code-ex"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2019-10758 — MongoDB mongo-express Remote Code Execution Vulnerability mongo-express before 0.54.0 is vulnerable to Remote Code Execution via endpoints that uses the `toBSON` method. Vendor: MongoDB, Product: mongo-express. Federal patch due: 2022-06-10. CVE-2019-10758 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2021-12-10-cisa-kev-cve-2019-10758-mongodb-mongo-express-remote-code-ex" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2019-10758 — MongoDB mongo-express Remote Code Execution Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2021-12-10</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">mongo-express before 0.54.0 is vulnerable to Remote Code Execution via endpoints that uses the `toBSON` method. Vendor: MongoDB, Product: mongo-express. Federal patch due: 2022-06-10.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2019-10758</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-2538-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-2538"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-2538-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2538-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2538-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2538-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2538-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2019-10758&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2538-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2019-10758&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2538-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2538-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2538-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2538-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2019-10758&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-2538-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2019-10758&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-2539" data-art-slug="2021-12-10-cisa-kev-cve-2021-44228-apache-log4j2-remote-code-execution-"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1486"
@@ -2551,348 +2678,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-2564" data-art-slug="2021-11-05-6-big-aws-iam-vulnerabilities-and-how-to-avoid-them"
-  data-phases="actions,c2,exploit,install" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="cloudwatch,datadog,sigma,spl"
-  data-splunk-cats="cloud"
-  data-targets="aws"
-  data-uc-count="5" data-llm-uc-count="5"
-  data-search="6 big AWS IAM vulnerabilities – and how to avoid them Cloud misconfigurations can lead to breaches and security failures — especially when the vulnerability is related to Identity and Access Management (IAM).  T1190 [LLM] S3 bucket enumeration fan-out by a single principal (Capital One recon pattern) [LLM] S3 mass object download / &#x27;s3 sync&#x27; exfiltration from a single bucket [LLM] IAM role trust policy allows all principals (Principal &#x27;*&#x27; + sts:AssumeRole) [LLM] IAM policy grants full administrative &#x27;*:*&#x27; privileges or attaches AdministratorAccess [LLM] Successful AWS console login without MFA">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2021-11-05-6-big-aws-iam-vulnerabilities-and-how-to-avoid-them" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/6-big-aws-iam-vulnerabilities-and-how-to-avoid-them/" target="_blank" rel="noopener">6 big AWS IAM vulnerabilities – and how to avoid them</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2021-11-05</span>
-    <span>5 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Cloud misconfigurations can lead to breaches and security failures — especially when the vulnerability is related to Identity and Access Management (IAM).</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-2564-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-2564"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-2564-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Successful AWS console login without MFA</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] S3 bucket enumeration fan-out by a single principal (Capital One recon pattern) · [LLM] S3 mass object download / &#x27;s3 sync&#x27; exfiltration from a single bucket · [LLM] IAM role trust policy allows all principals (Principal &#x27;*&#x27; + sts:AssumeRole) · [LLM] IAM policy grants full administrative &#x27;*:*&#x27; privileges or attaches AdministratorAccess</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="cfa44a3e68" data-platforms="cloudwatch,datadog,spl" data-targets="aws" open>
-  <summary>
-    <span class="uc-title">S3 bucket enumeration fan-out by a single principal (Capital One recon pattern)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="cfa44a3e68" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts a single IAM principal calling ListBuckets / ListObjects across an unusually large number of distinct buckets in a short window — the &#x27;enumerate all your buckets to figure out where you keep your data&#x27; step the article warns about and the first stage of the Capital One breach. Article-specific because it keys on the exact s3:List* permissions Snyk flags as dangerous.
-
-Rationale: Anchored on the article&#x27;s named s3:ListAllMyBuckets / s3:List* permissions (CloudTrail eventName ListBuckets/ListObjects). Corroborated by the Capital One technical analyses, where stolen role creds were used to list buckets before s3 sync. Cross-checked rhinosecuritylabs CloudGoat cloud_breach_s3 and the MS Sentinel Capital One hunting write-up.
-
-Cross-checked against:
-  • https://rhinosecuritylabs.com/aws/capital-one-cloud_breach_s3-cloudgoat/
-  • https://techcommunity.microsoft.com/blog/microsoftsentinelblog/hunting-for-capital-one-breach-ttps-in-aws-logs-using-azure-sentinel---part-ii/1019767</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Cloud Infrastructure Discovery">T1580</span> <span class="ind tech" title="Cloud Service Discovery">T1526</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Backup/DR tooling (e.g. cross-account replication jobs) that legitimately enumerates all buckets</li><li>CSPM/security scanners (Prowler, ScoutSuite, Snyk Cloud) inventorying buckets</li><li>Cost-management or data-governance crawlers tagging buckets</li><li>A platform/DevOps role doing a legitimate org-wide bucket audit</li><li>CI/CD pipelines that list buckets to locate a deploy target</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where userIdentity.arn not like /:role\/(prowler|scoutsuite|cspm|backup|replication)/i</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the principal&#x27;s full CloudTrail history for the prior/next 24h — is this an interactive human, a known scanner, or a freshly-assumed role? Check sourceIPAddress against expected ranges and whether the principal normally touches S3 at all. Step 2 (contain): If unrecognized, attach an explicit Deny / revoke the role&#x27;s active sessions (aws iam put-role-policy deny + revoke-session) and rotate any access keys the principal used. Step 3 (hunt): Pivot to S3 data events for GetObject volume from the same principal (UC &#x27;S3 mass object download&#x27;) to confirm whether enumeration progressed to exfiltration.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2564-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2564-uc0-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-2564-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2564-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(ListBuckets OR ListObjects OR ListObjectsV2)</code></pre></div>
-    <div class="tab-content" id="art-2564-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, userIdentity.arn, userIdentity.type, sourceIPAddress, awsRegion, requestParameters.bucketName
-| filter eventSource = &quot;s3.amazonaws.com&quot; and eventName in [&quot;ListBuckets&quot;, &quot;ListObjects&quot;, &quot;ListObjectsV2&quot;]
-| stats count(*) as listCalls, count_distinct(requestParameters.bucketName) as bucketsTouched, earliest(@timestamp) as firstSeen, latest(@timestamp) as lastSeen by userIdentity.arn, sourceIPAddress
-| filter bucketsTouched &gt;= 10 or listCalls &gt;= 50
-| sort bucketsTouched desc</code></pre></div>
-    <div class="tab-content" id="art-2564-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=aws:cloudtrail eventSource=&quot;s3.amazonaws.com&quot; (eventName=&quot;ListBuckets&quot; OR eventName=&quot;ListObjects&quot; OR eventName=&quot;ListObjectsV2&quot;)
-| stats count AS listCalls dc(&#x27;requestParameters.bucketName&#x27;) AS bucketsTouched min(_time) AS firstSeen max(_time) AS lastSeen values(eventName) AS apis BY userIdentity.arn sourceIPAddress
-| where bucketsTouched&gt;=10 OR listCalls&gt;=50
-| sort - bucketsTouched</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1d52f122e3" data-platforms="cloudwatch,datadog,spl" data-targets="aws">
-  <summary>
-    <span class="uc-title">S3 mass object download / &#x27;s3 sync&#x27; exfiltration from a single bucket</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1d52f122e3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts a single principal reading a large volume of distinct S3 objects from one bucket inside a short window — the &#x27;s3 sync requires list permissions, the bad actor can then steal sensitive data&#x27; exfiltration step the article describes and the data-theft stage of Capital One. Requires S3 object-level (data event) logging.
-
-Rationale: Directly models the article&#x27;s &#x27;s3 sync … steal sensitive data from your buckets&#x27; claim — mass GetObject is what `aws s3 sync` generates. 500 reads/5min is an empirical bulk-copy floor; tune per environment. Corroborated by the Capital One analyses describing recursive s3 sync exfiltration and BytesTransferred/GetObject anomaly detection.
-
-Cross-checked against:
-  • https://rhinosecuritylabs.com/aws/capital-one-cloud_breach_s3-cloudgoat/
-  • https://techcommunity.microsoft.com/blog/microsoftsentinelblog/hunting-for-capital-one-breach-ttps-in-aws-logs-using-azure-sentinel---part-ii/1019767</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Cloud Storage Object">T1530</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate batch/ETL jobs (EMR, Glue, Athena) reading many objects from a data-lake bucket</li><li>Backup/archival or cross-region replication processes</li><li>Static-website or media bucket with high legitimate read volume</li><li>A data-science role pulling a large training dataset</li><li>App service accounts that paginate through many objects normally</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where userIdentity.arn not like /:assumed-role\/(glue|emr|athena|backup|replication)/i and requestParameters.bucketName not like /(datalake|public-assets|cdn|backup)/i</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the principal and bucket — is the bucket sensitive (PII/secrets) and does this principal normally read at this rate? Check whether reads originate from an EC2/Lambda role (expected app traffic) or an interactive IAMUser/AssumedRole from an external IP. Step 2 (contain): For an unexpected principal, revoke active sessions, deactivate the access key, and apply a bucket policy Deny for that principal; preserve the data-event logs. Step 3 (hunt): Correlate back to the enumeration UC (ListBuckets fan-out) by the same principal, and check VPC Flow / NAT egress volume for matching outbound bytes to an external destination.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2564-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2564-uc1-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-2564-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2564-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:GetObject</code></pre></div>
-    <div class="tab-content" id="art-2564-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail/dataevents
-fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, requestParameters.bucketName, requestParameters.key
-| filter eventSource = &quot;s3.amazonaws.com&quot; and eventName = &quot;GetObject&quot;
-| stats count(*) as objectReads, count_distinct(requestParameters.key) as distinctObjects by userIdentity.arn, requestParameters.bucketName, sourceIPAddress, bin(5m)
-| filter objectReads &gt;= 500
-| sort objectReads desc</code></pre></div>
-    <div class="tab-content" id="art-2564-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=aws:cloudtrail eventSource=&quot;s3.amazonaws.com&quot; eventName=&quot;GetObject&quot;
-| bin _time span=5m
-| stats count AS objectReads dc(&#x27;requestParameters.key&#x27;) AS distinctObjects BY _time userIdentity.arn &#x27;requestParameters.bucketName&#x27; sourceIPAddress
-| where objectReads&gt;=500
-| sort - objectReads</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="c4dd4f9308" data-platforms="cloudwatch,datadog,sigma,spl" data-targets="aws">
-  <summary>
-    <span class="uc-title">IAM role trust policy allows all principals (Principal &#x27;*&#x27; + sts:AssumeRole)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="c4dd4f9308" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects CreateRole / UpdateAssumeRolePolicy where the trust policy combines Effect Allow, Principal &#x27;*&#x27;, and Action sts:AssumeRole — the exact three-element anti-pattern the article says to never allow together. Lets any account assume the role: privilege escalation / cross-account takeover.
-
-Rationale: Matches the article&#x27;s explicit triple — Effect Allow + Principal &#x27;*&#x27; + Action sts:AssumeRole — against the CloudTrail assumeRolePolicyDocument. High fidelity: a wildcard-principal trust policy is almost never intentional. Cross-checked Elastic&#x27;s UpdateAssumeRolePolicy privilege-escalation rule and AWS&#x27;s trust-policy guidance.
-
-Cross-checked against:
-  • https://www.elastic.co/docs/reference/security/prebuilt-rules/rules/integrations/aws/privilege_escalation_iam_update_assume_role_policy
-  • https://aws.amazon.com/blogs/security/how-to-use-trust-policies-with-iam-roles/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation">T1098</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A SaaS/third-party integration role legitimately set wide then meant to be scoped by ExternalId/Condition (still risky — review)</li><li>IaC drift where a Terraform/CloudFormation module templated a permissive trust policy</li><li>A short-lived sandbox/lab role in a non-prod account</li><li>Vendor onboarding role created before the principal ARN was known</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Read the full trust policy from the event — is there a Condition (sts:ExternalId, aws:PrincipalOrgID) narrowing the wildcard, or is it truly open? Identify who made the change (userIdentity.arn) and whether it was IaC or interactive. Step 2 (contain): If open with no Condition, immediately update the trust policy to a specific principal and revoke any sessions assumed against the role since the change. Step 3 (hunt): Search STS AssumeRole events for this RoleName from unexpected accounts/IPs, and review the same actor&#x27;s preceding IAM changes (PutRolePolicy, AttachRolePolicy) for a chained escalation.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2564-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2564-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2564-uc2-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-2564-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2564-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS IAM Role Trust Policy Allows All Principals
-id: 8c2f1a76-9d3e-4f1b-bc44-2a6f0e9d11c7
-description: CreateRole or UpdateAssumeRolePolicy with a trust policy granting sts:AssumeRole to Principal &#x27;*&#x27; (any AWS account), per the Snyk AWS IAM vulnerabilities guidance.
-references:
-  - https://snyk.io/blog/6-big-aws-iam-vulnerabilities-and-how-to-avoid-them/
-  - https://www.elastic.co/docs/reference/security/prebuilt-rules/rules/integrations/aws/privilege_escalation_iam_update_assume_role_policy
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1098
-  - attack.t1078.004
-logsource:
-  product: aws
-  service: cloudtrail
-detection:
-  selection:
-    eventSource: iam.amazonaws.com
-    eventName:
-      - CreateRole
-      - UpdateAssumeRolePolicy
-  wildcard_principal:
-    - requestParameters.policyDocument|contains: &#x27;&quot;Principal&quot;:&quot;*&quot;&#x27;
-    - requestParameters.policyDocument|contains: &#x27;&quot;AWS&quot;:&quot;*&quot;&#x27;
-    - requestParameters.assumeRolePolicyDocument|contains: &#x27;&quot;Principal&quot;:&quot;*&quot;&#x27;
-    - requestParameters.assumeRolePolicyDocument|contains: &#x27;&quot;AWS&quot;:&quot;*&quot;&#x27;
-  condition: selection and wildcard_principal
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2564-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(CreateRole OR UpdateAssumeRolePolicy) (@requestParameters.policyDocument:(*sts\:AssumeRole* AND *&quot;\**) OR @requestParameters.assumeRolePolicyDocument:(*sts\:AssumeRole* AND *&quot;\**))</code></pre></div>
-    <div class="tab-content" id="art-2564-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, requestParameters.roleName, requestParameters.policyDocument, requestParameters.assumeRolePolicyDocument
-| filter eventSource = &quot;iam.amazonaws.com&quot; and eventName in [&quot;CreateRole&quot;, &quot;UpdateAssumeRolePolicy&quot;]
-| filter (requestParameters.policyDocument like /sts:AssumeRole/ or requestParameters.assumeRolePolicyDocument like /sts:AssumeRole/)
-| filter (requestParameters.policyDocument like /&quot;(Principal|AWS)&quot;\s*:\s*&quot;\*&quot;/ or requestParameters.assumeRolePolicyDocument like /&quot;(Principal|AWS)&quot;\s*:\s*&quot;\*&quot;/)
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2564-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=aws:cloudtrail eventSource=&quot;iam.amazonaws.com&quot; (eventName=&quot;CreateRole&quot; OR eventName=&quot;UpdateAssumeRolePolicy&quot;)
-| eval doc=coalesce(&#x27;requestParameters.policyDocument&#x27;,&#x27;requestParameters.assumeRolePolicyDocument&#x27;)
-| where like(doc,&quot;%sts:AssumeRole%&quot;) AND (match(doc,&quot;\&quot;Principal\&quot;\s*:\s*\&quot;\*\&quot;&quot;) OR match(doc,&quot;\&quot;AWS\&quot;\s*:\s*\&quot;\*\&quot;&quot;))
-| table _time userIdentity.arn sourceIPAddress requestParameters.roleName doc
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="8930b5ac0a" data-platforms="cloudwatch,datadog,sigma,spl" data-targets="aws">
-  <summary>
-    <span class="uc-title">IAM policy grants full administrative &#x27;*:*&#x27; privileges or attaches AdministratorAccess</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8930b5ac0a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects inline policies whose Action and Resource are both &#x27;*&#x27; (PutRolePolicy/PutUserPolicy/CreatePolicy) or the attachment of the AdministratorAccess managed policy — the &#x27;Allow all permissions for all services&#x27; least-privilege violation the article calls &#x27;game over&#x27;.
-
-Rationale: Keys on the article&#x27;s exact &#x27;*:*&#x27; (Action &#x27;*&#x27; + Resource &#x27;*&#x27;) wildcard pair plus the canonical AdministratorAccess managed policy ARN. Both are concrete, high-signal IAM CloudTrail events. Cross-checked Elastic&#x27;s AdministratorAccess-policy-attached prebuilt rule.
-
-Cross-checked against:
-  • https://www.elastic.co/docs/reference/security/prebuilt-rules/rules/integrations/aws/privilege_escalation_iam_administratoraccess_policy_attached_to_role</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation: Additional Cloud Roles">T1098.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Break-glass / org-admin role provisioning by the cloud platform team</li><li>Bootstrap of a new account where an admin role is intentionally created</li><li>IaC pipelines that attach AdministratorAccess to a CI deploy role (anti-pattern but expected in some orgs)</li><li>Landing-zone automation (Control Tower / AFT) attaching admin to baseline roles</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where userIdentity.arn not like /:(role|user)\/(break-glass|org-admin|control-tower|aft-)/i</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Determine the grantor (userIdentity.arn) and grantee (role/user) and whether this is sanctioned admin provisioning vs an unexpected actor self-granting. Check if the grantee was created or had keys made minutes earlier. Step 2 (contain): If unsanctioned, detach the policy / delete the inline statement and revoke the grantee&#x27;s sessions and access keys; snapshot CloudTrail. Step 3 (hunt): Pivot on the grantee identity for subsequent high-impact API calls (CreateAccessKey, AssumeRole, data-plane reads) and review the grantor&#x27;s recent activity for a broader compromise.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2564-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2564-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2564-uc3-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-2564-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2564-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS IAM Full Administrative Privileges Granted
-id: 4b9e0c21-7a55-4d8e-9f33-1c2d8e6b4470
-description: Inline IAM policy with Action &#x27;*&#x27; and Resource &#x27;*&#x27;, or attachment of AdministratorAccess, per the Snyk AWS IAM vulnerabilities guidance.
-references:
-  - https://snyk.io/blog/6-big-aws-iam-vulnerabilities-and-how-to-avoid-them/
-  - https://www.elastic.co/docs/reference/security/prebuilt-rules/rules/integrations/aws/privilege_escalation_iam_administratoraccess_policy_attached_to_role
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1098.003
-logsource:
-  product: aws
-  service: cloudtrail
-detection:
-  attach_admin:
-    eventSource: iam.amazonaws.com
-    eventName:
-      - AttachRolePolicy
-      - AttachUserPolicy
-      - AttachGroupPolicy
-    requestParameters.policyArn|endswith: &#x27;:policy/AdministratorAccess&#x27;
-  inline_star:
-    eventSource: iam.amazonaws.com
-    eventName:
-      - PutRolePolicy
-      - PutUserPolicy
-      - PutGroupPolicy
-      - CreatePolicy
-    requestParameters.policyDocument|contains|all:
-      - &#x27;&quot;Action&quot;:&quot;*&quot;&#x27;
-      - &#x27;&quot;Resource&quot;:&quot;*&quot;&#x27;
-  condition: attach_admin or inline_star
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2564-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail (@evt.name:(AttachRolePolicy OR AttachUserPolicy OR AttachGroupPolicy) AND @requestParameters.policyArn:*AdministratorAccess) OR (@evt.name:(PutRolePolicy OR PutUserPolicy OR PutGroupPolicy OR CreatePolicy) AND @requestParameters.policyDocument:(*&quot;Action&quot;:&quot;\** AND *&quot;Resource&quot;:&quot;\**))</code></pre></div>
-    <div class="tab-content" id="art-2564-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, requestParameters.roleName, requestParameters.userName, requestParameters.policyArn, requestParameters.policyDocument
-| filter eventSource = &quot;iam.amazonaws.com&quot;
-| filter (eventName in [&quot;AttachRolePolicy&quot;,&quot;AttachUserPolicy&quot;,&quot;AttachGroupPolicy&quot;] and requestParameters.policyArn like /AdministratorAccess/)
-      or (eventName in [&quot;PutRolePolicy&quot;,&quot;PutUserPolicy&quot;,&quot;PutGroupPolicy&quot;,&quot;CreatePolicy&quot;] and requestParameters.policyDocument like /&quot;Action&quot;\s*:\s*&quot;\*&quot;/ and requestParameters.policyDocument like /&quot;Resource&quot;\s*:\s*&quot;\*&quot;/)
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2564-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=aws:cloudtrail eventSource=&quot;iam.amazonaws.com&quot;
-| eval doc=coalesce(&#x27;requestParameters.policyDocument&#x27;,&quot;&quot;)
-| where ((eventName IN (&quot;AttachRolePolicy&quot;,&quot;AttachUserPolicy&quot;,&quot;AttachGroupPolicy&quot;)) AND like(&#x27;requestParameters.policyArn&#x27;,&quot;%AdministratorAccess%&quot;)) OR ((eventName IN (&quot;PutRolePolicy&quot;,&quot;PutUserPolicy&quot;,&quot;PutGroupPolicy&quot;,&quot;CreatePolicy&quot;)) AND match(doc,&quot;\&quot;Action\&quot;\s*:\s*\&quot;\*\&quot;&quot;) AND match(doc,&quot;\&quot;Resource\&quot;\s*:\s*\&quot;\*\&quot;&quot;))
-| table _time eventName userIdentity.arn sourceIPAddress requestParameters.roleName requestParameters.userName requestParameters.policyArn
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="45b37cecdc" data-platforms="cloudwatch,datadog,sigma,spl" data-targets="aws">
-  <summary>
-    <span class="uc-title">Successful AWS console login without MFA</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="45b37cecdc" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects successful AWS Management Console sign-ins where additionalEventData.MFAUsed is &#x27;No&#x27; — the article&#x27;s &#x27;without MFA only a username and password are required … the keys to the kingdom&#x27; weakness. Surfaces IAM users (and root) authenticating with password alone.
-
-Rationale: Direct expression of the article&#x27;s &#x27;all IAM users with console access should have MFA enabled&#x27; control — ConsoleLogin with additionalEventData.MFAUsed=&#x27;No&#x27; is the exact CloudTrail field. AssumedRole excluded because federated/SSO logins legitimately report MFAUsed=No (MFA enforced at the IdP).</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Federated/SSO sign-ins where MFA is enforced at the identity provider (often logged as MFAUsed=No)</li><li>Documented break-glass account used during an incident</li><li>Service/automation accounts that legitimately use console without MFA (should be remediated, not alerted forever)</li><li>Newly provisioned users in the window before MFA enrollment is completed</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (userIdentity.arn like /break-glass/ or sourceIPAddress like /^(203\.0\.113\.|198\.51\.100\.)/)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the principal and whether it&#x27;s root, a human IAMUser, or federated. Root or a privileged IAMUser logging in without MFA from an unusual IP is high priority; SSO with IdP-side MFA is expected. Step 2 (contain): For root/privileged-user no-MFA from an unexpected source, force a password reset, enable/enforce MFA, and review session activity; treat root no-MFA as a P1. Step 3 (hunt): Enumerate all IAM users still lacking MFA (credential report) and check whether this principal performed sensitive actions in the same session (IAM changes, S3 reads).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2564-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2564-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2564-uc4-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-2564-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2564-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS Console Login Without MFA
-id: 1f6a3d09-2b7c-4e55-8a91-7d4c0b2e9a13
-description: Successful AWS Management Console sign-in with MFAUsed=No, per the Snyk AWS IAM vulnerabilities guidance on missing MFA.
-references:
-  - https://snyk.io/blog/6-big-aws-iam-vulnerabilities-and-how-to-avoid-them/
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1078.004
-logsource:
-  product: aws
-  service: cloudtrail
-detection:
-  selection:
-    eventName: ConsoleLogin
-    responseElements.ConsoleLogin: Success
-    additionalEventData.MFAUsed: &#x27;No&#x27;
-  filter_assumed:
-    userIdentity.type: AssumedRole
-  condition: selection and not filter_assumed
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-2564-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:ConsoleLogin @evt.outcome:success @additionalEventData.MFAUsed:No -@userIdentity.type:AssumedRole</code></pre></div>
-    <div class="tab-content" id="art-2564-uc4-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, userIdentity.type, userIdentity.arn, userIdentity.userName, sourceIPAddress, additionalEventData.MFAUsed, responseElements.ConsoleLogin
-| filter eventName = &quot;ConsoleLogin&quot; and responseElements.ConsoleLogin = &quot;Success&quot; and additionalEventData.MFAUsed = &quot;No&quot; and userIdentity.type != &quot;AssumedRole&quot;
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2564-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=aws:cloudtrail eventName=&quot;ConsoleLogin&quot; &quot;responseElements.ConsoleLogin&quot;=&quot;Success&quot; &quot;additionalEventData.MFAUsed&quot;=&quot;No&quot; userIdentity.type!=&quot;AssumedRole&quot;
-| table _time userIdentity.type userIdentity.arn userIdentity.userName sourceIPAddress additionalEventData.MFAUsed
-| sort - _time</code></pre></div>
   </div>
 </details></div>
 </article>

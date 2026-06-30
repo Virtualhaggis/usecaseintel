@@ -22,12 +22,93 @@ In this blog post, I aim to show you why me…
 - **T1190** — Exploit Public-Facing Application
 - **T1053.005** — Scheduled Task
 - **T1204.002** — User Execution: Malicious File
+- **T1059** — Command and Scripting Interpreter
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Celery task injected into Apache Airflow message broker (unacked queue / execute_command)
+
+`UC_3023_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*lpush*" OR Processes.process="*rpush*" OR Processes.process="*hset*" OR Processes.process="*hmset*" OR Processes.process="*amqp-publish*" OR Processes.process="*basic_publish*") (Processes.process="*celery*" OR Processes.process="*unacked*" OR Processes.process="*execute_command*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where ProcessCommandLine has_any ("lpush","rpush","hset","hmset","amqp-publish","basic_publish")
+| where ProcessCommandLine has_any ("celery","unacked","celery_executor.execute_command","execute_command")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Apache Airflow Celery worker spawns non-airflow child (command-injection RCE, CVE-2020-11981)
+
+`UC_3023_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process="*celery*" Processes.parent_process="*worker*") OR (Processes.parent_process="*airflow*" Processes.parent_process="*worker*")) (Processes.process_name="sh" OR Processes.process_name="bash" OR Processes.process_name="dash" OR Processes.process_name="zsh" OR Processes.process_name="nc" OR Processes.process_name="ncat" OR Processes.process_name="netcat" OR Processes.process_name="socat" OR Processes.process_name="curl" OR Processes.process_name="wget" OR Processes.process_name="perl" OR Processes.process_name="ruby") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT (process="*airflow tasks run*" OR process="*airflow run*") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (InitiatingProcessCommandLine has_all ("celery","worker")) or (InitiatingProcessCommandLine has_all ("airflow","worker"))
+| where (FileName in~ ("sh","bash","dash","zsh","nc","ncat","netcat","socat","curl","wget","perl","ruby"))
+     or (FileName in~ ("python","python3") and ProcessCommandLine has "-c")
+| where not (ProcessCommandLine has "airflow tasks run" or ProcessCommandLine has "airflow run")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Apache Airflow task run with --pickle flag (pickle deserialization, CVE-2020-11982)
+
+`UC_3023_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*airflow*" Processes.process="*--pickle*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "airflow"
+| where ProcessCommandLine has "--pickle"
+| where ProcessCommandLine has_any ("run","tasks run")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Hosts exposed to Apache Airflow Celery broker RCE (CVE-2020-11981 / CVE-2020-11982)
+
+`UC_3023_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve="CVE-2020-11981" OR Vulnerabilities.cve="CVE-2020-11982") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2020-11981","CVE-2020-11982")
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
+```
 
 ### Scheduled task created with suspicious image / encoded args
 
@@ -100,4 +181,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -11,7 +11,15 @@ Open something like Claude Cowork, type "build me a tool that cleans up this spr
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `23.254.164.92`
+- **IPv4 (defanged):** `23.254.164.123`
+- **Domain (defanged):** `hwsrv-1327786.hostwindsdns.com`
+- **Domain (defanged):** `hwsrv-1327785.hostwindsdns.com`
+- **SHA256:** `b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4`
+- **SHA256:** `c38954e85bf5433e61e7c8f4230336695624ae88b6953afabf7bf817aa91b638`
+- **SHA256:** `cdec8b20338beb708b5be8d3d7a3041a35a8b0fb92f9186262f312d55ff82066`
+- **SHA256:** `9570f77a5e1511869f4e554e7166df9fde081f2583e293c2569621792ed7d9c9`
+- **SHA256:** `221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf`
 
 ## MITRE ATT&CK Techniques
 
@@ -19,6 +27,8 @@ Open something like Claude Cowork, type "build me a tool that cleans up this spr
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
@@ -35,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### easy-day-js npm postinstall dropper: node executing setup.cjs --no-warnings
 
-`UC_61_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_62_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +70,7 @@ DeviceProcessEvents
 
 ### easy-day-js stealer C2 beacon to Hostwinds 23.254.164.0/24 (ports 8000/443)
 
-`UC_61_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_62_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +91,7 @@ DeviceNetworkEvents
 
 ### easy-day-js Windows persistence: Run key 'NvmProtocal' / protocal.cjs autostart
 
-`UC_61_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_62_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +113,7 @@ DeviceRegistryEvents
 
 ### easy-day-js implant artifacts dropped: protocal.cjs / NodePackages / cross-OS persistence files
 
-`UC_61_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_62_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -206,7 +216,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `23.254.164.92`, `23.254.164.123`, `hwsrv-1327786.hostwindsdns.com`, `hwsrv-1327785.hostwindsdns.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4`, `c38954e85bf5433e61e7c8f4230336695624ae88b6953afabf7bf817aa91b638`, `cdec8b20338beb708b5be8d3d7a3041a35a8b0fb92f9186262f312d55ff82066`, `9570f77a5e1511869f4e554e7166df9fde081f2583e293c2569621792ed7d9c9`, `221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

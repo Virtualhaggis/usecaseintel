@@ -20,12 +20,34 @@ In this post, we will explore how Kubernetes container isolation impacts privile
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1068** — Exploitation for Privilege Escalation
+- **T1611** — Escape to Host
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Unprivileged user-namespace creation (unshare CLONE_NEWUSER) preceding Linux privilege escalation
+
+`UC_2946_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=unshare AND (Processes.process="*--user*" OR Processes.process="*--map-root-user*" OR Processes.process="* -r*" OR Processes.process="* -U*" OR Processes.process="*CLONE_NEWUSER*") AND Processes.user!=root by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "unshare"
+| where ProcessCommandLine has_any ("--user","--map-root-user","CLONE_NEWUSER") or ProcessCommandLine matches regex @"(^|\s)-(?:r|U)(\s|$)"
+| where AccountName !in~ ("root","system") and AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — Kernel privilege escalation: how Kubernetes container isolation impacts privileg
 
@@ -70,4 +92,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

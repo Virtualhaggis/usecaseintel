@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?
 
-`UC_19_0` · phase: **exploit** · confidence: **High**
+`UC_20_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -25,12 +25,53 @@ Overview The Mintegral SDK is a popular mobile app advertising SDK available for
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1567** — Exfiltration Over Web Service
+- **T1437.001** — Application Layer Protocol: Web Protocols (Mobile)
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### SourMint/Mintegral SDK covert click-data exfiltration to n.systemlog.me
+
+`UC_3014_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*n.systemlog.me*" OR Web.dest="n.systemlog.me" OR Web.url="*systemlog.me/log*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "systemlog.me"
+| where RemoteUrl has "n.systemlog.me" or RemoteUrl has "systemlog.me/log"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), Devices=make_set(DeviceName,50) by RemoteUrl, InitiatingProcessFileName, RemoteIP
+| order by LastSeen desc
+```
+
+### Mintegral SourMint SDK config/analytics beacon to rayjump.com
+
+`UC_3014_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query="*setting.rayjump.com*" OR DNS.query="*analytics.rayjump.com*" OR DNS.query="*rayjump.com*") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "rayjump.com"
+| extend Endpoint = case(RemoteUrl has "setting.rayjump.com", "settings-control", RemoteUrl has "analytics.rayjump.com", "analytics", "other-rayjump")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), URLs=make_set(RemoteUrl,20) by DeviceName, InitiatingProcessFileName, Endpoint
+| order by LastSeen desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -104,4 +145,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -19,12 +19,27 @@ October 26, 2020
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### REDoS exploitation of ua-parser-js via space-padded Xiaomi User-Agent (CVE-2020-7733)
+
+`UC_2975_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_user_agent="*android*mi*pad*" OR Web.http_user_agent="*android*redmi*") by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| eval ua_len=len(http_user_agent)
+| where ua_len > 300 AND match(http_user_agent, "[\s+]{50,}")
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
 
 ### Article-specific behavioural hunt — Regular Expression Denial of Service (REDoS) in UAParser.js
 
@@ -85,4 +100,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
