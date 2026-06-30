@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Fetch the Flag CTF 2022 writeup: File Explorer
 
-`UC_1830_2` · phase: **exploit** · confidence: **High**
+`UC_1829_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

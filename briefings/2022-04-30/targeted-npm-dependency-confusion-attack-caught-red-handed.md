@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### npm dropper DNS exfil to pkgio.com / game-note.com (gxm-reference campaign)
 
-`UC_2136_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_2135_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### npm post-install spawns node confsettingsaaa.js (gxm-reference dropper execution)
 
-`UC_2136_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2135_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### gxm-reference encrypted-payload artifacts written to disk (obfusc/mac/win/lin .enc.js)
 
-`UC_2136_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_2135_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### gxm-reference second-stage backdoor C2 to 82.196.7.23 / 82.196.15.238 (/callbackupload)
 
-`UC_2136_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2135_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -331,7 +331,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Targeted npm dependency confusion attack caught red-handed
 
-`UC_2136_6` · phase: **exploit** · confidence: **High**
+`UC_2135_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

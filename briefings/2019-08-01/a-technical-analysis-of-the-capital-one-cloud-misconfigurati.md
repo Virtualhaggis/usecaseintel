@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### EC2 instance-metadata credential theft via curl to 169.254.169.254 IAM endpoint
 
-`UC_3196_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3195_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### EC2 instance-role temporary credentials used from non-AWS public IP (exfiltrated creds)
 
-`UC_3196_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3195_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ index=* sourcetype=aws:cloudtrail userIdentity.type=AssumedRole NOT errorCode=*
 
 ### Single principal mass S3 bucket enumeration and object duplication (700+ buckets)
 
-`UC_3196_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3195_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — npm Shrinkwrap reloaded: Locking npm Deps with Package-Lock and Yarn.Lock
 
-`UC_3326_0` · phase: **exploit** · confidence: **High**
+`UC_3325_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Scanning Docker images for key binaries - going beyond package managers
 
-`UC_3267_0` · phase: **exploit** · confidence: **High**
+`UC_3266_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Securing your Kubernetes application development with Snyk and Tilt
 
-`UC_2928_0` · phase: **exploit** · confidence: **High**
+`UC_2927_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

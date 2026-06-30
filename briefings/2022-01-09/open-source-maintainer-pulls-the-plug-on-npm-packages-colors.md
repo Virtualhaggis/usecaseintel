@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Install/resolution of sabotaged npm packages colors@1.4.1/1.4.2/liberty-2 or faker@6.6.6
 
-`UC_2500_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_2499_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Open source maintainer pulls the plug on npm packages colors and faker, now what
 
-`UC_2500_1` · phase: **exploit** · confidence: **High**
+`UC_2499_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Adding security to Nuxt 3
 
-`UC_1762_0` · phase: **exploit** · confidence: **High**
+`UC_1761_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Ghostcat (CVE-2020-1938) external connection to Apache Tomcat AJP port 8009
 
-`UC_3115_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3114_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ DeviceNetworkEvents
 
 ### Vulnerable Apache Tomcat exposed to Ghostcat (CVE-2020-1938) version exposure hunt
 
-`UC_3115_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_3114_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Apache Tomcat (java) spawning a command shell - Ghostcat JSP webshell RCE
 
-`UC_3115_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3114_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

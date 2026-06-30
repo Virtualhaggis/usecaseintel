@@ -9,7 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-30
-- [oracle e business suite flaw cve 2026 46817 actively exploit](./2026-06-30/oracle-e-business-suite-flaw-cve-2026-46817-actively-exploit.md)
+- [apple patches 30 ios macos safari flaws including ai discove](./2026-06-30/apple-patches-30-ios-macos-safari-flaws-including-ai-discove.md)
 
 ## 2026-06-29
 - [236 000 dcloud uni app sites used in crypto scams phishing a](./2026-06-29/236-000-dcloud-uni-app-sites-used-in-crypto-scams-phishing-a.md)

@@ -1,21 +1,28 @@
-# [CRIT] Oracle E-Business Suite Flaw CVE-2026-46817 Actively Exploited in the Wild
+# [CRIT] Apple Patches 30+ iOS, macOS, Safari Flaws, Including AI-Discovered WebKit Bugs
 
 **Source:** The Hacker News
 **Published:** 2026-06-30
-**Article:** https://thehackernews.com/2026/06/oracle-e-business-suite-flaw-cve-2026.html
+**Article:** https://thehackernews.com/2026/06/apple-patches-30-ios-macos-safari-flaws.html
 
 ## Threat Profile
 
-Oracle E-Business Suite Flaw CVE-2026-46817 Actively Exploited in the Wild 
- Ravie Lakshmanan  Jun 30, 2026 Vulnerability / Enterprise Software 
-A critical security flaw impacting Oracle E-Business Suite has come under active exploitation in the wild, according to Defused Cyber.
-The vulnerability, tracked as CVE-2026-46817 (CVSS score: 9.8), refers to an improper privilege management and authentication flaw in Oracle Payments that could be abused to take over susceptible instances.
-"Easily exp…
+Apple Patches 30+ iOS, macOS, Safari Flaws, Including AI-Discovered WebKit Bugs 
+ Ravie Lakshmanan  Jun 30, 2026 Artificial Intelligence / Vulnerability 
+Apple on Monday released security updates for iOS, macOS, and the Safari web browser to address over three dozen flaws, including four vulnerabilities in WebKit that were discovered using artificial intelligence (AI) tools like Anthropic Claude and OpenAI Codex Security.
+The WebKit vulnerabilities are listed below -
+CVE-2026-43707 - A memory …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-46817`
-- **IPv4 (defanged):** `45.84.137.125`
+- **CVE:** `CVE-2026-43707`
+- **CVE:** `CVE-2026-43716`
+- **CVE:** `CVE-2026-43745`
+- **CVE:** `CVE-2026-43715`
+- **CVE:** `CVE-2026-43720`
+- **CVE:** `CVE-2026-43725`
+- **CVE:** `CVE-2026-43722`
+- **CVE:** `CVE-2026-43724`
+- **CVE:** `CVE-2026-39868`
 
 ## MITRE ATT&CK Techniques
 
@@ -28,13 +35,7 @@ The vulnerability, tracked as CVE-2026-46817 (CVSS score: 9.8), refers to an imp
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1486** — Data Encrypted for Impact
-- **T1003.001** — LSASS Memory
-- **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
-- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -211,90 +212,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### Ransomware-style mass file rename / extension change
-
-`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("modified","renamed")
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files > 200
-| sort - files
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessAccountName !endswith "$"
-| where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-```
-
-### LSASS process access / dump (credential theft)
-
-`UC_LSASS` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
-        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
-        OR Processes.process="*procdump*lsass*")
-       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where ActionType == "OpenProcessApiCall"
-| where FileName =~ "lsass.exe"
-| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
-                                          "svchost.exe","wininit.exe","services.exe",
-                                          "lsm.exe","SearchProtocolHost.exe")
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
-| order by Timestamp desc
-```
-
-### Remote service execution — PsExec / SMB lateral movement
-
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
 ### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
 
 `UC_RMM_TOOLS` · phase: **install** · confidence: **High**
@@ -327,12 +244,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-46817`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `45.84.137.125`
+  - CVE(s): `CVE-2026-43707`, `CVE-2026-43716`, `CVE-2026-43745`, `CVE-2026-43715`, `CVE-2026-43720`, `CVE-2026-43725`, `CVE-2026-43722`, `CVE-2026-43724` _(+1 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

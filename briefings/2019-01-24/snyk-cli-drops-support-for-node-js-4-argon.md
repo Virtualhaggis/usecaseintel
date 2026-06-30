@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk CLI drops support for Node.js 4 (Argon)
 
-`UC_3274_0` · phase: **exploit** · confidence: **High**
+`UC_3273_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
