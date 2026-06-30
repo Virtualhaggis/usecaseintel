@@ -19,12 +19,22 @@ This security vulnerability referred to and manifests as prototype pollution , e
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploitation of Public-Facing Application
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### jQuery prototype pollution payload (__proto__) in inbound HTTP request (CVE-2019-11358)
+
+`UC_3242_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_query="*__proto__*" OR Web.uri_query="*%5f%5fproto%5f%5f*" OR Web.uri_query="*constructor[*" OR Web.uri_query="*prototype[*") by Web.src, Web.dest, Web.http_method, Web.uri_path, Web.uri_query, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
 
 ### Article-specific behavioural hunt — After three years of silence, a new jQuery prototype pollution vulnerability eme
 
@@ -78,4 +88,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

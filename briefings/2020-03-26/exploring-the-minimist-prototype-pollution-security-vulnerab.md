@@ -20,12 +20,57 @@ What is a prototype pollution vulnerability? This security vulnerability that…
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1068** — Exploitation for Privilege Escalation
+- **T1574.010** — Hijack Execution Flow: Services File Permissions Weakness
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Prototype pollution payload in CLI args (--__proto__ / constructor.prototype) to Node tool
+
+`UC_3095_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process IN ("*--__proto__*","*__proto__.*","*__proto__[*","*constructor.prototype*","*constructor[*prototype*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where user!="-" | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine matches regex @"(?i)(--?)?(__proto__|constructor\.prototype|constructor\[)"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### World-writable executable run as a shell (-c) — minimist polluted shell privesc payload
+
+`UC_3095_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path IN ("/tmp/*","/var/tmp/*","/dev/shm/*")) Processes.process="* -c *" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FolderPath matches regex @"^/(tmp|var/tmp|dev/shm)/"
+| where ProcessCommandLine matches regex @"^/(tmp|var/tmp|dev/shm)/\S+\s+-c(\s|$)"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          ProcessIntegrityLevel, SHA256
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — Exploring the minimist prototype pollution security vulnerability
 
@@ -86,4 +131,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

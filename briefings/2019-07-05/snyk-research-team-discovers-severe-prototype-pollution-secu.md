@@ -28,6 +28,33 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Vulnerable lodash (CVE-2019-10744 prototype pollution) present in software inventory
+
+`UC_3208_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2019-10744" OR (Vulnerabilities.signature="*lodash*" AND Vulnerabilities.signature="*prototype pollution*") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(7d)
+| where CveId =~ "CVE-2019-10744" or (SoftwareName has "lodash" and SoftwareVersion startswith "4.")
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc
+```
+
+### Prototype pollution payload (__proto__ / constructor.prototype) in inbound web requests
+
+`UC_3208_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query="*__proto__*" OR Web.uri_query="*%5f%5fproto%5f%5f*" OR (Web.uri_query="*constructor*" AND Web.uri_query="*prototype*") OR Web.uri_path="*__proto__*") by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | sort - lastTime
+```
+
 ### Article-specific behavioural hunt — Snyk research team discovers severe prototype pollution security vulnerabilities
 
 `UC_3208_1` · phase: **exploit** · confidence: **High**
@@ -87,4 +114,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -24,12 +24,55 @@ How does this security vulnerability affect the npm package man…
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Compromise Software Supply Chain
+- **T1574** — Hijack Execution Flow
+- **T1546** — Event Triggered Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Vulnerable npm/yarn/pnpm version exposed to bin-key file overwrite (CVE-2019-16776/16777/10773)
+
+`UC_3141_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2019-16776","CVE-2019-16777","CVE-2019-10773")) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2019-16776","CVE-2019-16777","CVE-2019-10773")
+| project DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
+```
+
+### npm/yarn/pnpm planting or overwriting a binary in a system bin directory
+
+`UC_3141_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN ("created","modified","write")) AND (Filesystem.file_path IN ("/usr/bin/*","/bin/*","/sbin/*","/usr/sbin/*","/usr/local/bin/*")) AND (Filesystem.file_name IN ("date","curl","wget","ssh","scp","sudo","bash","sh","git","python","python3","node","ls","cp","mv")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName has_any ("node","npm","yarn","pnpm","node.exe","pnpm.cjs","npm-cli.js")
+| where InitiatingProcessAccountName !endswith "$"
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath in~ ("/usr/bin","/bin","/sbin","/usr/sbin"))
+     or (FolderPath =~ "/usr/local/bin" and FileName in~ ("date","curl","wget","ssh","scp","sudo","bash","sh","git","python","python3","node","ls","cp","mv"))
+| where not(InitiatingProcessCommandLine has_any ("nvm","corepack"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana
 
@@ -90,4 +133,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

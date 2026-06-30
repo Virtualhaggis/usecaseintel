@@ -19,12 +19,64 @@ December 6, 2018
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1554** — Compromise Host Software Binary
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Malicious flatmap-stream npm package present in node_modules (event-stream supply-chain backdoor)
+
+`UC_3285_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\flatmap-stream\\*" OR Filesystem.file_path="*/node_modules/flatmap-stream/*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has @"\node_modules\flatmap-stream\" or FolderPath contains "/node_modules/flatmap-stream/"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Build-time injection into vendored @zxing ReedSolomonDecoder.js (Copay wallet stealer payload)
+
+`UC_3285_2` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="ReedSolomonDecoder.js" AND (Filesystem.file_path="*\\@zxing\\library\\esm5\\core\\common\\reedsolomon\\*" OR Filesystem.file_path="*/@zxing/library/esm5/core/common/reedsolomon/*") AND Filesystem.action=modified) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.action Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "ReedSolomonDecoder.js"
+| where FolderPath has @"\@zxing\library\esm5\core\common\reedsolomon" or FolderPath contains "/@zxing/library/esm5/core/common/reedsolomon"
+| where ActionType in ("FileModified", "FileRenamed")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — A post-mortem of the malicious event-stream backdoor
 
@@ -78,4 +130,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

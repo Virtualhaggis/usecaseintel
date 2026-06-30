@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Signal Desktop linked-device URI (sgnl://linkdevice) invoked from a clicked link (UNC5792)
 
-`UC_25_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Inbound email impersonating Signal support requesting Backup Recovery Key / device-link (UNC4221)
 
-`UC_25_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_26_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

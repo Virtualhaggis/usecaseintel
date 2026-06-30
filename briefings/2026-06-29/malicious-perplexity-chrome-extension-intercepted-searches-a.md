@@ -28,10 +28,9 @@ Microsoft says Google removed it from the store after responsi…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
-- **T1176.001** — Browser Extensions
-- **T1185** — Browser Session Hijacking
-- **T1056.004** — Input Capture: Credential API Hooking
 - **T1041** — Exfiltration Over C2 Channel
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1056.004** — Input Capture: Credential API Hooking
 
 ## Kill chain phases observed
 
@@ -39,32 +38,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious 'Search for perplexity ai' Chrome/Edge extension installed by ID flkebkiofojicogddingbdmcmkpbplcd
+### Browser traffic to Perplexity look-alike domain perplexity-ai.online (search interception)
 
-`UC_1_7` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*flkebkiofojicogddingbdmcmkpbplcd*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(90d)
-| where FolderPath has "flkebkiofojicogddingbdmcmkpbplcd"
-| where InitiatingProcessFileName !endswith "$"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), FileCount=count(), SampleFile=any(FileName) by DeviceName, InitiatingProcessAccountName, FolderPath, InitiatingProcessFileName
-| order by FirstSeen desc
-```
-
-### Browser traffic to look-alike search-hijack domain perplexity-ai.online
-
-`UC_1_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_2_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*perplexity-ai.online*" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query="*perplexity-ai.online*" by DNS.src, DNS.dest, DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -72,9 +52,27 @@ DeviceFileEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteUrl has "perplexity-ai.online"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe","chrome_proxy.exe","vivaldi.exe")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), RemoteIPs=make_set(RemoteIP,10) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl
-| order by FirstSeen desc
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe","vivaldi.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Malicious 'Search for perplexity ai' extension files written (ID flkebkiofojicogddingbdmcmkpbplcd)
+
+`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*flkebkiofojicogddingbdmcmkpbplcd*" by Filesystem.dest, Filesystem.file_path, Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "flkebkiofojicogddingbdmcmkpbplcd"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -308,4 +306,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

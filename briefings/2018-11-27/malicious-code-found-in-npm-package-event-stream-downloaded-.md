@@ -20,12 +20,57 @@ The event-stream package makes creating and working with streams easy, and is ve
 
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
+- **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — JavaScript
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Malicious npm flatmap-stream / event-stream@3.3.6 dependency dropped to endpoint disk
+
+`UC_3286_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*flatmap-stream*" OR Filesystem.file_path="*\\node_modules\\flatmap-stream\\*" OR Filesystem.file_name="flatmap-stream*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "flatmap-stream" or FileName has "flatmap-stream"
+   or (FolderPath has @"\node_modules\event-stream\" and FolderPath has "3.3.6")
+| project Timestamp, DeviceName, FileName, FolderPath, ActionType,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
+
+### Copay wallet-stealer C2 exfil to copayapi.host / 111.90.151.134
+
+`UC_3286_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="111.90.151.134" OR All_Traffic.dest_host="copayapi.host" OR All_Traffic.url="*copayapi.host*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.app All_Traffic.url | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteUrl has "copayapi.host" or RemoteIP == "111.90.151.134"
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -59,4 +104,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

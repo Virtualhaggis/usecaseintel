@@ -30,6 +30,15 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Sequelize ORM JSON-path SQLi exploitation via ')) AS DECIMAL)' cast-break (CVE-2019-10748)
+
+`UC_3181_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query="*AS DECIMAL)*" OR Web.uri_query="*AS%20DECIMAL%29*" OR Web.uri_query="*AS+DECIMAL%29*" OR Web.url="*AS DECIMAL)*" OR Web.url="*AS%20DECIMAL%29*") (Web.uri_query="*UNION*" OR Web.url="*UNION*" OR Web.uri_query="*VERSION(*" OR Web.url="*VERSION(*") by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | where count > 0 | sort - lastTime
+```
+
 ### Article-specific behavioural hunt — Sequelize ORM npm library found vulnerable to SQL Injection attacks
 
 `UC_3181_1` · phase: **exploit** · confidence: **High**
@@ -89,4 +98,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

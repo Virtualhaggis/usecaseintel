@@ -20,12 +20,66 @@ We have already added the vulnerability to our database , and if your Ruby proje
 
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1105** — Ingress Tool Transfer
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### strong_password 0.0.7 backdoor: Ruby app server fetches second-stage payload from pastebin.com/raw/xa456PFt
+
+`UC_3207_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*pastebin.com/raw/xa456PFt*" OR (Web.url="*pastebin.com/raw/*" AND (Web.app="ruby" OR Web.app="puma" OR Web.app="unicorn" OR Web.app="passenger"))) by Web.src Web.dest Web.url Web.app Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (InitiatingProcessFileName has_any ("ruby","puma","unicorn","passenger","rails") or InitiatingProcessFolderPath has "ruby")
+| where RemoteUrl has "pastebin.com"
+| extend ExactIOC = RemoteUrl has "pastebin.com/raw/xa456PFt"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ExactIOC
+| order by Timestamp desc
+```
+
+### strong_password 0.0.7 backdoor: beacon to home server smiley.zzz.com.ua
+
+`UC_3207_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="smiley.zzz.com.ua" OR DNS.query="*.smiley.zzz.com.ua") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "smiley.zzz.com.ua"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### strong_password 0.0.7 backdoor: RCE via attacker-controlled ___id cookie eval middleware
+
+`UC_3207_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.cookie="*___id=*" by Web.src Web.dest Web.http_method Web.uri_path Web.cookie Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -61,4 +115,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

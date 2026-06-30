@@ -19,12 +19,49 @@ Webmin is an interface for system administration for Unix. As the name suggests,
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Webmin password_change.cgi unauthenticated command injection exploit attempt (CVE-2019-15107)
+
+`UC_3189_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST AND Web.url="*password_change.cgi*" by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| search NOT http_user_agent IN ("*Nessus*","*Qualys*","*nuclei*","*zgrab*","*masscan*")
+| sort - lastTime
+```
+
+### Webmin RCE: miniserv/password_change.cgi spawning reverse shell (CVE-2019-15107)
+
+`UC_3189_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*password_change.cgi*" OR Processes.parent_process_name="miniserv.pl" OR Processes.parent_process_name="perl") AND Processes.process_name IN ("sh","bash","dash","perl","python","python3","nc","ncat","netcat") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(process, "(?i)(IO::Socket|Socket|fsockopen|/dev/tcp|sh -i|bash -i|perl -e|/bin/sh)")
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessCommandLine has "password_change.cgi" or InitiatingProcessFileName =~ "miniserv.pl" or InitiatingProcessParentFileName =~ "miniserv.pl"
+| where FileName in~ ("sh","bash","dash","perl","python","python3","nc","ncat","netcat")
+| where ProcessCommandLine has_any ("IO::Socket","Socket","fsockopen","/dev/tcp","sh -i","bash -i","perl -e")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| sort by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — A year-old dormant malicious remote code execution vulnerability discovered in W
 
@@ -62,4 +99,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

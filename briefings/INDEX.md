@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-30
+- [oracle e business suite flaw cve 2026 46817 actively exploit](./2026-06-30/oracle-e-business-suite-flaw-cve-2026-46817-actively-exploit.md)
 
 ## 2026-06-29
 - [236 000 dcloud uni app sites used in crypto scams phishing a](./2026-06-29/236-000-dcloud-uni-app-sites-used-in-crypto-scams-phishing-a.md)
@@ -3733,11 +3736,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2020-02-26
 - [ghostcat breach affects all tomcat versions](./2020-02-26/ghostcat-breach-affects-all-tomcat-versions.md)
 
+## 2020-02-12
+- [security breach leaks the personal data of all 6 5 million i](./2020-02-12/security-breach-leaks-the-personal-data-of-all-6-5-million-i.md)
+
 ## 2020-02-06
 - [node js release fixes a critical http security vulnerability](./2020-02-06/node-js-release-fixes-a-critical-http-security-vulnerability.md)
 
 ## 2020-01-07
 - [understanding filesystem takeover vulnerabilities in npm jav](./2020-01-07/understanding-filesystem-takeover-vulnerabilities-in-npm-jav.md)
+
+## 2019-12-05
+- [malicious packages found to be typo squatting in python pack](./2019-12-05/malicious-packages-found-to-be-typo-squatting-in-python-pack.md)
 
 ## 2019-11-19
 - [showing application vulnerabilities in kubernetes native too](./2019-11-19/showing-application-vulnerabilities-in-kubernetes-native-too.md)
@@ -3778,6 +3787,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mastering node js version management and npm registry source](./2019-08-28/mastering-node-js-version-management-and-npm-registry-source.md)
 
 ## 2019-08-21
+- [code execution back door found in ruby s rest client library](./2019-08-21/code-execution-back-door-found-in-ruby-s-rest-client-library.md)
 - [jackson deserialization vulnerability](./2019-08-21/jackson-deserialization-vulnerability.md)
 
 ## 2019-08-20
@@ -3800,6 +3810,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-07-03
 - [serverless is great but what about the security of my aws la](./2019-07-03/serverless-is-great-but-what-about-the-security-of-my-aws-la.md)
+
+## 2019-06-17
+- [yet another malicious package found in npm targeting cryptoc](./2019-06-17/yet-another-malicious-package-found-in-npm-targeting-cryptoc.md)
 
 ## 2019-06-04
 - [npm passes the 1 millionth package milestone what can we lea](./2019-06-04/npm-passes-the-1-millionth-package-milestone-what-can-we-lea.md)

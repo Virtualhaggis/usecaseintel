@@ -20,12 +20,67 @@ And then, one day I had a eureka! ? Let me show you how easy it is to introduce 
 
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1059** — Command and Scripting Interpreter
+- **T1546.016** — Installer Packages
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### npm/yarn dependency fetched from non-registry source (lockfile resolved-URL hijack)
+
+`UC_3177_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*/tarball/*" AND (Web.http_user_agent="npm/*" OR Web.http_user_agent="yarn/*" OR Web.http_user_agent="pnpm/*") AND NOT (Web.dest="registry.npmjs.org" OR Web.dest="registry.yarnpkg.com") by Web.src Web.user Web.dest Web.site Web.url Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe")
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has "/tarball/"
+    or RemoteUrl has_any ("github.com","raw.githubusercontent.com","gitlab.com","bitbucket.org")
+    or (RemoteUrl has "registry." and RemoteUrl !has "registry.npmjs.org" and RemoteUrl !has "registry.yarnpkg.com")
+| where RemoteUrl !has "registry.npmjs.org" and RemoteUrl !has "registry.yarnpkg.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### npm/yarn install lifecycle (postinstall) spawning download or LOLBin tooling
+
+`UC_3177_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe")) AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","certutil.exe","bitsadmin.exe","wscript.exe","cscript.exe","mshta.exe")) AND (Processes.process="*DownloadString*" OR Processes.process="*DownloadFile*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*certutil*" OR Processes.process="*bitsadmin*" OR Processes.process="*curl *" OR Processes.process="*wget *" OR Processes.process="*FromBase64String*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","curl.exe","certutil.exe","bitsadmin.exe","wscript.exe","cscript.exe","mshta.exe")
+| where ProcessCommandLine has_any ("DownloadString","DownloadFile","Invoke-WebRequest","iwr ","curl ","wget ","certutil","bitsadmin","IEX","Invoke-Expression","-enc ","FromBase64String")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -87,4 +142,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

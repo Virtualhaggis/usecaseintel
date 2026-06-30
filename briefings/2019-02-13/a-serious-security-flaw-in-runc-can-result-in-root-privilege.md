@@ -20,12 +20,55 @@ The vulnerability, affecting several container engines such as Docker and Kubern
 
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1611** — Escape to Host
+- **T1610** — Deploy Container
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Host runc binary overwrite from container (CVE-2019-5736 escape-to-host)
+
+`UC_3265_2` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/usr/bin/runc","/usr/sbin/runc","/usr/bin/docker-runc","/usr/sbin/docker-runc","/usr/local/bin/runc","/usr/bin/containerd-shim-runc-v2") OR Filesystem.file_name IN ("runc","docker-runc","containerd-shim-runc-v2")) (Filesystem.action IN ("modified","created","write","rename")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("runc","docker-runc","runc.amd64","containerd-shim-runc-v2")
+| where FolderPath has_any ("/usr/bin","/usr/sbin","/usr/local/bin","/usr/local/sbin")
+| where ActionType in ("FileModified","FileCreated","FileRenamed")
+| where InitiatingProcessFileName !in~ ("dpkg","rpm","apt","apt-get","yum","dnf","zypper","tar","dockerd","containerd")
+| project Timestamp, DeviceName, FolderPath, FileName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
+
+### runc /proc/self/exe re-exec abuse (CVE-2019-5736 exploit primitive)
+
+`UC_3265_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*/proc/self/exe*" OR Processes.process_path="*/proc/self/exe*" OR Processes.parent_process="*/proc/self/exe*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "/proc/self/exe" or InitiatingProcessCommandLine has "/proc/self/exe" or FolderPath has "/proc/self/exe"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -61,4 +104,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
