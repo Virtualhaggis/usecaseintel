@@ -24,8 +24,10 @@ the targeted al…
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
-- **T1485** — Data Destruction
 - **T1087** — Account Discovery
+- **T1485** — Data Destruction
+- **T1548** — Abuse Elevation Control Mechanism
+- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
@@ -33,64 +35,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### OpenRemote cross-realm alarm DELETE: single client deleting alarms in >1 realm (IDOR)
+### OpenRemote alarm-ID enumeration via repeated DELETE probing of /api/{realm}/alarm
 
-`UC_114_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_115_0` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count as requests, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.http_method=DELETE Web.url="*/alarm" by Web.src, Web.user, Web.url, Web.status
-| `drop_dm_object_name("Web")`
-| rex field=url "/api/(?<realm>[^/?]+)/alarm"
-| where isnotnull(realm)
-| stats sum(requests) as requests, values(realm) as realms, dc(realm) as realm_count, sum(eval(if(status>=200 AND status<300, requests, 0))) as successful_deletes, min(firstTime) as firstTime, max(lastTime) as lastTime by src, user
-| where realm_count > 1
-| convert ctime(firstTime) ctime(lastTime)
-| sort - realm_count, - successful_deletes
+| tstats summariesonly=true count as req_count, dc(Web.status) as status_variety, values(Web.status) as statuses from datamodel=Web where Web.http_method=DELETE (Web.url="*/alarm" OR Web.url="*/alarm?*") by Web.src, Web.user, _time span=10m
+| `drop_dm_object_name(Web)`
+| where req_count > 15 AND status_variety > 1
+| sort - req_count
 ```
 
-### OpenRemote high-volume alarm DELETE to /api/*/alarm (mass destruction / scripted abuse)
+### OpenRemote bulk alarm deletion — successful DELETE on /api/{realm}/alarm (removeAlarms IDOR)
 
-`UC_114_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_115_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Web where Web.http_method=DELETE Web.url="*/alarm" (Web.status=200 OR Web.status=204) by Web.src, Web.user, Web.url, _time span=10m
-| `drop_dm_object_name("Web")`
-| rex field=url "/api/(?<realm>[^/?]+)/alarm"
-| stats sum(count) as delete_requests, dc(realm) as realm_count, values(realm) as realms by src, user, _time
-| where delete_requests >= 20
-| sort - delete_requests
+| tstats summariesonly=true count from datamodel=Web where Web.http_method=DELETE Web.url="*/alarm" Web.status=200 by Web.src, Web.user, Web.uri_path, _time span=5m
+| `drop_dm_object_name(Web)`
+| rex field=uri_path "/api/(?<realm>[^/]+)/alarm"
+| stats sum(count) as delete_count, values(realm) as realms, min(_time) as firstTime, max(_time) as lastTime by src, user
+| where delete_count > 0
+| sort - delete_count
 ```
 
-### OpenRemote alarm-endpoint authorization-failure cascade then success (IDOR boundary probing)
+### OpenRemote cross-realm alarm deletion — user deletes alarms in a realm outside their baseline (IDOR priv-esc)
 
-`UC_114_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_115_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Web where Web.http_method=DELETE Web.url="*/alarm" by Web.src, Web.user, Web.status, _time span=5m
-| `drop_dm_object_name("Web")`
-| stats sum(eval(if(status==401 OR status==403, count, 0))) as auth_failures, sum(eval(if(status>=200 AND status<300, count, 0))) as successes by src, user, _time
-| where auth_failures >= 2 AND successes >= 1
-| sort - auth_failures
+| tstats summariesonly=true count from datamodel=Web where Web.http_method=DELETE Web.url="*/alarm" Web.status=200 by Web.user, Web.uri_path, _time
+| `drop_dm_object_name(Web)`
+| rex field=uri_path "/api/(?<realm>[^/]+)/alarm"
+| eval action="delete"
+| join type=left user [
+    | tstats summariesonly=true count from datamodel=Web where Web.url="/api/*" by Web.user, Web.uri_path
+    | `drop_dm_object_name(Web)`
+    | rex field=uri_path "/api/(?<baseline_realm>[^/]+)/"
+    | stats values(baseline_realm) as known_realms by user ]
+| eval cross_realm=if(isnull(mvfind(known_realms, realm)), 1, 0)
+| where cross_realm=1
+| stats count as del_count, values(realm) as victim_realms, min(_time) as firstTime by user
+| sort - del_count
 ```
 
-### OpenRemote alarm-ID enumeration via 404-response probing across realms
+### OpenRemote bulk alarm deletion by non-human / service account (stolen-credential scope escalation)
 
-`UC_114_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_115_3` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Web where Web.http_method=DELETE Web.url="*/alarm" Web.status=404 by Web.src, Web.user, Web.url, _time span=10m
-| `drop_dm_object_name("Web")`
-| rex field=url "/api/(?<realm>[^/?]+)/alarm"
-| stats sum(count) as probe_404s, dc(realm) as realm_count, values(realm) as realms by src, user, _time
-| where probe_404s >= 15
-| sort - probe_404s
+| tstats summariesonly=true count from datamodel=Web where Web.http_method=DELETE Web.url="*/alarm" Web.status=200 by Web.user, Web.src, Web.uri_path, _time span=10m
+| `drop_dm_object_name(Web)`
+| rex field=uri_path "/api/(?<realm>[^/]+)/alarm"
+| search user="svc*" OR user="service*" OR user="bot*" OR user="api*" OR user="*-integration*"
+| stats sum(count) as del_count, dc(realm) as realm_count, values(realm) as realms, min(_time) as firstTime by user, src
+| where del_count > 0
+| sort - del_count
 ```
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

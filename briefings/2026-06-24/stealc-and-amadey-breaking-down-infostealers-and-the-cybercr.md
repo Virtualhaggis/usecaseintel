@@ -20,39 +20,12 @@ Infostealers continue to be some of the most pervasive and impactful threats acr
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `polse.us`
-- **Domain (defanged):** `roger99699.xyz`
-- **Domain (defanged):** `bluescry.com`
-- **Domain (defanged):** `secure.controlpanel.asia`
-- **Domain (defanged):** `neltron-geltron.shop`
-- **Domain (defanged):** `cdntestconnect.com`
-- **Domain (defanged):** `bartsen284.online`
-- **Domain (defanged):** `goodpanelforgoodjob.com`
-- **Domain (defanged):** `rebustan.top`
-- **Domain (defanged):** `svclsc.com`
-- **Domain (defanged):** `microsoft-telemetry.at`
-- **Domain (defanged):** `spasopro.at`
-- **SHA256:** `8f32456359f209a63adfd24b94235e1727382ac7f7bb7f2bcaf754e721925b64`
-- **SHA256:** `0215f734867bd71c57ff5c524d8cc670be5b4f1861b2c390cf46d18784a53624`
-- **SHA256:** `2a0f053855da59b3b56812e580d7baeba59fc9493694722aa9e3f121ee3363f1`
-- **SHA256:** `977b33a9b481cf714946b7d386865cd5d284312aa5ecfa0546c197b1003e1bde`
-- **SHA256:** `b7d1f172ff3feafe65d47fd1cbe0cc249316371ae0e1cbe3a7c741c738b3353d`
-- **SHA256:** `9383572a30ae5b76fadd0700fbd7a1aa7b05d0b6c8f9cdaef9b30a3e1f65d57d`
-- **SHA256:** `5f5b25b2e35d404034d0d60975cf1ffbc6f141761ec3f4f15d6f7c6213a056f6`
-- **SHA256:** `98e504cc7125b79eda5491f40b998605a05f4cd968b961aab4cce7beb074fefe`
-- **SHA256:** `30cef3d3d956e83e2c50579cfbe57a49159cccbcc8b0b0422f27d55e1c401ad9`
-- **SHA256:** `8cef760d11d24fc2e9bbd9f770dca5105854f7ece3b0e6948d7c8b7fdd1765ea`
-- **SHA256:** `99507f18c4e61fdb109805404bf6a79ea8ce2fddc590ce48d717e97516ab7e8d`
-- **SHA256:** `1246c5b89ab668c1137f377507bc3e266a98e93248382aa026610ae1e764a497`
-- **SHA256:** `d43c988d6f9cb355497696b580621fb1bdb7b6ed6d90f97520ecf6da5a1a41ff`
-- **SHA256:** `ca4d4c4fc3e5d5cfa922b898f2d7411f03a446dddb139ba45dfd4f8f0018b64f`
-- **SHA256:** `43455f1ff4a623b783da670d052eb77eaaacb0c66a9f1e8508f802bf22e8129e`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -90,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### StealC/Amadey C2 beacon to Operation Endgame seized domains
 
-`UC_102_17` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_103_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +82,7 @@ DeviceNetworkEvents
 
 ### Known StealC / Amadey binary hashes on endpoint (Operation Endgame IOC set)
 
-`UC_102_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_103_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +100,7 @@ union
 
 ### Amadey command-handler execution: C2 beacon followed by rundll32/cmd/PowerShell spawn
 
-`UC_102_19` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_103_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -615,7 +588,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — StealC and Amadey: Breaking down infostealers and the cybercrime services that d
 
-`UC_102_16` · phase: **exploit** · confidence: **High**
+`UC_103_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -662,17 +635,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `polse.us`, `roger99699.xyz`, `bluescry.com`, `secure.controlpanel.asia`, `neltron-geltron.shop`, `cdntestconnect.com`, `bartsen284.online`, `goodpanelforgoodjob.com` _(+4 more)_
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `8f32456359f209a63adfd24b94235e1727382ac7f7bb7f2bcaf754e721925b64`, `0215f734867bd71c57ff5c524d8cc670be5b4f1861b2c390cf46d18784a53624`, `2a0f053855da59b3b56812e580d7baeba59fc9493694722aa9e3f121ee3363f1`, `977b33a9b481cf714946b7d386865cd5d284312aa5ecfa0546c197b1003e1bde`, `b7d1f172ff3feafe65d47fd1cbe0cc249316371ae0e1cbe3a7c741c738b3353d`, `9383572a30ae5b76fadd0700fbd7a1aa7b05d0b6c8f9cdaef9b30a3e1f65d57d`, `5f5b25b2e35d404034d0d60975cf1ffbc6f141761ec3f4f15d6f7c6213a056f6`, `98e504cc7125b79eda5491f40b998605a05f4cd968b961aab4cce7beb074fefe` _(+7 more)_
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 20 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 18 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

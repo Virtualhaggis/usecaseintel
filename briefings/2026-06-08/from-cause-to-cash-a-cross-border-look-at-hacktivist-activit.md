@@ -35,119 +35,10 @@ Indicators of compromise
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2023-44976`
+- **CVE:** `CVE-2021-34473`
+- **CVE:** `CVE-2021-34523`
+- **CVE:** `CVE-2021-31207`
 - **IPv4 (defanged):** `185.221.153.121`
-- **IPv4 (defanged):** `77.72.85.62`
-- **IPv4 (defanged):** `45.150.109.2`
-- **IPv4 (defanged):** `212.46.12.182`
-- **IPv4 (defanged):** `130.49.155.112`
-- **IPv4 (defanged):** `45.112.194.82`
-- **IPv4 (defanged):** `138.226.236.52`
-- **IPv4 (defanged):** `85.137.253.186`
-- **Domain (defanged):** `asp.net`
-- **MD5:** `09d0517a1f69feff8186655ae3b567e0`
-- **MD5:** `26100db3f56880110a92a2b4742d6eaf`
-- **MD5:** `cf682a6fee80a78be578b1edd82627fa`
-- **MD5:** `2d5533fb65ebb50a5a5fd53e62d73b9a`
-- **MD5:** `fe04d230db612ea24af3826fda667131`
-- **MD5:** `2db94ee3ec69988588702bd77999a5d4`
-- **MD5:** `f88d2b5c3b885ad5a9c1c44551bccc60`
-- **MD5:** `1e1edf879b2dc6c9892a22bfa5985db1`
-- **MD5:** `78250fa890220821e2b91e31b965de59`
-- **MD5:** `f2af797ac45b9f578c53cc49e5797397`
-- **MD5:** `0c32bfdf83ecebe3a1399d261dc8ff57`
-- **MD5:** `e14cc9a959bbe16c48b8dff063b311f3`
-- **MD5:** `36b3be503c6e34613ff50cb28e0f3ddb`
-- **MD5:** `c12ebe625737ed0908b045e811f14ecd`
-- **MD5:** `1c0924f5711a24821921de5ad822213b`
-- **MD5:** `d78adab5e16c26d4cd14fe38f77e29e6`
-- **MD5:** `6cf548445c39aff844be96d73c89e376`
-- **MD5:** `911a21aa999c324dc960d3498eec528e`
-- **MD5:** `68e310de44c3165ffffa25bc495d6fc5`
-- **MD5:** `4f41a22b3e7469fb6b45a42d71ec7087`
-- **MD5:** `80e5bde401d6b0ca96015ae9cfeb6535`
-- **MD5:** `1c82a94c362a9e98a66ae57d6ff37900`
-- **MD5:** `fa04aeedc0d2f5bb6ed357fdae1c1435`
-- **MD5:** `555a6722436d7cf7de396e0c57d32a27`
-- **MD5:** `b974141ff9ad1efb60dd9e16977266ca`
-- **MD5:** `7da855b2fd9b52f9088e64d656164637`
-- **MD5:** `d08056c2ac28933d6843658c2c8c574f`
-- **MD5:** `038cab0c60c53cf12f048272014024c0`
-- **MD5:** `c183033d86d2e052b8eb0deb2136ab29`
-- **MD5:** `bc0ebf67986eea803b4c9633ed3a4bb5`
-- **MD5:** `18618f4b468ba4e64c2e1072a6da2134`
-- **MD5:** `1742a9fa35e253614b76ac0f687ba02e`
-- **MD5:** `c7eb6da3aa216816079a1b785097552a`
-- **MD5:** `3ee38b944e5c83922f99641846f7db0c`
-- **MD5:** `d8ff7f417d56fa2a3baf3c8933013a25`
-- **MD5:** `1ff222457f5e0e32adfa8341f260dde7`
-- **MD5:** `ede8ce887dd9ab7add0f0fc872d51369`
-- **MD5:** `1344e6bc51cea35befb4adff7a25899b`
-- **MD5:** `2a09162d72aa416e18bab46070043a13`
-- **MD5:** `841b7d3863b49f62d4faa9949ff5df38`
-- **MD5:** `1bd1ca848b15530e39792b4fe6f31367`
-- **MD5:** `b36968b98046d1b033d84f292e7ca1cb`
-- **MD5:** `663a479d6d24c767f1d3229a0a91554b`
-- **MD5:** `54a308f734095d54ae0e1c86c849a2d8`
-- **MD5:** `3137958eb830186826d486afd9222aee`
-- **MD5:** `1d09499cb2d7d70df903b60602a58887`
-- **MD5:** `d74262f968dc3f378c4021a89d16a292`
-- **MD5:** `3d9cbc944f9a9e127550ffb4e8394965`
-- **MD5:** `bcd3859f4ddd72c4690d76c3b4ef8955`
-- **MD5:** `3a9b0875fc692944c180b165a83a0d17`
-- **MD5:** `c558e6a9d0a697c757aa6d7782e269c9`
-- **MD5:** `61647db645f7cc221046999ef1dbe1d1`
-- **MD5:** `02493e1cb684be6a1a1fc6334a56c516`
-- **MD5:** `a3dba01c76571adc0797801ff30f2b90`
-- **MD5:** `3f4fbba101b209b00e70787fd5bab819`
-- **MD5:** `cd0c5b9e4e47df4231d02ed87ff49f26`
-- **MD5:** `b8a13e808b5b5f1836d3e559755139d0`
-- **MD5:** `60f8b115aec8a13b0069efc84fc645f5`
-- **MD5:** `da55b5612a80ef20ec75b68151e7ff4b`
-- **MD5:** `7d35b4961914ad83a57f8832d8e870d8`
-- **MD5:** `334abbdc99d359aab2ea371dd4eda5f2`
-- **MD5:** `389a1bbdbf5c91bd1c179227f5ae0923`
-- **MD5:** `87d48fbccb4aaee95222e215ecb7ebec`
-- **MD5:** `76c819185e3c8b8557a2c3986ab80a7c`
-- **MD5:** `6d19c8eea11d50c01d20f18382a964d1`
-- **MD5:** `8db0adf8fd6dc6195d7ae55e37e49f97`
-- **MD5:** `08f3a14a2337eb9936c38f5159be007c`
-- **MD5:** `717ab7624c192f6f8dd38994116c28dc`
-- **MD5:** `d1c51b92939aa168f0951a8368841373`
-- **MD5:** `5398b7eaa94f0ee570b1c5642b559047`
-- **MD5:** `d65a79ea9257637c77cab6e087468912`
-- **MD5:** `008cd423ca45134d3343f66cced1d104`
-- **MD5:** `9741672506f26813c71839aaa6aa3882`
-- **MD5:** `06bed0a0906e52c764b3b7016d6a4428`
-- **MD5:** `08c069f133ac27cbc02a0ed79e4e87ba`
-- **MD5:** `a36082c998391a3ebaf05ba4f834172c`
-- **MD5:** `9810ea6752112b3569ddc096e1a72e1d`
-- **MD5:** `10824d14c814524155f2b529cf5fee43`
-- **MD5:** `242038139842ec79ec1044c64eb0804a`
-- **MD5:** `53ba13cc6066adfd67f8098c0a5b8dde`
-- **MD5:** `84bb66a982710c5536143a07d84e8749`
-- **MD5:** `fa3c222f6b53d6a2e35a54600f6aa011`
-- **MD5:** `0b1870d57221eec6f3bbef648e71a724`
-- **MD5:** `5e81f72614db42615489266be11b1d09`
-- **MD5:** `4c8a0531653b5398a35c6b1b80ff1350`
-- **MD5:** `83f66862c0cc40da20236fd6b47138fd`
-- **MD5:** `56be07e46fd452315008ed246ebbf52b`
-- **MD5:** `579e8bbd6a5bcca89b5acd6fb5db32db`
-- **MD5:** `dd8fea244afc8223b961f1d9d6ac8c5d`
-- **MD5:** `62123c39477389d500e74e82782adea5`
-- **MD5:** `6d365de5c5a13006b7cadd6bc6876e84`
-- **MD5:** `2f40bcee90abed0898e92521da17e52d`
-- **MD5:** `6dfef58ef68fb7965a23da8be3141af9`
-- **MD5:** `56d1de3159adbfda20aca593c99901f9`
-- **MD5:** `96dbdc2651d829bf9ba35674dd4bfcae`
-- **MD5:** `129225b3e93c17f131bcc2a982ffb09a`
-- **MD5:** `9f37fff7e5d22f83fc1c0872ad5332f9`
-- **MD5:** `cf54f6cbdb4dbf1ce6fc2e5be4ca3b20`
-- **MD5:** `e99efd77392e2b4fe4d9bf5728a12b98`
-- **MD5:** `f2dc794bf93887e281ad89209493065a`
-- **MD5:** `d13997b1716e4c82ab454285202eafdc`
-- **MD5:** `ecb57d8793514aa02314417265b1853f`
-- **MD5:** `3b974ff986445e5944c51179d19bd6be`
 
 ## MITRE ATT&CK Techniques
 
@@ -165,12 +56,146 @@ Indicators of compromise
 - **T1219** — Remote Access Software
 - **T1547.001** — Persistence (article-specific)
 - **T1543.003** — Persistence (article-specific)
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1041** — Exfiltration Over C2 Channel
+- **T1572** — Protocol Tunneling
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1490** — Inhibit System Recovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### ProxyShell exploitation of on-prem Exchange (autodiscover SSRF → PowerShell backend)
+
+`UC_239_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_method IN ("POST","GET")) (Web.url="*/autodiscover.json*" OR Web.url="*Email=autodiscover*" OR Web.url="*X-Rps-CAT*" OR Web.url="*X-BEResource*" OR Web.url="*/powershell*") by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | sort - lastTime
+```
+
+### fd.aspx modular web shell dropped into Exchange web directories
+
+`UC_239_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name="fd.aspx" by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_name, Endpoint.Filesystem.user | `drop_dm_object_name(Endpoint.Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName =~ "fd.aspx"
+   or (FileName endswith ".aspx" and InitiatingProcessFileName =~ "w3wp.exe" and FolderPath has_any (@"\FrontEnd\HttpProxy\", @"\ClientAccess\", @"\aspnet_client\", @"\inetpub\wwwroot\"))
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### IIS worker w3wp.exe spawning PowerShell/cmd (fd.aspx command execution)
+
+`UC_239_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name="w3wp.exe" (Endpoint.Processes.process_name="powershell.exe" OR Endpoint.Processes.process_name="pwsh.exe" OR Endpoint.Processes.process_name="cmd.exe") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process, Endpoint.Processes.process_name, Endpoint.Processes.process | `drop_dm_object_name(Endpoint.Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
+| where not (ProcessCommandLine has_any ("Microsoft.Exchange.","ExchangeHealth","ServerManager","CleanupWebServiceCache"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Host egress to shared hacktivist C2/exfil IP 185.221.153.121
+
+`UC_239_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest="185.221.153.121" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.user, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "185.221.153.121"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### Microsoft Dev Tunnels (devtunnel.exe) abused as ingress backdoor
+
+`UC_239_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.process_name="devtunnel.exe" OR Endpoint.Processes.process="*devtunnel*") (Endpoint.Processes.process="*host*" OR Endpoint.Processes.process="*port create*" OR Endpoint.Processes.process="*user login*") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process | `drop_dm_object_name(Endpoint.Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "devtunnel.exe" or ProcessCommandLine has "devtunnel"
+| where ProcessCommandLine has_any ("host","port create","user login")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### BYOVD EDR-killer: rentdrv2 vulnerable driver drop to disable Defender/MDE
+
+`UC_239_14` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name="rentdrv2.sys" by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_name, Endpoint.Filesystem.user | `drop_dm_object_name(Endpoint.Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+union
+(DeviceFileEvents
+ | where Timestamp > ago(30d)
+ | where FileName has "rentdrv2"
+ | project Timestamp, DeviceName, Kind="FileWrite", Detail=FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+(DeviceRegistryEvents
+ | where Timestamp > ago(30d)
+ | where RegistryKey has @"\Services\rentdrv2"
+ | project Timestamp, DeviceName, Kind="ServiceKey", Detail=RegistryKey, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName)
+| order by Timestamp desc
+```
+
+### ClearWater ransomware payload execution from C:\ProgramData
+
+`UC_239_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.process_name="ClearWater_x64.exe" OR Endpoint.Processes.process_path="C:\\ProgramData\\ClearWater_x64.exe") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process, Endpoint.Processes.process_hash | `drop_dm_object_name(Endpoint.Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "ClearWater_x64.exe" or FolderPath has @"\ProgramData\ClearWater_x64.exe"
+| project Timestamp, DeviceName, AccountName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -349,7 +374,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From cause to cash: a cross-border look at hacktivist activity
 
-`UC_238_9` · phase: **exploit** · confidence: **High**
+`UC_239_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -420,15 +445,12 @@ DeviceRegistryEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `185.221.153.121`, `77.72.85.62`, `45.150.109.2`, `212.46.12.182`, `130.49.155.112`, `45.112.194.82`, `138.226.236.52`, `85.137.253.186` _(+1 more)_
+  - IP / domain IOC(s): `185.221.153.121`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2023-44976`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `09d0517a1f69feff8186655ae3b567e0`, `26100db3f56880110a92a2b4742d6eaf`, `cf682a6fee80a78be578b1edd82627fa`, `2d5533fb65ebb50a5a5fd53e62d73b9a`, `fe04d230db612ea24af3826fda667131`, `2db94ee3ec69988588702bd77999a5d4`, `f88d2b5c3b885ad5a9c1c44551bccc60`, `1e1edf879b2dc6c9892a22bfa5985db1` _(+95 more)_
+  - CVE(s): `CVE-2021-34473`, `CVE-2021-34523`, `CVE-2021-31207`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 16 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -11,16 +11,15 @@ By Sergiu Gatlan
 July 1, 2026
 08:30 AM
 0 
-
-
 Over 900 Oracle E-Business Suite (EBS) instances have been found exposed online amid ongoing attacks exploiting a critical security flaw.
-
-
-The vulnerability (tracked as CVE-2026-46817 ) was found in the File Transmission component of EBS's Oracle Payments product and allows malicious actors without privileges and with HTTP network access to take over vulnerable systems through low-c…
+The vulnerability (tracked as CVE-2026-46817 ) was found in the File Transmission component of EBS's Oracle Payments product and allows malicious actors without privileges and with HTTP network access to take over vulnerable systems through low-complexit…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-46817`
+- **CVE:** `CVE-2025-61882`
+- **CVE:** `CVE-2026-35273`
+- **CVE:** `CVE-2024-21182`
 
 ## MITRE ATT&CK Techniques
 
@@ -42,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Oracle EBS CVE-2026-46817 exploitation — POST to /OA_HTML/ibytransmit File Transmission endpoint
 
-`UC_1_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Oracle EBS web/app tier (java/OHS) spawning shell or recon binary — post-exploit RCE
 
-`UC_1_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_5_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +70,7 @@ DeviceProcessEvents
 
 ### Exposed & unpatched Oracle E-Business Suite instances vulnerable to CVE-2026-46817
 
-`UC_1_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_5_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -178,7 +177,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-46817`
+  - CVE(s): `CVE-2026-46817`, `CVE-2025-61882`, `CVE-2026-35273`, `CVE-2024-21182`
 
 
 ## Why this matters

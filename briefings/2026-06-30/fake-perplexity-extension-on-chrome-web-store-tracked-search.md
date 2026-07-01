@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious 'Perplexity AI' Chromium extension flkebkiofojicogddingbdmcmkpbplcd written to browser profile
 
-`UC_29_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_33_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceFileEvents
 
 ### Browser egress to fake-Perplexity interception infra (perplexity-ai.online / oda.digital / extension.tilda.ws)
 
-`UC_29_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_33_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

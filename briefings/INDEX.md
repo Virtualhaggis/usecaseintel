@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2267 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2266 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-01
 - [2026 cybersecurity assessment the gap between awareness and ](./2026-07-01/2026-cybersecurity-assessment-the-gap-between-awareness-and-.md)
+- [ai generated browser ransomware abuses chromium api on windo](./2026-07-01/ai-generated-browser-ransomware-abuses-chromium-api-on-windo.md)
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [azure cli password spray hits at least 78 microsoft accounts](./2026-07-01/azure-cli-password-spray-hits-at-least-78-microsoft-accounts.md)
 - [citrix patches six netscaler flaws allowing file read and de](./2026-07-01/citrix-patches-six-netscaler-flaws-allowing-file-read-and-de.md)
@@ -17,14 +18,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [over 900 oracle e business instances exposed to ongoing atta](./2026-07-01/over-900-oracle-e-business-instances-exposed-to-ongoing-atta.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [phantom squatting uses ai hallucinated domains for phishing ](./2026-07-01/phantom-squatting-uses-ai-hallucinated-domains-for-phishing-.md)
+- [progress kemp loadmaster pre auth rce flaw faces active expl](./2026-07-01/progress-kemp-loadmaster-pre-auth-rce-flaw-faces-active-expl.md)
 - [researcher analyzes 3 000 live clickfix payloads exposing ap](./2026-07-01/researcher-analyzes-3-000-live-clickfix-payloads-exposing-ap.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
+- [stepsecurity maintained actions are now free for public repo](./2026-07-01/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 - [the soc files screenconnect masked as freeware an inside loo](./2026-07-01/the-soc-files-screenconnect-masked-as-freeware-an-inside-loo.md)
 
 ## 2026-06-30
 - [airdrop and quick share flaws let nearby attackers trigger c](./2026-06-30/airdrop-and-quick-share-flaws-let-nearby-attackers-trigger-c.md)
 - [attackers exploit simplehelp cve 2026 48558 to deploy taskwe](./2026-06-30/attackers-exploit-simplehelp-cve-2026-48558-to-deploy-taskwe.md)
-- [blackfield ransomware asks nidec corporation for 2 million r](./2026-06-30/blackfield-ransomware-asks-nidec-corporation-for-2-million-r.md)
 - [fake perplexity extension on chrome web store tracked search](./2026-06-30/fake-perplexity-extension-on-chrome-web-store-tracked-search.md)
 - [guardfall exposes open source ai coding agents to decades ol](./2026-06-30/guardfall-exposes-open-source-ai-coding-agents-to-decades-ol.md)
 - [insurance giant aflac discloses data breach after subsidiary](./2026-06-30/insurance-giant-aflac-discloses-data-breach-after-subsidiary.md)
@@ -77,7 +79,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-25/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [beyond iocs ai enabled threat intelligence](./2026-06-25/beyond-iocs-ai-enabled-threat-intelligence.md)
 - [chrome ad blocker with 10m installs found with dormant scrip](./2026-06-25/chrome-ad-blocker-with-10m-installs-found-with-dormant-scrip.md)
-- [cisco catalyst sd wan zero day cve 2026 20245 exploited to g](./2026-06-25/cisco-catalyst-sd-wan-zero-day-cve-2026-20245-exploited-to-g.md)
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
@@ -86,7 +87,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [microsoft a leader in the forrester wave for endpoint manage](./2026-06-25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-manage.md)
 - [new gaslight macos malware uses prompt injection to disrupt ](./2026-06-25/new-gaslight-macos-malware-uses-prompt-injection-to-disrupt-.md)
-- [new mistic backdoor linked to kongtuke in clickfix and model](./2026-06-25/new-mistic-backdoor-linked-to-kongtuke-in-clickfix-and-model.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 - [photo zip campaign targeting hospitality industry delivers n](./2026-06-25/photo-zip-campaign-targeting-hospitality-industry-delivers-n.md)
 - [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
@@ -920,9 +920,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-09-23
 - [cisa kev cve 2025 10585 google chromium v8 type confusion vu](./2025-09-23/cisa-kev-cve-2025-10585-google-chromium-v8-type-confusion-vu.md)
 - [s1ngularity popular nx build system package compromised with](./2025-09-23/s1ngularity-popular-nx-build-system-package-compromised-with.md)
-
-## 2025-09-19
-- [ghostaction campaign over 3 000 secrets stolen through malic](./2025-09-19/ghostaction-campaign-over-3-000-secrets-stolen-through-malic.md)
 
 ## 2025-09-15
 - [zero day extensive npm package compromise shai hulud supply ](./2025-09-15/zero-day-extensive-npm-package-compromise-shai-hulud-supply-.md)

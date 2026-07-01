@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Citrix NetScaler SAML pre-auth memory overread exploitation (CVE-2026-8451 / CVE-2026-3055)
 
-`UC_16_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_20_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### Unpatched NetScaler ADC/Gateway exposure to July 2026 six-CVE bulletin
 
-`UC_16_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_20_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
