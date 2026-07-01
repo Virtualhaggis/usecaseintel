@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious easy-day-js npm package installed (Mastra supply-chain typosquat of dayjs)
 
-`UC_7_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_9_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceFileEvents
 
 ### Beacon to Mastra dropper/RAT C2 in Hostwinds 23.254.164.0/24 (easy-day-js)
 
-`UC_7_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### easy-day-js dropper temp artifacts and self-delete (.pkg_history / .pkg_logs / 24-hex .js)
 
-`UC_7_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_9_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceFileEvents
 
 ### Compromised codfish/semantic-release-action commit checked out on self-hosted runner
 
-`UC_7_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_9_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

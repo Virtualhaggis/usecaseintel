@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — The State of Open Source Security Survey - 2020
 
-`UC_3098_0` · phase: **exploit** · confidence: **High**
+`UC_3097_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

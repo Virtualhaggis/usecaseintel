@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound phishing email from npmjs.help maintainer-takeover domain
 
-`UC_808_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_807_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ senders
 
 ### Browser/HTTPS traffic to npmjs.help credential-harvesting page
 
-`UC_808_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_807_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### Egress to websocket-api2.publicvm.com (Qix campaign credential exfil C2)
 
-`UC_808_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_807_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### Install / lockfile mention of the 28 compromised Qix-campaign package@versions
 
-`UC_808_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_807_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -407,7 +407,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm Supply Chain Attack via Open Source maintainer compromise
 
-`UC_808_8` · phase: **exploit** · confidence: **High**
+`UC_807_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

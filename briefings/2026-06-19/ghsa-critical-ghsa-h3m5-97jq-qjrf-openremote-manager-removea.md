@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote alarm-ID enumeration via repeated DELETE probing of /api/{realm}/alarm
 
-`UC_113_0` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_112_0` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote bulk alarm deletion — successful DELETE on /api/{realm}/alarm (removeAlarms IDOR)
 
-`UC_113_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_112_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote cross-realm alarm deletion — user deletes alarms in a realm outside their baseline (IDOR priv-esc)
 
-`UC_113_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_112_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote bulk alarm deletion by non-human / service account (stolen-credential scope escalation)
 
-`UC_113_3` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_112_3` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

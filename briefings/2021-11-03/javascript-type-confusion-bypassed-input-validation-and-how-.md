@@ -20,15 +20,10 @@ One of the main goals for this research was to explore (in the JavaScript ecosys
 - **CVE:** `CVE-2021-23440`
 - **CVE:** `CVE-2021-23443`
 - **CVE:** `CVE-2021-23444`
-- **CVE:** `CVE-2021-23445`
-- **CVE:** `CVE-2021-23447`
-- **CVE:** `CVE-2020-15256`
-- **SHA1:** `1ade7fbb81fbc1b52757650214d6baca140d3eb0`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 
@@ -40,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Prototype pollution / type-confusion payload in web request (__proto__, constructor[prototype])
 
-`UC_2570_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2569_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — JavaScript type confusion: Bypassed input validation (and how to remediate)
 
-`UC_2570_2` · phase: **exploit** · confidence: **High**
+`UC_2569_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,12 +99,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2021-23434`, `CVE-2021-23436`, `CVE-2021-23438`, `CVE-2021-23440`, `CVE-2021-23443`, `CVE-2021-23444`, `CVE-2021-23445`, `CVE-2021-23447` _(+1 more)_
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `1ade7fbb81fbc1b52757650214d6baca140d3eb0`
+  - CVE(s): `CVE-2021-23434`, `CVE-2021-23436`, `CVE-2021-23438`, `CVE-2021-23440`, `CVE-2021-23443`, `CVE-2021-23444`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -14,10 +14,10 @@ Editor's note (18 Dec 2021 at 6:55 p.m. GMT): The Log4j situation is rapidly cha
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2021-44832`
 - **CVE:** `CVE-2021-44228`
 - **CVE:** `CVE-2021-45046`
 - **CVE:** `CVE-2021-45105`
+- **CVE:** `CVE-2021-44832`
 
 ## MITRE ATT&CK Techniques
 
@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Log4Shell JNDI lookup injection string in HTTP requests / process cmdline (${jndi:ldap})
 
-`UC_2521_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2520_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Java process making outbound LDAP/RMI connection (Log4Shell second-stage class fetch)
 
-`UC_2521_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2520_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### Java/Tomcat process spawning OS shell (Log4Shell Runtime.exec post-exploitation)
 
-`UC_2521_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2520_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Log4Shell in a nutshell (for non-developers & non-Java developers)
 
-`UC_2521_2` · phase: **install** · confidence: **High**
+`UC_2520_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2021-44832`, `CVE-2021-44228`, `CVE-2021-45046`, `CVE-2021-45105`
+  - CVE(s): `CVE-2021-44228`, `CVE-2021-45046`, `CVE-2021-45105`, `CVE-2021-44832`
 
 
 ## Why this matters

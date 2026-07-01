@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Magento CVE-2022-24086/24087 TrojanOrders checkout exploitation from known attacker IP
 
-`UC_2403_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2402_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Magento webshell drop (health_check.php / pub-media PHP) written by web-server process
 
-`UC_2403_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2402_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceFileEvents
 
 ### Magento php-fpm/web-server spawning shell or download utility (CVE-2022-24086 RCE)
 
-`UC_2403_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2402_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### Outbound or inbound connection to TrojanOrders C2/source IP 45.134.20.11
 
-`UC_2403_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2402_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

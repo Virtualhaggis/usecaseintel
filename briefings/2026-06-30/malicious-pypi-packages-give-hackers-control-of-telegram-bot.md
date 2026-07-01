@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Operation Navy Ghost: pip install of trojanized Pyrogram fork packages
 
-`UC_30_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_32_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### Operation Navy Ghost: hidden secret.py backdoor dropped in Pyrogram helpers
 
-`UC_30_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_32_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceFileEvents
 
 ### Operation Navy Ghost: Python bot spawning /bin/bash -c shell handler
 
-`UC_30_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_32_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### Operation Navy Ghost: bot harvesting /etc/passwd, .env and cloud credentials
 
-`UC_30_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_32_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious PyPI packages give hackers control of Telegram bot servers
 
-`UC_30_1` · phase: **exploit** · confidence: **High**
+`UC_32_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

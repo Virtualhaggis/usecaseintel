@@ -1,8 +1,8 @@
-# [CRIT] Adobe Patches 7 CVSS 10.0 Flaws in ColdFusion and Campaign Classic
+# [CRIT] SEO-Poisoned Software Sites Abuse ScreenConnect to Deploy AsyncRAT
 
 **Source:** The Hacker News
 **Published:** 2026-07-01
-**Article:** https://thehackernews.com/2026/07/adobe-patches-7-cvss-100-flaws-in.html
+**Article:** https://thehackernews.com/2026/07/seo-poisoned-software-sites-abuse.html
 
 ## Threat Profile
 
@@ -14,11 +14,11 @@ The ColdFusion updates "resolves critical and important vulnerabilities that c
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-48276`
+- **CVE:** `CVE-2026-48283`
 - **CVE:** `CVE-2026-48277`
 - **CVE:** `CVE-2026-48281`
-- **CVE:** `CVE-2026-48282`
-- **CVE:** `CVE-2026-48283`
 - **CVE:** `CVE-2026-48316`
+- **CVE:** `CVE-2026-48282`
 - **CVE:** `CVE-2026-48313`
 - **CVE:** `CVE-2026-48315`
 - **CVE:** `CVE-2026-48307`
@@ -36,8 +36,11 @@ The ColdFusion updates "resolves critical and important vulnerabilities that c
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1059.003** — Windows Command Shell
-- **T1505.003** — Web Shell
+- **T1083** — File and Directory Discovery
+- **T1005** — Data from Local System
+- **T1203** — Exploitation for Client Execution
+- **T1059** — Command and Scripting Interpreter
+- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
@@ -45,61 +48,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Exposure: hosts vulnerable to Adobe ColdFusion / Campaign Classic July 2026 max-severity RCE CVEs
+### Path-traversal / dangerous-upload exploit requests to Adobe ColdFusion & Campaign Classic endpoints (APSB26-68/71)
 
-`UC_3_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-48276","CVE-2026-48277","CVE-2026-48281","CVE-2026-48282","CVE-2026-48283","CVE-2026-48316","CVE-2026-48313","CVE-2026-48315","CVE-2026-48307","CVE-2026-48286") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-48276","CVE-2026-48277","CVE-2026-48281","CVE-2026-48282","CVE-2026-48283","CVE-2026-48316","CVE-2026-48313","CVE-2026-48315","CVE-2026-48307","CVE-2026-48286")
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing) by DeviceId) on DeviceId
-| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing
-| order by IsInternetFacing desc, CveId asc
-```
-
-### Adobe ColdFusion server process spawning a command interpreter (post-exploit RCE)
-
-`UC_3_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_0_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("coldfusion.exe","jvm.exe") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","net.exe","net1.exe","whoami.exe","certutil.exe","bitsadmin.exe","curl.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status from datamodel=Web.Web where (Web.url="*/CFIDE/*" OR Web.url="*/cf_scripts/*" OR Web.url="*/nl/*" OR Web.url="*/nms/*" OR Web.url="*.cfm*" OR Web.url="*.cfc*") AND (Web.url="*../*" OR Web.url="*..%2f*" OR Web.url="*..%252f*" OR Web.url="*%2e%2e*") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | sort - count
+```
+
+### Adobe ColdFusion / Campaign Classic service spawning a command interpreter
+
+`UC_0_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("coldfusion.exe","cfexec.exe","jvm.exe","java.exe","nlserver.exe")) AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","bitsadmin.exe","certutil.exe","curl.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("coldfusion.exe","jvm.exe","cfexec.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","net.exe","net1.exe","whoami.exe","certutil.exe","bitsadmin.exe","curl.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where InitiatingProcessFileName in~ ("coldfusion.exe", "cfexec.exe", "jvm.exe", "java.exe", "nlserver.exe")
+| where InitiatingProcessFolderPath has_any ("ColdFusion", "cfusion", "Campaign", "Adobe", "neolane")
+| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "wscript.exe", "cscript.exe", "mshta.exe", "bitsadmin.exe", "certutil.exe", "curl.exe", "bash.exe", "sh.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine, ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Web shell written to ColdFusion webroot/CFIDE by the ColdFusion process
+### Web shell written to web root by ColdFusion / Campaign Classic runtime
 
-`UC_3_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_0_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("*.cfm","*.cfml","*.cfc","*.jsp") AND (Filesystem.file_path="*\\wwwroot\\*" OR Filesystem.file_path="*\\CFIDE\\*" OR Filesystem.file_path="*\\cfusion\\*") AND Filesystem.process_name IN ("coldfusion.exe","jvm.exe","java.exe") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("coldfusion.exe","cfexec.exe","jvm.exe","java.exe","nlserver.exe")) AND (Filesystem.file_name="*.cfm" OR Filesystem.file_name="*.cfml" OR Filesystem.file_name="*.cfc" OR Filesystem.file_name="*.jsp" OR Filesystem.file_name="*.jspx" OR Filesystem.file_name="*.aspx") AND (Filesystem.file_path="*wwwroot*" OR Filesystem.file_path="*CFIDE*" OR Filesystem.file_path="*webroot*" OR Filesystem.file_path="*neolane*") by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("coldfusion.exe","jvm.exe","java.exe")
-| where FileName endswith ".cfm" or FileName endswith ".cfml" or FileName endswith ".cfc" or FileName endswith ".jsp"
-| where FolderPath has_any (@"\wwwroot\", @"\CFIDE\", @"\cfusion\")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, SHA256
+| where ActionType in ("FileCreated", "FileModified")
+| where FileName endswith ".cfm" or FileName endswith ".cfml" or FileName endswith ".cfc" or FileName endswith ".jsp" or FileName endswith ".jspx" or FileName endswith ".aspx"
+| where InitiatingProcessFileName in~ ("coldfusion.exe", "cfexec.exe", "jvm.exe", "java.exe", "nlserver.exe")
+| where FolderPath has_any ("wwwroot", "CFIDE", "webroot", "neolane", "Campaign")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
+```
+
+### Adobe ColdFusion / Campaign Classic hosts exposed to APSB26-68 CVSS 10.0 RCE CVE
+
+`UC_0_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2026-48276", "CVE-2026-48283", "CVE-2026-48277", "CVE-2026-48281", "CVE-2026-48316", "CVE-2026-48282", "CVE-2026-48313", "CVE-2026-48315", "CVE-2026-48307", "CVE-2026-48286")
+| summarize ExposedCves = make_set(CveId), MaxSeverity = max(VulnerabilitySeverityLevel), RecommendedUpdate = any(RecommendedSecurityUpdate) by DeviceId, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion
+| join kind=leftouter (DeviceInfo | where Timestamp > ago(7d) | summarize arg_max(Timestamp, IsInternetFacing) by DeviceId) on DeviceId
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, ExposedCves, MaxSeverity, RecommendedUpdate, IsInternetFacing
+| order by IsInternetFacing desc, DeviceName asc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -303,9 +314,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-48276`, `CVE-2026-48277`, `CVE-2026-48281`, `CVE-2026-48282`, `CVE-2026-48283`, `CVE-2026-48316`, `CVE-2026-48313`, `CVE-2026-48315` _(+2 more)_
+  - CVE(s): `CVE-2026-48276`, `CVE-2026-48283`, `CVE-2026-48277`, `CVE-2026-48281`, `CVE-2026-48316`, `CVE-2026-48282`, `CVE-2026-48313`, `CVE-2026-48315` _(+2 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -14,7 +14,6 @@ January 10, 2022
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2021-23435`
 - **CVE:** `CVE-2021-23385`
 - **CVE:** `CVE-2021-32618`
 - **CVE:** `CVE-2021-23401`
@@ -22,6 +21,8 @@ January 10, 2022
 - **CVE:** `CVE-2021-33056`
 - **CVE:** `CVE-2021-23414`
 - **CVE:** `CVE-2021-37352`
+- **CVE:** `CVE-2021-23435`
+- **CVE:** `CVE-2021-45046`
 
 ## MITRE ATT&CK Techniques
 
@@ -36,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — URL confusion vulnerabilities in the wild: Exploring parser inconsistencies
 
-`UC_2485_1` · phase: **exploit** · confidence: **High**
+`UC_2484_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +89,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2021-23435`, `CVE-2021-23385`, `CVE-2021-32618`, `CVE-2021-23401`, `CVE-2021-23393`, `CVE-2021-33056`, `CVE-2021-23414`, `CVE-2021-37352`
+  - CVE(s): `CVE-2021-23385`, `CVE-2021-32618`, `CVE-2021-23401`, `CVE-2021-23393`, `CVE-2021-33056`, `CVE-2021-23414`, `CVE-2021-37352`, `CVE-2021-23435` _(+1 more)_
 
 
 ## Why this matters

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### TinyRCT AppDomainManager injection via chrome_setup.exe loading MyAppDomainManager.dll
 
-`UC_71_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_72_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceImageLoadEvents
 
 ### ASPX web shell execution: IIS w3wp.exe spawning shell/recon child processes
 
-`UC_71_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_72_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### TinyRCT C2 and downloader beacon to CL-STA-1062 infrastructure IPs
 
-`UC_71_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_72_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### Masquerading: VMware/XDR/PerfWatson binaries from non-standard paths
 
-`UC_71_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_72_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceProcessEvents
 
 ### CL-STA-1062 / TinyRCT toolset known-bad SHA256 execution or file write
 
-`UC_71_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_72_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -297,7 +297,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese-Speaking APT Deploys New TinyRCT Backdoor in Southeast Asia Campaign
 
-`UC_71_7` · phase: **exploit** · confidence: **High**
+`UC_72_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

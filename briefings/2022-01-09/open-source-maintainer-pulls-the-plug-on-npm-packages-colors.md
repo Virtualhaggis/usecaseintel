@@ -1,4 +1,4 @@
-# [HIGH] Open source maintainer pulls the plug on npm packages colors and faker, now what?
+# [CRIT] Open source maintainer pulls the plug on npm packages colors and faker, now what?
 
 **Source:** Snyk
 **Published:** 2022-01-09
@@ -14,10 +14,11 @@ January 9, 2022
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2021-23567`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1195.001** — Compromise Software Dependencies and Development Tools
@@ -31,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Install/resolution of sabotaged npm packages colors@1.4.1/1.4.2/liberty-2 or faker@6.6.6
 
-`UC_2502_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_2501_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +75,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Open source maintainer pulls the plug on npm packages colors and faker, now what
 
-`UC_2502_1` · phase: **exploit** · confidence: **High**
+`UC_2501_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +122,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2021-23567`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

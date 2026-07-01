@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2267 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2270 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,7 +10,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-01
 - [2026 cybersecurity assessment the gap between awareness and ](./2026-07-01/2026-cybersecurity-assessment-the-gap-between-awareness-and-.md)
-- [adobe patches 7 cvss 10 0 flaws in coldfusion and campaign c](./2026-07-01/adobe-patches-7-cvss-10-0-flaws-in-coldfusion-and-campaign-c.md)
 - [ai generated browser ransomware abuses chromium api on windo](./2026-07-01/ai-generated-browser-ransomware-abuses-chromium-api-on-windo.md)
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [azure cli password spray hits at least 78 microsoft accounts](./2026-07-01/azure-cli-password-spray-hits-at-least-78-microsoft-accounts.md)
@@ -24,15 +23,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [phantom squatting uses ai hallucinated domains for phishing ](./2026-07-01/phantom-squatting-uses-ai-hallucinated-domains-for-phishing-.md)
 - [researcher analyzes 3 000 live clickfix payloads exposing ap](./2026-07-01/researcher-analyzes-3-000-live-clickfix-payloads-exposing-ap.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
+- [seo poisoned software sites abuse screenconnect to deploy as](./2026-07-01/seo-poisoned-software-sites-abuse-screenconnect-to-deploy-as.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-01/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 - [the soc files screenconnect masked as freeware an inside loo](./2026-07-01/the-soc-files-screenconnect-masked-as-freeware-an-inside-loo.md)
+- [veil drop malware chain uses blogger platform to deliver pur](./2026-07-01/veil-drop-malware-chain-uses-blogger-platform-to-deliver-pur.md)
 
 ## 2026-06-30
 - [airdrop and quick share flaws let nearby attackers trigger c](./2026-06-30/airdrop-and-quick-share-flaws-let-nearby-attackers-trigger-c.md)
 - [attackers exploit simplehelp cve 2026 48558 to deploy taskwe](./2026-06-30/attackers-exploit-simplehelp-cve-2026-48558-to-deploy-taskwe.md)
 - [fake perplexity extension on chrome web store tracked search](./2026-06-30/fake-perplexity-extension-on-chrome-web-store-tracked-search.md)
 - [guardfall exposes open source ai coding agents to decades ol](./2026-06-30/guardfall-exposes-open-source-ai-coding-agents-to-decades-ol.md)
-- [insurance giant aflac discloses data breach after subsidiary](./2026-06-30/insurance-giant-aflac-discloses-data-breach-after-subsidiary.md)
 - [langflow rce exploited to deploy monero miner on exposed ai ](./2026-06-30/langflow-rce-exploited-to-deploy-monero-miner-on-exposed-ai-.md)
 - [malicious pypi packages give hackers control of telegram bot](./2026-06-30/malicious-pypi-packages-give-hackers-control-of-telegram-bot.md)
 - [microsoft warns poisoned mcp tool descriptions can make ai a](./2026-06-30/microsoft-warns-poisoned-mcp-tool-descriptions-can-make-ai-a.md)
@@ -67,7 +67,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [chinese speaking apt deploys new tinyrct backdoor in southea](./2026-06-26/chinese-speaking-apt-deploys-new-tinyrct-backdoor-in-southea.md)
 - [cisa adds exploited ptc windchill rce flaw to kev as web she](./2026-06-26/cisa-adds-exploited-ptc-windchill-rce-flaw-to-kev-as-web-she.md)
 - [fbi warns russian intelligence hackers target signal backup ](./2026-06-26/fbi-warns-russian-intelligence-hackers-target-signal-backup-.md)
-- [google details turla s new stockstay backdoor used in ukrain](./2026-06-26/google-details-turla-s-new-stockstay-backdoor-used-in-ukrain.md)
 - [miasma malware targets npm packages and github actions in su](./2026-06-26/miasma-malware-targets-npm-packages-and-github-actions-in-su.md)
 - [multiple immobiliarelabs backstage plugins compromised on np](./2026-06-26/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
 - [new dirtyclone linux kernel flaw lets local users gain root ](./2026-06-26/new-dirtyclone-linux-kernel-flaw-lets-local-users-gain-root-.md)
@@ -81,7 +80,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-25
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-25/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [beyond iocs ai enabled threat intelligence](./2026-06-25/beyond-iocs-ai-enabled-threat-intelligence.md)
-- [chrome ad blocker with 10m installs found with dormant scrip](./2026-06-25/chrome-ad-blocker-with-10m-installs-found-with-dormant-scrip.md)
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
@@ -3147,6 +3145,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [8 best java code review tools for developers](./2022-01-14/8-best-java-code-review-tools-for-developers.md)
 
 ## 2022-01-12
+- [new years resolution don t show my security tokens when hack](./2022-01-12/new-years-resolution-don-t-show-my-security-tokens-when-hack.md)
 - [the secure developer 2021 in review](./2022-01-12/the-secure-developer-2021-in-review.md)
 
 ## 2022-01-10
@@ -3180,11 +3179,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [checking terraform iac security in ci cd with regula and bit](./2021-12-29/checking-terraform-iac-security-in-ci-cd-with-regula-and-bit.md)
 - [new log4j 2 17 1 fixes cve 2021 44832 remote code execution ](./2021-12-29/new-log4j-2-17-1-fixes-cve-2021-44832-remote-code-execution-.md)
 
+## 2021-12-24
+- [it takes a community responding to open source criticism pos](./2021-12-24/it-takes-a-community-responding-to-open-source-criticism-pos.md)
+
 ## 2021-12-22
 - [snyk container in 2021 shifting container security all the w](./2021-12-22/snyk-container-in-2021-shifting-container-security-all-the-w.md)
 - [snyk iac in 2021 leading infrastructure as code security for](./2021-12-22/snyk-iac-in-2021-leading-infrastructure-as-code-security-for.md)
 
 ## 2021-12-21
+- [snyk makes it easier to fix log4shell with extended free sca](./2021-12-21/snyk-makes-it-easier-to-fix-log4shell-with-extended-free-sca.md)
 - [snyk open source in 2021 a year of innovation](./2021-12-21/snyk-open-source-in-2021-a-year-of-innovation.md)
 
 ## 2021-12-18
@@ -3222,12 +3225,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2021-12-09
 - [responsible disclosure codecov ceo cto share learnings from ](./2021-12-09/responsible-disclosure-codecov-ceo-cto-share-learnings-from-.md)
 
+## 2021-12-08
+- [snyk open source adds beta c c security scanning for unmanag](./2021-12-08/snyk-open-source-adds-beta-c-c-security-scanning-for-unmanag.md)
+
 ## 2021-12-01
 - [cisa kev cve 2018 14847 mikrotik router os directory travers](./2021-12-01/cisa-kev-cve-2018-14847-mikrotik-router-os-directory-travers.md)
 - [cisa kev cve 2020 11261 qualcomm multiple chipsets improper ](./2021-12-01/cisa-kev-cve-2020-11261-qualcomm-multiple-chipsets-improper-.md)
 - [cisa kev cve 2021 37415 zoho manageengine servicedesk authen](./2021-12-01/cisa-kev-cve-2021-37415-zoho-manageengine-servicedesk-authen.md)
 - [cisa kev cve 2021 40438 apache http server side request forg](./2021-12-01/cisa-kev-cve-2021-40438-apache-http-server-side-request-forg.md)
 - [cisa kev cve 2021 44077 zoho manageengine servicedesk plus r](./2021-12-01/cisa-kev-cve-2021-44077-zoho-manageengine-servicedesk-plus-r.md)
+- [java json deserialization problems with the jackson objectma](./2021-12-01/java-json-deserialization-problems-with-the-jackson-objectma.md)
 
 ## 2021-11-30
 - [snyk achieves aws security competency status](./2021-11-30/snyk-achieves-aws-security-competency-status.md)

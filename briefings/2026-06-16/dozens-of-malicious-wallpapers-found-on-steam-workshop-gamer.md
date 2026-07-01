@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### Wallpaper Engine spawning LOLBins or staged binaries (Steam Workshop wallpaper malware)
 
-`UC_184_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_183_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Campaign loader '._cache_GAME1.exe' execution (Steam wallpaper malware)
 
-`UC_184_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_183_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### DarkKomet Synaptics.exe backdoor executing from ProgramData
 
-`UC_184_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_183_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### Tampered AggregatorHost.dll loaded/dropped (Steam session credential theft)
 
-`UC_184_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_183_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceImageLoadEvents
 
 ### C2 communication to Steam wallpaper campaign infrastructure (120.48.156.17 / 202.144.192.29)
 
-`UC_184_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_183_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceNetworkEvents
 
 ### DarkKomet 'Synaptics Pointing Device Driver' Run-key persistence to ProgramData
 
-`UC_184_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_183_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +190,7 @@ DeviceRegistryEvents
 
 ### Steam wallpaper campaign payload hash sweep (DarkKomet / Lumma / Vidar / RenEngine)
 
-`UC_184_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_183_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -357,7 +357,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Dozens of malicious wallpapers found on Steam Workshop: gamers’ accounts at risk
 
-`UC_184_7` · phase: **exploit** · confidence: **High**
+`UC_183_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

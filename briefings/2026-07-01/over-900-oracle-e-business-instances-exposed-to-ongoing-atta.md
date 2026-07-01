@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Oracle EBS CVE-2026-46817 exploitation — POST to /OA_HTML/ibytransmit File Transmission endpoint
 
-`UC_9_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_11_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Oracle EBS web/app tier (java/OHS) spawning shell or recon binary — post-exploit RCE
 
-`UC_9_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_11_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### Exposed & unpatched Oracle E-Business Suite instances vulnerable to CVE-2026-46817
 
-`UC_9_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_11_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

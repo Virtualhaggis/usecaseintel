@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious postmark-mcp npm package install or on-disk presence (supply-chain MCP server)
 
-`UC_32_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_34_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ union
 
 ### Covert BCC email exfiltration to giftshop.club via trojanized postmark-mcp
 
-`UC_32_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_34_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ EmailEvents
 
 ### Network/DNS IOC sweep for postmark-mcp exfil domain giftshop.club
 
-`UC_32_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_34_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
