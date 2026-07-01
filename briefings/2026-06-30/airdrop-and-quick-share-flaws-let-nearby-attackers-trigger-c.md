@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Google Quick Share for Windows (nearby_share.exe) repeated crash/restart loop — UAF DoS
 
-`UC_46_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_48_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### Google Quick Share for Windows (nearby_share.exe) spawning shell or LOLBin — UAF code execution
 
-`UC_46_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_48_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

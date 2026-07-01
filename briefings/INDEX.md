@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2266 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2267 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,15 +10,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-01
 - [2026 cybersecurity assessment the gap between awareness and ](./2026-07-01/2026-cybersecurity-assessment-the-gap-between-awareness-and-.md)
+- [adobe patches 7 cvss 10 0 flaws in coldfusion and campaign c](./2026-07-01/adobe-patches-7-cvss-10-0-flaws-in-coldfusion-and-campaign-c.md)
 - [ai generated browser ransomware abuses chromium api on windo](./2026-07-01/ai-generated-browser-ransomware-abuses-chromium-api-on-windo.md)
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [azure cli password spray hits at least 78 microsoft accounts](./2026-07-01/azure-cli-password-spray-hits-at-least-78-microsoft-accounts.md)
 - [citrix patches six netscaler flaws allowing file read and de](./2026-07-01/citrix-patches-six-netscaler-flaws-allowing-file-read-and-de.md)
-- [openclaw risks for agent users and how to mitigate them](./2026-07-01/openclaw-risks-for-agent-users-and-how-to-mitigate-them.md)
+- [critical cursor flaws could let prompt injection escape sand](./2026-07-01/critical-cursor-flaws-could-let-prompt-injection-escape-sand.md)
+- [microsoft named a leader in the frost radar for cloud and ap](./2026-07-01/microsoft-named-a-leader-in-the-frost-radar-for-cloud-and-ap.md)
+- [openclaw risks for the users and how to mitigate them](./2026-07-01/openclaw-risks-for-the-users-and-how-to-mitigate-them.md)
+- [ousaban banking trojan targets iberian bank users with fake ](./2026-07-01/ousaban-banking-trojan-targets-iberian-bank-users-with-fake-.md)
 - [over 900 oracle e business instances exposed to ongoing atta](./2026-07-01/over-900-oracle-e-business-instances-exposed-to-ongoing-atta.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [phantom squatting uses ai hallucinated domains for phishing ](./2026-07-01/phantom-squatting-uses-ai-hallucinated-domains-for-phishing-.md)
-- [progress kemp loadmaster pre auth rce flaw faces active expl](./2026-07-01/progress-kemp-loadmaster-pre-auth-rce-flaw-faces-active-expl.md)
 - [researcher analyzes 3 000 live clickfix payloads exposing ap](./2026-07-01/researcher-analyzes-3-000-live-clickfix-payloads-exposing-ap.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-01/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
@@ -86,7 +89,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-06-25/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [microsoft a leader in the forrester wave for endpoint manage](./2026-06-25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-manage.md)
-- [new gaslight macos malware uses prompt injection to disrupt ](./2026-06-25/new-gaslight-macos-malware-uses-prompt-injection-to-disrupt-.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 - [photo zip campaign targeting hospitality industry delivers n](./2026-06-25/photo-zip-campaign-targeting-hospitality-industry-delivers-n.md)
 - [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
@@ -106,7 +108,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-22
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
 - [guarding ai memory](./2026-06-22/guarding-ai-memory.md)
-- [one intrusion two cyberattackers uncovering parallel threat ](./2026-06-22/one-intrusion-two-cyberattackers-uncovering-parallel-threat-.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
 ## 2026-06-19

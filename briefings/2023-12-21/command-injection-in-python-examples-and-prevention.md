@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Command injection in Python: examples and prevention
 
-`UC_1372_1` · phase: **exploit** · confidence: **High**
+`UC_1370_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

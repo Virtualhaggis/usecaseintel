@@ -1,4 +1,4 @@
-# [HIGH] OpenClaw: risks for agent users and how to mitigate them
+# [HIGH] OpenClaw: risks for the users and how to mitigate them
 
 **Source:** Securelist (Kaspersky)
 **Published:** 2026-07-01
@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### OpenClaw agent runtime exfiltrating to Telegram Bot API
 
-`UC_16_1` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_20_1` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### OpenClaw agent runtime spawning shell to harvest credential/token files
 
-`UC_16_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_20_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

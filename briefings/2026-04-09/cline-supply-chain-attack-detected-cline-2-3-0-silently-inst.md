@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### npm postinstall chain installs malicious 'openclaw' global package (cline@2.3.0 supply-chain IOC)
 
-`UC_446_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_444_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### OpenClaw Gateway WebSocket listener / loopback connection on TCP 18789
 
-`UC_446_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_444_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### Access to OpenClaw credential store (~/.openclaw/credentials/, ~/.openclaw/config.json5)
 
-`UC_446_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_444_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceFileEvents
 
 ### OpenClaw persistence — launchd plist / systemd unit drop referencing 'openclaw'
 
-`UC_446_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_444_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cline Supply Chain Attack Detected: cline@2.3.0 Silently Installs OpenClaw
 
-`UC_446_3` · phase: **exploit** · confidence: **High**
+`UC_444_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

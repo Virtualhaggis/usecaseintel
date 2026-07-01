@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Avoiding mass assignment vulnerabilities in Node.js
 
-`UC_1711_1` · phase: **exploit** · confidence: **High**
+`UC_1709_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

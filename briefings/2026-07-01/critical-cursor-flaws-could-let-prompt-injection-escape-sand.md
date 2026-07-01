@@ -1,23 +1,20 @@
-# [CRIT] Progress Kemp LoadMaster Pre-Auth RCE Flaw Faces Active Exploitation Attempts
+# [CRIT] Critical Cursor Flaws Could Let Prompt Injection Escape Sandbox and Run Commands
 
 **Source:** The Hacker News
 **Published:** 2026-07-01
-**Article:** https://thehackernews.com/2026/07/latest-progress-kemp-loadmaster-pre.html
+**Article:** https://thehackernews.com/2026/07/critical-cursor-flaws-could-let-prompt.html
 
 ## Threat Profile
 
-Progress Kemp LoadMaster Pre-Auth RCE Flaw Faces Active Exploitation Attempts 
- Ravie Lakshmanan  Jul 01, 2026 Vulnerability / Network Security 
-A recently disclosed critical security flaw impacting Progress Kemp LoadMaster is seeing active exploitation attempts, according to an advisory from eSentire's Threat Response Unit (TRU).
-The Canadian cybersecurity company said it identified exploitation attempts targeting CVE-2026-8037 (CVSS score: 9.6), an operating system (OS) command injection fla…
+Critical Cursor Flaws Could Let Prompt Injection Escape Sandbox and Run Commands 
+ Swati Khandelwal  Jul 01, 2026 AI Coding / Vulnerability 
+Two flaws in Cursor, an AI code editor, could let a single, ordinary-looking prompt break out of the editor's safety sandbox and run any command on a developer's computer. There is no click to fall for and no approval box to ignore.
+Cato AI Labs found the pair and named them DuneSlide . They are tracked as CVE-2026-50548 and CVE-2026-50549, both rated 9.8…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-8037`
-- **CVE:** `CVE-2024-1212`
-- **IPv4 (defanged):** `192.42.116.58`
-- **IPv4 (defanged):** `192.42.116.105`
-- **IPv4 (defanged):** `146.70.139.154`
+- **CVE:** `CVE-2026-50548`
+- **CVE:** `CVE-2026-50549`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,9 +28,11 @@ The Canadian cybersecurity company said it identified exploitation attempts targ
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1071** — Application Layer Protocol
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1211** — Exploitation for Defense Evasion
+- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
@@ -41,40 +40,68 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Progress Kemp LoadMaster /accessv2 pre-auth RCE exploitation from known attacker IPs (CVE-2026-8037)
+### Cursor agent overwrites macOS sandbox helper (DuneSlide sandbox escape)
 
-`UC_1_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status from datamodel=Web.Web where Web.url="*/accessv2*" AND Web.src IN ("192.42.116.58","192.42.116.105","146.70.139.154") by Web.src Web.dest Web.dest_host Web.url `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count
-```
-
-### Callback / traffic to CVE-2026-8037 exploitation infrastructure (192.42.116.58/105, 146.70.139.154)
-
-`UC_1_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("192.42.116.58","192.42.116.105","146.70.139.154") OR All_Traffic.src IN ("192.42.116.58","192.42.116.105","146.70.139.154") by All_Traffic.src All_Traffic.dest `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Cursor.app/Contents/Resources/app/resources/helpers/cursorsandbox" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.action Filesystem.process_id
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)` `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("192.42.116.58","192.42.116.105","146.70.139.154")
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where FileName =~ "cursorsandbox"
+    or FolderPath endswith "/Cursor.app/Contents/Resources/app/resources/helpers/cursorsandbox"
+| where ActionType in~ ("FileCreated","FileModified","FileRenamed")
+// legit helper changes come from the Cursor updater/installer, not a spawned shell/copy utility
+| where InitiatingProcessFileName in~ ("bash","zsh","sh","dash","node","tee","cp","mv","dd","cat","python3","perl","ruby","ln")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, FileName, ActionType
 | order by Timestamp desc
 ```
 
-### LoadMaster appliance shell execution or heap-corruption crash following /accessv2 exploitation (CVE-2026-8037)
+### Cursor-spawned terminal command targets sandbox helper, dotfiles, or symlink
 
-`UC_1_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_4_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* sourcetype=syslog ("segfault" OR "general protection" OR "core dumped" OR "heap" OR "malloc" OR "double free" OR "/bin/sh" OR "/bin/bash") | stats count min(_time) as firstTime max(_time) as lastTime values(process) as process by host | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("Cursor","cursorsandbox","Cursor Helper*")) Processes.process_name IN ("bash","zsh","sh","dash","node","python3","perl","ruby") (Processes.process="*cursorsandbox*" OR Processes.process="*/Contents/Resources/app/resources/helpers*" OR Processes.process="*.zshrc*" OR Processes.process="*.zprofile*" OR Processes.process="*.zshenv*" OR Processes.process="*.bashrc*" OR Processes.process="*.bash_profile*" OR Processes.process="*ln -s*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName has_any ("Cursor","cursorsandbox")
+| where FileName in~ ("bash","zsh","sh","dash","node","python3","perl","ruby")
+| where ProcessCommandLine has_any ("cursorsandbox","/Contents/Resources/app/resources/helpers",".zshrc",".zprofile",".zshenv",".bashrc",".bash_profile",".profile")
+    or ProcessCommandLine has "ln -s"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Vulnerable Cursor install below 3.0 exposed to DuneSlide (CVE-2026-50548/50549)
+
+`UC_4_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareInventory
+| where SoftwareName has "cursor"
+| where SoftwareVendor has_any ("anysphere","cursor")
+| extend MajorVersion = toint(extract(@"^(\d+)", 1, SoftwareVersion))
+| where isnotempty(MajorVersion) and MajorVersion < 3
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
+| order by DeviceName asc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -278,12 +305,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-8037`, `CVE-2024-1212`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `192.42.116.58`, `192.42.116.105`, `146.70.139.154`
+  - CVE(s): `CVE-2026-50548`, `CVE-2026-50549`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

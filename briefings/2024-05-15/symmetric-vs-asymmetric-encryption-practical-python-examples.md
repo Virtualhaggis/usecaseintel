@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Symmetric vs. asymmetric encryption: Practical Python examples
 
-`UC_1267_0` · phase: **exploit** · confidence: **High**
+`UC_1265_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

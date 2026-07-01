@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Ruby/Rails process fetching remote code from pastebin.com raw (rest-client 1.6.13 backdoor)
 
-`UC_3191_0` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3189_0` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ DeviceNetworkEvents
 
 ### Exfiltration callback to mironanoru.zzz.com.ua (rest-client backdoor C2)
 
-`UC_3191_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3189_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
