@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### Storm-2603 SharePoint ToolShell exploitation: ToolPane.aspx/spinstall0.aspx + win.ini/web.config LFI probing
 
-`UC_108_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_112_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### SharePoint IIS worker (w3wp.exe) spawning command shell — ToolShell web-shell execution
 
-`UC_108_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_112_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Velociraptor deployed via msiexec from workers.dev (Storm-2603 SecurityCheck.msi / CVE-2025-6264)
 
-`UC_108_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_112_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceProcessEvents
 
 ### Multiple parallel remote-access/tunnel tools on one host (Cloudflare tunnel + VS Code tunnel + TightVNC + Zoho + OpenSSH)
 
-`UC_108_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_112_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceProcessEvents
 
 ### Storm-2603 rogue admin account creation (adminbak/adminbak2) and Domain Admins enumeration
 
-`UC_108_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_112_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceProcessEvents
 
 ### Windows Defender disablement prior to tunnel install (Storm-2603 defense evasion)
 
-`UC_108_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_112_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,7 +212,7 @@ DeviceProcessEvents
 
 ### Storm-2603 concurrent C2 egress to workers.dev tunnels and attacker IPs
 
-`UC_108_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_112_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

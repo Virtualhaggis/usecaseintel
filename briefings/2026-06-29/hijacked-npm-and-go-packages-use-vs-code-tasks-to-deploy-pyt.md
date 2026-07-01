@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### VS Code/Cursor folder-open task auto-runs Node against fake .woff2 font (Fake Font / Contagious Interview)
 
-`UC_53_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_57_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Node.js process resolves blockchain dead-drop (TronGrid/Aptos/BSC RPC) — Fake Font Stage-2 C2 retrieval
 
-`UC_53_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### Fake Font socket.io C2 — connections to hardcoded IPs and /$/boot //snv //d/python.zip endpoints
 
-`UC_53_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### Fake Font Stage-4 Python toolchain staging — node drops python.zip/7zr.exe/get-pip.py into .npm
 
-`UC_53_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_57_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceFileEvents
 
 ### InvisibleFerret stealer — Python harvests dev creds/wallets and stages ZIP into .npm exfil dir
 
-`UC_53_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_57_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

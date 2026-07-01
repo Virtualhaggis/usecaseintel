@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Building Java container images using Jib
 
-`UC_2808_1` · phase: **install** · confidence: **High**
+`UC_2810_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

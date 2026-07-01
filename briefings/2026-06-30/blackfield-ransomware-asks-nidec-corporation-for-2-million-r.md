@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Blackfield (BlackFL) ransomware encryption: .BlackFL extension + BlackField_ReadMe.txt note drop
 
-`UC_37_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_42_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### Blackfield ransomware Volume Shadow Copy deletion via WMIC (inhibit recovery)
 
-`UC_37_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_42_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

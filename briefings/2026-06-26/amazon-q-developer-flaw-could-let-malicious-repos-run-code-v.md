@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious .amazonq/mcp.json MCP config delivered via cloned repository
 
-`UC_65_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_69_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceFileEvents
 
 ### Amazon Q MCP payload: aws sts get-caller-identity piped to web exfil
 
-`UC_65_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_69_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### Developer IDE / Amazon Q language server spawns shell running cloud-credential commands
 
-`UC_65_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_69_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### Exposure: endpoints running vulnerable Language Servers for AWS (CVE-2026-12957/12958)
 
-`UC_65_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_69_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

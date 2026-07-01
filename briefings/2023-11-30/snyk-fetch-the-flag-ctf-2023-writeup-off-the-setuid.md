@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### PHP web-server process initiating outbound TCP (fsockopen reverse shell to attacker)
 
-`UC_1393_1` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1395_1` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### PHP CLI dev server (php -S) spawning a shell or child interpreter (proc_open php -a)
 
-`UC_1393_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1395_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID
 
-`UC_1393_0` · phase: **exploit** · confidence: **High**
+`UC_1395_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

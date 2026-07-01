@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Prototype pollution payload in CLI args (--__proto__ / constructor.prototype) to Node tool
 
-`UC_3097_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3099_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### World-writable executable run as a shell (-c) — minimist polluted shell privesc payload
 
-`UC_3097_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_3099_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Exploring the minimist prototype pollution security vulnerability
 
-`UC_3097_1` · phase: **exploit** · confidence: **High**
+`UC_3099_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

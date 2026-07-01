@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure hunt: CVE-2020-15999 FreeType overflow in Chromium/Electron/CefSharp software
 
-`UC_2956_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2958_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

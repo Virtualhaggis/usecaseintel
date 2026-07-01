@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Node.js security: lessons from the Node.js Security Working Group in triaging vu
 
-`UC_2970_0` · phase: **exploit** · confidence: **High**
+`UC_2972_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
