@@ -1,12 +1,20 @@
 # Briefings — full archive
 
-_2267 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2264 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-01
+- [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
+- [azure cli password spray hits at least 78 microsoft accounts](./2026-07-01/azure-cli-password-spray-hits-at-least-78-microsoft-accounts.md)
+- [citrix patches six netscaler flaws allowing file read and de](./2026-07-01/citrix-patches-six-netscaler-flaws-allowing-file-read-and-de.md)
+- [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
+- [phantom squatting uses ai hallucinated domains for phishing ](./2026-07-01/phantom-squatting-uses-ai-hallucinated-domains-for-phishing-.md)
+- [researcher analyzes 3 000 live clickfix payloads exposing ap](./2026-07-01/researcher-analyzes-3-000-live-clickfix-payloads-exposing-ap.md)
 
 ## 2026-06-30
 - [airdrop and quick share flaws let nearby attackers trigger c](./2026-06-30/airdrop-and-quick-share-flaws-let-nearby-attackers-trigger-c.md)
@@ -17,6 +25,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [guardfall exposes open source ai coding agents to decades ol](./2026-06-30/guardfall-exposes-open-source-ai-coding-agents-to-decades-ol.md)
 - [insurance giant aflac discloses data breach after subsidiary](./2026-06-30/insurance-giant-aflac-discloses-data-breach-after-subsidiary.md)
 - [langflow rce exploited to deploy monero miner on exposed ai ](./2026-06-30/langflow-rce-exploited-to-deploy-monero-miner-on-exposed-ai-.md)
+- [malicious pypi packages give hackers control of telegram bot](./2026-06-30/malicious-pypi-packages-give-hackers-control-of-telegram-bot.md)
 - [microsoft warns poisoned mcp tool descriptions can make ai a](./2026-06-30/microsoft-warns-poisoned-mcp-tool-descriptions-can-make-ai-a.md)
 - [new bioshocking attack tricks ai browsers into leaking user ](./2026-06-30/new-bioshocking-attack-tricks-ai-browsers-into-leaking-user-.md)
 - [oracle e business suite flaw cve 2026 46817 actively exploit](./2026-06-30/oracle-e-business-suite-flaw-cve-2026-46817-actively-exploit.md)
@@ -31,17 +40,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-29
 - [236 000 dcloud uni app sites used in crypto scams phishing a](./2026-06-29/236-000-dcloud-uni-app-sites-used-in-crypto-scams-phishing-a.md)
 - [chromium extension uses ai related branding to redirect brow](./2026-06-29/chromium-extension-uses-ai-related-branding-to-redirect-brow.md)
-- [critical simplehelp flaw exploited to deploy new stealer mal](./2026-06-29/critical-simplehelp-flaw-exploited-to-deploy-new-stealer-mal.md)
 - [gamaredon expands ukraine attacks with new malware and cloud](./2026-06-29/gamaredon-expands-ukraine-attacks-with-new-malware-and-cloud.md)
-- [hackers now exploit critical oracle e business flaw in attac](./2026-06-29/hackers-now-exploit-critical-oracle-e-business-flaw-in-attac.md)
 - [hijacked npm and go packages use vs code tasks to deploy pyt](./2026-06-29/hijacked-npm-and-go-packages-use-vs-code-tasks-to-deploy-pyt.md)
 - [inside the inbox why cybercriminals want to break into your ](./2026-06-29/inside-the-inbox-why-cybercriminals-want-to-break-into-your-.md)
 - [microsoft removes 119 edge extensions that hid malware in im](./2026-06-29/microsoft-removes-119-edge-extensions-that-hid-malware-in-im.md)
-- [nissan discloses employee data breach linked to oracle zero ](./2026-06-29/nissan-discloses-employee-data-breach-linked-to-oracle-zero-.md)
 - [public poc released for critical libssh2 cve 2026 55200 clie](./2026-06-29/public-poc-released-for-critical-libssh2-cve-2026-55200-clie.md)
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
 - [the gentlemen are knocking ustom backdoors and evolving tact](./2026-06-29/the-gentlemen-are-knocking-ustom-backdoors-and-evolving-tact.md)
-- [u s offers 10 million for hackers targeting whatsapp signal ](./2026-06-29/u-s-offers-10-million-for-hackers-targeting-whatsapp-signal-.md)
 - [whatsapp is finally getting usernames to help keep phone num](./2026-06-29/whatsapp-is-finally-getting-usernames-to-help-keep-phone-num.md)
 
 ## 2026-06-27
@@ -82,16 +87,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
 
 ## 2026-06-24
-- [amadey and stealc malware network disrupted 27m stolen crede](./2026-06-24/amadey-and-stealc-malware-network-disrupted-27m-stolen-crede.md)
 - [cisa warns critical lantronix eds5000 flaw is being actively](./2026-06-24/cisa-warns-critical-lantronix-eds5000-flaw-is-being-actively.md)
-- [cisco unified cm flaw exploited after poc reveals file write](./2026-06-24/cisco-unified-cm-flaw-exploited-after-poc-reveals-file-write.md)
 - [cnapp evolution how microsoft aligns with leading cloud risk](./2026-06-24/cnapp-evolution-how-microsoft-aligns-with-leading-cloud-risk.md)
 - [compromised github action codfish semantic release action st](./2026-06-24/compromised-github-action-codfish-semantic-release-action-st.md)
-- [cordyceps ci cd flaws expose 300 github repositories to supp](./2026-06-24/cordyceps-ci-cd-flaws-expose-300-github-repositories-to-supp.md)
+- [stealc and amadey breaking down infostealers and the cybercr](./2026-06-24/stealc-and-amadey-breaking-down-infostealers-and-the-cybercr.md)
 - [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
-- [fortibleed targeted fortigate firewalls in 110 million crede](./2026-06-23/fortibleed-targeted-fortigate-firewalls-in-110-million-crede.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
 - [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
@@ -104,7 +106,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
 ## 2026-06-19
-- [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
 - [ghsa critical cve 2026 48814 network ai cve 2026 46701 fix i](./2026-06-19/ghsa-critical-cve-2026-48814-network-ai-cve-2026-46701-fix-i.md)
 - [ghsa critical cve 2026 54051 network ai improper neutralizat](./2026-06-19/ghsa-critical-cve-2026-54051-network-ai-improper-neutralizat.md)
 - [ghsa critical cve 2026 55255 langflow idor vulnerability in ](./2026-06-19/ghsa-critical-cve-2026-55255-langflow-idor-vulnerability-in-.md)
@@ -264,6 +265,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
+- [openclaw risks for agent users and how to mitigate them](./2026-06-01/openclaw-risks-for-agent-users-and-how-to-mitigate-them.md)
 
 ## 2026-05-29
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
@@ -279,7 +281,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47410 praisonai platform jwt signing ](./2026-05-29/ghsa-critical-cve-2026-47410-praisonai-platform-jwt-signing-.md)
 - [ghsa critical cve 2026 47416 praisonai platform any workspac](./2026-05-29/ghsa-critical-cve-2026-47416-praisonai-platform-any-workspac.md)
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
-- [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
 
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
@@ -292,7 +293,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48027 nx console embedded malicious code v](./2026-05-27/cisa-kev-cve-2026-48027-nx-console-embedded-malicious-code-v.md)
 - [cisa kev cve 2026 8398 daemon tools lite embedded malicious ](./2026-05-27/cisa-kev-cve-2026-8398-daemon-tools-lite-embedded-malicious-.md)
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
-- [out of the crypt the evolving cyber extortion economy](./2026-05-27/out-of-the-crypt-the-evolving-cyber-extortion-economy.md)
 
 ## 2026-05-26
 - [btmob a stealthy rat burrowing deep into android devices](./2026-05-26/btmob-a-stealthy-rat-burrowing-deep-into-android-devices.md)
@@ -312,7 +312,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
 - [cisa kev cve 2025 34291 langflow origin validation error vul](./2026-05-21/cisa-kev-cve-2025-34291-langflow-origin-validation-error-vul.md)
 - [cisa kev cve 2026 34926 trend micro apex one on premise dire](./2026-05-21/cisa-kev-cve-2026-34926-trend-micro-apex-one-on-premise-dire.md)
-- [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
 
 ## 2026-05-20
 - [cisa kev cve 2008 4250 microsoft windows buffer overflow vul](./2026-05-20/cisa-kev-cve-2008-4250-microsoft-windows-buffer-overflow-vul.md)

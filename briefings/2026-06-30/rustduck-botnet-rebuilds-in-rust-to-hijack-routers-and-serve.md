@@ -33,10 +33,10 @@ The e…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
-- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
-- **T1498.001** — Network Denial of Service: Direct Network Flood
+- **T1571** — Non-Standard Port
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
@@ -45,53 +45,49 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### RustDuck botnet delivery/C2 infrastructure traffic (176.65.139.0/24 & 176.65.142.0/24)
+### Egress to RustDuck spreader/delivery host 176.65.139.204
 
-`UC_1_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_20_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="176.65.139.204" OR All_Traffic.dest_ip="176.65.139.0/24" OR All_Traffic.dest_ip="176.65.142.0/24" OR All_Traffic.src_ip="176.65.139.0/24" OR All_Traffic.src_ip="176.65.142.0/24") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="176.65.139.204" OR All_Traffic.src_ip="176.65.139.204" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where RemoteIP == "176.65.139.204"
-    or ipv4_is_in_range(RemoteIP, "176.65.139.0/24")
-    or ipv4_is_in_range(RemoteIP, "176.65.142.0/24")
-| where RemoteIPType == "Public"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, ActionType
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### CVE-2017-17215 Huawei HG532 TR-064 RCE attempt (/ctrlt/DeviceUpgrade_1)
+### CVE-2017-17215 Huawei HG532 TR-064 command injection (RustDuck spread vector)
 
-`UC_1_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_20_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/ctrlt/DeviceUpgrade_1*" OR Web.uri_path="*/ctrlt/DeviceUpgrade_1*") by Web.src Web.dest Web.dest_port Web.http_method Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/ctrlt/DeviceUpgrade_1*" OR Web.dest_port=37215) by Web.src Web.dest Web.dest_port Web.http_method Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
-### RustDuck DuckDNS dynamic-DNS C2 resolution from server/non-browser process
+### RustDuck DuckDNS dynamic-DNS C2 resolution/beaconing
 
-`UC_1_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_20_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*.duckdns.org" by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*.duckdns.org" by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where RemoteUrl endswith "duckdns.org"
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe","safari.exe")
-| where isempty(InitiatingProcessAccountName) or InitiatingProcessAccountName !endswith "$"
-| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), Ports=make_set(RemotePort,15) by DeviceName, RemoteUrl, InitiatingProcessFileName
 | order by ConnCount desc
 ```
 

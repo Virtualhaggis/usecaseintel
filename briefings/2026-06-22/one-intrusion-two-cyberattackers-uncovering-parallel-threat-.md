@@ -47,13 +47,18 @@ What began as a routine ransomware investigation quickly revealed something far 
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
-- **T1083** — File and Directory Discovery
-- **T1588.002** — Obtain Capabilities: Tool
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1105** — Ingress Tool Transfer
+- **T1543.003** — Create or Modify System Process: Windows Service
 - **T1572** — Protocol Tunneling
 - **T1090** — Proxy
+- **T1136.001** — Create Account: Local Account
+- **T1136.002** — Create Account: Domain Account
+- **T1069.002** — Permission Groups Discovery: Domain Groups
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1543.003** — Create or Modify System Process: Windows Service
 - **T1068** — Exploitation for Privilege Escalation
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -61,120 +66,169 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### SharePoint LFI recon via win.ini / web.config requests (Storm-2603 ToolShell precursor)
+### Storm-2603 SharePoint ToolShell exploitation: ToolPane.aspx/spinstall0.aspx + win.ini/web.config LFI probing
 
-`UC_100_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_108_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*win.ini*" OR Web.url="*web.config*") by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent, Web.status
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url IN ("*/_layouts/15/ToolPane.aspx*","*spinstall0.aspx*","*win.ini*","*web.config*") OR Web.src IN ("38.54.16.179","91.236.230.76","65.38.121.226")) by Web.src, Web.dest, Web.http_method, Web.http_user_agent, Web.url, Web.status
 | `drop_dm_object_name(Web)`
-| sort - lastTime
-```
-
-### Velociraptor deployed with SYSTEM privileges (Storm-2603 LOTL tooling)
-
-`UC_100_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=velociraptor.exe OR Processes.process="*velociraptor*") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name, Processes.process_integrity_level
-| `drop_dm_object_name(Processes)`
-| where process_integrity_level IN ("system","high") OR like(process,"%--config%") OR like(process,"%artifacts%")
+| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "velociraptor.exe" or ProcessVersionInfoProductName has "Velociraptor" or ProcessVersionInfoFileDescription has "Velociraptor"
-| where ProcessIntegrityLevel in ("System","High") or ProcessCommandLine has_any ("--config","artifacts collect","gui","frontend","client")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessIntegrityLevel, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Cloudflared tunnel established for covert C2 (Storm-2603)
-
-`UC_100_9` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=cloudflared.exe OR Processes.process="*trycloudflare*") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| where like(process,"%tunnel%") OR like(process,"%--url%") OR like(process,"%--token%") OR like(process,"%trycloudflare%")
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "cloudflared.exe" or ProcessVersionInfoProductName has "cloudflared" or ProcessCommandLine has "trycloudflare"
-| where ProcessCommandLine has_any ("tunnel","--url","--token","run","trycloudflare")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
-| order by Timestamp desc
-```
-
-### Visual Studio Code remote tunnel abused as SSH/C2 channel (Storm-2603)
-
-`UC_100_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=code.exe OR Processes.process_name=code-tunnel.exe OR Processes.process_name=code.cmd) by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| where like(process,"%tunnel%")
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where (FileName =~ "code.exe" or FileName =~ "code-tunnel.exe" or ProcessVersionInfoProductName has "Visual Studio Code")
-| where ProcessCommandLine has "tunnel"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
-| order by Timestamp desc
-```
-
-### BYOVD vulnerable-driver load to disable endpoint protection (Storm-2603 NSecKrnl/ServiceMouse)
-
-`UC_100_11` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=NSecKrnl.sys OR Filesystem.file_name=AToolsKrnl64.sys) by Filesystem.dest, Filesystem.file_name, Filesystem.file_path, Filesystem.process_name, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
+DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("NSecKrnl.sys","AToolsKrnl64.sys")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where RemoteIP in ("38.54.16.179","91.236.230.76","65.38.121.226")
+| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Zoho Assist unsanctioned remote-support agent on server (Storm-2603)
+### SharePoint IIS worker (w3wp.exe) spawning command shell — ToolShell web-shell execution
 
-`UC_100_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_108_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=ZohoURSService.exe OR Processes.process_name=ZA_Connect.exe OR Processes.process_name=ZA_Access.exe OR Processes.process_name=ZMAgent.exe OR Processes.process="*Zoho Assist*") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","msiexec.exe","cscript.exe","wscript.exe","net.exe","net1.exe","whoami.exe") by Processes.dest, Processes.user, Processes.parent_process, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessVersionInfoCompanyName has "Zoho" or FileName has_any ("ZohoURS","ZA_Connect","ZA_Access","ZMAgent") or ProcessCommandLine has "Zoho Assist"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessVersionInfoCompanyName, InitiatingProcessFileName, SHA256
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","msiexec.exe","cscript.exe","wscript.exe","net.exe","net1.exe","whoami.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Velociraptor deployed via msiexec from workers.dev (Storm-2603 SecurityCheck.msi / CVE-2025-6264)
+
+`UC_108_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="msiexec.exe" AND (Processes.process="*workers.dev*" OR Processes.process="*v3.msi*" OR Processes.process="*ssh.msi*" OR Processes.process="*SecurityCheck.msi*") by Processes.dest, Processes.user, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "msiexec.exe" and ProcessCommandLine has_any ("workers.dev","v3.msi","ssh.msi","SecurityCheck.msi"))
+    or SHA256 in ("c70fafe5f9a3e5a9ee7de584dd024cb552443659f06348398d3873aa88fd6682","040d7ee5b7bb0b978220be326804fa827f6284c8478a27af88c616fcacfeb423")
+    or InitiatingProcessSHA256 in ("c70fafe5f9a3e5a9ee7de584dd024cb552443659f06348398d3873aa88fd6682","040d7ee5b7bb0b978220be326804fa827f6284c8478a27af88c616fcacfeb423")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Multiple parallel remote-access/tunnel tools on one host (Cloudflare tunnel + VS Code tunnel + TightVNC + Zoho + OpenSSH)
+
+`UC_108_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name="code.exe" AND Processes.process="*tunnel*") OR Processes.process_name="cloudflared.exe" OR Processes.process_name="tvnserver.exe" OR Processes.process="*--accept-server-license-terms*" OR Processes.process="*ssh.msi*" OR Processes.process="*ZohoAssist*" OR Processes.process="*ZA_Connect*" by Processes.dest, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| eval Tool=case(process_name="code.exe","VSCodeTunnel",process_name="cloudflared.exe","CloudflareTunnel",process_name="tvnserver.exe","TightVNC",like(process,"%ZohoAssist%") OR like(process,"%ZA_Connect%"),"ZohoAssist",like(process,"%ssh.msi%"),"OpenSSH",1==1,"Tunnel")
+| stats dc(Tool) as ToolCount values(Tool) as Tools values(process) as Cmds by dest
+| where ToolCount>=2
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| extend Tool = case(
+    FileName =~ "code.exe" and ProcessCommandLine has "tunnel", "VSCodeTunnel",
+    FileName =~ "cloudflared.exe" or ProcessCommandLine has "cloudflared", "CloudflareTunnel",
+    FileName =~ "tvnserver.exe", "TightVNC",
+    ProcessCommandLine has_any ("ZohoAssist","ZA_Connect") or FileName startswith "ZA_", "ZohoAssist",
+    FileName =~ "sshd.exe" or ProcessCommandLine has "ssh.msi", "OpenSSH",
+    "")
+| where isnotempty(Tool)
+| summarize Tools=make_set(Tool), ToolCount=dcount(Tool), Cmds=make_set(ProcessCommandLine, 8), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName
+| where ToolCount >= 2   // 2+ distinct remote-access/tunnel families on one host = Storm-2603 multi-channel pattern
+| order by LastSeen desc
+```
+
+### Storm-2603 rogue admin account creation (adminbak/adminbak2) and Domain Admins enumeration
+
+`UC_108_11` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("net.exe","net1.exe") AND (Processes.process="*adminbak*" OR Processes.process="*localgroup administrators*" OR Processes.process="*domain admins*") by Processes.dest, Processes.user, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("net.exe","net1.exe")
+| where ProcessCommandLine has "adminbak"
+    or ProcessCommandLine contains "domain admins"
+    or ProcessCommandLine contains "localgroup administrators"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Windows Defender disablement prior to tunnel install (Storm-2603 defense evasion)
+
+`UC_108_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Set-MpPreference*" OR Processes.process="*DisableRealtimeMonitoring*" OR Processes.process="*DisableBehaviorMonitoring*")) OR (Processes.process_name IN ("sc.exe","net.exe") AND (Processes.process="*stop WinDefend*" OR Processes.process="*stop Sense*")) OR (Processes.process_name="reg.exe" AND Processes.process="*DisableAntiSpyware*")) by Processes.dest, Processes.user, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Set-MpPreference","DisableRealtimeMonitoring","DisableBehaviorMonitoring","DisableIOAVProtection"))
+    or (FileName in~ ("sc.exe","net.exe") and ProcessCommandLine has_any ("stop WinDefend","stop Sense","config WinDefend"))
+    or (FileName =~ "reg.exe" and ProcessCommandLine has "DisableAntiSpyware")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### Storm-2603 concurrent C2 egress to workers.dev tunnels and attacker IPs
+
+`UC_108_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("velo.qaubctgg.workers.dev","royal-boat-bf05.qgtxtebl.workers.dev","update.githubtestbak.workers.dev","chat.hcqhajfv.workers.dev") by DNS.src, DNS.query, DNS.answer
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("velo.qaubctgg.workers.dev","royal-boat-bf05.qgtxtebl.workers.dev","update.githubtestbak.workers.dev","chat.hcqhajfv.workers.dev")
+    or RemoteIP in ("38.54.16.179","91.236.230.76","65.38.121.226")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
@@ -305,4 +359,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
