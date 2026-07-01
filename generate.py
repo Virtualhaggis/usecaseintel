@@ -5922,6 +5922,49 @@ def select_use_cases(article_text: str, ind: dict) -> list:
 # =============================================================================
 # HTML render
 # =============================================================================
+# Web analytics & Google Search Console verification.
+# -----------------------------------------------------------------------------
+# GA4_MEASUREMENT_ID: paste your Google Analytics 4 property ID here — it looks
+#   like "G-XXXXXXXXXX" (GA4 Admin -> Data streams -> your web stream -> top
+#   right). Leave "" to emit no analytics at all (pages stay byte-identical).
+# GSC_VERIFICATION: the token from Search Console's "HTML tag" verification
+#   method (just the content="..." value). Leave "" if you instead verify
+#   Search Console via the linked Google Analytics account (recommended once
+#   GA4 is live, so you don't need this at all).
+# Both are baked into ANALYTICS_HEAD once at import and injected into every
+# generated page <head>.
+# =============================================================================
+GA4_MEASUREMENT_ID = "G-EQ9ZHKD4L6"   # Clankerusecase GA4 web stream
+GSC_VERIFICATION   = ""   # e.g. "aBcDeF...google-site-verification token..."
+
+
+def _build_analytics_head() -> str:
+    """Assemble the <head> analytics + verification markup once.
+
+    Returns "" when nothing is configured, so the site stays exactly as it is
+    today until you fill in the IDs above. Safe to interpolate into f-string
+    heads via {ANALYTICS_HEAD} and into HTML_HEAD via the __ANALYTICS_HEAD__
+    token."""
+    parts = []
+    if GSC_VERIFICATION:
+        parts.append(
+            f'<meta name="google-site-verification" content="{html.escape(GSC_VERIFICATION)}">'
+        )
+    if GA4_MEASUREMENT_ID:
+        _gid = html.escape(GA4_MEASUREMENT_ID)
+        parts.append(
+            f'<!-- Google Analytics 4 -->\n'
+            f'<script async src="https://www.googletagmanager.com/gtag/js?id={_gid}"></script>\n'
+            f'<script>window.dataLayer=window.dataLayer||[];'
+            f'function gtag(){{dataLayer.push(arguments);}}'
+            f'gtag("js",new Date());gtag("config","{_gid}");</script>'
+        )
+    return "\n".join(parts)
+
+
+ANALYTICS_HEAD = _build_analytics_head()
+
+# =============================================================================
 
 HTML_HEAD = r"""<!doctype html>
 <html lang="en">
@@ -5937,6 +5980,7 @@ HTML_HEAD = r"""<!doctype html>
 <meta name="author" content="Virtualhaggis">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#08090a">
+__ANALYTICS_HEAD__
 
 <!-- Open Graph / Facebook / LinkedIn -->
 <meta property="og:type" content="website">
@@ -17703,6 +17747,7 @@ def _emit_share_stub(path, title: str, description: str, target: str):
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc_short)}">
 <link rel="canonical" href="{html.escape(target)}">
+<meta name="robots" content="noindex, follow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc_short)}">
@@ -17803,6 +17848,7 @@ def write_about_page(generated_human: str, usecase_count: int = 0) -> None:
 <meta name="description" content="Who runs Clankerusecase, how the detection pipeline works, what is validated, what is NOT guaranteed, and how to use or report the content.">
 <link rel="canonical" href="https://clankerusecase.com/about.html">
 <link rel="icon" type="image/png" href="logo.png">
+{ANALYTICS_HEAD}
 <style>{_TECH_PAGE_STYLE}</style>
 </head>
 <body>
@@ -18136,6 +18182,11 @@ def _render_technique_page(tid: str, technique_view: dict, matrix_data: dict,
     )
 
     canonical = f"{base_url}/techniques/{tid}.html"
+    # Thin/empty technique pages (nothing maps to them) are noindex'd so Google
+    # spends crawl budget on pages that carry real detection content instead.
+    robots_meta = ('<meta name="robots" content="index, follow, max-image-preview:large">'
+                   if ucs else
+                   '<meta name="robots" content="noindex, follow">')
 
     return f"""<!doctype html>
 <html lang="en">
@@ -18145,7 +18196,9 @@ def _render_technique_page(tid: str, technique_view: dict, matrix_data: dict,
 <title>{html.escape(tid)} · {html.escape(name)} — Clankerusecase MITRE ATT&CK detection coverage</title>
 <meta name="description" content="{html.escape(meta_desc)}">
 <link rel="canonical" href="{html.escape(canonical)}">
+{robots_meta}
 <link rel="icon" type="image/png" href="{base_url}/logo.png">
+{ANALYTICS_HEAD}
 <meta property="og:type" content="article">
 <meta property="og:title" content="{html.escape(tid)} · {html.escape(name)} — Clankerusecase">
 <meta property="og:description" content="{html.escape(meta_desc)}">
@@ -18511,6 +18564,7 @@ def _render_actor_page(actor: dict, technique_view: dict,
 <meta name="description" content="{html.escape(meta_desc_short)}">
 <link rel="canonical" href="{html.escape(canonical)}">
 <link rel="icon" type="image/png" href="{base_url}/logo.png">
+{ANALYTICS_HEAD}
 <meta property="og:type" content="article">
 <meta property="og:title" content="{html.escape(name)} — Threat actor profile · Clankerusecase">
 <meta property="og:description" content="{html.escape(meta_desc_short)}">
@@ -18751,6 +18805,7 @@ def _render_target_page(tag: str, label: str, icon: str, blurb: str,
 <meta name="description" content="{html.escape(meta_desc)}">
 <link rel="canonical" href="{html.escape(canonical)}">
 <link rel="icon" type="image/png" href="{base_url}/logo.png">
+{ANALYTICS_HEAD}
 <meta property="og:type" content="article">
 <meta property="og:title" content="{html.escape(label)} detection use cases — Clankerusecase">
 <meta property="og:description" content="{html.escape(meta_desc)}">
@@ -23456,6 +23511,7 @@ def main():
 
     page = (
         HTML_HEAD
+        .replace("__ANALYTICS_HEAD__", ANALYTICS_HEAD)
         .replace("__HOME__", home_html)
         .replace("__GENERATED_AT__", generated_human)
         .replace("__ARTICLE_COUNT__", f"{disp_article_count:,}")
@@ -23512,22 +23568,29 @@ def main():
             ("https://clankerusecase.com/cheatsheet.html", "0.9", "daily"),
             ("https://clankerusecase.com/about.html", "0.8", "weekly"),
         ]
-        briefings_root = _Path(__file__).with_name("briefings")
-        if briefings_root.exists():
-            for date_dir in sorted(briefings_root.iterdir()):
-                if not date_dir.is_dir():
-                    continue
-                for md in sorted(date_dir.glob("*.md")):
-                    rel = md.relative_to(_Path(__file__).parent).as_posix()
-                    sitemap_urls.append(
-                        (f"https://clankerusecase.com/{rel}",
-                         "0.6", "monthly")
-                    )
+        # NOTE: briefings are Markdown — GitHub Pages serves .md as text/plain,
+        # which search engines do NOT index as content. They are deliberately
+        # left OUT of the sitemap (listing them just wasted crawl budget).
+        # Per-article HTML walkthroughs should replace them as the SEO surface.
+
+        def _is_indexable(p) -> bool:
+            """False when a page carries a robots 'noindex' directive — keeps
+            thin/empty technique pages out of the sitemap so Google focuses on
+            pages with real detection content."""
+            try:
+                head = p.read_text(encoding="utf-8", errors="ignore")[:2000]
+            except Exception:
+                return True
+            return "noindex" not in head.lower()
+
         # Per-technique landing pages. One indexable URL per MITRE T-ID
-        # at techniques/<TID>.html — high-value SEO surface.
+        # at techniques/<TID>.html — high-value SEO surface. Empty/thin
+        # techniques are noindex'd (see _render_technique_page) and skipped.
         techniques_root = _Path(__file__).with_name("techniques")
         if techniques_root.exists():
             for tp in sorted(techniques_root.glob("*.html")):
+                if not _is_indexable(tp):
+                    continue
                 sitemap_urls.append(
                     (f"https://clankerusecase.com/techniques/{tp.name}",
                      "0.7", "weekly")
