@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js MCP server reachable from public clients (unauthenticated MCPServer exposure)
 
-`UC_136_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_137_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### PraisonAI MCP server (node) spawns shell/LOLBin child after external connection
 
-`UC_136_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_137_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent
 
-`UC_136_1` · phase: **exploit** · confidence: **High**
+`UC_137_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

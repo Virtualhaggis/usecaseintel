@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Suspicious MFA Bypass or MFA Reset Activity
 
-`UC_6_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ denials
 
 ### Credential Stuffing and Brute Force Against Enterprise Accounts
 
-`UC_6_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ AADSignInEventsBeta
 
 ### Lateral Movement via Valid Compromised Credentials
 
-`UC_6_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ AADSignInEventsBeta
 
 ### Reconnaissance and Information Gathering Pre-Exploitation
 
-`UC_6_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### Bulk data staging and exfiltration via MEGA / rclone
 
-`UC_6_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### Adversary lurking in incident-response chat tools and calls
 
-`UC_6_16` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_11_16` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

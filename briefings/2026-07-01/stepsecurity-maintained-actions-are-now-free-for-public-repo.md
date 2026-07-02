@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### GitHub Actions runner outbound to gist.githubusercontent.com (tj-actions/changed-files CVE-2025-30066)
 
-`UC_7_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceNetworkEvents
 
 ### tj-actions/changed-files malicious commit 0e58ed86 referenced on host (CVE-2025-30066)
 
-`UC_7_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_12_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

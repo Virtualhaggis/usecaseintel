@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2273 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2275 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-02
+- [ai agent exploits langflow rce to automate database ransomwa](./2026-07-02/ai-agent-exploits-langflow-rce-to-automate-database-ransomwa.md)
+- [alleged scattered spider hacker extradited to the united sta](./2026-07-02/alleged-scattered-spider-hacker-extradited-to-the-united-sta.md)
+- [fortibleed credential theft linked to inc and lynx ransomwar](./2026-07-02/fortibleed-credential-theft-linked-to-inc-and-lynx-ransomwar.md)
+- [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
+- [new chocopoc rat targets vulnerability researchers via fake ](./2026-07-02/new-chocopoc-rat-targets-vulnerability-researchers-via-fake-.md)
 - [sharepoint rce cve 2026 45659 added to cisa kev after active](./2026-07-02/sharepoint-rce-cve-2026-45659-added-to-cisa-kev-after-active.md)
 
 ## 2026-07-01
@@ -77,9 +82,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [amazon q developer flaw could let malicious repos run code v](./2026-06-26/amazon-q-developer-flaw-could-let-malicious-repos-run-code-v.md)
 - [beware of the license manager how a schneider electric softw](./2026-06-26/beware-of-the-license-manager-how-a-schneider-electric-softw.md)
 - [chinese speaking apt deploys new tinyrct backdoor in southea](./2026-06-26/chinese-speaking-apt-deploys-new-tinyrct-backdoor-in-southea.md)
-- [cisa adds exploited ptc windchill rce flaw to kev as web she](./2026-06-26/cisa-adds-exploited-ptc-windchill-rce-flaw-to-kev-as-web-she.md)
 - [fbi warns russian intelligence hackers target signal backup ](./2026-06-26/fbi-warns-russian-intelligence-hackers-target-signal-backup-.md)
-- [new dirtyclone linux kernel flaw lets local users gain root ](./2026-06-26/new-dirtyclone-linux-kernel-flaw-lets-local-users-gain-root-.md)
 - [new linux pedit cow exploit enables root access by poisoning](./2026-06-26/new-linux-pedit-cow-exploit-enables-root-access-by-poisoning.md)
 - [new sharkloader malware deploys cobalt strike in strikeshark](./2026-06-26/new-sharkloader-malware-deploys-cobalt-strike-in-strikeshark.md)
 - [npm now freezes high impact accounts after risky account cha](./2026-06-26/npm-now-freezes-high-impact-accounts-after-risky-account-cha.md)
@@ -223,7 +226,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-08
 - [cisa kev cve 2026 42271 berriai litellm command injection vu](./2026-06-08/cisa-kev-cve-2026-42271-berriai-litellm-command-injection-vu.md)
 - [cisa kev cve 2026 50751 check point security gateway imprope](./2026-06-08/cisa-kev-cve-2026-50751-check-point-security-gateway-imprope.md)
-- [from cause to cash a cross border look at hacktivist activit](./2026-06-08/from-cause-to-cash-a-cross-border-look-at-hacktivist-activit.md)
 - [ghsa critical cve 2026 45034 phpspreadsheet has a patch bypa](./2026-06-08/ghsa-critical-cve-2026-45034-phpspreadsheet-has-a-patch-bypa.md)
 - [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
 - [ghsa critical cve 2026 47430 cordova plugin inappbrowser ios](./2026-06-08/ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios.md)
