@@ -11,15 +11,9 @@ By Bill Toulas
 July 1, 2026
 05:09 PM
 0 
-
-
 Kubota North America Corporation disclosed that hackers had access to some of its network systems for more than a month earlier this year.
-
-
 Following an investigation into the incident, the company determined that between March 16 and April 20 the threat actor accessed files with personal information for employees and their dependents.
-
-
-Kubota is a Japanese industrial manufacturer kno…
+Kubota is a Japanese industrial manufacturer known for its a…
 
 ## Indicators of Compromise (high-fidelity only)
 

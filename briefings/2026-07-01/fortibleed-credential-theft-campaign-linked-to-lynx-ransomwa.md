@@ -11,33 +11,28 @@ By Lawrence Abrams
 July 1, 2026
 05:37 PM
 0 
-
-
 The massive FortiBleed credential theft campaign has been linked to the INC and Lynx ransomware operations, suggesting the stolen Fortinet credentials were intended to fuel future network intrusions.
-
-
-Earlier this month, a server containing credentials stolen from more than 73,000 Fortinet devices was discovered exposed on the internet. Researchers found the server contained downlo…
+Earlier this month, a server containing credentials stolen from more than 73,000 Fortinet devices was discovered exposed on the internet. Researchers found the server contained downloaded For…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `85.11.187.8`
+- **CVE:** `CVE-2026-24858`
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1071** — Application Layer Protocol
 - **T1136.001** — Create Account: Local Account
 - **T1078.003** — Valid Accounts: Local Accounts
 - **T1110.004** — Brute Force: Credential Stuffing
 - **T1110.003** — Brute Force: Password Spraying
 - **T1078** — Valid Accounts
-- **T1190** — Exploit Public-Facing Application
 - **T1602.002** — Data from Configuration Repository: Network Device Configuration Dump
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
@@ -257,10 +252,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `85.11.187.8`
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-24858`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

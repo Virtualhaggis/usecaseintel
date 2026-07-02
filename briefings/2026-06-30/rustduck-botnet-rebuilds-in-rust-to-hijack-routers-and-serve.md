@@ -33,11 +33,12 @@ The e…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
-- **T1105** — Ingress Tool Transfer
-- **T1571** — Non-Standard Port
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1027.002** — Obfuscated Files or Information: Software Packing
 - **T1568** — Dynamic Resolution
+- **T1046** — Network Service Discovery
+- **T1110** — Brute Force
 
 ## Kill chain phases observed
 
@@ -45,13 +46,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Egress to RustDuck spreader/delivery host 176.65.139.204
+### RustDuck C2/delivery infrastructure callback to 176.65.139.204
 
-`UC_45_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_45_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="176.65.139.204" OR All_Traffic.src_ip="176.65.139.204" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="176.65.139.204" OR All_Traffic.src="176.65.139.204" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport
+| `drop_dm_object_name("All_Traffic")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 **Defender KQL:**
@@ -59,36 +63,94 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "176.65.139.204"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, InitiatingProcessAccountName
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, ActionType
 | order by Timestamp desc
 ```
 
-### CVE-2017-17215 Huawei HG532 TR-064 command injection (RustDuck spread vector)
+### RustDuck two-stage loader file/execution by SHA1 hash
 
-`UC_45_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_45_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/ctrlt/DeviceUpgrade_1*" OR Web.dest_port=37215) by Web.src Web.dest Web.dest_port Web.http_method Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("8315f650e9e4f67c00277b076ab304eed23db47d","6aa791c76b3107fca9d57b7ecea8f46d97d83738","4d11bd496da82d15b3ed13050f414e44f5a892d4","d39a3ee96be6b8f5238cb1253514ab55c88f714c") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name("Processes")`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
-### RustDuck DuckDNS dynamic-DNS C2 resolution/beaconing
+**Defender KQL:**
+```kql
+union
+  (DeviceProcessEvents | where Timestamp > ago(30d) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, CmdOrParent=ProcessCommandLine),
+  (DeviceFileEvents | where Timestamp > ago(30d) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, CmdOrParent=InitiatingProcessCommandLine)
+| where SHA1 in~ ("8315f650e9e4f67c00277b076ab304eed23db47d","6aa791c76b3107fca9d57b7ecea8f46d97d83738","4d11bd496da82d15b3ed13050f414e44f5a892d4","d39a3ee96be6b8f5238cb1253514ab55c88f714c")
+| order by Timestamp desc
+```
 
-`UC_45_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+### RustDuck duckdns.org and dynamic-DNS C2 domain resolution
+
+`UC_45_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*.duckdns.org" by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("igmc.duckdns.org","qewqewqewqtq.duckdns.org","qewqewqewqtqthree.duckdns.org","qewqewqewqtqtwo.duckdns.org","dhdsjsdjxc.duckdns.org","fcfrfxrfrsfs5f.duckdns.org","gayporn.twilightparadox.com","bigniggadick.ignorelist.com","ilovefemboy.mooo.com","disciplinenahidwin.st","criminalcloudflare.online") by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name("DNS")`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let c2 = dynamic(["igmc.duckdns.org","qewqewqewqtq.duckdns.org","qewqewqewqtqthree.duckdns.org","qewqewqewqtqtwo.duckdns.org","dhdsjsdjxc.duckdns.org","fcfrfxrfrsfs5f.duckdns.org","gayporn.twilightparadox.com","bigniggadick.ignorelist.com","ilovefemboy.mooo.com","disciplinenahidwin.st","criminalcloudflare.online"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (c2)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### RustDuck-targeted CVE exposure across managed devices
+
+`UC_45_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2017-17215","CVE-2025-29635","CVE-2024-1781","CVE-2018-8007") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity
+| `drop_dm_object_name("Vulnerabilities")`
+| sort - severity
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2017-17215","CVE-2025-29635","CVE-2024-1781","CVE-2018-8007")
+| summarize arg_max(Timestamp, *) by DeviceId, CveId
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp,*) by DeviceId | project DeviceId, IsInternetFacing) on DeviceId
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc
+```
+
+### RustDuck worm-style outbound scanning on Telnet/SSH/ADB ports
+
+`UC_45_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true dc(All_Traffic.dest_ip) as distinct_targets count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (22,23,5555) All_Traffic.direction="outbound" by All_Traffic.src _time span=1h
+| `drop_dm_object_name("All_Traffic")`
+| where distinct_targets > 50
+| sort - distinct_targets
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl endswith "duckdns.org"
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), Ports=make_set(RemotePort,15) by DeviceName, RemoteUrl, InitiatingProcessFileName
-| order by ConnCount desc
+| where Timestamp > ago(1d)
+| where ActionType == "ConnectionSuccess" or ActionType == "ConnectionAttempt"
+| where RemotePort in (22, 23, 5555)
+| where RemoteIPType == "Public"
+| summarize DistinctTargets = dcount(RemoteIP), SampleTargets = make_set(RemoteIP, 20), Ports = make_set(RemotePort) by DeviceName, InitiatingProcessFileName, bin(Timestamp, 1h)
+| where DistinctTargets > 50
+| order by DistinctTargets desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -300,4 +362,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

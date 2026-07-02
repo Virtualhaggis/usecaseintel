@@ -4954,10 +4954,10 @@ level: critical
   data-techs="T1190,T1204.002,T1219,T1528"
   data-sources="The Hacker News"
   data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
+  data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,m365,windows"
-  data-uc-count="10" data-llm-uc-count="3"
-  data-search="RustDuck Botnet Rebuilds in Rust to Hijack Routers and Servers for DDoS A new two-stage malware family called RustDuck is hijacking home routers, IP cameras, Android boxes, and poorly secured servers, then stitching them into a network built to knock websites and online services offline. Researchers at QiAnXin&#x27;s&amp;nbsp;XLab&amp;nbsp;have tracked it since February 2026, and say the real story is not how big it is today, but how fast it is changing. The end goal is a CVE-2017-17215 CVE-2025-29635 CVE-2024-1781 CVE-2018-8007 T1190 T1204.002 T1219 T1528 [LLM] Egress to RustDuck spreader/delivery host 176.65.139.204 [LLM] CVE-2017-17215 Huawei HG532 TR-064 command injection (RustDuck spread vector) [LLM] RustDuck DuckDNS dynamic-DNS C2 resolution/beaconing Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Network connections to article IPs / domains">
+  data-uc-count="12" data-llm-uc-count="5"
+  data-search="RustDuck Botnet Rebuilds in Rust to Hijack Routers and Servers for DDoS A new two-stage malware family called RustDuck is hijacking home routers, IP cameras, Android boxes, and poorly secured servers, then stitching them into a network built to knock websites and online services offline. Researchers at QiAnXin&#x27;s&amp;nbsp;XLab&amp;nbsp;have tracked it since February 2026, and say the real story is not how big it is today, but how fast it is changing. The end goal is a CVE-2017-17215 CVE-2025-29635 CVE-2024-1781 CVE-2018-8007 T1190 T1204.002 T1219 T1528 [LLM] RustDuck C2/delivery infrastructure callback to 176.65.139.204 [LLM] RustDuck two-stage loader file/execution by SHA1 hash [LLM] RustDuck duckdns.org and dynamic-DNS C2 domain resolution [LLM] RustDuck-targeted CVE exposure across managed devices [LLM] RustDuck worm-style outbound scanning on Telnet/SSH/ADB ports Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Network connections to article IPs / domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-30-rustduck-botnet-rebuilds-in-rust-to-hijack-routers-and-serve" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -4966,7 +4966,7 @@ level: critical
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-06-30</span>
-    <span>10 use cases</span>
+    <span>12 use cases</span>
     <span>4 techniques</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -5017,32 +5017,32 @@ level: critical
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Egress to RustDuck spreader/delivery host 176.65.139.204 · Phishing-link click correlated to endpoint execution</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] CVE-2017-17215 Huawei HG532 TR-064 command injection (RustDuck spread vector) · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] RustDuck DuckDNS dynamic-DNS C2 resolution/beaconing · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] RustDuck worm-style outbound scanning on Telnet/SSH/ADB ports · Phishing-link click correlated to endpoint execution</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] RustDuck-targeted CVE exposure across managed devices · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] RustDuck two-stage loader file/execution by SHA1 hash · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] RustDuck C2/delivery infrastructure callback to 176.65.139.204 · [LLM] RustDuck duckdns.org and dynamic-DNS C2 domain resolution · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="35dbbd9701" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="ed81fc9097" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Egress to RustDuck spreader/delivery host 176.65.139.204</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">RustDuck C2/delivery infrastructure callback to 176.65.139.204</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="35dbbd9701" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="ed81fc9097" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts internal hosts (routers, servers, IoT gateways, or any monitored endpoint) making inbound or outbound connections to 176.65.139.204, XLab&#x27;s busiest RustDuck malware-distribution address. A device reaching this IP is almost certainly pulling the second-stage Rust core loader.
+    <div class="uc-desc">Hunts any host in the estate that talks to RustDuck&#x27;s busiest implant-delivery/C2 address 176.65.139.204. XLab flags this IP as the most active source spreading the two-stage RustDuck loader, so any inbound-from or outbound-to this address on a managed device is a strong compromise or exploit-attempt signal.
 
-Rationale: Uses the single concrete network IOC from the article — spreader IP 176.65.139.204 — which XLab flagged as the busiest of 20+ distribution addresses; a hard IP match is inherently low-FP. Corroborated by cyberpress.org and techjuice.pk write-ups of the same XLab report.
+Rationale: 176.65.139.204 is the single concrete network IOC in the article and is confirmed by XLab&#x27;s report as the busiest RustDuck delivery source; a discrete IP match is inherently high-fidelity. Cross-checked against the XLab blog IOC list.
 
 Cross-checked against:
-  • https://cyberpress.org/rustduck-botnet-expands-attacks/
-  • https://www.techjuice.pk/rustduck-botnet-rust-routers-servers-ddos-hijack-xlab/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Non-Standard Port">T1571</span></div>
+  • https://blog.xlab.qianxin.com/rustduck-en/
+  • https://securityaffairs.com/194556/malware/rustduck-the-botnet-thats-still-small-but-engineering-like-it-plans-to-grow.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher / threat-intel analyst deliberately sandboxing or sinkholing the IP</li><li>Internal threat-intel scanner or ASM tool actively probing known-bad infrastructure</li><li>Shared bulletproof-hosting block — an unrelated benign service briefly co-located on the same address after takedown</li><li>Firewall/IDS logging a blocked (not established) connection, which is a true positive of attempted contact but not compromise</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ActionType != &quot;ConnectionFailed&quot;   // keep only established sessions; blocked probes are informational</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm connection direction and whether it was allowed or blocked at the perimeter; identify the internal asset and whether it is an internet-facing router/IoT/server matching RustDuck&#x27;s target profile. 2) Contain: block 176.65.139.204 (and the parent /24) egress+ingress at the firewall, and isolate the internal host if the connection was established. 3) Hunt: on the same host pivot to DNS for *.duckdns.org (UC3) and check for any inbound exploit attempts on TR-064/37215 (UC2); sweep the fleet for any other host that touched the same /24 bulletproof block.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A threat-intel/blocklist appliance or sandbox intentionally probing the IP for enrichment</li><li>A security researcher in the org detonating the sample in a lab that egresses through the corporate proxy</li><li>Shared bulletproof-hosting IP that also fronts an unrelated benign service (low likelihood for this address)</li><li>NAT/proxy egress collapsing many hosts to one SourceIP in firewall logs, obscuring the true origin</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;MsSense.exe&quot;,&quot;MsMpEng.exe&quot;) or InitiatingProcessFolderPath has &quot;SentinelOne&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: identify the internal host and the initiating process; confirm whether the connection succeeded (ActionType/DeviceAction) and its direction. Pull the process tree and any file the process wrote in the prior hour. 2) CONTAIN: block 176.65.139.204 at the perimeter, isolate the host (or reboot/reimage the IoT/router if it is unmanaged network gear), and rotate any credentials that were exposed on that device&#x27;s Telnet/SSH/web-admin. 3) HUNT: sweep for the RustDuck loader hashes (UC &#x27;loader SHA1&#x27;) and duckdns C2 domains (UC &#x27;C2 domains&#x27;) across all hosts, and review whether the device is one of the CVE-vulnerable models in the exposure hunt.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-45-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-45-uc0-sentinel">Sentinel KQL</button>
@@ -5055,122 +5055,140 @@ Cross-checked against:
     <div class="tab-content active" id="art-45-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
 | where RemoteIP == &quot;176.65.139.204&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, InitiatingProcessAccountName
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, ActionType
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-45-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
 | where DestinationIP == &quot;176.65.139.204&quot; or SourceIP == &quot;176.65.139.204&quot;
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, ApplicationProtocol, RequestURL, DeviceAction
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, ApplicationProtocol, DeviceAction, RequestURL
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-45-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: RustDuck Spreader Host Network Connection (176.65.139.204)
-id: 3f2c9a11-8d4e-4b7a-9c21-6a1f0e5b7d90
-description: Detects network connections to 176.65.139.204, XLab&#x27;s busiest RustDuck malware-distribution address.
+    <div class="tab-content" id="art-45-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: RustDuck C2/Delivery IP Connection (176.65.139.204)
+id: a3f1c2d4-5b6e-4f80-9a1b-2c3d4e5f6a71
+description: Detects network connections to RustDuck&#x27;s most active implant-delivery/C2 address as reported by QiAnXin XLab.
 references:
+  - https://blog.xlab.qianxin.com/rustduck-en/
   - https://thehackernews.com/2026/06/rustduck-botnet-rebuilds-in-rust-to.html
-  - https://cyberpress.org/rustduck-botnet-expands-attacks/
 author: SOC Detection Engineering
-date: 2026/07/01
+date: 2026/07/02
 tags:
+  - attack.t1071.001
   - attack.t1105
   - attack.command_and_control
 logsource:
-  category: network_connection
-  product: windows
+  category: firewall
 detection:
   selection:
-    DestinationIp: &#x27;176.65.139.204&#x27;
-  condition: selection
+    dst_ip: &#x27;176.65.139.204&#x27;
+  selection_src:
+    src_ip: &#x27;176.65.139.204&#x27;
+  condition: selection or selection_src
 level: high</code></pre></div>
     <div class="tab-content" id="art-45-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:176.65.139.204</code></pre></div>
     <div class="tab-content" id="art-45-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;176.65.139.204&quot;
 | groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
     <div class="tab-content" id="art-45-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
+fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
 | filter dstAddr = &quot;176.65.139.204&quot; or srcAddr = &quot;176.65.139.204&quot;
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-45-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;176.65.139.204&quot; OR All_Traffic.src_ip=&quot;176.65.139.204&quot; by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-45-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;176.65.139.204&quot; OR All_Traffic.src_ip=&quot;176.65.139.204&quot; by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-45-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;176.65.139.204&quot; OR All_Traffic.src=&quot;176.65.139.204&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport
+| `drop_dm_object_name(&quot;All_Traffic&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre><pre class="spl-mode-body" id="art-45-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;176.65.139.204&quot; OR All_Traffic.src=&quot;176.65.139.204&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport
+| `drop_dm_object_name(&quot;All_Traffic&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="411c4df960" data-platforms="sent,sigma,spl" data-targets="">
+<details class="uc" data-uc-slug="f2fabb9654" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">CVE-2017-17215 Huawei HG532 TR-064 command injection (RustDuck spread vector)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="411c4df960" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">RustDuck two-stage loader file/execution by SHA1 hash</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="f2fabb9654" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP POST exploitation of CVE-2017-17215 against Huawei HG532 routers — the Mirai-lineage TR-064 firmware-upgrade bug RustDuck sprays to seed new bots. Matches the /ctrlt/DeviceUpgrade_1 endpoint on port 37215 carrying shell metacharacters in the NewStatusURL/NewDownloadURL SOAP elements.
+    <div class="uc-desc">Alerts on the presence or execution of the four RustDuck loader variants by their SHA1 hashes from XLab. The loader decrypts and unpacks the heavier Rust core, so a hash hit on any managed Linux/Windows server or endpoint means RustDuck stage-1 landed on that host.
 
-Rationale: Anchors on the unambiguous CVE-2017-17215 exploit signature — POST to /ctrlt/DeviceUpgrade_1 on port 37215 with NewStatusURL/NewDownloadURL — which the article names as a RustDuck spread vector and which Check Point/SonicWall/exploit-db independently document as the Mirai/Satori payload path. The endpoint string is never legitimate on a non-Huawei network. Defender/Falcon/Datadog/CloudWatch left empty because inbound router exploitation lives in network/WAF telemetry, not EDR or CloudTrail.
+Rationale: Four SHA1 loader hashes are published in XLab&#x27;s IOC list (referenced by the article&#x27;s &#x27;file hashes&#x27; line); a hash match has essentially zero false positives. Emitted for both file-write and process-exec so a dropped-but-not-yet-run loader is still caught.
 
 Cross-checked against:
-  • https://research.checkpoint.com/2017/good-zero-day-skiddie/
-  • https://www.sonicwall.com/blog/new-wave-of-attacks-attempting-to-exploit-huawei-home-routers
-  • https://www.exploit-db.com/exploits/43414</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanner (Nessus/Qualys/Nuclei) firing the CVE-2017-17215 plugin against internal Huawei gear</li><li>Internal red-team / pentest engagement replaying the public PoC</li><li>Security research honeypot intentionally soliciting the exploit</li><li>IDS decoding an unrelated benign SOAP TR-064 firmware-upgrade request to a real HG532 without shell metacharacters (rare — pair with the $()/backtick check to eliminate)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Message has_any (&quot;$(&quot;, &quot;`&quot;, &quot;busybox&quot;, &quot;wget&quot;, &quot;tftp&quot;, &quot;chmod&quot;, &quot;/bin/&quot;)   // keep only requests carrying an actual injected shell command</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the source IP (external scanner vs. attacker), confirm the request body contains shell metacharacters ($(), backticks, wget/tftp/busybox) in NewStatusURL/NewDownloadURL, and check whether any Huawei HG532/TR-064 device is actually exposed on 37215. 2) Contain: block the source IP, and firewall port 37215 off the public internet for all router assets. 3) Hunt: if a real device was hit, pivot that device&#x27;s egress to 176.65.139.204 (UC1) and *.duckdns.org (UC3); replace or re-flash EoL routers per CISA guidance since no RustDuck-proof patch exists.</div></details>
+  • https://blog.xlab.qianxin.com/rustduck-en/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Obfuscated Files or Information: Software Packing">T1027.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A sample intentionally staged in a malware-analysis VM that ships EDR telemetry</li><li>Hash re-use in a threat-hunting training/detonation range</li><li>Backup/AV quarantine copies of the same file re-scanned generating file events (not executions)</li><li>Extremely unlikely benign SHA1 collision</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FolderPath !has &quot;\\Quarantine\\&quot; and FolderPath !has &quot;/malware-lab/&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: confirm whether this was a file write only or an actual execution; capture the full path and the parent process. For IoT/router gear surfaced via Linux MDE, check whether it was reachable from the internet. 2) CONTAIN: kill and quarantine the binary, isolate the host, and preserve a copy for IR. Block the loader hashes org-wide via custom indicator. 3) HUNT: from the same host pivot to outbound connections (176.65.139.204 and duckdns C2 UCs) and to any /tmp or web-writable staging directory to find the unpacked Rust core.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-45-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-45-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-45-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-45-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-45-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-45-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+    <div class="tab-content active" id="art-45-uc1-kql"><pre><button class="copy-btn">COPY</button><code>union
+  (DeviceProcessEvents | where Timestamp &gt; ago(30d) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, CmdOrParent=ProcessCommandLine),
+  (DeviceFileEvents | where Timestamp &gt; ago(30d) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, CmdOrParent=InitiatingProcessCommandLine)
+| where SHA1 in~ (&quot;8315f650e9e4f67c00277b076ab304eed23db47d&quot;,&quot;6aa791c76b3107fca9d57b7ecea8f46d97d83738&quot;,&quot;4d11bd496da82d15b3ed13050f414e44f5a892d4&quot;,&quot;d39a3ee96be6b8f5238cb1253514ab55c88f714c&quot;)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-45-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
-| where RequestURL has &quot;/ctrlt/DeviceUpgrade_1&quot;
-    or DestinationPort == 37215
-    or Message has_any (&quot;NewStatusURL&quot;, &quot;NewDownloadURL&quot;, &quot;DeviceUpgrade_1&quot;)
-| where RequestURL has &quot;/ctrlt/DeviceUpgrade_1&quot;
-    or Message has_any (&quot;NewStatusURL&quot;, &quot;NewDownloadURL&quot;)
-    or (DestinationPort == 37215 and RequestMethod =~ &quot;POST&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, RequestMethod, RequestURL, Message
+| where SHA1 in~ (&quot;8315f650e9e4f67c00277b076ab304eed23db47d&quot;,&quot;6aa791c76b3107fca9d57b7ecea8f46d97d83738&quot;,&quot;4d11bd496da82d15b3ed13050f414e44f5a892d4&quot;,&quot;d39a3ee96be6b8f5238cb1253514ab55c88f714c&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetProcessName, ActingProcessCommandLine, SHA1
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-45-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: CVE-2017-17215 Huawei HG532 TR-064 Command Injection
-id: b71e04c8-2af5-4d3a-8e19-9c7d2a4f6b3c
-description: Detects exploitation of CVE-2017-17215 via a POST to /ctrlt/DeviceUpgrade_1, a RustDuck router-seeding vector.
+    <div class="tab-content" id="art-45-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: RustDuck Loader Execution by SHA1 Hash
+id: b4e2d3c5-6c7f-4091-8b2c-3d4e5f6a7b82
+description: Detects execution of any of the four RustDuck stage-1 loader variants by SHA1 hash as reported by QiAnXin XLab.
 references:
-  - https://thehackernews.com/2026/06/rustduck-botnet-rebuilds-in-rust-to.html
-  - https://research.checkpoint.com/2017/good-zero-day-skiddie/
-  - https://www.exploit-db.com/exploits/43414
+  - https://blog.xlab.qianxin.com/rustduck-en/
 author: SOC Detection Engineering
-date: 2026/07/01
+date: 2026/07/02
 tags:
-  - attack.t1190
-  - attack.t1059.004
-  - attack.initial_access
+  - attack.t1105
+  - attack.t1027.002
+  - attack.execution
 logsource:
-  category: proxy
+  category: process_creation
 detection:
   selection:
-    cs-method: &#x27;POST&#x27;
-    c-uri|contains: &#x27;/ctrlt/DeviceUpgrade_1&#x27;
+    Hashes|contains:
+      - &#x27;SHA1=8315f650e9e4f67c00277b076ab304eed23db47d&#x27;
+      - &#x27;SHA1=6aa791c76b3107fca9d57b7ecea8f46d97d83738&#x27;
+      - &#x27;SHA1=4d11bd496da82d15b3ed13050f414e44f5a892d4&#x27;
+      - &#x27;SHA1=d39a3ee96be6b8f5238cb1253514ab55c88f714c&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-45-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/ctrlt/DeviceUpgrade_1*&quot; OR Web.dest_port=37215) by Web.src Web.dest Web.dest_port Web.http_method Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-45-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/ctrlt/DeviceUpgrade_1*&quot; OR Web.dest_port=37215) by Web.src Web.dest Web.dest_port Web.http_method Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-45-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Hashes:(*8315f650e9e4f67c00277b076ab304eed23db47d* OR *6aa791c76b3107fca9d57b7ecea8f46d97d83738* OR *4d11bd496da82d15b3ed13050f414e44f5a892d4* OR *d39a3ee96be6b8f5238cb1253514ab55c88f714c*)</code></pre></div>
+    <div class="tab-content" id="art-45-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| SHA1HashData=/^(8315f650e9e4f67c00277b076ab304eed23db47d|6aa791c76b3107fca9d57b7ecea8f46d97d83738|4d11bd496da82d15b3ed13050f414e44f5a892d4|d39a3ee96be6b8f5238cb1253514ab55c88f714c)$/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-45-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;8315f650e9e4f67c00277b076ab304eed23db47d&quot;,&quot;6aa791c76b3107fca9d57b7ecea8f46d97d83738&quot;,&quot;4d11bd496da82d15b3ed13050f414e44f5a892d4&quot;,&quot;d39a3ee96be6b8f5238cb1253514ab55c88f714c&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(&quot;Processes&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-45-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;8315f650e9e4f67c00277b076ab304eed23db47d&quot;,&quot;6aa791c76b3107fca9d57b7ecea8f46d97d83738&quot;,&quot;4d11bd496da82d15b3ed13050f414e44f5a892d4&quot;,&quot;d39a3ee96be6b8f5238cb1253514ab55c88f714c&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(&quot;Processes&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="7e2443d8a1" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="8051094b8c" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">RustDuck DuckDNS dynamic-DNS C2 resolution/beaconing</span>
+    <span class="uc-title">RustDuck duckdns.org and dynamic-DNS C2 domain resolution</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="7e2443d8a1" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="8051094b8c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts DNS resolutions and connections to *.duckdns.org, the free dynamic-DNS service RustDuck uses for its rotating C2 endpoints (the &#x27;Duck&#x27; in the name). Surfaces routers/servers repeatedly resolving duckdns subdomains — especially from non-browser processes — as candidate bot check-ins.
+    <div class="uc-desc">Hunts DNS lookups / connections to the exact RustDuck C2 FQDNs published by XLab, including six *.duckdns.org subdomains plus five other free dynamic-DNS/registrar domains. Named FQDNs make this far higher-fidelity than a generic &#x27;contacts duckdns&#x27; rule.
 
-Rationale: Uses the article&#x27;s named C2 provider (duckdns.org) as the pivot; scoped to non-browser initiators and aggregated by count to separate periodic bot beaconing from one-off legitimate hobbyist lookups. Kept at hunting tier because duckdns is dual-use. Corroborated by the XLab-based cyberpress.org write-up naming duckdns as the RustDuck control channel.
+Rationale: The six duckdns subdomains and five other C2 FQDNs are taken verbatim from XLab&#x27;s IOC list (the article names duckdns.org as the C2 backbone but does not list the subdomains). Exact-FQDN matching avoids the FP problem of allow/deny-listing all of duckdns.org. Datadog left empty: no DNS-query log source is available in this tenant&#x27;s Datadog schema.
 
 Cross-checked against:
-  • https://cyberpress.org/rustduck-botnet-expands-attacks/
-  • https://www.techjuice.pk/rustduck-botnet-rust-routers-servers-ddos-hijack-xlab/</div>
+  • https://blog.xlab.qianxin.com/rustduck-en/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Dynamic Resolution">T1568</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Home-lab / Home Assistant / Pi-hole users pointing remote access at a duckdns hostname</li><li>Self-hosted game servers, cameras, or VPN endpoints legitimately using DuckDNS</li><li>Developers testing the open-source duckdns updater client</li><li>A single benign duckdns lookup with no repeating cadence (filtered out by the count/aggregation)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ConnCount &gt;= 6   // &gt;=6 resolutions in window approximates RustDuck&#x27;s ~10-min beacon cadence and drops one-off benign lookups</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: review the resolving host and initiating process — an IoT gateway, Linux server, or a non-browser binary resolving duckdns on a fixed ~10-minute cadence (RustDuck rotates keys every 10 min) is high-suspicion; a workstation browser is likely benign. 2) Contain: sinkhole or block the specific duckdns subdomain(s), and isolate any host showing periodic beaconing. 3) Hunt: correlate the same host against egress to 176.65.139.204 (UC1) and inbound TR-064 exploitation (UC2); capture PCAP to confirm the ChaCha20-Poly1305/AES-GCM TLS-mimicking traffic RustDuck uses.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate internal user who independently registered one of these duckdns subdomains for a hobby project (very unlikely given the random strings)</li><li>Passive-DNS / TI enrichment tooling resolving the domains for research</li><li>Sinkhole redirection after takedown still generating resolution logs</li><li>Web-content-filter appliance pre-resolving domains from a blocklist feed</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: identify the resolving host and the process that triggered the lookup; determine if the resolution was followed by an actual connection to the returned IP. 2) CONTAIN: sinkhole/block all eleven FQDNs at the resolver and perimeter, isolate the host, and treat it as RustDuck-infected pending forensics. 3) HUNT: because RustDuck rotates C2 and can push &#x27;switch to new control servers&#x27; commands, pivot on the resolved A-record IPs and on 176.65.139.204 to discover additional infrastructure, and scan for the loader hashes.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-45-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-45-uc2-sentinel">Sentinel KQL</button>
@@ -5178,25 +5196,25 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-45-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-45-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-45-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let c2 = dynamic([&quot;igmc.duckdns.org&quot;,&quot;qewqewqewqtq.duckdns.org&quot;,&quot;qewqewqewqtqthree.duckdns.org&quot;,&quot;qewqewqewqtqtwo.duckdns.org&quot;,&quot;dhdsjsdjxc.duckdns.org&quot;,&quot;fcfrfxrfrsfs5f.duckdns.org&quot;,&quot;gayporn.twilightparadox.com&quot;,&quot;bigniggadick.ignorelist.com&quot;,&quot;ilovefemboy.mooo.com&quot;,&quot;disciplinenahidwin.st&quot;,&quot;criminalcloudflare.online&quot;]);
+DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl endswith &quot;duckdns.org&quot;
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;iexplore.exe&quot;)
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), Ports=make_set(RemotePort,15) by DeviceName, RemoteUrl, InitiatingProcessFileName
-| order by ConnCount desc</code></pre></div>
-    <div class="tab-content" id="art-45-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
+| where RemoteUrl has_any (c2)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-45-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let c2 = dynamic([&quot;igmc.duckdns.org&quot;,&quot;qewqewqewqtq.duckdns.org&quot;,&quot;qewqewqewqtqthree.duckdns.org&quot;,&quot;qewqewqewqtqtwo.duckdns.org&quot;,&quot;dhdsjsdjxc.duckdns.org&quot;,&quot;fcfrfxrfrsfs5f.duckdns.org&quot;,&quot;gayporn.twilightparadox.com&quot;,&quot;bigniggadick.ignorelist.com&quot;,&quot;ilovefemboy.mooo.com&quot;,&quot;disciplinenahidwin.st&quot;,&quot;criminalcloudflare.online&quot;]);
+DnsEvents
 | where TimeGenerated &gt; ago(30d)
-| where Name endswith &quot;duckdns.org&quot;
-| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Queries=count(), Subdomains=dcount(Name) by Computer, ClientIP, Name
-| order by Queries desc</code></pre></div>
-    <div class="tab-content" id="art-45-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: RustDuck DuckDNS Dynamic-DNS C2 Query
-id: c9a4e7d2-1b6f-4e83-a5d0-7f2c8b3e91a4
-description: Detects DNS queries to *.duckdns.org, RustDuck&#x27;s dynamic-DNS C2 provider. Hunting-grade; duckdns has legitimate hobbyist use.
+| where Name has_any (c2)
+| project TimeGenerated, Computer, ClientIP, Name, IPAddresses, QueryType
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-45-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: RustDuck C2 Domain Resolution (duckdns.org and dynamic DNS)
+id: c5f3e4d6-7d80-41a2-9c3d-4e5f6a7b8c93
+description: Detects DNS queries for the exact RustDuck command-and-control FQDNs published by QiAnXin XLab.
 references:
-  - https://thehackernews.com/2026/06/rustduck-botnet-rebuilds-in-rust-to.html
-  - https://cyberpress.org/rustduck-botnet-expands-attacks/
+  - https://blog.xlab.qianxin.com/rustduck-en/
 author: SOC Detection Engineering
-date: 2026/07/01
+date: 2026/07/02
 tags:
   - attack.t1071.001
   - attack.t1568
@@ -5205,12 +5223,135 @@ logsource:
   category: dns
 detection:
   selection:
-    query|endswith: &#x27;.duckdns.org&#x27;
+    query:
+      - &#x27;igmc.duckdns.org&#x27;
+      - &#x27;qewqewqewqtq.duckdns.org&#x27;
+      - &#x27;qewqewqewqtqthree.duckdns.org&#x27;
+      - &#x27;qewqewqewqtqtwo.duckdns.org&#x27;
+      - &#x27;dhdsjsdjxc.duckdns.org&#x27;
+      - &#x27;fcfrfxrfrsfs5f.duckdns.org&#x27;
+      - &#x27;gayporn.twilightparadox.com&#x27;
+      - &#x27;bigniggadick.ignorelist.com&#x27;
+      - &#x27;ilovefemboy.mooo.com&#x27;
+      - &#x27;disciplinenahidwin.st&#x27;
+      - &#x27;criminalcloudflare.online&#x27;
   condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-45-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/duckdns\.org$/i
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-45-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;*.duckdns.org&quot; by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre><pre class="spl-mode-body" id="art-45-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;*.duckdns.org&quot; by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre></div></div>
+level: high</code></pre></div>
+    <div class="tab-content" id="art-45-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| DomainName=/(igmc\.duckdns\.org|qewqewqewqtq\.duckdns\.org|qewqewqewqtqthree\.duckdns\.org|qewqewqewqtqtwo\.duckdns\.org|dhdsjsdjxc\.duckdns\.org|fcfrfxrfrsfs5f\.duckdns\.org|gayporn\.twilightparadox\.com|bigniggadick\.ignorelist\.com|ilovefemboy\.mooo\.com|disciplinenahidwin\.st|criminalcloudflare\.online)/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-45-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;igmc.duckdns.org&quot;,&quot;qewqewqewqtq.duckdns.org&quot;,&quot;qewqewqewqtqthree.duckdns.org&quot;,&quot;qewqewqewqtqtwo.duckdns.org&quot;,&quot;dhdsjsdjxc.duckdns.org&quot;,&quot;fcfrfxrfrsfs5f.duckdns.org&quot;,&quot;gayporn.twilightparadox.com&quot;,&quot;bigniggadick.ignorelist.com&quot;,&quot;ilovefemboy.mooo.com&quot;,&quot;disciplinenahidwin.st&quot;,&quot;criminalcloudflare.online&quot;) by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(&quot;DNS&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-45-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;igmc.duckdns.org&quot;,&quot;qewqewqewqtq.duckdns.org&quot;,&quot;qewqewqewqtqthree.duckdns.org&quot;,&quot;qewqewqewqtqtwo.duckdns.org&quot;,&quot;dhdsjsdjxc.duckdns.org&quot;,&quot;fcfrfxrfrsfs5f.duckdns.org&quot;,&quot;gayporn.twilightparadox.com&quot;,&quot;bigniggadick.ignorelist.com&quot;,&quot;ilovefemboy.mooo.com&quot;,&quot;disciplinenahidwin.st&quot;,&quot;criminalcloudflare.online&quot;) by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(&quot;DNS&quot;)`
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="787a63cba8" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">RustDuck-targeted CVE exposure across managed devices</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="787a63cba8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Attack-surface hunt that surfaces every managed device carrying one of the four historical CVEs RustDuck weaponises (Huawei HG532, D-Link DIR-823X, Totolink X6000R, Apache CouchDB). Prioritises internet-facing and end-of-life gear for removal/patching before the botnet reaches it.
+
+Rationale: The four CVE IDs are stated verbatim in the article and confirmed in the XLab report. A TVM posture query is the cleanest way to close &#x27;the doors it walks through&#x27; (the article&#x27;s explicit defensive advice), and it prioritises EOL/internet-facing devices CISA advises pulling from service (DIR-823X).
+
+Cross-checked against:
+  • https://blog.xlab.qianxin.com/rustduck-en/
+  • https://www.scworld.com/brief/rustduck-botnet-rapidly-evolves-with-migration-to-rust</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>TVM version-inference flagging a device that has a vendor backport fixing the CVE without a version bump</li><li>A decommissioned router still in inventory but no longer network-reachable</li><li>A lab/test device intentionally kept vulnerable</li><li>Duplicate device records inflating counts (mitigated by arg_max per DeviceId)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: rank hits by IsInternetFacing then severity; confirm which are supported (CouchDB has fixed releases) vs EOL (DIR-823X, Totolink X6000R never patched). 2) CONTAIN: for supported software, patch to the fixed release; for EOL gear follow CISA guidance and remove it from service or move remote-admin (Telnet/SSH/ADB/web-UI) off the public internet. 3) HUNT: for any device that was internet-facing, retro-hunt the C2 IP, C2 domains and loader hashes to confirm it was not already recruited before patching.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-45-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-45-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId in (&quot;CVE-2017-17215&quot;,&quot;CVE-2025-29635&quot;,&quot;CVE-2024-1781&quot;,&quot;CVE-2018-8007&quot;)
+| summarize arg_max(Timestamp, *) by DeviceId, CveId
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp,*) by DeviceId | project DeviceId, IsInternetFacing) on DeviceId
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc</code></pre></div>
+    <div class="tab-content" id="art-45-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId in (&quot;CVE-2017-17215&quot;,&quot;CVE-2025-29635&quot;,&quot;CVE-2024-1781&quot;,&quot;CVE-2018-8007&quot;)
+| summarize arg_max(TimeGenerated, *) by DeviceId, CveId
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc</code></pre></div>
+    <div class="tab-content" id="art-45-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2017-17215&quot;,&quot;CVE-2025-29635&quot;,&quot;CVE-2024-1781&quot;,&quot;CVE-2018-8007&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity
+| `drop_dm_object_name(&quot;Vulnerabilities&quot;)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-45-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2017-17215&quot;,&quot;CVE-2025-29635&quot;,&quot;CVE-2024-1781&quot;,&quot;CVE-2018-8007&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity
+| `drop_dm_object_name(&quot;Vulnerabilities&quot;)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="642d473409" data-platforms="cloudwatch,datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">RustDuck worm-style outbound scanning on Telnet/SSH/ADB ports</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="642d473409" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Behavioural hunt for a compromised host propagating RustDuck: a single internal source fanning out to many distinct public IPs on the botnet&#x27;s spread ports (Telnet 23, SSH 22, Android Debug Bridge 5555). This is the propagation shape RustDuck uses to brute-force credentials and hit exposed ADB, distinct from the IOC-match UCs.
+
+Rationale: The article names weak-password Telnet/SSH login guessing and exposed ADB as RustDuck&#x27;s primary spread vectors; a host fanning out to 50+ external hosts on ports 22/23/5555 in an hour is the propagation fingerprint. The 50-target/1h threshold flags scanning while tolerating a handful of legit admin SSH sessions.
+
+Cross-checked against:
+  • https://blog.xlab.qianxin.com/rustduck-en/
+  • https://gbhackers.com/rustduck-botnet-targets-iot-devices/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Network Service Discovery">T1046</span> <span class="ind tech" title="Brute Force">T1110</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate vulnerability scanner (Nessus/Qualys/Nmap) sweeping external assets</li><li>A CI/CD or config-management host (Ansible/Salt) pushing to many SSH targets</li><li>A backup or file-transfer server with a large external SFTP fleet</li><li>A jump host used by admins to reach many customer devices on SSH</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;nessus.exe&quot;,&quot;nmap.exe&quot;,&quot;ansible&quot;,&quot;salt-minion&quot;,&quot;scp&quot;,&quot;sftp&quot;,&quot;plink.exe&quot;) and DeviceName !in~ (&quot;jump01&quot;,&quot;vulnscan01&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: identify the source host and initiating process; distinguish sanctioned scanners/automation (known service accounts, expected schedule) from an unexpected process driving the fan-out. Check whether port 5555 (ADB) is in the mix — that is not normal enterprise traffic. 2) CONTAIN: if unsanctioned, isolate the host, block outbound 22/23/5555 from it, and treat as RustDuck-infected. 3) HUNT: correlate the same host against the loader-hash and C2 UCs, and enumerate which external targets accepted the connection to gauge downstream spread.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-45-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-45-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-45-uc4-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-45-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-45-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(1d)
+| where ActionType == &quot;ConnectionSuccess&quot; or ActionType == &quot;ConnectionAttempt&quot;
+| where RemotePort in (22, 23, 5555)
+| where RemoteIPType == &quot;Public&quot;
+| summarize DistinctTargets = dcount(RemoteIP), SampleTargets = make_set(RemoteIP, 20), Ports = make_set(RemotePort) by DeviceName, InitiatingProcessFileName, bin(Timestamp, 1h)
+| where DistinctTargets &gt; 50
+| order by DistinctTargets desc</code></pre></div>
+    <div class="tab-content" id="art-45-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(1d)
+| where DestinationPort in (22, 23, 5555)
+| where ipv4_is_private(DestinationIP) == false
+| summarize DistinctTargets = dcount(DestinationIP), SampleTargets = make_set(DestinationIP, 20), Ports = make_set(DestinationPort) by SourceIP, bin(TimeGenerated, 1h)
+| where DistinctTargets &gt; 50
+| order by DistinctTargets desc</code></pre></div>
+    <div class="tab-content" id="art-45-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:(22 OR 23 OR 5555)</code></pre></div>
+    <div class="tab-content" id="art-45-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| in(RemotePort, values=[22,23,5555])
+| groupBy([aid, ComputerName], function=count(field=RemoteAddressIP4, distinct=true), field=distinct_targets)
+| distinct_targets &gt; 50</code></pre></div>
+    <div class="tab-content" id="art-45-uc4-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
+fields @timestamp, srcAddr, dstAddr, dstPort, action
+| filter dstPort in [22, 23, 5555] and action = &quot;ACCEPT&quot;
+| stats count_distinct(dstAddr) as distinctTargets by srcAddr
+| filter distinctTargets &gt; 50
+| sort distinctTargets desc</code></pre></div>
+    <div class="tab-content" id="art-45-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true dc(All_Traffic.dest_ip) as distinct_targets count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (22,23,5555) All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src _time span=1h
+| `drop_dm_object_name(&quot;All_Traffic&quot;)`
+| where distinct_targets &gt; 50
+| sort - distinct_targets</code></pre><pre class="spl-mode-body" id="art-45-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(All_Traffic.dest_ip) as distinct_targets count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (22,23,5555) All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src _time span=1h
+| `drop_dm_object_name(&quot;All_Traffic&quot;)`
+| where distinct_targets &gt; 50
+| sort - distinct_targets</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
@@ -5228,12 +5369,12 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-45-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-45-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-45-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-45-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-45-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-45-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-45-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
@@ -5241,7 +5382,7 @@ level: medium</code></pre></div>
 | where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+    <div class="tab-content" id="art-45-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
 ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
@@ -5253,7 +5394,7 @@ ImFileEvent
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
           TargetFilePath, TargetFileName, EventType
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+    <div class="tab-content" id="art-45-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
 status: experimental
 description: |
@@ -5297,7 +5438,7 @@ falsepositives:
     - Browser sync agents from non-stock vendors
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-45-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -5306,7 +5447,7 @@ level: high
         OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-45-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-45-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -5333,11 +5474,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-45-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-45-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-45-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-45-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-45-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -5346,7 +5487,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-45-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -5358,12 +5499,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-45-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2017-17215&quot;, &quot;CVE-2025-29635&quot;, &quot;CVE-2024-1781&quot;, &quot;CVE-2018-8007&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-45-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-45-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2017-17215&quot;, &quot;CVE-2025-29635&quot;, &quot;CVE-2024-1781&quot;, &quot;CVE-2018-8007&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -5386,17 +5527,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-45-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-45-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-45-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-45-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-45-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-45-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc5-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-45-uc7-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-45-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-45-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -5407,7 +5548,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-45-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -5433,7 +5574,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-45-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -5442,7 +5583,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-45-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-45-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -5478,11 +5619,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-45-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-45-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-45-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-45-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-45-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -5522,7 +5663,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-45-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-45-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -5547,7 +5688,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc6-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-45-uc8-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -5579,7 +5720,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-45-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-45-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -5629,19 +5770,19 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-45-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-45-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-45-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-45-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-45-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-45-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-45-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-45-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-45-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -5655,7 +5796,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-45-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -5699,7 +5840,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-45-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -5707,7 +5848,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-45-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-45-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -5733,12 +5874,12 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-45-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-45-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-45-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-45-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-45-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-45-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-45-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
@@ -5746,7 +5887,7 @@ level: high
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
    or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-45-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-45-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -5763,7 +5904,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+    <div class="tab-content" id="art-45-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
 status: experimental
 description: |
@@ -5798,13 +5939,13 @@ falsepositives:
       tool exclusion list per environment.
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-45-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-45-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-45-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
@@ -5828,17 +5969,17 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-45-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-45-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-45-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-45-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-45-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-45-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-45-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-45-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-45-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-45-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;176.65.139.204&quot;) or RemoteUrl has_any (&quot;&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-45-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;176.65.139.204&quot;]);
+    <div class="tab-content" id="art-45-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;176.65.139.204&quot;]);
 let BadDomains = dynamic([&quot;&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -5847,7 +5988,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-45-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -5877,7 +6018,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-45-uc9-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-45-uc11-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-45-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-45-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-45-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;176.65.139.204&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -5891,7 +6032,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-45-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-45-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;176.65.139.204&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
