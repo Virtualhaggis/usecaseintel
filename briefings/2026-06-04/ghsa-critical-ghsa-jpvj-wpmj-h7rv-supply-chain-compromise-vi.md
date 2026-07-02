@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Mini Shai-Hulud npm worm exfiltration to t.m-kosche.com OpenTelemetry endpoint
 
-`UC_249_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_250_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union isfuzzy=true
 
 ### Bun runtime spawned by npm/node preinstall hook (TeamPCP setup.mjs loader)
 
-`UC_249_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_250_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### Mini Shai-Hulud payload SHA256 on disk (7c24b4d9...e627144e8b)
 
-`UC_249_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_250_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ union isfuzzy=true
 
 ### Cloud/SSH/npm credential file access by Node or Bun during npm install
 
-`UC_249_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_250_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

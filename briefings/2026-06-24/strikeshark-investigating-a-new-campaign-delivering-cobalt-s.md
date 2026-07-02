@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### SystemSettings.exe executing from non-standard path (SharkLoader DLL side-load host)
 
-`UC_105_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_107_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### SharkLoader encrypted payload files dropped (DscCoreR.mui + SyncRes.dat + SystemSettings.dll)
 
-`UC_105_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_107_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### Web server process spawning command shell to relocate SystemSettings.exe (post-webshell staging)
 
-`UC_105_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_107_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### SharkLoader dropper masquerading as Cisco AnyConnect / Google Update installer
 
-`UC_105_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_107_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceProcessEvents
 
 ### Scheduled task persistence launching relocated SystemSettings.exe (SharkLoader)
 
-`UC_105_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_107_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceProcessEvents
 
 ### SharkLoader / Cobalt Strike C2 egress to StrikeShark lookalike domains
 
-`UC_105_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_107_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -379,7 +379,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — StrikeShark: investigating a new campaign delivering Cobalt Strike through Shark
 
-`UC_105_9` · phase: **exploit** · confidence: **High**
+`UC_107_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

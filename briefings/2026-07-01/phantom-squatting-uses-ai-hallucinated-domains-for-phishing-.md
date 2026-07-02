@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Montana Empire phishing-kit ZIP / postal-service APK file hash on endpoint
 
-`UC_42_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_46_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceFileEvents
 
 ### Victim traffic to Montana Empire phishing-kit endpoints (/mentalite.php, /panel_track.php, /verify_api.php, /letgovip.zip)
 
-`UC_42_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_46_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -36,12 +36,144 @@ Impact …
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
 - **T1546.003** — Persistence (article-specific)
+- **T1496** — Resource Hijacking
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1218.007** — System Binary Proxy Execution: Msiexec
+- **T1055** — Process Injection
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1484.001** — Domain Policy Modification: Group Policy Modification
+- **T1570** — Lateral Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Long-lived cryptomining C2 (stratum) from SYSTEM context on servers / domain controllers
+
+`UC_13_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port IN (3333,4444,5555,7777,14433,14444,45700,45560) OR All_Traffic.app IN ("stratum","stratum+tcp")) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | eval durDays=(lastTime-firstTime)/86400 | where durDays >= 7 | sort - durDays
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemotePort in (3333,4444,5555,7777,14433,14444,45700,45560)
+     or RemoteUrl has_any ("stratum","xmr","monero","minexmr","nanopool","supportxmr","miningpool","pool.min")
+| where InitiatingProcessAccountName in~ ("system","local service","network service") or InitiatingProcessAccountName endswith "$"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort), Dsts=make_set(RemoteIP) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256
+| where datetime_diff('day', LastSeen, FirstSeen) >= 7   // persistence beyond a week = the miner-on-DC pattern
+| order by FirstSeen asc
+```
+
+### PurpleFox in-memory install: msiexec.exe fetching a remote MSI
+
+`UC_13_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name="msiexec.exe" (Endpoint.Processes.process="*http://*" OR Endpoint.Processes.process="*https://*") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process | `drop_dm_object_name(Endpoint.Processes)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "msiexec.exe"
+| where ProcessCommandLine has_any ("http://","https://")
+| where ProcessCommandLine has_any (" /i"," -i","/q",".moe",".msi",".png")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### LionTail IIS backdoor: unexpected DLL written to / loaded by an IIS worker (w3wp)
+
+`UC_13_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_path="*\\inetpub\\*" OR Endpoint.Filesystem.file_path="*\\System32\\inetsrv\\*") Endpoint.Filesystem.file_name="*.dll" by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_name | `drop_dm_object_name(Endpoint.Filesystem)` | where process_name!="msiexec.exe" AND process_name!="TrustedInstaller.exe" | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| where FileName endswith ".dll"
+| where FolderPath !startswith @"C:\Windows\" and FolderPath !has @"\inetsrv\" and FolderPath !has @"\Microsoft.NET\" and FolderPath !has @"\assembly\" and FolderPath !has @"\Temporary ASP.NET Files\"
+| project Timestamp, DeviceName, InitiatingProcessFolderPath, ModulePath=FolderPath, ModuleName=FileName, SHA256
+| order by Timestamp desc
+```
+
+### Web-server process (w3wp/httpd) spawning a command shell or LOLBin
+
+`UC_13_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name IN ("w3wp.exe","httpd.exe","nginx.exe","php-cgi.exe","tomcat.exe","tomcat9.exe") Endpoint.Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","whoami.exe","cscript.exe","wscript.exe","rundll32.exe","systeminfo.exe") by Endpoint.Processes.dest, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process | `drop_dm_object_name(Endpoint.Processes)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("w3wp.exe","httpd.exe","nginx.exe","php-cgi.exe","tomcat.exe","tomcat9.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","whoami.exe","cscript.exe","wscript.exe","rundll32.exe","systeminfo.exe")
+| project Timestamp, DeviceName, AccountName, ParentProcess=InitiatingProcessFileName, ChildProcess=FileName, ProcessCommandLine, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Mass execution of binaries from SYSVOL/NETLOGON (abused GPO software distribution)
+
+`UC_13_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(Endpoint.Processes.dest) as hosts dc(Endpoint.Processes.dest) as host_count min(_time) as firstTime from datamodel=Endpoint.Processes where (Endpoint.Processes.process_path="*\\SYSVOL\\*" OR Endpoint.Processes.process="*\\SYSVOL\\*" OR Endpoint.Processes.process="*\\NETLOGON\\*") by Endpoint.Processes.process_name, Endpoint.Processes.process | `drop_dm_object_name(Endpoint.Processes)` | where host_count >= 5 | sort - host_count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FolderPath has @"\SYSVOL\" or ProcessCommandLine has @"\SYSVOL\" or ProcessCommandLine has @"\NETLOGON\" or FolderPath has @"\NETLOGON\"
+| where FileName endswith ".exe" or FileName in~ ("powershell.exe","cscript.exe","wscript.exe","cmd.exe")
+| summarize Hosts=dcount(DeviceName), HostList=make_set(DeviceName, 25), FirstSeen=min(Timestamp), Cmds=make_set(ProcessCommandLine, 5) by FileName, SHA256, FolderPath
+| where Hosts >= 5   // 5+ domain members running the same SYSVOL-sourced binary = mass GPO push
+| order by Hosts desc
+```
+
+### Remote management tool executing from a non-install (temp/download) path
+
+`UC_13_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name IN ("anydesk.exe","teamviewer.exe","screenconnect.clientservice.exe","atera_agent.exe","ateraagent.exe","splashtop.exe","strwinclt.exe","rustdesk.exe","meshagent.exe","netsupport.exe","client32.exe","dwagent.exe","logmein.exe","gotoassist.exe","supremo.exe","syncro.exe") (Endpoint.Processes.process_path IN ("*\\Temp\\*","*\\Downloads\\*","*\\ProgramData\\*","*\\Users\\Public\\*","*\\AppData\\*")) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.process_name, Endpoint.Processes.process_path, Endpoint.Processes.process | `drop_dm_object_name(Endpoint.Processes)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("anydesk.exe","teamviewer.exe","screenconnect.clientservice.exe","atera_agent.exe","ateraagent.exe","splashtop.exe","strwinclt.exe","rustdesk.exe","meshagent.exe","netsupport.exe","client32.exe","dwagent.exe","logmein.exe","gotoassist.exe","supremo.exe","syncro.exe")
+| where FolderPath has_any (@"\Temp\", @"\Downloads\", @"\ProgramData\", @"\Users\Public\", @"\AppData\")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -221,7 +353,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Missed incidents, persistent threats, and response gaps: Insights from compromis
 
-`UC_7_6` · phase: **exploit** · confidence: **High**
+`UC_13_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -290,4 +422,4 @@ DeviceRegistryEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 13 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### ARToken vendor-impersonation phish: look-alike SharePoint tenant + workers.dev lure with SPF/DKIM/DMARC fail
 
-`UC_41_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_45_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ EmailEvents
 
 ### EvilTokens device-code MFA bypass: successful device-code auth then token replay from a different IP
 
-`UC_41_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_45_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -110,7 +110,7 @@ AADSignInEventsBeta
 
 ### ARToken C2/panel and Cloudflare Workers lure beaconing (pamconj.com + {uuid}-*.workers.dev)
 
-`UC_41_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_45_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceNetworkEvents
 
 ### EvilTokens PRT persistence: Entra device registration / broker (WAM) sign-in after device-code auth
 
-`UC_41_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_45_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -147,7 +147,7 @@ AADSignInEventsBeta
 
 ### EvilTokens evidence suppression: malicious inbox rule (external forward / auto-delete / hide-to-RSS)
 
-`UC_41_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_45_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -163,7 +163,7 @@ CloudAppEvents
 
 ### EvilTokens SharePoint/OneDrive bulk exfiltration from a single session
 
-`UC_41_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_45_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

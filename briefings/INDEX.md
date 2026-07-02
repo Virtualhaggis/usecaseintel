@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2278 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2533 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,15 +9,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-02
+- [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
 - [ai agent exploits langflow rce to automate database ransomwa](./2026-07-02/ai-agent-exploits-langflow-rce-to-automate-database-ransomwa.md)
 - [alleged scattered spider hacker extradited to the united sta](./2026-07-02/alleged-scattered-spider-hacker-extradited-to-the-united-sta.md)
 - [cisa microsoft sharepoint rce flaw now actively exploited](./2026-07-02/cisa-microsoft-sharepoint-rce-flaw-now-actively-exploited.md)
 - [cisco finally confirms attackers exploiting unified cm flaw](./2026-07-02/cisco-finally-confirms-attackers-exploiting-unified-cm-flaw.md)
+- [consentfix and clickfix how microsoft 365 accounts are hijac](./2026-07-02/consentfix-and-clickfix-how-microsoft-365-accounts-are-hijac.md)
 - [fortibleed credential theft linked to inc and lynx ransomwar](./2026-07-02/fortibleed-credential-theft-linked-to-inc-and-lynx-ransomwar.md)
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
 - [new chocopoc rat targets vulnerability researchers via fake ](./2026-07-02/new-chocopoc-rat-targets-vulnerability-researchers-via-fake-.md)
-- [opera rolls out paste protect feature to fight clickfix atta](./2026-07-02/opera-rolls-out-paste-protect-feature-to-fight-clickfix-atta.md)
 - [sharepoint rce cve 2026 45659 added to cisa kev after active](./2026-07-02/sharepoint-rce-cve-2026-45659-added-to-cisa-kev-after-active.md)
+- [threatsday ai compute hijacking apple email flaw bluehammer ](./2026-07-02/threatsday-ai-compute-hijacking-apple-email-flaw-bluehammer-.md)
+- [toddycat linked umbrij malware abuses oauth to access gmail ](./2026-07-02/toddycat-linked-umbrij-malware-abuses-oauth-to-access-gmail-.md)
 
 ## 2026-07-01
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-07-01/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
@@ -38,7 +41,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new chocopoc malware targets researchers via trojanized poc ](./2026-07-01/new-chocopoc-malware-targets-researchers-via-trojanized-poc-.md)
 - [openclaw risks for the users and how to mitigate them](./2026-07-01/openclaw-risks-for-the-users-and-how-to-mitigate-them.md)
 - [ousaban banking trojan targets iberian bank users with fake ](./2026-07-01/ousaban-banking-trojan-targets-iberian-bank-users-with-fake-.md)
-- [over 900 oracle e business instances exposed to ongoing atta](./2026-07-01/over-900-oracle-e-business-instances-exposed-to-ongoing-atta.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [phantom squatting uses ai hallucinated domains for phishing ](./2026-07-01/phantom-squatting-uses-ai-hallucinated-domains-for-phishing-.md)
 - [researcher analyzes 3 000 live clickfix payloads exposing ap](./2026-07-01/researcher-analyzes-3-000-live-clickfix-payloads-exposing-ap.md)
@@ -83,9 +85,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-26
 - [beware of the license manager how a schneider electric softw](./2026-06-26/beware-of-the-license-manager-how-a-schneider-electric-softw.md)
-- [chinese speaking apt deploys new tinyrct backdoor in southea](./2026-06-26/chinese-speaking-apt-deploys-new-tinyrct-backdoor-in-southea.md)
 - [fbi warns russian intelligence hackers target signal backup ](./2026-06-26/fbi-warns-russian-intelligence-hackers-target-signal-backup-.md)
-- [new linux pedit cow exploit enables root access by poisoning](./2026-06-26/new-linux-pedit-cow-exploit-enables-root-access-by-poisoning.md)
 - [new sharkloader malware deploys cobalt strike in strikeshark](./2026-06-26/new-sharkloader-malware-deploys-cobalt-strike-in-strikeshark.md)
 - [npm now freezes high impact accounts after risky account cha](./2026-06-26/npm-now-freezes-high-impact-accounts-after-risky-account-cha.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
@@ -115,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-22
 - [a vbscript campaign distributed through whatsapp deploying r](./2026-06-22/a-vbscript-campaign-distributed-through-whatsapp-deploying-r.md)
-- [guarding ai memory](./2026-06-22/guarding-ai-memory.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
 ## 2026-06-19
@@ -329,6 +328,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2009 1537 microsoft directx null byte overwrite](./2026-05-20/cisa-kev-cve-2009-1537-microsoft-directx-null-byte-overwrite.md)
 - [cisa kev cve 2009 3459 adobe acrobat and reader heap based b](./2026-05-20/cisa-kev-cve-2009-3459-adobe-acrobat-and-reader-heap-based-b.md)
 - [cisa kev cve 2010 0249 microsoft internet explorer use after](./2026-05-20/cisa-kev-cve-2010-0249-microsoft-internet-explorer-use-after.md)
+- [cisa kev cve 2010 0806 microsoft internet explorer use after](./2026-05-20/cisa-kev-cve-2010-0806-microsoft-internet-explorer-use-after.md)
 - [cisa kev cve 2026 41091 microsoft defender link following vu](./2026-05-20/cisa-kev-cve-2026-41091-microsoft-defender-link-following-vu.md)
 - [cisa kev cve 2026 45498 microsoft defender denial of service](./2026-05-20/cisa-kev-cve-2026-45498-microsoft-defender-denial-of-service.md)
 - [dev machine guard now supports linux](./2026-05-20/dev-machine-guard-now-supports-linux.md)
@@ -527,6 +527,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [canisterworm gets teeth teampcp s kubernetes wiper targets i](./2026-03-22/canisterworm-gets-teeth-teampcp-s-kubernetes-wiper-targets-i.md)
 
 ## 2026-03-20
+- [cisa kev cve 2025 31277 apple multiple products buffer overf](./2026-03-20/cisa-kev-cve-2025-31277-apple-multiple-products-buffer-overf.md)
 - [cisa kev cve 2025 32432 craft cms code injection vulnerabili](./2026-03-20/cisa-kev-cve-2025-32432-craft-cms-code-injection-vulnerabili.md)
 - [cisa kev cve 2025 43510 apple multiple products improper loc](./2026-03-20/cisa-kev-cve-2025-43510-apple-multiple-products-improper-loc.md)
 - [cisa kev cve 2025 43520 apple multiple products classic buff](./2026-03-20/cisa-kev-cve-2025-43520-apple-multiple-products-classic-buff.md)
@@ -578,6 +579,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2017 7921 hikvision multiple products improper ](./2026-03-05/cisa-kev-cve-2017-7921-hikvision-multiple-products-improper-.md)
 - [cisa kev cve 2021 22681 rockwell multiple products insuffici](./2026-03-05/cisa-kev-cve-2021-22681-rockwell-multiple-products-insuffici.md)
 - [cisa kev cve 2021 30952 apple multiple products integer over](./2026-03-05/cisa-kev-cve-2021-30952-apple-multiple-products-integer-over.md)
+- [cisa kev cve 2023 41974 apple ios and ipados use after free ](./2026-03-05/cisa-kev-cve-2023-41974-apple-ios-and-ipados-use-after-free-.md)
 - [cisa kev cve 2023 43000 apple multiple products use after fr](./2026-03-05/cisa-kev-cve-2023-43000-apple-multiple-products-use-after-fr.md)
 - [how smbs use threat research and mdr to build a defensive ed](./2026-03-05/how-smbs-use-threat-research-and-mdr-to-build-a-defensive-ed.md)
 
@@ -661,6 +663,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [why your skill scanner is just false security and maybe malw](./2026-02-11/why-your-skill-scanner-is-just-false-security-and-maybe-malw.md)
 
 ## 2026-02-10
+- [cisa kev cve 2026 21510 microsoft windows shell protection m](./2026-02-10/cisa-kev-cve-2026-21510-microsoft-windows-shell-protection-m.md)
 - [cisa kev cve 2026 21513 microsoft mshtml framework protectio](./2026-02-10/cisa-kev-cve-2026-21513-microsoft-mshtml-framework-protectio.md)
 - [cisa kev cve 2026 21514 microsoft office word reliance on un](./2026-02-10/cisa-kev-cve-2026-21514-microsoft-office-word-reliance-on-un.md)
 - [cisa kev cve 2026 21519 microsoft windows type confusion vul](./2026-02-10/cisa-kev-cve-2026-21519-microsoft-windows-type-confusion-vul.md)
@@ -866,6 +869,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-10-28
 - [cisa kev cve 2025 6204 dassault syst mes delmia apriso code ](./2025-10-28/cisa-kev-cve-2025-6204-dassault-syst-mes-delmia-apriso-code-.md)
+- [cisa kev cve 2025 6205 dassault syst mes delmia apriso missi](./2025-10-28/cisa-kev-cve-2025-6205-dassault-syst-mes-delmia-apriso-missi.md)
 
 ## 2025-10-24
 - [cisa kev cve 2025 54236 adobe commerce and magento improper ](./2025-10-24/cisa-kev-cve-2025-54236-adobe-commerce-and-magento-improper-.md)
@@ -878,6 +882,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-10-20
 - [cisa kev cve 2022 48503 apple multiple products unspecified ](./2025-10-20/cisa-kev-cve-2022-48503-apple-multiple-products-unspecified-.md)
 - [cisa kev cve 2025 2746 kentico xperience cms authentication ](./2025-10-20/cisa-kev-cve-2025-2746-kentico-xperience-cms-authentication-.md)
+- [cisa kev cve 2025 2747 kentico xperience cms authentication ](./2025-10-20/cisa-kev-cve-2025-2747-kentico-xperience-cms-authentication-.md)
 - [cisa kev cve 2025 33073 microsoft windows smb client imprope](./2025-10-20/cisa-kev-cve-2025-33073-microsoft-windows-smb-client-imprope.md)
 - [cisa kev cve 2025 61884 oracle e business suite server side ](./2025-10-20/cisa-kev-cve-2025-61884-oracle-e-business-suite-server-side-.md)
 
@@ -986,6 +991,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-08-05
 - [cisa kev cve 2020 25078 d link dcs 2530l and dcs 2670l devic](./2025-08-05/cisa-kev-cve-2020-25078-d-link-dcs-2530l-and-dcs-2670l-devic.md)
+- [cisa kev cve 2020 25079 d link dcs 2530l and dcs 2670l comma](./2025-08-05/cisa-kev-cve-2020-25079-d-link-dcs-2530l-and-dcs-2670l-comma.md)
 - [cisa kev cve 2022 40799 d link dnr 322l download of code wit](./2025-08-05/cisa-kev-cve-2022-40799-d-link-dnr-322l-download-of-code-wit.md)
 - [snyk joins cisa s secure by design pledge](./2025-08-05/snyk-joins-cisa-s-secure-by-design-pledge.md)
 
@@ -994,10 +1000,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-07-28
 - [cisa kev cve 2023 2533 papercut ng mf cross site request for](./2025-07-28/cisa-kev-cve-2023-2533-papercut-ng-mf-cross-site-request-for.md)
+- [cisa kev cve 2025 20281 cisco identity services engine injec](./2025-07-28/cisa-kev-cve-2025-20281-cisco-identity-services-engine-injec.md)
 - [cisa kev cve 2025 20337 cisco identity services engine injec](./2025-07-28/cisa-kev-cve-2025-20337-cisco-identity-services-engine-injec.md)
 
 ## 2025-07-22
 - [cisa kev cve 2025 2775 sysaid on prem improper restriction o](./2025-07-22/cisa-kev-cve-2025-2775-sysaid-on-prem-improper-restriction-o.md)
+- [cisa kev cve 2025 2776 sysaid on prem improper restriction o](./2025-07-22/cisa-kev-cve-2025-2776-sysaid-on-prem-improper-restriction-o.md)
 - [cisa kev cve 2025 49704 microsoft sharepoint code injection ](./2025-07-22/cisa-kev-cve-2025-49704-microsoft-sharepoint-code-injection-.md)
 - [cisa kev cve 2025 54309 crushftp unprotected alternate chann](./2025-07-22/cisa-kev-cve-2025-54309-crushftp-unprotected-alternate-chann.md)
 - [cisa kev cve 2025 6558 google chromium angle and gpu imprope](./2025-07-22/cisa-kev-cve-2025-6558-google-chromium-angle-and-gpu-imprope.md)
@@ -1066,6 +1074,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-06-03
 - [cisa kev cve 2025 21479 qualcomm multiple chipsets incorrect](./2025-06-03/cisa-kev-cve-2025-21479-qualcomm-multiple-chipsets-incorrect.md)
+- [cisa kev cve 2025 21480 qualcomm multiple chipsets incorrect](./2025-06-03/cisa-kev-cve-2025-21480-qualcomm-multiple-chipsets-incorrect.md)
 - [cisa kev cve 2025 27038 qualcomm multiple chipsets use after](./2025-06-03/cisa-kev-cve-2025-27038-qualcomm-multiple-chipsets-use-after.md)
 
 ## 2025-06-02
@@ -1088,6 +1097,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 11182 mdaemon email server cross site scri](./2025-05-19/cisa-kev-cve-2024-11182-mdaemon-email-server-cross-site-scri.md)
 - [cisa kev cve 2024 27443 synacor zimbra collaboration suite z](./2025-05-19/cisa-kev-cve-2024-27443-synacor-zimbra-collaboration-suite-z.md)
 - [cisa kev cve 2025 27920 srimax output messenger directory tr](./2025-05-19/cisa-kev-cve-2025-27920-srimax-output-messenger-directory-tr.md)
+- [cisa kev cve 2025 4427 ivanti endpoint manager mobile epmm a](./2025-05-19/cisa-kev-cve-2025-4427-ivanti-endpoint-manager-mobile-epmm-a.md)
 - [cisa kev cve 2025 4428 ivanti endpoint manager mobile epmm c](./2025-05-19/cisa-kev-cve-2025-4428-ivanti-endpoint-manager-mobile-epmm-c.md)
 
 ## 2025-05-15
@@ -1100,6 +1110,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-05-13
 - [cisa kev cve 2025 30397 microsoft windows scripting engine t](./2025-05-13/cisa-kev-cve-2025-30397-microsoft-windows-scripting-engine-t.md)
 - [cisa kev cve 2025 30400 microsoft windows dwm core library u](./2025-05-13/cisa-kev-cve-2025-30400-microsoft-windows-dwm-core-library-u.md)
+- [cisa kev cve 2025 32701 microsoft windows common log file sy](./2025-05-13/cisa-kev-cve-2025-32701-microsoft-windows-common-log-file-sy.md)
 - [cisa kev cve 2025 32706 microsoft windows common log file sy](./2025-05-13/cisa-kev-cve-2025-32706-microsoft-windows-common-log-file-sy.md)
 - [cisa kev cve 2025 32709 microsoft windows ancillary function](./2025-05-13/cisa-kev-cve-2025-32709-microsoft-windows-ancillary-function.md)
 
@@ -1109,6 +1120,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-05-07
 - [cisa kev cve 2024 11120 geovision devices os command injecti](./2025-05-07/cisa-kev-cve-2024-11120-geovision-devices-os-command-injecti.md)
+- [cisa kev cve 2024 6047 geovision devices os command injectio](./2025-05-07/cisa-kev-cve-2024-6047-geovision-devices-os-command-injectio.md)
 
 ## 2025-05-06
 - [cisa kev cve 2025 27363 freetype out of bounds write vulnera](./2025-05-06/cisa-kev-cve-2025-27363-freetype-out-of-bounds-write-vulnera.md)
@@ -1145,6 +1157,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-04-09
 - [cisa kev cve 2024 53150 linux kernel out of bounds read vuln](./2025-04-09/cisa-kev-cve-2024-53150-linux-kernel-out-of-bounds-read-vuln.md)
+- [cisa kev cve 2024 53197 linux kernel out of bounds access vu](./2025-04-09/cisa-kev-cve-2024-53197-linux-kernel-out-of-bounds-access-vu.md)
 
 ## 2025-04-08
 - [cisa kev cve 2025 29824 microsoft windows common log file sy](./2025-04-08/cisa-kev-cve-2025-29824-microsoft-windows-common-log-file-sy.md)
@@ -1166,6 +1179,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 2783 google chromium mojo sandbox escape v](./2025-03-27/cisa-kev-cve-2025-2783-google-chromium-mojo-sandbox-escape-v.md)
 
 ## 2025-03-26
+- [cisa kev cve 2019 9874 sitecore cms and experience platform ](./2025-03-26/cisa-kev-cve-2019-9874-sitecore-cms-and-experience-platform-.md)
 - [cisa kev cve 2019 9875 sitecore cms and experience platform ](./2025-03-26/cisa-kev-cve-2019-9875-sitecore-cms-and-experience-platform-.md)
 
 ## 2025-03-24
@@ -1196,12 +1210,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-03-11
 - [cisa kev cve 2025 24983 microsoft windows win32k use after f](./2025-03-11/cisa-kev-cve-2025-24983-microsoft-windows-win32k-use-after-f.md)
+- [cisa kev cve 2025 24984 microsoft windows ntfs information d](./2025-03-11/cisa-kev-cve-2025-24984-microsoft-windows-ntfs-information-d.md)
 - [cisa kev cve 2025 24985 microsoft windows fast fat file syst](./2025-03-11/cisa-kev-cve-2025-24985-microsoft-windows-fast-fat-file-syst.md)
 - [cisa kev cve 2025 24991 microsoft windows ntfs out of bounds](./2025-03-11/cisa-kev-cve-2025-24991-microsoft-windows-ntfs-out-of-bounds.md)
 - [cisa kev cve 2025 24993 microsoft windows ntfs heap based bu](./2025-03-11/cisa-kev-cve-2025-24993-microsoft-windows-ntfs-heap-based-bu.md)
 - [cisa kev cve 2025 26633 microsoft windows management console](./2025-03-11/cisa-kev-cve-2025-26633-microsoft-windows-management-console.md)
 
 ## 2025-03-10
+- [cisa kev cve 2024 13159 ivanti endpoint manager epm absolute](./2025-03-10/cisa-kev-cve-2024-13159-ivanti-endpoint-manager-epm-absolute.md)
+- [cisa kev cve 2024 13160 ivanti endpoint manager epm absolute](./2025-03-10/cisa-kev-cve-2024-13160-ivanti-endpoint-manager-epm-absolute.md)
 - [cisa kev cve 2024 13161 ivanti endpoint manager epm absolute](./2025-03-10/cisa-kev-cve-2024-13161-ivanti-endpoint-manager-epm-absolute.md)
 - [cisa kev cve 2024 57968 advantive veracore unrestricted file](./2025-03-10/cisa-kev-cve-2024-57968-advantive-veracore-unrestricted-file.md)
 - [cisa kev cve 2025 25181 advantive veracore sql injection vul](./2025-03-10/cisa-kev-cve-2025-25181-advantive-veracore-sql-injection-vul.md)
@@ -1216,6 +1233,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-03-03
 - [cisa kev cve 2018 8639 microsoft windows win32k improper res](./2025-03-03/cisa-kev-cve-2018-8639-microsoft-windows-win32k-improper-res.md)
 - [cisa kev cve 2022 43769 hitachi vantara pentaho ba server sp](./2025-03-03/cisa-kev-cve-2022-43769-hitachi-vantara-pentaho-ba-server-sp.md)
+- [cisa kev cve 2022 43939 hitachi vantara pentaho ba server au](./2025-03-03/cisa-kev-cve-2022-43939-hitachi-vantara-pentaho-ba-server-au.md)
 - [cisa kev cve 2023 20118 cisco small business rv series route](./2025-03-03/cisa-kev-cve-2023-20118-cisco-small-business-rv-series-route.md)
 - [cisa kev cve 2024 4885 progress whatsup gold path traversal ](./2025-03-03/cisa-kev-cve-2024-4885-progress-whatsup-gold-path-traversal-.md)
 
@@ -1251,6 +1269,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [do not pass go malicious package alert](./2025-02-12/do-not-pass-go-malicious-package-alert.md)
 
 ## 2025-02-11
+- [cisa kev cve 2024 40890 zyxel dsl cpe os command injection v](./2025-02-11/cisa-kev-cve-2024-40890-zyxel-dsl-cpe-os-command-injection-v.md)
 - [cisa kev cve 2024 40891 zyxel dsl cpe os command injection v](./2025-02-11/cisa-kev-cve-2024-40891-zyxel-dsl-cpe-os-command-injection-v.md)
 - [cisa kev cve 2025 21391 microsoft windows storage link follo](./2025-02-11/cisa-kev-cve-2025-21391-microsoft-windows-storage-link-follo.md)
 - [cisa kev cve 2025 21418 microsoft windows ancillary function](./2025-02-11/cisa-kev-cve-2025-21418-microsoft-windows-ancillary-function.md)
@@ -1293,6 +1312,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-01-14
 - [cisa kev cve 2024 55591 fortinet fortios and fortiproxy auth](./2025-01-14/cisa-kev-cve-2024-55591-fortinet-fortios-and-fortiproxy-auth.md)
+- [cisa kev cve 2025 21333 microsoft windows hyper v nt kernel ](./2025-01-14/cisa-kev-cve-2025-21333-microsoft-windows-hyper-v-nt-kernel-.md)
+- [cisa kev cve 2025 21334 microsoft windows hyper v nt kernel ](./2025-01-14/cisa-kev-cve-2025-21334-microsoft-windows-hyper-v-nt-kernel-.md)
 - [cisa kev cve 2025 21335 microsoft windows hyper v nt kernel ](./2025-01-14/cisa-kev-cve-2025-21335-microsoft-windows-hyper-v-nt-kernel-.md)
 - [snyk recognized as trusted partner and innovator by jpmorgan](./2025-01-14/snyk-recognized-as-trusted-partner-and-innovator-by-jpmorgan.md)
 
@@ -1374,10 +1395,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 38813 vmware vcenter server privilege esca](./2024-11-20/cisa-kev-cve-2024-38813-vmware-vcenter-server-privilege-esca.md)
 
 ## 2024-11-18
+- [cisa kev cve 2024 0012 palo alto networks pan os management ](./2024-11-18/cisa-kev-cve-2024-0012-palo-alto-networks-pan-os-management-.md)
 - [cisa kev cve 2024 1212 progress kemp loadmaster os command i](./2024-11-18/cisa-kev-cve-2024-1212-progress-kemp-loadmaster-os-command-i.md)
 - [cisa kev cve 2024 9474 palo alto networks pan os management ](./2024-11-18/cisa-kev-cve-2024-9474-palo-alto-networks-pan-os-management-.md)
 
 ## 2024-11-14
+- [cisa kev cve 2024 9463 palo alto networks expedition os comm](./2024-11-14/cisa-kev-cve-2024-9463-palo-alto-networks-expedition-os-comm.md)
 - [cisa kev cve 2024 9465 palo alto networks expedition sql inj](./2024-11-14/cisa-kev-cve-2024-9465-palo-alto-networks-expedition-sql-inj.md)
 - [understanding command injection vulnerabilities in go](./2024-11-14/understanding-command-injection-vulnerabilities-in-go.md)
 
@@ -1427,6 +1450,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-10-09
 - [cisa kev cve 2024 23113 fortinet multiple products format st](./2024-10-09/cisa-kev-cve-2024-23113-fortinet-multiple-products-format-st.md)
+- [cisa kev cve 2024 9379 ivanti cloud services appliance csa s](./2024-10-09/cisa-kev-cve-2024-9379-ivanti-cloud-services-appliance-csa-s.md)
 - [cisa kev cve 2024 9380 ivanti cloud services appliance csa o](./2024-10-09/cisa-kev-cve-2024-9380-ivanti-cloud-services-appliance-csa-o.md)
 
 ## 2024-10-08
@@ -1472,6 +1496,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-09-17
 - [cisa kev cve 2013 0643 adobe flash player incorrect default ](./2024-09-17/cisa-kev-cve-2013-0643-adobe-flash-player-incorrect-default-.md)
 - [cisa kev cve 2013 0648 adobe flash player code execution vul](./2024-09-17/cisa-kev-cve-2013-0648-adobe-flash-player-code-execution-vul.md)
+- [cisa kev cve 2014 0497 adobe flash player integer underflow ](./2024-09-17/cisa-kev-cve-2014-0497-adobe-flash-player-integer-underflow-.md)
 - [cisa kev cve 2014 0502 adobe flash player double free vulner](./2024-09-17/cisa-kev-cve-2014-0502-adobe-flash-player-double-free-vulner.md)
 - [meet snyk for government our developer security solution wit](./2024-09-17/meet-snyk-for-government-our-developer-security-solution-wit.md)
 
@@ -1486,6 +1511,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-09-10
 - [cisa kev cve 2024 38014 microsoft windows installer improper](./2024-09-10/cisa-kev-cve-2024-38014-microsoft-windows-installer-improper.md)
 - [cisa kev cve 2024 38217 microsoft windows mark of the web mo](./2024-09-10/cisa-kev-cve-2024-38217-microsoft-windows-mark-of-the-web-mo.md)
+- [cisa kev cve 2024 38226 microsoft publisher protection mecha](./2024-09-10/cisa-kev-cve-2024-38226-microsoft-publisher-protection-mecha.md)
 
 ## 2024-09-09
 - [cisa kev cve 2016 3714 imagemagick improper input validation](./2024-09-09/cisa-kev-cve-2016-3714-imagemagick-improper-input-validation.md)
@@ -1496,6 +1522,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what you should know about php code security](./2024-09-04/what-you-should-know-about-php-code-security.md)
 
 ## 2024-09-03
+- [cisa kev cve 2021 20123 draytek vigorconnect path traversal ](./2024-09-03/cisa-kev-cve-2021-20123-draytek-vigorconnect-path-traversal-.md)
 - [cisa kev cve 2021 20124 draytek vigorconnect path traversal ](./2024-09-03/cisa-kev-cve-2021-20124-draytek-vigorconnect-path-traversal-.md)
 - [cisa kev cve 2024 7262 kingsoft wps office path traversal vu](./2024-09-03/cisa-kev-cve-2024-7262-kingsoft-wps-office-path-traversal-vu.md)
 
@@ -1520,6 +1547,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-08-21
 - [cisa kev cve 2021 31196 microsoft exchange server informatio](./2024-08-21/cisa-kev-cve-2021-31196-microsoft-exchange-server-informatio.md)
+- [cisa kev cve 2021 33044 dahua ip camera authentication bypas](./2024-08-21/cisa-kev-cve-2021-33044-dahua-ip-camera-authentication-bypas.md)
 - [cisa kev cve 2021 33045 dahua ip camera authentication bypas](./2024-08-21/cisa-kev-cve-2021-33045-dahua-ip-camera-authentication-bypas.md)
 - [cisa kev cve 2022 0185 linux kernel heap based buffer overfl](./2024-08-21/cisa-kev-cve-2022-0185-linux-kernel-heap-based-buffer-overfl.md)
 
@@ -1533,6 +1561,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vulnerabilities in nodejs c c add on extensions](./2024-08-14/vulnerabilities-in-nodejs-c-c-add-on-extensions.md)
 
 ## 2024-08-13
+- [cisa kev cve 2024 38106 microsoft windows kernel privilege e](./2024-08-13/cisa-kev-cve-2024-38106-microsoft-windows-kernel-privilege-e.md)
 - [cisa kev cve 2024 38107 microsoft windows power dependency c](./2024-08-13/cisa-kev-cve-2024-38107-microsoft-windows-power-dependency-c.md)
 - [cisa kev cve 2024 38178 microsoft windows scripting engine m](./2024-08-13/cisa-kev-cve-2024-38178-microsoft-windows-scripting-engine-m.md)
 - [cisa kev cve 2024 38189 microsoft project remote code execut](./2024-08-13/cisa-kev-cve-2024-38189-microsoft-project-remote-code-execut.md)
@@ -1662,6 +1691,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-04-24
 - [360 degrees of application security with snyk](./2024-04-24/360-degrees-of-application-security-with-snyk.md)
+- [cisa kev cve 2024 20353 cisco asa and ftd denial of service ](./2024-04-24/cisa-kev-cve-2024-20353-cisco-asa-and-ftd-denial-of-service-.md)
 - [cisa kev cve 2024 20359 cisco asa and ftd privilege escalati](./2024-04-24/cisa-kev-cve-2024-20359-cisco-asa-and-ftd-privilege-escalati.md)
 - [cisa kev cve 2024 4040 crushftp vfs sandbox escape vulnerabi](./2024-04-24/cisa-kev-cve-2024-4040-crushftp-vfs-sandbox-escape-vulnerabi.md)
 
@@ -1722,6 +1752,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-03-06
 - [cisa kev cve 2024 23225 apple multiple products memory corru](./2024-03-06/cisa-kev-cve-2024-23225-apple-multiple-products-memory-corru.md)
+- [cisa kev cve 2024 23296 apple multiple products memory corru](./2024-03-06/cisa-kev-cve-2024-23296-apple-multiple-products-memory-corru.md)
 - [snyk learn and the nist cybersecurity framework csf](./2024-03-06/snyk-learn-and-the-nist-cybersecurity-framework-csf.md)
 
 ## 2024-03-05
@@ -1750,6 +1781,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 21410 microsoft exchange server privilege ](./2024-02-15/cisa-kev-cve-2024-21410-microsoft-exchange-server-privilege-.md)
 
 ## 2024-02-13
+- [cisa kev cve 2024 21351 microsoft windows smartscreen securi](./2024-02-13/cisa-kev-cve-2024-21351-microsoft-windows-smartscreen-securi.md)
 - [cisa kev cve 2024 21412 microsoft windows internet shortcut ](./2024-02-13/cisa-kev-cve-2024-21412-microsoft-windows-internet-shortcut-.md)
 - [reporting appsec risk up to your ciso](./2024-02-13/reporting-appsec-risk-up-to-your-ciso.md)
 
@@ -1782,6 +1814,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [understanding and mitigating the jinja2 xss vulnerability cv](./2024-01-18/understanding-and-mitigating-the-jinja2-xss-vulnerability-cv.md)
 
 ## 2024-01-17
+- [cisa kev cve 2023 6548 citrix netscaler adc and netscaler ga](./2024-01-17/cisa-kev-cve-2023-6548-citrix-netscaler-adc-and-netscaler-ga.md)
 - [cisa kev cve 2023 6549 citrix netscaler adc and netscaler ga](./2024-01-17/cisa-kev-cve-2023-6549-citrix-netscaler-adc-and-netscaler-ga.md)
 - [cisa kev cve 2024 0519 google chromium v8 out of bounds memo](./2024-01-17/cisa-kev-cve-2024-0519-google-chromium-v8-out-of-bounds-memo.md)
 
@@ -1798,6 +1831,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2023 23752 joomla improper access control vulne](./2024-01-08/cisa-kev-cve-2023-23752-joomla-improper-access-control-vulne.md)
 - [cisa kev cve 2023 27524 apache superset insecure default ini](./2024-01-08/cisa-kev-cve-2023-27524-apache-superset-insecure-default-ini.md)
 - [cisa kev cve 2023 29300 adobe coldfusion deserialization of ](./2024-01-08/cisa-kev-cve-2023-29300-adobe-coldfusion-deserialization-of-.md)
+- [cisa kev cve 2023 38203 adobe coldfusion deserialization of ](./2024-01-08/cisa-kev-cve-2023-38203-adobe-coldfusion-deserialization-of-.md)
 - [cisa kev cve 2023 41990 apple multiple products code executi](./2024-01-08/cisa-kev-cve-2023-41990-apple-multiple-products-code-executi.md)
 
 ## 2024-01-05
@@ -1836,10 +1870,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [code injection in python examples and prevention](./2023-12-06/code-injection-in-python-examples-and-prevention.md)
 
 ## 2023-12-05
+- [cisa kev cve 2022 22071 qualcomm multiple chipsets use after](./2023-12-05/cisa-kev-cve-2022-22071-qualcomm-multiple-chipsets-use-after.md)
+- [cisa kev cve 2023 33063 qualcomm multiple chipsets use after](./2023-12-05/cisa-kev-cve-2023-33063-qualcomm-multiple-chipsets-use-after.md)
 - [cisa kev cve 2023 33106 qualcomm multiple chipsets use of ou](./2023-12-05/cisa-kev-cve-2023-33106-qualcomm-multiple-chipsets-use-of-ou.md)
 - [cisa kev cve 2023 33107 qualcomm multiple chipsets integer o](./2023-12-05/cisa-kev-cve-2023-33107-qualcomm-multiple-chipsets-integer-o.md)
 
 ## 2023-12-04
+- [cisa kev cve 2023 42916 apple multiple products webkit out o](./2023-12-04/cisa-kev-cve-2023-42916-apple-multiple-products-webkit-out-o.md)
 - [cisa kev cve 2023 42917 apple multiple products webkit memor](./2023-12-04/cisa-kev-cve-2023-42917-apple-multiple-products-webkit-memor.md)
 
 ## 2023-11-30
@@ -1876,7 +1913,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-11-13
 - [cisa kev cve 2023 36844 juniper junos os ex series php exter](./2023-11-13/cisa-kev-cve-2023-36844-juniper-junos-os-ex-series-php-exter.md)
+- [cisa kev cve 2023 36845 juniper junos os ex series and srx s](./2023-11-13/cisa-kev-cve-2023-36845-juniper-junos-os-ex-series-and-srx-s.md)
 - [cisa kev cve 2023 36846 juniper junos os srx series missing ](./2023-11-13/cisa-kev-cve-2023-36846-juniper-junos-os-srx-series-missing-.md)
+- [cisa kev cve 2023 36847 juniper junos os ex series missing a](./2023-11-13/cisa-kev-cve-2023-36847-juniper-junos-os-ex-series-missing-a.md)
+- [cisa kev cve 2023 36851 juniper junos os srx series missing ](./2023-11-13/cisa-kev-cve-2023-36851-juniper-junos-os-srx-series-missing-.md)
 - [cisa kev cve 2023 47246 sysaid server path traversal vulnera](./2023-11-13/cisa-kev-cve-2023-47246-sysaid-server-path-traversal-vulnera.md)
 
 ## 2023-11-09
@@ -2053,6 +2093,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-07-20
 - [cisa kev cve 2023 29298 adobe coldfusion improper access con](./2023-07-20/cisa-kev-cve-2023-29298-adobe-coldfusion-improper-access-con.md)
+- [cisa kev cve 2023 38205 adobe coldfusion improper access con](./2023-07-20/cisa-kev-cve-2023-38205-adobe-coldfusion-improper-access-con.md)
 
 ## 2023-07-19
 - [cisa kev cve 2023 3519 citrix netscaler adc and netscaler ga](./2023-07-19/cisa-kev-cve-2023-3519-citrix-netscaler-adc-and-netscaler-ga.md)
@@ -2073,6 +2114,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2022 31199 netwrix auditor insecure object dese](./2023-07-11/cisa-kev-cve-2022-31199-netwrix-auditor-insecure-object-dese.md)
 - [cisa kev cve 2023 32046 microsoft windows mshtml platform pr](./2023-07-11/cisa-kev-cve-2023-32046-microsoft-windows-mshtml-platform-pr.md)
 - [cisa kev cve 2023 32049 microsoft windows defender smartscre](./2023-07-11/cisa-kev-cve-2023-32049-microsoft-windows-defender-smartscre.md)
+- [cisa kev cve 2023 35311 microsoft outlook security feature b](./2023-07-11/cisa-kev-cve-2023-35311-microsoft-outlook-security-feature-b.md)
+- [cisa kev cve 2023 36874 microsoft windows error reporting se](./2023-07-11/cisa-kev-cve-2023-36874-microsoft-windows-error-reporting-se.md)
 
 ## 2023-07-07
 - [cisa kev cve 2021 29256 arm mali gpu kernel driver use after](./2023-07-07/cisa-kev-cve-2021-29256-arm-mali-gpu-kernel-driver-use-after.md)
@@ -2081,7 +2124,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [building a security conscious ci cd pipeline](./2023-06-29/building-a-security-conscious-ci-cd-pipeline.md)
 - [cisa kev cve 2019 17621 d link dir 859 router command execut](./2023-06-29/cisa-kev-cve-2019-17621-d-link-dir-859-router-command-execut.md)
 - [cisa kev cve 2019 20500 d link dwl 2600ap access point comma](./2023-06-29/cisa-kev-cve-2019-20500-d-link-dwl-2600ap-access-point-comma.md)
+- [cisa kev cve 2021 25371 samsung mobile devices unspecified v](./2023-06-29/cisa-kev-cve-2021-25371-samsung-mobile-devices-unspecified-v.md)
 - [cisa kev cve 2021 25372 samsung mobile devices improper boun](./2023-06-29/cisa-kev-cve-2021-25372-samsung-mobile-devices-improper-boun.md)
+- [cisa kev cve 2021 25394 samsung mobile devices race conditio](./2023-06-29/cisa-kev-cve-2021-25394-samsung-mobile-devices-race-conditio.md)
+- [cisa kev cve 2021 25395 samsung mobile devices race conditio](./2023-06-29/cisa-kev-cve-2021-25395-samsung-mobile-devices-race-conditio.md)
 - [cisa kev cve 2021 25487 samsung mobile devices out of bounds](./2023-06-29/cisa-kev-cve-2021-25487-samsung-mobile-devices-out-of-bounds.md)
 - [cisa kev cve 2021 25489 samsung mobile devices improper inpu](./2023-06-29/cisa-kev-cve-2021-25489-samsung-mobile-devices-improper-inpu.md)
 - [the importance of verifying webhook signatures](./2023-06-29/the-importance-of-verifying-webhook-signatures.md)
@@ -2094,6 +2140,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2023 27992 zyxel multiple nas devices command i](./2023-06-23/cisa-kev-cve-2023-27992-zyxel-multiple-nas-devices-command-i.md)
 - [cisa kev cve 2023 32434 apple multiple products integer over](./2023-06-23/cisa-kev-cve-2023-32434-apple-multiple-products-integer-over.md)
 - [cisa kev cve 2023 32435 apple multiple products webkit memor](./2023-06-23/cisa-kev-cve-2023-32435-apple-multiple-products-webkit-memor.md)
+- [cisa kev cve 2023 32439 apple multiple products webkit type ](./2023-06-23/cisa-kev-cve-2023-32439-apple-multiple-products-webkit-type-.md)
 
 ## 2023-06-22
 - [cisa kev cve 2016 0165 microsoft win32k privilege escalation](./2023-06-22/cisa-kev-cve-2016-0165-microsoft-win32k-privilege-escalation.md)
@@ -2123,6 +2170,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2023-06-05
 - [a day in the life of an ethical hacker](./2023-06-05/a-day-in-the-life-of-an-ethical-hacker.md)
 - [cisa kev cve 2023 33009 zyxel multiple firewalls buffer over](./2023-06-05/cisa-kev-cve-2023-33009-zyxel-multiple-firewalls-buffer-over.md)
+- [cisa kev cve 2023 33010 zyxel multiple firewalls buffer over](./2023-06-05/cisa-kev-cve-2023-33010-zyxel-multiple-firewalls-buffer-over.md)
 - [ethical hacking techniques](./2023-06-05/ethical-hacking-techniques.md)
 
 ## 2023-06-02
@@ -2142,6 +2190,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [data loss prevention for developers](./2023-05-24/data-loss-prevention-for-developers.md)
 
 ## 2023-05-22
+- [cisa kev cve 2023 28204 apple multiple products webkit out o](./2023-05-22/cisa-kev-cve-2023-28204-apple-multiple-products-webkit-out-o.md)
 - [cisa kev cve 2023 32373 apple multiple products webkit use a](./2023-05-22/cisa-kev-cve-2023-32373-apple-multiple-products-webkit-use-a.md)
 - [cisa kev cve 2023 32409 apple multiple products webkit sandb](./2023-05-22/cisa-kev-cve-2023-32409-apple-multiple-products-webkit-sandb.md)
 
@@ -2217,6 +2266,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2023-04-07
 - [cisa kev cve 2019 1388 microsoft windows certificate dialog ](./2023-04-07/cisa-kev-cve-2019-1388-microsoft-windows-certificate-dialog-.md)
 - [cisa kev cve 2021 27876 veritas backup exec agent file acces](./2023-04-07/cisa-kev-cve-2021-27876-veritas-backup-exec-agent-file-acces.md)
+- [cisa kev cve 2021 27877 veritas backup exec agent improper a](./2023-04-07/cisa-kev-cve-2021-27877-veritas-backup-exec-agent-improper-a.md)
 - [cisa kev cve 2021 27878 veritas backup exec agent command ex](./2023-04-07/cisa-kev-cve-2021-27878-veritas-backup-exec-agent-command-ex.md)
 - [cisa kev cve 2023 26083 arm mali gpu kernel driver informati](./2023-04-07/cisa-kev-cve-2023-26083-arm-mali-gpu-kernel-driver-informati.md)
 
@@ -2237,6 +2287,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2013 3163 microsoft internet explorer memory co](./2023-03-30/cisa-kev-cve-2013-3163-microsoft-internet-explorer-memory-co.md)
 - [cisa kev cve 2017 7494 samba remote code execution vulnerabi](./2023-03-30/cisa-kev-cve-2017-7494-samba-remote-code-execution-vulnerabi.md)
 - [cisa kev cve 2021 30900 apple ios ipados and macos out of bo](./2023-03-30/cisa-kev-cve-2021-30900-apple-ios-ipados-and-macos-out-of-bo.md)
+- [cisa kev cve 2022 22706 arm mali gpu kernel driver unspecifi](./2023-03-30/cisa-kev-cve-2022-22706-arm-mali-gpu-kernel-driver-unspecifi.md)
 - [cisa kev cve 2022 3038 google chromium network service use a](./2023-03-30/cisa-kev-cve-2022-3038-google-chromium-network-service-use-a.md)
 - [cisa kev cve 2022 38181 arm mali gpu kernel driver use after](./2023-03-30/cisa-kev-cve-2022-38181-arm-mali-gpu-kernel-driver-use-after.md)
 - [cisa kev cve 2022 39197 fortra cobalt strike teamserver cros](./2023-03-30/cisa-kev-cve-2022-39197-fortra-cobalt-strike-teamserver-cros.md)
@@ -2307,6 +2358,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-02-21
 - [building vue 3 components with tailwind css](./2023-02-21/building-vue-3-components-with-tailwind-css.md)
+- [cisa kev cve 2022 40765 mitel mivoice connect command inject](./2023-02-21/cisa-kev-cve-2022-40765-mitel-mivoice-connect-command-inject.md)
 - [cisa kev cve 2022 41223 mitel mivoice connect code injection](./2023-02-21/cisa-kev-cve-2022-41223-mitel-mivoice-connect-code-injection.md)
 - [cisa kev cve 2022 47986 ibm aspera faspex code execution vul](./2023-02-21/cisa-kev-cve-2022-47986-ibm-aspera-faspex-code-execution-vul.md)
 
@@ -2393,6 +2445,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2022-12-13
 - [azure bicep security fundamentals](./2022-12-13/azure-bicep-security-fundamentals.md)
 - [cisa kev cve 2022 26500 veeam backup replication remote code](./2022-12-13/cisa-kev-cve-2022-26500-veeam-backup-replication-remote-code.md)
+- [cisa kev cve 2022 26501 veeam backup replication remote code](./2022-12-13/cisa-kev-cve-2022-26501-veeam-backup-replication-remote-code.md)
 - [cisa kev cve 2022 27518 citrix application delivery controll](./2022-12-13/cisa-kev-cve-2022-27518-citrix-application-delivery-controll.md)
 - [cisa kev cve 2022 42475 fortinet fortios heap based buffer o](./2022-12-13/cisa-kev-cve-2022-42475-fortinet-fortios-heap-based-buffer-o.md)
 - [cisa kev cve 2022 44698 microsoft defender smartscreen secur](./2022-12-13/cisa-kev-cve-2022-44698-microsoft-defender-smartscreen-secur.md)
@@ -2468,7 +2521,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-10-24
 - [cisa kev cve 2018 19320 gigabyte multiple products unspecifi](./2022-10-24/cisa-kev-cve-2018-19320-gigabyte-multiple-products-unspecifi.md)
+- [cisa kev cve 2018 19321 gigabyte multiple products privilege](./2022-10-24/cisa-kev-cve-2018-19321-gigabyte-multiple-products-privilege.md)
+- [cisa kev cve 2018 19322 gigabyte multiple products code exec](./2022-10-24/cisa-kev-cve-2018-19322-gigabyte-multiple-products-code-exec.md)
 - [cisa kev cve 2018 19323 gigabyte multiple products privilege](./2022-10-24/cisa-kev-cve-2018-19323-gigabyte-multiple-products-privilege.md)
+- [cisa kev cve 2020 3153 cisco anyconnect secure mobility clie](./2022-10-24/cisa-kev-cve-2020-3153-cisco-anyconnect-secure-mobility-clie.md)
 - [cisa kev cve 2020 3433 cisco anyconnect secure mobility clie](./2022-10-24/cisa-kev-cve-2020-3433-cisco-anyconnect-secure-mobility-clie.md)
 
 ## 2022-10-20
@@ -2581,6 +2637,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2022 22536 sap multiple products http request s](./2022-08-18/cisa-kev-cve-2022-22536-sap-multiple-products-http-request-s.md)
 - [cisa kev cve 2022 26923 microsoft active directory domain se](./2022-08-18/cisa-kev-cve-2022-26923-microsoft-active-directory-domain-se.md)
 - [cisa kev cve 2022 2856 google chromium intents insufficient ](./2022-08-18/cisa-kev-cve-2022-2856-google-chromium-intents-insufficient-.md)
+- [cisa kev cve 2022 32893 apple ios and macos out of bounds wr](./2022-08-18/cisa-kev-cve-2022-32893-apple-ios-and-macos-out-of-bounds-wr.md)
 - [cisa kev cve 2022 32894 apple ios and macos out of bounds wr](./2022-08-18/cisa-kev-cve-2022-32894-apple-ios-and-macos-out-of-bounds-wr.md)
 - [the dangers of assert in python](./2022-08-18/the-dangers-of-assert-in-python.md)
 
@@ -2624,8 +2681,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2022 26925 microsoft windows lsa spoofing vulne](./2022-07-01/cisa-kev-cve-2022-26925-microsoft-windows-lsa-spoofing-vulne.md)
 
 ## 2022-06-27
+- [cisa kev cve 2018 4344 apple multiple products memory corrup](./2022-06-27/cisa-kev-cve-2018-4344-apple-multiple-products-memory-corrup.md)
 - [cisa kev cve 2019 8605 apple multiple products use after fre](./2022-06-27/cisa-kev-cve-2019-8605-apple-multiple-products-use-after-fre.md)
 - [cisa kev cve 2020 3837 apple multiple products memory corrup](./2022-06-27/cisa-kev-cve-2020-3837-apple-multiple-products-memory-corrup.md)
+- [cisa kev cve 2020 9907 apple multiple products memory corrup](./2022-06-27/cisa-kev-cve-2020-9907-apple-multiple-products-memory-corrup.md)
 - [cisa kev cve 2021 30533 google chromium popupblocker securit](./2022-06-27/cisa-kev-cve-2021-30533-google-chromium-popupblocker-securit.md)
 - [cisa kev cve 2021 30983 apple ios and ipados buffer overflow](./2022-06-27/cisa-kev-cve-2021-30983-apple-ios-and-ipados-buffer-overflow.md)
 - [cisa kev cve 2021 4034 red hat polkit out of bounds read and](./2022-06-27/cisa-kev-cve-2021-4034-red-hat-polkit-out-of-bounds-read-and.md)
@@ -2641,29 +2700,39 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-06-08
 - [cisa kev cve 2006 2492 microsoft word malformed object point](./2022-06-08/cisa-kev-cve-2006-2492-microsoft-word-malformed-object-point.md)
+- [cisa kev cve 2007 5659 adobe acrobat and reader buffer overf](./2022-06-08/cisa-kev-cve-2007-5659-adobe-acrobat-and-reader-buffer-overf.md)
 - [cisa kev cve 2008 0655 adobe acrobat and reader unspecified ](./2022-06-08/cisa-kev-cve-2008-0655-adobe-acrobat-and-reader-unspecified-.md)
 - [cisa kev cve 2009 0557 microsoft office object record corrup](./2022-06-08/cisa-kev-cve-2009-0557-microsoft-office-object-record-corrup.md)
+- [cisa kev cve 2009 0563 microsoft office buffer overflow vuln](./2022-06-08/cisa-kev-cve-2009-0563-microsoft-office-buffer-overflow-vuln.md)
+- [cisa kev cve 2009 1862 adobe acrobat and reader flash player](./2022-06-08/cisa-kev-cve-2009-1862-adobe-acrobat-and-reader-flash-player.md)
 - [cisa kev cve 2009 3953 adobe acrobat and reader universal 3d](./2022-06-08/cisa-kev-cve-2009-3953-adobe-acrobat-and-reader-universal-3d.md)
+- [cisa kev cve 2009 4324 adobe acrobat and reader use after fr](./2022-06-08/cisa-kev-cve-2009-4324-adobe-acrobat-and-reader-use-after-fr.md)
+- [cisa kev cve 2010 1297 adobe flash player memory corruption ](./2022-06-08/cisa-kev-cve-2010-1297-adobe-flash-player-memory-corruption-.md)
 - [cisa kev cve 2010 2572 microsoft powerpoint buffer overflow ](./2022-06-08/cisa-kev-cve-2010-2572-microsoft-powerpoint-buffer-overflow-.md)
 - [cisa kev cve 2010 2883 adobe acrobat and reader stack based ](./2022-06-08/cisa-kev-cve-2010-2883-adobe-acrobat-and-reader-stack-based-.md)
 - [cisa kev cve 2011 0609 adobe flash player unspecified vulner](./2022-06-08/cisa-kev-cve-2011-0609-adobe-flash-player-unspecified-vulner.md)
 - [cisa kev cve 2011 2462 adobe reader and acrobat universal 3d](./2022-06-08/cisa-kev-cve-2011-2462-adobe-reader-and-acrobat-universal-3d.md)
 - [cisa kev cve 2012 0151 microsoft windows authenticode signat](./2022-06-08/cisa-kev-cve-2012-0151-microsoft-windows-authenticode-signat.md)
+- [cisa kev cve 2012 0754 adobe flash player memory corruption ](./2022-06-08/cisa-kev-cve-2012-0754-adobe-flash-player-memory-corruption-.md)
 - [cisa kev cve 2012 0767 adobe flash player cross site scripti](./2022-06-08/cisa-kev-cve-2012-0767-adobe-flash-player-cross-site-scripti.md)
 - [cisa kev cve 2012 1889 microsoft xml core services memory co](./2022-06-08/cisa-kev-cve-2012-1889-microsoft-xml-core-services-memory-co.md)
 - [cisa kev cve 2012 4969 microsoft internet explorer use after](./2022-06-08/cisa-kev-cve-2012-4969-microsoft-internet-explorer-use-after.md)
 - [cisa kev cve 2012 5054 adobe flash player integer overflow v](./2022-06-08/cisa-kev-cve-2012-5054-adobe-flash-player-integer-overflow-v.md)
 - [cisa kev cve 2013 1331 microsoft office buffer overflow vuln](./2022-06-08/cisa-kev-cve-2013-1331-microsoft-office-buffer-overflow-vuln.md)
+- [cisa kev cve 2016 1646 google chromium v8 out of bounds read](./2022-06-08/cisa-kev-cve-2016-1646-google-chromium-v8-out-of-bounds-read.md)
 - [cisa kev cve 2016 5198 google chromium v8 out of bounds memo](./2022-06-08/cisa-kev-cve-2016-5198-google-chromium-v8-out-of-bounds-memo.md)
+- [cisa kev cve 2017 5030 google chromium v8 memory corruption ](./2022-06-08/cisa-kev-cve-2017-5030-google-chromium-v8-memory-corruption-.md)
 - [cisa kev cve 2017 5070 google chromium v8 type confusion vul](./2022-06-08/cisa-kev-cve-2017-5070-google-chromium-v8-type-confusion-vul.md)
 - [cisa kev cve 2017 6862 netgear multiple devices buffer overf](./2022-06-08/cisa-kev-cve-2017-6862-netgear-multiple-devices-buffer-overf.md)
 - [cisa kev cve 2018 17463 google chromium v8 remote code execu](./2022-06-08/cisa-kev-cve-2018-17463-google-chromium-v8-remote-code-execu.md)
+- [cisa kev cve 2018 17480 google chromium v8 out of bounds wri](./2022-06-08/cisa-kev-cve-2018-17480-google-chromium-v8-out-of-bounds-wri.md)
 - [cisa kev cve 2018 4990 adobe acrobat and reader double free ](./2022-06-08/cisa-kev-cve-2018-4990-adobe-acrobat-and-reader-double-free-.md)
 - [cisa kev cve 2018 6065 google chromium v8 integer overflow v](./2022-06-08/cisa-kev-cve-2018-6065-google-chromium-v8-integer-overflow-v.md)
 - [cisa kev cve 2019 15271 cisco rv series routers deserializat](./2022-06-08/cisa-kev-cve-2019-15271-cisco-rv-series-routers-deserializat.md)
 - [cisa kev cve 2019 5825 google chromium v8 out of bounds writ](./2022-06-08/cisa-kev-cve-2019-5825-google-chromium-v8-out-of-bounds-writ.md)
 - [cisa kev cve 2019 7192 qnap photo station improper access co](./2022-06-08/cisa-kev-cve-2019-7192-qnap-photo-station-improper-access-co.md)
 - [cisa kev cve 2019 7193 qnap qts improper input validation vu](./2022-06-08/cisa-kev-cve-2019-7193-qnap-qts-improper-input-validation-vu.md)
+- [cisa kev cve 2019 7194 qnap photo station path traversal vul](./2022-06-08/cisa-kev-cve-2019-7194-qnap-photo-station-path-traversal-vul.md)
 - [cisa kev cve 2019 7195 qnap photo station path traversal vul](./2022-06-08/cisa-kev-cve-2019-7195-qnap-photo-station-path-traversal-vul.md)
 
 ## 2022-06-06
@@ -2676,15 +2745,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snykweek boston perspectives on developer security adoption](./2022-05-26/snykweek-boston-perspectives-on-developer-security-adoption.md)
 
 ## 2022-05-25
+- [cisa kev cve 2010 0738 red hat jboss authentication bypass v](./2022-05-25/cisa-kev-cve-2010-0738-red-hat-jboss-authentication-bypass-v.md)
 - [cisa kev cve 2010 0840 oracle jre unspecified vulnerability](./2022-05-25/cisa-kev-cve-2010-0840-oracle-jre-unspecified-vulnerability.md)
 - [cisa kev cve 2010 1428 red hat jboss information disclosure ](./2022-05-25/cisa-kev-cve-2010-1428-red-hat-jboss-information-disclosure-.md)
 - [cisa kev cve 2012 1710 oracle fusion middleware unspecified ](./2022-05-25/cisa-kev-cve-2012-1710-oracle-fusion-middleware-unspecified-.md)
 - [cisa kev cve 2013 0074 microsoft silverlight double derefere](./2022-05-25/cisa-kev-cve-2013-0074-microsoft-silverlight-double-derefere.md)
 - [cisa kev cve 2013 0422 oracle jre remote code execution vuln](./2022-05-25/cisa-kev-cve-2013-0422-oracle-jre-remote-code-execution-vuln.md)
+- [cisa kev cve 2013 0431 oracle jre sandbox bypass vulnerabili](./2022-05-25/cisa-kev-cve-2013-0431-oracle-jre-sandbox-bypass-vulnerabili.md)
 - [cisa kev cve 2013 2423 oracle jre unspecified vulnerability](./2022-05-25/cisa-kev-cve-2013-2423-oracle-jre-unspecified-vulnerability.md)
+- [cisa kev cve 2013 3896 microsoft silverlight information dis](./2022-05-25/cisa-kev-cve-2013-3896-microsoft-silverlight-information-dis.md)
 - [cisa kev cve 2013 3993 ibm infosphere biginsights invalid in](./2022-05-25/cisa-kev-cve-2013-3993-ibm-infosphere-biginsights-invalid-in.md)
 - [cisa kev cve 2013 7331 microsoft internet explorer informati](./2022-05-25/cisa-kev-cve-2013-7331-microsoft-internet-explorer-informati.md)
 - [cisa kev cve 2014 0546 adobe reader and acrobat sandbox bypa](./2022-05-25/cisa-kev-cve-2014-0546-adobe-reader-and-acrobat-sandbox-bypa.md)
+- [cisa kev cve 2014 2817 microsoft internet explorer privilege](./2022-05-25/cisa-kev-cve-2014-2817-microsoft-internet-explorer-privilege.md)
 - [cisa kev cve 2014 3153 linux kernel privilege escalation vul](./2022-05-25/cisa-kev-cve-2014-3153-linux-kernel-privilege-escalation-vul.md)
 - [cisa kev cve 2014 4077 microsoft ime japanese privilege esca](./2022-05-25/cisa-kev-cve-2014-4077-microsoft-ime-japanese-privilege-esca.md)
 - [cisa kev cve 2014 4123 microsoft internet explorer privilege](./2022-05-25/cisa-kev-cve-2014-4123-microsoft-internet-explorer-privilege.md)
@@ -2693,9 +2766,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2015 0016 microsoft windows ts webproxy directo](./2022-05-25/cisa-kev-cve-2015-0016-microsoft-windows-ts-webproxy-directo.md)
 - [cisa kev cve 2015 0071 microsoft internet explorer aslr bypa](./2022-05-25/cisa-kev-cve-2015-0071-microsoft-internet-explorer-aslr-bypa.md)
 - [cisa kev cve 2015 0310 adobe flash player aslr bypass vulner](./2022-05-25/cisa-kev-cve-2015-0310-adobe-flash-player-aslr-bypass-vulner.md)
+- [cisa kev cve 2015 1671 microsoft windows remote code executi](./2022-05-25/cisa-kev-cve-2015-1671-microsoft-windows-remote-code-executi.md)
+- [cisa kev cve 2015 1769 microsoft windows mount manager privi](./2022-05-25/cisa-kev-cve-2015-1769-microsoft-windows-mount-manager-privi.md)
 - [cisa kev cve 2015 2360 microsoft win32k privilege escalation](./2022-05-25/cisa-kev-cve-2015-2360-microsoft-win32k-privilege-escalation.md)
+- [cisa kev cve 2015 2425 microsoft internet explorer memory co](./2022-05-25/cisa-kev-cve-2015-2425-microsoft-internet-explorer-memory-co.md)
 - [cisa kev cve 2015 4495 mozilla firefox security feature bypa](./2022-05-25/cisa-kev-cve-2015-4495-mozilla-firefox-security-feature-bypa.md)
+- [cisa kev cve 2015 6175 microsoft windows kernel privilege es](./2022-05-25/cisa-kev-cve-2015-6175-microsoft-windows-kernel-privilege-es.md)
+- [cisa kev cve 2015 8651 adobe flash player integer overflow v](./2022-05-25/cisa-kev-cve-2015-8651-adobe-flash-player-integer-overflow-v.md)
 - [cisa kev cve 2016 0034 microsoft silverlight runtime remote ](./2022-05-25/cisa-kev-cve-2016-0034-microsoft-silverlight-runtime-remote-.md)
+- [cisa kev cve 2016 0984 adobe flash player and air use after ](./2022-05-25/cisa-kev-cve-2016-0984-adobe-flash-player-and-air-use-after-.md)
 - [cisa kev cve 2016 1010 adobe flash player and air integer ov](./2022-05-25/cisa-kev-cve-2016-1010-adobe-flash-player-and-air-integer-ov.md)
 - [cisa kev cve 2016 3393 microsoft windows graphics device int](./2022-05-25/cisa-kev-cve-2016-3393-microsoft-windows-graphics-device-int.md)
 - [cisa kev cve 2016 7256 microsoft windows open type font remo](./2022-05-25/cisa-kev-cve-2016-7256-microsoft-windows-open-type-font-remo.md)
@@ -2703,17 +2782,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-05-24
 - [cisa kev cve 2016 0162 microsoft internet explorer informati](./2022-05-24/cisa-kev-cve-2016-0162-microsoft-internet-explorer-informati.md)
+- [cisa kev cve 2016 3298 microsoft internet explorer messaging](./2022-05-24/cisa-kev-cve-2016-3298-microsoft-internet-explorer-messaging.md)
+- [cisa kev cve 2016 3351 microsoft internet explorer and edge ](./2022-05-24/cisa-kev-cve-2016-3351-microsoft-internet-explorer-and-edge-.md)
 - [cisa kev cve 2016 4655 apple ios information disclosure vuln](./2022-05-24/cisa-kev-cve-2016-4655-apple-ios-information-disclosure-vuln.md)
 - [cisa kev cve 2016 4656 apple ios memory corruption vulnerabi](./2022-05-24/cisa-kev-cve-2016-4656-apple-ios-memory-corruption-vulnerabi.md)
+- [cisa kev cve 2016 4657 apple ios webkit memory corruption vu](./2022-05-24/cisa-kev-cve-2016-4657-apple-ios-webkit-memory-corruption-vu.md)
 - [cisa kev cve 2016 6366 cisco adaptive security appliance asa](./2022-05-24/cisa-kev-cve-2016-6366-cisco-adaptive-security-appliance-asa.md)
 - [cisa kev cve 2016 6367 cisco adaptive security appliance asa](./2022-05-24/cisa-kev-cve-2016-6367-cisco-adaptive-security-appliance-asa.md)
 - [cisa kev cve 2017 0005 microsoft windows graphics device int](./2022-05-24/cisa-kev-cve-2017-0005-microsoft-windows-graphics-device-int.md)
 - [cisa kev cve 2017 0022 microsoft xml core services informati](./2022-05-24/cisa-kev-cve-2017-0022-microsoft-xml-core-services-informati.md)
 - [cisa kev cve 2017 0147 microsoft windows smbv1 information d](./2022-05-24/cisa-kev-cve-2017-0147-microsoft-windows-smbv1-information-d.md)
 - [cisa kev cve 2017 0149 microsoft internet explorer memory co](./2022-05-24/cisa-kev-cve-2017-0149-microsoft-internet-explorer-memory-co.md)
+- [cisa kev cve 2017 0210 microsoft internet explorer privilege](./2022-05-24/cisa-kev-cve-2017-0210-microsoft-internet-explorer-privilege.md)
 - [cisa kev cve 2017 18362 kaseya vsa sql injection vulnerabili](./2022-05-24/cisa-kev-cve-2017-18362-kaseya-vsa-sql-injection-vulnerabili.md)
 - [cisa kev cve 2017 8291 artifex ghostscript type confusion vu](./2022-05-24/cisa-kev-cve-2017-8291-artifex-ghostscript-type-confusion-vu.md)
 - [cisa kev cve 2017 8543 microsoft windows search remote code ](./2022-05-24/cisa-kev-cve-2017-8543-microsoft-windows-search-remote-code-.md)
+- [cisa kev cve 2018 19943 qnap nas file station cross site scr](./2022-05-24/cisa-kev-cve-2018-19943-qnap-nas-file-station-cross-site-scr.md)
+- [cisa kev cve 2018 19949 qnap nas file station command inject](./2022-05-24/cisa-kev-cve-2018-19949-qnap-nas-file-station-command-inject.md)
 - [cisa kev cve 2018 19953 qnap nas file station cross site scr](./2022-05-24/cisa-kev-cve-2018-19953-qnap-nas-file-station-cross-site-scr.md)
 - [cisa kev cve 2018 8611 microsoft windows kernel privilege es](./2022-05-24/cisa-kev-cve-2018-8611-microsoft-windows-kernel-privilege-es.md)
 - [snyk finds 200 malicious npm packages including cobalt strik](./2022-05-24/snyk-finds-200-malicious-npm-packages-including-cobalt-strik.md)
@@ -2722,11 +2807,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2018 5002 adobe flash player stack based buffer](./2022-05-23/cisa-kev-cve-2018-5002-adobe-flash-player-stack-based-buffer.md)
 - [cisa kev cve 2018 8589 microsoft win32k privilege escalation](./2022-05-23/cisa-kev-cve-2018-8589-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2019 0676 microsoft internet explorer informati](./2022-05-23/cisa-kev-cve-2019-0676-microsoft-internet-explorer-informati.md)
+- [cisa kev cve 2019 0703 microsoft windows smb information dis](./2022-05-23/cisa-kev-cve-2019-0703-microsoft-windows-smb-information-dis.md)
+- [cisa kev cve 2019 0880 microsoft windows privilege escalatio](./2022-05-23/cisa-kev-cve-2019-0880-microsoft-windows-privilege-escalatio.md)
+- [cisa kev cve 2019 1130 microsoft windows appx deployment ser](./2022-05-23/cisa-kev-cve-2019-1130-microsoft-windows-appx-deployment-ser.md)
 - [cisa kev cve 2019 11707 mozilla firefox and thunderbird type](./2022-05-23/cisa-kev-cve-2019-11707-mozilla-firefox-and-thunderbird-type.md)
+- [cisa kev cve 2019 11708 mozilla firefox and thunderbird sand](./2022-05-23/cisa-kev-cve-2019-11708-mozilla-firefox-and-thunderbird-sand.md)
+- [cisa kev cve 2019 13720 google chrome webaudio use after fre](./2022-05-23/cisa-kev-cve-2019-13720-google-chrome-webaudio-use-after-fre.md)
 - [cisa kev cve 2019 1385 microsoft windows appx deployment ext](./2022-05-23/cisa-kev-cve-2019-1385-microsoft-windows-appx-deployment-ext.md)
 - [cisa kev cve 2019 18426 whatsapp cross site scripting vulner](./2022-05-23/cisa-kev-cve-2019-18426-whatsapp-cross-site-scripting-vulner.md)
 - [cisa kev cve 2019 5786 google chrome blink use after free vu](./2022-05-23/cisa-kev-cve-2019-5786-google-chrome-blink-use-after-free-vu.md)
+- [cisa kev cve 2019 7286 apple multiple products memory corrup](./2022-05-23/cisa-kev-cve-2019-7286-apple-multiple-products-memory-corrup.md)
 - [cisa kev cve 2019 7287 apple ios memory corruption vulnerabi](./2022-05-23/cisa-kev-cve-2019-7287-apple-ios-memory-corruption-vulnerabi.md)
+- [cisa kev cve 2019 8720 webkitgtk memory corruption vulnerabi](./2022-05-23/cisa-kev-cve-2019-8720-webkitgtk-memory-corruption-vulnerabi.md)
 - [cisa kev cve 2020 0638 microsoft update notification manager](./2022-05-23/cisa-kev-cve-2020-0638-microsoft-update-notification-manager.md)
 - [cisa kev cve 2020 1027 microsoft windows kernel privilege es](./2022-05-23/cisa-kev-cve-2020-1027-microsoft-windows-kernel-privilege-es.md)
 - [cisa kev cve 2021 0920 android kernel race condition vulnera](./2022-05-23/cisa-kev-cve-2021-0920-android-kernel-race-condition-vulnera.md)
@@ -2751,6 +2843,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2014 0160 openssl information disclosure vulner](./2022-05-04/cisa-kev-cve-2014-0160-openssl-information-disclosure-vulner.md)
 - [cisa kev cve 2014 0322 microsoft internet explorer use after](./2022-05-04/cisa-kev-cve-2014-0322-microsoft-internet-explorer-use-after.md)
 - [cisa kev cve 2014 4113 microsoft win32k privilege escalation](./2022-05-04/cisa-kev-cve-2014-4113-microsoft-win32k-privilege-escalation.md)
+- [cisa kev cve 2019 8506 apple multiple products type confusio](./2022-05-04/cisa-kev-cve-2019-8506-apple-multiple-products-type-confusio.md)
 - [cisa kev cve 2021 1789 apple multiple products type confusio](./2022-05-04/cisa-kev-cve-2021-1789-apple-multiple-products-type-confusio.md)
 
 ## 2022-05-03
@@ -2767,8 +2860,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-04-25
 - [cisa kev cve 2019 1003029 jenkins script security plugin san](./2022-04-25/cisa-kev-cve-2019-1003029-jenkins-script-security-plugin-san.md)
+- [cisa kev cve 2021 40450 microsoft win32k privilege escalatio](./2022-04-25/cisa-kev-cve-2021-40450-microsoft-win32k-privilege-escalatio.md)
 - [cisa kev cve 2021 41357 microsoft win32k privilege escalatio](./2022-04-25/cisa-kev-cve-2021-41357-microsoft-win32k-privilege-escalatio.md)
 - [cisa kev cve 2022 0847 linux kernel privilege escalation vul](./2022-04-25/cisa-kev-cve-2022-0847-linux-kernel-privilege-escalation-vul.md)
+- [cisa kev cve 2022 21919 microsoft windows user profile servi](./2022-04-25/cisa-kev-cve-2022-21919-microsoft-windows-user-profile-servi.md)
 - [cisa kev cve 2022 26904 microsoft windows user profile servi](./2022-04-25/cisa-kev-cve-2022-26904-microsoft-windows-user-profile-servi.md)
 - [cisa kev cve 2022 29464 wso2 multiple products unrestrictive](./2022-04-25/cisa-kev-cve-2022-29464-wso2-multiple-products-unrestrictive.md)
 
@@ -2794,10 +2889,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2022 22954 vmware workspace one access and iden](./2022-04-14/cisa-kev-cve-2022-22954-vmware-workspace-one-access-and-iden.md)
 
 ## 2022-04-13
+- [cisa kev cve 2014 9163 adobe flash player stack based buffer](./2022-04-13/cisa-kev-cve-2014-9163-adobe-flash-player-stack-based-buffer.md)
 - [cisa kev cve 2015 0311 adobe flash player remote code execut](./2022-04-13/cisa-kev-cve-2015-0311-adobe-flash-player-remote-code-execut.md)
+- [cisa kev cve 2015 0313 adobe flash player use after free vul](./2022-04-13/cisa-kev-cve-2015-0313-adobe-flash-player-use-after-free-vul.md)
 - [cisa kev cve 2015 2502 microsoft internet explorer memory co](./2022-04-13/cisa-kev-cve-2015-2502-microsoft-internet-explorer-memory-co.md)
 - [cisa kev cve 2015 3113 adobe flash player heap based buffer ](./2022-04-13/cisa-kev-cve-2015-3113-adobe-flash-player-heap-based-buffer-.md)
+- [cisa kev cve 2015 5122 adobe flash player use after free vul](./2022-04-13/cisa-kev-cve-2015-5122-adobe-flash-player-use-after-free-vul.md)
 - [cisa kev cve 2015 5123 adobe flash player use after free vul](./2022-04-13/cisa-kev-cve-2015-5123-adobe-flash-player-use-after-free-vul.md)
+- [cisa kev cve 2018 20753 kaseya vsa remote code execution vul](./2022-04-13/cisa-kev-cve-2018-20753-kaseya-vsa-remote-code-execution-vul.md)
 - [cisa kev cve 2018 7602 drupal core remote code execution vul](./2022-04-13/cisa-kev-cve-2018-7602-drupal-core-remote-code-execution-vul.md)
 - [cisa kev cve 2022 24521 microsoft windows clfs driver privil](./2022-04-13/cisa-kev-cve-2022-24521-microsoft-windows-clfs-driver-privil.md)
 
@@ -2810,6 +2909,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2021 22600 linux kernel privilege escalation vu](./2022-04-11/cisa-kev-cve-2021-22600-linux-kernel-privilege-escalation-vu.md)
 - [cisa kev cve 2021 27852 checkbox survey deserialization of u](./2022-04-11/cisa-kev-cve-2021-27852-checkbox-survey-deserialization-of-u.md)
 - [cisa kev cve 2021 39793 google pixel out of bounds write vul](./2022-04-11/cisa-kev-cve-2021-39793-google-pixel-out-of-bounds-write-vul.md)
+- [cisa kev cve 2021 42278 microsoft active directory domain se](./2022-04-11/cisa-kev-cve-2021-42278-microsoft-active-directory-domain-se.md)
 - [cisa kev cve 2021 42287 microsoft active directory domain se](./2022-04-11/cisa-kev-cve-2021-42287-microsoft-active-directory-domain-se.md)
 - [cisa kev cve 2022 23176 watchguard firebox and xtm privilege](./2022-04-11/cisa-kev-cve-2022-23176-watchguard-firebox-and-xtm-privilege.md)
 
@@ -2829,6 +2929,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-04-04
 - [cisa kev cve 2021 45382 d link multiple routers remote code ](./2022-04-04/cisa-kev-cve-2021-45382-d-link-multiple-routers-remote-code-.md)
+- [cisa kev cve 2022 22674 apple macos out of bounds read vulne](./2022-04-04/cisa-kev-cve-2022-22674-apple-macos-out-of-bounds-read-vulne.md)
 - [cisa kev cve 2022 22675 apple macos out of bounds write vuln](./2022-04-04/cisa-kev-cve-2022-22675-apple-macos-out-of-bounds-write-vuln.md)
 - [cisa kev cve 2022 22965 spring framework jdk 9 remote code e](./2022-04-04/cisa-kev-cve-2022-22965-spring-framework-jdk-9-remote-code-e.md)
 - [exploring 3 types of directory traversal vulnerabilities in ](./2022-04-04/exploring-3-types-of-directory-traversal-vulnerabilities-in-.md)
@@ -2865,13 +2966,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2013 2729 adobe reader and acrobat arbitrary in](./2022-03-28/cisa-kev-cve-2013-2729-adobe-reader-and-acrobat-arbitrary-in.md)
 - [cisa kev cve 2013 3660 microsoft win32k privilege escalation](./2022-03-28/cisa-kev-cve-2013-3660-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2015 1770 microsoft office uninitialized memory](./2022-03-28/cisa-kev-cve-2015-1770-microsoft-office-uninitialized-memory.md)
+- [cisa kev cve 2015 2419 microsoft internet explorer memory co](./2022-03-28/cisa-kev-cve-2015-2419-microsoft-internet-explorer-memory-co.md)
 - [cisa kev cve 2015 2426 microsoft windows adobe type manager ](./2022-03-28/cisa-kev-cve-2015-2426-microsoft-windows-adobe-type-manager-.md)
+- [cisa kev cve 2016 0040 microsoft windows kernel privilege es](./2022-03-28/cisa-kev-cve-2016-0040-microsoft-windows-kernel-privilege-es.md)
 - [cisa kev cve 2016 0151 microsoft windows csrss security feat](./2022-03-28/cisa-kev-cve-2016-0151-microsoft-windows-csrss-security-feat.md)
+- [cisa kev cve 2016 0189 microsoft internet explorer memory co](./2022-03-28/cisa-kev-cve-2016-0189-microsoft-internet-explorer-memory-co.md)
+- [cisa kev cve 2016 7200 microsoft edge memory corruption vuln](./2022-03-28/cisa-kev-cve-2016-7200-microsoft-edge-memory-corruption-vuln.md)
 - [cisa kev cve 2016 7201 microsoft edge memory corruption vuln](./2022-03-28/cisa-kev-cve-2016-7201-microsoft-edge-memory-corruption-vuln.md)
 - [cisa kev cve 2017 0037 microsoft edge and internet explorer ](./2022-03-28/cisa-kev-cve-2017-0037-microsoft-edge-and-internet-explorer-.md)
 - [cisa kev cve 2017 0059 microsoft internet explorer informati](./2022-03-28/cisa-kev-cve-2017-0059-microsoft-internet-explorer-informati.md)
 - [cisa kev cve 2017 0213 microsoft windows privilege escalatio](./2022-03-28/cisa-kev-cve-2017-0213-microsoft-windows-privilege-escalatio.md)
+- [cisa kev cve 2018 8405 microsoft directx graphics kernel pri](./2022-03-28/cisa-kev-cve-2018-8405-microsoft-directx-graphics-kernel-pri.md)
 - [cisa kev cve 2018 8406 microsoft directx graphics kernel pri](./2022-03-28/cisa-kev-cve-2018-8406-microsoft-directx-graphics-kernel-pri.md)
+- [cisa kev cve 2018 8440 microsoft windows privilege escalatio](./2022-03-28/cisa-kev-cve-2018-8440-microsoft-windows-privilege-escalatio.md)
 - [cisa kev cve 2019 7483 sonicwall sma100 directory traversal ](./2022-03-28/cisa-kev-cve-2019-7483-sonicwall-sma100-directory-traversal-.md)
 - [cisa kev cve 2021 20028 sonicwall secure remote access sra s](./2022-03-28/cisa-kev-cve-2021-20028-sonicwall-secure-remote-access-sra-s.md)
 - [cisa kev cve 2021 26085 atlassian confluence server pre auth](./2022-03-28/cisa-kev-cve-2021-26085-atlassian-confluence-server-pre-auth.md)
@@ -2885,13 +2992,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2005 2773 hp openview network node manager remo](./2022-03-25/cisa-kev-cve-2005-2773-hp-openview-network-node-manager-remo.md)
 - [cisa kev cve 2009 0927 adobe reader and adobe acrobat stack ](./2022-03-25/cisa-kev-cve-2009-0927-adobe-reader-and-adobe-acrobat-stack-.md)
 - [cisa kev cve 2009 1151 phpmyadmin remote code execution vuln](./2022-03-25/cisa-kev-cve-2009-1151-phpmyadmin-remote-code-execution-vuln.md)
+- [cisa kev cve 2009 2055 cisco ios xr border gateway protocol ](./2022-03-25/cisa-kev-cve-2009-2055-cisco-ios-xr-border-gateway-protocol-.md)
 - [cisa kev cve 2010 2861 adobe coldfusion directory traversal ](./2022-03-25/cisa-kev-cve-2010-2861-adobe-coldfusion-directory-traversal-.md)
 - [cisa kev cve 2010 3035 cisco ios xr border gateway protocol ](./2022-03-25/cisa-kev-cve-2010-3035-cisco-ios-xr-border-gateway-protocol-.md)
 - [cisa kev cve 2010 4344 exim heap based buffer overflow vulne](./2022-03-25/cisa-kev-cve-2010-4344-exim-heap-based-buffer-overflow-vulne.md)
 - [cisa kev cve 2010 4345 exim privilege escalation vulnerabili](./2022-03-25/cisa-kev-cve-2010-4345-exim-privilege-escalation-vulnerabili.md)
 - [cisa kev cve 2012 1823 php cgi query string parameter vulner](./2022-03-25/cisa-kev-cve-2012-1823-php-cgi-query-string-parameter-vulner.md)
 - [cisa kev cve 2013 2251 apache struts improper input validati](./2022-03-25/cisa-kev-cve-2013-2251-apache-struts-improper-input-validati.md)
+- [cisa kev cve 2013 4810 hp multiple products remote code exec](./2022-03-25/cisa-kev-cve-2013-4810-hp-multiple-products-remote-code-exec.md)
 - [cisa kev cve 2013 5223 d link dsl 2760u gateway cross site s](./2022-03-25/cisa-kev-cve-2013-5223-d-link-dsl-2760u-gateway-cross-site-s.md)
+- [cisa kev cve 2014 0130 ruby on rails directory traversal vul](./2022-03-25/cisa-kev-cve-2014-0130-ruby-on-rails-directory-traversal-vul.md)
 - [cisa kev cve 2014 3120 elasticsearch remote code execution v](./2022-03-25/cisa-kev-cve-2014-3120-elasticsearch-remote-code-execution-v.md)
 - [cisa kev cve 2014 6287 rejetto http file server hfs remote c](./2022-03-25/cisa-kev-cve-2014-6287-rejetto-http-file-server-hfs-remote-c.md)
 - [cisa kev cve 2014 6324 microsoft kerberos key distribution c](./2022-03-25/cisa-kev-cve-2014-6324-microsoft-kerberos-key-distribution-c.md)
@@ -2907,6 +3017,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2016 1555 netgear multiple wap devices command ](./2022-03-25/cisa-kev-cve-2016-1555-netgear-multiple-wap-devices-command-.md)
 - [cisa kev cve 2016 4171 adobe flash player remote code execut](./2022-03-25/cisa-kev-cve-2016-4171-adobe-flash-player-remote-code-execut.md)
 - [cisa kev cve 2016 7892 adobe flash player use after free vul](./2022-03-25/cisa-kev-cve-2016-7892-adobe-flash-player-use-after-free-vul.md)
+- [cisa kev cve 2017 0146 microsoft windows smb remote code exe](./2022-03-25/cisa-kev-cve-2017-0146-microsoft-windows-smb-remote-code-exe.md)
+- [cisa kev cve 2017 12615 apache tomcat on windows remote code](./2022-03-25/cisa-kev-cve-2017-12615-apache-tomcat-on-windows-remote-code.md)
 - [cisa kev cve 2017 12617 apache tomcat remote code execution ](./2022-03-25/cisa-kev-cve-2017-12617-apache-tomcat-remote-code-execution-.md)
 - [cisa kev cve 2017 3881 cisco ios and ios xe remote code exec](./2022-03-25/cisa-kev-cve-2017-3881-cisco-ios-and-ios-xe-remote-code-exec.md)
 - [cisa kev cve 2017 6316 citrix multiple products remote code ](./2022-03-25/cisa-kev-cve-2017-6316-citrix-multiple-products-remote-code-.md)
@@ -2919,9 +3031,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2018 6961 vmware sd wan edge by velocloud comma](./2022-03-25/cisa-kev-cve-2018-6961-vmware-sd-wan-edge-by-velocloud-comma.md)
 - [cisa kev cve 2018 8373 microsoft scripting engine memory cor](./2022-03-25/cisa-kev-cve-2018-8373-microsoft-scripting-engine-memory-cor.md)
 - [cisa kev cve 2018 8414 microsoft windows shell remote code e](./2022-03-25/cisa-kev-cve-2018-8414-microsoft-windows-shell-remote-code-e.md)
+- [cisa kev cve 2019 0903 microsoft gdi remote code execution v](./2022-03-25/cisa-kev-cve-2019-0903-microsoft-gdi-remote-code-execution-v.md)
 - [cisa kev cve 2019 1003030 jenkins matrix project plugin remo](./2022-03-25/cisa-kev-cve-2019-1003030-jenkins-matrix-project-plugin-remo.md)
 - [cisa kev cve 2019 10068 kentico xperience deserialization of](./2022-03-25/cisa-kev-cve-2019-10068-kentico-xperience-deserialization-of.md)
 - [cisa kev cve 2019 11043 php fastcgi process manager fpm buff](./2022-03-25/cisa-kev-cve-2019-11043-php-fastcgi-process-manager-fpm-buff.md)
+- [cisa kev cve 2019 12989 citrix sd wan and netscaler sql inje](./2022-03-25/cisa-kev-cve-2019-12989-citrix-sd-wan-and-netscaler-sql-inje.md)
 - [cisa kev cve 2019 12991 citrix sd wan and netscaler command ](./2022-03-25/cisa-kev-cve-2019-12991-citrix-sd-wan-and-netscaler-command-.md)
 - [cisa kev cve 2019 15107 webmin command injection vulnerabili](./2022-03-25/cisa-kev-cve-2019-15107-webmin-command-injection-vulnerabili.md)
 - [cisa kev cve 2019 16920 d link multiple routers command inje](./2022-03-25/cisa-kev-cve-2019-16920-d-link-multiple-routers-command-inje.md)
@@ -2931,6 +3045,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2020 1956 apache kylin os command injection vul](./2022-03-25/cisa-kev-cve-2020-1956-apache-kylin-os-command-injection-vul.md)
 - [cisa kev cve 2020 2021 palo alto networks pan os authenticat](./2022-03-25/cisa-kev-cve-2020-2021-palo-alto-networks-pan-os-authenticat.md)
 - [cisa kev cve 2020 2506 qnap helpdesk improper access control](./2022-03-25/cisa-kev-cve-2020-2506-qnap-helpdesk-improper-access-control.md)
+- [cisa kev cve 2020 25223 sophos sg utm remote code execution ](./2022-03-25/cisa-kev-cve-2020-25223-sophos-sg-utm-remote-code-execution-.md)
 - [cisa kev cve 2020 5410 vmware tanzu spring cloud config dire](./2022-03-25/cisa-kev-cve-2020-5410-vmware-tanzu-spring-cloud-config-dire.md)
 - [cisa kev cve 2020 7247 opensmtpd remote code execution vulne](./2022-03-25/cisa-kev-cve-2020-7247-opensmtpd-remote-code-execution-vulne.md)
 - [cisa kev cve 2020 9054 zyxel multiple nas devices os command](./2022-03-25/cisa-kev-cve-2020-9054-zyxel-multiple-nas-devices-os-command.md)
@@ -2958,9 +3073,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2016 3309 microsoft windows kernel privilege es](./2022-03-15/cisa-kev-cve-2016-3309-microsoft-windows-kernel-privilege-es.md)
 - [cisa kev cve 2017 0101 microsoft windows transaction manager](./2022-03-15/cisa-kev-cve-2017-0101-microsoft-windows-transaction-manager.md)
 - [cisa kev cve 2018 8120 microsoft win32k privilege escalation](./2022-03-15/cisa-kev-cve-2018-8120-microsoft-win32k-privilege-escalation.md)
+- [cisa kev cve 2019 0543 microsoft windows privilege escalatio](./2022-03-15/cisa-kev-cve-2019-0543-microsoft-windows-privilege-escalatio.md)
+- [cisa kev cve 2019 0841 microsoft windows appx deployment ser](./2022-03-15/cisa-kev-cve-2019-0841-microsoft-windows-appx-deployment-ser.md)
+- [cisa kev cve 2019 1064 microsoft windows appx deployment ser](./2022-03-15/cisa-kev-cve-2019-1064-microsoft-windows-appx-deployment-ser.md)
+- [cisa kev cve 2019 1069 microsoft task scheduler privilege es](./2022-03-15/cisa-kev-cve-2019-1069-microsoft-task-scheduler-privilege-es.md)
+- [cisa kev cve 2019 1129 microsoft windows appx deployment ser](./2022-03-15/cisa-kev-cve-2019-1129-microsoft-windows-appx-deployment-ser.md)
 - [cisa kev cve 2019 1132 microsoft win32k privilege escalation](./2022-03-15/cisa-kev-cve-2019-1132-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2019 1253 microsoft windows appx deployment ser](./2022-03-15/cisa-kev-cve-2019-1253-microsoft-windows-appx-deployment-ser.md)
 - [cisa kev cve 2019 1315 microsoft windows error reporting man](./2022-03-15/cisa-kev-cve-2019-1315-microsoft-windows-error-reporting-man.md)
+- [cisa kev cve 2019 1322 microsoft windows privilege escalatio](./2022-03-15/cisa-kev-cve-2019-1322-microsoft-windows-privilege-escalatio.md)
 - [cisa kev cve 2019 1405 microsoft windows universal plug and ](./2022-03-15/cisa-kev-cve-2019-1405-microsoft-windows-universal-plug-and-.md)
 - [cisa kev cve 2020 5135 sonicwall sonicos buffer overflow vul](./2022-03-15/cisa-kev-cve-2020-5135-sonicwall-sonicos-buffer-overflow-vul.md)
 
@@ -2984,10 +3105,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2019 11581 atlassian jira server and data cente](./2022-03-07/cisa-kev-cve-2019-11581-atlassian-jira-server-and-data-cente.md)
 - [cisa kev cve 2020 8218 pulse connect secure code injection v](./2022-03-07/cisa-kev-cve-2020-8218-pulse-connect-secure-code-injection-v.md)
 - [cisa kev cve 2021 21973 vmware vcenter server and cloud foun](./2022-03-07/cisa-kev-cve-2021-21973-vmware-vcenter-server-and-cloud-foun.md)
+- [cisa kev cve 2022 26485 mozilla firefox use after free vulne](./2022-03-07/cisa-kev-cve-2022-26485-mozilla-firefox-use-after-free-vulne.md)
 - [cisa kev cve 2022 26486 mozilla firefox use after free vulne](./2022-03-07/cisa-kev-cve-2022-26486-mozilla-firefox-use-after-free-vulne.md)
 
 ## 2022-03-03
 - [adding container and iac security to the snyk plugin for jet](./2022-03-03/adding-container-and-iac-security-to-the-snyk-plugin-for-jet.md)
+- [cisa kev cve 2002 0367 microsoft windows privilege escalatio](./2022-03-03/cisa-kev-cve-2002-0367-microsoft-windows-privilege-escalatio.md)
 - [cisa kev cve 2004 0210 microsoft windows privilege escalatio](./2022-03-03/cisa-kev-cve-2004-0210-microsoft-windows-privilege-escalatio.md)
 - [cisa kev cve 2008 2992 adobe reader and acrobat input valida](./2022-03-03/cisa-kev-cve-2008-2992-adobe-reader-and-acrobat-input-valida.md)
 - [cisa kev cve 2008 3431 oracle virtualbox insufficient input ](./2022-03-03/cisa-kev-cve-2008-3431-oracle-virtualbox-insufficient-input-.md)
@@ -2998,23 +3121,34 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2010 3333 microsoft office stack based buffer o](./2022-03-03/cisa-kev-cve-2010-3333-microsoft-office-stack-based-buffer-o.md)
 - [cisa kev cve 2011 0611 adobe flash player remote code execut](./2022-03-03/cisa-kev-cve-2011-0611-adobe-flash-player-remote-code-execut.md)
 - [cisa kev cve 2011 1889 microsoft forefront tmg remote code e](./2022-03-03/cisa-kev-cve-2011-1889-microsoft-forefront-tmg-remote-code-e.md)
+- [cisa kev cve 2011 3544 oracle java se runtime environment jr](./2022-03-03/cisa-kev-cve-2011-3544-oracle-java-se-runtime-environment-jr.md)
+- [cisa kev cve 2012 0507 oracle java se runtime environment jr](./2022-03-03/cisa-kev-cve-2012-0507-oracle-java-se-runtime-environment-jr.md)
+- [cisa kev cve 2012 1535 adobe flash player arbitrary code exe](./2022-03-03/cisa-kev-cve-2012-1535-adobe-flash-player-arbitrary-code-exe.md)
+- [cisa kev cve 2012 1723 oracle java se runtime environment jr](./2022-03-03/cisa-kev-cve-2012-1723-oracle-java-se-runtime-environment-jr.md)
 - [cisa kev cve 2012 1856 microsoft office mscomctl ocx remote ](./2022-03-03/cisa-kev-cve-2012-1856-microsoft-office-mscomctl-ocx-remote-.md)
 - [cisa kev cve 2012 4681 oracle java se runtime environment jr](./2022-03-03/cisa-kev-cve-2012-4681-oracle-java-se-runtime-environment-jr.md)
 - [cisa kev cve 2013 0632 adobe coldfusion authentication bypas](./2022-03-03/cisa-kev-cve-2013-0632-adobe-coldfusion-authentication-bypas.md)
+- [cisa kev cve 2013 0640 adobe reader and acrobat memory corru](./2022-03-03/cisa-kev-cve-2013-0640-adobe-reader-and-acrobat-memory-corru.md)
 - [cisa kev cve 2013 0641 adobe reader buffer overflow vulnerab](./2022-03-03/cisa-kev-cve-2013-0641-adobe-reader-buffer-overflow-vulnerab.md)
 - [cisa kev cve 2013 1347 microsoft internet explorer remote co](./2022-03-03/cisa-kev-cve-2013-1347-microsoft-internet-explorer-remote-co.md)
 - [cisa kev cve 2013 1675 mozilla firefox information disclosur](./2022-03-03/cisa-kev-cve-2013-1675-mozilla-firefox-information-disclosur.md)
 - [cisa kev cve 2013 3346 adobe reader and acrobat memory corru](./2022-03-03/cisa-kev-cve-2013-3346-adobe-reader-and-acrobat-memory-corru.md)
 - [cisa kev cve 2013 3897 microsoft internet explorer use after](./2022-03-03/cisa-kev-cve-2013-3897-microsoft-internet-explorer-use-after.md)
+- [cisa kev cve 2013 5065 microsoft windows kernel privilege es](./2022-03-03/cisa-kev-cve-2013-5065-microsoft-windows-kernel-privilege-es.md)
 - [cisa kev cve 2014 0496 adobe reader and acrobat use after fr](./2022-03-03/cisa-kev-cve-2014-0496-adobe-reader-and-acrobat-use-after-fr.md)
 - [cisa kev cve 2014 4114 microsoft windows object linking embe](./2022-03-03/cisa-kev-cve-2014-4114-microsoft-windows-object-linking-embe.md)
+- [cisa kev cve 2015 1642 microsoft office memory corruption vu](./2022-03-03/cisa-kev-cve-2015-1642-microsoft-office-memory-corruption-vu.md)
+- [cisa kev cve 2015 1701 microsoft win32k privilege escalation](./2022-03-03/cisa-kev-cve-2015-1701-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2015 2387 microsoft atm font driver privilege e](./2022-03-03/cisa-kev-cve-2015-2387-microsoft-atm-font-driver-privilege-e.md)
 - [cisa kev cve 2015 2424 microsoft powerpoint memory corruptio](./2022-03-03/cisa-kev-cve-2015-2424-microsoft-powerpoint-memory-corruptio.md)
 - [cisa kev cve 2015 2545 microsoft office malformed eps file v](./2022-03-03/cisa-kev-cve-2015-2545-microsoft-office-malformed-eps-file-v.md)
 - [cisa kev cve 2015 2590 oracle java se and java se embedded r](./2022-03-03/cisa-kev-cve-2015-2590-oracle-java-se-and-java-se-embedded-r.md)
 - [cisa kev cve 2015 3043 adobe flash player memory corruption ](./2022-03-03/cisa-kev-cve-2015-3043-adobe-flash-player-memory-corruption-.md)
 - [cisa kev cve 2015 4902 oracle java se integrity check vulner](./2022-03-03/cisa-kev-cve-2015-4902-oracle-java-se-integrity-check-vulner.md)
+- [cisa kev cve 2015 5119 adobe flash player use after free vul](./2022-03-03/cisa-kev-cve-2015-5119-adobe-flash-player-use-after-free-vul.md)
+- [cisa kev cve 2015 7645 adobe flash player arbitrary code exe](./2022-03-03/cisa-kev-cve-2015-7645-adobe-flash-player-arbitrary-code-exe.md)
 - [cisa kev cve 2016 0099 microsoft windows secondary logon ser](./2022-03-03/cisa-kev-cve-2016-0099-microsoft-windows-secondary-logon-ser.md)
+- [cisa kev cve 2016 1019 adobe flash player arbitrary code exe](./2022-03-03/cisa-kev-cve-2016-1019-adobe-flash-player-arbitrary-code-exe.md)
 - [cisa kev cve 2016 4117 adobe flash player arbitrary code exe](./2022-03-03/cisa-kev-cve-2016-4117-adobe-flash-player-arbitrary-code-exe.md)
 - [cisa kev cve 2016 5195 linux kernel race condition vulnerabi](./2022-03-03/cisa-kev-cve-2016-5195-linux-kernel-race-condition-vulnerabi.md)
 - [cisa kev cve 2016 7193 microsoft office memory corruption vu](./2022-03-03/cisa-kev-cve-2016-7193-microsoft-office-memory-corruption-vu.md)
@@ -3024,19 +3158,39 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2017 0001 microsoft graphics device interface g](./2022-03-03/cisa-kev-cve-2017-0001-microsoft-graphics-device-interface-g.md)
 - [cisa kev cve 2017 0261 microsoft office use after free vulne](./2022-03-03/cisa-kev-cve-2017-0261-microsoft-office-use-after-free-vulne.md)
 - [cisa kev cve 2017 11292 adobe flash player type confusion vu](./2022-03-03/cisa-kev-cve-2017-11292-adobe-flash-player-type-confusion-vu.md)
+- [cisa kev cve 2017 11826 microsoft office remote code executi](./2022-03-03/cisa-kev-cve-2017-11826-microsoft-office-remote-code-executi.md)
 - [cisa kev cve 2017 12231 cisco ios software network address t](./2022-03-03/cisa-kev-cve-2017-12231-cisco-ios-software-network-address-t.md)
+- [cisa kev cve 2017 12232 cisco ios software for cisco integra](./2022-03-03/cisa-kev-cve-2017-12232-cisco-ios-software-for-cisco-integra.md)
+- [cisa kev cve 2017 12233 cisco ios software common industrial](./2022-03-03/cisa-kev-cve-2017-12233-cisco-ios-software-common-industrial.md)
+- [cisa kev cve 2017 12234 cisco ios software common industrial](./2022-03-03/cisa-kev-cve-2017-12234-cisco-ios-software-common-industrial.md)
 - [cisa kev cve 2017 12235 cisco ios software for cisco industr](./2022-03-03/cisa-kev-cve-2017-12235-cisco-ios-software-for-cisco-industr.md)
+- [cisa kev cve 2017 12237 cisco ios and ios xe software intern](./2022-03-03/cisa-kev-cve-2017-12237-cisco-ios-and-ios-xe-software-intern.md)
 - [cisa kev cve 2017 12238 cisco catalyst 6800 series switches ](./2022-03-03/cisa-kev-cve-2017-12238-cisco-catalyst-6800-series-switches-.md)
+- [cisa kev cve 2017 12240 cisco ios and ios xe software dhcp r](./2022-03-03/cisa-kev-cve-2017-12240-cisco-ios-and-ios-xe-software-dhcp-r.md)
 - [cisa kev cve 2017 12319 cisco ios xe software ethernet virtu](./2022-03-03/cisa-kev-cve-2017-12319-cisco-ios-xe-software-ethernet-virtu.md)
+- [cisa kev cve 2017 6627 cisco ios software and cisco ios xe s](./2022-03-03/cisa-kev-cve-2017-6627-cisco-ios-software-and-cisco-ios-xe-s.md)
+- [cisa kev cve 2017 6663 cisco ios software and cisco ios xe s](./2022-03-03/cisa-kev-cve-2017-6663-cisco-ios-software-and-cisco-ios-xe-s.md)
 - [cisa kev cve 2017 6736 cisco ios and ios xe software snmp re](./2022-03-03/cisa-kev-cve-2017-6736-cisco-ios-and-ios-xe-software-snmp-re.md)
+- [cisa kev cve 2017 6737 cisco ios and ios xe software snmp re](./2022-03-03/cisa-kev-cve-2017-6737-cisco-ios-and-ios-xe-software-snmp-re.md)
+- [cisa kev cve 2017 6738 cisco ios and ios xe software snmp re](./2022-03-03/cisa-kev-cve-2017-6738-cisco-ios-and-ios-xe-software-snmp-re.md)
+- [cisa kev cve 2017 6739 cisco ios and ios xe software snmp re](./2022-03-03/cisa-kev-cve-2017-6739-cisco-ios-and-ios-xe-software-snmp-re.md)
+- [cisa kev cve 2017 6740 cisco ios and ios xe software snmp re](./2022-03-03/cisa-kev-cve-2017-6740-cisco-ios-and-ios-xe-software-snmp-re.md)
+- [cisa kev cve 2017 6743 cisco ios and ios xe software snmp re](./2022-03-03/cisa-kev-cve-2017-6743-cisco-ios-and-ios-xe-software-snmp-re.md)
+- [cisa kev cve 2017 6744 cisco ios software snmp remote code e](./2022-03-03/cisa-kev-cve-2017-6744-cisco-ios-software-snmp-remote-code-e.md)
 - [cisa kev cve 2017 8540 microsoft malware protection engine i](./2022-03-03/cisa-kev-cve-2017-8540-microsoft-malware-protection-engine-i.md)
 - [cisa kev cve 2018 0151 cisco ios software and cisco ios xe s](./2022-03-03/cisa-kev-cve-2018-0151-cisco-ios-software-and-cisco-ios-xe-s.md)
 - [cisa kev cve 2018 0154 cisco ios software integrated service](./2022-03-03/cisa-kev-cve-2018-0154-cisco-ios-software-integrated-service.md)
 - [cisa kev cve 2018 0155 cisco catalyst bidirectional forwardi](./2022-03-03/cisa-kev-cve-2018-0155-cisco-catalyst-bidirectional-forwardi.md)
 - [cisa kev cve 2018 0156 cisco ios software and cisco ios xe s](./2022-03-03/cisa-kev-cve-2018-0156-cisco-ios-software-and-cisco-ios-xe-s.md)
+- [cisa kev cve 2018 0158 cisco ios and xe software internet ke](./2022-03-03/cisa-kev-cve-2018-0158-cisco-ios-and-xe-software-internet-ke.md)
+- [cisa kev cve 2018 0159 cisco ios and xe software internet ke](./2022-03-03/cisa-kev-cve-2018-0159-cisco-ios-and-xe-software-internet-ke.md)
 - [cisa kev cve 2018 0161 cisco ios software resource managemen](./2022-03-03/cisa-kev-cve-2018-0161-cisco-ios-software-resource-managemen.md)
+- [cisa kev cve 2018 0167 cisco ios xr and xe software buffer o](./2022-03-03/cisa-kev-cve-2018-0167-cisco-ios-xr-and-xe-software-buffer-o.md)
+- [cisa kev cve 2018 0172 cisco ios and ios xe software imprope](./2022-03-03/cisa-kev-cve-2018-0172-cisco-ios-and-ios-xe-software-imprope.md)
+- [cisa kev cve 2018 0173 cisco ios and ios xe software imprope](./2022-03-03/cisa-kev-cve-2018-0173-cisco-ios-and-ios-xe-software-imprope.md)
 - [cisa kev cve 2018 0174 cisco ios software and cisco ios xe s](./2022-03-03/cisa-kev-cve-2018-0174-cisco-ios-software-and-cisco-ios-xe-s.md)
 - [cisa kev cve 2018 0175 cisco ios xr and xe software buffer o](./2022-03-03/cisa-kev-cve-2018-0175-cisco-ios-xr-and-xe-software-buffer-o.md)
+- [cisa kev cve 2018 0179 cisco ios software denial of service ](./2022-03-03/cisa-kev-cve-2018-0179-cisco-ios-software-denial-of-service-.md)
 - [cisa kev cve 2018 0180 cisco ios software denial of service ](./2022-03-03/cisa-kev-cve-2018-0180-cisco-ios-software-denial-of-service-.md)
 - [cisa kev cve 2018 8298 chakracore scripting engine type conf](./2022-03-03/cisa-kev-cve-2018-8298-chakracore-scripting-engine-type-conf.md)
 - [cisa kev cve 2018 8581 microsoft exchange server privilege e](./2022-03-03/cisa-kev-cve-2018-8581-microsoft-exchange-server-privilege-e.md)
@@ -3046,6 +3200,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2020 11899 treck tcp ip stack out of bounds rea](./2022-03-03/cisa-kev-cve-2020-11899-treck-tcp-ip-stack-out-of-bounds-rea.md)
 - [cisa kev cve 2020 1938 apache tomcat improper privilege mana](./2022-03-03/cisa-kev-cve-2020-1938-apache-tomcat-improper-privilege-mana.md)
 - [cisa kev cve 2021 41379 microsoft windows installer privileg](./2022-03-03/cisa-kev-cve-2021-41379-microsoft-windows-installer-privileg.md)
+- [cisa kev cve 2022 20699 cisco small business rv series route](./2022-03-03/cisa-kev-cve-2022-20699-cisco-small-business-rv-series-route.md)
+- [cisa kev cve 2022 20700 cisco small business rv series route](./2022-03-03/cisa-kev-cve-2022-20700-cisco-small-business-rv-series-route.md)
+- [cisa kev cve 2022 20701 cisco small business rv series route](./2022-03-03/cisa-kev-cve-2022-20701-cisco-small-business-rv-series-route.md)
+- [cisa kev cve 2022 20703 cisco small business rv series route](./2022-03-03/cisa-kev-cve-2022-20703-cisco-small-business-rv-series-route.md)
 - [cisa kev cve 2022 20708 cisco small business rv series route](./2022-03-03/cisa-kev-cve-2022-20708-cisco-small-business-rv-series-route.md)
 
 ## 2022-02-28
@@ -3053,6 +3211,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-02-25
 - [cisa kev cve 2014 6352 microsoft windows code injection vuln](./2022-02-25/cisa-kev-cve-2014-6352-microsoft-windows-code-injection-vuln.md)
+- [cisa kev cve 2017 0222 microsoft internet explorer remote co](./2022-02-25/cisa-kev-cve-2017-0222-microsoft-internet-explorer-remote-co.md)
 - [cisa kev cve 2017 8570 microsoft office remote code executio](./2022-02-25/cisa-kev-cve-2017-8570-microsoft-office-remote-code-executio.md)
 - [cisa kev cve 2022 24682 synacor zimbra collaborate suite zcs](./2022-02-25/cisa-kev-cve-2022-24682-synacor-zimbra-collaborate-suite-zcs.md)
 
@@ -3094,6 +3253,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2015 1130 apple os x authentication bypass vuln](./2022-02-10/cisa-kev-cve-2015-1130-apple-os-x-authentication-bypass-vuln.md)
 - [cisa kev cve 2015 1635 microsoft http sys remote code execut](./2022-02-10/cisa-kev-cve-2015-1635-microsoft-http-sys-remote-code-execut.md)
 - [cisa kev cve 2015 2051 d link dir 645 router remote code exe](./2022-02-10/cisa-kev-cve-2015-2051-d-link-dir-645-router-remote-code-exe.md)
+- [cisa kev cve 2016 3088 apache activemq improper input valida](./2022-02-10/cisa-kev-cve-2016-3088-apache-activemq-improper-input-valida.md)
+- [cisa kev cve 2017 0144 microsoft smbv1 remote code execution](./2022-02-10/cisa-kev-cve-2017-0144-microsoft-smbv1-remote-code-execution.md)
+- [cisa kev cve 2017 0145 microsoft smbv1 remote code execution](./2022-02-10/cisa-kev-cve-2017-0145-microsoft-smbv1-remote-code-execution.md)
+- [cisa kev cve 2017 0262 microsoft office remote code executio](./2022-02-10/cisa-kev-cve-2017-0262-microsoft-office-remote-code-executio.md)
 - [cisa kev cve 2017 0263 microsoft win32k privilege escalation](./2022-02-10/cisa-kev-cve-2017-0263-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2017 10271 oracle corporation weblogic server r](./2022-02-10/cisa-kev-cve-2017-10271-oracle-corporation-weblogic-server-r.md)
 - [cisa kev cve 2017 8464 microsoft windows shell lnk remote co](./2022-02-10/cisa-kev-cve-2017-8464-microsoft-windows-shell-lnk-remote-co.md)
@@ -3146,6 +3309,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2021 21975 vmware server side request forgery i](./2022-01-18/cisa-kev-cve-2021-21975-vmware-server-side-request-forgery-i.md)
 - [cisa kev cve 2021 22991 f5 big ip traffic management microke](./2022-01-18/cisa-kev-cve-2021-22991-f5-big-ip-traffic-management-microke.md)
 - [cisa kev cve 2021 25296 nagios xi os command injection](./2022-01-18/cisa-kev-cve-2021-25296-nagios-xi-os-command-injection.md)
+- [cisa kev cve 2021 25297 nagios xi os command injection](./2022-01-18/cisa-kev-cve-2021-25297-nagios-xi-os-command-injection.md)
+- [cisa kev cve 2021 25298 nagios xi os command injection](./2022-01-18/cisa-kev-cve-2021-25298-nagios-xi-os-command-injection.md)
 - [cisa kev cve 2021 32648 october cms improper authentication](./2022-01-18/cisa-kev-cve-2021-32648-october-cms-improper-authentication.md)
 - [cisa kev cve 2021 33766 microsoft exchange server informatio](./2022-01-18/cisa-kev-cve-2021-33766-microsoft-exchange-server-informatio.md)
 - [cisa kev cve 2021 40870 aviatrix controller unrestricted upl](./2022-01-18/cisa-kev-cve-2021-40870-aviatrix-controller-unrestricted-upl.md)
@@ -3217,6 +3382,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the log4j vulnerability and its impact on software supply ch](./2021-12-13/the-log4j-vulnerability-and-its-impact-on-software-supply-ch.md)
 
 ## 2021-12-10
+- [cisa kev cve 2010 1871 red hat linux jboss seam 2 remote cod](./2021-12-10/cisa-kev-cve-2010-1871-red-hat-linux-jboss-seam-2-remote-cod.md)
 - [cisa kev cve 2017 12149 red hat jboss application server rem](./2021-12-10/cisa-kev-cve-2017-12149-red-hat-jboss-application-server-rem.md)
 - [cisa kev cve 2017 17562 embedthis goahead remote code execut](./2021-12-10/cisa-kev-cve-2017-17562-embedthis-goahead-remote-code-execut.md)
 - [cisa kev cve 2019 0193 apache solr dataimporthandler code in](./2021-12-10/cisa-kev-cve-2019-0193-apache-solr-dataimporthandler-code-in.md)
@@ -3252,6 +3418,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2021 22204 exiftool remote code execution vulne](./2021-11-17/cisa-kev-cve-2021-22204-exiftool-remote-code-execution-vulne.md)
 - [cisa kev cve 2021 40449 microsoft windows win32k privilege e](./2021-11-17/cisa-kev-cve-2021-40449-microsoft-windows-win32k-privilege-e.md)
 - [cisa kev cve 2021 42292 microsoft excel security feature byp](./2021-11-17/cisa-kev-cve-2021-42292-microsoft-excel-security-feature-byp.md)
+- [cisa kev cve 2021 42321 microsoft exchange server remote cod](./2021-11-17/cisa-kev-cve-2021-42321-microsoft-exchange-server-remote-cod.md)
 
 ## 2021-11-10
 - [scanning arm templates for misconfigurations with the snyk c](./2021-11-10/scanning-arm-templates-for-misconfigurations-with-the-snyk-c.md)
@@ -3264,19 +3431,24 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2012 0158 microsoft mscomctl ocx remote code ex](./2021-11-03/cisa-kev-cve-2012-0158-microsoft-mscomctl-ocx-remote-code-ex.md)
 - [cisa kev cve 2012 3152 oracle fusion middleware unspecified ](./2021-11-03/cisa-kev-cve-2012-3152-oracle-fusion-middleware-unspecified-.md)
 - [cisa kev cve 2014 1812 microsoft windows group policy prefer](./2021-11-03/cisa-kev-cve-2014-1812-microsoft-windows-group-policy-prefer.md)
+- [cisa kev cve 2015 1641 microsoft office memory corruption vu](./2021-11-03/cisa-kev-cve-2015-1641-microsoft-office-memory-corruption-vu.md)
 - [cisa kev cve 2015 4852 oracle weblogic server deserializatio](./2021-11-03/cisa-kev-cve-2015-4852-oracle-weblogic-server-deserializatio.md)
 - [cisa kev cve 2016 0167 microsoft win32k privilege escalation](./2021-11-03/cisa-kev-cve-2016-0167-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2016 0185 microsoft windows media center remote](./2021-11-03/cisa-kev-cve-2016-0185-microsoft-windows-media-center-remote.md)
 - [cisa kev cve 2016 3235 microsoft office ole dll side loading](./2021-11-03/cisa-kev-cve-2016-3235-microsoft-office-ole-dll-side-loading.md)
 - [cisa kev cve 2016 3643 solarwinds virtualization manager pri](./2021-11-03/cisa-kev-cve-2016-3643-solarwinds-virtualization-manager-pri.md)
 - [cisa kev cve 2016 3715 imagemagick arbitrary file deletion v](./2021-11-03/cisa-kev-cve-2016-3715-imagemagick-arbitrary-file-deletion-v.md)
+- [cisa kev cve 2016 3718 imagemagick server side request forge](./2021-11-03/cisa-kev-cve-2016-3718-imagemagick-server-side-request-forge.md)
 - [cisa kev cve 2016 3976 sap netweaver directory traversal vul](./2021-11-03/cisa-kev-cve-2016-3976-sap-netweaver-directory-traversal-vul.md)
 - [cisa kev cve 2016 4437 apache shiro code execution vulnerabi](./2021-11-03/cisa-kev-cve-2016-4437-apache-shiro-code-execution-vulnerabi.md)
+- [cisa kev cve 2016 7255 microsoft win32k privilege escalation](./2021-11-03/cisa-kev-cve-2016-7255-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2016 9563 sap netweaver xml external entity xxe](./2021-11-03/cisa-kev-cve-2016-9563-sap-netweaver-xml-external-entity-xxe.md)
 - [cisa kev cve 2017 0143 microsoft windows server message bloc](./2021-11-03/cisa-kev-cve-2017-0143-microsoft-windows-server-message-bloc.md)
+- [cisa kev cve 2017 0199 microsoft office and wordpad remote c](./2021-11-03/cisa-kev-cve-2017-0199-microsoft-office-and-wordpad-remote-c.md)
 - [cisa kev cve 2017 11774 microsoft office outlook security fe](./2021-11-03/cisa-kev-cve-2017-11774-microsoft-office-outlook-security-fe.md)
 - [cisa kev cve 2017 11882 microsoft office memory corruption v](./2021-11-03/cisa-kev-cve-2017-11882-microsoft-office-memory-corruption-v.md)
 - [cisa kev cve 2017 16651 roundcube webmail file disclosure vu](./2021-11-03/cisa-kev-cve-2017-16651-roundcube-webmail-file-disclosure-vu.md)
+- [cisa kev cve 2017 5638 apache struts remote code execution v](./2021-11-03/cisa-kev-cve-2017-5638-apache-struts-remote-code-execution-v.md)
 - [cisa kev cve 2017 6327 symantec messaging gateway remote cod](./2021-11-03/cisa-kev-cve-2017-6327-symantec-messaging-gateway-remote-cod.md)
 - [cisa kev cve 2017 7269 microsoft windows server buffer overf](./2021-11-03/cisa-kev-cve-2017-7269-microsoft-windows-server-buffer-overf.md)
 - [cisa kev cve 2017 8759 microsoft net framework remote code e](./2021-11-03/cisa-kev-cve-2017-8759-microsoft-net-framework-remote-code-e.md)
@@ -3286,10 +3458,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2018 0171 cisco ios and ios xe software smart i](./2021-11-03/cisa-kev-cve-2018-0171-cisco-ios-and-ios-xe-software-smart-i.md)
 - [cisa kev cve 2018 0296 cisco adaptive security appliance asa](./2021-11-03/cisa-kev-cve-2018-0296-cisco-adaptive-security-appliance-asa.md)
 - [cisa kev cve 2018 0798 microsoft office memory corruption vu](./2021-11-03/cisa-kev-cve-2018-0798-microsoft-office-memory-corruption-vu.md)
+- [cisa kev cve 2018 11776 apache struts remote code execution ](./2021-11-03/cisa-kev-cve-2018-11776-apache-struts-remote-code-execution-.md)
 - [cisa kev cve 2018 13379 fortinet fortios ssl vpn path traver](./2021-11-03/cisa-kev-cve-2018-13379-fortinet-fortios-ssl-vpn-path-traver.md)
 - [cisa kev cve 2018 14558 tenda ac7 ac9 and ac10 routers comma](./2021-11-03/cisa-kev-cve-2018-14558-tenda-ac7-ac9-and-ac10-routers-comma.md)
 - [cisa kev cve 2018 15811 dotnetnuke dnn inadequate encryption](./2021-11-03/cisa-kev-cve-2018-15811-dotnetnuke-dnn-inadequate-encryption.md)
 - [cisa kev cve 2018 15961 adobe coldfusion unrestricted file u](./2021-11-03/cisa-kev-cve-2018-15961-adobe-coldfusion-unrestricted-file-u.md)
+- [cisa kev cve 2018 20062 thinkphp nonecms remote code executi](./2021-11-03/cisa-kev-cve-2018-20062-thinkphp-nonecms-remote-code-executi.md)
 - [cisa kev cve 2018 2380 sap customer relationship management ](./2021-11-03/cisa-kev-cve-2018-2380-sap-customer-relationship-management-.md)
 - [cisa kev cve 2018 4878 adobe flash player use after free vul](./2021-11-03/cisa-kev-cve-2018-4878-adobe-flash-player-use-after-free-vul.md)
 - [cisa kev cve 2018 4939 adobe coldfusion deserialization of u](./2021-11-03/cisa-kev-cve-2018-4939-adobe-coldfusion-deserialization-of-u.md)
@@ -3297,14 +3471,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2018 7600 drupal core remote code execution vul](./2021-11-03/cisa-kev-cve-2018-7600-drupal-core-remote-code-execution-vul.md)
 - [cisa kev cve 2018 8653 microsoft internet explorer scripting](./2021-11-03/cisa-kev-cve-2018-8653-microsoft-internet-explorer-scripting.md)
 - [cisa kev cve 2019 0211 apache http server privilege escalati](./2021-11-03/cisa-kev-cve-2019-0211-apache-http-server-privilege-escalati.md)
+- [cisa kev cve 2019 0541 microsoft mshtml remote code executio](./2021-11-03/cisa-kev-cve-2019-0541-microsoft-mshtml-remote-code-executio.md)
+- [cisa kev cve 2019 0604 microsoft sharepoint remote code exec](./2021-11-03/cisa-kev-cve-2019-0604-microsoft-sharepoint-remote-code-exec.md)
 - [cisa kev cve 2019 0708 microsoft remote desktop services rem](./2021-11-03/cisa-kev-cve-2019-0708-microsoft-remote-desktop-services-rem.md)
+- [cisa kev cve 2019 0797 microsoft win32k privilege escalation](./2021-11-03/cisa-kev-cve-2019-0797-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2019 0803 microsoft win32k privilege escalation](./2021-11-03/cisa-kev-cve-2019-0803-microsoft-win32k-privilege-escalation.md)
+- [cisa kev cve 2019 0808 microsoft win32k privilege escalation](./2021-11-03/cisa-kev-cve-2019-0808-microsoft-win32k-privilege-escalation.md)
+- [cisa kev cve 2019 0859 microsoft win32k privilege escalation](./2021-11-03/cisa-kev-cve-2019-0859-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2019 0863 microsoft windows error reporting wer](./2021-11-03/cisa-kev-cve-2019-0863-microsoft-windows-error-reporting-wer.md)
 - [cisa kev cve 2019 11510 ivanti pulse connect secure arbitrar](./2021-11-03/cisa-kev-cve-2019-11510-ivanti-pulse-connect-secure-arbitrar.md)
+- [cisa kev cve 2019 11539 ivanti pulse connect secure and poli](./2021-11-03/cisa-kev-cve-2019-11539-ivanti-pulse-connect-secure-and-poli.md)
 - [cisa kev cve 2019 11580 atlassian crowd and crowd data cente](./2021-11-03/cisa-kev-cve-2019-11580-atlassian-crowd-and-crowd-data-cente.md)
 - [cisa kev cve 2019 11634 citrix workspace application and rec](./2021-11-03/cisa-kev-cve-2019-11634-citrix-workspace-application-and-rec.md)
 - [cisa kev cve 2019 1214 microsoft windows privilege common lo](./2021-11-03/cisa-kev-cve-2019-1214-microsoft-windows-privilege-common-lo.md)
+- [cisa kev cve 2019 1215 microsoft windows privilege escalatio](./2021-11-03/cisa-kev-cve-2019-1215-microsoft-windows-privilege-escalatio.md)
 - [cisa kev cve 2019 13608 citrix storefront server xml externa](./2021-11-03/cisa-kev-cve-2019-13608-citrix-storefront-server-xml-externa.md)
+- [cisa kev cve 2019 1367 microsoft internet explorer scripting](./2021-11-03/cisa-kev-cve-2019-1367-microsoft-internet-explorer-scripting.md)
+- [cisa kev cve 2019 1429 microsoft internet explorer scripting](./2021-11-03/cisa-kev-cve-2019-1429-microsoft-internet-explorer-scripting.md)
 - [cisa kev cve 2019 15752 docker desktop community edition pri](./2021-11-03/cisa-kev-cve-2019-15752-docker-desktop-community-edition-pri.md)
 - [cisa kev cve 2019 15949 nagios xi remote code execution vuln](./2021-11-03/cisa-kev-cve-2019-15949-nagios-xi-remote-code-execution-vuln.md)
 - [cisa kev cve 2019 16256 simalliance toolbox browser command ](./2021-11-03/cisa-kev-cve-2019-16256-simalliance-toolbox-browser-command-.md)
@@ -3319,6 +3502,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2019 19781 citrix adc gateway and sd wan wanop ](./2021-11-03/cisa-kev-cve-2019-19781-citrix-adc-gateway-and-sd-wan-wanop-.md)
 - [cisa kev cve 2019 20085 tvt nvms 1000 directory traversal vu](./2021-11-03/cisa-kev-cve-2019-20085-tvt-nvms-1000-directory-traversal-vu.md)
 - [cisa kev cve 2019 2215 android kernel use after free vulnera](./2021-11-03/cisa-kev-cve-2019-2215-android-kernel-use-after-free-vulnera.md)
+- [cisa kev cve 2019 3396 atlassian confluence server and data ](./2021-11-03/cisa-kev-cve-2019-3396-atlassian-confluence-server-and-data-.md)
 - [cisa kev cve 2019 3398 atlassian confluence server and data ](./2021-11-03/cisa-kev-cve-2019-3398-atlassian-confluence-server-and-data-.md)
 - [cisa kev cve 2019 4716 ibm planning analytics remote code ex](./2021-11-03/cisa-kev-cve-2019-4716-ibm-planning-analytics-remote-code-ex.md)
 - [cisa kev cve 2019 5544 vmware esxi and horizon daas openslp ](./2021-11-03/cisa-kev-cve-2019-5544-vmware-esxi-and-horizon-daas-openslp-.md)
@@ -3326,22 +3510,34 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2019 6223 apple ios and macos group facetime vu](./2021-11-03/cisa-kev-cve-2019-6223-apple-ios-and-macos-group-facetime-vu.md)
 - [cisa kev cve 2019 7481 sonicwall sma100 sql injection vulner](./2021-11-03/cisa-kev-cve-2019-7481-sonicwall-sma100-sql-injection-vulner.md)
 - [cisa kev cve 2019 8394 zoho manageengine servicedesk plus sd](./2021-11-03/cisa-kev-cve-2019-8394-zoho-manageengine-servicedesk-plus-sd.md)
+- [cisa kev cve 2019 9082 thinkphp remote code execution vulner](./2021-11-03/cisa-kev-cve-2019-9082-thinkphp-remote-code-execution-vulner.md)
 - [cisa kev cve 2019 9978 wordpress social warfare plugin cross](./2021-11-03/cisa-kev-cve-2019-9978-wordpress-social-warfare-plugin-cross.md)
+- [cisa kev cve 2020 0601 microsoft windows cryptoapi spoofing ](./2021-11-03/cisa-kev-cve-2020-0601-microsoft-windows-cryptoapi-spoofing-.md)
+- [cisa kev cve 2020 0646 microsoft net framework remote code e](./2021-11-03/cisa-kev-cve-2020-0646-microsoft-net-framework-remote-code-e.md)
+- [cisa kev cve 2020 0674 microsoft internet explorer scripting](./2021-11-03/cisa-kev-cve-2020-0674-microsoft-internet-explorer-scripting.md)
 - [cisa kev cve 2020 0683 microsoft windows installer privilege](./2021-11-03/cisa-kev-cve-2020-0683-microsoft-windows-installer-privilege.md)
+- [cisa kev cve 2020 0688 microsoft exchange server validation ](./2021-11-03/cisa-kev-cve-2020-0688-microsoft-exchange-server-validation-.md)
 - [cisa kev cve 2020 0878 microsoft edge and internet explorer ](./2021-11-03/cisa-kev-cve-2020-0878-microsoft-edge-and-internet-explorer-.md)
 - [cisa kev cve 2020 0938 microsoft windows adobe font manager ](./2021-11-03/cisa-kev-cve-2020-0938-microsoft-windows-adobe-font-manager-.md)
+- [cisa kev cve 2020 0968 microsoft internet explorer scripting](./2021-11-03/cisa-kev-cve-2020-0968-microsoft-internet-explorer-scripting.md)
+- [cisa kev cve 2020 0986 microsoft windows kernel privilege es](./2021-11-03/cisa-kev-cve-2020-0986-microsoft-windows-kernel-privilege-es.md)
 - [cisa kev cve 2020 10148 solarwinds orion authentication bypa](./2021-11-03/cisa-kev-cve-2020-10148-solarwinds-orion-authentication-bypa.md)
 - [cisa kev cve 2020 10181 sumavision emr cross site request fo](./2021-11-03/cisa-kev-cve-2020-10181-sumavision-emr-cross-site-request-fo.md)
 - [cisa kev cve 2020 10189 zoho manageengine desktop central fi](./2021-11-03/cisa-kev-cve-2020-10189-zoho-manageengine-desktop-central-fi.md)
 - [cisa kev cve 2020 10199 sonatype nexus repository remote cod](./2021-11-03/cisa-kev-cve-2020-10199-sonatype-nexus-repository-remote-cod.md)
+- [cisa kev cve 2020 1020 microsoft windows adobe font manager ](./2021-11-03/cisa-kev-cve-2020-1020-microsoft-windows-adobe-font-manager-.md)
 - [cisa kev cve 2020 10221 rconfig os command injection vulnera](./2021-11-03/cisa-kev-cve-2020-10221-rconfig-os-command-injection-vulnera.md)
 - [cisa kev cve 2020 1040 microsoft hyper v remotefx vgpu remot](./2021-11-03/cisa-kev-cve-2020-1040-microsoft-hyper-v-remotefx-vgpu-remot.md)
+- [cisa kev cve 2020 1054 microsoft win32k privilege escalation](./2021-11-03/cisa-kev-cve-2020-1054-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2020 10987 tenda ac1900 router ac15 model remot](./2021-11-03/cisa-kev-cve-2020-10987-tenda-ac1900-router-ac15-model-remot.md)
+- [cisa kev cve 2020 1147 microsoft net framework sharepoint an](./2021-11-03/cisa-kev-cve-2020-1147-microsoft-net-framework-sharepoint-an.md)
 - [cisa kev cve 2020 11651 saltstack salt authentication bypass](./2021-11-03/cisa-kev-cve-2020-11651-saltstack-salt-authentication-bypass.md)
 - [cisa kev cve 2020 11652 saltstack salt path traversal vulner](./2021-11-03/cisa-kev-cve-2020-11652-saltstack-salt-path-traversal-vulner.md)
 - [cisa kev cve 2020 11738 wordpress snap creek duplicator plug](./2021-11-03/cisa-kev-cve-2020-11738-wordpress-snap-creek-duplicator-plug.md)
 - [cisa kev cve 2020 12271 sophos sfos sql injection vulnerabil](./2021-11-03/cisa-kev-cve-2020-12271-sophos-sfos-sql-injection-vulnerabil.md)
 - [cisa kev cve 2020 12812 fortinet fortios ssl vpn improper au](./2021-11-03/cisa-kev-cve-2020-12812-fortinet-fortios-ssl-vpn-improper-au.md)
+- [cisa kev cve 2020 1350 microsoft windows dns server remote c](./2021-11-03/cisa-kev-cve-2020-1350-microsoft-windows-dns-server-remote-c.md)
+- [cisa kev cve 2020 1380 microsoft internet explorer scripting](./2021-11-03/cisa-kev-cve-2020-1380-microsoft-internet-explorer-scripting.md)
 - [cisa kev cve 2020 1464 microsoft windows spoofing vulnerabil](./2021-11-03/cisa-kev-cve-2020-1464-microsoft-windows-spoofing-vulnerabil.md)
 - [cisa kev cve 2020 1472 microsoft netlogon privilege escalati](./2021-11-03/cisa-kev-cve-2020-1472-microsoft-netlogon-privilege-escalati.md)
 - [cisa kev cve 2020 14750 oracle weblogic server remote code e](./2021-11-03/cisa-kev-cve-2020-14750-oracle-weblogic-server-remote-code-e.md)
@@ -3353,50 +3549,77 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2020 16013 google chromium v8 incorrect impleme](./2021-11-03/cisa-kev-cve-2020-16013-google-chromium-v8-incorrect-impleme.md)
 - [cisa kev cve 2020 16017 google chrome use after free vulnera](./2021-11-03/cisa-kev-cve-2020-16017-google-chrome-use-after-free-vulnera.md)
 - [cisa kev cve 2020 16846 saltstack salt shell injection vulne](./2021-11-03/cisa-kev-cve-2020-16846-saltstack-salt-shell-injection-vulne.md)
+- [cisa kev cve 2020 17087 microsoft windows kernel privilege e](./2021-11-03/cisa-kev-cve-2020-17087-microsoft-windows-kernel-privilege-e.md)
 - [cisa kev cve 2020 17144 microsoft exchange server remote cod](./2021-11-03/cisa-kev-cve-2020-17144-microsoft-exchange-server-remote-cod.md)
 - [cisa kev cve 2020 17530 apache struts remote code execution ](./2021-11-03/cisa-kev-cve-2020-17530-apache-struts-remote-code-execution-.md)
 - [cisa kev cve 2020 24557 trend micro multiple products improp](./2021-11-03/cisa-kev-cve-2020-24557-trend-micro-multiple-products-improp.md)
 - [cisa kev cve 2020 25213 wordpress file manager plugin remote](./2021-11-03/cisa-kev-cve-2020-25213-wordpress-file-manager-plugin-remote.md)
 - [cisa kev cve 2020 25506 d link dns 320 device command inject](./2021-11-03/cisa-kev-cve-2020-25506-d-link-dns-320-device-command-inject.md)
+- [cisa kev cve 2020 2555 oracle multiple products remote code ](./2021-11-03/cisa-kev-cve-2020-2555-oracle-multiple-products-remote-code-.md)
 - [cisa kev cve 2020 26919 netgear jgs516pe devices missing fun](./2021-11-03/cisa-kev-cve-2020-26919-netgear-jgs516pe-devices-missing-fun.md)
 - [cisa kev cve 2020 27930 apple multiple products memory corru](./2021-11-03/cisa-kev-cve-2020-27930-apple-multiple-products-memory-corru.md)
 - [cisa kev cve 2020 27932 apple multiple products type confusi](./2021-11-03/cisa-kev-cve-2020-27932-apple-multiple-products-type-confusi.md)
+- [cisa kev cve 2020 27950 apple multiple products memory initi](./2021-11-03/cisa-kev-cve-2020-27950-apple-multiple-products-memory-initi.md)
 - [cisa kev cve 2020 29557 d link dir 825 r1 devices buffer ove](./2021-11-03/cisa-kev-cve-2020-29557-d-link-dir-825-r1-devices-buffer-ove.md)
+- [cisa kev cve 2020 29583 zyxel multiple products use of hard ](./2021-11-03/cisa-kev-cve-2020-29583-zyxel-multiple-products-use-of-hard-.md)
 - [cisa kev cve 2020 3118 cisco ios xr software discovery proto](./2021-11-03/cisa-kev-cve-2020-3118-cisco-ios-xr-software-discovery-proto.md)
 - [cisa kev cve 2020 3161 cisco ip phones web server remote cod](./2021-11-03/cisa-kev-cve-2020-3161-cisco-ip-phones-web-server-remote-cod.md)
 - [cisa kev cve 2020 3452 cisco asa and ftd read only path trav](./2021-11-03/cisa-kev-cve-2020-3452-cisco-asa-and-ftd-read-only-path-trav.md)
 - [cisa kev cve 2020 3566 cisco ios xr software dvmrp memory ex](./2021-11-03/cisa-kev-cve-2020-3566-cisco-ios-xr-software-dvmrp-memory-ex.md)
+- [cisa kev cve 2020 3569 cisco ios xr software dvmrp memory ex](./2021-11-03/cisa-kev-cve-2020-3569-cisco-ios-xr-software-dvmrp-memory-ex.md)
 - [cisa kev cve 2020 3580 cisco asa and ftd cross site scriptin](./2021-11-03/cisa-kev-cve-2020-3580-cisco-asa-and-ftd-cross-site-scriptin.md)
 - [cisa kev cve 2020 3950 vmware multiple products privilege es](./2021-11-03/cisa-kev-cve-2020-3950-vmware-multiple-products-privilege-es.md)
 - [cisa kev cve 2020 3952 vmware vcenter server information dis](./2021-11-03/cisa-kev-cve-2020-3952-vmware-vcenter-server-information-dis.md)
 - [cisa kev cve 2020 3992 vmware esxi openslp use after free vu](./2021-11-03/cisa-kev-cve-2020-3992-vmware-esxi-openslp-use-after-free-vu.md)
+- [cisa kev cve 2020 4006 multiple vmware products command inje](./2021-11-03/cisa-kev-cve-2020-4006-multiple-vmware-products-command-inje.md)
+- [cisa kev cve 2020 4427 ibm data risk manager security bypass](./2021-11-03/cisa-kev-cve-2020-4427-ibm-data-risk-manager-security-bypass.md)
 - [cisa kev cve 2020 4428 ibm data risk manager remote code exe](./2021-11-03/cisa-kev-cve-2020-4428-ibm-data-risk-manager-remote-code-exe.md)
 - [cisa kev cve 2020 4430 ibm data risk manager directory trave](./2021-11-03/cisa-kev-cve-2020-4430-ibm-data-risk-manager-directory-trave.md)
 - [cisa kev cve 2020 5735 amcrest cameras and nvr stack based b](./2021-11-03/cisa-kev-cve-2020-5735-amcrest-cameras-and-nvr-stack-based-b.md)
+- [cisa kev cve 2020 5849 unraid authentication bypass vulnerab](./2021-11-03/cisa-kev-cve-2020-5849-unraid-authentication-bypass-vulnerab.md)
 - [cisa kev cve 2020 5902 f5 big ip traffic management user int](./2021-11-03/cisa-kev-cve-2020-5902-f5-big-ip-traffic-management-user-int.md)
+- [cisa kev cve 2020 6207 sap solution manager missing authenti](./2021-11-03/cisa-kev-cve-2020-6207-sap-solution-manager-missing-authenti.md)
 - [cisa kev cve 2020 6287 sap netweaver missing authentication ](./2021-11-03/cisa-kev-cve-2020-6287-sap-netweaver-missing-authentication-.md)
+- [cisa kev cve 2020 6418 google chromium v8 type confusion vul](./2021-11-03/cisa-kev-cve-2020-6418-google-chromium-v8-type-confusion-vul.md)
 - [cisa kev cve 2020 6819 mozilla firefox and thunderbird use a](./2021-11-03/cisa-kev-cve-2020-6819-mozilla-firefox-and-thunderbird-use-a.md)
+- [cisa kev cve 2020 6820 mozilla firefox and thunderbird use a](./2021-11-03/cisa-kev-cve-2020-6820-mozilla-firefox-and-thunderbird-use-a.md)
 - [cisa kev cve 2020 7961 liferay portal deserialization of unt](./2021-11-03/cisa-kev-cve-2020-7961-liferay-portal-deserialization-of-unt.md)
 - [cisa kev cve 2020 8193 citrix adc gateway and sd wan wanop a](./2021-11-03/cisa-kev-cve-2020-8193-citrix-adc-gateway-and-sd-wan-wanop-a.md)
+- [cisa kev cve 2020 8195 citrix adc gateway and sd wan wanop a](./2021-11-03/cisa-kev-cve-2020-8195-citrix-adc-gateway-and-sd-wan-wanop-a.md)
+- [cisa kev cve 2020 8196 citrix adc gateway and sd wan wanop a](./2021-11-03/cisa-kev-cve-2020-8196-citrix-adc-gateway-and-sd-wan-wanop-a.md)
 - [cisa kev cve 2020 8243 ivanti pulse connect secure code exec](./2021-11-03/cisa-kev-cve-2020-8243-ivanti-pulse-connect-secure-code-exec.md)
+- [cisa kev cve 2020 8260 ivanti pulse connect secure code exec](./2021-11-03/cisa-kev-cve-2020-8260-ivanti-pulse-connect-secure-code-exec.md)
 - [cisa kev cve 2020 8467 trend micro apex one and officescan r](./2021-11-03/cisa-kev-cve-2020-8467-trend-micro-apex-one-and-officescan-r.md)
 - [cisa kev cve 2020 8468 trend micro multiple products content](./2021-11-03/cisa-kev-cve-2020-8468-trend-micro-multiple-products-content.md)
 - [cisa kev cve 2020 8515 multiple draytek vigor routers web ma](./2021-11-03/cisa-kev-cve-2020-8515-multiple-draytek-vigor-routers-web-ma.md)
+- [cisa kev cve 2020 8599 trend micro apex one and officescan a](./2021-11-03/cisa-kev-cve-2020-8599-trend-micro-apex-one-and-officescan-a.md)
 - [cisa kev cve 2020 8644 playsms server side template injectio](./2021-11-03/cisa-kev-cve-2020-8644-playsms-server-side-template-injectio.md)
 - [cisa kev cve 2020 8655 eyesofnetwork improper privilege mana](./2021-11-03/cisa-kev-cve-2020-8655-eyesofnetwork-improper-privilege-mana.md)
 - [cisa kev cve 2020 8657 eyesofnetwork use of hard coded crede](./2021-11-03/cisa-kev-cve-2020-8657-eyesofnetwork-use-of-hard-coded-crede.md)
 - [cisa kev cve 2020 9818 apple ios ipados and watchos out of b](./2021-11-03/cisa-kev-cve-2020-9818-apple-ios-ipados-and-watchos-out-of-b.md)
+- [cisa kev cve 2020 9819 apple ios ipados and watchos memory c](./2021-11-03/cisa-kev-cve-2020-9819-apple-ios-ipados-and-watchos-memory-c.md)
+- [cisa kev cve 2020 9859 apple multiple products code executio](./2021-11-03/cisa-kev-cve-2020-9859-apple-multiple-products-code-executio.md)
 - [cisa kev cve 2021 1497 cisco hyperflex hx installer virtual ](./2021-11-03/cisa-kev-cve-2021-1497-cisco-hyperflex-hx-installer-virtual-.md)
+- [cisa kev cve 2021 1498 cisco hyperflex hx data platform comm](./2021-11-03/cisa-kev-cve-2021-1498-cisco-hyperflex-hx-data-platform-comm.md)
+- [cisa kev cve 2021 1647 microsoft defender remote code execut](./2021-11-03/cisa-kev-cve-2021-1647-microsoft-defender-remote-code-execut.md)
+- [cisa kev cve 2021 1675 microsoft windows print spooler remot](./2021-11-03/cisa-kev-cve-2021-1675-microsoft-windows-print-spooler-remot.md)
+- [cisa kev cve 2021 1732 microsoft win32k privilege escalation](./2021-11-03/cisa-kev-cve-2021-1732-microsoft-win32k-privilege-escalation.md)
 - [cisa kev cve 2021 1782 apple multiple products race conditio](./2021-11-03/cisa-kev-cve-2021-1782-apple-multiple-products-race-conditio.md)
+- [cisa kev cve 2021 1870 apple ios ipados and macos webkit rem](./2021-11-03/cisa-kev-cve-2021-1870-apple-ios-ipados-and-macos-webkit-rem.md)
+- [cisa kev cve 2021 1871 apple ios ipados and macos webkit rem](./2021-11-03/cisa-kev-cve-2021-1871-apple-ios-ipados-and-macos-webkit-rem.md)
 - [cisa kev cve 2021 1879 apple ios ipados and watchos webkit c](./2021-11-03/cisa-kev-cve-2021-1879-apple-ios-ipados-and-watchos-webkit-c.md)
 - [cisa kev cve 2021 1905 qualcomm multiple chipsets use after ](./2021-11-03/cisa-kev-cve-2021-1905-qualcomm-multiple-chipsets-use-after-.md)
 - [cisa kev cve 2021 1906 qualcomm multiple chipsets detection ](./2021-11-03/cisa-kev-cve-2021-1906-qualcomm-multiple-chipsets-detection-.md)
+- [cisa kev cve 2021 20016 sonicwall sslvpn sma100 sql injectio](./2021-11-03/cisa-kev-cve-2021-20016-sonicwall-sslvpn-sma100-sql-injectio.md)
 - [cisa kev cve 2021 20021 sonicwall email security improper pr](./2021-11-03/cisa-kev-cve-2021-20021-sonicwall-email-security-improper-pr.md)
 - [cisa kev cve 2021 20090 arcadyan buffalo firmware path trave](./2021-11-03/cisa-kev-cve-2021-20090-arcadyan-buffalo-firmware-path-trave.md)
 - [cisa kev cve 2021 21017 adobe acrobat and reader heap based ](./2021-11-03/cisa-kev-cve-2021-21017-adobe-acrobat-and-reader-heap-based-.md)
 - [cisa kev cve 2021 21148 google chromium v8 heap buffer overf](./2021-11-03/cisa-kev-cve-2021-21148-google-chromium-v8-heap-buffer-overf.md)
 - [cisa kev cve 2021 21166 google chromium race condition vulne](./2021-11-03/cisa-kev-cve-2021-21166-google-chromium-race-condition-vulne.md)
+- [cisa kev cve 2021 21193 google chromium blink use after free](./2021-11-03/cisa-kev-cve-2021-21193-google-chromium-blink-use-after-free.md)
 - [cisa kev cve 2021 21206 google chromium blink use after free](./2021-11-03/cisa-kev-cve-2021-21206-google-chromium-blink-use-after-free.md)
+- [cisa kev cve 2021 21220 google chromium v8 improper input va](./2021-11-03/cisa-kev-cve-2021-21220-google-chromium-v8-improper-input-va.md)
+- [cisa kev cve 2021 21224 google chromium v8 type confusion vu](./2021-11-03/cisa-kev-cve-2021-21224-google-chromium-v8-type-confusion-vu.md)
 - [cisa kev cve 2021 21972 vmware vcenter server remote code ex](./2021-11-03/cisa-kev-cve-2021-21972-vmware-vcenter-server-remote-code-ex.md)
 - [cisa kev cve 2021 21985 vmware vcenter server improper input](./2021-11-03/cisa-kev-cve-2021-21985-vmware-vcenter-server-improper-input.md)
 - [cisa kev cve 2021 22005 vmware vcenter server file upload vu](./2021-11-03/cisa-kev-cve-2021-22005-vmware-vcenter-server-file-upload-vu.md)
@@ -3406,45 +3629,77 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2021 22893 ivanti pulse connect secure use afte](./2021-11-03/cisa-kev-cve-2021-22893-ivanti-pulse-connect-secure-use-afte.md)
 - [cisa kev cve 2021 22894 ivanti pulse connect secure collabor](./2021-11-03/cisa-kev-cve-2021-22894-ivanti-pulse-connect-secure-collabor.md)
 - [cisa kev cve 2021 22899 ivanti pulse connect secure command ](./2021-11-03/cisa-kev-cve-2021-22899-ivanti-pulse-connect-secure-command-.md)
+- [cisa kev cve 2021 22900 ivanti pulse connect secure unrestri](./2021-11-03/cisa-kev-cve-2021-22900-ivanti-pulse-connect-secure-unrestri.md)
 - [cisa kev cve 2021 22986 f5 big ip and big iq centralized man](./2021-11-03/cisa-kev-cve-2021-22986-f5-big-ip-and-big-iq-centralized-man.md)
 - [cisa kev cve 2021 23874 mcafee total protection mtp improper](./2021-11-03/cisa-kev-cve-2021-23874-mcafee-total-protection-mtp-improper.md)
 - [cisa kev cve 2021 26084 atlassian confluence server and data](./2021-11-03/cisa-kev-cve-2021-26084-atlassian-confluence-server-and-data.md)
+- [cisa kev cve 2021 26411 microsoft internet explorer memory c](./2021-11-03/cisa-kev-cve-2021-26411-microsoft-internet-explorer-memory-c.md)
+- [cisa kev cve 2021 26855 microsoft exchange server remote cod](./2021-11-03/cisa-kev-cve-2021-26855-microsoft-exchange-server-remote-cod.md)
+- [cisa kev cve 2021 26857 microsoft exchange server remote cod](./2021-11-03/cisa-kev-cve-2021-26857-microsoft-exchange-server-remote-cod.md)
+- [cisa kev cve 2021 26858 microsoft exchange server remote cod](./2021-11-03/cisa-kev-cve-2021-26858-microsoft-exchange-server-remote-cod.md)
 - [cisa kev cve 2021 27059 microsoft office remote code executi](./2021-11-03/cisa-kev-cve-2021-27059-microsoft-office-remote-code-executi.md)
+- [cisa kev cve 2021 27065 microsoft exchange server remote cod](./2021-11-03/cisa-kev-cve-2021-27065-microsoft-exchange-server-remote-cod.md)
+- [cisa kev cve 2021 27085 microsoft internet explorer remote c](./2021-11-03/cisa-kev-cve-2021-27085-microsoft-internet-explorer-remote-c.md)
+- [cisa kev cve 2021 27101 accellion fta sql injection vulnerab](./2021-11-03/cisa-kev-cve-2021-27101-accellion-fta-sql-injection-vulnerab.md)
+- [cisa kev cve 2021 27102 accellion fta os command injection v](./2021-11-03/cisa-kev-cve-2021-27102-accellion-fta-os-command-injection-v.md)
 - [cisa kev cve 2021 27103 accellion fta server side request fo](./2021-11-03/cisa-kev-cve-2021-27103-accellion-fta-server-side-request-fo.md)
 - [cisa kev cve 2021 27104 accellion fta os command injection v](./2021-11-03/cisa-kev-cve-2021-27104-accellion-fta-os-command-injection-v.md)
 - [cisa kev cve 2021 27561 yealink device management server sid](./2021-11-03/cisa-kev-cve-2021-27561-yealink-device-management-server-sid.md)
 - [cisa kev cve 2021 27562 arm trusted firmware out of bounds w](./2021-11-03/cisa-kev-cve-2021-27562-arm-trusted-firmware-out-of-bounds-w.md)
+- [cisa kev cve 2021 28310 microsoft win32k privilege escalatio](./2021-11-03/cisa-kev-cve-2021-28310-microsoft-win32k-privilege-escalatio.md)
 - [cisa kev cve 2021 28550 adobe acrobat and reader use after f](./2021-11-03/cisa-kev-cve-2021-28550-adobe-acrobat-and-reader-use-after-f.md)
+- [cisa kev cve 2021 28663 arm mali graphics processing unit gp](./2021-11-03/cisa-kev-cve-2021-28663-arm-mali-graphics-processing-unit-gp.md)
 - [cisa kev cve 2021 28664 arm mali graphics processing unit gp](./2021-11-03/cisa-kev-cve-2021-28664-arm-mali-graphics-processing-unit-gp.md)
 - [cisa kev cve 2021 30116 kaseya virtual system server adminis](./2021-11-03/cisa-kev-cve-2021-30116-kaseya-virtual-system-server-adminis.md)
+- [cisa kev cve 2021 30551 google chromium v8 type confusion vu](./2021-11-03/cisa-kev-cve-2021-30551-google-chromium-v8-type-confusion-vu.md)
+- [cisa kev cve 2021 30554 google chromium webgl use after free](./2021-11-03/cisa-kev-cve-2021-30554-google-chromium-webgl-use-after-free.md)
+- [cisa kev cve 2021 30563 google chromium v8 type confusion vu](./2021-11-03/cisa-kev-cve-2021-30563-google-chromium-v8-type-confusion-vu.md)
 - [cisa kev cve 2021 30632 google chromium v8 out of bounds wri](./2021-11-03/cisa-kev-cve-2021-30632-google-chromium-v8-out-of-bounds-wri.md)
 - [cisa kev cve 2021 30633 google chromium indexed db api use a](./2021-11-03/cisa-kev-cve-2021-30633-google-chromium-indexed-db-api-use-a.md)
+- [cisa kev cve 2021 30657 apple macos unspecified vulnerabilit](./2021-11-03/cisa-kev-cve-2021-30657-apple-macos-unspecified-vulnerabilit.md)
 - [cisa kev cve 2021 30661 apple multiple products webkit stora](./2021-11-03/cisa-kev-cve-2021-30661-apple-multiple-products-webkit-stora.md)
+- [cisa kev cve 2021 30663 apple multiple products webkit integ](./2021-11-03/cisa-kev-cve-2021-30663-apple-multiple-products-webkit-integ.md)
+- [cisa kev cve 2021 30665 apple multiple products webkit memor](./2021-11-03/cisa-kev-cve-2021-30665-apple-multiple-products-webkit-memor.md)
 - [cisa kev cve 2021 30666 apple ios webkit buffer overflow vul](./2021-11-03/cisa-kev-cve-2021-30666-apple-ios-webkit-buffer-overflow-vul.md)
 - [cisa kev cve 2021 30713 apple macos unspecified vulnerabilit](./2021-11-03/cisa-kev-cve-2021-30713-apple-macos-unspecified-vulnerabilit.md)
+- [cisa kev cve 2021 30761 apple ios webkit memory corruption v](./2021-11-03/cisa-kev-cve-2021-30761-apple-ios-webkit-memory-corruption-v.md)
+- [cisa kev cve 2021 30762 apple ios webkit use after free vuln](./2021-11-03/cisa-kev-cve-2021-30762-apple-ios-webkit-use-after-free-vuln.md)
+- [cisa kev cve 2021 30807 apple multiple products memory corru](./2021-11-03/cisa-kev-cve-2021-30807-apple-multiple-products-memory-corru.md)
 - [cisa kev cve 2021 30858 apple ios ipados macos use after fre](./2021-11-03/cisa-kev-cve-2021-30858-apple-ios-ipados-macos-use-after-fre.md)
 - [cisa kev cve 2021 30860 apple multiple products integer over](./2021-11-03/cisa-kev-cve-2021-30860-apple-multiple-products-integer-over.md)
 - [cisa kev cve 2021 30869 apple ios ipados and macos type conf](./2021-11-03/cisa-kev-cve-2021-30869-apple-ios-ipados-and-macos-type-conf.md)
 - [cisa kev cve 2021 31199 microsoft enhanced cryptographic pro](./2021-11-03/cisa-kev-cve-2021-31199-microsoft-enhanced-cryptographic-pro.md)
+- [cisa kev cve 2021 31201 microsoft enhanced cryptographic pro](./2021-11-03/cisa-kev-cve-2021-31201-microsoft-enhanced-cryptographic-pro.md)
 - [cisa kev cve 2021 31207 microsoft exchange server security f](./2021-11-03/cisa-kev-cve-2021-31207-microsoft-exchange-server-security-f.md)
 - [cisa kev cve 2021 31755 tenda ac11 router stack buffer overf](./2021-11-03/cisa-kev-cve-2021-31755-tenda-ac11-router-stack-buffer-overf.md)
 - [cisa kev cve 2021 31955 microsoft windows kernel information](./2021-11-03/cisa-kev-cve-2021-31955-microsoft-windows-kernel-information.md)
+- [cisa kev cve 2021 31956 microsoft windows ntfs privilege esc](./2021-11-03/cisa-kev-cve-2021-31956-microsoft-windows-ntfs-privilege-esc.md)
+- [cisa kev cve 2021 31979 microsoft windows kernel privilege e](./2021-11-03/cisa-kev-cve-2021-31979-microsoft-windows-kernel-privilege-e.md)
 - [cisa kev cve 2021 33739 microsoft desktop window manager dwm](./2021-11-03/cisa-kev-cve-2021-33739-microsoft-desktop-window-manager-dwm.md)
 - [cisa kev cve 2021 33742 microsoft windows mshtml platform re](./2021-11-03/cisa-kev-cve-2021-33742-microsoft-windows-mshtml-platform-re.md)
+- [cisa kev cve 2021 33771 microsoft windows kernel privilege e](./2021-11-03/cisa-kev-cve-2021-33771-microsoft-windows-kernel-privilege-e.md)
 - [cisa kev cve 2021 34448 microsoft windows scripting engine m](./2021-11-03/cisa-kev-cve-2021-34448-microsoft-windows-scripting-engine-m.md)
+- [cisa kev cve 2021 34473 microsoft exchange server remote cod](./2021-11-03/cisa-kev-cve-2021-34473-microsoft-exchange-server-remote-cod.md)
 - [cisa kev cve 2021 34523 microsoft exchange server privilege ](./2021-11-03/cisa-kev-cve-2021-34523-microsoft-exchange-server-privilege-.md)
 - [cisa kev cve 2021 34527 microsoft windows print spooler remo](./2021-11-03/cisa-kev-cve-2021-34527-microsoft-windows-print-spooler-remo.md)
 - [cisa kev cve 2021 35211 solarwinds serv u remote code execut](./2021-11-03/cisa-kev-cve-2021-35211-solarwinds-serv-u-remote-code-execut.md)
 - [cisa kev cve 2021 35395 realtek ap router sdk buffer overflo](./2021-11-03/cisa-kev-cve-2021-35395-realtek-ap-router-sdk-buffer-overflo.md)
 - [cisa kev cve 2021 35464 forgerock access management am core ](./2021-11-03/cisa-kev-cve-2021-35464-forgerock-access-management-am-core-.md)
+- [cisa kev cve 2021 36741 trend micro multiple products improp](./2021-11-03/cisa-kev-cve-2021-36741-trend-micro-multiple-products-improp.md)
 - [cisa kev cve 2021 36742 trend micro multiple products improp](./2021-11-03/cisa-kev-cve-2021-36742-trend-micro-multiple-products-improp.md)
 - [cisa kev cve 2021 36942 microsoft windows local security aut](./2021-11-03/cisa-kev-cve-2021-36942-microsoft-windows-local-security-aut.md)
 - [cisa kev cve 2021 36948 microsoft windows update medic servi](./2021-11-03/cisa-kev-cve-2021-36948-microsoft-windows-update-medic-servi.md)
+- [cisa kev cve 2021 36955 microsoft windows common log file sy](./2021-11-03/cisa-kev-cve-2021-36955-microsoft-windows-common-log-file-sy.md)
+- [cisa kev cve 2021 37973 google chromium portals use after fr](./2021-11-03/cisa-kev-cve-2021-37973-google-chromium-portals-use-after-fr.md)
+- [cisa kev cve 2021 37975 google chromium v8 use after free vu](./2021-11-03/cisa-kev-cve-2021-37975-google-chromium-v8-use-after-free-vu.md)
 - [cisa kev cve 2021 37976 google chromium information disclosu](./2021-11-03/cisa-kev-cve-2021-37976-google-chromium-information-disclosu.md)
 - [cisa kev cve 2021 38000 google chromium intents improper inp](./2021-11-03/cisa-kev-cve-2021-38000-google-chromium-intents-improper-inp.md)
 - [cisa kev cve 2021 38003 google chromium v8 memory corruption](./2021-11-03/cisa-kev-cve-2021-38003-google-chromium-v8-memory-corruption.md)
 - [cisa kev cve 2021 38645 microsoft open management infrastruc](./2021-11-03/cisa-kev-cve-2021-38645-microsoft-open-management-infrastruc.md)
 - [cisa kev cve 2021 38647 microsoft open management infrastruc](./2021-11-03/cisa-kev-cve-2021-38647-microsoft-open-management-infrastruc.md)
+- [cisa kev cve 2021 38648 microsoft open management infrastruc](./2021-11-03/cisa-kev-cve-2021-38648-microsoft-open-management-infrastruc.md)
+- [cisa kev cve 2021 38649 microsoft open management infrastruc](./2021-11-03/cisa-kev-cve-2021-38649-microsoft-open-management-infrastruc.md)
+- [cisa kev cve 2021 40444 microsoft mshtml remote code executi](./2021-11-03/cisa-kev-cve-2021-40444-microsoft-mshtml-remote-code-executi.md)
 - [cisa kev cve 2021 40539 zoho manageengine adselfservice plus](./2021-11-03/cisa-kev-cve-2021-40539-zoho-manageengine-adselfservice-plus.md)
 - [cisa kev cve 2021 42013 apache http server path traversal vu](./2021-11-03/cisa-kev-cve-2021-42013-apache-http-server-path-traversal-vu.md)
 - [cisa kev cve 2021 42258 bqe billquick web suite sql injectio](./2021-11-03/cisa-kev-cve-2021-42258-bqe-billquick-web-suite-sql-injectio.md)

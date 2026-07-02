@@ -38,10 +38,11 @@ A dual United States and Estonian citizen has been extradited to the U.S. to fac
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1078.003** — Valid Accounts: Domain Accounts
+- **T1098** — Account Manipulation
 - **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
-- **T1098.005** — Account Manipulation: Device Registration
-- **T1484.002** — Domain or Tenant Policy Modification: Trust Modification
-- **T1556.007** — Modify Authentication Process: Hybrid Identity
+- **T1564.006** — Hide Artifacts: Run Virtual Instance
+- **T1565.001** — Data Manipulation: Stored Data Manipulation
 
 ## Kill chain phases observed
 
@@ -49,64 +50,122 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Help-desk-driven password reset immediately followed by MFA re-registration (Scattered Spider account takeover)
+### Azure AD MFA push-bombing / fatigue burst followed by successful sign-in (Scattered Spider)
 
-`UC_8_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as commands values(All_Changes.src) as src from datamodel=Change where (All_Changes.command IN ("Reset password (by admin)","Reset user password","Change user password","User registered security info","Admin registered security info","User started security info registration")) by All_Changes.object _time span=1h | `drop_dm_object_name(Change)` | eval hasReset=if(match(mvjoin(commands,"|"),"(?i)reset|change user password"),1,0), hasMfaReg=if(match(mvjoin(commands,"|"),"(?i)registered security info"),1,0) | where hasReset=1 AND hasMfaReg=1 | sort - lastTime
+| tstats `summariesonly` count from datamodel=Authentication.Authentication where Authentication.action=failure Authentication.app IN ("*azure*","*office365*","*microsoftonline*","*entra*") by _time span=5m Authentication.user Authentication.src Authentication.app
+| `drop_dm_object_name(Authentication)`
+| where count>=10
+| rename user as target_user
+| join type=inner target_user [
+    | tstats `summariesonly` min(_time) as success_time from datamodel=Authentication.Authentication where Authentication.action=success Authentication.app IN ("*azure*","*office365*","*microsoftonline*","*entra*") by Authentication.user Authentication.src
+    | rename Authentication.user as target_user Authentication.src as success_src ]
+| where success_time>=_time AND success_time<=_time+600
+| table _time success_time target_user src success_src app count
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("Reset password (by admin)","Reset user password","Change user password","User registered security info","Admin registered security info","User started security info registration")
-| summarize Ops = make_set(ActionType), Events = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Actors = make_set(AccountDisplayName), IPs = make_set(IPAddress) by ObjectName
-| where Ops has_any ("Reset password (by admin)","Reset user password","Change user password") and Ops has_any ("User registered security info","Admin registered security info","User started security info registration")
-| order by LastSeen desc
+let MfaDenied = dynamic([500121,50074,50072,50076,50133]);
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode in (MfaDenied)
+| summarize MfaPrompts=count(), DeniedIPs=make_set(IPAddress,10), FirstDenied=min(Timestamp), LastDenied=max(Timestamp) by AccountUpn, bin(Timestamp, 5m)
+| where MfaPrompts >= 10   // >=10 denied MFA challenges in 5 min = push-bombing / fatigue burst
+| join kind=inner (
+    AADSignInEventsBeta
+    | where Timestamp > ago(1d)
+    | where ErrorCode == 0 and AuthenticationRequirement == "multiFactorAuthentication"
+    | project SuccessTime=Timestamp, AccountUpn, SuccessIP=IPAddress, Country, Application, ClientAppUsed
+  ) on AccountUpn
+| where SuccessTime between (LastDenied .. LastDenied + 10m)
+| project FirstDenied, LastDenied, SuccessTime, AccountUpn, MfaPrompts, DeniedIPs, SuccessIP, Country, Application, ClientAppUsed
+| order by MfaPrompts desc
 ```
 
-### Rogue federated domain / trust added to Entra tenant (Scattered Spider persistence)
+### Helpdesk-initiated password reset followed by privileged account remote logon
 
-`UC_8_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as object values(All_Changes.user) as user values(All_Changes.src) as src from datamodel=Change where (All_Changes.command IN ("Set domain authentication","Set federation settings on domain","Add unverified domain")) by All_Changes.command | `drop_dm_object_name(Change)` | sort - lastTime
+| tstats `summariesonly` min(_time) as reset_time from datamodel=Change.All_Changes where All_Changes.action=modified All_Changes.result=success All_Changes.object_category=user by All_Changes.user All_Changes.object
+| rename All_Changes.object as target_user All_Changes.user as reset_actor
+| where reset_actor!=target_user
+| join type=inner target_user [
+    | tstats `summariesonly` min(_time) as logon_time from datamodel=Authentication.Authentication where Authentication.action=success Authentication.signature_id=4624 (Authentication.Logon_Type=10 OR Authentication.Logon_Type=3) by Authentication.user Authentication.src
+    | rename Authentication.user as target_user Authentication.src as logon_src ]
+| where logon_time>reset_time AND logon_time<=reset_time+28800
+| table reset_time logon_time target_user reset_actor logon_src
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("Set domain authentication","Set federation settings on domain","Add unverified domain")
-| project Timestamp, ActionType, AccountDisplayName, IPAddress, CountryCode, UserAgent, ObjectName, ISP
-| order by Timestamp desc
+let ResetWindow = 8h;
+let Resets = IdentityDirectoryEvents
+| where Timestamp > ago(3d)
+| where ActionType in ("Account Password Changed","Account Password Reset","Recover password")
+| where isnotempty(TargetAccountUpn) and AccountUpn != TargetAccountUpn   // someone resetting ANOTHER user's password (helpdesk pattern)
+| project ResetTime=Timestamp, TargetUpn=TargetAccountUpn, Actor=AccountUpn;
+Resets
+| join kind=inner (
+    IdentityLogonEvents
+    | where Timestamp > ago(3d)
+    | where ActionType == "LogonSuccess" and LogonType in ("RemoteInteractive","Network","Interactive")
+    | project LogonTime=Timestamp, TargetUpn=AccountUpn, IPAddress, DeviceName, LogonType
+  ) on TargetUpn
+| where LogonTime between (ResetTime .. ResetTime + ResetWindow)
+| summarize LogonCount=count(), IPs=make_set(IPAddress,10), Devices=make_set(DeviceName,10), FirstLogon=min(LogonTime) by ResetTime, TargetUpn, Actor
+| order by ResetTime desc
 ```
 
-### Genymotion/Genymobile Android emulator executing on a managed endpoint (Scattered Spider MFA tooling)
+### Genymotion/Genymobile Android emulator execution on a corporate endpoint
 
-`UC_8_12` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_14_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where (Processes.process_path="*\\Genymobile\\*" OR Processes.process_path="*\\Genymotion\\*" OR Processes.process_name IN ("genymotion.exe","gmtool.exe","genyshell.exe")) AND NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("genymotion.exe","gmtool.exe","genyshell.exe","genymotion-player.exe","player.exe") AND Processes.process_path="*\\Genymobile\\Genymotion\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| search user!="*$"
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(14d)
 | where AccountName !endswith "$"
-| where (FolderPath has @"\Genymobile\" or FolderPath has @"\Genymotion\")
-    or ProcessVersionInfoCompanyName has "Genymobile"
-    or FileName in~ ("genymotion.exe","gmtool.exe","genyshell.exe")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
-          ProcessCommandLine, ProcessVersionInfoCompanyName,
-          InitiatingProcessFileName, SHA256
+| where (FileName in~ ("genymotion.exe","gmtool.exe","genyshell.exe","genymotion-player.exe","player.exe") and FolderPath has @"\Genymobile\Genymotion\")
+     or InitiatingProcessVersionInfoCompanyName has "Genymobile"
+     or ProcessVersionInfoCompanyName has "Genymobile"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
 | order by Timestamp desc
+```
+
+### DragonForce encryptor bulk file encryption (Scattered Spider impact)
+
+`UC_14_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime dc(Filesystem.file_path) as pathCount values(Filesystem.file_name) as sampleFiles from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name="*.dragonforce_encrypted" OR Filesystem.file_name="*.df_win" OR Filesystem.file_name="*.dragonforce") by Filesystem.dest Filesystem.process_id Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| where count>=25
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FileName endswith ".dragonforce_encrypted" or FileName endswith ".df_win" or FileName endswith ".dragonforce"
+| summarize FileCount=count(), Folders=dcount(FolderPath), SampleFile=any(FileName), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where FileCount >= 25   // bulk sequential encryption by a single process
+| order by FileCount desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -451,4 +510,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 14 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

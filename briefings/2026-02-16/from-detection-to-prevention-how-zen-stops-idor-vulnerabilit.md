@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From detection to prevention: How Zen stops IDOR vulnerabilities at runtime
 
-`UC_573_3` · phase: **exploit** · confidence: **High**
+`UC_577_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,12 +44,13 @@ The recently discovered financially-motivated FortiBleed campaign has been attri
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
-- **T1204.002** — User Execution: Malicious File
-- **T1588.001** — Obtain Capabilities: Malware
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1105** — Ingress Tool Transfer
 - **T1041** — Exfiltration Over C2 Channel
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1005** — Data from Local System
+- **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
 
@@ -57,95 +58,34 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FortiClient EMS exposed to CVE-2026-35616 (EKZ Infostealer delivery vector)
+### FortiClient EMS exploit chain (CVE-2026-35616) deploying EKZ Infostealer via fortitray/ipsec → PowerShell
 
-`UC_9_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-35616"
-    or (SoftwareName has "forticlient" and SoftwareName has "ems" and SoftwareVersion in ("7.4.5","7.4.6"))
-| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by Timestamp desc
-```
-
-### FortiBleed / EKZ Infostealer known-bad file hashes on endpoints
-
-`UC_9_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_15_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("0da123adf9251957a4b850a3f6bd6a753dd4892be176a84a18450e899534cc5e","d91c00fad521e76efa89715cca89db487d5676f2c767c883482f9c8f82bd383a","fd65051c61a904a304919c04a8c8633c001183ac73ac461cd4d9057946f02bf5","2927bc31b4f8254c6b332fc03110a6373cad00ffa2ff9de427c26bb222017bb2","2f25ea1b622abf3212141af932c2ec4cbd6b2b5903c2a531121f691227d98cff","17e771c78430cc67e71d4547f8996a1a488e9d3f","338662fd0c4d750a0ba203a32b59f081") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let s256 = dynamic(["0da123adf9251957a4b850a3f6bd6a753dd4892be176a84a18450e899534cc5e","d91c00fad521e76efa89715cca89db487d5676f2c767c883482f9c8f82bd383a","fd65051c61a904a304919c04a8c8633c001183ac73ac461cd4d9057946f02bf5","2927bc31b4f8254c6b332fc03110a6373cad00ffa2ff9de427c26bb222017bb2","2f25ea1b622abf3212141af932c2ec4cbd6b2b5903c2a531121f691227d98cff"]);
-let s1 = dynamic(["17e771c78430cc67e71d4547f8996a1a488e9d3f"]);
-let m5 = dynamic(["338662fd0c4d750a0ba203a32b59f081"]);
-union
-(DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in~ (s256) or SHA1 in~ (s1) or MD5 in~ (m5) | extend Src="Process"),
-(DeviceFileEvents  | where Timestamp > ago(30d) | where SHA256 in~ (s256) or SHA1 in~ (s1) or MD5 in~ (m5) | extend Src="File")
-| project Timestamp, DeviceName, Src, FileName, FolderPath, SHA256, SHA1, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### EKZ payload delivered as fake Fortinet update: FortiClient agent spawning script host
-
-`UC_9_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("FcmDaemon.exe","FortiClient.exe","FortiESNAC.exe","FortiSSLVPNdaemon.exe")) AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ( (Processes.parent_process_name IN ("fortitray.exe","ipsec.exe") AND Processes.process_name IN ("cmd.exe","powershell.exe")) OR Processes.process_name="FortiEndpoint_Patch.exe" OR Processes.process="*\\Fortinet\\FortiClient\\logs\\Trace\\scripts\\*" ) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("FcmDaemon.exe","FortiClient.exe","FortiESNAC.exe","FortiSSLVPNdaemon.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where (InitiatingProcessFileName in~ ("fortitray.exe","ipsec.exe") and FileName in~ ("cmd.exe","powershell.exe"))
+    or FileName =~ "FortiEndpoint_Patch.exe"
+    or ProcessCommandLine has @"\Fortinet\FortiClient\logs\Trace\scripts\"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### EKZ Infostealer access to Chromium/Firefox credential stores by non-browser process
+### EKZ Infostealer C2 download and HTTP-POST exfiltration to 83.138.53.110
 
-`UC_9_15` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("Login Data","Local State","key4.db","logins.json","cookies.sqlite","Web Data") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("Login Data","Local State","key4.db","logins.json","cookies.sqlite","Web Data")
-    or FolderPath has_any ("User Data","Profiles")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe","msedgewebview2.exe")
-| where FileName in~ ("Login Data","Local State","key4.db","logins.json","cookies.sqlite","Web Data")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ActionType
-| order by Timestamp desc
-```
-
-### Egress to FortiBleed C2 infrastructure IPs
-
-`UC_9_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_15_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("83.138.53.110","185.220.101.15","192.42.116.14") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("83.138.53.110","185.220.101.15","192.42.116.14") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -153,7 +93,53 @@ DeviceFileEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("83.138.53.110","185.220.101.15","192.42.116.14")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+    or RemoteUrl has_any ("/dl/p.exe","/service/save.php")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### EKZ Infostealer browser credential theft and staging to C:\ProgramData\log.txt
+
+`UC_15_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\ProgramData\\log.txt" AND Filesystem.action=created) OR (Filesystem.file_name IN ("key4.db","logins.json","cookies.sqlite","Login Data","Local State")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.action Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where (FolderPath =~ @"C:\ProgramData\log.txt" and ActionType == "FileCreated")
+    or (FileName in~ ("key4.db","logins.json","cookies.sqlite","Login Data","Local State")
+        and InitiatingProcessFileName in~ ("FortiEndpoint_Patch.exe","p.exe","powershell.exe"))
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### EKZ Infostealer / FortiBleed known-bad file hash execution sweep
+
+`UC_15_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("0da123adf9251957a4b850a3f6bd6a753dd4892be176a84a18450e899534cc5e","d91c00fad521e76efa89715cca89db487d5676f2c767c883482f9c8f82bd383a","fd65051c61a904a304919c04a8c8633c001183ac73ac461cd4d9057946f02bf5","2927bc31b4f8254c6b332fc03110a6373cad00ffa2ff9de427c26bb222017bb2","2f25ea1b622abf3212141af932c2ec4cbd6b2b5903c2a531121f691227d98cff","17e771c78430cc67e71d4547f8996a1a488e9d3f","338662fd0c4d750a0ba203a32b59f081") by Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let Sha256 = dynamic(["0da123adf9251957a4b850a3f6bd6a753dd4892be176a84a18450e899534cc5e","d91c00fad521e76efa89715cca89db487d5676f2c767c883482f9c8f82bd383a","fd65051c61a904a304919c04a8c8633c001183ac73ac461cd4d9057946f02bf5","2927bc31b4f8254c6b332fc03110a6373cad00ffa2ff9de427c26bb222017bb2","2f25ea1b622abf3212141af932c2ec4cbd6b2b5903c2a531121f691227d98cff"]);
+union
+  (DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in~ (Sha256) or SHA1 =~ "17e771c78430cc67e71d4547f8996a1a488e9d3f" or MD5 =~ "338662fd0c4d750a0ba203a32b59f081"
+    | extend Evt="ProcessCreated", Cmd=ProcessCommandLine),
+  (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in~ (Sha256) or SHA1 =~ "17e771c78430cc67e71d4547f8996a1a488e9d3f" or MD5 =~ "338662fd0c4d750a0ba203a32b59f081"
+    | extend Evt=ActionType, Cmd=InitiatingProcessCommandLine)
+| project Timestamp, DeviceName, Evt, FileName, FolderPath, SHA256, SHA1, MD5, Cmd
 | order by Timestamp desc
 ```
 
@@ -482,4 +468,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 16 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
