@@ -3347,7 +3347,17 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # LLM_UC_MODEL so an operator switching models (e.g. Opus -> Haiku to
     # save cost, or back up again) doesn't keep serving the old model's
     # cached output indefinitely.
-    cache_key = hashlib.sha1(f"{UC_VERSION}|{LLM_UC_MODEL}|{url}".encode("utf-8", "replace")).hexdigest()
+    # KEV catalog entries (and merged clusters that inherited the KEV link)
+    # all share ONE URL, so a URL-only key collides them onto a single cache
+    # slot: each article overwrites the last and the _body_hash republish
+    # check then forces a fresh LLM regeneration on every run. Fold the
+    # title into the key for that URL so each entry gets its own slot.
+    # Normal articles keep the pure-URL key so the existing cache corpus
+    # stays warm.
+    _uc_cache_ident = url
+    if "known-exploited-vulnerabilities-catalog" in url:
+        _uc_cache_ident = f"{url}#{article.get('title', '')}"
+    cache_key = hashlib.sha1(f"{UC_VERSION}|{LLM_UC_MODEL}|{_uc_cache_ident}".encode("utf-8", "replace")).hexdigest()
     cache_path = LLM_UC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     # Pending quality-review suggestions for this article (set in main()).
@@ -3390,9 +3400,14 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # Read-only, same rationale as the v1 fallback below: adding the model
     # to the key must not orphan the existing cache corpus. Fresh calls
     # write under the new key only.
+    # Legacy fallbacks are URL-keyed, so for the shared KEV catalog URL they
+    # hold SOME article's UCs — serving them to a different KEV entry would
+    # attach the wrong CVE's detections. Skip legacy reads for shared-URL
+    # articles (they regenerate under the new per-title key instead).
+    _legacy_ok = (_uc_cache_ident == url)
     legacy2_key = hashlib.sha1(f"{UC_VERSION}|{url}".encode("utf-8", "replace")).hexdigest()
     legacy2_path = LLM_UC_CACHE_DIR / f"{legacy2_key[:2]}/{legacy2_key}.json"
-    if cached_fallback is None and legacy2_path.exists() and legacy2_path != cache_path:
+    if _legacy_ok and cached_fallback is None and legacy2_path.exists() and legacy2_path != cache_path:
         try:
             data = __import__("json").loads(legacy2_path.read_text(encoding="utf-8"))
             ucs = [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
@@ -3413,7 +3428,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # under EITHER key, so legacy UCs aren't redundantly re-generated.
     legacy_key = hashlib.sha1(url.encode("utf-8", "replace")).hexdigest()
     legacy_path = LLM_UC_CACHE_DIR / f"{legacy_key[:2]}/{legacy_key}.json"
-    if cached_fallback is None and legacy_path.exists() and legacy_path != cache_path:
+    if _legacy_ok and cached_fallback is None and legacy_path.exists() and legacy_path != cache_path:
         try:
             data = __import__("json").loads(legacy_path.read_text(encoding="utf-8"))
             ucs = [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
@@ -21725,6 +21740,23 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
         for existing in deduped:
             if not _within_window(a, existing):
                 continue
+            # CISA KEV rows are one-CVE-per-entry BY DESIGN: two KEV rows
+            # with different CVE ids are different vulnerabilities, however
+            # similar their vendor/product titles look (SAP NetWeaver alone
+            # has 8+ rows that clear the 0.55 title-Jaccard bar because the
+            # titles differ only in the CVE token). Fusing them (a) silently
+            # drops the absorbed CVE's card from the site and (b) reshuffles
+            # cluster composition run-to-run as feeds move, which defeats the
+            # body-keyed LLM caches — the same KEV CVE was live-extracted
+            # 118 times over three weeks. A KEV row may only merge with a
+            # pure-KEV cluster when they share a CVE id (never true in
+            # today's catalog; kept in case CISA ever splits an entry).
+            if (a["source"] == "CISA KEV"
+                    and existing.get("sources") == ["CISA KEV"]):
+                a_cves = {i for i in a["_ids"] if i.startswith("cve-")}
+                e_cves = {i for i in existing["_ids"] if i.startswith("cve-")}
+                if not (a_cves & e_cves):
+                    continue
             # Existing rule: title-token Jaccard >= 0.55
             if _looks_same_story(a["_tokens"], existing["_tokens"]):
                 match = existing; same_story_merges += 1
