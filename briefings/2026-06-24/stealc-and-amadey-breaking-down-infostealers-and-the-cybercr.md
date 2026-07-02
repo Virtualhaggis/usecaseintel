@@ -50,12 +50,13 @@ Infostealers continue to be some of the most pervasive and impactful threats acr
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
 - **T1218.011** — System Binary Proxy Execution: Rundll32
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1105** — Ingress Tool Transfer
+- **T1555** — Credentials from Password Stores
+- **T1115** — Clipboard Data
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1132.001** — Data Encoding: Standard Encoding
-- **T1005** — Data from Local System
+- **T1573.001** — Encrypted Channel: Symmetric Cryptography
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
@@ -63,96 +64,71 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Amadey loader staging payloads via rundll32 DLL-load / PowerShell from temp-resident parent
+### Amadey rundll32 credential/clipper module execution from AppData
 
-`UC_102_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_102_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="rundll32.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") (Processes.parent_process_path="*\\AppData\\Local\\Temp\\*" OR Processes.parent_process_path="*\\AppData\\Roaming\\*" OR Processes.parent_process_path="*\\Users\\Public\\*" OR Processes.parent_process_path="*\\Windows\\Temp\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_path Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where (process_name="rundll32.exe" AND match(process,"(?i)\.dll") AND match(process,"(?i)(AppData|\\Temp\\|Public|ProgramData)")) OR ((process_name="powershell.exe" OR process_name="pwsh.exe") AND match(process,"(?i)(\.ps1|DownloadString|DownloadFile|Invoke-WebRequest|Invoke-RestMethod)")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=rundll32.exe (Processes.process="*cred64.dll*" OR Processes.process="*clip64.dll*" OR Processes.process="*cred.dll*" OR Processes.process="*clip.dll*" OR (Processes.process="*\\AppData\\Roaming\\*" AND Processes.process="*.dll,Main*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(7d)
+| where FileName =~ "rundll32.exe"
+| where ProcessCommandLine has_any ("cred64.dll","clip64.dll","cred.dll","clip.dll")
+    or (ProcessCommandLine has "AppData" and ProcessCommandLine matches regex @"(?i)\.dll\s*,\s*Main")
 | where AccountName !endswith "$"
-| where InitiatingProcessFolderPath has_any (@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Users\Public\", @"\Windows\Temp\")
-| where (FileName =~ "rundll32.exe"
-            and ProcessCommandLine has ".dll"
-            and ProcessCommandLine has_any (@"\AppData\", @"\Temp\", @"\Public\", @"\ProgramData\"))
-     or (FileName in~ ("powershell.exe","pwsh.exe")
-            and ProcessCommandLine has_any (".ps1","DownloadString","DownloadFile","Invoke-WebRequest","Invoke-RestMethod"))
-| project Timestamp, DeviceName, AccountName,
-          ParentPath = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine,
-          FileName, ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Amadey C2 check-in beacon with characteristic id/vs/sd/os/bi parameter set
+### Amadey C2 check-in beacon to .php endpoint from AppData-resident process
 
 `UC_102_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*id=*" Web.url="*vs=*" Web.url="*sd=*" Web.url="*os=*" Web.url="*bi=*") (Web.url="*&ar=*" OR Web.url="*&pc=*" OR Web.url="*&un=*" OR Web.url="*&av=*" OR Web.url="*&lv=*") by Web.src Web.dest Web.dest_ip Web.http_method Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*index.php*" (Web.url="*r=*" OR Web.http_method=POST) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has_all ("id=", "vs=", "sd=", "os=", "bi=")
-      and RemoteUrl has_any ("&ar=", "&pc=", "&un=", "&av=", "&lv=")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| where Timestamp > ago(7d)
+| where InitiatingProcessFolderPath has_any ("\\AppData\\Local\\Temp\\","\\AppData\\Roaming\\")
+| where RemoteIPType == "Public"
+| where RemoteUrl endswith ".php" or RemoteUrl has "index.php"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### StealC harvesting multiple browser credential/cookie/wallet stores by a non-browser process
+### Amadey loader command handler spawning cmd/PowerShell from AppData self-copy
 
-`UC_102_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` dc(Filesystem.file_name) as file_count values(Filesystem.file_name) as file_names min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("Login Data","Cookies","Web Data","Local State","logins.json","key4.db","signons.sqlite","cookies.sqlite","places.sqlite","formhistory.sqlite")) (Filesystem.process_name!="chrome.exe" Filesystem.process_name!="msedge.exe" Filesystem.process_name!="firefox.exe" Filesystem.process_name!="brave.exe" Filesystem.process_name!="opera.exe" Filesystem.process_name!="chromium.exe" Filesystem.process_name!="iexplore.exe") by Filesystem.dest Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where file_count>=3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","chromium.exe","iexplore.exe","vivaldi.exe"]);
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessAccountName !endswith "$"
-| where InitiatingProcessFileName !in~ (browsers)
-| where FileName in~ ("Login Data","Cookies","Web Data","Local State","logins.json","key4.db","signons.sqlite","cookies.sqlite","places.sqlite","formhistory.sqlite")
-      or FolderPath has_any (@"\Ethereum\", @"\Exodus\", @"\Electrum\", @"\Bitcoin\", @"\wallets\")
-| summarize FileCount = dcount(FileName), Files = make_set(FileName, 20),
-            FolderPaths = make_set(FolderPath, 20),
-            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-        by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessAccountName
-| where FileCount >= 3
-| order by LastSeen desc
-```
-
-### ClickFix delivery: explorer-spawned interpreter downloading a payload from the Run dialog
-
-`UC_102_18` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_102_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="cmd.exe" OR Processes.process_name="mshta.exe" OR Processes.process_name="curl.exe" OR Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(process,"(?i)(https?://|DownloadString|Invoke-WebRequest|Invoke-RestMethod|iwr |curl |certutil|bitsadmin|mshta |IEX)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_path="*\\AppData\\Roaming\\*" OR Processes.parent_process_path="*\\AppData\\Local\\Temp\\*") (Processes.process_name=cmd.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_path Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| regex parent_process_path="(?i)\\\\AppData\\\\(Roaming|Local\\\\Temp)\\\\[0-9A-Za-z]{6,}\\\\"
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(7d)
+| where InitiatingProcessFolderPath matches regex @"(?i)\\AppData\\(Roaming|Local\\Temp)\\[0-9A-Za-z]{6,}\\"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe")
 | where AccountName !endswith "$"
-| where InitiatingProcessFileName =~ "explorer.exe"
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","curl.exe","wscript.exe","cscript.exe")
-| where ProcessCommandLine has_any ("http://","https://","DownloadString","Invoke-WebRequest","Invoke-RestMethod","iwr ","curl ","certutil","bitsadmin","mshta ","IEX")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, ProcessCommandLine, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
@@ -668,4 +644,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 19 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 18 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

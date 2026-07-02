@@ -392,7 +392,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI-Generated Browser Ransomware Abuses Chromium API on Windows and Android
 
-`UC_21_13` · phase: **exploit** · confidence: **High**
+`UC_22_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

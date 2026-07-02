@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### FortiBleed 'adminin' backdoor local account creation and logon
 
-`UC_0_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ union
 
 ### Credential-stuffing burst culminating in success against FortiGate SSL-VPN / SSO
 
-`UC_0_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ AADSignInEventsBeta
 
 ### FortiGate admin login and configuration download from external IP
 
-`UC_0_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ AADSignInEventsBeta
 
 ### Outbound connection to FortiBleed operator infrastructure 85.11.187.8
 
-`UC_0_8` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_1_8` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### Lynx/INC ransomware mass file encryption via .lynx extension
 
-`UC_0_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
