@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### CVE-2020-9484 Tomcat session deserialization: JSESSIONID path-traversal in HTTP request
 
-`UC_2806_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2807_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Tomcat/Java server process spawning an OS command shell (CVE-2020-9484 RCE outcome)
 
-`UC_2806_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2807_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### Attacker-staged .session deserialization payload written outside Tomcat's session store
 
-`UC_2806_3` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_2807_3` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### IoliteLabs VSCode extension dropper: VS Code child process reaching rraghh.com / oortt.com C2
 
-`UC_451_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_452_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### IoliteLabs Stage-2 regsvr32 LOLbin loading ntuser DLL from fake Chrome\ChromeUpdate path
 
-`UC_451_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_452_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ union ProcSig, HashSig
 
 ### IoliteLabs IOC sweep: rraghh.com / oortt.com hostnames + campaign file hashes
 
-`UC_451_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_452_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -269,7 +269,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious IoliteLabs VSCode Extensions Target Solidity Developers on Windows, ma
 
-`UC_451_7` · phase: **exploit** · confidence: **High**
+`UC_452_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -91,7 +91,7 @@ _(none detected from narrative keywords)_
 
 ### Non-browser process writing Chromium 'Secure Preferences'/'Preferences' (Silent Swap sideload)
 
-`UC_40_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_49_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceFileEvents
 
 ### Single process force-terminating multiple Chromium browsers (Silent Swap profile-unlock precursor)
 
-`UC_40_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_49_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### Silent Swap / VPN Go clipper C2 and clipboard-exfil to known infrastructure
 
-`UC_40_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_49_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

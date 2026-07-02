@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### axios Supply Chain RAT C2 Callback to sfrclak.com (Port 8000)
 
-`UC_440_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_441_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ union
 
 ### npm postinstall node setup.js dropper executing from plain-crypto-js with immediate network egress
 
-`UC_440_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_441_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ SetupRun
 
 ### Malicious axios or plain-crypto-js package files written to node_modules
 
-`UC_440_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_441_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceFileEvents
 
 ### plain-crypto-js setup.js self-deletion or package.json overwrite (anti-forensics)
 
-`UC_440_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_441_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -324,7 +324,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — axios Compromised on npm - Malicious Versions Drop Remote Access Trojan
 
-`UC_440_7` · phase: **exploit** · confidence: **High**
+`UC_441_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

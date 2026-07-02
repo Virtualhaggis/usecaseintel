@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### Fake OBS/DS4Windows freeware archive downloaded from typosquatted ScreenConnect-delivery infra
 
-`UC_16_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_27_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceFileEvents
 
 ### DLL side-load of install.res.1033.dll via renamed Microsoft install.exe (ScreenConnect loader)
 
-`UC_16_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceImageLoadEvents
 
 ### msiexec silently installing MSI packages renamed as .dll (vcredist_x64.dll / vcredist_x86.dll)
 
-`UC_16_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceProcessEvents
 
 ### ScreenConnect-spawned PowerShell adds Defender exclusions and disables UAC (Fj5NmEsp9EuKrun.ps1)
 
-`UC_16_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceProcessEvents
 
 ### ScreenConnect service drops and executes VBS/PS loader files in C:\Users\Public
 
-`UC_16_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +190,7 @@ union
 
 ### Scheduled task MasterPackager.Updater re-launching wscript C:\Users\Public\script.vbs every 2 minutes
 
-`UC_16_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,7 +212,7 @@ DeviceProcessEvents
 
 ### RegAsm.exe (hollowed) beaconing to AsyncRAT C2 / ScreenConnect infra contacts campaign IPs
 
-`UC_16_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_27_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -389,7 +389,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The SOC Files: ScreenConnect masked as freeware. An inside look at a large-scale
 
-`UC_16_7` · phase: **exploit** · confidence: **High**
+`UC_27_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### ProxyShell exploitation of on-prem Exchange (autodiscover SSRF → PowerShell backend)
 
-`UC_236_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_237_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### fd.aspx modular web shell dropped into Exchange web directories
 
-`UC_236_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_237_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceFileEvents
 
 ### IIS worker w3wp.exe spawning PowerShell/cmd (fd.aspx command execution)
 
-`UC_236_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_237_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### Host egress to shared hacktivist C2/exfil IP 185.221.153.121
 
-`UC_236_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_237_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### Microsoft Dev Tunnels (devtunnel.exe) abused as ingress backdoor
 
-`UC_236_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_237_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceProcessEvents
 
 ### BYOVD EDR-killer: rentdrv2 vulnerable driver drop to disable Defender/MDE
 
-`UC_236_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_237_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ union
 
 ### ClearWater ransomware payload execution from C:\ProgramData
 
-`UC_236_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_237_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -374,7 +374,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From cause to cash: a cross-border look at hacktivist activity
 
-`UC_236_8` · phase: **exploit** · confidence: **High**
+`UC_237_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

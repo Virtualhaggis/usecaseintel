@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Egress to RustDuck spreader/delivery host 176.65.139.204
 
-`UC_35_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_45_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### CVE-2017-17215 Huawei HG532 TR-064 command injection (RustDuck spread vector)
 
-`UC_35_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_45_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### RustDuck DuckDNS dynamic-DNS C2 resolution/beaconing
 
-`UC_35_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_45_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Unprivileged user+network namespace creation (DirtyClone CAP_NET_ADMIN path)
 
-`UC_78_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_85_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### Loopback IPsec/XFRM tunnel configured by local process (DirtyClone write primitive)
 
-`UC_78_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_85_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### Namespace creation followed by loopback IPsec setup (DirtyClone exploit chain)
 
-`UC_78_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_85_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Hosts exposed to DirtyFrag-class kernel LPE (CVE-2026-43503 and siblings)
 
-`UC_78_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_85_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -149,7 +149,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — New DirtyClone Linux Kernel Flaw Lets Local Users Gain Root via Cloned Packets
 
-`UC_78_2` · phase: **install** · confidence: **High**
+`UC_85_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

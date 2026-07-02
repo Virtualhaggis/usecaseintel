@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### StealC/Amadey C2 beacon to Operation Endgame seized domains
 
-`UC_101_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### Known StealC / Amadey binary hashes on endpoint (Operation Endgame IOC set)
 
-`UC_101_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_102_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union
 
 ### Amadey command-handler execution: C2 beacon followed by rundll32/cmd/PowerShell spawn
 
-`UC_101_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_102_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -588,7 +588,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — StealC and Amadey: Breaking down infostealers and the cybercrime services that d
 
-`UC_101_14` · phase: **exploit** · confidence: **High**
+`UC_102_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

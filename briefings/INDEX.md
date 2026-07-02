@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2270 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2273 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,13 +9,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-01
+- [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-07-01/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
+- [19 year old scattered spider suspect extradited to face u s ](./2026-07-01/19-year-old-scattered-spider-suspect-extradited-to-face-u-s-.md)
 - [2026 cybersecurity assessment the gap between awareness and ](./2026-07-01/2026-cybersecurity-assessment-the-gap-between-awareness-and-.md)
 - [ai generated browser ransomware abuses chromium api on windo](./2026-07-01/ai-generated-browser-ransomware-abuses-chromium-api-on-windo.md)
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [azure cli password spray hits at least 78 microsoft accounts](./2026-07-01/azure-cli-password-spray-hits-at-least-78-microsoft-accounts.md)
 - [citrix patches six netscaler flaws allowing file read and de](./2026-07-01/citrix-patches-six-netscaler-flaws-allowing-file-read-and-de.md)
+- [codfish semantic release action github action has been compr](./2026-07-01/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [critical cursor flaws could let prompt injection escape sand](./2026-07-01/critical-cursor-flaws-could-let-prompt-injection-escape-sand.md)
+- [fortibleed credential theft campaign linked to lynx ransomwa](./2026-07-01/fortibleed-credential-theft-campaign-linked-to-lynx-ransomwa.md)
+- [kubota says hackers had month long access to network systems](./2026-07-01/kubota-says-hackers-had-month-long-access-to-network-systems.md)
+- [mass npm supply chain attack 20 leo platform packages compro](./2026-07-01/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
+- [maven support comes to github checks and oss package search](./2026-07-01/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [microsoft named a leader in the frost radar for cloud and ap](./2026-07-01/microsoft-named-a-leader-in-the-frost-radar-for-cloud-and-ap.md)
+- [multiple immobiliarelabs backstage plugins compromised on np](./2026-07-01/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
+- [new chocopoc malware targets researchers via trojanized poc ](./2026-07-01/new-chocopoc-malware-targets-researchers-via-trojanized-poc-.md)
 - [openclaw risks for the users and how to mitigate them](./2026-07-01/openclaw-risks-for-the-users-and-how-to-mitigate-them.md)
 - [ousaban banking trojan targets iberian bank users with fake ](./2026-07-01/ousaban-banking-trojan-targets-iberian-bank-users-with-fake-.md)
 - [over 900 oracle e business instances exposed to ongoing atta](./2026-07-01/over-900-oracle-e-business-instances-exposed-to-ongoing-atta.md)
@@ -24,17 +33,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [researcher analyzes 3 000 live clickfix payloads exposing ap](./2026-07-01/researcher-analyzes-3-000-live-clickfix-payloads-exposing-ap.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [seo poisoned software sites abuse screenconnect to deploy as](./2026-07-01/seo-poisoned-software-sites-abuse-screenconnect-to-deploy-as.md)
+- [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-01/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 - [the soc files screenconnect masked as freeware an inside loo](./2026-07-01/the-soc-files-screenconnect-masked-as-freeware-an-inside-loo.md)
+- [unpatched argo cd repo server flaw could let attackers take ](./2026-07-01/unpatched-argo-cd-repo-server-flaw-could-let-attackers-take-.md)
 - [veil drop malware chain uses blogger platform to deliver pur](./2026-07-01/veil-drop-malware-chain-uses-blogger-platform-to-deliver-pur.md)
 
 ## 2026-06-30
 - [airdrop and quick share flaws let nearby attackers trigger c](./2026-06-30/airdrop-and-quick-share-flaws-let-nearby-attackers-trigger-c.md)
 - [attackers exploit simplehelp cve 2026 48558 to deploy taskwe](./2026-06-30/attackers-exploit-simplehelp-cve-2026-48558-to-deploy-taskwe.md)
-- [fake perplexity extension on chrome web store tracked search](./2026-06-30/fake-perplexity-extension-on-chrome-web-store-tracked-search.md)
 - [guardfall exposes open source ai coding agents to decades ol](./2026-06-30/guardfall-exposes-open-source-ai-coding-agents-to-decades-ol.md)
 - [langflow rce exploited to deploy monero miner on exposed ai ](./2026-06-30/langflow-rce-exploited-to-deploy-monero-miner-on-exposed-ai-.md)
-- [malicious pypi packages give hackers control of telegram bot](./2026-06-30/malicious-pypi-packages-give-hackers-control-of-telegram-bot.md)
 - [microsoft warns poisoned mcp tool descriptions can make ai a](./2026-06-30/microsoft-warns-poisoned-mcp-tool-descriptions-can-make-ai-a.md)
 - [new bioshocking attack tricks ai browsers into leaking user ](./2026-06-30/new-bioshocking-attack-tricks-ai-browsers-into-leaking-user-.md)
 - [oracle e business suite flaw cve 2026 46817 actively exploit](./2026-06-30/oracle-e-business-suite-flaw-cve-2026-46817-actively-exploit.md)
@@ -68,7 +77,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa adds exploited ptc windchill rce flaw to kev as web she](./2026-06-26/cisa-adds-exploited-ptc-windchill-rce-flaw-to-kev-as-web-she.md)
 - [fbi warns russian intelligence hackers target signal backup ](./2026-06-26/fbi-warns-russian-intelligence-hackers-target-signal-backup-.md)
 - [miasma malware targets npm packages and github actions in su](./2026-06-26/miasma-malware-targets-npm-packages-and-github-actions-in-su.md)
-- [multiple immobiliarelabs backstage plugins compromised on np](./2026-06-26/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
 - [new dirtyclone linux kernel flaw lets local users gain root ](./2026-06-26/new-dirtyclone-linux-kernel-flaw-lets-local-users-gain-root-.md)
 - [new linux pedit cow exploit enables root access by poisoning](./2026-06-26/new-linux-pedit-cow-exploit-enables-root-access-by-poisoning.md)
 - [new sharkloader malware deploys cobalt strike in strikeshark](./2026-06-26/new-sharkloader-malware-deploys-cobalt-strike-in-strikeshark.md)
@@ -78,18 +86,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [top koi alternatives in 2026](./2026-06-26/top-koi-alternatives-in-2026.md)
 
 ## 2026-06-25
-- [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-25/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [beyond iocs ai enabled threat intelligence](./2026-06-25/beyond-iocs-ai-enabled-threat-intelligence.md)
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
-- [codfish semantic release action github action has been compr](./2026-06-25/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
 - [gamaredon in 2025 leveraging tunnels workers dead drops and ](./2026-06-25/gamaredon-in-2025-leveraging-tunnels-workers-dead-drops-and-.md)
-- [mass npm supply chain attack 20 leo platform packages compro](./2026-06-25/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
-- [maven support comes to github checks and oss package search](./2026-06-25/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [microsoft a leader in the forrester wave for endpoint manage](./2026-06-25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-manage.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 - [photo zip campaign targeting hospitality industry delivers n](./2026-06-25/photo-zip-campaign-targeting-hospitality-industry-delivers-n.md)
-- [simonecorsi mawesome github action has been compromised](./2026-06-25/simonecorsi-mawesome-github-action-has-been-compromised.md)
 
 ## 2026-06-24
 - [cnapp evolution how microsoft aligns with leading cloud risk](./2026-06-24/cnapp-evolution-how-microsoft-aligns-with-leading-cloud-risk.md)
