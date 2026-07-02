@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### FortiClient EMS exposed to CVE-2026-35616 (EKZ Infostealer delivery vector)
 
-`UC_3_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -72,7 +72,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### FortiBleed / EKZ Infostealer known-bad file hashes on endpoints
 
-`UC_3_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_9_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ union
 
 ### EKZ payload delivered as fake Fortinet update: FortiClient agent spawning script host
 
-`UC_3_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_9_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### EKZ Infostealer access to Chromium/Firefox credential stores by non-browser process
 
-`UC_3_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_9_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceFileEvents
 
 ### Egress to FortiBleed C2 infrastructure IPs
 
-`UC_3_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

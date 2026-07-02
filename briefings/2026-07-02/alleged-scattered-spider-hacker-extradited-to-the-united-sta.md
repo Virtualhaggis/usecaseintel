@@ -11,12 +11,8 @@ By Sergiu Gatlan
 July 2, 2026
 04:58 AM
 0 
-
-
 A dual United States and Estonian citizen has been extradited to the U.S. to face charges alleging he was a member of the Scattered Spider hacking collective.
-
-
-19-year-old Peter Stokes (who used the online handles "Bouquet," "Spencer," and "Jordan") was arrested in Finland on April 10 while attempting to board a flight to Japan at Helsinki's airport and is accused of having helped e…
+19-year-old Peter Stokes (who used the online handles "Bouquet," "Spencer," and "Jordan") was arrested in Finland on April 10 while attempting to board a flight to Japan at Helsinki's airport and is accused of having helped extort mi…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -55,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Help-desk-driven password reset immediately followed by MFA re-registration (Scattered Spider account takeover)
 
-`UC_2_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_8_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +70,7 @@ CloudAppEvents
 
 ### Rogue federated domain / trust added to Entra tenant (Scattered Spider persistence)
 
-`UC_2_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +88,7 @@ CloudAppEvents
 
 ### Genymotion/Genymobile Android emulator executing on a managed endpoint (Scattered Spider MFA tooling)
 
-`UC_2_12` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_8_12` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

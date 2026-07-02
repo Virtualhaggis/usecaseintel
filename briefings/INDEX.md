@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2275 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2278 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,9 +11,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-02
 - [ai agent exploits langflow rce to automate database ransomwa](./2026-07-02/ai-agent-exploits-langflow-rce-to-automate-database-ransomwa.md)
 - [alleged scattered spider hacker extradited to the united sta](./2026-07-02/alleged-scattered-spider-hacker-extradited-to-the-united-sta.md)
+- [cisa microsoft sharepoint rce flaw now actively exploited](./2026-07-02/cisa-microsoft-sharepoint-rce-flaw-now-actively-exploited.md)
+- [cisco finally confirms attackers exploiting unified cm flaw](./2026-07-02/cisco-finally-confirms-attackers-exploiting-unified-cm-flaw.md)
 - [fortibleed credential theft linked to inc and lynx ransomwar](./2026-07-02/fortibleed-credential-theft-linked-to-inc-and-lynx-ransomwar.md)
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
 - [new chocopoc rat targets vulnerability researchers via fake ](./2026-07-02/new-chocopoc-rat-targets-vulnerability-researchers-via-fake-.md)
+- [opera rolls out paste protect feature to fight clickfix atta](./2026-07-02/opera-rolls-out-paste-protect-feature-to-fight-clickfix-atta.md)
 - [sharepoint rce cve 2026 45659 added to cisa kev after active](./2026-07-02/sharepoint-rce-cve-2026-45659-added-to-cisa-kev-after-active.md)
 
 ## 2026-07-01
@@ -79,7 +82,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ukraine says russian intelligence used fake support texts to](./2026-06-27/ukraine-says-russian-intelligence-used-fake-support-texts-to.md)
 
 ## 2026-06-26
-- [amazon q developer flaw could let malicious repos run code v](./2026-06-26/amazon-q-developer-flaw-could-let-malicious-repos-run-code-v.md)
 - [beware of the license manager how a schneider electric softw](./2026-06-26/beware-of-the-license-manager-how-a-schneider-electric-softw.md)
 - [chinese speaking apt deploys new tinyrct backdoor in southea](./2026-06-26/chinese-speaking-apt-deploys-new-tinyrct-backdoor-in-southea.md)
 - [fbi warns russian intelligence hackers target signal backup ](./2026-06-26/fbi-warns-russian-intelligence-hackers-target-signal-backup-.md)
@@ -3865,6 +3867,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2019-04-04
 - [malicious remote code execution backdoor discovered in the p](./2019-04-04/malicious-remote-code-execution-backdoor-discovered-in-the-p.md)
 - [securing bitbucket cloud with snyk](./2019-04-04/securing-bitbucket-cloud-with-snyk.md)
+
+## 2019-03-13
+- [snyking in regular expression denial of service vulnerabilit](./2019-03-13/snyking-in-regular-expression-denial-of-service-vulnerabilit.md)
 
 ## 2019-02-26
 - [open source maintainers want to be secure but 70 lack skills](./2019-02-26/open-source-maintainers-want-to-be-secure-but-70-lack-skills.md)

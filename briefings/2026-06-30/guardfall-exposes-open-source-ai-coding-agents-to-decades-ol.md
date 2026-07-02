@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Shell blocklist bypass via empty-quote/token-split binary names (GuardFall)
 
-`UC_56_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_58_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Open-source AI coding agent auto-execute flag spawning a shell
 
-`UC_56_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_58_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### AI agent shell reaching into ~/.ssh / ~/.aws credential files
 
-`UC_56_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_58_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Untrusted in-repo AI agent config (.aider.conf.yml) landing from clone/checkout
 
-`UC_56_9` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_58_9` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
