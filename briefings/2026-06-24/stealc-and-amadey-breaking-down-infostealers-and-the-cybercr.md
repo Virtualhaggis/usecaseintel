@@ -49,10 +49,12 @@ Infostealers continue to be some of the most pervasive and impactful threats acr
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
 - **T1218.011** — System Binary Proxy Execution: Rundll32
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1132.001** — Data Encoding: Standard Encoding
+- **T1005** — Data from Local System
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
@@ -61,69 +63,97 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### StealC/Amadey C2 beacon to Operation Endgame seized domains
+### Amadey loader staging payloads via rundll32 DLL-load / PowerShell from temp-resident parent
 
-`UC_102_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("polse.us","roger99699.xyz","bluescry.com","secure.controlpanel.asia","neltron-geltron.shop","cdntestconnect.com","bartsen284.online","goodpanelforgoodjob.com","rebustan.top","svclsc.com","microsoft-telemetry.at","spasopro.at") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="rundll32.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") (Processes.parent_process_path="*\\AppData\\Local\\Temp\\*" OR Processes.parent_process_path="*\\AppData\\Roaming\\*" OR Processes.parent_process_path="*\\Users\\Public\\*" OR Processes.parent_process_path="*\\Windows\\Temp\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_path Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where (process_name="rundll32.exe" AND match(process,"(?i)\.dll") AND match(process,"(?i)(AppData|\\Temp\\|Public|ProgramData)")) OR ((process_name="powershell.exe" OR process_name="pwsh.exe") AND match(process,"(?i)(\.ps1|DownloadString|DownloadFile|Invoke-WebRequest|Invoke-RestMethod)")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let C2Domains = dynamic(["polse.us","roger99699.xyz","bluescry.com","secure.controlpanel.asia","neltron-geltron.shop","cdntestconnect.com","bartsen284.online","goodpanelforgoodjob.com","rebustan.top","svclsc.com","microsoft-telemetry.at","spasopro.at"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (C2Domains) or RemoteUrl in~ (C2Domains)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Known StealC / Amadey binary hashes on endpoint (Operation Endgame IOC set)
-
-`UC_102_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("8f32456359f209a63adfd24b94235e1727382ac7f7bb7f2bcaf754e721925b64","0215f734867bd71c57ff5c524d8cc670be5b4f1861b2c390cf46d18784a53624","2a0f053855da59b3b56812e580d7baeba59fc9493694722aa9e3f121ee3363f1","977b33a9b481cf714946b7d386865cd5d284312aa5ecfa0546c197b1003e1bde","b7d1f172ff3feafe65d47fd1cbe0cc249316371ae0e1cbe3a7c741c738b3353d","9383572a30ae5b76fadd0700fbd7a1aa7b05d0b6c8f9cdaef9b30a3e1f65d57d","5f5b25b2e35d404034d0d60975cf1ffbc6f141761ec3f4f15d6f7c6213a056f6","98e504cc7125b79eda5491f40b998605a05f4cd968b961aab4cce7beb074fefe","30cef3d3d956e83e2c50579cfbe57a49159cccbcc8b0b0422f27d55e1c401ad9","8cef760d11d24fc2e9bbd9f770dca5105854f7ece3b0e6948d7c8b7fdd1765ea","99507f18c4e61fdb109805404bf6a79ea8ce2fddc590ce48d717e97516ab7e8d","1246c5b89ab668c1137f377507bc3e266a98e93248382aa026610ae1e764a497","d43c988d6f9cb355497696b580621fb1bdb7b6ed6d90f97520ecf6da5a1a41ff","ca4d4c4fc3e5d5cfa922b898f2d7411f03a446dddb139ba45dfd4f8f0018b64f","43455f1ff4a623b783da670d052eb77eaaacb0c66a9f1e8508f802bf22e8129e") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let BadHashes = dynamic(["8f32456359f209a63adfd24b94235e1727382ac7f7bb7f2bcaf754e721925b64","0215f734867bd71c57ff5c524d8cc670be5b4f1861b2c390cf46d18784a53624","2a0f053855da59b3b56812e580d7baeba59fc9493694722aa9e3f121ee3363f1","977b33a9b481cf714946b7d386865cd5d284312aa5ecfa0546c197b1003e1bde","b7d1f172ff3feafe65d47fd1cbe0cc249316371ae0e1cbe3a7c741c738b3353d","9383572a30ae5b76fadd0700fbd7a1aa7b05d0b6c8f9cdaef9b30a3e1f65d57d","5f5b25b2e35d404034d0d60975cf1ffbc6f141761ec3f4f15d6f7c6213a056f6","98e504cc7125b79eda5491f40b998605a05f4cd968b961aab4cce7beb074fefe","30cef3d3d956e83e2c50579cfbe57a49159cccbcc8b0b0422f27d55e1c401ad9","8cef760d11d24fc2e9bbd9f770dca5105854f7ece3b0e6948d7c8b7fdd1765ea","99507f18c4e61fdb109805404bf6a79ea8ce2fddc590ce48d717e97516ab7e8d","1246c5b89ab668c1137f377507bc3e266a98e93248382aa026610ae1e764a497","d43c988d6f9cb355497696b580621fb1bdb7b6ed6d90f97520ecf6da5a1a41ff","ca4d4c4fc3e5d5cfa922b898f2d7411f03a446dddb139ba45dfd4f8f0018b64f","43455f1ff4a623b783da670d052eb77eaaacb0c66a9f1e8508f802bf22e8129e"]);
-union
-  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in~ (BadHashes) or InitiatingProcessSHA256 in~ (BadHashes) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, Source="ProcessCreate"),
-  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in~ (BadHashes) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine, Source=strcat("File:",ActionType))
-| order by Timestamp desc
-```
-
-### Amadey command-handler execution: C2 beacon followed by rundll32/cmd/PowerShell spawn
-
-`UC_102_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN ("polse.us","roger99699.xyz","bluescry.com","secure.controlpanel.asia","neltron-geltron.shop","cdntestconnect.com","bartsen284.online","goodpanelforgoodjob.com","rebustan.top","svclsc.com","microsoft-telemetry.at","spasopro.at") by DNS.src _time span=1s | `drop_dm_object_name(DNS)` | rename src as dvc | join type=inner dvc [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN ("rundll32.exe","cmd.exe","powershell.exe","pwsh.exe") by Processes.dest Processes.parent_process_name Processes.process _time span=1s | `drop_dm_object_name(Processes)` | rename dest as dvc, _time as proc_time] | where proc_time>=_time AND proc_time<=_time+300 | table _time proc_time dvc query parent_process_name process
-```
-
-**Defender KQL:**
-```kql
-let C2Domains = dynamic(["polse.us","roger99699.xyz","bluescry.com","secure.controlpanel.asia","neltron-geltron.shop","cdntestconnect.com","bartsen284.online","goodpanelforgoodjob.com","rebustan.top","svclsc.com","microsoft-telemetry.at","spasopro.at"]);
-let Win = 5m;
-let Beacons = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (C2Domains)
-    | project BeaconTime = Timestamp, DeviceId, DeviceName, BeaconProc = InitiatingProcessFileName, BeaconPid = InitiatingProcessId, RemoteUrl;
 DeviceProcessEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFolderPath has_any (@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Users\Public\", @"\Windows\Temp\")
+| where (FileName =~ "rundll32.exe"
+            and ProcessCommandLine has ".dll"
+            and ProcessCommandLine has_any (@"\AppData\", @"\Temp\", @"\Public\", @"\ProgramData\"))
+     or (FileName in~ ("powershell.exe","pwsh.exe")
+            and ProcessCommandLine has_any (".ps1","DownloadString","DownloadFile","Invoke-WebRequest","Invoke-RestMethod"))
+| project Timestamp, DeviceName, AccountName,
+          ParentPath = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Amadey C2 check-in beacon with characteristic id/vs/sd/os/bi parameter set
+
+`UC_102_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*id=*" Web.url="*vs=*" Web.url="*sd=*" Web.url="*os=*" Web.url="*bi=*") (Web.url="*&ar=*" OR Web.url="*&pc=*" OR Web.url="*&un=*" OR Web.url="*&av=*" OR Web.url="*&lv=*") by Web.src Web.dest Web.dest_ip Web.http_method Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has_all ("id=", "vs=", "sd=", "os=", "bi=")
+      and RemoteUrl has_any ("&ar=", "&pc=", "&un=", "&av=", "&lv=")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### StealC harvesting multiple browser credential/cookie/wallet stores by a non-browser process
+
+`UC_102_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(Filesystem.file_name) as file_count values(Filesystem.file_name) as file_names min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("Login Data","Cookies","Web Data","Local State","logins.json","key4.db","signons.sqlite","cookies.sqlite","places.sqlite","formhistory.sqlite")) (Filesystem.process_name!="chrome.exe" Filesystem.process_name!="msedge.exe" Filesystem.process_name!="firefox.exe" Filesystem.process_name!="brave.exe" Filesystem.process_name!="opera.exe" Filesystem.process_name!="chromium.exe" Filesystem.process_name!="iexplore.exe") by Filesystem.dest Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where file_count>=3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","chromium.exe","iexplore.exe","vivaldi.exe"]);
+DeviceFileEvents
+| where Timestamp > ago(14d)
 | where InitiatingProcessAccountName !endswith "$"
-| where FileName in~ ("rundll32.exe","cmd.exe","powershell.exe","pwsh.exe")
-| join kind=inner Beacons on DeviceId
-| where Timestamp between (BeaconTime .. BeaconTime + Win)
-| where InitiatingProcessId == BeaconPid or InitiatingProcessFileName =~ BeaconProc
-| project BeaconTime, SpawnTime = Timestamp, DeviceName, RemoteUrl, ParentProc = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath, Child = FileName, ChildCmd = ProcessCommandLine
-| order by SpawnTime desc
+| where InitiatingProcessFileName !in~ (browsers)
+| where FileName in~ ("Login Data","Cookies","Web Data","Local State","logins.json","key4.db","signons.sqlite","cookies.sqlite","places.sqlite","formhistory.sqlite")
+      or FolderPath has_any (@"\Ethereum\", @"\Exodus\", @"\Electrum\", @"\Bitcoin\", @"\wallets\")
+| summarize FileCount = dcount(FileName), Files = make_set(FileName, 20),
+            FolderPaths = make_set(FolderPath, 20),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+        by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessAccountName
+| where FileCount >= 3
+| order by LastSeen desc
+```
+
+### ClickFix delivery: explorer-spawned interpreter downloading a payload from the Run dialog
+
+`UC_102_18` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="cmd.exe" OR Processes.process_name="mshta.exe" OR Processes.process_name="curl.exe" OR Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(process,"(?i)(https?://|DownloadString|Invoke-WebRequest|Invoke-RestMethod|iwr |curl |certutil|bitsadmin|mshta |IEX)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName =~ "explorer.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","curl.exe","wscript.exe","cscript.exe")
+| where ProcessCommandLine has_any ("http://","https://","DownloadString","Invoke-WebRequest","Invoke-RestMethod","iwr ","curl ","certutil","bitsadmin","mshta ","IEX")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -638,4 +668,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 18 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 19 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

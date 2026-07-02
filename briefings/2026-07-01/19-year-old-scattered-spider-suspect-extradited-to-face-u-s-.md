@@ -37,12 +37,118 @@ Peter Stokes , 19, a dual U.S. and Estonian citizen, appeared in a Chicago feder
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1556** — Modify Authentication Process
+- **T1621** — Multi-Factor Authentication Request Generation
+- **T1098.005** — Account Manipulation: Device Registration
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1213.005** — Data from Information Repositories: Messaging Applications
+- **T1580** — Cloud Infrastructure Discovery
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1074.001** — Local Data Staging
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Scattered Spider help-desk vishing: admin password/MFA reset then immediate anomalous sign-in
+
+`UC_4_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication.Authentication where (Authentication.action=success) by _time Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | rename user as reset_user | join type=inner reset_user [ search index=azure_ad OperationName IN ("Reset password (by admin)","Reset user password","Admin registered security info","User registered security info") | rename targetResources{}.userPrincipalName as reset_user | eval reset_time=_time | fields reset_time reset_user OperationName ] | where _time>=reset_time AND _time<=reset_time+7200 | table _time reset_time reset_user OperationName src app
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("Reset password (by admin)","Reset user password","Admin registered security info","User registered security info","Register security information","Update user")
+| where AccountDisplayName !endswith "$"
+| project ResetTime = Timestamp, ActionType, Actor = AccountDisplayName, TargetUser = ObjectName, ActorIP = IPAddress, CountryCode, ISP
+| join kind=inner (
+    AADSignInEventsBeta
+    | where Timestamp > ago(14d)
+    | where ErrorCode == 0
+    | project SignInTime = Timestamp, AccountUpn, SignInIP = IPAddress, Country, City, Application, UserAgent
+  ) on $left.TargetUser == $right.AccountUpn
+| where SignInTime between (ResetTime .. ResetTime + 2h)
+| project ResetTime, SignInTime, DelayMin = datetime_diff('minute', SignInTime, ResetTime), TargetUser, Actor, ActionType, ActorIP, SignInIP, Country, City, Application, UserAgent
+| order by ResetTime desc
+```
+
+### Scattered Spider MFA fatigue: repeated push denials followed by a satisfied MFA sign-in
+
+`UC_4_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication.Authentication where nodename=Authentication.Failed_Authentication Authentication.signature_id IN ("500121","50074","50076","500122") by _time span=30m Authentication.user Authentication.src | `drop_dm_object_name(Authentication)` | stats count as DenialCount max(_time) as LastDenial by user src | where DenialCount>=5 | join type=inner user [ | tstats `summariesonly` count from datamodel=Authentication.Authentication where nodename=Authentication.Successful_Authentication by _time Authentication.user | `drop_dm_object_name(Authentication)` | rename _time as SuccessTime ] | where SuccessTime>=LastDenial AND SuccessTime<=LastDenial+1800 | table user src DenialCount LastDenial SuccessTime
+```
+
+**Defender KQL:**
+```kql
+let window = 30m;
+let denials = AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where ErrorCode in (500121, 50074, 50076, 500122)
+    | summarize DenialCount = count(), LastDenial = max(Timestamp) by AccountUpn, IPAddress, bin(Timestamp, window)
+    | where DenialCount >= 5;   // >=5 denials in 30m = push-bombing pressure
+denials
+| join kind=inner (
+    AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where ErrorCode == 0
+    | where AuthenticationRequirement == "multiFactorAuthentication"
+    | project SuccessTime = Timestamp, AccountUpn, SuccessIP = IPAddress, Application, Country
+  ) on AccountUpn
+| where SuccessTime between (LastDenial .. LastDenial + window)
+| project LastDenial, SuccessTime, AccountUpn, DenialCount, DenialIP = IPAddress, SuccessIP, Application, Country
+| order by DenialCount desc
+```
+
+### Scattered Spider defender-surveillance: rogue/external identity joining incident-response Teams calls & channels
+
+`UC_4_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=o365 sourcetype=o365:management:activity Workload=MicrosoftTeams Operation IN ("MemberAdded","TeamsSessionStarted","MeetingParticipantDetail","MemberRoleChanged","MessageSent") (UserType=Guest OR UserId="*#EXT#*" OR ExternalAccess=true) | stats count min(_time) as first max(_time) as last values(Operation) as ops values(ClientIP) as src by UserId ObjectId | sort - last
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Microsoft Teams"
+| where AccountType == "Guest" or AccountDisplayName has "#EXT#"
+| where ActionType in ("MemberAdded","MeetingParticipantDetail","TeamsSessionStarted","ChatCreated","MessageSent","MemberRoleChanged")
+| summarize Events = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Actions = make_set(ActionType), IPs = make_set(IPAddress) by Account = AccountDisplayName, AccountType, ObjectName
+| order by LastSeen desc
+```
+
+### Scattered Spider data-theft-for-extortion: cloud exfiltration tooling (rclone/MEGAsync/WinSCP)
+
+`UC_4_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("rclone.exe","megasync.exe","winscp.exe","filezilla.exe") OR Processes.process="*mega.nz*" OR Processes.process="*transfer.sh*" OR Processes.process="*gofile.io*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | table dest user parent_process_name process_name process firstTime lastTime count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has_any ("mega.nz","mega.io","mega.co.nz","transfer.sh","gofile.io","anonfiles.com","tmpfiles.org","file.io")
+   or InitiatingProcessFileName in~ ("rclone.exe","megasync.exe","megacmd.exe","winscp.exe","filezilla.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -416,4 +522,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 15 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

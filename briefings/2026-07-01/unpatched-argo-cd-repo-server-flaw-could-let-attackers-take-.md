@@ -29,10 +29,16 @@ Synacktiv , which found the bug, says it can lead to a full cluster takeover. Th
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1210** — Exploitation of Remote Services
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1552.007** — Unsecured Credentials: Container API
+- **T1555** — Credentials from Password Stores
 - **T1610** — Deploy Container
-- **T1557** — Adversary-in-the-Middle
+- **T1072** — Software Deployment Tools
+- **T1098** — Account Manipulation
+- **T1078** — Valid Accounts
+- **T1525** — Implant Internal Image
 
 ## Kill chain phases observed
 
@@ -40,63 +46,99 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Argo CD repo-server kustomize --helm-command RCE via attacker Git script
+### kustomize invoked with --helm-command pointing to a non-helm executable (Argo CD repo-server RCE primitive)
 
 `UC_3_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="kustomize" OR Processes.parent_process_name="argocd-repo-server" OR Processes.parent_process_name="kustomize") Processes.process="*--helm-command*" Processes.process="*/tmp/*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*--helm-command*" AND Processes.process="*kustomize*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | regex process!="(?i)--helm-command[ =]+\S*/?helm\b" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where FileName =~ "kustomize" or ProcessCommandLine has "kustomize"
 | where ProcessCommandLine has "--helm-command"
-| where InitiatingProcessFileName =~ "argocd-repo-server" or FileName =~ "kustomize" or InitiatingProcessFileName =~ "kustomize"
-| where ProcessCommandLine has "/tmp/"          // attacker helm-command script lives in the repo checkout under /tmp, not /usr/local/bin/helm
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| where not(ProcessCommandLine matches regex @"(?i)--helm-command[ =]+\S*/?helm\b")
+| project Timestamp, DeviceName, AccountName, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### argocd-repo-server spawning shell or network tooling (post-exploitation)
+### Argo CD Repo-Server Exploitation Attempt
 
-`UC_3_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_3_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="argocd-repo-server" Processes.process_name IN ("sh","bash","dash","curl","wget","nc","ncat","python","python3","perl","ruby","socat","busybox") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("argocd-repo-server","repo-server","kustomize","helm")) AND Processes.process_name IN ("bash","sh","dash","curl","wget","nc","ncat","socat","python","python3","perl","chmod","base64") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "argocd-repo-server"
-| where FileName in~ ("sh","bash","dash","curl","wget","nc","ncat","python","python3","perl","ruby","socat","busybox")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| where InitiatingProcessFileName in~ ("argocd-repo-server","repo-server","kustomize","helm") or InitiatingProcessCommandLine has "argocd-repo-server"
+| where FileName in~ ("bash","sh","dash","curl","wget","nc","ncat","socat","python","python3","perl","chmod","base64")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Unexpected pod reaching Argo CD Redis 6379 / repo-server gRPC (CVE-2024-31989 revival)
+### Argo CD repo-server pod initiating anomalous outbound egress (attacker script fetch / C2)
 
 `UC_3_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (6379,8081,8084) All_Traffic.app!="argocd-repo-server" All_Traffic.app!="redis-server" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_host="*argocd-repo-server*" by All_Traffic.src_host All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where NOT (cidrmatch("10.0.0.0/8",dest_ip) OR cidrmatch("172.16.0.0/12",dest_ip) OR cidrmatch("192.168.0.0/16",dest_ip)) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemotePort in (6379, 8081, 8084)
-| where RemoteIPType == "Private"
-| where InitiatingProcessFileName !in~ ("argocd-repo-server","argocd-application-controller","argocd-server","argocd-applicationset-controller","argocd-cmp-server","redis-server","redis-sentinel","redis-exporter")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalIP, RemoteIP, RemotePort
-| order by Timestamp desc
+| where DeviceName has "argocd-repo-server" or InitiatingProcessFileName in~ ("argocd-repo-server","kustomize","helm","sh","bash","curl","wget")
+| where RemoteIPType == "Public"
+| where not(RemoteUrl has_any ("github.com","gitlab.com","bitbucket.org","ghcr.io","docker.io","registry-1.docker.io","quay.io"))
+| summarize FirstSeen=min(Timestamp), Count=count(), Ports=make_set(RemotePort,20) by DeviceName, InitiatingProcessFileName, RemoteIP, RemoteUrl
+| order by FirstSeen desc
+```
+
+### Suspicious Git Repository Credential Access from Argo CD
+
+`UC_3_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=kubernetes sourcetype="kube:apiserver:audit" verb IN ("get","list","watch") "objectRef.resource"=secrets "objectRef.namespace"=argocd NOT "user.username"="system:serviceaccount:argocd:*" NOT "user.username"="system:apiserver" | stats dc('objectRef.name') as secret_count values('objectRef.name') as secrets min(_time) as firstTime values(userAgent) as userAgents by 'user.username' | where secret_count>=3 | `security_content_ctime(firstTime)`
+```
+
+### Malicious Application Deployment via Compromised Argo CD
+
+`UC_3_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=kubernetes sourcetype="kube:apiserver:audit" verb IN ("create","update","patch") "objectRef.resource" IN ("pods","deployments","daemonsets","statefulsets") "user.username"="system:serviceaccount:argocd:*" | search ("requestObject.spec.hostNetwork"=true OR "requestObject.spec.hostPID"=true OR _raw="*\"privileged\":true*" OR _raw="*docker.sock*") | table _time user.username verb objectRef.namespace objectRef.name | sort - _time
+```
+
+### Argo CD Service Account RBAC Privilege Escalation
+
+`UC_3_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=kubernetes sourcetype="kube:apiserver:audit" verb IN ("create","update","patch") "objectRef.resource" IN ("clusterrolebindings","rolebindings") "requestObject.roleRef.name"=cluster-admin | search _raw="*argocd*" | table _time user.username verb objectRef.name requestObject.roleRef.name | sort - _time
+```
+
+### Persistence via Backdoored Argo CD Application
+
+`UC_3_12` · phase: **install** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=kubernetes sourcetype="kube:apiserver:audit" verb IN ("create","update","patch") "objectRef.resource" IN ("applications","applicationsets") | rename requestObject.spec.source.repoURL as repoURL requestObject.spec.destination.namespace as destNs | eval suspicious=if(match(repoURL,"https?://\d+\.\d+\.\d+\.\d+") OR match(repoURL,"raw\.githubusercontent\.com"),1,0) | where suspicious=1 OR NOT match('user.username',"^system:serviceaccount:argocd:") | table _time user.username verb objectRef.name repoURL destNs suspicious | sort - _time
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -305,4 +347,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -30,11 +30,16 @@ On June 17, 2026, an attacker compromised the @mastra npm organization and quiet
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1059.007** — JavaScript
-- **T1105** — Ingress Tool Transfer
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1070.004** — File Deletion
-- **T1528** — Steal Application Access Token
+- **T1105** — Ingress Tool Transfer
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1553.004** — Subvert Trust Controls: Install Root Certificate / TLS
+- **T1005** — Data from Local System
+- **T1074.001** — Local Data Staging
+- **T1204.003** — User Execution: Malicious Image / Package
+- **T1555.003** — Credentials from Web Browsers
+- **T1217** — Browser Information Discovery
 
 ## Kill chain phases observed
 
@@ -42,13 +47,73 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious easy-day-js npm package installed (Mastra supply-chain typosquat of dayjs)
+### easy-day-js second-stage C2 egress to 23.254.164.92 / 23.254.164.123
 
-`UC_6_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_6_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\node_modules\\easy-day-js\\*" OR Filesystem.file_path="*/node_modules/easy-day-js/*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("23.254.164.92","23.254.164.123") by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("23.254.164.92", "23.254.164.123")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### npm postinstall detached node dropper from TEMP with TLS verification disabled
+
+`UC_6_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name IN ("node.exe","npm.cmd","npm","yarn.cmd","pnpm.cmd") Endpoint.Processes.process_name="node.exe" (Endpoint.Processes.process="*\\Temp\\*" OR Endpoint.Processes.process="*NODE_TLS_REJECT_UNAUTHORIZED=0*" OR Endpoint.Processes.process="*--no-strict-ssl*" OR Endpoint.Processes.process="*rejectUnauthorized*" OR Endpoint.Processes.process="*/tmp/.*") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process, Endpoint.Processes.process, Endpoint.Processes.process_hash | `drop_dm_object_name(Endpoint.Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe", "npm.cmd", "npm", "yarn.cmd", "pnpm.cmd")
+| where FileName in~ ("node.exe", "node")
+| where AccountName !endswith "$"
+| where ProcessCommandLine has_any ("NODE_TLS_REJECT_UNAUTHORIZED=0", "--no-strict-ssl", "strict-ssl false", "rejectUnauthorized", "--insecure")
+   or ProcessCommandLine has_any (@"\Temp\", @"\AppData\Local\Temp", "/tmp/.", @"\.pkg")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### easy-day-js RAT collection artifacts (.pkg_history / .pkg_logs) written by node
+
+`UC_6_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_name IN (".pkg_history",".pkg_logs") OR Endpoint.Filesystem.file_hash IN ("b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4","ae70dd4f6bc0d1c8c2848e4e6b51934626c4818dcb5af99d080ddbd7dc337185","4a8860240e4231c3a74c81949be655a28e096a7d72f38fbe84e5b37636b98417","b73de25c053c3225a077738a1fcbd9ca6966d7b3cd6f5494a30f0aa0eae55c7e","221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf")) by Endpoint.Filesystem.dest, Endpoint.Filesystem.user, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_name | `drop_dm_object_name(Endpoint.Filesystem)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName in~ (".pkg_history", ".pkg_logs")
+   or FolderPath has_any (".pkg_history", ".pkg_logs")
+   or SHA256 in ("b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4","ae70dd4f6bc0d1c8c2848e4e6b51934626c4818dcb5af99d080ddbd7dc337185","4a8860240e4231c3a74c81949be655a28e096a7d72f38fbe84e5b37636b98417","b73de25c053c3225a077738a1fcbd9ca6966d7b3cd6f5494a30f0aa0eae55c7e","221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Compromised easy-day-js package installed into node_modules / pinned in lockfiles
+
+`UC_6_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path="*\\node_modules\\easy-day-js\\*" OR Endpoint.Filesystem.file_path="*/node_modules/easy-day-js/*" by Endpoint.Filesystem.dest, Endpoint.Filesystem.user, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_name | `drop_dm_object_name(Endpoint.Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -56,66 +121,28 @@ _(none detected from narrative keywords)_
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where FolderPath has @"\node_modules\easy-day-js\" or FolderPath has "/node_modules/easy-day-js/"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), FileCount=dcount(FileName), SampleFiles=make_set(FileName, 10)
-    by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by FirstSeen desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Files=make_set(FileName, 20), any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by LastSeen desc
 ```
 
-### Beacon to Mastra dropper/RAT C2 in Hostwinds 23.254.164.0/24 (easy-day-js)
+### node.exe accessing browser profiles & crypto-wallet extension stores (easy-day-js RAT collection)
 
-`UC_6_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("23.254.164.92","23.254.164.123") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in ("23.254.164.92","23.254.164.123") or ipv4_is_in_subnet(RemoteIP, "23.254.164.0/24")
-| extend PayloadPathHit = iff(RemoteUrl has "/update/49890878", true, false)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, PayloadPathHit
-| order by Timestamp desc
-```
-
-### easy-day-js dropper temp artifacts and self-delete (.pkg_history / .pkg_logs / 24-hex .js)
-
-`UC_6_6` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=".pkg_history" OR Filesystem.file_name=".pkg_logs" OR Filesystem.file_name IN ("*.js")) AND (Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*/tmp/*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | rex field=file_name "^(?<hexjs>[a-f0-9]{24})\.js$" | where file_name=".pkg_history" OR file_name=".pkg_logs" OR isnotnull(hexjs) | `drop_dm_object_name(Filesystem)`
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.process_name="node.exe" (Endpoint.Filesystem.file_path="*\\User Data\\*\\History" OR Endpoint.Filesystem.file_path="*\\User Data\\*\\Login Data" OR Endpoint.Filesystem.file_path="*\\Local Extension Settings\\*" OR Endpoint.Filesystem.file_path="*\\User Data\\*\\Web Data") by Endpoint.Filesystem.dest, Endpoint.Filesystem.user, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_name | `drop_dm_object_name(Endpoint.Filesystem)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp", "/tmp/", "/var/folders/")
-| where FileName in~ (".pkg_history", ".pkg_logs") or FileName matches regex @"(?i)^[a-f0-9]{24}\.js$"
 | where InitiatingProcessFileName in~ ("node.exe", "node")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Compromised codfish/semantic-release-action commit checked out on self-hosted runner
-
-`UC_6_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*6b9501e1889cc45c91726729610cf69c2442b8c5*" OR Processes.process="*codfish/semantic-release-action*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(45d)
-| where ProcessCommandLine has "6b9501e1889cc45c91726729610cf69c2442b8c5"
-    or ProcessCommandLine has "codfish/semantic-release-action"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\User Data\", @"\Local Extension Settings", @"\Login Data", @"\Web Data", "/Application Support/Google/Chrome", "/BraveSoftware/", ".config/google-chrome")
+| where FolderPath has_any ("History", "Login Data", "Local Extension Settings", "Web Data", "Local Storage")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, ActionType, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -185,4 +212,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
