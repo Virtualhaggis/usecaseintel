@@ -1,4 +1,4 @@
-# [CRIT] AI-Generated Browser Ransomware Abuses Chromium API on Windows and Android
+# [CRIT] AI-Generated Browser Ransomware Abuses Chromium API on Windows, Linux, macOS, Android
 
 **Source:** The Hacker News
 **Published:** 2026-07-01
@@ -390,13 +390,13 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — AI-Generated Browser Ransomware Abuses Chromium API on Windows and Android
+### Article-specific behavioural hunt — AI-Generated Browser Ransomware Abuses Chromium API on Windows, Linux, macOS, An
 
-`UC_22_13` · phase: **exploit** · confidence: **High**
+`UC_23_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — AI-Generated Browser Ransomware Abuses Chromium API on Windows and Android ```
+``` Article-specific bespoke detection — AI-Generated Browser Ransomware Abuses Chromium API on Windows, Linux, macOS, An ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("deepseek_python_20260125_da0631.py"))
@@ -417,7 +417,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — AI-Generated Browser Ransomware Abuses Chromium API on Windows and Android
+// Article-specific bespoke detection — AI-Generated Browser Ransomware Abuses Chromium API on Windows, Linux, macOS, An
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents

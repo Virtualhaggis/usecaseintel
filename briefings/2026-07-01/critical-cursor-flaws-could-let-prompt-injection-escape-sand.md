@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Cursor agent overwrites macOS sandbox helper (DuneSlide sandbox escape)
 
-`UC_20_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_21_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### Cursor-spawned terminal command targets sandbox helper, dotfiles, or symlink
 
-`UC_20_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_21_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Vulnerable Cursor install below 3.0 exposed to DuneSlide (CVE-2026-50548/50549)
 
-`UC_20_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_21_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

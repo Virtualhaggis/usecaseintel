@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Kemp LoadMaster CVE-2026-8037 pre-auth RCE via /accessv2 heap-overflow command injection
 
-`UC_59_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_60_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Root command execution on Kemp LoadMaster appliance following /accessv2 exploitation
 
-`UC_59_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_60_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ index=* sourcetype=syslog (host=*loadmaster* OR host=*lmos* OR host=*kemp*) ("/e
 
 ### Kemp LoadMaster CVE-2026-33691 WAF bypass via whitespace-padded upload filename extension
 
-`UC_59_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_60_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

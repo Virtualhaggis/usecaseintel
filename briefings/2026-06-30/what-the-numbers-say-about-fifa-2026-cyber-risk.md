@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Network/DNS contact with FIFA World Cup 2026 lookalike fraud domains
 
-`UC_54_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_55_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### Inbound mail or embedded URL from FIFA 2026 impersonation domains
 
-`UC_54_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_55_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
