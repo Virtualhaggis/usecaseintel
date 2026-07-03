@@ -66,14 +66,20 @@ Threat actors associated with the Anubis ransomware operation have been observed
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1068** — Exploitation for Privilege Escalation
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1571** — Non-Standard Port
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1133** — External Remote Services
 - **T1095** — Non-Application Layer Protocol
+- **T1571** — Non-Standard Port
 - **T1090** — Proxy
+- **T1068** — Exploitation for Privilege Escalation
+- **T1547.006** — Boot or Logon Autostart Execution: Kernel Modules and Extensions
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1572** — Protocol Tunneling
 - **T1567.002** — Exfiltration to Cloud Storage
 - **T1048** — Exfiltration Over Alternative Protocol
+- **T1485** — Data Destruction
+- **T1490** — Inhibit System Recovery
+- **T1070.001** — Indicator Removal: Clear Windows Event Logs
 
 ## Kill chain phases observed
 
@@ -81,36 +87,31 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### The Gentlemen: BYOVD vulnerable Kontron driver ktapi.sys load / drop
+### CitrixBleed 2 (CVE-2025-5777) session-token scraping via repeated NetScaler auth POSTs
 
-`UC_5_13` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="ktapi.sys" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceImageLoadEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "ktapi.sys" or SHA256 == "7ee17efef04bb7c9de90d5210263ed6993f867e5a11f86e65e3bb1362c7de237"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### The Gentlemen: Go backdoor C2 beacon to 81.177.215.15 on TCP/9443
-
-`UC_5_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="81.177.215.15" All_Traffic.dest_port=9443 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Web.Web where (Web.http_method=POST AND Web.url="*doAuthentication.do*") by Web.src, Web.dest, Web.http_user_agent, _time span=5m | `drop_dm_object_name(Web)` | stats sum(count) as auth_posts min(_time) as first_seen max(_time) as last_seen by src, dest | where auth_posts > 100
+```
+
+### Anubis VPN authentication from hosting ASNs (Constant Company AS20473 / ServerMania AS55286)
+
+`UC_6_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user, Authentication.src, Authentication.app, Authentication.src_asn, _time span=1h | `drop_dm_object_name(Authentication)` | search src_asn IN (20473, 55286) | stats count min(_time) as first_seen max(_time) as last_seen by user, src, src_asn, app
+```
+
+### The Gentlemen Go backdoor C2 to 81.177.215.15:9443
+
+`UC_6_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="81.177.215.15" AND All_Traffic.dest_port=9443 by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, _time span=1m | `drop_dm_object_name(All_Traffic)` | stats count min(_time) as first_seen max(_time) as last_seen by src, dest_ip, dest_port, app
 ```
 
 **Defender KQL:**
@@ -118,77 +119,135 @@ DeviceImageLoadEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "81.177.215.15" and RemotePort == 9443
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Anubis: Cloudflare Tunnel (cloudflared) covert access channel
+### The Gentlemen BYOVD: Kontron ktapi.sys vulnerable-driver load
 
-`UC_5_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="cloudflared.exe" OR Processes.process="*cloudflared*") (Processes.process="*tunnel*" OR Processes.process="*--token*" OR Processes.process="*trycloudflare.com*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name="ktapi.sys" by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_name, _time span=1m | `drop_dm_object_name(Filesystem)` | stats count min(_time) as first_seen max(_time) as last_seen by dest, file_path, process_name
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "ktapi.sys"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Anubis affiliate RMM tooling first-seen deployment (ScreenConnect/Zoho/MeshAgent/Remotely/UltraVNC/TSD)
+
+`UC_6_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name IN ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","ZA_Access.exe","ZA_Connect.exe","meshagent.exe","meshagent64.exe","Remotely_Agent.exe","Remotely_Desktop.exe","winvnc.exe","winvnc64.exe","TSD.exe")) by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name, _time span=1h | `drop_dm_object_name(Processes)` | stats count min(_time) as first_seen max(_time) as last_seen by dest, user, process_name, process, parent_process_name
+```
+
+**Defender KQL:**
+```kql
+let RMM = dynamic(["screenconnect.clientservice.exe","screenconnect.windowsclient.exe","za_access.exe","za_connect.exe","zaservice.exe","meshagent.exe","meshagent64.exe","remotely_agent.exe","remotely_desktop.exe","winvnc.exe","winvnc64.exe","tsd.exe"]);
+let Baseline = DeviceProcessEvents
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where tolower(FileName) in (RMM)
+    | summarize by DeviceName, FileName;
+DeviceProcessEvents
+| where Timestamp > ago(1d)
+| where tolower(FileName) in (RMM)
+| where AccountName !endswith "$"
+| join kind=leftanti Baseline on DeviceName, FileName
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| order by Timestamp desc
+```
+
+### Cloudflare Tunnel (cloudflared) covert egress setup
+
+`UC_6_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name="cloudflared.exe" OR Processes.process="*cloudflared*") AND (Processes.process="*tunnel*" OR Processes.process="*--token*" OR Processes.process="*trycloudflare*") by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name, _time span=1h | `drop_dm_object_name(Processes)` | stats count min(_time) as first_seen max(_time) as last_seen by dest, user, process, parent_process_name
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
+| where Timestamp > ago(7d)
 | where FileName =~ "cloudflared.exe" or ProcessCommandLine has "cloudflared"
-| where ProcessCommandLine has_any ("tunnel", "--token", "trycloudflare.com", "tunnel run")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where ProcessCommandLine has_any ("tunnel","--token","--url","trycloudflare")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
 | order by Timestamp desc
 ```
 
-### Anubis: Cloud/bulk exfiltration tooling staged before encryption (rclone, s5cmd, S3 Browser, WinSCP, PuTTY)
+### Anubis pre-encryption cloud-exfil tooling (rclone/s5cmd/S3 Browser/WinSCP)
 
-`UC_5_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("rclone.exe","s5cmd.exe","winscp.exe","winscp.com","s3browser.exe","s3browser-con.exe","psftp.exe","pscp.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name IN ("rclone.exe","s5cmd.exe","s3browser.exe","s3browser-con.exe") OR (Processes.process_name IN ("WinSCP.exe","WinSCP.com","pscp.exe","psftp.exe") AND (Processes.process="*sftp*" OR Processes.process="*s3:*" OR Processes.process="* put *"))) by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name, _time span=1h | `drop_dm_object_name(Processes)` | stats count min(_time) as first_seen max(_time) as last_seen by dest, user, process_name, process, parent_process_name
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(7d)
+| where (FileName in~ ("rclone.exe","s5cmd.exe","s3browser.exe","s3browser-con.exe"))
+   or (FileName in~ ("winscp.exe","winscp.com","pscp.exe","psftp.exe") and ProcessCommandLine has_any (" sftp"," s3:"," put ","-hostkey","open ftp"))
 | where AccountName !endswith "$"
-| where FileName in~ ("rclone.exe","s5cmd.exe","winscp.exe","winscp.com","s3browser.exe","s3browser-con.exe","psftp.exe","pscp.exe")
-| extend Suspicious = iff(FileName in~ ("rclone.exe","s5cmd.exe") and ProcessCommandLine has_any ("copy","sync"," cp "," mb ","--transfers",":s3","remote:"), "transfer-verb", "tool-exec")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, Suspicious,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
 | order by Timestamp desc
 ```
 
-### Anubis: endpoint defense impairment (Defender RTP disable, Sophos uninstall, PCHunter)
+### Anubis /WIPEMODE zero-KB in-place file truncation (data destruction)
 
-`UC_5_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("PCHunter.exe","PCHunter64.exe","PCHunter32.exe","SophosUninstall.exe")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*Set-MpPreference*" AND Processes.process="*DisableRealtimeMonitoring*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.action IN ("modified","renamed") AND Endpoint.Filesystem.file_size=0 by Endpoint.Filesystem.dest, Endpoint.Filesystem.process_name, Endpoint.Filesystem.process_guid, _time span=10m | `drop_dm_object_name(Filesystem)` | stats dc(process_guid) as procs count as zero_byte_events by dest, process_name, _time | where zero_byte_events > 200
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where ActionType in ("FileModified","FileRenamed")
+| where FileSize == 0
+| where InitiatingProcessAccountName !endswith "$"
+| summarize ZeroByteFiles = dcount(FolderPath), SampleFolders = make_set(FolderPath, 5), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+         by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessId
+| where ZeroByteFiles > 200   // /WIPEMODE truncates many files to 0 KB in place; benign apps rarely zero-out hundreds of files from one process
+| order by ZeroByteFiles desc
+```
+
+### Anubis/Gentlemen defense-evasion cluster: Defender disable, PCHunter, SophosUninstall, log clearing
+
+`UC_6_21` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where ((Processes.process="*Set-MpPreference*" AND Processes.process="*DisableRealtimeMonitoring*") OR Processes.process_name IN ("PCHunter64.exe","PCHunter32.exe","PCHunter.exe") OR Processes.process="*SophosUninstall*" OR Processes.process="*uninstallcli.exe*" OR (Processes.process_name="wevtutil.exe" AND Processes.process="*cl *") OR Processes.process="*Clear-EventLog*") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name, _time span=1h | `drop_dm_object_name(Processes)` | stats count min(_time) as first_seen max(_time) as last_seen by dest, user, process_name, process, parent_process_name
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where (FileName in~ ("PCHunter.exe","PCHunter64.exe","PCHunter32.exe","SophosUninstall.exe"))
-     or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Set-MpPreference" and ProcessCommandLine has "DisableRealtimeMonitoring")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Set-MpPreference" and ProcessCommandLine has "DisableRealtimeMonitoring")
+     or (FileName in~ ("PCHunter64.exe","PCHunter32.exe","PCHunter.exe"))
+     or (ProcessCommandLine has_any ("SophosUninstall","uninstallcli.exe"))
+     or (FileName =~ "wevtutil.exe" and ProcessCommandLine has_any (" cl ","clear-log"))
+     or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Clear-EventLog")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, SHA256
 | order by Timestamp desc
 ```
 
@@ -498,7 +557,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware Groups Turn to Citrix Bleed 2, BYOVD, and Supply Chain Credentials
 
-`UC_5_12` · phase: **exploit** · confidence: **High**
+`UC_6_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -561,4 +620,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 18 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 22 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
