@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### BeepRAT (DCRat variant) HFY.exe establishing scheduled-task persistence
 
-`UC_6_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### BeepRAT DNS-over-HTTPS C2 resolution from non-browser process
 
-`UC_6_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### Platform-aware phishing: Ninite Loader installing ConnectWise/Itarian RMM as a RAT
 
-`UC_6_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### Fake INTERPOL/law-enforcement lure linking to Proton Drive-hosted ransomware archive
 
-`UC_6_19` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_19` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -607,7 +607,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: AI Compute Hijacking, Apple Email Flaw, BlueHammer Ransomware + 14 S
 
-`UC_6_15` · phase: **exploit** · confidence: **High**
+`UC_8_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

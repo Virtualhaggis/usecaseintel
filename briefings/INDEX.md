@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2534 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2535 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-03
+- [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
 
 ## 2026-07-02
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)

@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious 'postmark-mcp' MCP server package present/executing on developer endpoints
 
-`UC_217_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_218_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ union
 
 ### GlassWorm Stage-2 C2 beacon to Vultr-hosted command-and-control IPs
 
-`UC_217_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_218_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

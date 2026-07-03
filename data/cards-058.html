@@ -1,3 +1,371 @@
+<article class="card" id="art-1980" data-art-slug="2022-09-08-cisa-kev-cve-2022-27593-qnap-photo-station-externally-contro"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190,T1486"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="windows"
+  data-uc-count="4" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2022-27593 — QNAP Photo Station Externally Controlled Reference Vulnerability Certain QNAP NAS running Photo Station with internet exposure contain an externally controlled reference to a resource vulnerability which can allow an attacker to modify system files. This vulnerability was observed being utilized in a Deadbolt ransomware campaign. Vendor: QNAP, Product: Photo Station. Known ransomware use: Known. Federal patch due: 2022-09-29. CVE-2022-27593 T1190 T1486 Asset exposure — vulnerability matches article CVE(s) Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2022-09-08-cisa-kev-cve-2022-27593-qnap-photo-station-externally-contro" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2022-27593 — QNAP Photo Station Externally Controlled Reference Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2022-09-08</span>
+    <span>4 use cases</span>
+    <span>2 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Certain QNAP NAS running Photo Station with internet exposure contain an externally controlled reference to a resource vulnerability which can allow an attacker to modify system files. This vulnerability was observed being utilized in a Deadbolt ransomware campaign. Vendor: QNAP, Product: Photo Station. Known ransomware use: Known. Federal patch due: 2022-09-29.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2022-27593</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1980-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1980"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1980-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1980-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1980-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1980-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1980-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2022-27593&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2022-27593&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1980-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1980-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1980-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2022-27593&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1980-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2022-27593&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8f76affc05" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Ransomware-style mass file rename / extension change</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="8f76affc05" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Threshold detection: many files renamed in short window, often with new extension.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1980-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1980-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1980-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1980-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(1d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where ActionType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files &gt; 200    // empirical: &gt; 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
+| order by files desc
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(1d)
+| where ActorUsername !endswith &quot;$&quot;
+| where EventType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
+| summarize files = dcount(TargetFileName)
+            by DvcHostname, ActorUsername, ActingProcessName, bin(TimeGenerated, 1m)
+| where files &gt; 200    // P99 of legit bulk-tooling per-minute rename volume
+| order by files desc
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1980-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1980-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1980-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files &gt; 200
+| sort - files</code></pre><pre class="spl-mode-body" id="art-1980-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files &gt; 200
+| sort - files</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b723485c48" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">LSASS process access / dump (credential theft)</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="b723485c48" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="LSASS Memory">T1003.001</span> <span class="ind tech" title="OS Credential Dumping">T1003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1980-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1980-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1980-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1980-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1980-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where ActionType == &quot;OpenProcessApiCall&quot;
+| where FileName =~ &quot;lsass.exe&quot;
+| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MsMpEng.exe&quot;,&quot;csrss.exe&quot;,
+                                          &quot;svchost.exe&quot;,&quot;wininit.exe&quot;,&quot;services.exe&quot;,
+                                          &quot;lsm.exe&quot;,&quot;SearchProtocolHost.exe&quot;)
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1980-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 0x40 / 0x1010
+// indicate read access to lsass.exe — credential-dump signature. Audit
+// Object Access &gt; Audit File System policy required.
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4663
+| where ObjectName endswith &quot;\lsass.exe&quot;
+| where Account !endswith &quot;$&quot;
+| project TimeGenerated, Computer, Account, ObjectName, ProcessName,
+          AccessMask, AccessReason
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: LSASS Process Access Outside Microsoft-Signed Tooling
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d04
+status: experimental
+description: |
+    Anything opening lsass.exe with read-memory access that isn&#x27;t a
+    Microsoft signed component (Defender, csrss, etc.) is suspect.
+    Mimikatz / Pypykatz / nanodump signature.
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1003.001
+    - attack.credential-access
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: &#x27;\lsass.exe&#x27;
+    filter_known_good:
+        SourceImage|endswith:
+            - &#x27;\MsSense.exe&#x27;
+            - &#x27;\MsMpEng.exe&#x27;
+            - &#x27;\csrss.exe&#x27;
+            - &#x27;\svchost.exe&#x27;
+            - &#x27;\wininit.exe&#x27;
+            - &#x27;\services.exe&#x27;
+            - &#x27;\lsm.exe&#x27;
+            - &#x27;\SearchProtocolHost.exe&#x27;
+    condition: selection and not filter_known_good
+falsepositives:
+    - Third-party EDR / forensic tools — extend the filter list
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1980-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1980-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1980-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
+        OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
+        OR Processes.process=&quot;*procdump*lsass*&quot;)
+       OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-1980-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
+        OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
+        OR Processes.process=&quot;*procdump*lsass*&quot;)
+       OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4e3ef9d0b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Remote service execution — PsExec / SMB lateral movement</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="4e3ef9d0b4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1980-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1980-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1980-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1980-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1980-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+   or (FileName =~ &quot;wmic.exe&quot; and ProcessCommandLine has &quot;/node:&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688            // process-create (audit-policy required)
+| where Account !endswith &quot;$&quot;
+| where NewProcessName endswith &quot;\psexec.exe&quot;
+   or NewProcessName endswith &quot;\psexesvc.exe&quot;
+   or NewProcessName endswith &quot;\paexec.exe&quot;
+   or (NewProcessName endswith &quot;\wmic.exe&quot; and CommandLine has &quot;/node:&quot;)
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
+          ParentProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
+status: experimental
+description: |
+    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
+    pivots over SMB. Pair with `wmic /node:` for the full cluster.
+references:
+    - https://attack.mitre.org/techniques/T1021/002/
+    - https://attack.mitre.org/techniques/T1569/002/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1021.002
+    - attack.t1569.002
+    - attack.lateral-movement
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_psexec:
+        Image|endswith:
+            - &#x27;\psexec.exe&#x27;
+            - &#x27;\psexec64.exe&#x27;
+            - &#x27;\psexesvc.exe&#x27;
+            - &#x27;\paexec.exe&#x27;
+            - &#x27;\csexec.exe&#x27;
+            - &#x27;\remcom.exe&#x27;
+            - &#x27;\smbexec.py&#x27;
+    selection_wmic_remote:
+        Image|endswith:
+            - &#x27;\wmic.exe&#x27;
+        CommandLine|contains:
+            - &#x27;/node:&#x27;
+    condition: selection_psexec or selection_wmic_remote
+falsepositives:
+    - Sysadmins running approved remote-management tooling — wrap with
+      a known-admin-host watchlist
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-1980-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1980-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1980-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1980-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-1980-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-1981" data-art-slug="2022-09-08-cisa-kev-cve-2022-26258-d-link-dir-820l-remote-code-executio"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -5023,455 +5391,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-2017" data-art-slug="2022-08-23-rediscovering-argument-injection-when-using-vcs-tools-git-an"
-  data-phases="c2,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="windows"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="Rediscovering argument injection when using VCS tools — git and mercurial In this blog post, we aim to demonstrate common scenarios where, even when using a safe API, it’s possible to execute arbitrary commands through injection argument options. CVE-2022-25766 CVE-2022-29184 CVE-2022-23915 CVE-2022-24433 CVE-2022-25648 CVE-2022-24440 CVE-2022-21223 CVE-2022-21235 CVE-2022-25866 CVE-2022-21187 CVE-2022-25865 CVE-2022-24065 CVE-2022-26945 T1190 [LLM] Git argument injection via --upload-pack option spawned by web-app runtime [LLM] Mercurial argument injection via --config alias/hooks or --debugger from app runtime [LLM] git/hg spawning a shell as child of a web-app runtime (argument-injection RCE evidence) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Rediscovering argument injection when using VCS tools — git and mercurial">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2022-08-23-rediscovering-argument-injection-when-using-vcs-tools-git-an" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/argument-injection-when-using-git-and-mercurial/" target="_blank" rel="noopener">Rediscovering argument injection when using VCS tools — git and mercurial</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2022-08-23</span>
-    <span>5 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">In this blog post, we aim to demonstrate common scenarios where, even when using a safe API, it’s possible to execute arbitrary commands through injection argument options.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2022-25766</span> <span class="ind cve">CVE-2022-29184</span> <span class="ind cve">CVE-2022-23915</span> <span class="ind cve">CVE-2022-24433</span> <span class="ind cve">CVE-2022-25648</span> <span class="ind cve">CVE-2022-24440</span> <span class="ind cve">CVE-2022-21223</span> <span class="ind cve">CVE-2022-21235</span> <span class="ind cve">CVE-2022-25866</span> <span class="ind cve">CVE-2022-21187</span> <span class="ind cve">CVE-2022-25865</span> <span class="ind cve">CVE-2022-24065</span> <span class="ind cve">CVE-2022-26945</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-2017-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-2017"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-2017-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Git argument injection via --upload-pack option spawned by web-app runtime · [LLM] Mercurial argument injection via --config alias/hooks or --debugger from app runtime · [LLM] git/hg spawning a shell as child of a web-app runtime (argument-injection RCE evidence) · Article-specific behavioural hunt — Rediscovering argument injection when using VCS tools — git and mercurial</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="a2609ecbe1" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Git argument injection via --upload-pack option spawned by web-app runtime</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="a2609ecbe1" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts a server-side application runtime (node/python/ruby/java/php) invoking git with an attacker-controllable --upload-pack option on the ls-remote/fetch/pull/clone/fetch-pack subcommands. Per Snyk, this lets a remote user smuggle a shell command past a &#x27;safe&#x27; spawn() API (no shell metacharacters needed), as exploited in ungit (CVE-2022-25766) and simple-git (CVE-2022-24433).
-
-Rationale: Anchors on the article&#x27;s exact dangerous option string &#x27;--upload-pack&#x27; on the named affected subcommands (ls-remote/fetch/pull/clone/fetch-pack), gated by a web-app-runtime parent which matches Snyk&#x27;s stated target (web apps/libraries, not CLI use). The git-upload-pack exclusion removes the only legitimate use (pointing at a custom server binary). Cross-checked Snyk blog + ungit CVE-2022-25766 advisory (real payload --upload-pack=curl ... --data &quot;$(id)&quot;) + simple-git CVE-2022-24433.
-
-Cross-checked against:
-  • https://snyk.io/blog/argument-injection-when-using-git-and-mercurial/
-  • https://security.snyk.io/vuln/SNYK-JS-UNGIT-2414099
-  • https://security.snyk.io/vuln/SNYK-JS-SIMPLEGIT-2421199</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DevOps wrapper scripts (node/python) that legitimately pass --upload-pack=/path/to/git-upload-pack to reach a non-default server-side binary over SSH</li><li>Git LFS or custom transport tooling invoked from a build agent that wraps git in a python/ruby orchestrator</li><li>CI runners executing git fetch with a pinned --upload-pack path for a self-hosted Git server</li><li>Internal repo-sync services that shell out to git from a Java/Node service with administrator-configured upload-pack overrides</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ProcessCommandLine has &quot;git-upload-pack&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the full git ProcessCommandLine and read the --upload-pack value. A path ending in git-upload-pack is benign; anything containing a space, command name, sub-shell ($()/backticks) or URL is an injection. Confirm the parent runtime and which app endpoint shelled out (InitiatingProcessCommandLine). 2) CONTAIN: Isolate the host, kill the git process tree, and rotate any secrets/tokens accessible to the web-app service account. Take the vulnerable endpoint offline or WAF-block the parameter. 3) HUNT: Pivot on the same DeviceId for child shells spawned by git (see the process-tree UC), outbound connections from git/sh to attacker infra, and review web/app access logs for the repo-url/branch parameter carrying &#x27;--upload-pack&#x27;.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2017-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2017-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2017-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2017-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2017-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName in~ (&quot;git&quot;,&quot;git.exe&quot;)
-| where ProcessCommandLine has &quot;--upload-pack&quot;
-| where ProcessCommandLine has_any (&quot;ls-remote&quot;,&quot;fetch&quot;,&quot;pull&quot;,&quot;clone&quot;,&quot;fetch-pack&quot;)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;node.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;python.exe&quot;,&quot;ruby&quot;,&quot;ruby.exe&quot;,&quot;java&quot;,&quot;java.exe&quot;,&quot;php&quot;,&quot;php-fpm&quot;,&quot;php-cgi.exe&quot;,&quot;w3wp.exe&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;puma&quot;,&quot;unicorn&quot;)
-| where AccountName !endswith &quot;$&quot;
-| where not(ProcessCommandLine has &quot;git-upload-pack&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2017-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where NewProcessName has_any (&quot;\\git.exe&quot;,&quot;/git&quot;)
-| where CommandLine has &quot;--upload-pack&quot;
-| where CommandLine has_any (&quot;ls-remote&quot;,&quot;fetch&quot;,&quot;pull&quot;,&quot;clone&quot;,&quot;fetch-pack&quot;)
-| where ParentProcessName has_any (&quot;node&quot;,&quot;python&quot;,&quot;ruby&quot;,&quot;java&quot;,&quot;php&quot;,&quot;w3wp.exe&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;puma&quot;,&quot;unicorn&quot;)
-| where not(CommandLine has &quot;git-upload-pack&quot;)
-| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2017-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Git --upload-pack Argument Injection From Application Runtime
-id: 7f3a1c2e-4b6d-4a91-9c0e-2d5f8a1b6c34
-description: Detects a server-side application runtime invoking git with an attacker-controllable --upload-pack option, enabling arbitrary command execution via argument injection (Snyk research; CVE-2022-25766 ungit, CVE-2022-24433 simple-git).
-references:
-  - https://snyk.io/blog/argument-injection-when-using-git-and-mercurial/
-  - https://security.snyk.io/vuln/SNYK-JS-UNGIT-2414099
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1190
-  - attack.t1059.004
-  - attack.t1059.003
-logsource:
-  category: process_creation
-detection:
-  selection_git:
-    Image|endswith:
-      - &#x27;\git.exe&#x27;
-      - &#x27;/git&#x27;
-  selection_opt:
-    CommandLine|contains: &#x27;--upload-pack&#x27;
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;/node&#x27;
-      - &#x27;\python.exe&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;\ruby.exe&#x27;
-      - &#x27;/ruby&#x27;
-      - &#x27;\java.exe&#x27;
-      - &#x27;/java&#x27;
-      - &#x27;\php.exe&#x27;
-      - &#x27;/php&#x27;
-      - &#x27;/php-fpm&#x27;
-      - &#x27;\w3wp.exe&#x27;
-  filter_legit:
-    CommandLine|contains: &#x27;git-upload-pack&#x27;
-  condition: selection_git and selection_opt and selection_parent and not filter_legit
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2017-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\git.exe OR *\\Git.exe OR *\\GIT.EXE) @CommandLine:*--upload-pack* @ParentImage:(*\\node.exe OR *\\python.exe OR *\\ruby.exe OR *\\java.exe OR *\\php.exe OR *\\php-cgi.exe OR *\\w3wp.exe) -@CommandLine:*git-upload-pack*</code></pre></div>
-    <div class="tab-content" id="art-2017-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\git(\.exe)?$/i CommandLine=/--upload-pack/i ParentBaseFileName=/^(node|python[0-9]?|ruby|java|php|php-fpm|w3wp|gunicorn|uwsgi|puma|unicorn)(\.exe)?$/i
-| NOT (CommandLine=/git-upload-pack/i)
-| table([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-2017-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2017-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2017-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2017-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;git&quot;,&quot;git.exe&quot;)) AND (Processes.process=&quot;*--upload-pack*&quot;) AND (Processes.parent_process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;python.exe&quot;,&quot;ruby&quot;,&quot;ruby.exe&quot;,&quot;java&quot;,&quot;java.exe&quot;,&quot;php&quot;,&quot;php-fpm&quot;,&quot;php-cgi.exe&quot;,&quot;w3wp.exe&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;puma&quot;,&quot;unicorn&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | search NOT process=&quot;*git-upload-pack*&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2017-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;git&quot;,&quot;git.exe&quot;)) AND (Processes.process=&quot;*--upload-pack*&quot;) AND (Processes.parent_process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;python.exe&quot;,&quot;ruby&quot;,&quot;ruby.exe&quot;,&quot;java&quot;,&quot;java.exe&quot;,&quot;php&quot;,&quot;php-fpm&quot;,&quot;php-cgi.exe&quot;,&quot;w3wp.exe&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;puma&quot;,&quot;unicorn&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | search NOT process=&quot;*git-upload-pack*&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ac0630b121" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Mercurial argument injection via --config alias/hooks or --debugger from app runtime</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ac0630b121" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts hg invoked with an injected --config=alias.&lt;cmd&gt;=!&lt;shell&gt; shell alias, --config=hooks.pre-/post-&lt;cmd&gt;=&lt;shell&gt; hook, or --debugger flag. Per Snyk, mercurial needs only a single controllable argument (even the only one) to achieve RCE, making it easier to exploit than git. Confirmed against Weblate (CVE-2022-23915) and the documented hg argument-injection vectors.
-
-Rationale: Anchors on mercurial&#x27;s exact injection primitives from the article: shell alias &#x27;alias.&lt;cmd&gt;=!&#x27; (the &#x27;!&#x27; is what makes it a shell alias), &#x27;hooks.pre-/hooks.post-&#x27; hooks, plus the corroborated &#x27;--debugger&#x27; flag. The alias regex requires the &#x27;!&#x27; so it ignores benign aliases that map to other hg commands; legit &#x27;--config ui.*&#x27;/&#x27;extensions.*&#x27; usage is excluded by construction. Cross-checked Snyk blog + SonarSource hg argument-injection-vectors + Phabricator T13012 (--config/--debugger RCE) + Weblate CVE-2022-23915.
-
-Cross-checked against:
-  • https://snyk.io/blog/argument-injection-when-using-git-and-mercurial/
-  • https://sonarsource.github.io/argument-injection-vectors/binaries/hg/
-  • https://secure.phabricator.com/T13012
-  • https://security.snyk.io/vuln/SNYK-PYTHON-WEBLATE-2414088</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>RhodeCode/Kallithea/SCM-Manager hosting platforms that legitimately set repository hooks via &#x27;hg --config hooks.*&#x27; (often pointing at &#x27;python:module.func&#x27; rather than a shell command)</li><li>Admin automation that defines a temporary alias via --config for a maintenance batch job</li><li>Developers running &#x27;hg --debugger&#x27; interactively to drop into pdb while debugging an extension</li><li>Backup/mirroring scripts that set hooks.pre-/post- to a vetted internal script path</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ProcessCommandLine has &quot;python:&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Read the hg ProcessCommandLine. For alias.*=! and hooks.pre-/post-, inspect the value: a &#x27;python:&#x27; target is usually a legit hg hook, while a raw shell command (id/whoami/curl/bash -c) or &#x27;!&#x27;-prefixed alias is injection. Identify the calling app endpoint via InitiatingProcessCommandLine. 2) CONTAIN: Kill the hg process tree, isolate the host, and rotate credentials reachable by the service account; block/patch the vulnerable parameter (add &#x27;--&#x27; before user input or upgrade the affected library). 3) HUNT: Look for hg/sh child processes performing discovery or egress on the same host, and grep app logs for repo-url/source/branch fields containing &#x27;--config&#x27; or &#x27;--debugger&#x27;.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2017-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2017-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2017-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2017-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2017-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName in~ (&quot;hg&quot;,&quot;hg.exe&quot;)
-| where (ProcessCommandLine has &quot;--config&quot; and (ProcessCommandLine matches regex @&quot;(?i)alias\.[a-z0-9_-]+\s*=\s*!&quot; or ProcessCommandLine has_any (&quot;hooks.pre-&quot;,&quot;hooks.post-&quot;))) or ProcessCommandLine has &quot;--debugger&quot;
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2017-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where NewProcessName has_any (&quot;\\hg.exe&quot;,&quot;/hg&quot;)
-| where (CommandLine has &quot;--config&quot; and (CommandLine matches regex @&quot;(?i)alias\.[a-z0-9_-]+\s*=\s*!&quot; or CommandLine has_any (&quot;hooks.pre-&quot;,&quot;hooks.post-&quot;))) or CommandLine has &quot;--debugger&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2017-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Mercurial --config Alias/Hook or --debugger Argument Injection
-id: b2c9e4a1-7d83-4f50-8a26-1e6c3b9d0f72
-description: Detects hg invoked with an injected shell alias (--config=alias.X=!cmd), pre/post command hook (--config=hooks.pre-*/post-*), or the --debugger flag, enabling RCE via argument injection (Snyk research; CVE-2022-23915 Weblate).
-references:
-  - https://snyk.io/blog/argument-injection-when-using-git-and-mercurial/
-  - https://sonarsource.github.io/argument-injection-vectors/binaries/hg/
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1190
-  - attack.t1059.004
-  - attack.t1059.003
-logsource:
-  category: process_creation
-detection:
-  selection_hg:
-    Image|endswith:
-      - &#x27;\hg.exe&#x27;
-      - &#x27;/hg&#x27;
-  selection_config:
-    CommandLine|contains: &#x27;--config&#x27;
-  selection_payload:
-    CommandLine|contains:
-      - &#x27;hooks.pre-&#x27;
-      - &#x27;hooks.post-&#x27;
-  selection_alias:
-    CommandLine|re: &#x27;(?i)alias\.[a-z0-9_-]+\s*=\s*!&#x27;
-  selection_debugger:
-    CommandLine|contains: &#x27;--debugger&#x27;
-  condition: selection_hg and ( (selection_config and (selection_payload or selection_alias)) or selection_debugger )
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2017-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\hg.exe OR *\\Hg.exe OR *\\HG.EXE) ((@CommandLine:*--config* AND (@CommandLine:*alias.* OR @CommandLine:*hooks.pre-* OR @CommandLine:*hooks.post-*)) OR @CommandLine:*--debugger*)</code></pre></div>
-    <div class="tab-content" id="art-2017-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\hg(\.exe)?$/i ((CommandLine=/--config/i (CommandLine=/alias\.[a-z0-9_-]+\s*=\s*!/i OR CommandLine=/hooks\.(pre|post)-/i)) OR CommandLine=/--debugger/i)
-| table([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-2017-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2017-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2017-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2017-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;hg&quot;,&quot;hg.exe&quot;)) AND ((Processes.process=&quot;*--config*&quot; AND (Processes.process=&quot;*alias.*=!*&quot; OR Processes.process=&quot;*hooks.pre-*&quot; OR Processes.process=&quot;*hooks.post-*&quot;)) OR Processes.process=&quot;*--debugger*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2017-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;hg&quot;,&quot;hg.exe&quot;)) AND ((Processes.process=&quot;*--config*&quot; AND (Processes.process=&quot;*alias.*=!*&quot; OR Processes.process=&quot;*hooks.pre-*&quot; OR Processes.process=&quot;*hooks.post-*&quot;)) OR Processes.process=&quot;*--debugger*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ae82ae826d" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">git/hg spawning a shell as child of a web-app runtime (argument-injection RCE evidence)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="ae82ae826d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Behavioral catch-all for the execution stage of git/hg argument injection: a server-side runtime (node/python/ruby/java/php) invokes git or hg, which in turn spawns a shell (sh/bash/cmd/powershell) to run the injected command. Catches the RCE regardless of which specific injectable option (--upload-pack, --config alias/hooks, --debugger) was abused.
-
-Rationale: Targets the actual command-execution evidence (git/hg becoming the parent of a shell process) rather than the injection string, using the article&#x27;s stated process-chain shape: app-runtime -&gt; git/hg -&gt; shell. The grandparent web-runtime constraint (Defender InitiatingProcessParentFileName) keeps it tied to the server-side scenario Snyk describes. Sentinel/Falcon variants drop the grandparent (4688 / FDR single-event lack it) so they are noisier and run as hunting.
-
-Cross-checked against:
-  • https://snyk.io/blog/argument-injection-when-using-git-and-mercurial/
-  • https://security.snyk.io/vuln/SNYK-JS-UNGIT-2414099</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>git invoking sh for credential helpers, askpass, or git-sh-setup during normal fetch/clone from a CI runner</li><li>Husky/git-hooks under node spawning sh for legitimate pre-commit/post-checkout scripts</li><li>git-lfs smudge/clean filters shelling out during checkout from a build agent</li><li>Mercurial extensions or hooks that legitimately invoke a shell wrapper during automated mirroring</li><li>Developer tooling (IDE git integration) wrapped in a node/python launcher that triggers git hook scripts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ChildCmd has_any (&quot;git-sh-setup&quot;,&quot;git-lfs&quot;,&quot;credential&quot;,&quot;askpass&quot;,&quot;husky&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Inspect the child shell&#x27;s command line (ChildCmd) and the parent git/hg command line. Benign helpers reference git-sh-setup/credential/askpass/git-lfs or a known hook path; recon commands (id/whoami/uname), downloaders (curl/wget), or reverse-shell strings indicate exploitation. Confirm the grandparent is an internet-facing app service. 2) CONTAIN: Kill the process tree, isolate the host, rotate the service account&#x27;s secrets/tokens, and pull the offending app endpoint or WAF-block the input parameter. 3) HUNT: Correlate with the git/hg cmdline UCs to recover the exact injected option, review outbound connections from the shell, and search app/web logs for repo/branch/source parameters containing &#x27;--upload-pack&#x27;, &#x27;--config&#x27;, or &#x27;--debugger&#x27;.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2017-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2017-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2017-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2017-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;git&quot;,&quot;git.exe&quot;,&quot;hg&quot;,&quot;hg.exe&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;sh.exe&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
-| where InitiatingProcessParentFileName in~ (&quot;node&quot;,&quot;node.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;python.exe&quot;,&quot;ruby&quot;,&quot;ruby.exe&quot;,&quot;java&quot;,&quot;java.exe&quot;,&quot;php&quot;,&quot;php-fpm&quot;,&quot;php-cgi.exe&quot;,&quot;w3wp.exe&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;puma&quot;,&quot;unicorn&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, GrandParent=InitiatingProcessParentFileName, Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, Child=FileName, ChildCmd=ProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2017-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where ParentProcessName has_any (&quot;\\git.exe&quot;,&quot;/git&quot;,&quot;\\hg.exe&quot;,&quot;/hg&quot;)
-| where NewProcessName has_any (&quot;\\sh.exe&quot;,&quot;/sh&quot;,&quot;\\bash.exe&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;\\cmd.exe&quot;,&quot;\\powershell.exe&quot;,&quot;/pwsh&quot;)
-| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2017-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\git.exe OR *\\Git.exe OR *\\hg.exe OR *\\Hg.exe) @Image:(*\\sh.exe OR *\\bash.exe OR *\\cmd.exe OR *\\Cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe)</code></pre></div>
-    <div class="tab-content" id="art-2017-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(git|hg)(\.exe)?$/i ImageFileName=/\\(sh|bash|dash|zsh|cmd|powershell|pwsh)(\.exe)?$/i
-| table([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-2017-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2017-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2017-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2017-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;git&quot;,&quot;git.exe&quot;,&quot;hg&quot;,&quot;hg.exe&quot;)) AND (Processes.process_name IN (&quot;sh&quot;,&quot;sh.exe&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2017-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;git&quot;,&quot;git.exe&quot;,&quot;hg&quot;,&quot;hg.exe&quot;)) AND (Processes.process_name IN (&quot;sh&quot;,&quot;sh.exe&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2017-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2017-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2022-25766&quot;, &quot;CVE-2022-29184&quot;, &quot;CVE-2022-23915&quot;, &quot;CVE-2022-24433&quot;, &quot;CVE-2022-25648&quot;, &quot;CVE-2022-24440&quot;, &quot;CVE-2022-21223&quot;, &quot;CVE-2022-21235&quot;, &quot;CVE-2022-25866&quot;, &quot;CVE-2022-21187&quot;, &quot;CVE-2022-25865&quot;, &quot;CVE-2022-24065&quot;, &quot;CVE-2022-26945&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2017-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2022-25766&quot;, &quot;CVE-2022-29184&quot;, &quot;CVE-2022-23915&quot;, &quot;CVE-2022-24433&quot;, &quot;CVE-2022-25648&quot;, &quot;CVE-2022-24440&quot;, &quot;CVE-2022-21223&quot;, &quot;CVE-2022-21235&quot;, &quot;CVE-2022-25866&quot;, &quot;CVE-2022-21187&quot;, &quot;CVE-2022-25865&quot;, &quot;CVE-2022-24065&quot;, &quot;CVE-2022-26945&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2017-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2017-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2017-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2017-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2022-25766&quot;, &quot;CVE-2022-29184&quot;, &quot;CVE-2022-23915&quot;, &quot;CVE-2022-24433&quot;, &quot;CVE-2022-25648&quot;, &quot;CVE-2022-24440&quot;, &quot;CVE-2022-21223&quot;, &quot;CVE-2022-21235&quot;, &quot;CVE-2022-25866&quot;, &quot;CVE-2022-21187&quot;, &quot;CVE-2022-25865&quot;, &quot;CVE-2022-24065&quot;, &quot;CVE-2022-26945&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-2017-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2022-25766&quot;, &quot;CVE-2022-29184&quot;, &quot;CVE-2022-23915&quot;, &quot;CVE-2022-24433&quot;, &quot;CVE-2022-25648&quot;, &quot;CVE-2022-24440&quot;, &quot;CVE-2022-21223&quot;, &quot;CVE-2022-21235&quot;, &quot;CVE-2022-25866&quot;, &quot;CVE-2022-21187&quot;, &quot;CVE-2022-25865&quot;, &quot;CVE-2022-24065&quot;, &quot;CVE-2022-26945&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="61926cbdb0" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Rediscovering argument injection when using VCS tools — git and mercurial</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="61926cbdb0" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2017-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2017-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2017-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Rediscovering argument injection when using VCS tools — git and mercurial
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2017-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Rediscovering argument injection when using VCS tools — git and mercurial
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2017-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2017-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2017-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2017-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Rediscovering argument injection when using VCS tools — git and mercurial ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-2017-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Rediscovering argument injection when using VCS tools — git and mercurial ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

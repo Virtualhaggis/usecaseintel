@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-facing PraisonAI platform booting on default JWT secret (CVE-2026-47410)
 
-`UC_139_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_140_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### PraisonAI workspace/member destruction via owner-gated routes (forged-JWT takeover impact)
 
-`UC_139_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_140_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### PraisonAI workspace member enumeration harvesting owner user_ids (pre-takeover recon)
 
-`UC_139_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_140_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f38v-77qj-h4jq: praisonai-platform 0.1.4 still boots on t
 
-`UC_139_1` · phase: **exploit** · confidence: **High**
+`UC_140_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

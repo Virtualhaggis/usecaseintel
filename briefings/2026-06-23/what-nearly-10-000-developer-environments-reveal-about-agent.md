@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What nearly 10,000 developer environments reveal about agentic development risk
 
-`UC_113_1` · phase: **exploit** · confidence: **High**
+`UC_114_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

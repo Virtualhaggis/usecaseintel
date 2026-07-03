@@ -83,7 +83,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen: BYOVD vulnerable Kontron driver ktapi.sys load / drop
 
-`UC_3_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceImageLoadEvents
 
 ### The Gentlemen: Go backdoor C2 beacon to 81.177.215.15 on TCP/9443
 
-`UC_3_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceNetworkEvents
 
 ### Anubis: Cloudflare Tunnel (cloudflared) covert access channel
 
-`UC_3_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### Anubis: Cloud/bulk exfiltration tooling staged before encryption (rclone, s5cmd, S3 Browser, WinSCP, PuTTY)
 
-`UC_3_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,7 +171,7 @@ DeviceProcessEvents
 
 ### Anubis: endpoint defense impairment (Defender RTP disable, Sophos uninstall, PCHunter)
 
-`UC_3_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -498,7 +498,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware Groups Turn to Citrix Bleed 2, BYOVD, and Supply Chain Credentials
 
-`UC_3_12` · phase: **exploit** · confidence: **High**
+`UC_5_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
