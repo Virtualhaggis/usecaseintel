@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Spring4Shell classLoader property injection via dirContext.docBase (Glassfish/Payara/Tomcat)
 
-`UC_2287_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2288_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Spring4Shell post-exploitation arbitrary file read (/etc/passwd via relocated docBase)
 
-`UC_2287_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2288_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Spring4Shell extends to Glassfish and Payara: same vulnerability, new exploit
 
-`UC_2287_1` · phase: **install** · confidence: **High**
+`UC_2288_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Crawl4AI path-traversal: crawler Python process writes to RCE-enabling paths (cron.d, authorized_keys, shell rc, site-packages)
 
-`UC_129_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_131_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceFileEvents
 
 ### Crawl4AI RCE confirmation: cron/sshd/shell executes payload dropped by crawler within correlation window
 
-`UC_129_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_131_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-2jq4-q6vv-4cp3: Crawl4AI: Arbitrary file write (path trav
 
-`UC_129_0` · phase: **install** · confidence: **High**
+`UC_131_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -37,11 +37,13 @@ That's the defining characteristic of moder…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1114.002** — Email Collection: Remote Email Collection
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1204** — User Execution
+- **T1105** — Ingress Tool Transfer
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1564.008** — Hide Artifacts: Email Hiding Rules
 
 ## Kill chain phases observed
 
@@ -49,84 +51,107 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ConsentFix/ClickFix phishing-page callouts to named lookalike M365 domains
+### ConsentFix: interactive browser sign-in to Azure CLI / dev-tool first-party app
 
-`UC_5_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*trustpointassurance.com*" OR Web.url="*fastwaycheck.com*" OR Web.url="*previewcentral.com*" OR Web.dest="trustpointassurance.com" OR Web.dest="fastwaycheck.com" OR Web.dest="previewcentral.com") by Web.src Web.user Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where (Authentication.app IN ("04b07795-8ddb-461a-bbee-02f9e1bf7b46","1950a258-227b-4e31-a9cf-717495945fc2","aebc6443-996d-45c2-90f0-388ff96faa56","04f0c124-f2bc-4f59-8241-bf6df9866bbd","12128f48-ec9e-42f0-b203-ea49fb6af367")) by Authentication.user Authentication.app Authentication.src Authentication.action _time | `drop_dm_object_name(Authentication)` | where action="success" | convert ctime(firstTime) | convert ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let PhishDomains = dynamic(["trustpointassurance.com","fastwaycheck.com","previewcentral.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (PhishDomains)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","arc.exe","outlook.exe","olk.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+let VulnerableFirstPartyApps = dynamic(["04b07795-8ddb-461a-bbee-02f9e1bf7b46","1950a258-227b-4e31-a9cf-717495945fc2","aebc6443-996d-45c2-90f0-388ff96faa56","04f0c124-f2bc-4f59-8241-bf6df9866bbd","12128f48-ec9e-42f0-b203-ea49fb6af367"]);
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ApplicationId in (VulnerableFirstPartyApps)   // Azure CLI + dev-tool public clients abused by ConsentFix
+| where IsInteractive == true
+| where ErrorCode == 0
+| where ClientAppUsed == "Browser"                    // interactive browser flow = the lure, not native CLI use
+| project Timestamp, AccountUpn, AccountDisplayName, Application, ApplicationId, IPAddress, Country, City, UserAgent, Browser, DeviceName
 | order by Timestamp desc
 ```
 
-### ClickFix payload fetch: LOLBin command line referencing campaign phishing domains
+### ConsentFix: Azure CLI token redemption from divergent IP within 10 min of interactive sign-in
 
-`UC_5_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let AppScope = dynamic(["04b07795-8ddb-461a-bbee-02f9e1bf7b46","1950a258-227b-4e31-a9cf-717495945fc2","aebc6443-996d-45c2-90f0-388ff96faa56","04f0c124-f2bc-4f59-8241-bf6df9866bbd","12128f48-ec9e-42f0-b203-ea49fb6af367"]);
+let Interactive = AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where ApplicationId in (AppScope)
+    | where IsInteractive == true and ErrorCode == 0
+    | project VictimTime = Timestamp, AccountObjectId, AccountUpn, ApplicationId, VictimIP = IPAddress, VictimCountry = Country;
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ApplicationId in (AppScope)
+| where IsInteractive == false and ErrorCode == 0
+| project RedeemTime = Timestamp, AccountObjectId, ApplicationId, RedeemIP = IPAddress, RedeemCountry = Country, RedeemUserAgent = UserAgent
+| join kind=inner Interactive on AccountObjectId, ApplicationId
+| where RedeemTime between (VictimTime .. VictimTime + 10m)   // 10-min human-delayed redemption window (Push Security)
+| where RedeemIP != VictimIP                                  // attacker infra differs from victim device
+| project VictimTime, RedeemTime, DelaySec = datetime_diff('second', RedeemTime, VictimTime), AccountUpn, ApplicationId, VictimIP, VictimCountry, RedeemIP, RedeemCountry, RedeemUserAgent
+| order by VictimTime desc
+```
+
+### ClickFix: PowerShell/mshta download-execute spawned from Run dialog (explorer parent)
+
+`UC_10_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","curl.exe","certutil.exe","bitsadmin.exe","wscript.exe","cscript.exe")) AND (Processes.process="*trustpointassurance.com*" OR Processes.process="*fastwaycheck.com*" OR Processes.process="*previewcentral.com*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="explorer.exe") (Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe","curl.exe","wscript.exe","cscript.exe")) (Processes.process IN ("*iwr*","*invoke-webrequest*","*IEX*","*DownloadString*","*DownloadFile*","*mshta http*","*-w hidden*","*-windowstyle hidden*","*FromBase64String*","*.hta*","*curl *","*certutil*","*http://*","*https://*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process _time | `drop_dm_object_name(Processes)` | where user!="*$" | convert ctime(firstTime) | convert ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let PhishDomains = dynamic(["trustpointassurance.com","fastwaycheck.com","previewcentral.com"]);
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","curl.exe","certutil.exe","bitsadmin.exe","wscript.exe","cscript.exe")
-| where ProcessCommandLine has_any (PhishDomains)
+| where Timestamp > ago(7d)
 | where AccountName !endswith "$"
+| where InitiatingProcessFileName =~ "explorer.exe"   // Win+R Run dialog / double-click origin
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe","curl.exe","wscript.exe","cscript.exe")
+| where ProcessCommandLine has_any ("iwr","invoke-webrequest","iex","invoke-expression","downloadstring","downloadfile","mshta http","-w hidden","-windowstyle hidden","-nop","frombase64string",".hta","curl ","certutil","start-bitstransfer","http://","https://")
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### ConsentFix: Azure CLI OAuth token replay from campaign IPs (MFA bypass)
+### ConsentFix lure delivery: inbound email link to DocSend/Dropbox or ConsentFix phishing infra
 
-`UC_5_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where (Authentication.app="04b07795-8ddb-461a-bbee-02f9e1bf7b46" OR Authentication.signature="Microsoft Azure CLI") AND (Authentication.src IN ("12.75.216.90","182.3.36.223","12.75.116.137")) by Authentication.user Authentication.app Authentication.src Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
-```
+`UC_10_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-let CampaignIPs = dynamic(["12.75.216.90","182.3.36.223","12.75.116.137"]);
-AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where ApplicationId == "04b07795-8ddb-461a-bbee-02f9e1bf7b46"   // Microsoft Azure CLI first-party app abused by ConsentFix
-| where IPAddress in (CampaignIPs)
-| project Timestamp, AccountUpn, Application, ApplicationId, IPAddress, Country, City, IsInteractive, AuthenticationRequirement, ClientAppUsed, ErrorCode, RiskLevelDuringSignIn
+let LureDomains = dynamic(["docsend.com","dropbox.com","dropboxusercontent.com"]);
+let ConsentFixInfra = dynamic(["trustpointassurance.com","fastwaycheck.com","previewcentral.com","security-updater.com"]);
+EmailEvents
+| where Timestamp > ago(14d)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+| join kind=inner (
+    EmailUrlInfo
+    | where Timestamp > ago(14d)
+    | project NetworkMessageId, Url, UrlDomain
+  ) on NetworkMessageId
+| where UrlDomain has_any (LureDomains) or UrlDomain has_any (ConsentFixInfra)
+| extend Verdict = iff(UrlDomain has_any (ConsentFixInfra), "ConsentFix-infra", "trusted-service-lure")
+| project Timestamp, Verdict, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, AuthenticationDetails
 | order by Timestamp desc
 ```
 
-### ConsentFix post-compromise mailbox access & inbox-rule creation from campaign IPs
+### Post-session-theft mailbox abuse: auto-forwarding / inbox rule creation via stolen M365 session
 
-`UC_5_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.action IN ("MailItemsAccessed","New-InboxRule","Set-InboxRule","UpdateInboxRules")) AND (All_Changes.src IN ("12.75.216.90","182.3.36.223","12.75.116.137")) by All_Changes.user All_Changes.action All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime)
-```
+`UC_10_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-let CampaignIPs = dynamic(["12.75.216.90","182.3.36.223","12.75.116.137"]);
 CloudAppEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("MailItemsAccessed","New-InboxRule","Set-InboxRule","UpdateInboxRules","Set-Mailbox")
-| where IPAddress in (CampaignIPs)
-| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, IPAddress, CountryCode, ISP, Application, ObjectName
+| where Timestamp > ago(7d)
+| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules","Set-Mailbox","New-TransportRule")
+| extend Raw = tostring(RawEventData)
+| where Raw has_any ("ForwardTo","ForwardAsAttachmentTo","RedirectTo","DeliverToMailboxAndForward","DeleteMessage","MoveToFolder")
+| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, Application, IPAddress, CountryCode, UserAgent, ObjectName, RawEventData
 | order by Timestamp desc
 ```
 
@@ -456,4 +481,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

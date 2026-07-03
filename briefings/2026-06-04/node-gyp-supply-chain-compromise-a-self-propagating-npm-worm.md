@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Phantom Gyp: node-gyp install-time code execution via weaponized binding.gyp
 
-`UC_256_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_258_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### Miasma loader fetches standalone Bun v1.3.13 from oven-sh GitHub releases during install
 
-`UC_256_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_258_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Miasma GitHub Actions workflow injection for persistence by node payload
 
-`UC_256_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_258_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceFileEvents
 
 ### Miasma/Node-gyp loader file hashes present on developer or CI host
 
-`UC_256_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_258_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -334,7 +334,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind
 
-`UC_256_6` · phase: **exploit** · confidence: **High**
+`UC_258_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

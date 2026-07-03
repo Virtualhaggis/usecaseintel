@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### External MS Teams chat invite from IT-impersonating unmanaged or federated tenant
 
-`UC_237_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_239_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ CloudAppEvents
 
 ### MFA approval within minutes of inbound external Microsoft Teams chat
 
-`UC_237_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_239_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ AADSignInEventsBeta
 
 ### Activity involving ommicrosoft.com Cloaked-Ursa Teams typosquat
 
-`UC_237_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_239_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

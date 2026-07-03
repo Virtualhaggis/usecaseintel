@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — See Snyk and GitHub in action at GitHub Universe
 
-`UC_3415_0` · phase: **exploit** · confidence: **High**
+`UC_3416_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

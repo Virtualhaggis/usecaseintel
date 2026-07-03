@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Vulnerabilities in NodeJS C/C++ add-on extensions
 
-`UC_1216_0` · phase: **exploit** · confidence: **High**
+`UC_1217_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2533 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2534 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,13 +12,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
 - [ai agent exploits langflow rce to automate database ransomwa](./2026-07-02/ai-agent-exploits-langflow-rce-to-automate-database-ransomwa.md)
 - [alleged scattered spider hacker extradited to the united sta](./2026-07-02/alleged-scattered-spider-hacker-extradited-to-the-united-sta.md)
+- [catan and mouse](./2026-07-02/catan-and-mouse.md)
 - [cisa microsoft sharepoint rce flaw now actively exploited](./2026-07-02/cisa-microsoft-sharepoint-rce-flaw-now-actively-exploited.md)
 - [cisco finally confirms attackers exploiting unified cm flaw](./2026-07-02/cisco-finally-confirms-attackers-exploiting-unified-cm-flaw.md)
 - [consentfix and clickfix how microsoft 365 accounts are hijac](./2026-07-02/consentfix-and-clickfix-how-microsoft-365-accounts-are-hijac.md)
 - [fortibleed credential theft linked to inc and lynx ransomwar](./2026-07-02/fortibleed-credential-theft-linked-to-inc-and-lynx-ransomwar.md)
+- [google disrupts netnut residential proxy network spanning 2 ](./2026-07-02/google-disrupts-netnut-residential-proxy-network-spanning-2-.md)
+- [how we added webauthn to a browser based rdp client](./2026-07-02/how-we-added-webauthn-to-a-browser-based-rdp-client.md)
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
 - [new chocopoc rat targets vulnerability researchers via fake ](./2026-07-02/new-chocopoc-rat-targets-vulnerability-researchers-via-fake-.md)
+- [ransomware groups turn to citrix bleed 2 byovd and supply ch](./2026-07-02/ransomware-groups-turn-to-citrix-bleed-2-byovd-and-supply-ch.md)
 - [sharepoint rce cve 2026 45659 added to cisa kev after active](./2026-07-02/sharepoint-rce-cve-2026-45659-added-to-cisa-kev-after-active.md)
+- [stepsecurity maintained actions are now free for public repo](./2026-07-02/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 - [threatsday ai compute hijacking apple email flaw bluehammer ](./2026-07-02/threatsday-ai-compute-hijacking-apple-email-flaw-bluehammer-.md)
 - [toddycat linked umbrij malware abuses oauth to access gmail ](./2026-07-02/toddycat-linked-umbrij-malware-abuses-oauth-to-access-gmail-.md)
 
@@ -47,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [seo poisoned software sites abuse screenconnect to deploy as](./2026-07-01/seo-poisoned-software-sites-abuse-screenconnect-to-deploy-as.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)
-- [stepsecurity maintained actions are now free for public repo](./2026-07-01/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 - [the soc files screenconnect masked as freeware an inside loo](./2026-07-01/the-soc-files-screenconnect-masked-as-freeware-an-inside-loo.md)
 - [unpatched argo cd repo server flaw could let attackers take ](./2026-07-01/unpatched-argo-cd-repo-server-flaw-could-let-attackers-take-.md)
 - [veil drop malware chain uses blogger platform to deliver pur](./2026-07-01/veil-drop-malware-chain-uses-blogger-platform-to-deliver-pur.md)
@@ -85,8 +89,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-26
 - [beware of the license manager how a schneider electric softw](./2026-06-26/beware-of-the-license-manager-how-a-schneider-electric-softw.md)
-- [fbi warns russian intelligence hackers target signal backup ](./2026-06-26/fbi-warns-russian-intelligence-hackers-target-signal-backup-.md)
-- [new sharkloader malware deploys cobalt strike in strikeshark](./2026-06-26/new-sharkloader-malware-deploys-cobalt-strike-in-strikeshark.md)
 - [npm now freezes high impact accounts after risky account cha](./2026-06-26/npm-now-freezes-high-impact-accounts-after-risky-account-cha.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
 - [threat brief mitigating large scale credential attacks](./2026-06-26/threat-brief-mitigating-large-scale-credential-attacks.md)
@@ -293,7 +295,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
 
 ## 2026-05-28
-- [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [what mdm can t protect on developer machines and what to do ](./2026-05-28/what-mdm-can-t-protect-on-developer-machines-and-what-to-do-.md)

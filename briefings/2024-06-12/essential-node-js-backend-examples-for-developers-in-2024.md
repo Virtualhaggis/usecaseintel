@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Essential Node.js backend examples for developers in 2024
 
-`UC_1269_1` · phase: **exploit** · confidence: **High**
+`UC_1270_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious bootstrap-sass 3.2.0.3 gem implant on disk (middleware.rb backdoor / SHA256)
 
-`UC_3504_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_3505_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceFileEvents
 
 ### bootstrap-sass RCE trigger: base64 Ruby payload smuggled in ___cfduid cookie
 
-`UC_3504_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3505_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceFileEvents
 
 ### Rails/Ruby app worker (puma/unicorn/passenger) spawning a shell — post-eval RCE
 
-`UC_3504_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3505_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

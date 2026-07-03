@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Yarn 2 plugins - an introduction
 
-`UC_3339_0` · phase: **exploit** · confidence: **High**
+`UC_3340_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

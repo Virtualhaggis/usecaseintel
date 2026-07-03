@@ -44,11 +44,10 @@ This is not one big break. It is small permissions, weak checks, open systems, a
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1053.005** — Persistence (article-specific)
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1132.001** — Data Encoding: Standard Encoding
+- **T1568** — Dynamic Resolution
 - **T1105** — Ingress Tool Transfer
 - **T1566.002** — Phishing: Spearphishing Link
 
@@ -58,108 +57,90 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### BeepRAT dropper HFY.exe spawning cmd/PowerShell (China-nexus DCRat variant)
+### BeepRAT (DCRat variant) HFY.exe establishing scheduled-task persistence
 
-`UC_1_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="HFY.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="HFY.exe" AND ((Processes.process_name="schtasks.exe" AND Processes.process="*/create*") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*ScheduledTask*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "HFY.exe"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe")
+| where Timestamp > ago(14d)
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, FileName, ProcessCommandLine, SHA256
+| where InitiatingProcessFileName =~ "HFY.exe"
+| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "/create")
+    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Register-ScheduledTask","New-ScheduledTask"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### BeepRAT scheduled-task persistence for user-writable / app-directory binary
+### BeepRAT DNS-over-HTTPS C2 resolution from non-browser process
 
-`UC_1_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" AND Processes.process="*/create*" AND (Processes.process="*HFY.exe*" OR Processes.process="*\\AppData\\*" OR Processes.process="*\\Users\\Public\\*" OR Processes.process="*\\Temp\\*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | search NOT user IN ("*$","SYSTEM","LOCAL SERVICE","NETWORK SERVICE") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any ("HFY.exe", @"\AppData\", @"\Users\Public\", @"\Temp\", @"\Roaming\")
-| where AccountName !endswith "$" and AccountName !in~ ("system","local service","network service")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### BeepRAT DoH C2 bootstrap to api.service.bio / public DoH resolvers from non-browser process
-
-`UC_1_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*cloudflare-dns.com*","*mozilla.cloudflare-dns.com*","*dns.google*","*dns.quad9.net*","*doh.opendns.com*","*dns.nextdns.io*","*api.service.bio*")) AND NOT (Web.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")) by Web.src Web.user Web.app Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("1.1.1.1","1.0.0.1","8.8.8.8","8.8.4.4","9.9.9.9") OR All_Traffic.dest IN ("cloudflare-dns.com","mozilla.cloudflare-dns.com","dns.google","doh.opendns.com","dns.quad9.net")) AND All_Traffic.dest_port=443 AND NOT All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe") by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("cloudflare-dns.com","mozilla.cloudflare-dns.com","dns.google","dns.quad9.net","doh.opendns.com","dns.nextdns.io") or RemoteUrl =~ "api.service.bio"
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","arc.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where Timestamp > ago(14d)
+| where RemotePort == 443
+| where RemoteUrl has_any ("cloudflare-dns.com","mozilla.cloudflare-dns.com","dns.google","doh.opendns.com","dns.quad9.net","dns.adguard.com","doh.cleanbrowsing.org")
+    or RemoteIP in ("1.1.1.1","1.0.0.1","8.8.8.8","8.8.4.4","9.9.9.9")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","svchost.exe","MsMpEng.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Platform-aware phishing: ConnectWise/ScreenConnect or Itarian RAT dropped via browser download (Cofense)
+### Platform-aware phishing: Ninite Loader installing ConnectWise/Itarian RMM as a RAT
 
-`UC_1_19` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","explorer.exe","outlook.exe") AND (Processes.process_name IN ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","Ninite.exe","NiniteOne.exe","ITSMService.exe","RmmService.exe","ITSMAgent.exe") OR Processes.process="*ScreenConnect*" OR Processes.process="*ConnectWiseControl*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="*Ninite*" AND ((Processes.process_name IN ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","ITSMAgent.exe","RmmService.exe","ITSMService.exe")) OR Processes.process="*connectwisecontrol*" OR Processes.process="*ScreenConnect*" OR Processes.process="*itarian*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","explorer.exe","outlook.exe")
-| where FileName in~ ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","Ninite.exe","NiniteOne.exe","ITSMService.exe","RmmService.exe","ITSMAgent.exe")
-    or ProcessVersionInfoProductName has_any ("ScreenConnect","ConnectWise Control","Itarian","Comodo")
-    or FolderPath has_any (@"\Downloads\", @"\AppData\Local\Temp\")
-| where FolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\") or ProcessVersionInfoProductName has_any ("ScreenConnect","ConnectWise Control","Itarian","Comodo")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, FolderPath, ProcessVersionInfoProductName, ProcessCommandLine, SHA256
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName has "Ninite"
+| where FileName has_any ("ScreenConnect","ITSMAgent","RmmService","ITSMService")
+    or ProcessCommandLine has_any ("connectwisecontrol","ScreenConnect","itarian","comodo")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Fake-INTERPOL law-enforcement phishing with Proton Drive payload link
+### Fake INTERPOL/law-enforcement lure linking to Proton Drive-hosted ransomware archive
 
-`UC_1_20` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_19` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.direction="inbound" AND (All_Email.subject="*INTERPOL*" OR All_Email.subject="*investigation*" OR All_Email.subject="*law enforcement*" OR All_Email.subject="*suspicious activity*" OR All_Email.subject="*criminal*") AND (All_Email.url="*proton.me*" OR All_Email.url="*drive.proton.me*" OR All_Email.url="*protondrive*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.url | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime)
+```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 30d;
-let LureMail = EmailEvents
-    | where Timestamp > ago(LookbackDays)
-    | where EmailDirection == "Inbound"
-    | where Subject has_any ("INTERPOL","Interpol","investigation","suspicious activity","law enforcement","police","evidence","legal notice")
-    | project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName, SenderMailFromDomain, RecipientEmailAddress, Subject, DeliveryAction, AttachmentCount;
-LureMail
+EmailEvents
+| where Timestamp > ago(14d)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+| where Subject has_any ("INTERPOL","Interpol","investigation","suspicious activity","law enforcement","evidence of","police","criminal")
 | join kind=inner (
     EmailUrlInfo
-    | where Timestamp > ago(LookbackDays)
     | where UrlDomain has_any ("proton.me","drive.proton.me","pd.proton.me","protondrive")
     | project NetworkMessageId, Url, UrlDomain
   ) on NetworkMessageId
-| project Timestamp, SenderFromAddress, SenderDisplayName, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, AttachmentCount
+| project Timestamp, SenderFromAddress, SenderDisplayName, RecipientEmailAddress, Subject, Url, UrlDomain
 | order by Timestamp desc
 ```
 
@@ -626,7 +607,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: AI Compute Hijacking, Apple Email Flaw, BlueHammer Ransomware + 14 S
 
-`UC_1_15` · phase: **exploit** · confidence: **High**
+`UC_6_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -683,4 +664,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 21 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 20 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

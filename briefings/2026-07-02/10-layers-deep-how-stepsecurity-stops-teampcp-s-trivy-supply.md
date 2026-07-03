@@ -28,11 +28,12 @@ Back to Blog Product 10 Layers Deep: How StepSecurity Stops TeamPCP's Trivy Supp
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1003.007** — OS Credential Dumping: Proc Filesystem
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1567.002** — Exfiltration to Cloud Storage / Web Service
+- **T1074.001** — Data Staged: Local Data Staging
+- **T1560.001** — Archive Collected Data: Archive via Utility
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568.002** — Dynamic Resolution: Domain Generation / Tunnelling
+- **T1041** — Exfiltration Over C2 Channel
+- **T1552.007** — Unsecured Credentials: Container API
+- **T1613** — Container and Resource Discovery
 
 ## Kill chain phases observed
 
@@ -40,50 +41,114 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TeamPCP trivy-action stealer reading Runner.Worker memory via /proc/<pid>/mem
+### Credential stealer reads /proc/<pid>/mem of Runner.Worker on CI runner (TeamPCP Trivy)
 
-`UC_3_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_8_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*/proc/*/mem*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="/proc/[0-9]+/mem" | search NOT process_name IN ("gdb","lldb","strace","criu","gcore") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="/proc/*/mem" by Filesystem.dest Filesystem.file_path Filesystem.process_id 
+| `drop_dm_object_name(Filesystem)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Defender-for-Linux cannot see /proc reads directly; this surfaces the stealer's python spawned by the trivy-action entrypoint on a runner. Pair with auditd for the direct /proc/<pid>/mem open.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("python","python3")
+| where InitiatingProcessFileName in~ ("entrypoint.sh","bash","sh","dash")
+| where InitiatingProcessCommandLine has_any ("trivy","entrypoint.sh","aquasecurity")
+    or InitiatingProcessParentFileName in~ ("Runner.Worker","Runner.Listener")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### TeamPCP secret-staging archive written on CI runner (tpcp.tar.gz / /tmp/runner_collected_)
+
+`UC_8_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="tpcp.tar.gz" OR Filesystem.file_path="/tmp/runner_collected_*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name 
+| `drop_dm_object_name(Filesystem)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName =~ "tpcp.tar.gz" or (FolderPath startswith "/tmp" and FileName startswith "runner_collected_") or FolderPath has "/tmp/runner_collected_"
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### CI runner egress/exfil to TeamPCP C2 (scan.aquasecurtiy.org / 45.148.10.212 / 94.154.172.43)
+
+`UC_8_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="45.148.10.212" OR All_Traffic.dest_ip="94.154.172.43") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app 
+| `drop_dm_object_name(All_Traffic)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "scan.aquasecurtiy.org" or RemoteIP in ("45.148.10.212","94.154.172.43")
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### CI runner DNS resolution of TeamPCP typosquat domains
+
+`UC_8_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="scan.aquasecurtiy.org" OR DNS.query="checkmarx.zone" OR DNS.query="audit.checkmarx.cx" OR DNS.query="models.litellm.cloud" OR DNS.query="tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io") by DNS.src DNS.query 
+| `drop_dm_object_name(DNS)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("scan.aquasecurtiy.org","checkmarx.zone","audit.checkmarx.cx","models.litellm.cloud","tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io")
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Kubernetes secret harvesting from CI runner (kubectl get secrets --all-namespaces / TeamPCP)
+
+`UC_8_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*kubectl*" AND Processes.process="*get secrets*" AND Processes.process="*--all-namespaces*" by Processes.dest Processes.user Processes.process Processes.parent_process_name 
+| `drop_dm_object_name(Processes)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessCommandLine matches regex @"/proc/[0-9]+/mem"
-| where AccountName !endswith "$"
-| where not(FileName in~ ("gdb","lldb","strace","criu","gcore","dumpcap"))
-| project Timestamp, DeviceName, AccountName,
-          ParentProc = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          RunnerContext = InitiatingProcessFolderPath,
-          FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Egress to TeamPCP Trivy C2 (scan.aquasecurtiy.org / 45.148.10.212 + Cloudflare-tunnel fallback)
-
-`UC_3_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.148.10.212","83.142.209.203","94.154.172.43") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let c2Domains = dynamic(["scan.aquasecurtiy.org","plug-tab-protective-relay.trycloudflare.com"]);
-let c2IPs = dynamic(["45.148.10.212","83.142.209.203","94.154.172.43"]);
-DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl in~ (c2Domains) or RemoteIP in (c2IPs)
-| project Timestamp, DeviceName,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteUrl, RemoteIP, RemotePort
+| where FileName in~ ("bash","sh","dash","kubectl")
+| where ProcessCommandLine has_all ("kubectl", "get secrets", "--all-namespaces")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -159,4 +224,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
