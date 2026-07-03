@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Azure AD MFA push-bombing / fatigue burst followed by successful sign-in (Scattered Spider)
 
-`UC_21_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_22_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ AADSignInEventsBeta
 
 ### Helpdesk-initiated password reset followed by privileged account remote logon
 
-`UC_21_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_22_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ Resets
 
 ### Genymotion/Genymobile Android emulator execution on a corporate endpoint
 
-`UC_21_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_22_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### DragonForce encryptor bulk file encryption (Scattered Spider impact)
 
-`UC_21_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_22_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
