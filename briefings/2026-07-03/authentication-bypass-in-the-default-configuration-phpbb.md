@@ -19,7 +19,9 @@ To get you up to speed, phpBB is an old forum software that's st…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1078.001** — Valid Accounts: Default Accounts
 - **T1078** — Valid Accounts
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -27,22 +29,47 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### phpBB CVE-2026-48611 auth bypass via apache provider on login_link flow
+### phpBB CVE-2026-48611 auth bypass: login_link flow with auth_provider=apache
 
 `UC_0_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method values(Web.http_user_agent) as user_agent from datamodel=Web where (Web.url="*auth_provider=apache*" AND (Web.uri_path="*ucp.php*" OR Web.url="*mode=login_link*" OR Web.url="*login_link_*")) by Web.src Web.dest Web.uri_path Web.url | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.http_method=POST Web.uri_path="/ucp.php" Web.uri_query="*auth_provider=apache*" (Web.uri_query="*mode=login_link*" OR Web.uri_query="*login_link_*") by Web.src Web.dest Web.uri_path Web.uri_query
+| `drop_dm_object_name("Web")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
-### phpBB post-bypass ACP access from CVE-2026-48611 exploit source IP
+### phpBB login_link_* query parameter (CVE-2026-48611 filter-evasion variant)
 
-`UC_0_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_0_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as _time from datamodel=Web where ((Web.url="*auth_provider=apache*" AND Web.uri_path="*ucp.php*") OR Web.uri_path="*adm/index.php*" OR Web.uri_path="*/adm/*") by Web.src Web.uri_path Web.url _time span=1s | `drop_dm_object_name(Web)` | eval phase=if(like(url,"%auth_provider=apache%"),"exploit",if(match(uri_path,"adm/"),"acp","other")) | stats min(eval(if(phase="exploit",_time,null()))) as exploit_time min(eval(if(phase="acp",_time,null()))) as acp_time values(uri_path) as paths by src | where isnotnull(exploit_time) AND isnotnull(acp_time) AND acp_time>=exploit_time AND (acp_time-exploit_time)<=1800 | eval delay_sec=acp_time-exploit_time | convert ctime(exploit_time) ctime(acp_time) | sort - acp_time
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.uri_query) as uri_query values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.uri_path="/ucp.php" Web.uri_query="*login_link_*" by Web.src Web.dest Web.uri_path
+| `drop_dm_object_name("Web")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+### phpBB ACP (/adm/) access shortly after a CVE-2026-48611 bypass request
+
+`UC_0_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as bypassTime from datamodel=Web where Web.http_method=POST Web.uri_path="/ucp.php" Web.uri_query="*auth_provider=apache*" Web.uri_query="*login_link*" by Web.src
+| `drop_dm_object_name("Web")`
+| rename src as attacker_src
+| join type=inner attacker_src [
+    | tstats `summariesonly` min(_time) as adminTime values(Web.uri_path) as admin_paths from datamodel=Web where Web.uri_path IN ("/adm/index.php","/adm/","/mcp.php") by Web.src
+    | `drop_dm_object_name("Web")`
+    | rename src as attacker_src ]
+| where adminTime >= bypassTime AND adminTime <= bypassTime + 900
+| eval delaySec = adminTime - bypassTime
+| convert ctime(bypassTime) ctime(adminTime)
+| table attacker_src bypassTime adminTime delaySec admin_paths
 ```
 
 ### OAuth consent / suspicious app grant
@@ -106,4 +133,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
