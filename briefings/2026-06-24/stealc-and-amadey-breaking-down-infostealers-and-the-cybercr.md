@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### Amadey rundll32 credential/clipper module execution from AppData
 
-`UC_109_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_108_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Amadey C2 check-in beacon to .php endpoint from AppData-resident process
 
-`UC_109_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_108_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### Amadey loader command handler spawning cmd/PowerShell from AppData self-copy
 
-`UC_109_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_108_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -594,7 +594,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — StealC and Amadey: Breaking down infostealers and the cybercrime services that d
 
-`UC_109_14` · phase: **exploit** · confidence: **High**
+`UC_108_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### TeamPCP Trivy stealer C2/exfil egress to typosquat & Checkmarx/LiteLLM domains
 
-`UC_11_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_10_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceNetworkEvents
 
 ### CI stealer reads /proc/<pid>/mem to scrape secrets from Runner.Worker
 
-`UC_11_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### TeamPCP sysmon.py systemd persistence beaconing ICP canister C2
 
-`UC_11_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

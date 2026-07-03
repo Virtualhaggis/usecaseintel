@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma/Hades Bun dropper executed via npm/pip lifecycle hook (setup_bun.js / bun_environment.js)
 
-`UC_156_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_155_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### TruffleHog secret-scanning spawned by npm/pip during install (Shai-Hulud credential harvest)
 
-`UC_156_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_155_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud/Miasma malicious GitHub Actions workflow file written to .github/workflows
 
-`UC_156_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_155_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceFileEvents
 
 ### Developer-runtime exfiltration to webhook.site (Shai-Hulud token drop)
 
-`UC_156_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_155_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceNetworkEvents
 
 ### Mass npm publish from a developer endpoint (worm self-replication)
 
-`UC_156_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_155_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

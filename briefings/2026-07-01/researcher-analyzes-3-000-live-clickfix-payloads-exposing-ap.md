@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### ClickFix launcher: explorer/WindowsTerminal spawning powershell/cmd/msiexec with immediate network egress
 
-`UC_55_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_54_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### ClickFix Downloads-folder AMSI-bypass orchestrator (Move-Item Downloads -> tar -xf -> conhost --headless)
 
-`UC_55_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_54_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### Contact to ClickFix API payload-delivery servers (comicstar.lat / babybon.cfd / merkantalolol.asia)
 
-`UC_55_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_54_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -339,7 +339,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Researcher Analyzes 3,000 Live ClickFix Payloads, Exposing API-Driven Malware De
 
-`UC_55_7` · phase: **exploit** · confidence: **High**
+`UC_54_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

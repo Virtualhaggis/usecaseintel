@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI codeMode escape: Node.js process spawning OS shell for recon/secret access
 
-`UC_145_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_144_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### PraisonAI codeMode Function-constructor prototype-chain escape payload signature
 
-`UC_145_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_144_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-vmmj-pfw7-fjwp: npm PraisonAI codeMode sandbox escape via
 
-`UC_145_0` · phase: **exploit** · confidence: **High**
+`UC_144_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
