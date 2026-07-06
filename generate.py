@@ -19795,7 +19795,10 @@ def _fetch_ghsa(source, since):
             pub = None
         if since and pub and pub < since:
             continue
-        if len(out) >= MAX_PER_SOURCE:
+        # MAX_PER_SOURCE=0 means 'no cap' (matching the RSS path's
+        # guard) - an unguarded >= 0 comparison broke out of the loop
+        # on the first entry and silently killed this source.
+        if MAX_PER_SOURCE > 0 and len(out) >= MAX_PER_SOURCE:
             break
         ghsa_id  = a.get("ghsa_id") or ""
         cve_id   = a.get("cve_id") or ""
@@ -19859,7 +19862,10 @@ def _fetch_kev(source, since):
             pub = None
         if since and pub and pub < since:
             continue
-        if len(out) >= MAX_PER_SOURCE:
+        # MAX_PER_SOURCE=0 means 'no cap' (matching the RSS path's
+        # guard) - an unguarded >= 0 comparison broke out of the loop
+        # on the first entry and silently killed this source.
+        if MAX_PER_SOURCE > 0 and len(out) >= MAX_PER_SOURCE:
             break
         cve = v.get("cveID", "") or ""
         vname = v.get("vulnerabilityName", "") or ""
