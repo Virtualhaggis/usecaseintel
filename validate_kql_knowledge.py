@@ -164,7 +164,10 @@ def _build_prompt(article: dict, ind: dict) -> str:
             .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)")
             .replace("<<DEFENDER_SCHEMA>>", generate._DEFENDER_SCHEMA_BLOCK)
             .replace("<<SENTINEL_SCHEMA>>", generate._SENTINEL_SCHEMA_BLOCK)
-            .replace("<<KQL_KNOWLEDGE>>", generate._KQL_KNOWLEDGE_BLOCK))
+            # Article-aware knowledge selection — slim base plus the
+            # example/table sections generate.py picks for this article.
+            .replace("<<KQL_KNOWLEDGE>>",
+                     generate._kql_knowledge_for(f"{title}\n{body}")))
 
 
 def run_prompt_shape() -> int:

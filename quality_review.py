@@ -240,8 +240,16 @@ def list_recent_articles(top_n: int = 30) -> list[dict]:
     if LAST_RUN_ARTICLES.exists():
         try:
             data = json.loads(LAST_RUN_ARTICLES.read_text(encoding="utf-8"))
+            # generate.py writes {"ts":..., "count":..., "articles":[...]} —
+            # iterate the article list, not the wrapper dict. (Iterating the
+            # dict yields its string keys, which crashed this reader on every
+            # pass and silently demoted it to the briefings/ directory scan,
+            # losing the severity-ranked ordering.)
+            entries = data.get("articles") if isinstance(data, dict) else data
             arts = []
-            for a in data:
+            for a in entries or []:
+                if not isinstance(a, dict):
+                    continue
                 arts.append({
                     "id": a.get("id"),
                     "url": a.get("url") or "",
