@@ -33,8 +33,13 @@ REM Dual-account failover enabled: setup_dual_account.ps1 has provisioned
 REM both per-account config dirs. Same PRIMARY=A / SECONDARY=B pair used
 REM across every scheduled batch so a sticky switch persists for the run.
 REM To revert to default %USERPROFILE%\.claude, re-comment both lines.
-set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
-set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
+REM 2026-07-06: dual-account sessions (.claude-acct-a/b) are still expired
+REM (401 since ~06-21) — run_once.bat / run_review.bat already fell back to
+REM the default %USERPROFILE%\.claude session on 06-26, but this file was
+REM missed, so daily/weekly LLM calls were routing to dead accounts.
+REM Re-run setup_dual_account.ps1 and un-comment both lines to restore.
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 
 for /f %%a in ('powershell -nop -c "Get-Date -Format yyyy-MM-dd"') do set TS=%%a

@@ -27,8 +27,11 @@ REM LLM lens review (Tier 2) + prompt-proposal drafting (Tier 3) use the same
 REM dual-account Claude OAuth path as the pipeline. Drop --with-llm below to run
 REM deterministic-only (no LLM cost): the lint, auto-fix, and proposal RECORDING
 REM all work without it; only the LLM-authored suggestions/drafts are skipped.
-set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
-set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
+REM 2026-07-06: dual-account sessions expired (401 since ~06-21) — fall back
+REM to the default %USERPROFILE%\.claude session like run_once.bat. Re-run
+REM setup_dual_account.ps1 and un-comment both lines to restore failover.
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 
 py -u site_review.py --with-llm 1>>"%LOG%" 2>>&1
