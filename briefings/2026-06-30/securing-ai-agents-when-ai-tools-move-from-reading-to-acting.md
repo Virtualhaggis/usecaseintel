@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Securing AI agents: When AI tools move from reading to acting
 
-`UC_90_1` · phase: **exploit** · confidence: **High**
+`UC_114_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

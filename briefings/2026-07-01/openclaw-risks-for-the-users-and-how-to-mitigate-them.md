@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### OpenClaw agent runtime exfiltrating to Telegram Bot API
 
-`UC_80_1` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_1` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### OpenClaw agent runtime spawning shell to harvest credential/token files
 
-`UC_80_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

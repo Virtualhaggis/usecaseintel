@@ -11,26 +11,19 @@ By Bill Toulas
 July 4, 2026
 10:16 AM
 0 
-
-
 Researchers identified what they believe is the first documented case of a ransomware operation, JadePuffer, conducted entirely by a large language model (LLM) agent.
-
-
 According to cloud security company Sysdig, JadePuffer used an autonomous AI agent for reconnaissance on the target, to steal credentials, move laterally, establish persistence, escalate privileges, and to encrypt data.
-…
+The resea…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-3248`
 - **CVE:** `CVE-2021-29441`
-- **IPv4 (defanged):** `45.131.66.106`
-- **IPv4 (defanged):** `64.20.53.230`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
@@ -55,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow server process spawning shell/credential-recon after CVE-2025-3248 RCE
 
-`UC_19_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +69,7 @@ DeviceProcessEvents
 
 ### CVE-2025-3248 Langflow exploit — POST to /api/v1/validate/code
 
-`UC_19_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_27_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +78,7 @@ DeviceProcessEvents
 
 ### JadePuffer C2 beaconing to 45.131.66.106 / 64.20.53.230
 
-`UC_19_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_27_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +96,7 @@ DeviceNetworkEvents
 
 ### Cron persistence written by a web-server process (JadePuffer 30-min beacon)
 
-`UC_19_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +115,7 @@ DeviceFileEvents
 
 ### Nacos CVE-2021-29441 auth bypass — rogue admin creation via Nacos-Server UA
 
-`UC_19_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +124,7 @@ DeviceFileEvents
 
 ### Nacos database ransomware — AES_ENCRYPT + config_info drop + README_RANSOM table
 
-`UC_19_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_27_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -299,13 +292,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `45.131.66.106`, `64.20.53.230`
-
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-3248`, `CVE-2021-29441`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### npm install-time script executing 'node .' postinstall payload
 
-`UC_1164_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_2171_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### npm dropper exfiltration to pkgio.com telemetry server
 
-`UC_1164_5` · phase: **exfil** · confidence: **High** · AI-generated for this article
+`UC_2171_5` · phase: **exfil** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk finds 200+ malicious npm packages, including Cobalt Strike dependency confu
 
-`UC_1164_3` · phase: **exploit** · confidence: **High**
+`UC_2171_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

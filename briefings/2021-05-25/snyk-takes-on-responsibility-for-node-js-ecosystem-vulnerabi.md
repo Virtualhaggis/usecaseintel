@@ -26,7 +26,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk takes on responsibility for Node.js ecosystem vulnerability disclosure prog
 
-`UC_1426_0` · phase: **exploit** · confidence: **High**
+`UC_3123_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

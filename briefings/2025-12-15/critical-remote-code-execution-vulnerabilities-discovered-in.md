@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js process downloads payload via curl/wget (React2Shell SNOWLIGHT/VShell deployment)
 
-`UC_445_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_691_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ DeviceProcessEvents
 
 ### Vulnerable React Server Components or Next.js App Router versions present in inventory
 
-`UC_445_4` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_691_4` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Remote Code Execution Vulnerabilities Discovered in React Server Compon
 
-`UC_445_2` · phase: **exploit** · confidence: **High**
+`UC_691_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

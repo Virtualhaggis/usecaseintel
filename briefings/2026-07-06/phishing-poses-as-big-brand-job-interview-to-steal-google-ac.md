@@ -11,16 +11,16 @@ By Ionut Ilascu
 July 6, 2026
 04:27 PM
 0 
-
-
 A phishing campaign is impersonating more than 30 well-known brands, including Adobe, Netflix, Coca-Cola, and OpenAI, in fake job interviews to steal Google account credentials from marketing professionals.
-
-
-The operation is abusing the legitimate cloud-based PeopleForce human resources platform and a domain associated with the Salesforce Marketing Cloud service before redirecting…
+The operation is abusing the legitimate cloud-based PeopleForce human resources platform and a domain associated with the Salesforce Marketing Cloud service before redirecting the rec…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `adidas-hiring.com`
+- **Domain (defanged):** `exct.net`
+- **Domain (defanged):** `wiseagent.com`
+- **Domain (defanged):** `satoshicommands.com`
+- **Domain (defanged):** `hrguxhellito281.onrender.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound recruiter-themed job-interview phish linking to Salesforce/exct.net → wiseagent redirect infra
 
-`UC_0_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_6_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -240,7 +240,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `adidas-hiring.com`
+  - IP / domain IOC(s): `adidas-hiring.com`, `exct.net`, `wiseagent.com`, `satoshicommands.com`, `hrguxhellito281.onrender.com`
 
 
 ## Why this matters

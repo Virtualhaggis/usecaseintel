@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 10 Dimensions of Python Static Analysis
 
-`UC_666_0` · phase: **exploit** · confidence: **High**
+`UC_1251_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

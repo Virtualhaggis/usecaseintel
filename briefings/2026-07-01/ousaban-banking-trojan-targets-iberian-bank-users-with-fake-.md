@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Ousaban persistence via 'Financeiro' Run key
 
-`UC_70_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_92_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceRegistryEvents
 
 ### Ousaban payload staging in C:\SysMain_5874288
 
-`UC_70_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_92_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceFileEvents
 
 ### Ousaban C2 egress from SysMain_5874288 binary
 
-`UC_70_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_92_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

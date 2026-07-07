@@ -11,12 +11,8 @@ Sponsored by BeyondTrust
 July 6, 2026
 10:00 AM
 0 
-
-
 Author: Morey J. Haber, Chief Security Advisor, BeyondTrust 
-
-
-Every major evolution in software development has reduced the friction between an idea and a deployable solution. Waterfall optimized execution against a plan. Agile optimized adaptation to change. DevOps optimized continuous delivery. Today, generative artificial intelligence and Vibe Coding optimize creation fo…
+Every major evolution in software development has reduced the friction between an idea and a deployable solution. Waterfall optimized execution against a plan. Agile optimized adaptation to change. DevOps optimized continuous delivery. Today, generative artificial intelligence and Vibe Coding optimize creation for anyone…
 
 ## Indicators of Compromise (high-fidelity only)
 

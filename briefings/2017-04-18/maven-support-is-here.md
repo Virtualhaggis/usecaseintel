@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Maven support is here!
 
-`UC_1918_0` · phase: **exploit** · confidence: **High**
+`UC_3615_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

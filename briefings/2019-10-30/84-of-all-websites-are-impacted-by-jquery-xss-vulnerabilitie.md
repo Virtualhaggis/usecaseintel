@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 84% of all websites are impacted by jQuery XSS vulnerabilities
 
-`UC_1736_0` · phase: **exploit** · confidence: **High**
+`UC_3433_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

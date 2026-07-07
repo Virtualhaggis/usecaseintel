@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Pegasus HomeKit operator email IOC (rauharepo888@gmail.com) in mail flow
 
-`UC_32_9` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_40_9` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

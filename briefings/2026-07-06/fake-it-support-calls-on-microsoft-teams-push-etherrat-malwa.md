@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 6, 2026
 04:23 PM
 0 
-
-
 Threat actors are abusing Microsoft Teams voice calls by impersonating corporate IT support staff to trick employees into installing the EtherRAT malware, giving attackers initial access to corporate networks.
-
-
-The campaign, reported by Palo Alto Networks' Unit 42, combines phishing emails, Microsoft Teams voice calls, legitimate remote management tools, and a Node.js-based malware…
+The campaign, reported by Palo Alto Networks' Unit 42, combines phishing emails, Microsoft Teams voice calls, legitimate remote management tools, and a Node.js-based malware loader …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -51,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### External Microsoft Teams chat/call from unfamiliar tenant impersonating IT/helpdesk
 
-`UC_1_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +72,7 @@ CloudAppEvents
 
 ### Dual remote-access tools (HopToDesk + AnyDesk) installed on same host within short window
 
-`UC_1_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_7_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +95,7 @@ DeviceProcessEvents
 
 ### Msiexec installing remote EtherRAT loader MSI (v#.msi) from camorreado.click
 
-`UC_1_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +116,7 @@ DeviceProcessEvents
 
 ### Endpoint DNS/network egress to EtherRAT delivery & C2 domain camorreado.click
 
-`UC_1_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_7_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -404,7 +400,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake IT support calls on Microsoft Teams push EtherRAT malware
 
-`UC_1_8` · phase: **exploit** · confidence: **High**
+`UC_7_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

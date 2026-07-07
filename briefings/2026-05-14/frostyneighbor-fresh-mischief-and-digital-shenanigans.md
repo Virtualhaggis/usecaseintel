@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### FrostyNeighbor PicassoLoader drop to %AppData%\WinDataScope\Update.js
 
-`UC_235_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_367_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### FrostyNeighbor JS dropper self-relaunch with --update flag
 
-`UC_235_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_367_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### FrostyNeighbor C2 callout to needbinding/nebao/algsat/sardk/alexavegas/lavanille
 
-`UC_235_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_367_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ union NetHits, EventHits
 
 ### PicassoLoader scheduled-task creation by wscript/cscript after C2 XML fetch
 
-`UC_235_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_367_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### FrostyNeighbor Cobalt Strike beacon ViberPC.dll image load
 
-`UC_235_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_367_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -491,7 +491,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — FrostyNeighbor: Fresh mischief and digital shenanigans
 
-`UC_235_11` · phase: **exploit** · confidence: **High**
+`UC_367_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

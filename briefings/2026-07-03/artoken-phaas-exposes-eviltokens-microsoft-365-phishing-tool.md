@@ -11,44 +11,12 @@ By Lawrence Abrams
 July 3, 2026
 10:12 AM
 0 
-
-
 A new phishing-as-a-service (PhaaS) platform dubbed "ARToken" appears to operate as an affiliate of the EvilTokens phishing platform, giving researchers a glimpse into an extensive toolkit designed to compromise Microsoft 365.
-
-
-Cisco Talos researchers discovered the platform while investigating phishing infrastructure used in an incident response engagement and identified a React…
+Cisco Talos researchers discovered the platform while investigating phishing infrastructure used in an incident response engagement and identified a React-based m…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `dashboard-bl.pamconj.com`
-- **Domain (defanged):** `spx.pamconj.com`
-- **Domain (defanged):** `clear90489058903-document.workers.dev`
-- **Domain (defanged):** `authdocspro.com`
-- **Domain (defanged):** `backdoor-hub.com`
-- **Domain (defanged):** `docusend.networkssolutionmail.com`
-- **Domain (defanged):** `eventcalender-schedule.com`
-- **Domain (defanged):** `evobothub.org`
-- **Domain (defanged):** `framebound.cloud`
-- **Domain (defanged):** `infinitechai.org`
-- **Domain (defanged):** `internalmemorecord.bxwancheng.com`
-- **Domain (defanged):** `mirsanotolastik.com`
-- **Domain (defanged):** `mirzanyapi.com`
-- **Domain (defanged):** `newmobilepolojean.com`
-- **Domain (defanged):** `notificationsmanagersec.com`
-- **Domain (defanged):** `promanager.outboundciwidey.com`
-- **Domain (defanged):** `serenitygovsupplys.com`
-- **Domain (defanged):** `signaturerequired.thecoolcactus.com`
-- **Domain (defanged):** `statushelper.aguasomos.com`
-- **Domain (defanged):** `suctwocesonesstory.com`
-- **Domain (defanged):** `topbuysella.com`
-- **Domain (defanged):** `update.youcreadio.cfd`
-- **Domain (defanged):** `well.atlantaperlnatal.com`
-- **Domain (defanged):** `youremplregroup.com`
-- **Domain (defanged):** `adobe-lar.denise-chxhistory-com-s-account.workers.dev`
-- **Domain (defanged):** `docusign-vs4.finance-zltnservices-org-s-account.workers.dev`
-- **Domain (defanged):** `onedrive-au8.hayixa9795-pazard-com-s-account.workers.dev`
-- **Domain (defanged):** `sharepoint-uo2.angela-warrconstructioninc-onmicrosoft-com-s-account.workers.dev`
-- **Domain (defanged):** `page-voicemail-3i6.ucbqzm9-ucl-ac-uk-s-account.workers.dev`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -62,7 +30,6 @@ Cisco Talos researchers discovered the platform while investigating phishing inf
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1071** — Application Layer Protocol
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1656** — Impersonation
 - **T1621** — Multi-Factor Authentication Request Generation
@@ -82,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### ARToken/EvilTokens invoice-lure phish delivered with look-alike SharePoint / Workers IOC URL
 
-`UC_29_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_37_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +71,7 @@ EmailEvents
 
 ### Successful Entra device-code authentication (EvilTokens/ARToken MFA bypass)
 
-`UC_29_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_37_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +97,7 @@ AADSignInEventsBeta
 
 ### Entra device registration by a user who just completed device-code auth (PRT persistence)
 
-`UC_29_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_37_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +124,7 @@ AADSignInEventsBeta
 
 ### Malicious inbox rule that hides/deletes/forwards mail (ARToken BEC evidence suppression)
 
-`UC_29_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_37_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +149,7 @@ CloudAppEvents
 
 ### Endpoint egress/DNS to ARToken phishing domains and {uuid}-service.workers.dev hosts
 
-`UC_29_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_37_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -203,7 +170,7 @@ DeviceNetworkEvents
 
 ### Bulk SharePoint/OneDrive download fan-out after M365 account takeover (ARToken data theft)
 
-`UC_29_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_37_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -427,14 +394,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `dashboard-bl.pamconj.com`, `spx.pamconj.com`, `clear90489058903-document.workers.dev`, `authdocspro.com`, `backdoor-hub.com`, `docusend.networkssolutionmail.com`, `eventcalender-schedule.com`, `evobothub.org` _(+21 more)_
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

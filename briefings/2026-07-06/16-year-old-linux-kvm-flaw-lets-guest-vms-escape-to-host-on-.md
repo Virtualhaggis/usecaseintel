@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Unpatched x86 KVM host exposed to Januscape guest-to-host escape (CVE-2026-53359)
 
-`UC_4_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_10_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### KVM shadow-MMU use-after-free host panic (Januscape PoC signature)
 
-`UC_4_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ index=* (sourcetype=syslog OR sourcetype=linux_secure OR sourcetype="kernel") "k
 
 ### Out-of-tree kernel module load on KVM host/guest (Januscape exploit prerequisite)
 
-`UC_4_9` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_10_9` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -232,7 +232,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 16-Year-Old Linux KVM Flaw Lets Guest VMs Escape to Host on Intel and AMD x86 Sy
 
-`UC_4_6` · phase: **install** · confidence: **High**
+`UC_10_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Lazarus lookalike Rollup-polyfill npm packages installed in build/dev tree
 
-`UC_28_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_36_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### npm/node egress to hardcoded second-stage payload server 216.126.236.244
 
-`UC_28_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### Node.js dead-drop fetch from JSONKeeper (jsonkeeper.com) resolver
 
-`UC_28_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceNetworkEvents
 
 ### security-alerts-sdk Python backdoor beacon to 142.93.211.30:5000
 
-`UC_28_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceNetworkEvents
 
 ### OtterCookie-overlap RAT dependency @nut-tree-fork/nut-js pulled into npm tree
 
-`UC_28_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_36_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

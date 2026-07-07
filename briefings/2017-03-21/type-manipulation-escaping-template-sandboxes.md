@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Dust.js qs type-manipulation RCE payload in web request query string
 
-`UC_1921_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3618_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js process spawning shell/curl to read and exfiltrate /etc/passwd (Dust.js post-exploit)
 
-`UC_1921_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3618_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Type Manipulation: Escaping Template Sandboxes
 
-`UC_1921_0` · phase: **exploit** · confidence: **High**
+`UC_3618_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
