@@ -1,751 +1,3 @@
-<article class="card" id="art-469" data-art-slug="2026-04-02-you-patched-litellm-but-do-you-know-your-ai-blast-radius"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190,T1195.002"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="cloud,endpoint,network"
-  data-targets="aws,kubernetes,linux,windows"
-  data-uc-count="8" data-llm-uc-count="6"
-  data-search="You Patched LiteLLM, But Do You Know Your AI Blast Radius? The LiteLLM compromise showed AI risk extends beyond dependencies. Use Evo AI-SPM to map your full AI blast radius, securing connected models, tools, and agent workflows.1  T1190 T1195.002 [LLM] Compromised litellm 1.82.7 / 1.82.8 PyPI install (TeamPCP supply-chain) [LLM] litellm_init.pth Python autoload persistence drop [LLM] WAV-disguised stager pull from TeamPCP loader 83.142.209.203:8080 [LLM] TeamPCP C2 / exfil egress to models.litellm.cloud, checkmarx.zone and AS205759 nodes [LLM] Linux user-systemd sysmon persistence drop (~/.config/sysmon/sysmon.py + sysmon.service) [LLM] Kubernetes privileged-pod DaemonSet fan-out from compromised LiteLLM workload Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-04-02-you-patched-litellm-but-do-you-know-your-ai-blast-radius" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/litellm-ai-blast-radius/" target="_blank" rel="noopener">You Patched LiteLLM, But Do You Know Your AI Blast Radius?</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2026-04-02</span>
-    <span>8 use cases</span>
-    <span>2 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">The LiteLLM compromise showed AI risk extends beyond dependencies. Use Evo AI-SPM to map your full AI blast radius, securing connected models, tools, and agent workflows.1</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">models.litellm.cloud</span> <span class="ind ">checkmarx.zone</span> <span class="ind ">aquasecurtiy.org</span> <span class="ind ">tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io</span> <span class="ind ">championships-peoples-point-cassette.trycloudflare.com</span> <span class="ind ">investigation-launches-hearings-copying.trycloudflare.com</span> <span class="ind ">souls-entire-defined-routes.trycloudflare.com</span></div>
-<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">83.142.209.203</span> <span class="ind ">83.142.209.11</span> <span class="ind ">46.151.182.203</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-469-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-469"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-469-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] WAV-disguised stager pull from TeamPCP loader 83.142.209.203:8080</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Compromised litellm 1.82.7 / 1.82.8 PyPI install (TeamPCP supply-chain) · [LLM] litellm_init.pth Python autoload persistence drop · [LLM] Linux user-systemd sysmon persistence drop (~/.config/sysmon/sysmon.py + sysmon.service)</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] TeamPCP C2 / exfil egress to models.litellm.cloud, checkmarx.zone and AS205759 nodes · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Kubernetes privileged-pod DaemonSet fan-out from compromised LiteLLM workload</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="8b4987f640" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">Compromised litellm 1.82.7 / 1.82.8 PyPI install (TeamPCP supply-chain)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8b4987f640" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts pip/uv/poetry installing the exact malicious LiteLLM versions published by TeamPCP on 2026-03-24 (online ~40 min before PyPI quarantine). Catches the initial-access moment before .pth persistence and credential harvesting fire.
-
-Rationale: Pivots on the two exact malicious version strings (1.82.7, 1.82.8) confirmed across Datadog Security Labs, Trend Micro, JFrog and the official LiteLLM security advisory. Hard-pin to pip/uv/poetry/python parents to keep noise off.
-
-Cross-checked against:
-  • https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  • https://docs.litellm.ai/blog/security-update-march-2026
-  • https://research.jfrog.com/post/litellm-compromised-teampcp/
-  • https://www.trendmicro.com/en_us/research/26/c/your-ai-stack-just-handed-over-your-root-keys-inside-the-litellm-pypi-breach.html
-  • https://www.sonatype.com/blog/compromised-litellm-pypi-package-delivers-multi-stage-credential-stealer</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher detonating the IOC in an isolated lab VM</li><li>SCA tooling that reproduces the version string in a scan log (filter by tool process)</li><li>Internal mirror cache replaying the version string in a build pipeline scan</li><li>Forensic responder running `pip show litellm==1.82.8` to confirm presence (this is a wanted hit, not an FP)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;snyk.exe&quot;,&quot;snyk&quot;,&quot;trivy&quot;,&quot;trivy.exe&quot;,&quot;grype&quot;,&quot;grype.exe&quot;,&quot;safety&quot;,&quot;safety.exe&quot;) or InitiatingProcessCommandLine has_any (&quot;scan&quot;,&quot;audit&quot;,&quot;vuln&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: pull `pip show litellm` and `pip index versions litellm` from the host; check the install timestamp against 2026-03-24 10:39 UTC ± 40 min window plus the post-quarantine grace period during which mirrors continued serving. Contain: isolate the host, rotate every cloud/CI/SSH/Kubernetes credential reachable from that host (assume full credential blast radius — Mercor lost source code this way), and uninstall litellm before reinstalling a known-good ≥1.82.9. Hunt: pivot on the host&#x27;s network telemetry for the C2 + WAV-stager IOCs in UC3/UC4; check for the `litellm_init.pth` persistence drop in UC2.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-469-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-469-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-469-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-469-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-469-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-469-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-469-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;uv&quot;,&quot;uv.exe&quot;,&quot;poetry&quot;,&quot;poetry.exe&quot;))
-    or (InitiatingProcessFileName in~ (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;uv.exe&quot;,&quot;poetry.exe&quot;))
-| where ProcessCommandLine has_any (&quot;litellm==1.82.7&quot;,&quot;litellm==1.82.8&quot;,&quot;litellm-1.82.7&quot;,&quot;litellm-1.82.8&quot;)
-    or InitiatingProcessCommandLine has_any (&quot;litellm==1.82.7&quot;,&quot;litellm==1.82.8&quot;,&quot;litellm-1.82.7&quot;,&quot;litellm-1.82.8&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-  (SecurityEvent
-   | where TimeGenerated &gt; ago(30d)
-   | where EventID == 4688
-   | where NewProcessName endswith &quot;\\pip.exe&quot; or NewProcessName endswith &quot;\\pip3.exe&quot;
-        or NewProcessName endswith &quot;\\python.exe&quot; or NewProcessName endswith &quot;\\python3.exe&quot;
-        or NewProcessName endswith &quot;\\uv.exe&quot; or NewProcessName endswith &quot;\\poetry.exe&quot;
-   | where CommandLine has_any (&quot;litellm==1.82.7&quot;,&quot;litellm==1.82.8&quot;,&quot;litellm-1.82.7&quot;,&quot;litellm-1.82.8&quot;)
-   | project TimeGenerated, Computer, Account=TargetUserName, NewProcessName, CommandLine, ParentProcessName),
-  (Syslog
-   | where TimeGenerated &gt; ago(30d)
-   | where SyslogMessage has_any (&quot;litellm==1.82.7&quot;,&quot;litellm==1.82.8&quot;,&quot;litellm-1.82.7&quot;,&quot;litellm-1.82.8&quot;)
-   | project TimeGenerated, Computer, ProcessName, SyslogMessage)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: TeamPCP LiteLLM Compromised PyPI Install (1.82.7 / 1.82.8)
-id: 8b3c54a1-9f2c-4e7c-a6b1-7f1d4b5a2e90
-description: Detects pip/uv/poetry installing the malicious litellm 1.82.7 or 1.82.8 PyPI versions published by TeamPCP on 2026-03-24.
-references:
-  - https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  - https://docs.litellm.ai/blog/security-update-march-2026
-  - https://www.trendmicro.com/en_us/research/26/c/your-ai-stack-just-handed-over-your-root-keys-inside-the-litellm-pypi-breach.html
-author: SOC Detection Engineering
-date: 2026/05/21
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-  - attack.execution
-  - attack.t1059.006
-logsource:
-  category: process_creation
-detection:
-  selection_img:
-    Image|endswith:
-      - &#x27;\pip.exe&#x27;
-      - &#x27;\pip3.exe&#x27;
-      - &#x27;\python.exe&#x27;
-      - &#x27;\python3.exe&#x27;
-      - &#x27;\uv.exe&#x27;
-      - &#x27;\poetry.exe&#x27;
-      - &#x27;/pip&#x27;
-      - &#x27;/pip3&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/uv&#x27;
-      - &#x27;/poetry&#x27;
-  selection_cmd:
-    CommandLine|contains:
-      - &#x27;litellm==1.82.7&#x27;
-      - &#x27;litellm==1.82.8&#x27;
-      - &#x27;litellm-1.82.7&#x27;
-      - &#x27;litellm-1.82.8&#x27;
-  condition: selection_img and selection_cmd
-falsepositives:
-  - Forensic researcher pulling the IOC sample into a sandbox; whitelist by host
-level: high</code></pre></div>
-    <div class="tab-content" id="art-469-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.security OR source:windows.sysmon OR source:linux.auditd) (@CommandLine:(*litellm==1.82.7* OR *litellm==1.82.8* OR *litellm-1.82.7* OR *litellm-1.82.8*) OR @process.command_line:(*litellm==1.82.7* OR *litellm==1.82.8* OR *litellm-1.82.7* OR *litellm-1.82.8*))</code></pre></div>
-    <div class="tab-content" id="art-469-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| (ImageFileName=/(pip|pip3|python|python3|uv|poetry)(\.exe)?$/i OR ParentBaseFileName=/(pip|pip3|python|python3|uv|poetry)(\.exe)?$/i)
-| regex(&quot;litellm[=\\-]1\\.82\\.(7|8)&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-469-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-469-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-469-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-469-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;uv.exe&quot;,&quot;uv&quot;,&quot;poetry.exe&quot;,&quot;poetry&quot;)) AND (Processes.process=&quot;*litellm==1.82.7*&quot; OR Processes.process=&quot;*litellm==1.82.8*&quot; OR Processes.process=&quot;*litellm-1.82.7*&quot; OR Processes.process=&quot;*litellm-1.82.8*&quot;) by host, user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-469-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;uv.exe&quot;,&quot;uv&quot;,&quot;poetry.exe&quot;,&quot;poetry&quot;)) AND (Processes.process=&quot;*litellm==1.82.7*&quot; OR Processes.process=&quot;*litellm==1.82.8*&quot; OR Processes.process=&quot;*litellm-1.82.7*&quot; OR Processes.process=&quot;*litellm-1.82.8*&quot;) by host, user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2eef6dcae6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">litellm_init.pth Python autoload persistence drop</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="2eef6dcae6" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the creation of `litellm_init.pth` under site-packages — TeamPCP&#x27;s auto-execution mechanism that fires on every Python interpreter startup, even when LiteLLM itself is never imported. Version 1.82.8&#x27;s signature persistence file.
-
-Rationale: `litellm_init.pth` is the unique persistence-file artefact called out by Datadog Security Labs, SafeDep and Sonatype — Python `.pth` autoload abuse is the differentiator vs 1.82.7 (which executes via `setup.py`). High-signal, no legitimate reuse of this filename in any clean LiteLLM release.
-
-Cross-checked against:
-  • https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  • https://safedep.io/malicious-litellm-1-82-8-analysis/
-  • https://www.sonatype.com/blog/compromised-litellm-pypi-package-delivers-multi-stage-credential-stealer</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Event Triggered Execution">T1546</span> <span class="ind tech" title="Hijack Execution Flow">T1574</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Forensic copy of the malicious artefact into a sandbox or DFIR collection share (filter by sandbox host group)</li><li>SCA tool unpacking the .whl to a temp dir for inspection</li><li>File-system imaging utility copying a quarantined sample across paths</li><li>Backup software replicating a known-bad-but-quarantined file</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: cat the `.pth` and confirm it contains an `exec()` / `__import__` call (the malicious version executes a base64-decoded loader; the legit Python `.pth` files contain ONLY import lines). Contain: delete the file, then `pip uninstall litellm` and treat the host as credential-compromised — rotate ssh keys, ~/.aws, ~/.kube, ~/.docker, ~/.netrc, env-var secrets, CI runner tokens. Hunt: pivot on the writing process&#x27;s later behaviour for the WAV-stager pull (UC3) and the TeamPCP C2 egress (UC4) within ±2 h of the write.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-469-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-469-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-469-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-469-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-469-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-469-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-469-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where FileName =~ &quot;litellm_init.pth&quot; or FolderPath has &quot;litellm_init.pth&quot;
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where TargetFileName =~ &quot;litellm_init.pth&quot; or TargetFilePath has &quot;litellm_init.pth&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, EventType,
-          TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: TeamPCP LiteLLM .pth Autoload Persistence File Write
-id: 4d6a91f8-3e0a-4a3a-8f5e-2c4d9e7b1a02
-description: Detects creation of litellm_init.pth, the auto-execution persistence file dropped by malicious litellm 1.82.8.
-references:
-  - https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  - https://safedep.io/malicious-litellm-1-82-8-analysis/
-author: SOC Detection Engineering
-date: 2026/05/21
-tags:
-  - attack.persistence
-  - attack.t1546
-  - attack.defense_evasion
-  - attack.t1574
-logsource:
-  category: file_event
-detection:
-  selection:
-    TargetFilename|contains: &#x27;litellm_init.pth&#x27;
-  condition: selection
-falsepositives:
-  - Legitimate upstream LiteLLM release reusing the filename (unlikely; not present in any clean release through 1.82.6 or 1.82.9+)
-level: high</code></pre></div>
-    <div class="tab-content" id="art-469-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:11 @TargetFilename:*litellm_init.pth*) OR (source:linux.auditd @file.path:*litellm_init.pth*) OR (source:windows.defender @FilePath:*litellm_init.pth*)</code></pre></div>
-    <div class="tab-content" id="art-469-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;litellm_init\\.pth&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName, ContextProcessId], function=count())</code></pre></div>
-    <div class="tab-content" id="art-469-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-469-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-469-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-469-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;litellm_init.pth&quot; OR Filesystem.file_path=&quot;*litellm_init.pth*&quot;) by host, user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-469-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;litellm_init.pth&quot; OR Filesystem.file_path=&quot;*litellm_init.pth*&quot;) by host, user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b6b925084c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="aws,linux,windows">
-  <summary>
-    <span class="uc-title">WAV-disguised stager pull from TeamPCP loader 83.142.209.203:8080</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b6b925084c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the second-stage download where the .pth/setup.py loader pulls a binary disguised as a .wav file from 83.142.209.203:8080. Confirmed across Trend Micro, JFrog and Hunt.io as the canonical TeamPCP stager fetch.
-
-Rationale: Hunt.io and Trend Micro both call out 83.142.209.203:8080 as the stager-fetch endpoint with WAV-file masquerade — the IP+port+file-extension combination is high-fidelity and was not used outside this campaign.
-
-Cross-checked against:
-  • https://hunt.io/blog/33k-exposed-litellm-teampcp-c2-supply-chain-attack
-  • https://www.trendmicro.com/en/research/26/c/inside-litellm-supply-chain-compromise.html
-  • https://research.jfrog.com/post/litellm-compromised-teampcp/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="Binary Padding / Steganography">T1027.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel team&#x27;s controlled-detonation sandbox subnet (whitelist by source range)</li><li>Honeynet replaying the IOC for purple-team validation</li><li>Internet-wide scanner (Censys, Shodan) hitting the IP — these almost never land on :8080 with a GET for a .wav file, but check</li><li>Security researcher reproducing the kill chain on an isolated VM</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;,&quot;detonation&quot;,&quot;malware-lab&quot;,&quot;purple-team&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: identify the InitiatingProcess on the host — confirm whether it&#x27;s a Python/pip interpreter (matches the attack chain) or something else (could be a different threat). Contain: block 83.142.209.203/32 at perimeter + endpoint, isolate the host, and treat as breach-confirmed if the parent is Python — proceed to full credential rotation per UC1 runbook. Hunt: pivot from this host to its outbound DNS history for the TeamPCP C2 domains in UC4 (models.litellm.cloud, checkmarx.zone) and check the file system for the .pth artefact from UC2.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-469-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-469-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-469-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-469-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-469-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-469-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-469-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where (RemoteIP == &quot;83.142.209.203&quot; and RemotePort == 8080)
-    or (RemoteIP == &quot;83.142.209.203&quot; and (RemoteUrl has &quot;.wav&quot; or RemoteUrl has &quot;/wav&quot;))
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Protocol,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-  (ImNetworkSession
-   | where TimeGenerated &gt; ago(30d)
-   | where DstIpAddr == &quot;83.142.209.203&quot; and DstPortNumber == 8080
-   | project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkBytes, Url),
-  (CommonSecurityLog
-   | where TimeGenerated &gt; ago(30d)
-   | where DestinationIP == &quot;83.142.209.203&quot; and DestinationPort == 8080
-   | project TimeGenerated, SourceIP, DestinationIP, DestinationPort, RequestURL, RequestMethod, ReceivedBytes, SentBytes, SourceUserName),
-  (ImWebSession
-   | where TimeGenerated &gt; ago(30d)
-   | where DstIpAddr == &quot;83.142.209.203&quot; or Url has &quot;83.142.209.203&quot;
-   | where Url has_any (&quot;.wav&quot;,&quot;:8080&quot;)
-   | project TimeGenerated, DvcHostname, SrcIpAddr, Url, HttpMethod, DstIpAddr, HttpResponseBodyBytes)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: TeamPCP LiteLLM WAV-Disguised Stager Pull (83.142.209.203:8080)
-id: 1f5c2b48-7e0d-4c6f-9b85-3a0e5d2c7491
-description: Detects outbound connection to TeamPCP loader IP 83.142.209.203 on port 8080, used by malicious LiteLLM 1.82.7/1.82.8 to fetch a .wav-disguised second-stage binary.
-references:
-  - https://hunt.io/blog/33k-exposed-litellm-teampcp-c2-supply-chain-attack
-  - https://www.trendmicro.com/en/research/26/c/inside-litellm-supply-chain-compromise.html
-author: SOC Detection Engineering
-date: 2026/05/21
-tags:
-  - attack.command_and_control
-  - attack.t1105
-  - attack.t1071.001
-logsource:
-  category: network_connection
-detection:
-  selection:
-    DestinationIp: &#x27;83.142.209.203&#x27;
-    DestinationPort: 8080
-  condition: selection
-falsepositives:
-  - Threat-intel team performing controlled IOC re-validation from a sandbox subnet
-level: high</code></pre></div>
-    <div class="tab-content" id="art-469-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>((source:windows.sysmon @EventID:3) OR source:linux.auditd OR source:cloudtrail) (@DestinationIp:83.142.209.203 OR @DestinationHostname:83.142.209.203 OR @network.destination.ip:83.142.209.203) @DestinationPort:8080</code></pre></div>
-    <div class="tab-content" id="art-469-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;83.142.209.203&quot; RemotePort=8080
-| groupBy([aid, ComputerName, ContextImageFileName, ContextProcessId, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-469-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-469-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-469-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-469-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;83.142.209.203&quot; AND All_Traffic.dest_port=8080) by host, All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.bytes_out | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-469-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;83.142.209.203&quot; AND All_Traffic.dest_port=8080) by host, All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.bytes_out | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2b5f0757c4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">TeamPCP C2 / exfil egress to models.litellm.cloud, checkmarx.zone and AS205759 nodes</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2b5f0757c4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts DNS resolution or direct egress to any of the TeamPCP campaign&#x27;s C2 / data-exfil endpoints: models.litellm.cloud (RSA-wrapped POST exfil), checkmarx.zone (50-min payload poll), the AdaptixC2 / Havoc backend IPs, and the trycloudflare / icp0.io rotators. These domains have no legitimate use.
-
-Rationale: All seven domains and four backend IPs are confirmed across Datadog, Hunt.io, JFrog and Sonatype as TeamPCP-exclusive infrastructure. `models.litellm.cloud` is a non-BerriAI lookalike used for AES-256/RSA-4096 POST exfil; `checkmarx.zone` is the 50-min loader-poll endpoint feeding AdaptixC2 (83.142.209.11) and Havoc (45.148.10.212). All hosted on AS205759 / Ghosty Networks bulletproof.
-
-Cross-checked against:
-  • https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  • https://hunt.io/blog/33k-exposed-litellm-teampcp-c2-supply-chain-attack
-  • https://research.jfrog.com/post/litellm-compromised-teampcp/
-  • https://www.trendmicro.com/en_us/research/26/c/inside-litellm-supply-chain-compromise.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Asymmetric Cryptography (RSA-4096 + AES-256)">T1573.002</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Domain Generation / Lookalike Domains">T1568.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>EDR/SIEM source resolving IOC for matching validation (whitelist by source-tool host)</li><li>Threat-intel platform pulling indicator metadata via API</li><li>Snyk / Cycode scanner doing IOC validation from a known scanning subnet</li><li>Honeynet replaying the IOC for purple-team exercise</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;snyk.exe&quot;,&quot;snyk&quot;,&quot;trivy&quot;,&quot;trivy.exe&quot;,&quot;censys.exe&quot;,&quot;shodan.exe&quot;) and DeviceName has_any (&quot;scanner&quot;,&quot;threat-intel&quot;,&quot;ioc-validation&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: confirm which process initiated the connection — Python parent = breach-confirmed against this host; browser/curl could be a researcher pulling the IOC. Contain: sinkhole all seven domains and block the four IPs at perimeter; isolate the host; rotate every credential reachable from it (SSH, ~/.aws, ~/.kube, ~/.docker, env-vars, CI tokens, crypto wallet files). Hunt: walk back ≤2 h for the pip-install in UC1 and ≤24 h for the WAV stager pull in UC3; check Kubernetes audit for privileged-pod creation in UC6.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-469-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-469-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-469-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-469-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-469-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-469-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-469-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;models.litellm.cloud&quot;,&quot;checkmarx.zone&quot;,&quot;aquasecurtiy.org&quot;,&quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;,&quot;championships-peoples-point-cassette.trycloudflare.com&quot;,&quot;investigation-launches-hearings-copying.trycloudflare.com&quot;,&quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-    or RemoteIP in (&quot;83.142.209.203&quot;,&quot;83.142.209.11&quot;,&quot;46.151.182.203&quot;,&quot;45.148.10.212&quot;)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Protocol,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-  (DnsEvents
-   | where TimeGenerated &gt; ago(30d)
-   | where Name has_any (&quot;models.litellm.cloud&quot;,&quot;checkmarx.zone&quot;,&quot;aquasecurtiy.org&quot;,&quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;,&quot;championships-peoples-point-cassette.trycloudflare.com&quot;,&quot;investigation-launches-hearings-copying.trycloudflare.com&quot;,&quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-   | project TimeGenerated, Computer, ClientIP, Name, QueryType, Result),
-  (CommonSecurityLog
-   | where TimeGenerated &gt; ago(30d)
-   | where DestinationIP in (&quot;83.142.209.203&quot;,&quot;83.142.209.11&quot;,&quot;46.151.182.203&quot;,&quot;45.148.10.212&quot;)
-      or RequestURL has_any (&quot;models.litellm.cloud&quot;,&quot;checkmarx.zone&quot;,&quot;aquasecurtiy.org&quot;,&quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;,&quot;championships-peoples-point-cassette.trycloudflare.com&quot;,&quot;investigation-launches-hearings-copying.trycloudflare.com&quot;,&quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-   | project TimeGenerated, SourceIP, DestinationIP, RequestURL, RequestMethod, SentBytes, ReceivedBytes, SourceUserName, DeviceVendor),
-  (ImDnsActivity
-   | where TimeGenerated &gt; ago(30d)
-   | where DnsQuery has_any (&quot;models.litellm.cloud&quot;,&quot;checkmarx.zone&quot;,&quot;aquasecurtiy.org&quot;,&quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;,&quot;championships-peoples-point-cassette.trycloudflare.com&quot;,&quot;investigation-launches-hearings-copying.trycloudflare.com&quot;,&quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-   | project TimeGenerated, DvcHostname, SrcIpAddr, DnsQuery, DnsQueryTypeName, DnsResponseName)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: TeamPCP LiteLLM C2 / Exfil Domain Resolution
-id: 2a8e1c93-6d4b-4f3b-9c2e-1d8a5f2b9e34
-description: Detects DNS queries for any TeamPCP campaign C2/exfil domain associated with the litellm 1.82.7/1.82.8 PyPI compromise.
-references:
-  - https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  - https://hunt.io/blog/33k-exposed-litellm-teampcp-c2-supply-chain-attack
-  - https://research.jfrog.com/post/litellm-compromised-teampcp/
-author: SOC Detection Engineering
-date: 2026/05/21
-tags:
-  - attack.command_and_control
-  - attack.t1071.001
-  - attack.exfiltration
-  - attack.t1041
-logsource:
-  category: dns
-detection:
-  selection:
-    query|contains:
-      - &#x27;models.litellm.cloud&#x27;
-      - &#x27;checkmarx.zone&#x27;
-      - &#x27;aquasecurtiy.org&#x27;
-      - &#x27;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&#x27;
-      - &#x27;championships-peoples-point-cassette.trycloudflare.com&#x27;
-      - &#x27;investigation-launches-hearings-copying.trycloudflare.com&#x27;
-      - &#x27;souls-entire-defined-routes.trycloudflare.com&#x27;
-  condition: selection
-falsepositives:
-  - Security tool resolving the IOC for telemetry validation; whitelist by EDR/SIEM source IP
-level: high</code></pre></div>
-    <div class="tab-content" id="art-469-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(@DestinationHostname:(models.litellm.cloud OR checkmarx.zone OR aquasecurtiy.org OR tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io OR championships-peoples-point-cassette.trycloudflare.com OR investigation-launches-hearings-copying.trycloudflare.com OR souls-entire-defined-routes.trycloudflare.com) OR @DomainName:(models.litellm.cloud OR checkmarx.zone OR aquasecurtiy.org OR tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io) OR @DestinationIp:(83.142.209.203 OR 83.142.209.11 OR 46.151.182.203 OR 45.148.10.212) OR @network.destination.ip:(83.142.209.203 OR 83.142.209.11 OR 46.151.182.203 OR 45.148.10.212))</code></pre></div>
-    <div class="tab-content" id="art-469-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| regex(&quot;(models\\.litellm\\.cloud|checkmarx\\.zone|aquasecurtiy\\.org|tdtqy-oyaaa-aaaae-af2dq-cai\\.raw\\.icp0\\.io|championships-peoples-point-cassette\\.trycloudflare\\.com|investigation-launches-hearings-copying\\.trycloudflare\\.com|souls-entire-defined-routes\\.trycloudflare\\.com)&quot;, field=DomainName)
-| groupBy([aid, ComputerName, DomainName, ContextImageFileName, ContextProcessId], function=count())</code></pre></div>
-    <div class="tab-content" id="art-469-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-469-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-469-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-469-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN (&quot;models.litellm.cloud&quot;,&quot;checkmarx.zone&quot;,&quot;aquasecurtiy.org&quot;,&quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;,&quot;championships-peoples-point-cassette.trycloudflare.com&quot;,&quot;investigation-launches-hearings-copying.trycloudflare.com&quot;,&quot;souls-entire-defined-routes.trycloudflare.com&quot;) OR DNS.query=&quot;*.models.litellm.cloud&quot; OR DNS.query=&quot;*.checkmarx.zone&quot;) by host, DNS.src, DNS.query, DNS.answer | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;83.142.209.203&quot;,&quot;83.142.209.11&quot;,&quot;46.151.182.203&quot;,&quot;45.148.10.212&quot;) by host, All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-469-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN (&quot;models.litellm.cloud&quot;,&quot;checkmarx.zone&quot;,&quot;aquasecurtiy.org&quot;,&quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;,&quot;championships-peoples-point-cassette.trycloudflare.com&quot;,&quot;investigation-launches-hearings-copying.trycloudflare.com&quot;,&quot;souls-entire-defined-routes.trycloudflare.com&quot;) OR DNS.query=&quot;*.models.litellm.cloud&quot; OR DNS.query=&quot;*.checkmarx.zone&quot;) by host, DNS.src, DNS.query, DNS.answer | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=false count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;83.142.209.203&quot;,&quot;83.142.209.11&quot;,&quot;46.151.182.203&quot;,&quot;45.148.10.212&quot;) by host, All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b5fa18d4f3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Linux user-systemd sysmon persistence drop (~/.config/sysmon/sysmon.py + sysmon.service)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b5fa18d4f3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the Linux-side persistence artefacts dropped by malicious LiteLLM: a Python implant at `~/.config/sysmon/sysmon.py` registered as a user-systemd unit `~/.config/systemd/user/sysmon.service`. Name choice mimics legit Microsoft Sysmon-for-Linux but the path differs.
-
-Rationale: Datadog Security Labs and Sonatype both confirm `~/.config/sysmon/sysmon.py` and the user-systemd `sysmon.service` unit as the Linux persistence pair. The legit Microsoft Sysmon-for-Linux binary lives under `/opt/sysmon` or `/usr/sbin/sysmon` (never `~/.config` and never `.py`), so the path itself is the discriminator.
-
-Cross-checked against:
-  • https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  • https://www.sonatype.com/blog/compromised-litellm-pypi-package-delivers-multi-stage-credential-stealer</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create or Modify System Process: Systemd Service">T1543.002</span> <span class="ind tech" title="Masquerading: Match Legitimate Name (Sysmon)">T1036.005</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer experimenting with a personal cron/systemd helper that happens to be named sysmon (rare; check ownership)</li><li>DFIR responder restoring a captured artefact to a forensic VM under ~/.config (whitelist by VM hostname)</li><li>Configuration-management tooling deploying an internal helper named sysmon to user space (audit whether internal Ansible/Salt roles do this)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFolderPath has_any (&quot;/var/lib/dfir/&quot;,&quot;/opt/forensics/&quot;) or DeviceName has_any (&quot;forensic&quot;,&quot;sandbox&quot;,&quot;dfir-vm&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: `systemctl --user status sysmon`, read the .py contents (the malicious version makes outbound POSTs to models.litellm.cloud / checkmarx.zone — UC4). Contain: `systemctl --user disable --now sysmon &amp;&amp; rm -rf ~/.config/sysmon ~/.config/systemd/user/sysmon.service &amp;&amp; systemctl --user daemon-reload`; isolate the host. Hunt: walk back for the litellm 1.82.7/1.82.8 install in UC1 and forward for C2 beacons in UC4. Treat as full credential compromise (the implant harvests SSH, ~/.aws, ~/.kube, ~/.docker, ~/.netrc, env-vars).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-469-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-469-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-469-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-469-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-469-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-469-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-469-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where FolderPath has &quot;/.config/sysmon/&quot; and FileName =~ &quot;sysmon.py&quot;
-    or FolderPath has &quot;/.config/systemd/user/&quot; and FileName =~ &quot;sysmon.service&quot;
-    or FolderPath endswith &quot;/.config/sysmon/sysmon.py&quot;
-    or FolderPath endswith &quot;/.config/systemd/user/sysmon.service&quot;
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-  (ImFileEvent
-   | where TimeGenerated &gt; ago(30d)
-   | where TargetFilePath has &quot;/.config/sysmon/sysmon.py&quot; or TargetFilePath has &quot;/.config/systemd/user/sysmon.service&quot;
-   | project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, ActingProcessName, ActingProcessCommandLine),
-  (Syslog
-   | where TimeGenerated &gt; ago(30d)
-   | where SyslogMessage has_any (&quot;/.config/sysmon/sysmon.py&quot;,&quot;/.config/systemd/user/sysmon.service&quot;,&quot;systemctl --user enable sysmon&quot;,&quot;systemctl --user start sysmon&quot;)
-   | project TimeGenerated, Computer, ProcessName, SyslogMessage, Facility)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: TeamPCP LiteLLM Linux User-Systemd sysmon Persistence Drop
-id: 3c7d5e1f-8a02-4b9c-bf1a-5e3d7c9f2a18
-description: Detects the creation of ~/.config/sysmon/sysmon.py or ~/.config/systemd/user/sysmon.service — Linux-side persistence dropped by malicious litellm 1.82.7/1.82.8.
-references:
-  - https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  - https://www.sonatype.com/blog/compromised-litellm-pypi-package-delivers-multi-stage-credential-stealer
-author: SOC Detection Engineering
-date: 2026/05/21
-tags:
-  - attack.persistence
-  - attack.t1543.002
-  - attack.defense_evasion
-  - attack.t1036.005
-logsource:
-  product: linux
-  category: file_event
-detection:
-  selection:
-    TargetFilename|contains:
-      - &#x27;/.config/sysmon/sysmon.py&#x27;
-      - &#x27;/.config/systemd/user/sysmon.service&#x27;
-  condition: selection
-falsepositives:
-  - Microsoft Sysmon-for-Linux installs into /opt or /usr/sbin, never under ~/.config — this path is malicious
-level: high</code></pre></div>
-    <div class="tab-content" id="art-469-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.auditd OR source:linux.syslog) (@file.path:*/.config/sysmon/sysmon.py OR @file.path:*/.config/systemd/user/sysmon.service OR @process.command_line:*&quot;systemctl --user enable sysmon&quot;* OR @process.command_line:*&quot;systemctl --user start sysmon&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-469-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;/\\.config/(sysmon/sysmon\\.py|systemd/user/sysmon\\.service)&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName, ContextProcessId], function=count())</code></pre></div>
-    <div class="tab-content" id="art-469-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-469-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-469-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-469-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*/.config/sysmon/sysmon.py&quot; OR Filesystem.file_path=&quot;*/.config/systemd/user/sysmon.service&quot;) by host, user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-469-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*/.config/sysmon/sysmon.py&quot; OR Filesystem.file_path=&quot;*/.config/systemd/user/sysmon.service&quot;) by host, user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="8edb321e76" data-platforms="datadog,sent,spl" data-targets="kubernetes">
-  <summary>
-    <span class="uc-title">Kubernetes privileged-pod DaemonSet fan-out from compromised LiteLLM workload</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8edb321e76" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the post-exploitation step where the TeamPCP LiteLLM payload creates privileged pods on every node in a cluster to establish persistence and lateral movement. Pivots on K8s audit logs for create-pod/daemonset events with privileged/hostNetwork/hostPID flags and ≥3 node fan-out from a single principal.
-
-Rationale: Datadog Security Labs and Trend Micro both describe the LiteLLM 1.82.8 payload&#x27;s Kubernetes module creating privileged pods on every node for persistence. The cross-node fan-out (NodesTouched ≥ 3) from one user combined with privileged/hostNetwork/hostPID flags is the article-specific signal — distinguishes from legit DaemonSets (CSI drivers, log shippers) by combining principal-novelty triage downstream. Defender and Falcon left empty because K8s control-plane audit isn&#x27;t shipped to MDE/FDR in standard configs.
-
-Cross-checked against:
-  • https://securitylabs.datadoghq.com/articles/litellm-compromised-pypi-teampcp-supply-chain-campaign/
-  • https://www.trendmicro.com/en_us/research/26/c/inside-litellm-supply-chain-compromise.html
-  • https://futuresearch.ai/blog/litellm-pypi-supply-chain-attack/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Deploy Container">T1610</span> <span class="ind tech" title="Escape to Host">T1611</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication</span> <span class="ind">Change</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legit DaemonSet rollout: CSI driver (`csi-node`), CNI agent (`cilium`, `calico-node`), log shipper (`fluent-bit`, `datadog-agent`), security agent (`falcon-sensor`)</li><li>Cluster admin manually creating a debug privileged pod on each node for troubleshooting</li><li>Helm upgrade of a privileged add-on (cert-manager webhook, ingress-nginx in privileged mode)</li><li>kured / node-maintenance operators that create per-node helper pods</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Username has_any (&quot;system:serviceaccount:kube-system&quot;,&quot;system:serviceaccount:kube-public&quot;,&quot;system:serviceaccount:datadog&quot;,&quot;system:serviceaccount:falcon&quot;,&quot;system:serviceaccount:cilium&quot;,&quot;system:serviceaccount:calico-system&quot;) or Namespace in (&quot;kube-system&quot;,&quot;kube-public&quot;,&quot;gke-system&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: pull the RequestObject and check the container image — if it&#x27;s an unfamiliar registry / contains `litellm` / matches the TeamPCP IOC images, treat as confirmed. Check the principal — is it a service account that should be allowed to create privileged pods? Contain: revoke the principal&#x27;s token (`kubectl delete secret &lt;sa-token&gt;` + rotate), apply a Kyverno/OPA-Gatekeeper policy blocking privileged: true outside system namespaces, and `kubectl delete daemonset/pods` matching the IOC labels. Hunt: walk back to the source pod — did one of its containers run `pip install litellm` (UC1)? Pull its egress logs for the C2 IOCs in UC4.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-469-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-469-uc5-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-469-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-469-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(30d)
-| where Verb in (&quot;create&quot;,&quot;patch&quot;)
-| extend Resource = tostring(ObjectRef.resource), Namespace = tostring(ObjectRef.namespace), Name = tostring(ObjectRef.name)
-| where Resource in (&quot;pods&quot;,&quot;daemonsets&quot;)
-| extend RO = tostring(RequestObject)
-| where RO has_any (&#x27;&quot;privileged&quot;:true&#x27;,&#x27;&quot;hostNetwork&quot;:true&#x27;,&#x27;&quot;hostPID&quot;:true&#x27;,&#x27;&quot;hostIPC&quot;:true&#x27;)
-| extend NodeName = extract(@&#x27;&quot;nodeName&quot;\s*:\s*&quot;([^&quot;]+)&quot;&#x27;, 1, RO)
-| summarize NodesTouched = dcount(NodeName), Pods = make_set(Name, 10), FirstSeen = min(TimeGenerated), Sample = any(RO)
-            by Username, Namespace, Resource
-| where NodesTouched &gt;= 3
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-469-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR patch) @objectRef.resource:(pods OR daemonsets) (@requestObject.spec.containers.securityContext.privileged:true OR @requestObject.spec.hostNetwork:true OR @requestObject.spec.hostPID:true OR @requestObject.spec.hostIPC:true)</code></pre></div>
-    <div class="tab-content" id="art-469-uc5-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=k8s_audit sourcetype IN (&quot;kube:apiserver:audit&quot;,&quot;aws:eks:audit&quot;,&quot;gcp:gke:audit&quot;) verb IN (&quot;create&quot;,&quot;patch&quot;) objectRef.resource IN (&quot;pods&quot;,&quot;daemonsets&quot;)
-| spath input=requestObject path=spec.containers{}.securityContext.privileged output=privileged_arr
-| spath input=requestObject path=spec.hostNetwork output=hostNet
-| spath input=requestObject path=spec.hostPID output=hostPid
-| spath input=requestObject path=spec.nodeName output=nodeName
-| where &#x27;privileged_arr&#x27;=&quot;true&quot; OR hostNet=&quot;true&quot; OR hostPid=&quot;true&quot;
-| stats dc(nodeName) as NodesTouched, values(objectRef.name) as Pods, min(_time) as firstTime, max(_time) as lastTime by user.username, objectRef.namespace
-| where NodesTouched &gt;= 3
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-469-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-469-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-469-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-469-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-469-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-469-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-469-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-469-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-469-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-469-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-469-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-469-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-469-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-469-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-469-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-469-uc7-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-469-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;83.142.209.203&quot;, &quot;83.142.209.11&quot;, &quot;46.151.182.203&quot;) or RemoteUrl has_any (&quot;models.litellm.cloud&quot;, &quot;checkmarx.zone&quot;, &quot;aquasecurtiy.org&quot;, &quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;, &quot;championships-peoples-point-cassette.trycloudflare.com&quot;, &quot;investigation-launches-hearings-copying.trycloudflare.com&quot;, &quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-469-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;83.142.209.203&quot;, &quot;83.142.209.11&quot;, &quot;46.151.182.203&quot;]);
-let BadDomains = dynamic([&quot;models.litellm.cloud&quot;, &quot;checkmarx.zone&quot;, &quot;aquasecurtiy.org&quot;, &quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;, &quot;championships-peoples-point-cassette.trycloudflare.com&quot;, &quot;investigation-launches-hearings-copying.trycloudflare.com&quot;, &quot;souls-entire-defined-routes.trycloudflare.com&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-469-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-469-uc7-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-469-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-469-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-469-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;83.142.209.203&quot;, &quot;83.142.209.11&quot;, &quot;46.151.182.203&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;models.litellm.cloud&quot;, &quot;checkmarx.zone&quot;, &quot;aquasecurtiy.org&quot;, &quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;, &quot;championships-peoples-point-cassette.trycloudflare.com&quot;, &quot;investigation-launches-hearings-copying.trycloudflare.com&quot;, &quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;models.litellm.cloud&quot;, &quot;checkmarx.zone&quot;, &quot;aquasecurtiy.org&quot;, &quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;, &quot;championships-peoples-point-cassette.trycloudflare.com&quot;, &quot;investigation-launches-hearings-copying.trycloudflare.com&quot;, &quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-469-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;83.142.209.203&quot;, &quot;83.142.209.11&quot;, &quot;46.151.182.203&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;models.litellm.cloud&quot;, &quot;checkmarx.zone&quot;, &quot;aquasecurtiy.org&quot;, &quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;, &quot;championships-peoples-point-cassette.trycloudflare.com&quot;, &quot;investigation-launches-hearings-copying.trycloudflare.com&quot;, &quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;models.litellm.cloud&quot;, &quot;checkmarx.zone&quot;, &quot;aquasecurtiy.org&quot;, &quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;, &quot;championships-peoples-point-cassette.trycloudflare.com&quot;, &quot;investigation-launches-hearings-copying.trycloudflare.com&quot;, &quot;souls-entire-defined-routes.trycloudflare.com&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-470" data-art-slug="2026-04-02-cisa-kev-cve-2026-3502-trueconf-client-download-of-code-with"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -18613,6 +17865,132 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-503-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2025-32432&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-504" data-art-slug="2026-03-20-cisa-kev-cve-2025-54068-laravel-livewire-code-injection-vuln"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2025-54068 — Laravel Livewire Code Injection Vulnerability Laravel Livewire contain a code injection vulnerability that could allow unauthenticated attackers to achieve remote command execution in specific scenarios. Vendor: Laravel, Product: Livewire. Federal patch due: 2026-04-03. CVE-2025-54068  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-03-20-cisa-kev-cve-2025-54068-laravel-livewire-code-injection-vuln" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2025-54068 — Laravel Livewire Code Injection Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-03-20</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Laravel Livewire contain a code injection vulnerability that could allow unauthenticated attackers to achieve remote command execution in specific scenarios. Vendor: Laravel, Product: Livewire. Federal patch due: 2026-04-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-54068</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-504-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-504"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-504-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-504-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-504-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-504-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-504-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-54068&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-504-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-54068&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-504-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-504-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-504-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-504-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-54068&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-504-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-54068&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

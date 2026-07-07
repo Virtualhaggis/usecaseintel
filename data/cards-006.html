@@ -1,3 +1,129 @@
+<article class="card" id="art-150" data-art-slug="2026-06-25-ghsa-critical-cve-2026-39831-golang-org-x-crypto-ssh-fido-u2"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="[GHSA / CRITICAL] CVE-2026-39831: golang.org/x/crypto/ssh: FIDO/U2F security key physical presence check can be bypassed golang.org/x/crypto/ssh: FIDO/U2F security key physical presence check can be bypassed CVE-2026-39831  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-25-ghsa-critical-cve-2026-39831-golang-org-x-crypto-ssh-fido-u2" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-89gr-r52h-f8rx" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-39831: golang.org/x/crypto/ssh: FIDO/U2F security key physical presence check can be bypassed</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-25</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">golang.org/x/crypto/ssh: FIDO/U2F security key physical presence check can be bypassed</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-39831</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-150-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-150"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-150-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-150-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-150-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-150-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-150-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-39831&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-150-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-39831&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-150-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-39831&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-150-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-39831&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-152" data-art-slug="2026-06-25-ghsa-critical-cve-2026-39832-golang-org-x-crypto-ssh-agent-d"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -128,11 +254,11 @@ DeviceTvmSoftwareVulnerabilities
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="cloudwatch,datadog,def,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
-  data-targets="aws,vcs,web-app,windows"
-  data-uc-count="7" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead to AWS IAM/PKI compromise Lemur: ACME SSRF + creator-equality IDOR lead to AWS IAM/PKI compromise CVE-2026-55166 T1190 [LLM] Lemur ACME authority created with acme_url pointing at cloud metadata / internal host (CVE-2026-55166 SSRF) [LLM] Lemur EC2 instance-profile role (lemur-acme-role) STS credentials used from outside the instance (CVE-2026-55166 credential exfiltration) Beaconing — periodic outbound to small set of destinations Asset exposure — vulnerability matches article CVE(s) Remote service execution — PsExec / SMB lateral movement RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead">
+  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,network"
+  data-targets="aws,linux,vcs,web-app,windows"
+  data-uc-count="8" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead to AWS IAM/PKI compromise Lemur: ACME SSRF + creator-equality IDOR lead to AWS IAM/PKI compromise CVE-2026-55166 T1190 [LLM] Lemur ACME worker-role STS credentials used from outside AWS (IMDS SSRF exfiltration, CVE-2026-55166) [LLM] Lemur web worker fetching EC2 IMDS credentials path (acme_url SSRF to 169.254.169.254) [LLM] Anomalous private-key export from Lemur certificate key endpoint (creator-equality IDOR, CVE-2026-55166) Beaconing — periodic outbound to small set of destinations Asset exposure — vulnerability matches article CVE(s) Remote service execution — PsExec / SMB lateral movement RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-25-ghsa-critical-cve-2026-55166-lemur-acme-ssrf-creator-equalit" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -141,7 +267,7 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-25</span>
-    <span>7 use cases</span>
+    <span>8 use cases</span>
     <span>1 technique</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -192,106 +318,216 @@ DeviceTvmSoftwareVulnerabilities
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Lemur ACME authority created with acme_url pointing at cloud metadata / internal host (CVE-2026-55166 SSRF) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Lemur web worker fetching EC2 IMDS credentials path (acme_url SSRF to 169.254.169.254) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Lemur EC2 instance-profile role (lemur-acme-role) STS credentials used from outside the instance (CVE-2026-55166 credential exfiltration) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Lemur ACME worker-role STS credentials used from outside AWS (IMDS SSRF exfiltration, CVE-2026-55166) · [LLM] Anomalous private-key export from Lemur certificate key endpoint (creator-equality IDOR, CVE-2026-55166) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="d83b411937" data-platforms="sent,sigma,spl" data-targets="vcs,web-app" open>
+  <div class="usecases"><details class="uc" data-uc-slug="8691fd57ca" data-platforms="cloudwatch,datadog,sigma,spl" data-targets="aws,vcs,web-app" open>
   <summary>
-    <span class="uc-title">Lemur ACME authority created with acme_url pointing at cloud metadata / internal host (CVE-2026-55166 SSRF)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">Lemur ACME worker-role STS credentials used from outside AWS (IMDS SSRF exfiltration, CVE-2026-55166)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d83b411937" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="8691fd57ca" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the exploitation request for CVE-2026-55166: an authenticated (auto-provisioned SSO) user POSTs a new ACME authority to /api/1/authorities whose acme_url plugin option targets the EC2 instance metadata service (169.254.169.254), a link-local/RFC1918 address, or a file://gopher:// scheme. Lemur fetches it server-side with no allowlist, round-tripping AWS IAM credentials back to the attacker. Requires a body-inspecting WAF or Lemur request logging.
+    <div class="uc-desc">Hunts the payoff of the acme_url SSRF: temporary EC2 instance-role credentials belonging to the Lemur worker (e.g. &#x27;lemur-acme-role&#x27;) being replayed by AWS API calls from a source IP outside the AWS/VPC range. This is the highest-fidelity signal that IMDS credentials were stolen via the Lemur authority-creation SSRF and are now being used off-instance.
 
-Rationale: Uses the article&#x27;s concrete endpoint (/api/1/authorities), the acme_url plugin option name, and the IMDS address 169.254.169.254 plus the file://gopher:// schemes the advisory calls reachable. Cross-checked the GHSA advisory and a public CVE roundup confirming the three-sink chain. High-fidelity because a POST to the authority-creation endpoint carrying a link-local/metadata target has no benign meaning.
+Rationale: Keys on the article&#x27;s concrete role name &#x27;lemur-acme-role&#x27; (matched loosely as *lemur* so it survives per-deployment naming) + AssumedRole type + a source IP outside AWS/RFC1918 — the exact shape GuardDuty labels InstanceCredentialExfiltration.OutsideAWS. Cross-checked AWS GuardDuty docs, MITRE T1552.005, and Datadog Security Labs&#x27; IMDS-theft write-up.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-v2wp-frmc-5q3v
-  • https://vulert.com/blog/critical-open-source-cves-security-roundup/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate operator adding a real ACME authority (Let&#x27;s Encrypt) - acme_url is a public https directory, not a metadata/link-local address</li><li>WAF signature testing or an authorized pentest replaying the PoC</li><li>Internal ACME/step-ca deployment whose directory URL is a private RFC1918 host (whitelist that specific host)</li><li>Automation/Terraform that provisions the Lemur ACME authority against an internal CA</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Message has_any (&quot;acme-v02.api.letsencrypt.org&quot;, &quot;acme-staging-v02.api.letsencrypt.org&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request body from the WAF/Lemur log for the flagged /api/1/authorities POST and confirm acme_url resolves to 169.254.169.254, a link-local/RFC1918 IP, or file://gopher://. Identify the SSO user and whether the account was auto-provisioned (active=True) recently. 2) Contain: disable the offending Lemur user, delete the malicious ACME authority object, and immediately rotate the lemur worker EC2 instance-profile role (revoke the STS session) since the metadata credentials must be assumed compromised. 3) Hunt: pivot to CloudTrail for the lemur-acme-role session used from any non-instance IP (see companion UC), and enumerate certificates whose creator differs from current owner to find IDOR key re-fetches.</div></details>
+  • https://attack.mitre.org/techniques/T1552/005/
+  • https://aws.amazon.com/blogs/aws/amazon-guardduty-enhances-detection-of-ec2-instance-credential-exfiltration/
+  • https://securitylabs.datadoghq.com/cloud-security-atlas/attacks/stealing-ec2-instance-role-credentials/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Corporate NAT/egress IP that legitimately proxies EC2 role calls when workloads run behind an on-prem gateway</li><li>Third-party SaaS/monitoring vendor assuming the role cross-account from its own public IP range</li><li>CI/CD or IaC runner outside AWS legitimately using exported role credentials</li><li>Geo-IP/attribution error tagging an AWS-owned IP as external</li><li>VPN split-tunnel making an instance&#x27;s calls appear to originate from a public IP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and userIdentity.invokedBy not like /amazonaws.com/ and sourceIPAddress not like /^3\.|^13\.|^15\.|^18\.|^52\.|^54\./</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all CloudTrail events for the flagged AssumedRole session (accessKeyId + sessionIssuer) and confirm the source IP is genuinely non-AWS and the role is the Lemur instance profile; check GuardDuty for a matching InstanceCredentialExfiltration finding. 2) Contain: revoke the session via an inline Deny policy with an aws:TokenIssueTime condition (or detach/rotate the role), then force IMDSv2-only on the Lemur EC2 instance so GET-only SSRF can no longer read credentials. 3) Hunt: enumerate every API action the stolen session performed (IAM changes, S3/KMS access, new access keys), review Lemur for rogue ACME authorities pointed at 169.254.169.254, and rotate any resources the role could touch.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-153-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-153-uc0-sigma">Sigma</button>
+      <button class="tab-btn active" data-target="art-153-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-153-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-153-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(14d)
-| where RequestMethod == &quot;POST&quot;
-| where RequestURL has &quot;/api/1/authorities&quot;
-| where Message has_any (&quot;169.254.169.254&quot;, &quot;acme_url&quot;, &quot;metadata&quot;, &quot;file://&quot;, &quot;gopher://&quot;, &quot;localhost&quot;, &quot;127.0.0.1&quot;)
-    or RequestContext has_any (&quot;169.254.169.254&quot;, &quot;acme_url&quot;, &quot;file://&quot;, &quot;gopher://&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, RequestMethod, RequestURL, RequestClientApplication, SourceUserName, Message
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-153-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Lemur ACME Authority Creation With SSRF acme_url (CVE-2026-55166)
-id: 3f1c8a2e-9d4b-4e77-bb51-2a6f0c9d7e10
-description: Detects a POST to the Lemur /api/1/authorities endpoint whose body carries an acme_url pointing at cloud metadata, link-local, loopback, or non-http scheme - the SSRF trigger for CVE-2026-55166.
+    <div class="tab-content active" id="art-153-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Lemur Instance-Role Credentials Used From Outside AWS (CVE-2026-55166)
+id: 6f1d2c8a-9b4e-4a71-8f2c-1a3e5d7c9b02
+description: AssumedRole session tied to the Lemur ACME worker role makes AWS API calls from a non-AWS/non-RFC1918 source IP, indicating IMDS credential exfiltration via the acme_url SSRF.
 references:
   - https://github.com/advisories/GHSA-v2wp-frmc-5q3v
+  - https://attack.mitre.org/techniques/T1552/005/
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1552.005
+  - attack.t1078.004
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    userIdentity.type: &#x27;AssumedRole&#x27;
+    userIdentity.sessionContext.sessionIssuer.userName|contains: &#x27;lemur&#x27;
+  filter_internal:
+    sourceIPAddress|startswith:
+      - &#x27;10.&#x27;
+      - &#x27;172.16.&#x27;
+      - &#x27;172.17.&#x27;
+      - &#x27;172.18.&#x27;
+      - &#x27;172.19.&#x27;
+      - &#x27;172.20.&#x27;
+      - &#x27;172.21.&#x27;
+      - &#x27;172.22.&#x27;
+      - &#x27;172.23.&#x27;
+      - &#x27;172.24.&#x27;
+      - &#x27;172.25.&#x27;
+      - &#x27;172.26.&#x27;
+      - &#x27;172.27.&#x27;
+      - &#x27;172.28.&#x27;
+      - &#x27;172.29.&#x27;
+      - &#x27;172.30.&#x27;
+      - &#x27;172.31.&#x27;
+      - &#x27;192.168.&#x27;
+  filter_aws:
+    sourceIPAddress: &#x27;AWS Internal&#x27;
+  condition: selection and not filter_internal and not filter_aws
+level: high</code></pre></div>
+    <div class="tab-content" id="art-153-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @userIdentity.type:AssumedRole @userIdentity.sessionContext.sessionIssuer.userName:(*lemur* OR *Lemur* OR *LEMUR*) -CIDR(@network.client.ip, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16) -@network.client.ip:&quot;AWS Internal&quot;</code></pre></div>
+    <div class="tab-content" id="art-153-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, eventSource, sourceIPAddress, userAgent, userIdentity.arn, userIdentity.sessionContext.sessionIssuer.userName
+| filter userIdentity.type = &quot;AssumedRole&quot;
+  and userIdentity.sessionContext.sessionIssuer.userName like /lemur/i
+  and sourceIPAddress != &quot;AWS Internal&quot;
+  and sourceIPAddress not like /^10\./
+  and sourceIPAddress not like /^172\.(1[6-9]|2[0-9]|3[01])\./
+  and sourceIPAddress not like /^192\.168\./
+  and userIdentity.invokedBy not like /amazonaws.com/
+| stats count(*) as calls, min(@timestamp) as firstSeen, max(@timestamp) as lastSeen by sourceIPAddress, userIdentity.arn, eventName
+| sort lastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.action) as actions from datamodel=Change.All_Changes where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.user_type=&quot;AssumedRole&quot; All_Changes.user=&quot;*lemur*&quot; by All_Changes.src All_Changes.user
+| `drop_dm_object_name(All_Changes)`
+| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,src) OR cidrmatch(&quot;172.16.0.0/12&quot;,src) OR cidrmatch(&quot;192.168.0.0/16&quot;,src) OR src=&quot;AWS Internal&quot;)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-153-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Changes.action) as actions from datamodel=Change.All_Changes where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.user_type=&quot;AssumedRole&quot; All_Changes.user=&quot;*lemur*&quot; by All_Changes.src All_Changes.user
+| `drop_dm_object_name(All_Changes)`
+| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,src) OR cidrmatch(&quot;172.16.0.0/12&quot;,src) OR cidrmatch(&quot;192.168.0.0/16&quot;,src) OR src=&quot;AWS Internal&quot;)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="547a608a99" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,web-app,windows">
+  <summary>
+    <span class="uc-title">Lemur web worker fetching EC2 IMDS credentials path (acme_url SSRF to 169.254.169.254)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="547a608a99" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the SSRF exploitation step itself: the Lemur application worker (python/gunicorn/celery) opening an HTTP connection to the link-local IMDS endpoint 169.254.169.254 as a result of the attacker-supplied acme_url. Any public-facing web worker reaching IMDS&#x27;s security-credentials path is anomalous and, on IMDSv1, indicates credential theft in progress.
+
+Rationale: Anchors on the article&#x27;s exact IMDS target 169.254.169.254 combined with the Lemur worker process set — the on-wire trace of the acme_url SSRF. Low confidence because the AWS SDK (boto) legitimately hits the same IP for role-credential refresh; deploy scoped to the Lemur host(s) and treat as a hunt. IMDS-SSRF technique corroborated by Datadog Security Labs and MITRE T1552.005.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-v2wp-frmc-5q3v
+  • https://securitylabs.datadoghq.com/cloud-security-atlas/attacks/stealing-ec2-instance-role-credentials/
+  • https://attack.mitre.org/techniques/T1552/005/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>boto3/botocore periodically refreshing instance-role credentials from IMDS (same IP, same python process) — the dominant benign source</li><li>AWS CLI or SSM agent on the host querying IMDS metadata</li><li>Container/EKS metadata proxy or a health-check probing 169.254.169.254</li><li>Config-management (Ansible/Chef) modules resolving instance identity via IMDS</li><li>Application code that legitimately reads region/AZ from IMDS on startup</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine has_any (&quot;lemur&quot;,&quot;acme&quot;,&quot;authorit&quot;) or InitiatingProcessAccountName !in~ (&quot;root&quot;,&quot;awssdk&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the connecting process and whether the host is a Lemur worker; correlate the timestamp against inbound POSTs to /api/1/authorities and check whether the IMDS request targeted the iam/security-credentials path vs benign metadata. 2) Contain: enforce IMDSv2-only (HttpTokens=required, hop-limit=1) on the instance so GET-only SSRF cannot read credentials, and patch Lemur to 1.9.2. 3) Hunt: pivot to CloudTrail for off-instance use of the Lemur role (UC1), review Lemur for authorities whose acme_url is a link-local/RFC1918 address, and audit recently auto-provisioned SSO accounts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-153-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-153-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP == &quot;169.254.169.254&quot;
+| where InitiatingProcessFileName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;celery&quot;,&quot;lemur&quot;,&quot;nginx&quot;)
+| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr == &quot;169.254.169.254&quot;
+| summarize Conns=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by DvcHostname, SrcIpAddr, SrcUsername, DstIpAddr, NetworkApplicationProtocol
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web Worker Connecting to EC2 IMDS Link-Local Address (Lemur CVE-2026-55166 SSRF)
+id: 2b7c4e19-3a56-4d02-9c8f-7e1b0a6d4f31
+description: A server process connects to the EC2 Instance Metadata Service at 169.254.169.254, consistent with the Lemur acme_url SSRF reaching IMDS to steal instance-role credentials.
+references:
+  - https://github.com/advisories/GHSA-v2wp-frmc-5q3v
+  - https://attack.mitre.org/techniques/T1552/005/
 author: SOC Detection Engineering
 date: 2026/07/07
 tags:
   - attack.t1552.005
   - attack.t1190
 logsource:
-  category: webserver
+  category: network_connection
+  product: linux
 detection:
-  selection_endpoint:
-    cs-method: POST
-    cs-uri-stem|contains: &#x27;/api/1/authorities&#x27;
-  selection_ssrf:
-    - &#x27;169.254.169.254&#x27;
-    - &#x27;acme_url&#x27;
-    - &#x27;file://&#x27;
-    - &#x27;gopher://&#x27;
-  condition: selection_endpoint and selection_ssrf
-level: high</code></pre></div>
-    <div class="tab-content" id="art-153-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as userAgents from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/1/authorities*&quot; by Web.src, Web.dest, Web.status | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | comment(&quot;authority creation is a rare admin action; pivot each src to the WAF body to confirm acme_url=169.254.169.254 / file:// / gopher:// / RFC1918 SSRF payload&quot;) | sort - count</code></pre><pre class="spl-mode-body" id="art-153-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as userAgents from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/1/authorities*&quot; by Web.src, Web.dest, Web.status | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | comment(&quot;authority creation is a rare admin action; pivot each src to the WAF body to confirm acme_url=169.254.169.254 / file:// / gopher:// / RFC1918 SSRF payload&quot;) | sort - count</code></pre></div></div>
+  selection:
+    DestinationIp: &#x27;169.254.169.254&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @network.destination.ip:169.254.169.254 @process.name:(python OR python3 OR gunicorn OR uwsgi OR celery OR nginx)</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=169.254.169.254
+| ContextImageFileName=/(python|python3|gunicorn|uwsgi|celery|nginx|lemur)/i
+| groupBy([aid, ComputerName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as apps from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;169.254.169.254&quot; by All_Traffic.src All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre><pre class="spl-mode-body" id="art-153-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as apps from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;169.254.169.254&quot; by All_Traffic.src All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="6ec6871ee8" data-platforms="cloudwatch,datadog,spl" data-targets="aws">
+<details class="uc" data-uc-slug="48f3125bfa" data-platforms="sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Lemur EC2 instance-profile role (lemur-acme-role) STS credentials used from outside the instance (CVE-2026-55166 credential exfiltration)</span>
+    <span class="uc-title">Anomalous private-key export from Lemur certificate key endpoint (creator-equality IDOR, CVE-2026-55166)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="6ec6871ee8" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="48f3125bfa" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the downstream effect of the CVE-2026-55166 SSRF: the lemur worker&#x27;s EC2 instance-profile credentials (assumed-role lemur-acme-role, session name = instance i-id) exfiltrated via IMDS and then replayed from a source IP that is not the instance itself. This is the CloudTrail-observable half of the chain since IMDS GETs themselves are invisible to CloudTrail/VPC Flow.
+    <div class="uc-desc">Hunts the IDOR payoff: a single principal/IP pulling private keys from multiple certificates via GET /api/1/certificates/&lt;id&gt;/key. Because the creator branch always returns 200 even after ownership transfer, an attacker harvests PKI private keys; a burst of successful key exports by one caller is the article-specific web-log signature.
 
-Rationale: Uses the exact role name from the SSRF PoC payload (lemur-acme-role) and the EC2 instance-profile session marker (assumed-role/lemur-acme-role/i-&lt;instanceid&gt;) to isolate instance credentials, then flags use from any non-RFC1918 (off-instance) source IP. Corroborated against AWS GuardDuty&#x27;s InstanceCredentialExfiltration.OutsideAWS documentation, which confirms IMDS GETs are invisible to CloudTrail but the external replay of the temporary keys is detectable. Very low FP because a legitimate instance profile is only ever used from the instance&#x27;s own private IP.
+Rationale: Anchors on Lemur&#x27;s private-key export route /api/1/certificates/&lt;id&gt;/key (the sink at certificates/views.py:734) and a fan-out threshold (&gt;=3 distinct keys per caller) to catch harvesting while suppressing single legitimate exports. Web-log-only detection since ownership context isn&#x27;t in access logs; grounded in the advisory&#x27;s IDOR description.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-v2wp-frmc-5q3v
-  • https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-iam.html
-  • https://aws.amazon.com/blogs/aws/amazon-guardduty-enhances-detection-of-ec2-instance-credential-exfiltration/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A NAT gateway / egress proxy re-writing the instance&#x27;s calls to a public IP (add the NAT public IP to an allowlist)</li><li>Legitimate cross-account access where the role is intentionally used from a peered account IP</li><li>Autoscaling replaced the instance - new i- session id but still an internal VPC IP (already excluded by the RFC1918 filter)</li><li>Corporate VPN or bastion routing that changes the observed sourceIPAddress</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the sourceIPAddress is not a known NAT/egress IP for the lemur instance and enumerate the eventNames the session invoked (iam:*, sts:*, s3:*, acm:* are high concern). Correlate the timestamp against the companion SSRF authority-creation alert. 2) Contain: revoke the active STS session (aws iam put-role-policy deny / rotate the instance profile), stop or reimage the lemur worker instance, and enforce IMDSv2 (HttpTokens=required, hop-limit=1) on the instance. 3) Hunt: review CloudTrail for any persistence created by the stolen session (new IAM users/keys, policy attachments), and check Lemur for certificates re-fetched via the creator-equality IDOR to scope private-key exposure - those keys must be revoked/reissued, not just re-owned.</div></details>
+  • https://vulert.com/blog/critical-open-source-cves-security-roundup/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Private Keys">T1552.004</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate PKI operator bulk-exporting keys during a CA migration or key-rotation project</li><li>Automation/service account that periodically exports keys for deployment pipelines</li><li>An admin troubleshooting several certificates and legitimately downloading their keys</li><li>Load-balancer/health-check hitting a certificate route (usually non-200 on /key, so filtered by status=200)</li><li>Backup tooling snapshotting certificate material</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcUsername !in~ (&quot;pki-automation&quot;,&quot;cert-deploy-svc&quot;) and SrcUsername !endswith &quot;-svc&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the SrcUsername/SrcIp and whether it is a freshly auto-provisioned SSO account (cross-check Lemur user creation time and active=True), then list which certificates&#x27; keys were pulled and whether the caller is the current owner. 2) Contain: disable the offending Lemur account, revoke and reissue every certificate whose private key was exported (ownership transfer does NOT revoke creator access — the key must be rotated), and patch to Lemur 1.9.2. 3) Hunt: correlate the same principal to UC1 (stolen AWS role use) and UC2 (IMDS SSRF), and review authority-creation activity by the account.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-153-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-153-uc1-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-153-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-153-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @userIdentity.type:AssumedRole @userIdentity.sessionContext.sessionIssuer.userName:lemur-acme-role @userIdentity.arn:*assumed-role\/lemur-acme-role\/i-* -CIDR(@network.client.ip, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)</code></pre></div>
-    <div class="tab-content" id="art-153-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, eventSource, sourceIPAddress, userIdentity.arn, userIdentity.sessionContext.sessionIssuer.userName, userAgent, awsRegion
-| filter userIdentity.type = &quot;AssumedRole&quot;
-      and userIdentity.sessionContext.sessionIssuer.userName = &quot;lemur-acme-role&quot;
-      and userIdentity.arn like /:assumed-role\/lemur-acme-role\/i-/
-      and not (sourceIPAddress like /^10\./ or sourceIPAddress like /^172\.(1[6-9]|2[0-9]|3[01])\./ or sourceIPAddress like /^192\.168\./)
-| stats count(*) as calls, min(@timestamp) as firstSeen, max(@timestamp) as lastSeen by sourceIPAddress, userAgent
-| sort calls desc</code></pre></div>
-    <div class="tab-content" id="art-153-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>`cloudtrail` userIdentity.type=AssumedRole userIdentity.sessionContext.sessionIssuer.userName=lemur-acme-role userIdentity.arn=&quot;*:assumed-role/lemur-acme-role/i-*&quot; | stats count min(_time) as firstTime max(_time) as lastTime values(eventName) as apiCalls values(userAgent) as userAgents dc(sourceIPAddress) as srcIpCount by sourceIPAddress | where NOT cidrmatch(&quot;10.0.0.0/8&quot;, sourceIPAddress) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;, sourceIPAddress) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;, sourceIPAddress) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count</code></pre></div>
+    <div class="tab-content active" id="art-153-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where Url matches regex @&quot;(?i)/api/1/certificates/[0-9]+/key&quot;
+| where HttpStatusCode == 200
+| summarize KeyExports=count(), DistinctKeys=dcount(Url), SampleUrls=make_set(Url, 25), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by SrcIpAddr, SrcUsername
+| where DistinctKeys &gt;= 3   // one principal exporting &gt;=3 distinct private keys in the window
+| order by DistinctKeys desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count dc(Web.uri_path) as distinct_keys values(Web.uri_path) as uris min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_path=&quot;/api/1/certificates/*/key&quot; Web.status=200 by Web.src Web.user
+| `drop_dm_object_name(Web)`
+| where distinct_keys &gt;= 3
+| convert ctime(firstTime) ctime(lastTime)
+| sort - distinct_keys</code></pre><pre class="spl-mode-body" id="art-153-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count dc(Web.uri_path) as distinct_keys values(Web.uri_path) as uris min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_path=&quot;/api/1/certificates/*/key&quot; Web.status=200 by Web.src Web.user
+| `drop_dm_object_name(Web)`
+| where distinct_keys &gt;= 3
+| convert ctime(firstTime) ctime(lastTime)
+| sort - distinct_keys</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -309,11 +545,11 @@ fields @timestamp, eventName, eventSource, sourceIPAddress, userIdentity.arn, us
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-153-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-153-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-153-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-153-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-153-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -326,7 +562,7 @@ fields @timestamp, eventName, eventSource, sourceIPAddress, userIdentity.arn, us
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-153-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-153-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -336,7 +572,7 @@ fields @timestamp, eventName, eventSource, sourceIPAddress, userIdentity.arn, us
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-153-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-153-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -345,7 +581,7 @@ fields @timestamp, eventName, eventSource, sourceIPAddress, userIdentity.arn, us
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-153-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-153-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -372,11 +608,11 @@ fields @timestamp, eventName, eventSource, sourceIPAddress, userIdentity.arn, us
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-153-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-153-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-153-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-153-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-153-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -385,7 +621,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-153-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-153-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -397,12 +633,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-153-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-153-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-55166&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-153-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-153-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-55166&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -425,12 +661,12 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-153-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-153-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-153-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-153-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-153-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-153-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
@@ -438,7 +674,7 @@ DeviceTvmSoftwareVulnerabilities
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-153-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-153-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688            // process-create (audit-policy required)
 | where Account !endswith &quot;$&quot;
@@ -450,7 +686,7 @@ DeviceTvmSoftwareVulnerabilities
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-153-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
+    <div class="tab-content" id="art-153-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
 status: experimental
 description: |
@@ -490,12 +726,12 @@ falsepositives:
       a known-admin-host watchlist
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-153-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-153-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-153-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-153-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
@@ -518,12 +754,12 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-153-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-153-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-153-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-153-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-153-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-153-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
@@ -531,7 +767,7 @@ level: high
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
    or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-153-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-153-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -548,7 +784,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-153-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+    <div class="tab-content" id="art-153-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
 status: experimental
 description: |
@@ -583,13 +819,13 @@ falsepositives:
       tool exclusion list per environment.
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-153-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-153-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-153-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-153-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
@@ -613,11 +849,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-153-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-153-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-153-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-153-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead
+    <div class="tab-content active" id="art-153-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -637,7 +873,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-153-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-153-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead
@@ -660,7 +896,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-153-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead ```
+    <div class="tab-content" id="art-153-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;views.py&quot;,&quot;acme_handlers.py&quot;))
@@ -676,7 +912,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-153-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead ```
+]</code></pre><pre class="spl-mode-body" id="art-153-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55166: Lemur: ACME SSRF + creator-equality IDOR lead ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;views.py&quot;,&quot;acme_handlers.py&quot;))
@@ -14367,667 +14603,6 @@ DeviceFileEvents
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/tmp/test*&quot; OR Filesystem.file_path=&quot;*/var/lib/postgresql/data*&quot; OR Filesystem.file_path=&quot;*/tmp/poc-writer-fy4k5064*&quot; OR Filesystem.file_name IN (&quot;gogs-rce.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-179" data-art-slug="2026-06-23-ghsa-critical-cve-2026-52811-gogs-uploadrepofiles-writes-out"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190,T1539"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="linux,vcs,windows"
-  data-uc-count="7" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo working tree via committed parent sym Gogs: UploadRepoFiles writes outside repo working tree via committed parent sym CVE-2026-52811 T1190 T1539 [LLM] Gogs process writing to git server-side hook or authorized_keys (CVE-2026-52811 symlink write) [LLM] Gogs git post-receive/update hook spawning a shell or network tool (CVE-2026-52811 RCE trigger) [LLM] Interactive shell for Gogs &#x27;git&#x27; service account via SSH (CVE-2026-52811 authorized_keys foothold) Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo work">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-23-ghsa-critical-cve-2026-52811-gogs-uploadrepofiles-writes-out" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-89mr-xqfv-758m" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo working tree via committed parent sym</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-23</span>
-    <span>7 use cases</span>
-    <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Gogs: UploadRepoFiles writes outside repo working tree via committed parent sym</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-52811</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-179-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-179"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-179-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gogs git post-receive/update hook spawning a shell or network tool (CVE-2026-52811 RCE trigger) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo work</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Gogs process writing to git server-side hook or authorized_keys (CVE-2026-52811 symlink write) · [LLM] Interactive shell for Gogs &#x27;git&#x27; service account via SSH (CVE-2026-52811 authorized_keys foothold) · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="522f179af8" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Gogs process writing to git server-side hook or authorized_keys (CVE-2026-52811 symlink write)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="522f179af8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the arbitrary-file-write primitive of CVE-2026-52811: the gogs web binary (running as the git UID) writing bytes into a repository&#x27;s .git/hooks/post-receive (next-push RCE) or ~git/.ssh/authorized_keys (SSH foothold) because iox.CopyFile followed an attacker-committed parent directory symlink. Article-specific because it pins the writer to the &#x27;gogs&#x27; process and the two exact sink files named in the advisory.
-
-Rationale: Pins the writer to process &#x27;gogs&#x27; plus the two exact sink files (authorized_keys and hooks/post-receive) the advisory names as the impact of the symlink-followed CopyFile; second-sourced by the GitLab advisory and Wiz/Upwind write-ups of the same Gogs symlink-write family.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/gogs.io/gogs/CVE-2026-52811/
-  • https://www.wiz.io/blog/wiz-research-gogs-cve-2025-8110-rce-exploit
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-52811</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Gogs writing the delegating hook stubs (pre-receive/update/post-receive) legitimately at repository creation</li><li>Gogs SSH key management rewriting ~git/.ssh/authorized_keys when users add or remove deploy/user keys via the UI</li><li>Administrator editing custom hooks through the Gogs repo settings UI</li><li>Repository import/mirror or backup-restore repopulating hook files</li><li>Config-management (Ansible/Puppet) re-templating the git service account&#x27;s authorized_keys</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has &quot;/hooks/&quot; and InitiatingProcessCommandLine has_any (&quot;create&quot;,&quot;init&quot;,&quot;migrate&quot;,&quot;mirror&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: For a hook hit, diff the written hooks/* file against the gogs delegating stub (it should only exec `gogs hook ...`); any shell/curl/interpreter content = confirmed. For authorized_keys, check for entries lacking the `command=&quot;...gogs serv key-N...&quot;,no-port-forwarding` forced-command prefix. 2) CONTAIN: Isolate the Gogs host, revoke/rotate any non-gogs-managed keys in authorized_keys, restore the hook file, and suspend the two attacker repo-write accounts. 3) HUNT: Pivot on the repoID/temp path under AppDataPath/tmp/local-r for committed symlinks (mode-120000) pointing outside the repo, and correlate with UC2 (post-receive spawning a shell) and UC3 (interactive git-user SSH).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;gogs&quot;
-| where (FileName =~ &quot;authorized_keys&quot; and FolderPath has &quot;/.ssh/&quot;)
-     or (FolderPath has &quot;/hooks/&quot; and FileName in~ (&quot;post-receive&quot;,&quot;pre-receive&quot;,&quot;update&quot;,&quot;post-update&quot;))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, InitiatingProcessCommandLine, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActingProcessName has &quot;gogs&quot;
-| where TargetFilePath has &quot;/.ssh/authorized_keys&quot;
-     or (TargetFilePath has &quot;/hooks/&quot; and (TargetFilePath endswith &quot;/post-receive&quot; or TargetFilePath endswith &quot;/pre-receive&quot; or TargetFilePath endswith &quot;/update&quot; or TargetFilePath endswith &quot;/post-update&quot;))
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, DvcAction
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gogs Process Writes Git Hook or SSH authorized_keys (CVE-2026-52811)
-id: 6f2a9c1e-4d3b-4a7e-9b1c-2f8e7a6d5c40
-description: Detects the gogs web binary writing to a git server-side hook or ~git/.ssh/authorized_keys, the arbitrary-file-write primitive of the CVE-2026-52811 committed-parent-symlink traversal.
-references:
-  - https://github.com/advisories/GHSA-89mr-xqfv-758m
-  - https://advisories.gitlab.com/golang/gogs.io/gogs/CVE-2026-52811/
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1190
-  - attack.t1098.004
-logsource:
-  category: file_event
-  product: linux
-detection:
-  writer:
-    Image|endswith: &#x27;/gogs&#x27;
-  authkeys:
-    TargetFilename|endswith: &#x27;/.ssh/authorized_keys&#x27;
-  hooks:
-    TargetFilename|contains: &#x27;/hooks/&#x27;
-    TargetFilename|endswith:
-      - &#x27;/post-receive&#x27;
-      - &#x27;/pre-receive&#x27;
-      - &#x27;/update&#x27;
-      - &#x27;/post-update&#x27;
-  condition: writer and (authkeys or hooks)
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/\/gogs$/i
-| TargetFileName=/(\/\.ssh\/authorized_keys|\/hooks\/(post-receive|pre-receive|update|post-update))$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=gogs (Filesystem.file_name=&quot;authorized_keys&quot; OR Filesystem.file_name IN (&quot;post-receive&quot;,&quot;pre-receive&quot;,&quot;update&quot;,&quot;post-update&quot;)) by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | where like(file_path,&quot;%/.ssh/authorized_keys&quot;) OR like(file_path,&quot;%/hooks/%&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-179-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=gogs (Filesystem.file_name=&quot;authorized_keys&quot; OR Filesystem.file_name IN (&quot;post-receive&quot;,&quot;pre-receive&quot;,&quot;update&quot;,&quot;post-update&quot;)) by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | where like(file_path,&quot;%/.ssh/authorized_keys&quot;) OR like(file_path,&quot;%/hooks/%&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4c4622d5c1" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Gogs git post-receive/update hook spawning a shell or network tool (CVE-2026-52811 RCE trigger)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4c4622d5c1" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the RCE payoff of CVE-2026-52811: an overwritten server-side git hook (post-receive/pre-receive/update) firing on the next push and spawning an interpreter or download tool instead of the benign `gogs hook` delegator. This is the execution stage of the symlink-write chain.
-
-Rationale: The advisory names post-receive hook overwrite as the direct RCE vector; a git hook&#x27;s only legitimate child on a Gogs box is the `gogs hook` delegator, so a hook parenting bash/curl/python is near-zero-FP and confirms exploitation.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/gogs.io/gogs/CVE-2026-52811/
-  • https://www.upwind.io/feed/cve-2025-8110-gogs-rce-unpatched</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Event Triggered Execution">T1546</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Custom legitimate hooks that intentionally run CI/notification scripts (curl to Slack/webhook) on push</li><li>Gitea/Gogs mirror or CI integration hooks invoking git-lfs or fetch helpers</li><li>Admin-authored post-receive deploy scripts that pull artifacts</li><li>Backup jobs invoking hooks during repo verification</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;hooks.slack.com&quot;,&quot;/opt/ci/&quot;,&quot;gogs hook&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Read the hook file at the ParentImage path and the child ProcessCommandLine; benign Gogs hooks only exec `gogs hook &lt;name&gt;`. Any inline shell, base64, or outbound curl/wget = confirmed RCE. 2) CONTAIN: Isolate the host, kill the child process tree, restore the hook from a known-good repo template, and block the C2 destination seen in the child cmdline. 3) HUNT: Identify the pushing user and source IP from Gogs access logs, enumerate other repos owned by that account for planted symlinks/hooks, and sweep for UC1 file-write events preceding this execution.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;post-receive&quot;,&quot;pre-receive&quot;,&quot;update&quot;,&quot;post-update&quot;)
-| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;post-receive&quot;,&quot;pre-receive&quot;,&quot;update&quot;,&quot;post-update&quot;)
-| where ActingProcessName has_any (&quot;/bash&quot;,&quot;/sh&quot;,&quot;/dash&quot;,&quot;/ash&quot;,&quot;/zsh&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/python&quot;,&quot;/perl&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/socat&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gogs Git Hook Spawns Shell or Network Tool (CVE-2026-52811 RCE)
-id: b81d4f2a-6c9e-49a1-8d3f-71a2c5e0b93d
-description: Detects a server-side git hook (post-receive/pre-receive/update) executing an interpreter or download tool, indicating a hijacked hook per CVE-2026-52811.
-references:
-  - https://github.com/advisories/GHSA-89mr-xqfv-758m
-  - https://www.upwind.io/feed/cve-2025-8110-gogs-rce-unpatched
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1059.004
-  - attack.t1546
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    ParentImage|endswith:
-      - &#x27;/post-receive&#x27;
-      - &#x27;/pre-receive&#x27;
-      - &#x27;/update&#x27;
-      - &#x27;/post-update&#x27;
-    Image|endswith:
-      - &#x27;/bash&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/ash&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/perl&#x27;
-      - &#x27;/nc&#x27;
-      - &#x27;/ncat&#x27;
-      - &#x27;/socat&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(post-receive|pre-receive|update|post-update)$/i
-| ImageFileName=/\/(bash|sh|dash|ash|zsh|curl|wget|python3?|perl|nc|ncat|socat)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;post-receive&quot;,&quot;pre-receive&quot;,&quot;update&quot;,&quot;post-update&quot;) Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-179-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;post-receive&quot;,&quot;pre-receive&quot;,&quot;update&quot;,&quot;post-update&quot;) Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="897c85e237" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Interactive shell for Gogs &#x27;git&#x27; service account via SSH (CVE-2026-52811 authorized_keys foothold)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="897c85e237" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the SSH-foothold payoff of CVE-2026-52811: an attacker key implanted into ~git/.ssh/authorized_keys yields an interactive shell as the git service account, bypassing Gogs&#x27; forced `gogs serv` command. Normal Gogs SSH sessions never spawn bash/sh, so an sshd-parented shell under the git user is high-fidelity.
-
-Rationale: Gogs keys in authorized_keys always carry a forced `command=&quot;gogs serv ...&quot;`, so SSH sessions for the git user only ever exec the gogs binary; an sshd-parented interactive shell for that account is the direct symptom of an unrestricted attacker key implanted via the CVE-2026-52811 write.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/gogs.io/gogs/CVE-2026-52811/
-  • https://www.wiz.io/blog/wiz-research-gogs-cve-2025-8110-rce-exploit</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span> <span class="ind tech" title="Remote Services: SSH">T1021.004</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A sysadmin who legitimately holds an unrestricted key for the git account for maintenance/break-glass</li><li>Backup or automation tooling that SSHes as git to run rsync/tar (would spawn those tools, not a login shell)</li><li>Configuration management running a remote command as git</li><li>Monitoring agents invoking a shell health-check as the git user</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;rsync&quot;,&quot;borg&quot;,&quot;/usr/bin/tar&quot;,&quot;gogs serv&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Grep ~git/.ssh/authorized_keys for any entry lacking the `command=&quot;...gogs serv key-N...&quot;,no-pty` forced-command wrapper; capture the source IP from sshd/auth logs and the child ProcessCommandLine. 2) CONTAIN: Kill the session, remove the offending key line, rotate the git account&#x27;s credentials, and firewall SSH to management ranges only. 3) HUNT: Correlate the session start with UC1 authorized_keys write events and UC2 hook execution, enumerate commands run in the shell (history/auditd), and check for lateral movement or persistence dropped from that shell.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;sshd&quot;
-| where AccountName =~ &quot;git&quot;
-| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;)
-| where FileName != &quot;gogs&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName endswith &quot;sshd&quot; or ParentProcessName == &quot;sshd&quot;
-| where ActorUsername == &quot;git&quot;
-| where ActingProcessName has_any (&quot;/bash&quot;,&quot;/sh&quot;,&quot;/dash&quot;,&quot;/ash&quot;,&quot;/zsh&quot;)
-| where not (ActingProcessName has &quot;gogs&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Interactive Shell for Gogs git Service Account via SSH (CVE-2026-52811 foothold)
-id: c40e7b19-2a5d-4f8c-b6e1-9d3a71f2c8ab
-description: Detects sshd spawning an interactive shell under the git service account, bypassing Gogs&#x27; forced gogs-serv command - the SSH foothold from an implanted authorized_keys entry (CVE-2026-52811).
-references:
-  - https://github.com/advisories/GHSA-89mr-xqfv-758m
-  - https://www.wiz.io/blog/wiz-research-gogs-cve-2025-8110-rce-exploit
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1098.004
-  - attack.t1021.004
-  - attack.t1078
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    ParentImage|endswith: &#x27;/sshd&#x27;
-    User: &#x27;git&#x27;
-    Image|endswith:
-      - &#x27;/bash&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/ash&#x27;
-      - &#x27;/zsh&#x27;
-  filter:
-    Image|endswith: &#x27;/gogs&#x27;
-  condition: selection and not filter
-level: high</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^sshd$/i UserName=/^git$/i
-| ImageFileName=/\/(bash|sh|dash|ash|zsh)$/i
-| NOT (ImageFileName=/\/gogs$/i)
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=sshd Processes.user=git Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;) NOT Processes.process_name=gogs by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-179-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=sshd Processes.user=git Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;) NOT Processes.process_name=gogs by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-179-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-52811&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-52811&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-52811&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-179-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-52811&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ace0fd1925" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ace0fd1925" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Access Software">T1219</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
-   or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-179-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\AnyDesk.exe&quot;
-   or NewProcessName endswith &quot;\TeamViewer.exe&quot;
-   or NewProcessName endswith &quot;\TeamViewer_Service.exe&quot;
-   or NewProcessName endswith &quot;\ScreenConnect.ClientService.exe&quot;
-   or NewProcessName endswith &quot;\ConnectWiseControl.ClientService.exe&quot;
-   or NewProcessName endswith &quot;\atera_agent.exe&quot;
-   or NewProcessName endswith &quot;\SplashtopStreamer.exe&quot;
-   or NewProcessName endswith &quot;\RustDesk.exe&quot;
-   or NewProcessName endswith &quot;\NinjaOne.exe&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
-status: experimental
-description: |
-    AnyDesk / TeamViewer / ScreenConnect / Atera / Splashtop /
-    RustDesk — RMM tools attackers commonly install for hands-on-
-    keyboard access. Filter against the IT estate&#x27;s known tool.
-references:
-    - https://attack.mitre.org/techniques/T1219/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1219
-    - attack.command-and-control
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Image|endswith:
-            - &#x27;\AnyDesk.exe&#x27;
-            - &#x27;\TeamViewer.exe&#x27;
-            - &#x27;\TeamViewer_Service.exe&#x27;
-            - &#x27;\ScreenConnect.ClientService.exe&#x27;
-            - &#x27;\ConnectWiseControl.ClientService.exe&#x27;
-            - &#x27;\atera_agent.exe&#x27;
-            - &#x27;\SplashtopStreamer.exe&#x27;
-            - &#x27;\RustDesk.exe&#x27;
-            - &#x27;\NinjaOne.exe&#x27;
-    condition: selection
-falsepositives:
-    - IT-approved RMM in use across the estate. Maintain a known-IT-
-      tool exclusion list per environment.
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-179-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6c0a5b73b0" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo work</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6c0a5b73b0" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo work
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;poc.py&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/home/git/.ssh&quot;, &quot;/tmp/local-r/&quot;, &quot;/usr/bin/env&quot;, &quot;/home/git/.ssh/authorized_keys&quot;) or FileName in~ (&quot;poc.py&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo work
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;poc.py&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/home/git/.ssh&quot;, &quot;/tmp/local-r/&quot;, &quot;/usr/bin/env&quot;, &quot;/home/git/.ssh/authorized_keys&quot;) or FileName in~ (&quot;poc.py&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo work ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;poc.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/home/git/.ssh*&quot; OR Filesystem.file_path=&quot;*/tmp/local-r/*&quot; OR Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/home/git/.ssh/authorized_keys*&quot; OR Filesystem.file_name IN (&quot;poc.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-179-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52811: Gogs: UploadRepoFiles writes outside repo work ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;poc.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/home/git/.ssh*&quot; OR Filesystem.file_path=&quot;*/tmp/local-r/*&quot; OR Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/home/git/.ssh/authorized_keys*&quot; OR Filesystem.file_name IN (&quot;poc.py&quot;))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`

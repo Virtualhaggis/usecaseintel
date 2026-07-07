@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2560 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2559 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-07
+- [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
 
 ## 2026-07-06
 - [16 year old linux kvm flaw lets guest vms escape to host on ](./2026-07-06/16-year-old-linux-kvm-flaw-lets-guest-vms-escape-to-host-on-.md)
@@ -193,8 +196,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44179 xwiki pro macros has remote cod](./2026-06-22/ghsa-critical-cve-2026-44179-xwiki-pro-macros-has-remote-cod.md)
 - [ghsa critical cve 2026 44203 openam has pre auth reflected x](./2026-06-22/ghsa-critical-cve-2026-44203-openam-has-pre-auth-reflected-x.md)
 - [ghsa critical cve 2026 46488 motioneye authentication possib](./2026-06-22/ghsa-critical-cve-2026-46488-motioneye-authentication-possib.md)
-- [ghsa critical cve 2026 46495 opendj pre auth rce via java de](./2026-06-22/ghsa-critical-cve-2026-46495-opendj-pre-auth-rce-via-java-de.md)
-- [ghsa critical cve 2026 48170 scimpatch vulnerable to prototy](./2026-06-22/ghsa-critical-cve-2026-48170-scimpatch-vulnerable-to-prototy.md)
 - [ghsa critical cve 2026 54352 budibase has arbitrary file rea](./2026-06-22/ghsa-critical-cve-2026-54352-budibase-has-arbitrary-file-rea.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 

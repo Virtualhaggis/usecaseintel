@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Successful Azure CLI sign-in from LSHIY LLC IPv6 range (2a0a:d683::/32) — confirmed compromise
 
-`UC_103_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ AADSignInEventsBeta
 
 ### Azure CLI ROPC password spray from LSHIY LLC (2a0a:d683::/32) — high failed-auth fan-out
 
-`UC_103_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ AADSignInEventsBeta
 
 ### Azure CLI ROPC sign-in bypassing Conditional Access (CA NotApplied, non-interactive)
 
-`UC_103_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_104_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

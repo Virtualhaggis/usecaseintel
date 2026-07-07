@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Enterprise asset contacting NetNut/Popa residential-proxy gateway (netnut.com/netnut.io)
 
-`UC_55_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_56_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

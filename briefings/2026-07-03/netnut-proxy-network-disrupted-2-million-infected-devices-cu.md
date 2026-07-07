@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Enterprise host egress to seized NetNut/Popa residential-proxy infrastructure (netnut.io, proxyjet.io, divinetworks.com)
 
-`UC_34_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_35_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
