@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### VS Code / Cursor auto-run task spawns inline node -e / python -c / script host (TaskJacker folderOpen RCE)
 
-`UC_32_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_36_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### BeaverTail loader appends JavaScript to build-config files (postcss/tailwind/next/vite/eslint/babel)
 
-`UC_32_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_36_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### Developer tooling (node) contacts TRON/Aptos/BNB Smart Chain public RPC to stage payload
 
-`UC_32_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### DEV#POPPER stage-2 / socket.io C2 to Evoxt IPs or EmbedIO port 27017
 
-`UC_32_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceNetworkEvents
 
 ### Scripted Git history rewrite: amend with backdated commit or scripted force-push
 
-`UC_32_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_36_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -341,7 +341,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — North Korean Hackers Publish 108 Malicious Packages and Extensions in PolinRider
 
-`UC_32_7` · phase: **exploit** · confidence: **High**
+`UC_36_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

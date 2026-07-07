@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### RustDuck C2/delivery infrastructure callback to 176.65.139.204
 
-`UC_113_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_116_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### RustDuck two-stage loader file/execution by SHA1 hash
 
-`UC_113_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_116_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ union
 
 ### RustDuck duckdns.org and dynamic-DNS C2 domain resolution
 
-`UC_113_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_116_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### RustDuck-targeted CVE exposure across managed devices
 
-`UC_113_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_116_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### RustDuck worm-style outbound scanning on Telnet/SSH/ADB ports
 
-`UC_113_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_116_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

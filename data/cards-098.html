@@ -1,3 +1,243 @@
+<article class="card" id="art-3265" data-art-slug="2020-09-21-arbitrary-code-execution-in-grunt"
+  data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="Arbitrary code execution in Grunt Welcome to the Snyk Monthly Vulnerability Profile. This month we’re looking at an arbitrary code execution vulnerability discovered in the popular Grunt JavaScript package. CVE-2020-7729 T1190 [LLM] Vulnerable Grunt &lt; 1.3.0 exposed to YAML deserialization ACE (CVE-2020-7729) [LLM] Grunt task-runner (node.exe) spawning a command shell — possible js-yaml load() ACE Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2020-09-21-arbitrary-code-execution-in-grunt" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/arbitrary-code-execution-in-js-grunt/" target="_blank" rel="noopener">Arbitrary code execution in Grunt</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2020-09-21</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Welcome to the Snyk Monthly Vulnerability Profile. This month we’re looking at an arbitrary code execution vulnerability discovered in the popular Grunt JavaScript package.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-7729</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3265-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3265"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3265-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable Grunt &lt; 1.3.0 exposed to YAML deserialization ACE (CVE-2020-7729) · [LLM] Grunt task-runner (node.exe) spawning a command shell — possible js-yaml load() ACE</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="630e512947" data-platforms="def,sent" data-targets="" open>
+  <summary>
+    <span class="uc-title">Vulnerable Grunt &lt; 1.3.0 exposed to YAML deserialization ACE (CVE-2020-7729)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="630e512947" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces hosts/build agents carrying a Grunt task-runner version below 1.3.0, which calls js-yaml load() inside grunt.file.readYAML and can execute arbitrary JavaScript when parsing an attacker-controlled YAML file. Article-specific because it pivots on the exact CVE and the fixed version (1.3.0) named in the Snyk disclosure.
+
+Rationale: Anchors on the concrete CVE-2020-7729 and fixed version 1.3.0 from the article; cross-checked against NVD and the GitHub Advisory Database confirming grunt &lt; 1.3.0 uses js-yaml load() in grunt.file.readYAML. Pure exposure hunt, near-zero false positives.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2020-7729
+  • https://github.com/advisories/GHSA-m5pj-vjjf-4m3h</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools">T1195.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Stale TVM inventory still showing &lt; 1.3.0 after an in-place upgrade to 1.3.0+</li><li>Grunt bundled inside another product&#x27;s node_modules but never invoked on untrusted YAML (no readYAML reachability)</li><li>Air-gapped CI build agents where the YAML inputs are fully trusted and risk is formally accepted</li><li>grunt-cli (the launcher) reported separately from the vulnerable grunt runtime, causing version confusion</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported SoftwareVersion is truly &lt; 1.3.0 and that the project actually calls grunt.file.readYAML on externally-sourced YAML (check Gruntfile / tasks). 2) Contain: prioritise build agents and developer endpoints; bump grunt to &gt;= 1.3.0 (npm install grunt@latest) and rebuild; block ingestion of YAML from untrusted sources into the build. 3) Hunt: pivot to UC2 to check whether any node/grunt process on these hosts has already spawned a shell, indicating attempted or successful exploitation.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3265-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3265-uc0-sentinel">Sentinel KQL</button>
+    </div>
+    <div class="tab-content active" id="art-3265-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2020-7729&quot;
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-3265-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2020-7729&quot;
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6882c96bb5" data-platforms="datadog,def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Grunt task-runner (node.exe) spawning a command shell — possible js-yaml load() ACE</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="6882c96bb5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts node.exe running a Grunt build (grunt in the command line) that spawns a shell/script interpreter, the manifestation of CVE-2020-7729 where a crafted YAML deserialized by js-yaml load() invokes child_process during grunt.file.readYAML. Article-specific via the grunt parent anchor; treat as a hunting pivot because legitimate grunt shell tasks share this shape.
+
+Rationale: Uses the article&#x27;s grunt task-runner context (node.exe with &#x27;grunt&#x27; in the parent command line) combined with a shell child to surface the js-yaml load() ACE manifestation. Falcon left empty because ProcessRollup2 in this schema reference exposes no parent command line field, so the &#x27;grunt&#x27; anchor cannot be applied without flooding on every node-&gt;shell.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2020-7729
+  • https://github.com/advisories/GHSA-m5pj-vjjf-4m3h</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Client Execution">T1203</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate grunt-exec / grunt-shell tasks that deliberately spawn cmd/powershell as part of the build</li><li>npm/CI scripts wrapped by grunt that shell out to package managers or git</li><li>Developers running ad-hoc grunt tasks that call shell commands locally</li><li>grunt invoking wscript/cscript for legacy tooling on Windows build agents</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;grunt-exec&quot;,&quot;grunt-shell&quot;,&quot;npm run&quot;,&quot;node_modules\\.bin&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read InitiatingProcessCommandLine and the child ProcessCommandLine — is the shell running a defined Gruntfile task (grunt-exec/grunt-shell) or an unexpected recon/download command? Check whether the host appears in UC1 as still &lt; 1.3.0. 2) Contain: if the child command is not a known build step (e.g. it pulls a remote payload, enumerates the host, or writes to startup), isolate the host and capture the Gruntfile plus any recently parsed YAML inputs. 3) Hunt: review what untrusted YAML the build consumed, search DeviceNetworkEvents from the same node PID for outbound C2, and sweep peer build agents sharing the same repo/CI pipeline.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3265-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3265-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3265-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3265-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3265-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3265-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;node.exe&quot;
+| where InitiatingProcessCommandLine has &quot;grunt&quot;
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh.exe&quot;,&quot;bash.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3265-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessName has &quot;node.exe&quot;
+| where ActingProcessCommandLine has &quot;grunt&quot;
+| where TargetProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3265-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Grunt (node.exe) Spawning Command Shell - Possible CVE-2020-7729 js-yaml ACE
+id: 7d2c1f4e-9a3b-4c2d-8e6f-1b0a5c9d3e21
+description: Detects node.exe running a Grunt build spawning a shell or script interpreter, the execution signature of CVE-2020-7729 arbitrary code execution via js-yaml load() in grunt.file.readYAML.
+references:
+  - https://snyk.io/blog/arbitrary-code-execution-in-js-grunt/
+  - https://nvd.nist.gov/vuln/detail/CVE-2020-7729
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1203
+  - attack.t1059.007
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith: &#x27;\node.exe&#x27;
+    ParentCommandLine|contains: &#x27;grunt&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+  condition: selection
+level: low</code></pre></div>
+    <div class="tab-content" id="art-3265-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\node.exe OR *\node.EXE) @ParentCommandLine:(*grunt* OR *Grunt*) @Image:(*\cmd.exe OR *\powershell.exe OR *\PowerShell.exe OR *\pwsh.exe OR *\wscript.exe OR *\cscript.exe)</code></pre></div>
+    <div class="tab-content" id="art-3265-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3265-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3265-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3265-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;node.exe&quot; Processes.parent_process=&quot;*grunt*&quot; (Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;sh.exe&quot; OR Processes.process_name=&quot;bash.exe&quot; OR Processes.process_name=&quot;wscript.exe&quot; OR Processes.process_name=&quot;cscript.exe&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3265-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;node.exe&quot; Processes.parent_process=&quot;*grunt*&quot; (Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;sh.exe&quot; OR Processes.process_name=&quot;bash.exe&quot; OR Processes.process_name=&quot;wscript.exe&quot; OR Processes.process_name=&quot;cscript.exe&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3265-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3265-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3265-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3265-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-7729&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3265-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-7729&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3265-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3265-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3265-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3265-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-7729&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3265-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-7729&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3274" data-art-slug="2020-09-08-building-a-secure-amazon-s3-bucket-aws"
   data-phases="actions,c2,exploit,install" data-sev="med"
   data-techs="T1190"
@@ -5533,384 +5773,6 @@ DeviceFileEvents
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_name IN (&quot;conftest.py&quot;,&quot;api.py&quot;,&quot;test_aws.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3361" data-art-slug="2020-03-26-exploring-the-minimist-prototype-pollution-security-vulnerab"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="Exploring the minimist prototype pollution security vulnerability This post discusses the prototype pollution vulnerability, explains how certain applications can be subject to it, and describes the rationale behind its severity classification. CVE-2020-7598 T1190 [LLM] Prototype pollution payload in CLI args (--__proto__ / constructor.prototype) to Node tool [LLM] World-writable executable run as a shell (-c) — minimist polluted shell privesc payload Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Exploring the minimist prototype pollution security vulnerability">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2020-03-26-exploring-the-minimist-prototype-pollution-security-vulnerab" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/prototype-pollution-minimist/" target="_blank" rel="noopener">Exploring the minimist prototype pollution security vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-03-26</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">This post discusses the prototype pollution vulnerability, explains how certain applications can be subject to it, and describes the rationale behind its severity classification.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-7598</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3361-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3361"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3361-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Prototype pollution payload in CLI args (--__proto__ / constructor.prototype) to Node tool · Article-specific behavioural hunt — Exploring the minimist prototype pollution security vulnerability</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] World-writable executable run as a shell (-c) — minimist polluted shell privesc payload</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="307fa6e2ef" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Prototype pollution payload in CLI args (--__proto__ / constructor.prototype) to Node tool</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="307fa6e2ef" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for the minimist CVE-2020-7598 exploitation primitive: command-line argument tokens that walk the Object prototype (--__proto__.shell, __proto__.polluted, constructor.prototype.x) passed to a Node.js CLI utility. These tokens are JavaScript keywords that essentially never appear in legitimate command lines, making them a high-fidelity indicator of an attacker abusing an argument parser (minimist/yargs-parser) to pollute Object.prototype for privilege escalation or logic tampering.
-
-Rationale: Anchored on the exact exploit token from the article (`--__proto__.shell`) and the corroborated CVE-2020-7598 payload family (`--__proto__.y=`, `--constructor.prototype.polluted=true`). These JS-keyword tokens in argv are near-zero-FP. Cross-checked GitHub Advisory GHSA-vh95-rmgr-6w4m and SentinelOne&#x27;s CVE DB for payload syntax.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-vh95-rmgr-6w4m
-  • https://security.snyk.io/vuln/SNYK-JS-MINIMIST-559764
-  • https://www.sentinelone.com/vulnerability-database/cve-2020-7598/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Hijack Execution Flow: Services File Permissions Weakness">T1574.010</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researchers / pentesters running prototype-pollution PoCs (e.g. lirantal/pp-minimist-poc) against test apps</li><li>Burp Suite or npm audit-style scanners emitting __proto__ probe strings in argv</li><li>CTF challenge solving on a developer workstation</li><li>Unit/integration tests for a parser that intentionally feed __proto__ fixtures</li><li>A log line or file path that legitimately contains the literal substring &#x27;constructor&#x27; adjacent to &#x27;prototype&#x27; (rare)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;burpsuite&quot;,&quot;node&quot;) or ProcessCommandLine has_any (&quot;--__proto__&quot;,&quot;constructor.prototype&quot;) | where InitiatingProcessFolderPath !startswith &quot;/opt/security-tools/&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the full ProcessCommandLine and the parent process. Confirm the token targets a prototype path (--__proto__.&lt;x&gt;, constructor.prototype.&lt;x&gt;) and identify the receiving Node.js binary; map it to a known minimist/yargs-parser-using app and its version. Step 2 (contain): If the target is a setuid/root or network-facing Node service, isolate the host and kill the process; if the parser version is vulnerable (&lt;1.2.3 for minimist), block invocation and schedule an emergency dependency bump. Step 3 (hunt): Search the same host/user for a follow-on world-writable executable being run as a shell (see companion UC), unexpected setuid-binary children, and any /tmp file drops + chmod +x in the surrounding 5 minutes.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3361-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3361-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3361-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3361-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3361-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3361-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3361-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where ProcessCommandLine matches regex @&quot;(?i)(--?)?(__proto__|constructor\.prototype|constructor\[)&quot;
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3361-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where TargetProcessCommandLine matches regex @&quot;(?i)(--?)?(__proto__|constructor\.prototype|constructor\[)&quot;
-| where ActorUsername !endswith &quot;$&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine,
-          ParentProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3361-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Prototype Pollution Payload in CLI Arguments (minimist CVE-2020-7598)
-id: 7b1f3c9e-2a4d-4f8b-9c1e-5d6a8f0b3c21
-description: Detects __proto__ / constructor.prototype tokens passed as command-line arguments to a Node.js CLI utility, the exploitation primitive for prototype pollution in argument parsers such as minimist and yargs-parser.
-references:
-  - https://snyk.io/blog/prototype-pollution-minimist/
-  - https://github.com/advisories/GHSA-vh95-rmgr-6w4m
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1068
-  - attack.t1574.010
-logsource:
-  category: process_creation
-detection:
-  selection:
-    CommandLine|contains:
-      - &#x27;__proto__&#x27;
-      - &#x27;constructor.prototype&#x27;
-      - &#x27;constructor[&#x27;
-  condition: selection
-falsepositives:
-  - Security testing / vulnerability scanners (Burp Prototype Pollution Scanner, pp-finder)
-  - Developers running prototype-pollution PoC scripts
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3361-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*__proto__* OR *constructor.prototype* OR *constructor\[*)</code></pre></div>
-    <div class="tab-content" id="art-3361-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/(--?)?(__proto__|constructor\.prototype|constructor\[)/i
-| table([aid, ComputerName, UserName, ImageFileName, ParentBaseFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-3361-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3361-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3361-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3361-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process IN (&quot;*--__proto__*&quot;,&quot;*__proto__.*&quot;,&quot;*__proto__[*&quot;,&quot;*constructor.prototype*&quot;,&quot;*constructor[*prototype*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where user!=&quot;-&quot; | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3361-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process IN (&quot;*--__proto__*&quot;,&quot;*__proto__.*&quot;,&quot;*__proto__[*&quot;,&quot;*constructor.prototype*&quot;,&quot;*constructor[*prototype*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where user!=&quot;-&quot; | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="11bbb1164d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">World-writable executable run as a shell (-c) — minimist polluted shell privesc payload</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="11bbb1164d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the second stage of the CVE-2020-7598 privilege-escalation chain from the article: after polluting Object.prototype.shell, child_process.execSync invokes the attacker file (e.g. /tmp/exploit) as the system shell, spawning it as `&lt;world-writable-path&gt; -c &lt;command&gt;`. A binary living in /tmp, /var/tmp or /dev/shm being executed with shell `-c` semantics is a strong signal of execSync shell-substitution, distinct from a normal script launch.
-
-Rationale: Anchored on the article&#x27;s exact privesc payload: `printf &#x27;#!/bin/sh id&#x27; &gt; /tmp/exploit; chmod +x /tmp/exploit; u-reboot --__proto__.shell /tmp/exploit`, where the polluted shell makes execSync run /tmp/exploit as `-c` shell. The world-writable-path + shell-`-c`-invocation pair is the distinguishing behaviour, separate from the argv token in UC1.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-vh95-rmgr-6w4m
-  • https://arxiv.org/pdf/2207.11171</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A build system (CI runner) staging and executing a generated wrapper script from /tmp with an explicit -c flag</li><li>Configuration-management tooling (Ansible/Salt) dropping a temp script invoked via shell -c</li><li>An admin debugging by copying a script to /tmp and running &#x27;sh -c&#x27; style</li><li>Sandboxing/AV detonation harnesses executing samples from /tmp</li><li>Snap/Flatpak helper executables that legitimately reside under /var/tmp</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !startswith &quot;/usr/lib/&quot; and InitiatingProcessFileName !in~ (&quot;ansible&quot;,&quot;salt-minion&quot;,&quot;chef-client&quot;,&quot;runner&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the parent process — confirm whether it is a Node.js / setuid binary (the minimist-using utility). Inspect the /tmp executable&#x27;s content (hashes, shebang, recent FileWritten + chmod +x events) and the command after -c. Step 2 (contain): If the parent ran with elevated/setuid privileges and the /tmp payload is attacker-controlled, isolate the host, kill the process tree, and quarantine the dropped file. Step 3 (hunt): Pivot on the same host/user for the UC1 prototype-pollution argv token within the prior few minutes, enumerate other setuid Node binaries on the host, and review for additional /tmp drops, chmod +x, and unexpected uid=0 child processes.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3361-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3361-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3361-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3361-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3361-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3361-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3361-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FolderPath matches regex @&quot;^/(tmp|var/tmp|dev/shm)/&quot;
-| where ProcessCommandLine matches regex @&quot;^/(tmp|var/tmp|dev/shm)/\S+\s+-c(\s|$)&quot;
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          ProcessIntegrityLevel, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3361-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where TargetProcessName matches regex @&quot;^/(tmp|var/tmp|dev/shm)/&quot;
-| where TargetProcessCommandLine matches regex @&quot;^/(tmp|var/tmp|dev/shm)/\S+\s+-c(\s|$)&quot;
-| where ActorUsername !endswith &quot;$&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine,
-          ParentProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3361-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: World-Writable Executable Invoked as Shell (-c) — Prototype Pollution Shell Hijack
-id: c4e2a917-8b63-4d05-a1f7-2e9c6b0d4a88
-description: Detects a binary located in /tmp, /var/tmp or /dev/shm being executed with a shell -c argument, the execSync shell-substitution payload behaviour from minimist prototype pollution (CVE-2020-7598) privilege escalation.
-references:
-  - https://snyk.io/blog/prototype-pollution-minimist/
-  - https://github.com/advisories/GHSA-vh95-rmgr-6w4m
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1059.004
-  - attack.t1068
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_path:
-    Image|startswith:
-      - &#x27;/tmp/&#x27;
-      - &#x27;/var/tmp/&#x27;
-      - &#x27;/dev/shm/&#x27;
-  selection_shell:
-    CommandLine|contains: &#x27; -c &#x27;
-  condition: selection_path and selection_shell
-falsepositives:
-  - Package managers or build tooling executing helper scripts from a temp directory
-  - Sysadmin one-off scripts staged in /tmp run with an explicit -c
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-3361-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.executable.path:/tmp/* OR @process.executable.path:/var/tmp/* OR @process.executable.path:/dev/shm/*) @process.command_line:*\ -c\ *</code></pre></div>
-    <div class="tab-content" id="art-3361-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/^\/(tmp|var\/tmp|dev\/shm)\//
-| CommandLine=/^\/(tmp|var\/tmp|dev\/shm)\/\S+\s+-c(\s|$)/
-| table([aid, ComputerName, UserName, ImageFileName, ParentBaseFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-3361-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3361-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3361-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3361-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path IN (&quot;/tmp/*&quot;,&quot;/var/tmp/*&quot;,&quot;/dev/shm/*&quot;)) Processes.process=&quot;* -c *&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3361-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path IN (&quot;/tmp/*&quot;,&quot;/var/tmp/*&quot;,&quot;/dev/shm/*&quot;)) Processes.process=&quot;* -c *&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3361-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3361-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3361-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3361-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-7598&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3361-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-7598&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3361-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3361-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3361-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3361-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-7598&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3361-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-7598&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="566e5c53fe" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Exploring the minimist prototype pollution security vulnerability</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="566e5c53fe" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3361-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3361-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3361-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3361-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Exploring the minimist prototype pollution security vulnerability
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/exploit&quot;) or FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3361-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Exploring the minimist prototype pollution security vulnerability
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/exploit&quot;) or FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3361-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3361-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3361-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3361-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Exploring the minimist prototype pollution security vulnerability ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/exploit*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3361-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Exploring the minimist prototype pollution security vulnerability ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/exploit*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`

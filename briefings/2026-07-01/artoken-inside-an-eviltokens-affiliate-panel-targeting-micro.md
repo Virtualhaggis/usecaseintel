@@ -40,17 +40,13 @@ The ARToken panel exposes 80+ API endpoints for device code phishing, Primary Re
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
-- **T1566.002** — Phishing: Spearphishing Link
 - **T1656** — Impersonation
-- **T1621** — Multi-Factor Authentication Request Generation
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1098.005** — Account Manipulation: Device Registration
-- **T1606.002** — Forge Web Credentials: SAML/PRT Tokens
-- **T1564.008** — Hide Artifacts: Email Hiding Rules
-- **T1114.003** — Email Collection: Email Forwarding Rule
-- **T1213.002** — Data from Information Repositories: SharePoint
-- **T1114.002** — Email Collection: Remote Email Collection
+- **T1036.005** — Match Legitimate Name or Location
+- **T1078.004** — Cloud Accounts
+- **T1098.005** — Device Registration
+- **T1550.001** — Application Access Token
+- **T1102** — Web Service
+- **T1497** — Virtualization/Sandbox Evasion
 
 ## Kill chain phases observed
 
@@ -58,123 +54,124 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ARToken vendor-impersonation phish: look-alike SharePoint tenant + workers.dev lure with SPF/DKIM/DMARC fail
+### ARToken vendor-impersonation phish: inbound mail failing SPF+DKIM+DMARC with pumber.png signature lure
 
-`UC_100_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_103_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.direction="inbound" (All_Email.url="*mononapfpcom.sharepoint.com*" OR All_Email.url="*clear90489058903-document.workers.dev*" OR All_Email.url="*-docviewer.workers.dev*" OR All_Email.url="*-onedrive.workers.dev*" OR All_Email.url="*-adobe2.workers.dev*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.url | `drop_dm_object_name(All_Email)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.direction="inbound" All_Email.action="delivered" All_Email.file_name="pumber.png" by All_Email.src_user, All_Email.recipient, All_Email.subject, All_Email.file_name, All_Email.message_id
+| `drop_dm_object_name(All_Email)`
+| where like(subject, "%invoice%") OR like(subject, "%outstanding%")
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 30d;
 EmailEvents
-| where Timestamp > ago(LookbackDays)
-| where EmailDirection == "Inbound"
-| where AuthenticationDetails has "compauth=none" or (AuthenticationDetails has "spf=fail" and AuthenticationDetails has "dkim=fail")
+| where Timestamp > ago(30d)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+| extend AD = parse_json(AuthenticationDetails)
+| where tostring(AD.SPF) =~ "fail" and tostring(AD.DKIM) =~ "fail" and tostring(AD.DMARC) =~ "fail"
 | join kind=inner (
-    EmailUrlInfo
-    | where Timestamp > ago(LookbackDays)
-    | where UrlDomain in~ ("mononapfpcom.sharepoint.com","clear90489058903-document.workers.dev")
-        or UrlDomain matches regex @"(?i)^[0-9a-f-]{8,}-(docviewer|onedrive|adobe2)\.workers\.dev$"
-    | project NetworkMessageId, Url, UrlDomain
+    EmailAttachmentInfo
+    | where Timestamp > ago(30d)
+    | where FileName =~ "pumber.png"
+    | project NetworkMessageId, SigImage = FileName
   ) on NetworkMessageId
-| project Timestamp, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, AuthenticationDetails
+| project Timestamp, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, SigImage, SenderIPv4, NetworkMessageId
 | order by Timestamp desc
 ```
 
-### EvilTokens device-code MFA bypass: successful device-code auth then token replay from a different IP
+### SharePoint tenant lookalike via .com-folding (mononapfpcom.sharepoint.com) in phishing URL
 
-`UC_100_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-let Window = 2h;
-let DeviceCode = AADSignInEventsBeta
-    | where Timestamp > ago(14d)
-    | where ErrorCode == 0
-    | extend Details = tostring(AuthenticationProcessingDetails)
-    | where Details has "Device Code"
-    | project AuthTime = Timestamp, AccountUpn, AuthIP = IPAddress;
-AADSignInEventsBeta
-| where Timestamp > ago(14d)
-| where ErrorCode == 0 and IsInteractive == false
-| join kind=inner DeviceCode on AccountUpn
-| where Timestamp between (AuthTime .. AuthTime + Window)
-| where IPAddress != AuthIP
-| summarize DistinctTokenIPs = dcount(IPAddress), TokenApps = make_set(Application, 10), FirstTokenUse = min(Timestamp) by AccountUpn, AuthTime, AuthIP
-| order by AuthTime desc
-```
-
-### ARToken C2/panel and Cloudflare Workers lure beaconing (pamconj.com + {uuid}-*.workers.dev)
-
-`UC_100_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_103_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*.pamconj.com" OR DNS.query="pamconj.com" OR DNS.query="clear90489058903-document.workers.dev" OR DNS.query="*-docviewer.workers.dev" OR DNS.query="*-onedrive.workers.dev" OR DNS.query="*-adobe2.workers.dev") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="mononapfpcom.sharepoint.com" OR DNS.query="*com.sharepoint.com") by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| regex query="^[a-z0-9-]+com\.sharepoint\.com$"
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 30d;
+EmailUrlInfo
+| where Timestamp > ago(30d)
+| where UrlDomain endswith ".sharepoint.com"
+| where UrlDomain =~ "mononapfpcom.sharepoint.com" or UrlDomain matches regex @"(?i)^[a-z0-9-]+com\.sharepoint\.com$"
+| join kind=inner (
+    EmailEvents
+    | where Timestamp > ago(30d)
+    | where EmailDirection == "Inbound"
+    | project NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject
+  ) on NetworkMessageId
+| project Timestamp, SenderFromAddress, RecipientEmailAddress, Subject, Url, UrlDomain
+| order by Timestamp desc
+```
+
+### EvilTokens device-code phishing API call: POST /api/device/start with clientMode broker to C2
+
+`UC_103_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method="POST" (Web.url="*/api/device/start*" AND (Web.dest="spx.pamconj.com" OR Web.dest="*pamconj.com")) by Web.src, Web.user, Web.dest, Web.url, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+### EvilTokens PRT persistence chain: /prt/setup /prt/refresh /prt/renew /prt/reacquire /prt/cookie to C2
+
+`UC_103_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest="spx.pamconj.com" OR Web.dest="*pamconj.com") (Web.url="*/prt/setup*" OR Web.url="*/prt/refresh*" OR Web.url="*/prt/renew*" OR Web.url="*/prt/reacquire*" OR Web.url="*/prt/cookie*") by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| stats dc(url) as distinct_prt_endpoints values(url) as urls min(firstTime) as firstTime max(lastTime) as lastTime by src, user, dest
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+### ARToken Cloudflare Workers lure delivery: {uuid}-docviewer/onedrive/adobe2/document.workers.dev
+
+`UC_103_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*-docviewer.workers.dev" OR DNS.query="*-onedrive.workers.dev" OR DNS.query="*-adobe2.workers.dev" OR DNS.query="*-document.workers.dev" OR DNS.query="clear90489058903-document.workers.dev") by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
 DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
-| where RemoteUrl endswith "pamconj.com"
-    or RemoteUrl =~ "clear90489058903-document.workers.dev"
-    or RemoteUrl matches regex @"(?i)^[0-9a-f-]{8,}-(docviewer|onedrive|adobe2)\.workers\.dev$"
+| where Timestamp > ago(30d)
+| where RemoteUrl matches regex @"(?i)[a-f0-9-]+-(docviewer|onedrive|adobe2|document)\.workers\.dev" or RemoteUrl has "clear90489058903-document.workers.dev"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Endpoint egress to ARToken C2 / phishing infrastructure (pamconj.com, workers.dev)
+
+`UC_103_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="pamconj.com" OR DNS.query="*.pamconj.com" OR DNS.query="clear90489058903-document.workers.dev") by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl contains "pamconj.com" or RemoteUrl has "clear90489058903-document.workers.dev"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
-```
-
-### EvilTokens PRT persistence: Entra device registration / broker (WAM) sign-in after device-code auth
-
-`UC_100_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-AADSignInEventsBeta
-| where Timestamp > ago(14d)
-| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker (WAM) — clientMode:"broker" PRT acquisition
-| where ErrorCode == 0
-| extend Details = tostring(AuthenticationProcessingDetails)
-| where Details has "Device Code" or IsInteractive == false
-| project Timestamp, AccountUpn, Application, IPAddress, Country, DeviceTrustType, AadDeviceId, IsInteractive
-| order by Timestamp desc
-```
-
-### EvilTokens evidence suppression: malicious inbox rule (external forward / auto-delete / hide-to-RSS)
-
-`UC_100_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules")
-| extend Raw = tostring(RawEventData)
-| where Raw has_any ("ForwardTo","ForwardAsAttachmentTo","RedirectTo","DeleteMessage")
-    or (Raw has "MoveToFolder" and Raw has_any ("Deleted Items","RSS","RSS Feeds","Conversation History","Archive"))
-| project Timestamp, AccountDisplayName, AccountId, IPAddress, ActionType, Application, Raw
-| order by Timestamp desc
-```
-
-### EvilTokens SharePoint/OneDrive bulk exfiltration from a single session
-
-`UC_100_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application in ("Microsoft SharePoint Online","Microsoft OneDrive for Business")
-| where ActionType in ("FileDownloaded","FileSyncDownloadedFull")
-| summarize FileCount = dcount(ObjectName), Files = make_set(ObjectName, 20), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-    by AccountDisplayName, AccountObjectId, IPAddress, bin(Timestamp, 1h)
-| where FileCount > 50    // 50 = bulk-download threshold; tune to org P95 of hourly per-user downloads
-| order by FileCount desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -506,4 +503,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

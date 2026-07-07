@@ -27,6 +27,9 @@ Several versions of firmware released by Chinese network device manufacturer Ten
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1078.001** — Valid Accounts: Default Accounts
+- **T1556** — Modify Authentication Process
+- **T1554** — Compromise Host Software Binary
+- **T1098** — Account Manipulation
 
 ## Kill chain phases observed
 
@@ -34,31 +37,31 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Managed asset flagged vulnerable to Tenda rzadmin backdoor (CVE-2026-11405)
+### Tenda router backdoor auth via undocumented 'rzadmin' account (CVE-2026-11405)
 
-`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.cve="CVE-2026-11405" OR Vulnerabilities.signature="*rzadmin*" OR (Vulnerabilities.signature="*Tenda*" AND (Vulnerabilities.signature="*FH1201*" OR Vulnerabilities.signature="*W15E*" OR Vulnerabilities.signature="*AC10*" OR Vulnerabilities.signature="*AC5*" OR Vulnerabilities.signature="*AC6*"))) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-11405"
-   or (SoftwareVendor has "Tenda" and SoftwareVersion has_any ("V1.2.0.14","V15.11.0.5","V15.03.06.46","V15.03.06.48","V15.03.06.51"))
-| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by Timestamp desc
-```
-
-### HTTP authentication to router mgmt interface using Tenda 'rzadmin' backdoor username
-
-`UC_2_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_6_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query="*rzadmin*" OR Web.url="*rzadmin*" OR Web.uri_query="*sys.rzadmin.password*") by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.uri_query Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success (Authentication.user="rzadmin" OR Authentication.user="*rzadmin*") by Authentication.src, Authentication.dest, Authentication.user, Authentication.app | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+### Tenda router backdoor credential store reference (sys.rzadmin.password) — CVE-2026-11405
+
+`UC_6_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+search (index=network OR index=firewall OR index=syslog) (sourcetype=*tenda* OR sourcetype=*syslog*) "sys.rzadmin.password" | stats count min(_time) as firstTime max(_time) as lastTime values(host) as hosts by _raw | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+### Tenda router auth-failure immediately followed by admin success (backdoor code path) — CVE-2026-11405
+
+`UC_6_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication where nodename=Authentication (Authentication.action=success OR Authentication.action=failure) by _time span=30s, Authentication.src, Authentication.dest, Authentication.action | `drop_dm_object_name(Authentication)` | eval fails=if(action=="failure",count,0), succ=if(action=="success",count,0) | stats sum(fails) as failures sum(succ) as successes by _time, src, dest | where failures>0 AND successes>0 | sort - _time
 ```
 
 ### Suspicious browser extension installation
@@ -209,4 +212,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

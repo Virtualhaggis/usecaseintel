@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2558 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2559 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,6 +11,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-07
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
 - [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
+- [microsoft to enable windows settings backup by default for o](./2026-07-07/microsoft-to-enable-windows-settings-backup-by-default-for-o.md)
+- [suspected china aligned hackers exploit roundcube flaws agai](./2026-07-07/suspected-china-aligned-hackers-exploit-roundcube-flaws-agai.md)
+- [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
+- [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
 
 ## 2026-07-06
 - [16 year old linux kvm flaw lets guest vms escape to host on ](./2026-07-06/16-year-old-linux-kvm-flaw-lets-guest-vms-escape-to-host-on-.md)
@@ -60,7 +64,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
 - [ai agent exploits langflow rce to automate database ransomwa](./2026-07-02/ai-agent-exploits-langflow-rce-to-automate-database-ransomwa.md)
 - [catan and mouse](./2026-07-02/catan-and-mouse.md)
-- [consentfix and clickfix how microsoft 365 accounts are hijac](./2026-07-02/consentfix-and-clickfix-how-microsoft-365-accounts-are-hijac.md)
 - [fortibleed credential theft linked to inc and lynx ransomwar](./2026-07-02/fortibleed-credential-theft-linked-to-inc-and-lynx-ransomwar.md)
 - [ghsa critical cve 2026 49352 9router s hardcoded default fal](./2026-07-02/ghsa-critical-cve-2026-49352-9router-s-hardcoded-default-fal.md)
 - [ghsa critical cve 2026 50027 mcp memory service missing auth](./2026-07-02/ghsa-critical-cve-2026-50027-mcp-memory-service-missing-auth.md)
@@ -117,7 +120,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft warns poisoned mcp tool descriptions can make ai a](./2026-06-30/microsoft-warns-poisoned-mcp-tool-descriptions-can-make-ai-a.md)
 - [rustduck botnet rebuilds in rust to hijack routers and serve](./2026-06-30/rustduck-botnet-rebuilds-in-rust-to-hijack-routers-and-serve.md)
 - [securing ai agents when ai tools move from reading to acting](./2026-06-30/securing-ai-agents-when-ai-tools-move-from-reading-to-acting.md)
-- [silent swap crypto clipper uses fake google notes extension ](./2026-06-30/silent-swap-crypto-clipper-uses-fake-google-notes-extension-.md)
 - [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
 - [what s new in microsoft security june 2026](./2026-06-30/what-s-new-in-microsoft-security-june-2026.md)
 
@@ -171,7 +173,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [eset takes part in operation endgame to disrupt amadey and s](./2026-06-24/eset-takes-part-in-operation-endgame-to-disrupt-amadey-and-s.md)
 - [ghsa critical cve 2026 45051 openam pre auth rce via java de](./2026-06-24/ghsa-critical-cve-2026-45051-openam-pre-auth-rce-via-java-de.md)
 - [ghsa critical cve 2026 45052 openam pre auth user profile ta](./2026-06-24/ghsa-critical-cve-2026-45052-openam-pre-auth-user-profile-ta.md)
-- [strikeshark investigating a new campaign delivering cobalt s](./2026-06-24/strikeshark-investigating-a-new-campaign-delivering-cobalt-s.md)
 
 ## 2026-06-23
 - [cisa kev cve 2025 67038 lantronix eds5000 code injection vul](./2026-06-23/cisa-kev-cve-2025-67038-lantronix-eds5000-code-injection-vul.md)
