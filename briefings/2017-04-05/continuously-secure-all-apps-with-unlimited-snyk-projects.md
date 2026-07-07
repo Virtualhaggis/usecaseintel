@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Continuously secure all apps with unlimited Snyk projects
 
-`UC_3608_0` · phase: **exploit** · confidence: **High**
+`UC_1919_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

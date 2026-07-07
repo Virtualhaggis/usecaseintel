@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — npm passes the 1 millionth package milestone! What can we learn?
 
-`UC_3474_0` · phase: **exploit** · confidence: **High**
+`UC_1785_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

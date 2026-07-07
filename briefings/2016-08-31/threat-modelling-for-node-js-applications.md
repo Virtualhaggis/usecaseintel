@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Threat modelling For Node.js applications
 
-`UC_3632_0` · phase: **exploit** · confidence: **High**
+`UC_1943_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

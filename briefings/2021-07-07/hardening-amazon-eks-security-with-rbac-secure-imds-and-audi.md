@@ -15,14 +15,12 @@ July 7, 2021
 
 - **CVE:** `CVE-2019-11253`
 - **CVE:** `CVE-2020-8559`
-- **MD5:** `DC83F13246D9B2E468D2CAAD692EAF22`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1190** — Exploit Public-Facing Application
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
@@ -68,7 +66,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Hardening Amazon EKS security with RBAC, secure IMDS, and audit logging
 
-`UC_3086_3` · phase: **install** · confidence: **High**
+`UC_1397_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,10 +104,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2019-11253`, `CVE-2020-8559`
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `DC83F13246D9B2E468D2CAAD692EAF22`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

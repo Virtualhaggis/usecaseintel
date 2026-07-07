@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 2018 Year in Review
 
-`UC_3537_0` · phase: **exploit** · confidence: **High**
+`UC_1848_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

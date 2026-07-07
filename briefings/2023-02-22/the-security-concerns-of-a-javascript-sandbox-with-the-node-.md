@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The security concerns of a JavaScript sandbox with the Node.js VM module
 
-`UC_1791_1` · phase: **exploit** · confidence: **High**
+`UC_969_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

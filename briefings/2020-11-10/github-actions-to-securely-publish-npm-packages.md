@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — GitHub Actions to securely publish npm packages
 
-`UC_3224_0` · phase: **exploit** · confidence: **High**
+`UC_1535_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

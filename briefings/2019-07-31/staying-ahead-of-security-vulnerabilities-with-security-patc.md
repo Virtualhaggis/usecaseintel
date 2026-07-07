@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Staying ahead of security vulnerabilities with security patches
 
-`UC_3456_1` · phase: **exploit** · confidence: **High**
+`UC_1767_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

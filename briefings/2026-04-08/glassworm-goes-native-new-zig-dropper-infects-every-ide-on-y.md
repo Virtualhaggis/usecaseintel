@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### GlassWorm Zig dropper native node addon (win.node/mac.node) written to IDE extension bin/ folder
 
-`UC_449_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_296_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceFileEvents
 
 ### Force-install of IDE extension via cmd.exe with --install-extension flag spawned by node host
 
-`UC_449_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_296_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### Outbound fetch of attacker-controlled autoimport VSIX from ColossusQuailPray GitHub release
 
-`UC_449_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_296_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -264,7 +264,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GlassWorm goes native: New Zig dropper infects every IDE on your machine
 
-`UC_449_7` · phase: **exploit** · confidence: **High**
+`UC_296_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

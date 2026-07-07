@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Git argument injection via --upload-pack option spawned by web-app runtime
 
-`UC_2017_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1115_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Mercurial argument injection via --config alias/hooks or --debugger from app runtime
 
-`UC_2017_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1115_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### git/hg spawning a shell as child of a web-app runtime (argument-injection RCE evidence)
 
-`UC_2017_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1115_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Rediscovering argument injection when using VCS tools — git and mercurial
 
-`UC_2017_1` · phase: **exploit** · confidence: **High**
+`UC_1115_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

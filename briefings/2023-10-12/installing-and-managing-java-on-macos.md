@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Installing and managing Java on macOS
 
-`UC_1495_0` · phase: **exploit** · confidence: **High**
+`UC_805_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

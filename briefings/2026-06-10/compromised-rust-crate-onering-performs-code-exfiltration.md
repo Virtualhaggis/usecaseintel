@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Exfiltration to attacker-controlled Sentry ingest endpoint (onering crate)
 
-`UC_220_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_161_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceNetworkEvents
 
 ### Rust build script harvesting git commit diff (onering build.rs)
 
-`UC_220_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_161_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### Rust build script making outbound network connection (build-time exfil)
 
-`UC_220_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_161_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
