@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2559 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2558 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-07
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
+- [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
 
 ## 2026-07-06
 - [16 year old linux kvm flaw lets guest vms escape to host on ](./2026-07-06/16-year-old-linux-kvm-flaw-lets-guest-vms-escape-to-host-on-.md)
@@ -59,7 +60,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
 - [ai agent exploits langflow rce to automate database ransomwa](./2026-07-02/ai-agent-exploits-langflow-rce-to-automate-database-ransomwa.md)
 - [catan and mouse](./2026-07-02/catan-and-mouse.md)
-- [cisco finally confirms attackers exploiting unified cm flaw](./2026-07-02/cisco-finally-confirms-attackers-exploiting-unified-cm-flaw.md)
 - [consentfix and clickfix how microsoft 365 accounts are hijac](./2026-07-02/consentfix-and-clickfix-how-microsoft-365-accounts-are-hijac.md)
 - [fortibleed credential theft linked to inc and lynx ransomwar](./2026-07-02/fortibleed-credential-theft-linked-to-inc-and-lynx-ransomwar.md)
 - [ghsa critical cve 2026 49352 9router s hardcoded default fal](./2026-07-02/ghsa-critical-cve-2026-49352-9router-s-hardcoded-default-fal.md)
@@ -113,7 +113,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-30
 - [ghsa critical cve 2026 50566 fission environment runtime con](./2026-06-30/ghsa-critical-cve-2026-50566-fission-environment-runtime-con.md)
-- [guardfall exposes open source ai coding agents to decades ol](./2026-06-30/guardfall-exposes-open-source-ai-coding-agents-to-decades-ol.md)
 - [langflow rce exploited to deploy monero miner on exposed ai ](./2026-06-30/langflow-rce-exploited-to-deploy-monero-miner-on-exposed-ai-.md)
 - [microsoft warns poisoned mcp tool descriptions can make ai a](./2026-06-30/microsoft-warns-poisoned-mcp-tool-descriptions-can-make-ai-a.md)
 - [rustduck botnet rebuilds in rust to hijack routers and serve](./2026-06-30/rustduck-botnet-rebuilds-in-rust-to-hijack-routers-and-serve.md)

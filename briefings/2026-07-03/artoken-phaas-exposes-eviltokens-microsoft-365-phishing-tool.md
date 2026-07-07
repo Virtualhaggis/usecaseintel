@@ -77,7 +77,7 @@ _(none detected from narrative keywords)_
 
 ### ARToken/EvilTokens invoice-lure phishing email with device-code kit domains
 
-`UC_38_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_40_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ EmailEvents
 
 ### Endpoint DNS/network contact to ARToken/EvilTokens phishing & C2 domains
 
-`UC_38_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_40_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### First-seen Microsoft Authentication Broker sign-in (device-code PRT acquisition)
 
-`UC_38_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_40_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ AADSignInEventsBeta
 
 ### Entra ID device registration tied to device-code token abuse (PRT persistence)
 
-`UC_38_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_40_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ CloudAppEvents
 
 ### Malicious inbox rule that hides/deletes/forwards mail (BEC cover-tracks)
 
-`UC_38_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_40_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ CloudAppEvents
 
 ### Post-compromise SharePoint/OneDrive bulk-download fan-out from single actor
 
-`UC_38_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_40_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### ConsentFix: interactive browser sign-in to Azure CLI / dev-tool first-party app
 
-`UC_65_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_67_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ AADSignInEventsBeta
 
 ### ConsentFix: Azure CLI token redemption from divergent IP within 10 min of interactive sign-in
 
-`UC_65_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_67_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -99,7 +99,7 @@ AADSignInEventsBeta
 
 ### ClickFix: PowerShell/mshta download-execute spawned from Run dialog (explorer parent)
 
-`UC_65_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_67_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### ConsentFix lure delivery: inbound email link to DocSend/Dropbox or ConsentFix phishing infra
 
-`UC_65_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_67_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -142,7 +142,7 @@ EmailEvents
 
 ### Post-session-theft mailbox abuse: auto-forwarding / inbox rule creation via stolen M365 session
 
-`UC_65_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_67_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

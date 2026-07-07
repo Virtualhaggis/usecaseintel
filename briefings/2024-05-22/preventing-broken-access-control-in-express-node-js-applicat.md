@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Preventing broken access control in express Node.js applications
 
-`UC_1296_1` · phase: **exploit** · confidence: **High**
+`UC_1295_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Using ES2015 Proxy for fun and profit
 
-`UC_3641_0` · phase: **install** · confidence: **High**
+`UC_3640_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

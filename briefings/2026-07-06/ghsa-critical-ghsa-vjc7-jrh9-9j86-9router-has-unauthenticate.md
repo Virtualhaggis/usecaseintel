@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### 9router unauthenticated /api/* endpoint enumeration (GHSA-vjc7-jrh9-9j86)
 
-`UC_4_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_6_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### 9router unauthenticated provider CRUD mutation (rogue-provider / key-swap / DoS delete)
 
-`UC_4_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### 9router unauthenticated read of API-key-leaking usage/stats & provider config
 
-`UC_4_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### 9router bulk exfiltration of conversation history via /api/usage/request-details
 
-`UC_4_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-vjc7-jrh9-9j86: 9router has unauthenticated CRUD on /api/
 
-`UC_4_1` · phase: **exploit** · confidence: **High**
+`UC_6_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

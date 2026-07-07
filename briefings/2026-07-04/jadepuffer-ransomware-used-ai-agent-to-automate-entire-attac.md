@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow CVE-2025-3248 exploitation via /api/v1/validate/code (JadePuffer initial access)
 
-`UC_28_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_30_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### Nacos CVE-2021-29441 auth bypass — rogue admin creation via Nacos-Server User-Agent
 
-`UC_28_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_30_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ _(none detected from narrative keywords)_
 
 ### JadePuffer C2 beacon to attacker infrastructure (45.131.66.106 / 64.20.53.230)
 
-`UC_28_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_30_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceNetworkEvents
 
 ### JadePuffer MySQL/Nacos database extortion — AES_ENCRYPT + README_RANSOM table
 
-`UC_28_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_30_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### Langflow web-service account spawning DB dump / MinIO enumeration (post-RCE recon)
 
-`UC_28_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_30_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### 9router node process spawns 'sudo -S sh' (GHSA-g6g7-pvmx-m74p command-injection primitive)
 
-`UC_52_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_54_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### 9router node process fetches tailscale.com/install.sh via curl (vulnerable route invoked)
 
-`UC_52_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_54_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### Unauthenticated POST to 9router /api/tunnel/tailscale-install endpoint
 
-`UC_52_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_54_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-g6g7-pvmx-m74p: 9router: Missing Authorization and OS Com
 
-`UC_52_0` · phase: **exploit** · confidence: **High**
+`UC_54_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

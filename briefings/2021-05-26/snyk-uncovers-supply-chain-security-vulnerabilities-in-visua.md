@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js debugger/inspector launched bound to all network interfaces (CVE-2018-12120/-13567)
 
-`UC_3122_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3121_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Remote (non-loopback) connection to an exposed Node.js debug/inspect port 5858/9229
 
-`UC_3122_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3121_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens
 
-`UC_3122_2` · phase: **exploit** · confidence: **High**
+`UC_3121_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

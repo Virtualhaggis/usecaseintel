@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Installation of poisoned Ultralytics PyPI package (v8.3.41 / 8.3.42 / 8.3.45 / 8.3.46)
 
-`UC_1094_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1093_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### GitHub Actions branch-name template injection — bash brace-expansion shell signature
 
-`UC_1094_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1093_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### Outbound fetch of file.sh via attacker-controlled commit d8daa0b... on raw.githubusercontent.com
 
-`UC_1094_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1093_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ultralytics AI Pwn Request Supply Chain Attack
 
-`UC_1094_3` · phase: **exploit** · confidence: **High**
+`UC_1093_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

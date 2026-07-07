@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Host runc binary overwrite from container (CVE-2019-5736 escape-to-host)
 
-`UC_3532_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3531_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceFileEvents
 
 ### runc /proc/self/exe re-exec abuse (CVE-2019-5736 exploit primitive)
 
-`UC_3532_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3531_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

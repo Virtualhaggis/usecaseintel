@@ -1,6 +1,6 @@
 # [CRIT] BeyondTrust Patches Critical Auth Bypass Flaws in Remote Support and PRA
 
-**Source:** The Hacker News
+**Source:** The Hacker News, BleepingComputer
 **Published:** 2026-07-07
 **Article:** https://thehackernews.com/2026/07/beyondtrust-patches-critical-auth.html
 
