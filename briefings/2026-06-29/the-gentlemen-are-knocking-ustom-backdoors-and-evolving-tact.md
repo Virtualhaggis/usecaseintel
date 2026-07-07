@@ -101,7 +101,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen network sniffing via netsh trace capture redirected to ADMIN$ share
 
-`UC_130_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_132_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### The Gentlemen Go backdoor C2 beacon to 81.177.215.15 on TCP/9443
 
-`UC_130_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_132_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### The Gentlemen BYOVD vulnerable driver drop/load (EDR-killer drivers)
 
-`UC_130_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_132_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceImageLoadEvents
 
 ### The Gentlemen impair defenses via Set-MpPreference exclusions and AV-removal tooling
 
-`UC_130_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_132_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceProcessEvents
 
 ### The Gentlemen Windows Defender disabled via Policy registry keys
 
-`UC_130_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_132_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -200,7 +200,7 @@ DeviceRegistryEvents
 
 ### The Gentlemen ransomware deployment via deploy_gpo.ps1 / NETLOGON staging
 
-`UC_130_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_132_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -423,7 +423,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Gentlemen are knocking: сustom backdoors and evolving tactics
 
-`UC_130_9` · phase: **exploit** · confidence: **High**
+`UC_132_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

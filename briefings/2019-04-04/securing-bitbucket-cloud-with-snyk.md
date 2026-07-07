@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Securing Bitbucket Cloud with Snyk
 
-`UC_3516_0` · phase: **exploit** · confidence: **High**
+`UC_3515_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

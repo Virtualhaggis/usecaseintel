@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### ImageMagick 'convert -resize' command injection via sh -c in Go web app
 
-`UC_1123_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1122_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

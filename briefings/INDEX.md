@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2565 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2564 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -19,6 +19,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [court filing reveals windows device id helped fbi trace alle](./2026-07-07/court-filing-reveals-windows-device-id-helped-fbi-trace-alle.md)
 - [debull tooling abuses microsoft device code flow to target m](./2026-07-07/debull-tooling-abuses-microsoft-device-code-flow-to-target-m.md)
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
+- [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
 - [microsoft to enable windows settings backup by default for o](./2026-07-07/microsoft-to-enable-windows-settings-backup-by-default-for-o.md)
 - [new januscape linux flaw allows vm escape on intel amd devic](./2026-07-07/new-januscape-linux-flaw-allows-vm-escape-on-intel-amd-devic.md)
 - [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
@@ -229,14 +230,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 892r p3jq jp24 praisonai agentos remains ](./2026-06-18/ghsa-critical-ghsa-892r-p3jq-jp24-praisonai-agentos-remains-.md)
 - [ghsa critical ghsa 9752 mhqh h34f npm praisonai agentos expo](./2026-06-18/ghsa-critical-ghsa-9752-mhqh-h34f-npm-praisonai-agentos-expo.md)
 - [ghsa critical ghsa f38v 77qj h4jq praisonai platform 0 1 4 s](./2026-06-18/ghsa-critical-ghsa-f38v-77qj-h4jq-praisonai-platform-0-1-4-s.md)
-- [ghsa critical ghsa fq2m 6wqh x44g praisonai jobs api exposes](./2026-06-18/ghsa-critical-ghsa-fq2m-6wqh-x44g-praisonai-jobs-api-exposes.md)
 - [ghsa critical ghsa hxpf 9xvq wph8 netlicensing mcp rest path](./2026-06-18/ghsa-critical-ghsa-hxpf-9xvq-wph8-netlicensing-mcp-rest-path.md)
 - [ghsa critical ghsa j4f3 55x4 r6q2 npm praisonai mcpserver ex](./2026-06-18/ghsa-critical-ghsa-j4f3-55x4-r6q2-npm-praisonai-mcpserver-ex.md)
 - [ghsa critical ghsa p69m 4f92 2v84 praisonai remote code exec](./2026-06-18/ghsa-critical-ghsa-p69m-4f92-2v84-praisonai-remote-code-exec.md)
 - [ghsa critical ghsa p75f 6fp4 p57w praisonai missing authenti](./2026-06-18/ghsa-critical-ghsa-p75f-6fp4-p57w-praisonai-missing-authenti.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
 - [ghsa critical ghsa vmmj pfw7 fjwp npm praisonai codemode san](./2026-06-18/ghsa-critical-ghsa-vmmj-pfw7-fjwp-npm-praisonai-codemode-san.md)
-- [ghsa critical ghsa x8cv xmq7 p8xp praisonai agentteam launch](./2026-06-18/ghsa-critical-ghsa-x8cv-xmq7-p8xp-praisonai-agentteam-launch.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)

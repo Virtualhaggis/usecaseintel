@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### ngrok tunneling agent execution / signup by Scattered Spider on corporate host
 
-`UC_8_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_10_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### Teleport.sh tunneling / data-transfer to Amazon S3 by Scattered Spider
 
-`UC_8_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceNetworkEvents
 
 ### Scattered Spider help-desk account takeover: Entra password reset + MFA re-registration then sign-in
 
-`UC_8_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_10_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ AADSignInEventsBeta
 
 ### Bulk data egress to Amazon S3 from tunneling/transfer tooling (77GB exfil pattern)
 
-`UC_8_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
