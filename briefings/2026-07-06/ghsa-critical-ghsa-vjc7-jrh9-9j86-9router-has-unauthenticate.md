@@ -29,9 +29,13 @@ Multiple critical API security vulnerabilities were discovered in 9Router's Next
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.002** — User Execution: Malicious File
-- **T1190** — Exploit Public-Facing Application
-- **T1552** — Unsecured Credentials
+- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1046** — Network Service Discovery
 - **T1565.001** — Data Manipulation: Stored Data Manipulation
+- **T1098.003** — Account Manipulation: Additional Cloud Roles
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1213** — Data from Information Repositories
+- **T1020** — Automated Exfiltration
 
 ## Kill chain phases observed
 
@@ -39,30 +43,40 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unauthenticated read of 9router credential/usage API endpoints (API-key & conversation leak)
+### 9router unauthenticated /api/* endpoint enumeration (GHSA-vjc7-jrh9-9j86)
 
-`UC_3_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.http_method=GET Web.status=200 (Web.uri_path IN ("/api/usage/stats","/api/providers","/api/usage/request-logs") OR Web.uri_path="/api/usage/request-details/*" OR Web.uri_path="/api/providers/*") by Web.src, Web.dest, Web.uri_path, Web.http_method, Web.status, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats `summariesonly` dc(Web.uri_path) as distinct_paths count as requests values(Web.uri_path) as paths values(Web.http_user_agent) as user_agents min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_path="/api/providers*" OR Web.uri_path="/api/usage/*" OR Web.uri_path="/api/version" OR Web.uri_path="/api/models" OR Web.uri_path="/api/v1/models") (Web.http_user_agent="*curl*" OR Web.http_user_agent="*python-requests*" OR Web.http_user_agent="*Go-http-client*" OR Web.http_user_agent="*wget*" OR Web.http_user_agent="*HTTPie*" OR Web.http_user_agent="*Postman*" OR Web.http_user_agent="*Nmap*") by Web.src Web.dest _time span=5m | `drop_dm_object_name(Web)` | where distinct_paths >= 5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
-### Unauthenticated provider CRUD tampering on 9router /api/providers (rogue provider / key swap / DoS)
+### 9router unauthenticated provider CRUD mutation (rogue-provider / key-swap / DoS delete)
 
 `UC_3_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Web.http_method) as http_methods, values(Web.status) as statuses, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.http_method IN ("POST","PUT","DELETE") (Web.uri_path="/api/providers" OR Web.uri_path="/api/providers/*") by Web.src, Web.dest, Web.uri_path, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats `summariesonly` count values(Web.status) as status values(Web.http_user_agent) as user_agent values(Web.http_referrer) as referrer min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_method IN ("POST","PUT","DELETE")) (Web.uri_path="/api/providers" OR Web.uri_path="/api/providers/*") by Web.src Web.dest Web.http_method Web.uri_path | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+### 9router unauthenticated read of API-key-leaking usage/stats & provider config
+
+`UC_3_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Web.http_user_agent) as user_agent sum(Web.bytes_out) as bytes_out min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_method="GET") (Web.uri_path="/api/usage/stats" OR Web.uri_path="/api/usage/request-logs" OR Web.uri_path="/api/providers") (Web.status=200) (Web.http_user_agent="*curl*" OR Web.http_user_agent="*python-requests*" OR Web.http_user_agent="*Go-http-client*" OR Web.http_user_agent="*wget*" OR Web.http_user_agent="*HTTPie*" OR Web.http_user_agent="*Postman*" OR Web.http_user_agent="*node-fetch*" OR Web.http_user_agent="*axios*") by Web.src Web.dest Web.uri_path | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+### 9router bulk exfiltration of conversation history via /api/usage/request-details
+
+`UC_3_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(Web.uri_path) as distinct_records count as requests sum(Web.bytes_out) as total_bytes_out values(Web.http_user_agent) as user_agents min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_method="GET") (Web.uri_path="/api/usage/request-details/*") (Web.status=200) by Web.src Web.dest _time span=30m | `drop_dm_object_name(Web)` | where distinct_records >= 50 OR total_bytes_out > 52428800 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 ### OAuth consent / suspicious app grant
@@ -144,4 +158,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -36,13 +36,11 @@ According to JFrog, the packages "rollup-packages-polyfill-core" and "rollup-run
 - **T1071** — Application Layer Protocol
 - **T1059.007** — JavaScript
 - **T1105** — Ingress Tool Transfer
-- **T1571** — Non-Standard Port
-- **T1140** — Deobfuscate/Decode Files or Information
-- **T1102.001** — Web Service: Dead Drop Resolver
 - **T1071.001** — Web Protocols
+- **T1102** — Web Service
 - **T1552.001** — Credentials In Files
-- **T1219** — Remote Access Software
-- **T1113** — Screen Capture
+- **T1555** — Credentials from Password Stores
+- **T1059.006** — Python
 
 ## Kill chain phases observed
 
@@ -50,31 +48,34 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Lazarus lookalike Rollup-polyfill npm packages installed in build/dev tree
+### Lazarus rollup-polyfill lookalike npm packages installed into node_modules
 
 `UC_36_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\rollup-packages-polyfill-core\\*" OR Filesystem.file_path="*\\node_modules\\rollup-runtime-polyfill-core\\*" OR Filesystem.file_path="*\\node_modules\\swift-parse-stream\\*" OR Filesystem.file_path="*\\node_modules\\quirky-token\\*" OR Filesystem.file_path="*\\node_modules\\react-icon-svgs\\*" OR Filesystem.file_path="*\\node_modules\\rollup-plugin-polyfill-connect\\*" OR Filesystem.file_path="*\\node_modules\\rollup-plugin-polyfill-route\\*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path="*node_modules*rollup-packages-polyfill-core*" OR Filesystem.file_path="*node_modules*rollup-runtime-polyfill-core*" OR Filesystem.file_path="*node_modules*rollup-plugin-polyfill-connect*" OR Filesystem.file_path="*node_modules*swift-parse-stream*" OR Filesystem.file_path="*node_modules*quirky-token*" OR Filesystem.file_path="*node_modules*react-icon-svgs*" OR Filesystem.file_path="*node_modules*@nut-tree-fork*nut-js*") by Filesystem.dest | `drop_dm_object_name(Filesystem)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has_any (@"\node_modules\rollup-packages-polyfill-core\", @"\node_modules\rollup-runtime-polyfill-core\", @"\node_modules\swift-parse-stream\", @"\node_modules\quirky-token\", @"\node_modules\react-icon-svgs\", @"\node_modules\rollup-plugin-polyfill-connect\", @"\node_modules\rollup-plugin-polyfill-route\")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where ActionType == "FileCreated"
+| where FolderPath has "node_modules"
+| where FolderPath has_any ("rollup-packages-polyfill-core","rollup-runtime-polyfill-core","rollup-plugin-polyfill-connect","swift-parse-stream","quirky-token","react-icon-svgs","nut-js")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### npm/node egress to hardcoded second-stage payload server 216.126.236.244
+### npm/node egress to Lazarus rollup-polyfill C2 216.126.236.244
 
 `UC_36_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="216.126.236.244" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="216.126.236.244" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -82,17 +83,17 @@ DeviceFileEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "216.126.236.244"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Node.js dead-drop fetch from JSONKeeper (jsonkeeper.com) resolver
+### node.exe resolving jsonkeeper.com dead-drop resolver
 
 `UC_36_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="*jsonkeeper.com" (All_Traffic.process_name="node.exe" OR All_Traffic.process_name="npm*") by All_Traffic.src_ip All_Traffic.dest All_Traffic.process_name All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*jsonkeeper.com" by DNS.src DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -100,18 +101,27 @@ DeviceNetworkEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteUrl has "jsonkeeper.com"
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","npm.cmd","pnpm.exe","yarn.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","node","npm")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### security-alerts-sdk Python backdoor beacon to 142.93.211.30:5000
+### node.exe bulk-reading developer, cloud & AI-tool secrets (rollup-polyfill collector)
 
-`UC_36_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="142.93.211.30" All_Traffic.dest_port=5000 by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process_name All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` dc(Filesystem.file_path) as distinct_files values(Filesystem.file_path) as file_path max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=read Filesystem.process_name="node.exe" (Filesystem.file_path="*\\.aws\\credentials" OR Filesystem.file_path="*\\.ssh\\*" OR Filesystem.file_path="*\\.npmrc" OR Filesystem.file_path="*\\.zsh_history" OR Filesystem.file_path="*\\Cursor\\*" OR Filesystem.file_path="*\\Windsurf\\*" OR Filesystem.file_path="*\\Code\\User\\History\\*" OR Filesystem.file_path="*\\.gemini*" OR Filesystem.file_path="*\\.claude*" OR Filesystem.file_path="*\\Foundry\\*") by Filesystem.dest Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where distinct_files >= 3 | sort - lastTime
+```
+
+### security-alerts-sdk PyPI backdoor beacon to 142.93.211.30:5000
+
+`UC_36_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="142.93.211.30" All_Traffic.dest_port="5000" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -119,25 +129,7 @@ DeviceNetworkEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "142.93.211.30" and RemotePort == 5000
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### OtterCookie-overlap RAT dependency @nut-tree-fork/nut-js pulled into npm tree
-
-`UC_36_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\node_modules\\@nut-tree-fork\\nut-js\\*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath has @"\node_modules\@nut-tree-fork\nut-js\"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
@@ -456,4 +448,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

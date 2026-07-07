@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2564 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2560 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -45,6 +45,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
 - [cyber readiness for smbs getting the basics right](./2026-07-03/cyber-readiness-for-smbs-getting-the-basics-right.md)
 - [european parliament member investigating spyware was hacked ](./2026-07-03/european-parliament-member-investigating-spyware-was-hacked-.md)
+- [netnut proxy network disrupted 2 million infected devices cu](./2026-07-03/netnut-proxy-network-disrupted-2-million-infected-devices-cu.md)
 - [new avalon malware framework packs crownx ransomware capabil](./2026-07-03/new-avalon-malware-framework-packs-crownx-ransomware-capabil.md)
 - [new bad epoll linux kernel flaw lets unprivileged users gain](./2026-07-03/new-bad-epoll-linux-kernel-flaw-lets-unprivileged-users-gain.md)
 - [north korea linked npm packages mimic rollup polyfills to st](./2026-07-03/north-korea-linked-npm-packages-mimic-rollup-polyfills-to-st.md)
@@ -66,7 +67,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 9558 mautic has server side template ](./2026-07-02/ghsa-critical-cve-2026-9558-mautic-has-server-side-template-.md)
 - [ghsa critical cve 2026 9559 mautic vulnerable to path traver](./2026-07-02/ghsa-critical-cve-2026-9559-mautic-vulnerable-to-path-traver.md)
 - [ghsa critical ghsa g6g7 pvmx m74p 9router missing authorizat](./2026-07-02/ghsa-critical-ghsa-g6g7-pvmx-m74p-9router-missing-authorizat.md)
-- [ghsa critical ghsa w4v6 g3wm w36c openclaw qqbot admin comma](./2026-07-02/ghsa-critical-ghsa-w4v6-g3wm-w36c-openclaw-qqbot-admin-comma.md)
 - [google disrupts netnut residential proxy network spanning 2 ](./2026-07-02/google-disrupts-netnut-residential-proxy-network-spanning-2-.md)
 - [how we added webauthn to a browser based rdp client](./2026-07-02/how-we-added-webauthn-to-a-browser-based-rdp-client.md)
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
@@ -91,7 +91,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 41052 rancher has privilege escalatio](./2026-07-01/ghsa-critical-cve-2026-41052-rancher-has-privilege-escalatio.md)
 - [ghsa critical cve 2026 44935 rancher fleet vulnerable to cro](./2026-07-01/ghsa-critical-cve-2026-44935-rancher-fleet-vulnerable-to-cro.md)
 - [ghsa critical cve 2026 44939 rancher vulnerable to command i](./2026-07-01/ghsa-critical-cve-2026-44939-rancher-vulnerable-to-command-i.md)
-- [ghsa critical cve 2026 49457 quic has broken tls verificatio](./2026-07-01/ghsa-critical-cve-2026-49457-quic-has-broken-tls-verificatio.md)
 - [ghsa critical cve 2026 53943 ghost cache poisoning xss in gh](./2026-07-01/ghsa-critical-cve-2026-53943-ghost-cache-poisoning-xss-in-gh.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-07-01/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-07-01/maven-support-comes-to-github-checks-and-oss-package-search.md)
@@ -129,7 +128,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-26
 - [beware of the license manager how a schneider electric softw](./2026-06-26/beware-of-the-license-manager-how-a-schneider-electric-softw.md)
-- [ghsa critical cve 2026 44024 fluentd is vulnerable to remote](./2026-06-26/ghsa-critical-cve-2026-44024-fluentd-is-vulnerable-to-remote.md)
 - [ghsa critical cve 2026 48751 incus has a restricted project ](./2026-06-26/ghsa-critical-cve-2026-48751-incus-has-a-restricted-project-.md)
 - [ghsa critical cve 2026 48752 incus has arbitrary file read w](./2026-06-26/ghsa-critical-cve-2026-48752-incus-has-arbitrary-file-read-w.md)
 - [ghsa critical cve 2026 48753 incus has an arbitrary file wri](./2026-06-26/ghsa-critical-cve-2026-48753-incus-has-an-arbitrary-file-wri.md)
@@ -154,10 +152,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
 - [gamaredon in 2025 leveraging tunnels workers dead drops and ](./2026-06-25/gamaredon-in-2025-leveraging-tunnels-workers-dead-drops-and-.md)
-- [ghsa critical cve 2026 39830 golang org x crypto ssh invokin](./2026-06-25/ghsa-critical-cve-2026-39830-golang-org-x-crypto-ssh-invokin.md)
 - [ghsa critical cve 2026 39831 golang org x crypto ssh fido u2](./2026-06-25/ghsa-critical-cve-2026-39831-golang-org-x-crypto-ssh-fido-u2.md)
 - [ghsa critical cve 2026 39832 golang org x crypto ssh agent d](./2026-06-25/ghsa-critical-cve-2026-39832-golang-org-x-crypto-ssh-agent-d.md)
-- [ghsa critical cve 2026 39834 golang org x crypto ssh vulnera](./2026-06-25/ghsa-critical-cve-2026-39834-golang-org-x-crypto-ssh-vulnera.md)
 - [ghsa critical cve 2026 42508 golang org x crypto ssh knownho](./2026-06-25/ghsa-critical-cve-2026-42508-golang-org-x-crypto-ssh-knownho.md)
 - [ghsa critical cve 2026 46595 golang org x crypto ssh invokin](./2026-06-25/ghsa-critical-cve-2026-46595-golang-org-x-crypto-ssh-invokin.md)
 - [ghsa critical cve 2026 48713 i18next fs backend vulnerable t](./2026-06-25/ghsa-critical-cve-2026-48713-i18next-fs-backend-vulnerable-t.md)

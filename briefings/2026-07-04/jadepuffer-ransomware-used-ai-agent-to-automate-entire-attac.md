@@ -19,11 +19,14 @@ The resea…
 
 - **CVE:** `CVE-2025-3248`
 - **CVE:** `CVE-2021-29441`
+- **IPv4 (defanged):** `45.131.66.106`
+- **IPv4 (defanged):** `64.20.53.230`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
@@ -32,13 +35,13 @@ The resea…
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1059.006** — Command and Scripting Interpreter: Python
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
-- **T1053.003** — Scheduled Task/Job: Cron
 - **T1136.001** — Create Account: Local Account
-- **T1078** — Valid Accounts
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1053.003** — Scheduled Task/Job: Cron
 - **T1485** — Data Destruction
+- **T1005** — Data from Local System
+- **T1530** — Data from Cloud Storage
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 
 ## Kill chain phases observed
 
@@ -46,99 +49,93 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Langflow server process spawning shell/credential-recon after CVE-2025-3248 RCE
+### Langflow CVE-2025-3248 exploitation via /api/v1/validate/code (JadePuffer initial access)
 
-`UC_27_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","uvicorn","gunicorn","langflow")) AND (Processes.process_name IN ("sh","bash","dash","curl","wget","whoami","id","env","nc") OR Processes.process="*OPENAI_API_KEY*" OR Processes.process="*ANTHROPIC_API_KEY*" OR Processes.process="*DEEPSEEK*" OR Processes.process="*/proc/self/environ*" OR Processes.process="*/etc/passwd*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python","python3","uvicorn","gunicorn","langflow")
-| where FileName in~ ("sh","bash","dash","curl","wget","whoami","id","env","nc","ncat")
-    or ProcessCommandLine has_any ("/proc/self/environ","OPENAI_API_KEY","ANTHROPIC_API_KEY","DEEPSEEK","/etc/passwd","find / -name")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### CVE-2025-3248 Langflow exploit — POST to /api/v1/validate/code
-
-`UC_27_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_27_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method="POST" AND Web.url="*/api/v1/validate/code*" by Web.src Web.dest Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method="POST" Web.url="*/api/v1/validate/code*" by Web.src, Web.dest, Web.http_user_agent, Web.url, Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
-### JadePuffer C2 beaconing to 45.131.66.106 / 64.20.53.230
+### Nacos CVE-2021-29441 auth bypass — rogue admin creation via Nacos-Server User-Agent
 
-`UC_27_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_27_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("45.131.66.106","64.20.53.230") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*/nacos/v1/auth/users*" Web.http_user_agent="Nacos-Server*" by Web.src, Web.dest, Web.http_method, Web.http_user_agent, Web.url, Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+### JadePuffer C2 beacon to attacker infrastructure (45.131.66.106 / 64.20.53.230)
+
+`UC_27_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_ip IN ("45.131.66.106","64.20.53.230") by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(14d)
 | where RemoteIP in ("45.131.66.106","64.20.53.230")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Cron persistence written by a web-server process (JadePuffer 30-min beacon)
+### JadePuffer MySQL/Nacos database extortion — AES_ENCRYPT + README_RANSOM table
 
-`UC_27_9` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="crontab" AND (Processes.parent_process_name IN ("python","python3","uvicorn","gunicorn","langflow","sh","bash")) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has_any ("/var/spool/cron","/etc/cron.d","/etc/crontab","/etc/cron.hourly","/etc/cron.daily")
-| where InitiatingProcessFileName in~ ("python","python3","uvicorn","gunicorn","langflow","sh","bash","crontab")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Nacos CVE-2021-29441 auth bypass — rogue admin creation via Nacos-Server UA
-
-`UC_27_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*/nacos/v1/auth/users*" AND Web.http_method IN ("POST","PUT") AND Web.http_user_agent="*Nacos-Server*" by Web.src Web.dest Web.url Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-### Nacos database ransomware — AES_ENCRYPT + config_info drop + README_RANSOM table
-
-`UC_27_11` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*README_RANSOM*" OR (Processes.process="*AES_ENCRYPT*" AND Processes.process="*config_info*") OR (Processes.process="*DROP*" AND Processes.process="*config_info*" AND Processes.process="*history*")) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*README_RANSOM*" OR (Processes.process="*AES_ENCRYPT*" AND Processes.process="*config_info*") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(14d)
 | where ProcessCommandLine has "README_RANSOM"
-    or (ProcessCommandLine has "AES_ENCRYPT" and ProcessCommandLine has "config_info")
-    or (ProcessCommandLine has "DROP" and ProcessCommandLine has "config_info" and ProcessCommandLine has "history")
+   or (ProcessCommandLine has "AES_ENCRYPT" and ProcessCommandLine has "config_info")
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Langflow web-service account spawning DB dump / MinIO enumeration (post-RCE recon)
+
+`UC_27_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","uvicorn","gunicorn")) AND (Processes.process_name IN ("pg_dump","psql") OR (Processes.process_name IN ("curl","wget","mc") AND (Processes.process="*:9000*" OR Processes.process="*minio*"))) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName has_any ("python","python3","uvicorn","gunicorn")
+| where (FileName in~ ("pg_dump","psql"))
+   or (FileName in~ ("curl","wget","mc") and (ProcessCommandLine has ":9000" or ProcessCommandLine has "minio"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -292,10 +289,13 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `45.131.66.106`, `64.20.53.230`
+
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-3248`, `CVE-2021-29441`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

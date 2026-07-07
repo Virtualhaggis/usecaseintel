@@ -24,12 +24,65 @@ With that in mind, I endeavored to …
 
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1083** — File and Directory Discovery
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### motionEye unauthenticated path traversal read of motion.conf / system secrets
+
+`UC_175_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_method="GET" AND (Web.url="*/playback/*" OR Web.url="*/download/*" OR Web.url="*/preview/*") AND (Web.url="*motion.conf*" OR Web.url="*/etc/passwd*" OR Web.url="*/etc/shadow*" OR Web.url="*/etc/*" OR Web.url="*/root/*" OR Web.url="*.ssh*")) by Web.src Web.dest Web.http_method Web.url Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+### motionEye RCE: motion daemon spawns shell via injected command_*_exec hook
+
+`UC_175_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="motion" AND (Processes.process_name="sh" OR Processes.process_name="bash" OR Processes.process_name="dash" OR Processes.process_name="curl" OR Processes.process_name="wget" OR Processes.process_name="nc" OR Processes.process_name="python" OR Processes.process_name="python3" OR Processes.process_name="perl") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "motion"
+| where FileName in~ ("sh","bash","dash","curl","wget","nc","ncat","python","python3","perl","touch")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### motionEye traversal read followed by admin config-hook write from same source
+
+`UC_175_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as reads from datamodel=Web where (Web.http_method="GET" AND (Web.url="*/playback/*" OR Web.url="*/download/*" OR Web.url="*/preview/*") AND (Web.url="*motion.conf*" OR Web.url="*/etc/*")) by Web.src
+| `drop_dm_object_name(Web)`
+| join type=inner src [
+    | tstats `summariesonly` count as writes from datamodel=Web where (Web.http_method="POST" AND Web.url="*/config/*/set*") by Web.src
+    | `drop_dm_object_name(Web)` ]
+| where reads>0 AND writes>0
+| table src reads writes
+```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-phv5-334h-mxcw: motionEye Partial Authentication Bypass:
 
@@ -90,4 +143,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

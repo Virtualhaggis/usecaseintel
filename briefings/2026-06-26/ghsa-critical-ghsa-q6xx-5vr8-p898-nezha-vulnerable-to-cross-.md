@@ -14,21 +14,48 @@ In nezha **v1.14.13–v1.14.14** and **v2.0.0–v2.0.9**, the WebSocket endpoint
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-46716`
-- **SHA1:** `6661d6a7fc1c269f55c7f4e775082ad23fbe0f54`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
-- **T1027** — Obfuscated Files or Information
+- **T1563** — Remote Service Session Hijacking
+- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Nezha WebSocket terminal/file-manager session hijack — one stream UUID attached from 2+ source IPs
+
+`UC_128_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t dc(Web.src) as distinct_clients values(Web.src) as clients values(Web.user) as users count as hits min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/ws/terminal/*" OR Web.url="*/ws/file/*") by Web.url
+| `drop_dm_object_name(Web)`
+| rex field=url "/ws/(?<endpoint>terminal|file)/(?<stream_id>[0-9a-fA-F\-]{16,})"
+| where isnotnull(stream_id) AND distinct_clients>1
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+### Nezha harvested stream-UUID replay — one client attaching to many distinct terminal/file WebSocket UUIDs
+
+`UC_128_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t dc(Web.url) as distinct_streams values(Web.url) as streams count as hits min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/ws/terminal/*" OR Web.url="*/ws/file/*") by Web.src Web.user _time span=1h
+| `drop_dm_object_name(Web)`
+| where distinct_streams>5
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - distinct_streams
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -59,17 +86,7 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-46716`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6661d6a7fc1c269f55c7f4e775082ad23fbe0f54`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

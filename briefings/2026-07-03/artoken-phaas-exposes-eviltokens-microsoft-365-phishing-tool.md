@@ -16,7 +16,35 @@ Cisco Talos researchers discovered the platform while investigating phishing inf
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `dashboard-bl.pamconj.com`
+- **Domain (defanged):** `spx.pamconj.com`
+- **Domain (defanged):** `clear90489058903-document.workers.dev`
+- **Domain (defanged):** `authdocspro.com`
+- **Domain (defanged):** `backdoor-hub.com`
+- **Domain (defanged):** `bumpgames.net`
+- **Domain (defanged):** `carbatterygurgaon.com`
+- **Domain (defanged):** `careldutoit-el.co.za`
+- **Domain (defanged):** `docusend.networkssolutionmail.com`
+- **Domain (defanged):** `eventcalender-schedule.com`
+- **Domain (defanged):** `evobothub.org`
+- **Domain (defanged):** `framebound.cloud`
+- **Domain (defanged):** `infinitechai.org`
+- **Domain (defanged):** `internalmemorecord.bxwancheng.com`
+- **Domain (defanged):** `macmamo.com`
+- **Domain (defanged):** `mirsanotolastik.com`
+- **Domain (defanged):** `mirzanyapi.com`
+- **Domain (defanged):** `newmobilepolojean.com`
+- **Domain (defanged):** `notificationsmanagersec.com`
+- **Domain (defanged):** `pelangiservice.com`
+- **Domain (defanged):** `prcservis.com`
+- **Domain (defanged):** `promanager.outboundciwidey.com`
+- **Domain (defanged):** `serenitygovsupplys.com`
+- **Domain (defanged):** `signaturerequired.thecoolcactus.com`
+- **Domain (defanged):** `smstltle.net`
+- **Domain (defanged):** `statushelper.aguasomos.com`
+- **Domain (defanged):** `suctwocesonesstory.com`
+- **Domain (defanged):** `update.youcreadio.cfd`
+- **Domain (defanged):** `well.atlantaperlnatal.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -30,14 +58,14 @@ Cisco Talos researchers discovered the platform while investigating phishing inf
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1656** — Impersonation
-- **T1621** — Multi-Factor Authentication Request Generation
-- **T1098.005** — Account Manipulation: Device Registration
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1098.005** — Account Manipulation: Device Registration
 - **T1564.008** — Hide Artifacts: Email Hiding Rules
 - **T1114.003** — Email Collection: Email Forwarding Rule
-- **T1102** — Web Service
 - **T1213.002** — Data from Information Repositories: SharePoint
 - **T1530** — Data from Cloud Storage
 
@@ -47,148 +75,132 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ARToken/EvilTokens invoice-lure phish delivered with look-alike SharePoint / Workers IOC URL
+### ARToken/EvilTokens invoice-lure phishing email with device-code kit domains
 
-`UC_37_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_37_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.direction="inbound" (All_Email.url="*pamconj.com*" OR All_Email.url="*-document.workers.dev*" OR All_Email.url="*-docviewer.workers.dev*" OR All_Email.url="*-onedrive.workers.dev*" OR All_Email.url="*-adobe2.workers.dev*" OR All_Email.url="*authdocspro.com*" OR All_Email.url="*backdoor-hub.com*" OR All_Email.url="*networkssolutionmail.com*" OR All_Email.url="*evobothub.org*" OR All_Email.url="*framebound.cloud*" OR All_Email.url="*infinitechai.org*" OR All_Email.url="*bxwancheng.com*" OR All_Email.url="*mirsanotolastik.com*" OR All_Email.url="*mirzanyapi.com*" OR All_Email.url="*newmobilepolojean.com*" OR All_Email.url="*notificationsmanagersec.com*" OR All_Email.url="*outboundciwidey.com*" OR All_Email.url="*serenitygovsupplys.com*" OR All_Email.url="*thecoolcactus.com*" OR All_Email.url="*aguasomos.com*" OR All_Email.url="*suctwocesonesstory.com*" OR All_Email.url="*eventcalender-schedule.com*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.url
-| `drop_dm_object_name(All_Email)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.direction=inbound (All_Email.url="*authdocspro.com*" OR All_Email.url="*docusend.networkssolutionmail.com*" OR All_Email.url="*clear90489058903-document.workers.dev*" OR All_Email.url="*notificationsmanagersec.com*" OR All_Email.url="*eventcalender-schedule.com*" OR All_Email.url="*evobothub.org*" OR All_Email.url="*framebound.cloud*" OR All_Email.url="*infinitechai.org*" OR All_Email.url="*macmamo.com*" OR All_Email.url="*pelangiservice.com*" OR All_Email.url="*authdocspro*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.url | `drop_dm_object_name(All_Email)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let IocDomains = dynamic(["dashboard-bl.pamconj.com","spx.pamconj.com","clear90489058903-document.workers.dev","authdocspro.com","backdoor-hub.com","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","internalmemorecord.bxwancheng.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","promanager.outboundciwidey.com","serenitygovsupplys.com","signaturerequired.thecoolcactus.com","statushelper.aguasomos.com","suctwocesonesstory.com"]);
+let ARTokenDomains = dynamic(["authdocspro.com","docusend.networkssolutionmail.com","clear90489058903-document.workers.dev","notificationsmanagersec.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","macmamo.com","pelangiservice.com","backdoor-hub.com","bumpgames.net","carbatterygurgaon.com","careldutoit-el.co.za","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","internalmemorecord.bxwancheng.com","dashboard-bl.pamconj.com","spx.pamconj.com"]);
 EmailEvents
 | where Timestamp > ago(30d)
 | where EmailDirection == "Inbound"
 | join kind=inner (EmailUrlInfo | where Timestamp > ago(30d) | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
-| where UrlDomain in~ (IocDomains) or UrlDomain matches regex @"(?i)-(document|docviewer|onedrive|adobe2)\.workers\.dev$"
-| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, Url, UrlDomain, NetworkMessageId
+| where UrlDomain in~ (ARTokenDomains) or Url has_any (ARTokenDomains)
+| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation, NetworkMessageId
 | order by Timestamp desc
 ```
 
-### Successful Entra device-code authentication (EvilTokens/ARToken MFA bypass)
+### Endpoint DNS/network contact to ARToken/EvilTokens phishing & C2 domains
 
-`UC_37_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_37_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Authentication.app) as app values(Authentication.src) as src min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.signature="deviceCode" by Authentication.user
-| `drop_dm_object_name(Authentication)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*authdocspro.com" OR DNS.query="*docusend.networkssolutionmail.com" OR DNS.query="*clear90489058903-document.workers.dev" OR DNS.query="*notificationsmanagersec.com" OR DNS.query="*eventcalender-schedule.com" OR DNS.query="*evobothub.org" OR DNS.query="*framebound.cloud" OR DNS.query="*infinitechai.org" OR DNS.query="*pelangiservice.com" OR DNS.query="*dashboard-bl.pamconj.com" OR DNS.query="*spx.pamconj.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// AADSignInEventsBeta has no AuthenticationProtocol column, so pivot on the device-code -> PRT app: Microsoft Authentication Broker (clientMode:broker per Talos)
+let ARTokenDomains = dynamic(["authdocspro.com","docusend.networkssolutionmail.com","clear90489058903-document.workers.dev","notificationsmanagersec.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","macmamo.com","pelangiservice.com","backdoor-hub.com","bumpgames.net","carbatterygurgaon.com","careldutoit-el.co.za","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","internalmemorecord.bxwancheng.com","dashboard-bl.pamconj.com","spx.pamconj.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (ARTokenDomains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### First-seen Microsoft Authentication Broker sign-in (device-code PRT acquisition)
+
+`UC_37_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.app="Microsoft Authentication Broker" Authentication.action=success by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | eval earliest_30d=relative_time(now(),"-30d@d"), recent=relative_time(now(),"-1d@d") | where firstTime>=recent | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+let LookbackBaseline = 30d;
+let RecentWindow = 1d;
 let Baseline = AADSignInEventsBeta
-    | where Timestamp between (ago(30d) .. ago(1d))
-    | where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"
-    | summarize by AccountUpn, Country;
+    | where Timestamp between (ago(LookbackBaseline) .. ago(RecentWindow))
+    | where (ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e" or Application =~ "Microsoft Authentication Broker")
+    | where ErrorCode == 0
+    | distinct AccountUpn;
 AADSignInEventsBeta
-| where Timestamp > ago(1d)
+| where Timestamp > ago(RecentWindow)
+| where (ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e" or Application =~ "Microsoft Authentication Broker")
 | where ErrorCode == 0
-| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker — mints the PRT
-| join kind=leftanti Baseline on AccountUpn, Country
-| project Timestamp, AccountUpn, Application, IPAddress, Country, City, DeviceName, DeviceTrustType, ClientAppUsed
+| join kind=leftanti Baseline on AccountUpn
+| project Timestamp, AccountUpn, Application, IPAddress, Country, City, ClientAppUsed, DeviceTrustType, ResourceDisplayName, IsInteractive
 | order by Timestamp desc
 ```
 
-### Entra device registration by a user who just completed device-code auth (PRT persistence)
+### Entra ID device registration tied to device-code token abuse (PRT persistence)
 
-`UC_37_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-sourcetype="o365:management:activity" Workload=AzureActiveDirectory (Operation="Add device" OR Operation="Register device" OR Operation="Add registered owner to device")
-| stats count min(_time) as firstTime max(_time) as lastTime values(ClientIP) as src by UserId Operation
-| sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-// A newly-registered device authenticating = candidate attacker device holding a PRT
-let KnownDevices = AADSignInEventsBeta
-    | where Timestamp between (ago(30d) .. ago(1d))
-    | where isnotempty(AadDeviceId)
-    | summarize by AccountUpn, AadDeviceId;
-AADSignInEventsBeta
-| where Timestamp > ago(1d)
-| where ErrorCode == 0
-| where DeviceTrustType == "Azure AD registered"
-| join kind=leftanti KnownDevices on AccountUpn, AadDeviceId
-| project Timestamp, AccountUpn, AadDeviceId, DeviceName, DeviceTrustType, IPAddress, Country, City, Application
-| order by Timestamp desc
-```
-
-### Malicious inbox rule that hides/deletes/forwards mail (ARToken BEC evidence suppression)
-
-`UC_37_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_37_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-sourcetype="o365:management:activity" Workload=Exchange (Operation="New-InboxRule" OR Operation="Set-InboxRule" OR Operation="UpdateInboxRules")
-| eval params=mvjoin('Parameters{}.Value', "|")
-| where match(params, "(?i)DeleteMessage|MoveToFolder|ForwardTo|RedirectTo|ForwardAsAttachmentTo|MarkAsRead|Deleted Items|Junk|RSS")
-| stats count min(_time) as firstTime max(_time) as lastTime values(Operation) as ops by UserId ClientIP
-| sort - firstTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.action=created OR All_Changes.command="Add registered device" OR All_Changes.command="Register device") All_Changes.object_category=device by All_Changes.user All_Changes.src All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 CloudAppEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("New-InboxRule", "Set-InboxRule", "UpdateInboxRules", "Update-InboxRules")
-| extend Raw = tostring(RawEventData)
-| where Raw has_any ("DeleteMessage", "MoveToFolder", "ForwardTo", "RedirectTo", "ForwardAsAttachmentTo", "MarkAsRead")
-| where Raw has_any ("Deleted Items", "Junk", "RSS", "Archive", "DeleteMessage", "ForwardTo", "RedirectTo")
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ActionType, ObjectName, RawEventData
+| where Application in~ ("Microsoft Entra", "Office 365", "Azure Active Directory")
+| where ActionType in~ ("Add registered device", "Register device", "Add device")
+| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, IPAddress, ObjectName, CountryCode, ISP, UserAgent, Application
 | order by Timestamp desc
 ```
 
-### Endpoint egress/DNS to ARToken phishing domains and {uuid}-service.workers.dev hosts
+### Malicious inbox rule that hides/deletes/forwards mail (BEC cover-tracks)
 
-`UC_37_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_37_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query IN ("dashboard-bl.pamconj.com","spx.pamconj.com","clear90489058903-document.workers.dev","authdocspro.com","backdoor-hub.com","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","internalmemorecord.bxwancheng.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","promanager.outboundciwidey.com","serenitygovsupplys.com","signaturerequired.thecoolcactus.com","statushelper.aguasomos.com","suctwocesonesstory.com") OR DNS.query="*-document.workers.dev" OR DNS.query="*-docviewer.workers.dev" OR DNS.query="*-onedrive.workers.dev" OR DNS.query="*-adobe2.workers.dev") by DNS.src DNS.query
-| `drop_dm_object_name(DNS)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.command="New-InboxRule" OR All_Changes.command="Set-InboxRule" OR All_Changes.command="UpdateInboxRules") by All_Changes.user All_Changes.src All_Changes.command All_Changes.object | `drop_dm_object_name(Change)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let IocDomains = dynamic(["dashboard-bl.pamconj.com","spx.pamconj.com","clear90489058903-document.workers.dev","authdocspro.com","backdoor-hub.com","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","internalmemorecord.bxwancheng.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","promanager.outboundciwidey.com","serenitygovsupplys.com","signaturerequired.thecoolcactus.com","statushelper.aguasomos.com","suctwocesonesstory.com"]);
-DeviceNetworkEvents
+CloudAppEvents
 | where Timestamp > ago(30d)
-| where isnotempty(RemoteUrl)
-| where RemoteUrl has_any (IocDomains) or RemoteUrl matches regex @"(?i)-(document|docviewer|onedrive|adobe2)\.workers\.dev"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where ActionType in~ ("New-InboxRule", "Set-InboxRule", "UpdateInboxRules")
+| where (RawEventData has "DeleteMessage" and RawEventData has "true")
+    or RawEventData has_any ("Deleted Items", "RSS Feeds", "RSS Subscriptions", "Conversation History", "Archive", "Junk Email")
+    or RawEventData has_any ("ForwardTo", "RedirectTo", "ForwardAsAttachmentTo")
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ISP, CountryCode, ActionType, RawEventData
 | order by Timestamp desc
 ```
 
-### Bulk SharePoint/OneDrive download fan-out after M365 account takeover (ARToken data theft)
+### Post-compromise SharePoint/OneDrive bulk-download fan-out from single actor
 
-`UC_37_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_37_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-sourcetype="o365:management:activity" (Workload=SharePoint OR Workload=OneDrive) Operation="FileDownloaded"
-| stats count as downloads dc(ObjectId) as distinctFiles values(Site_Url) as sites min(_time) as firstTime max(_time) as lastTime by UserId ClientIP
-| where downloads>100 AND distinctFiles>50
-| sort - downloads
+| tstats `summariesonly` dc(All_Changes.object) as FileCount min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.command="FileDownloaded" OR All_Changes.command="FileSyncDownloadedFull") (All_Changes.object_category=SharePoint OR All_Changes.object_category=OneDrive) by All_Changes.user All_Changes.src _time span=1h | `drop_dm_object_name(Change)` | where FileCount > 50 | sort - FileCount
 ```
 
 **Defender KQL:**
 ```kql
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where Application in ("Microsoft SharePoint Online", "Microsoft OneDrive for Business")
-| where ActionType in ("FileDownloaded", "FileSyncDownloadedFull")
-| summarize Downloads = count(), DistinctFiles = dcount(ObjectId), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), IPs = make_set(IPAddress, 20) by AccountObjectId, AccountDisplayName
-| where Downloads > 100 and DistinctFiles > 50   // bulk-staging threshold; tune to org P99
-| order by Downloads desc
+| where Application in~ ("Microsoft SharePoint Online", "Microsoft OneDrive for Business")
+| where ActionType in~ ("FileDownloaded", "FileSyncDownloadedFull", "FileAccessed")
+| summarize FileCount = dcount(ObjectId), SampleFiles = make_set(ObjectName, 25), StartTime = min(Timestamp), EndTime = max(Timestamp)
+    by AccountObjectId, AccountDisplayName, IPAddress, bin(Timestamp, 1h)
+| where FileCount > 50   // 50 = bulk-download fan-out threshold; tune to org P99 per-user hourly download volume
+| order by FileCount desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -394,7 +406,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `dashboard-bl.pamconj.com`, `spx.pamconj.com`, `clear90489058903-document.workers.dev`, `authdocspro.com`, `backdoor-hub.com`, `bumpgames.net`, `carbatterygurgaon.com`, `careldutoit-el.co.za` _(+21 more)_
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

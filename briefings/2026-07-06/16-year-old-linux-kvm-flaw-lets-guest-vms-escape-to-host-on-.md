@@ -28,9 +28,8 @@ Dubbed ' Januscape ' and tracked as  CVE-2026-53359 , the flaw sits in the shad
 - **T1569.002** — Service Execution
 - **T1204.002** — User Execution: Malicious File
 - **T1611** — Escape to Host
-- **T1068** — Exploitation for Privilege Escalation
-- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 - **T1547.006** — Boot or Logon Autostart Execution: Kernel Modules and Extensions
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 
 ## Kill chain phases observed
 
@@ -38,58 +37,47 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unpatched x86 KVM host exposed to Januscape guest-to-host escape (CVE-2026-53359)
+### Suspicious Linux kernel module load from world-writable path (Januscape PoC delivery)
 
-`UC_10_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-53359" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-53359"
-| where OSPlatform startswith "Linux"
-| summarize arg_max(Timestamp, *) by DeviceId
-| project DeviceName, OSPlatform, OSVersion, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, VulnerabilitySeverityLevel
-| sort by DeviceName asc
-```
-
-### KVM shadow-MMU use-after-free host panic (Januscape PoC signature)
-
-`UC_10_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* (sourcetype=syslog OR sourcetype=linux_secure OR sourcetype="kernel") "kvm" ("use-after-free" OR "KASAN" OR "kvm_mmu_get_child_sp" OR "Kernel panic - not syncing" OR "general protection fault" OR "BUG: unable to handle")
-| stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sample by host
-| sort - lastTime
-```
-
-### Out-of-tree kernel module load on KVM host/guest (Januscape exploit prerequisite)
-
-`UC_10_9` · phase: **install** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name IN ("insmod","modprobe") Endpoint.Processes.process="*.ko*" NOT Endpoint.Processes.process="*/lib/modules/*" by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.process_name, Endpoint.Processes.process
-| `drop_dm_object_name(Endpoint.Processes)`
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("insmod","modprobe","kmod") AND Processes.process="*.ko*" AND (Processes.process="*/tmp/*" OR Processes.process="*/dev/shm/*" OR Processes.process="*/home/*" OR Processes.process="*/var/tmp/*" OR Processes.process="*/run/user/*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("insmod","modprobe")
+| where Timestamp > ago(14d)
+| where FileName in~ ("insmod","modprobe","kmod")
 | where ProcessCommandLine has ".ko"
+| where ProcessCommandLine has_any ("/tmp/","/dev/shm/","/home/","/var/tmp/","/run/user/")
 | where ProcessCommandLine !has "/lib/modules/"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| sort by Timestamp desc
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### KVM host kernel panic / shadow-MMU BUG referencing kvm_mmu_get_child_sp (Januscape trigger)
+
+`UC_10_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=* sourcetype=linux_secure OR sourcetype=syslog OR sourcetype=linux_messages_syslog ("kvm_mmu_get_child_sp" OR "kvm_mmu" OR "FNAME(fetch)" OR (("kvm") AND ("kernel BUG" OR "BUG:" OR "Oops" OR "kernel panic" OR "general protection fault" OR "unable to handle"))) | stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sample by host | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+### Unpatched KVM hosts exposed to Januscape (CVE-2026-53359) — asset exposure
+
+`UC_10_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId == "CVE-2026-53359"
+| join kind=leftouter (DeviceInfo | where Timestamp > ago(1d) | summarize arg_max(Timestamp, IsInternetFacing, OSPlatform, OSDistribution) by DeviceId) on DeviceId
+| project DeviceName, DeviceId, OSPlatform, OSDistribution, OSVersion, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing
+| order by IsInternetFacing desc, DeviceName asc
 ```
 
 ### Suspicious browser extension installation
@@ -273,4 +261,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

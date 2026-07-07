@@ -23,12 +23,69 @@
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1548.003** — Abuse Elevation Control Mechanism: Sudo and Sudo Caching
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### 9router node process spawns 'sudo -S sh' (GHSA-g6g7-pvmx-m74p command-injection primitive)
+
+`UC_51_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=sudo Processes.process="*sudo*-S*sh*" Processes.parent_process_name IN (node,9router) by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "sudo"
+| where ProcessCommandLine has_all ("-S", "sh")
+| where InitiatingProcessFileName in~ ("node", "9router")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessId, ProcessId
+| order by Timestamp desc
+```
+
+### 9router node process fetches tailscale.com/install.sh via curl (vulnerable route invoked)
+
+`UC_51_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=curl Processes.process="*tailscale.com/install.sh*" Processes.parent_process_name IN (node,9router) by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "curl"
+| where ProcessCommandLine has "tailscale.com/install.sh"
+| where InitiatingProcessFileName in~ ("node", "9router")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessId
+| order by Timestamp desc
+```
+
+### Unauthenticated POST to 9router /api/tunnel/tailscale-install endpoint
+
+`UC_51_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST Web.url="*/api/tunnel/tailscale-install*" by Web.src Web.dest Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-g6g7-pvmx-m74p: 9router: Missing Authorization and OS Com
 
@@ -82,4 +139,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
