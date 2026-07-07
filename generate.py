@@ -84,10 +84,10 @@ SOURCES = [
     # write-ups (RU/CN/MENA actors) with rich IOC tables and YARA.
     {"name": "Lab52",                   "kind": "rss",
      "url":  "https://lab52.io/blog/feed/"},
-    # Cyber Security News — broad daily feed; complements the news-
-    # style sources with extra coverage on emerging CVEs and POCs.
-    {"name": "Cyber Security News",     "kind": "rss",
-     "url":  "https://cybersecuritynews.com/feed/"},
+    # Cyber Security News — removed 2026-07-07: feed returns HTTP 403 /
+    # malformed XML (dead since at least 2026-07-03) and was flagged as a
+    # zero-entry source every run. Archived CSN articles keep rendering via
+    # the name→slug maps and _NODROP_SOURCES, which intentionally stay.
     # Supply-chain / open-source ecosystem researchers — fill the gap left
     # by news outlets when a campaign breaks across npm / PyPI / GitHub
     # Actions (Snyk + Aikido covered TanStack / Mini Shai-Hulud first;
