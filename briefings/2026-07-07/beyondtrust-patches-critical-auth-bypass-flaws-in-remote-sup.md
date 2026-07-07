@@ -32,6 +32,7 @@ CVE-2026-40138 (CVSS score: 9.2) - A pre-authentication vul…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
@@ -39,34 +40,26 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable BeyondTrust Remote Support / PRA appliances (CVE-2026-40138 pre-auth bypass, fixed 25.3.3)
+### Vulnerable BeyondTrust Remote Support / PRA appliance exposed (CVE-2026-40138/40139/40140/40141)
 
-`UC_4_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2026-40138","CVE-2026-40139","CVE-2026-40140","CVE-2026-40141")) OR (Vulnerabilities.signature="*BeyondTrust*" AND (Vulnerabilities.signature="*Remote Support*" OR Vulnerabilities.signature="*Privileged Remote Access*")) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category | `drop_dm_object_name("Vulnerabilities")` | convert ctime(firstTime) ctime(lastTime) | sort - severity dest
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2026-40138","CVE-2026-40139","CVE-2026-40140","CVE-2026-40141") OR Vulnerabilities.signature="*BeyondTrust*Remote Support*" OR Vulnerabilities.signature="*Privileged Remote Access*") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity 
+| `drop_dm_object_name(Vulnerabilities)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - severity
 ```
 
 **Defender KQL:**
 ```kql
-let VulnCves = dynamic(["CVE-2026-40138","CVE-2026-40139","CVE-2026-40140","CVE-2026-40141"]);
-union
-(
-    DeviceTvmSoftwareVulnerabilities
-    | where CveId in (VulnCves)
-    | project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, Source = "TVM-CVE"
-),
-(
-    DeviceTvmSoftwareInventory
-    | where SoftwareVendor has "BeyondTrust"
-    | where SoftwareName has_any ("Remote Support", "Privileged Remote Access")
-    | extend v = split(SoftwareVersion, ".")
-    | extend major = toint(v[0]), minor = toint(v[1]), build = toint(v[2])
-    | where major < 25 or (major == 25 and minor < 3) or (major == 25 and minor == 3 and build <= 2)   // fixed in RS/PRA 25.3.3
-    | project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId = "CVE-2026-40138/40139/40140/40141", VulnerabilitySeverityLevel = "Critical", RecommendedSecurityUpdate = "Upgrade to RS/PRA 25.3.3 or above", Source = "Inventory-Version"
-)
-| sort by DeviceName asc
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in ("CVE-2026-40138","CVE-2026-40139","CVE-2026-40140","CVE-2026-40141")
+   or (SoftwareVendor has "beyondtrust" and SoftwareName has_any ("remote support","privileged remote access"))
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel desc, Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -217,4 +210,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

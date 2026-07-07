@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Calendly authentication-laundering phish: 'Booking Manager (via Calendly)' lure to hospitality staff
 
-`UC_147_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_149_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ EmailEvents
 
 ### Photo ZIP campaign delivery artifacts: IMG-/PHOTO-*.png.lnk and photo-<digits>.zip
 
-`UC_147_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_149_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceFileEvents
 
 ### Node.js implant: node.exe running random .js from %LOCALAPPDATA%\Nodejs with a domain argument
 
-`UC_147_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_149_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### Node.js implant persistence: PowerShell detached relauncher (process.execPath + unref)
 
-`UC_147_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_149_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceProcessEvents
 
 ### Defender process-exclusion for %TEMP% executable via Add-MpPreference -ExclusionProcess
 
-`UC_147_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_149_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceProcessEvents
 
 ### Node.js implant C2 beacon to safedocphoto/recallnine/kentjerk/photodoc-secure .info domains
 
-`UC_147_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_149_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -454,7 +454,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Photo ZIP campaign targeting hospitality industry delivers Node.js implant for p
 
-`UC_147_8` · phase: **exploit** · confidence: **High**
+`UC_149_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

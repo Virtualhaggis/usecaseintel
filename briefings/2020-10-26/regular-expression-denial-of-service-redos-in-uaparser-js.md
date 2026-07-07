@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### REDoS exploitation of ua-parser-js via space-padded Xiaomi User-Agent (CVE-2020-7733)
 
-`UC_3241_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3242_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Regular Expression Denial of Service (REDoS) in UAParser.js
 
-`UC_3241_1` · phase: **exploit** · confidence: **High**
+`UC_3242_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

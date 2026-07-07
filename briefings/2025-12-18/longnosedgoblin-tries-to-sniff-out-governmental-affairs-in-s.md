@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### NosyDoor AppDomainManager hijack: UevAppMonitor.exe executing from non-standard path
 
-`UC_681_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_682_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ UevExec
 
 ### NosyDoor persistence: scheduled task 'OneDrive Reporting Task-S-1-5-21-' under Microsoft folder
 
-`UC_681_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_682_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceFileEvents
 
 ### NosyDoor dropper file artefacts in C:\Windows\Microsoft.NET\Framework
 
-`UC_681_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_682_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -312,7 +312,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — LongNosedGoblin tries to sniff out governmental affairs in Southeast Asia and Ja
 
-`UC_681_6` · phase: **exploit** · confidence: **High**
+`UC_682_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

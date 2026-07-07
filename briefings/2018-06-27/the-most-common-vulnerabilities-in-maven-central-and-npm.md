@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — The most common vulnerabilities in Maven Central and npm
 
-`UC_3572_1` · phase: **install** · confidence: **High**
+`UC_3573_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

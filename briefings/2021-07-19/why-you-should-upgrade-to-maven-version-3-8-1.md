@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Maven (<3.8.1) invocation revealed by build classpath — CVE-2021-26291
 
-`UC_3088_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3089_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Maven fetching dependencies over cleartext HTTP (MITM-exposed artifact download) — CVE-2021-26291
 
-`UC_3088_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3089_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

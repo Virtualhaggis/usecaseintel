@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Machine that pulled compromised easy-day-js npm package (node_modules write)
 
-`UC_86_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_92_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### easy-day-js dropper C2 beacon to Sapphire Sleet Hostwinds infrastructure
 
-`UC_86_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_92_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### easy-day-js self-deleting postinstall dropper temp artifacts (.pkg_history/.pkg_logs)
 
-`UC_86_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_92_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceFileEvents
 
 ### easy-day-js second-stage infostealer reading browser secrets & crypto-wallet extensions via node
 
-`UC_86_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_92_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

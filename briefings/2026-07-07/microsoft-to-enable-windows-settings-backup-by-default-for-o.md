@@ -11,12 +11,9 @@ By Sergiu Gatlan
 July 7, 2026
 05:41 AM
 0 
-
-
 Microsoft says the Windows settings backup and restore tool will be enabled by default on Microsoft Entra-joined or Microsoft Entra hybrid-joined enterprise systems after upgrading to Windows 11 26H2.
-
-
-Formerly known as Windows Backup for Organizations , this backup tool helps back up and restore enterprise users' Windows settings after a device is reset, replaced, upgraded, or reim…
+Formerly known as Windows Backup for Organizations , this backup tool helps back up and restore enterprise users' Windows settings after a device is reset, replaced, upgraded, or reimaged.
+Th…
 
 ## Indicators of Compromise (high-fidelity only)
 

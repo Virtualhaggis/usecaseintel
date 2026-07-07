@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2559 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2561 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,10 +11,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-07
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
 - [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
+- [court filing reveals windows device id helped fbi trace alle](./2026-07-07/court-filing-reveals-windows-device-id-helped-fbi-trace-alle.md)
+- [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [microsoft to enable windows settings backup by default for o](./2026-07-07/microsoft-to-enable-windows-settings-backup-by-default-for-o.md)
+- [new januscape linux flaw allows vm escape on intel amd devic](./2026-07-07/new-januscape-linux-flaw-allows-vm-escape-on-intel-amd-devic.md)
+- [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
+- [spain arrests suspected member of pro russian hacktivist gro](./2026-07-07/spain-arrests-suspected-member-of-pro-russian-hacktivist-gro.md)
 - [suspected china aligned hackers exploit roundcube flaws agai](./2026-07-07/suspected-china-aligned-hackers-exploit-roundcube-flaws-agai.md)
+- [the github actions attack pattern your ci security scanners ](./2026-07-07/the-github-actions-attack-pattern-your-ci-security-scanners-.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
+- [what changes when your software supply chain includes ai wri](./2026-07-07/what-changes-when-your-software-supply-chain-includes-ai-wri.md)
+- [writer ai flaw could let agent previews leak session tokens ](./2026-07-07/writer-ai-flaw-could-let-agent-previews-leak-session-tokens-.md)
 
 ## 2026-07-06
 - [16 year old linux kvm flaw lets guest vms escape to host on ](./2026-07-06/16-year-old-linux-kvm-flaw-lets-guest-vms-escape-to-host-on-.md)
@@ -49,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-03
 - [armored likho digging a snake pit inside the covert busysnak](./2026-07-03/armored-likho-digging-a-snake-pit-inside-the-covert-busysnak.md)
 - [armored likho targets government agencies power sector with ](./2026-07-03/armored-likho-targets-government-agencies-power-sector-with-.md)
-- [artoken phaas exposes eviltokens microsoft 365 phishing tool](./2026-07-03/artoken-phaas-exposes-eviltokens-microsoft-365-phishing-tool.md)
 - [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
 - [cyber readiness for smbs getting the basics right](./2026-07-03/cyber-readiness-for-smbs-getting-the-basics-right.md)
 - [european parliament member investigating spyware was hacked ](./2026-07-03/european-parliament-member-investigating-spyware-was-hacked-.md)
@@ -91,7 +98,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [azure cli password spray hits at least 78 microsoft accounts](./2026-07-01/azure-cli-password-spray-hits-at-least-78-microsoft-accounts.md)
 - [cisa kev cve 2026 45659 microsoft sharepoint server deserial](./2026-07-01/cisa-kev-cve-2026-45659-microsoft-sharepoint-server-deserial.md)
-- [citrix patches six netscaler flaws allowing file read and de](./2026-07-01/citrix-patches-six-netscaler-flaws-allowing-file-read-and-de.md)
 - [codfish semantic release action github action has been compr](./2026-07-01/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [critical cursor flaws could let prompt injection escape sand](./2026-07-01/critical-cursor-flaws-could-let-prompt-injection-escape-sand.md)
 - [ghsa critical cve 2026 41052 rancher has privilege escalatio](./2026-07-01/ghsa-critical-cve-2026-41052-rancher-has-privilege-escalatio.md)
@@ -116,9 +122,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-30
 - [ghsa critical cve 2026 50566 fission environment runtime con](./2026-06-30/ghsa-critical-cve-2026-50566-fission-environment-runtime-con.md)
-- [langflow rce exploited to deploy monero miner on exposed ai ](./2026-06-30/langflow-rce-exploited-to-deploy-monero-miner-on-exposed-ai-.md)
-- [microsoft warns poisoned mcp tool descriptions can make ai a](./2026-06-30/microsoft-warns-poisoned-mcp-tool-descriptions-can-make-ai-a.md)
-- [rustduck botnet rebuilds in rust to hijack routers and serve](./2026-06-30/rustduck-botnet-rebuilds-in-rust-to-hijack-routers-and-serve.md)
 - [securing ai agents when ai tools move from reading to acting](./2026-06-30/securing-ai-agents-when-ai-tools-move-from-reading-to-acting.md)
 - [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
 - [what s new in microsoft security june 2026](./2026-06-30/what-s-new-in-microsoft-security-june-2026.md)
@@ -156,10 +159,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
 - [gamaredon in 2025 leveraging tunnels workers dead drops and ](./2026-06-25/gamaredon-in-2025-leveraging-tunnels-workers-dead-drops-and-.md)
-- [ghsa critical cve 2026 39831 golang org x crypto ssh fido u2](./2026-06-25/ghsa-critical-cve-2026-39831-golang-org-x-crypto-ssh-fido-u2.md)
-- [ghsa critical cve 2026 39832 golang org x crypto ssh agent d](./2026-06-25/ghsa-critical-cve-2026-39832-golang-org-x-crypto-ssh-agent-d.md)
-- [ghsa critical cve 2026 42508 golang org x crypto ssh knownho](./2026-06-25/ghsa-critical-cve-2026-42508-golang-org-x-crypto-ssh-knownho.md)
-- [ghsa critical cve 2026 46595 golang org x crypto ssh invokin](./2026-06-25/ghsa-critical-cve-2026-46595-golang-org-x-crypto-ssh-invokin.md)
+- [ghsa critical cve 2026 39831 golang org x crypto fido u2f se](./2026-06-25/ghsa-critical-cve-2026-39831-golang-org-x-crypto-fido-u2f-se.md)
+- [ghsa critical cve 2026 39832 golang org x crypto doesn t dro](./2026-06-25/ghsa-critical-cve-2026-39832-golang-org-x-crypto-doesn-t-dro.md)
+- [ghsa critical cve 2026 42508 golang org x crypto vulnerable ](./2026-06-25/ghsa-critical-cve-2026-42508-golang-org-x-crypto-vulnerable-.md)
+- [ghsa critical cve 2026 46595 golang org x crypto invoking ve](./2026-06-25/ghsa-critical-cve-2026-46595-golang-org-x-crypto-invoking-ve.md)
 - [ghsa critical cve 2026 48713 i18next fs backend vulnerable t](./2026-06-25/ghsa-critical-cve-2026-48713-i18next-fs-backend-vulnerable-t.md)
 - [ghsa critical cve 2026 48714 i18next http middleware missing](./2026-06-25/ghsa-critical-cve-2026-48714-i18next-http-middleware-missing.md)
 - [ghsa critical cve 2026 55166 lemur acme ssrf creator equalit](./2026-06-25/ghsa-critical-cve-2026-55166-lemur-acme-ssrf-creator-equalit.md)
@@ -225,7 +228,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa fq2m 6wqh x44g praisonai jobs api exposes](./2026-06-18/ghsa-critical-ghsa-fq2m-6wqh-x44g-praisonai-jobs-api-exposes.md)
 - [ghsa critical ghsa hxpf 9xvq wph8 netlicensing mcp rest path](./2026-06-18/ghsa-critical-ghsa-hxpf-9xvq-wph8-netlicensing-mcp-rest-path.md)
 - [ghsa critical ghsa j4f3 55x4 r6q2 npm praisonai mcpserver ex](./2026-06-18/ghsa-critical-ghsa-j4f3-55x4-r6q2-npm-praisonai-mcpserver-ex.md)
-- [ghsa critical ghsa j4hj 7hfh g2f4 praisonai recipe serve aut](./2026-06-18/ghsa-critical-ghsa-j4hj-7hfh-g2f4-praisonai-recipe-serve-aut.md)
 - [ghsa critical ghsa p69m 4f92 2v84 praisonai remote code exec](./2026-06-18/ghsa-critical-ghsa-p69m-4f92-2v84-praisonai-remote-code-exec.md)
 - [ghsa critical ghsa p75f 6fp4 p57w praisonai missing authenti](./2026-06-18/ghsa-critical-ghsa-p75f-6fp4-p57w-praisonai-missing-authenti.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)

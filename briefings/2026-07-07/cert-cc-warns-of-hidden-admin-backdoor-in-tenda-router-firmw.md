@@ -26,10 +26,10 @@ Several versions of firmware released by Chinese network device manufacturer Ten
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1078.001** — Valid Accounts: Default Accounts
 - **T1556** — Modify Authentication Process
-- **T1554** — Compromise Host Software Binary
-- **T1098** — Account Manipulation
+- **T1078.001** — Valid Accounts: Default Accounts
+- **T1542.001** — Pre-OS Boot: System Firmware
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
@@ -37,31 +37,51 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Tenda router backdoor auth via undocumented 'rzadmin' account (CVE-2026-11405)
+### Tenda /bin/httpd backdoor auth artifact (rzadmin / sys.rzadmin.password) in router syslog
 
-`UC_6_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_16_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success (Authentication.user="rzadmin" OR Authentication.user="*rzadmin*") by Authentication.src, Authentication.dest, Authentication.user, Authentication.app | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+index=* (sourcetype=syslog OR sourcetype=cisco:asa OR sourcetype=tenda:httpd) ("rzadmin" OR "sys.rzadmin.password")
+| rex field=_raw "(?<src_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+| stats count min(_time) as firstTime max(_time) as lastTime values(src_ip) as src_ip by host, sourcetype
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
-### Tenda router backdoor credential store reference (sys.rzadmin.password) — CVE-2026-11405
+### Exposed vulnerable Tenda firmware builds (CVE-2026-11405) in asset/vuln inventory
 
-`UC_6_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_16_7` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-search (index=network OR index=firewall OR index=syslog) (sourcetype=*tenda* OR sourcetype=*syslog*) "sys.rzadmin.password" | stats count min(_time) as firstTime max(_time) as lastTime values(host) as hosts by _raw | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve="CVE-2026-11405" OR Vulnerabilities.signature="*rzadmin*") by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - count
 ```
 
-### Tenda router auth-failure immediately followed by admin success (backdoor code path) — CVE-2026-11405
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(7d)
+| where CveId =~ "CVE-2026-11405"
+   or (SoftwareVendor has "tenda" and SoftwareVersion has_any ("V1.2.0.14(408)","V15.11.0.5","V15.03.06.46","V15.03.06.48","V15.03.06.51"))
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc
+```
 
-`UC_6_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+### Inbound internet access to Tenda router web-management ports (remote-mgmt exposure)
+
+`UC_16_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Authentication where nodename=Authentication (Authentication.action=success OR Authentication.action=failure) by _time span=30s, Authentication.src, Authentication.dest, Authentication.action | `drop_dm_object_name(Authentication)` | eval fails=if(action=="failure",count,0), succ=if(action=="success",count,0) | stats sum(fails) as failures sum(succ) as successes by _time, src, dest | where failures>0 AND successes>0 | sort - _time
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (80,443,8080,8443) All_Traffic.direction=inbound by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.action
+| `drop_dm_object_name(All_Traffic)`
+| where NOT (cidrmatch("10.0.0.0/8", src) OR cidrmatch("172.16.0.0/12", src) OR cidrmatch("192.168.0.0/16", src))
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 ### Suspicious browser extension installation

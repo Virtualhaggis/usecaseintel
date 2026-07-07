@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Securing the Agent Skills Registry: How Snyk and Tessl Are Setting the Standard
 
-`UC_519_3` · phase: **exploit** · confidence: **High**
+`UC_521_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
