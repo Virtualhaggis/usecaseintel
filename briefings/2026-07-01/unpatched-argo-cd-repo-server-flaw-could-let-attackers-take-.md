@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Argo CD repo-server exploit: kustomize --helm-command points to non-helm script
 
-`UC_90_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_94_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### Argo CD repo-server / kustomize spawning shell or network tooling
 
-`UC_90_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_94_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Argo CD service account deploys privileged / host-escape workload
 
-`UC_90_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_94_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ index=* sourcetype="kube:apiserver:audit" verb IN ("create","update","patch") "o
 
 ### ClusterRoleBinding granting elevated rights to Argo CD service account
 
-`UC_90_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_94_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ index=* sourcetype="kube:apiserver:audit" verb IN ("create","update","patch") "o
 
 ### New Argo CD Application/ApplicationSet pointing to external Git repo
 
-`UC_90_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_94_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

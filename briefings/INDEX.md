@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2561 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2563 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,7 +11,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-07
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
 - [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
+- [cisa kev cve 2026 48908 joomshaper sp page builder unrestric](./2026-07-07/cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric.md)
+- [cisa kev cve 2026 55255 langflow authorization bypass throug](./2026-07-07/cisa-kev-cve-2026-55255-langflow-authorization-bypass-throug.md)
+- [cisa kev cve 2026 56290 joomlack page builder improper acces](./2026-07-07/cisa-kev-cve-2026-56290-joomlack-page-builder-improper-acces.md)
 - [court filing reveals windows device id helped fbi trace alle](./2026-07-07/court-filing-reveals-windows-device-id-helped-fbi-trace-alle.md)
+- [debull tooling abuses microsoft device code flow to target m](./2026-07-07/debull-tooling-abuses-microsoft-device-code-flow-to-target-m.md)
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [microsoft to enable windows settings backup by default for o](./2026-07-07/microsoft-to-enable-windows-settings-backup-by-default-for-o.md)
 - [new januscape linux flaw allows vm escape on intel amd devic](./2026-07-07/new-januscape-linux-flaw-allows-vm-escape-on-intel-amd-devic.md)
@@ -60,7 +64,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
 - [cyber readiness for smbs getting the basics right](./2026-07-03/cyber-readiness-for-smbs-getting-the-basics-right.md)
 - [european parliament member investigating spyware was hacked ](./2026-07-03/european-parliament-member-investigating-spyware-was-hacked-.md)
-- [netnut proxy network disrupted 2 million infected devices cu](./2026-07-03/netnut-proxy-network-disrupted-2-million-infected-devices-cu.md)
 - [new avalon malware framework packs crownx ransomware capabil](./2026-07-03/new-avalon-malware-framework-packs-crownx-ransomware-capabil.md)
 - [new bad epoll linux kernel flaw lets unprivileged users gain](./2026-07-03/new-bad-epoll-linux-kernel-flaw-lets-unprivileged-users-gain.md)
 - [north korea linked npm packages mimic rollup polyfills to st](./2026-07-03/north-korea-linked-npm-packages-mimic-rollup-polyfills-to-st.md)
@@ -112,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ousaban banking trojan targets iberian bank users with fake ](./2026-07-01/ousaban-banking-trojan-targets-iberian-bank-users-with-fake-.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [phantom squatting uses ai hallucinated domains for phishing ](./2026-07-01/phantom-squatting-uses-ai-hallucinated-domains-for-phishing-.md)
-- [researcher analyzes 3 000 live clickfix payloads exposing ap](./2026-07-01/researcher-analyzes-3-000-live-clickfix-payloads-exposing-ap.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [seo poisoned software sites abuse screenconnect to deploy as](./2026-07-01/seo-poisoned-software-sites-abuse-screenconnect-to-deploy-as.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)

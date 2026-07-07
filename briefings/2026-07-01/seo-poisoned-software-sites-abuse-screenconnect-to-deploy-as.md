@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Path-traversal / dangerous-upload exploit requests to Adobe ColdFusion & Campaign Classic endpoints (APSB26-68/71)
 
-`UC_99_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_103_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### Adobe ColdFusion / Campaign Classic service spawning a command interpreter
 
-`UC_99_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_103_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### Web shell written to web root by ColdFusion / Campaign Classic runtime
 
-`UC_99_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_103_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceFileEvents
 
 ### Adobe ColdFusion / Campaign Classic hosts exposed to APSB26-68 CVSS 10.0 RCE CVE
 
-`UC_99_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_103_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

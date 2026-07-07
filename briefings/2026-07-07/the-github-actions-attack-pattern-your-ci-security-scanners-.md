@@ -11,15 +11,9 @@ Sponsored by ActiveState
 July 7, 2026
 10:01 AM
 0 
-
-
 A green pipeline is not a governed one, and agentic coding is widening the gap faster than review can close it. 
-
-
 By Shane Warden, Principal Architect, ActiveState 
-
-
-In June 2026, researchers at Novee Security disclosed a class of CI/CD weakness they named Cordyceps . They scanned roughly 30,000 high-impact repositories across the npm, PyPI, crates.io, and Go ecosystems,…
+In June 2026, researchers at Novee Security disclosed a class of CI/CD weakness they named Cordyceps . They scanned roughly 30,000 high-impact repositories across the npm, PyPI, crates.io, and Go ecosystems, then flagge…
 
 ## Indicators of Compromise (high-fidelity only)
 

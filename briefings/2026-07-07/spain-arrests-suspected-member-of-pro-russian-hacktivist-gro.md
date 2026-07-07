@@ -11,12 +11,8 @@ By Bill Toulas
 July 7, 2026
 11:21 AM
 0 
-
-
 Spain's National Police have arrested a man who is suspected of being an active member of the CyberArmy of Russia Reborn (CARR) and Z-Pentest, both pro-Russian hacktivist groups.
-
-
-Although hacktivism typically refers to cyberattacks intended to promote a political or ideological message rather than cause widespread damage, the two groups have been linked to multiple attacks targeting …
+Although hacktivism typically refers to cyberattacks intended to promote a political or ideological message rather than cause widespread damage, the two groups have been linked to multiple attacks targeting critical…
 
 ## Indicators of Compromise (high-fidelity only)
 

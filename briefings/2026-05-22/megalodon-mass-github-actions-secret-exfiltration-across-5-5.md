@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Megalodon CI/CD exfil: outbound HTTPS to C2 216.126.225.129:8443
 
-`UC_334_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_337_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### Megalodon harvester: curl POST to C2 /collect endpoint on Linux runner
 
-`UC_334_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_337_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Megalodon harvester: bash secret-grep across workspace (API_KEY|SECRET|TOKEN|PRIVATE_KEY|BEGIN RSA)
 
-`UC_334_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_337_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### Megalodon backdoor workflow file (SysDiag.yml / Optimize-Build.yml) written to .github/workflows/
 
-`UC_334_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_337_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceFileEvents
 
 ### Megalodon harvester: clustered read of ~/.ssh/id_*, ~/.kube/config, ~/.npmrc, ~/.docker/config.json in one session
 
-`UC_334_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_337_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +242,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Megalodon: Mass GitHub Actions Secret Exfiltration Across 5,500+ Public Reposito
 
-`UC_334_5` · phase: **install** · confidence: **High**
+`UC_337_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

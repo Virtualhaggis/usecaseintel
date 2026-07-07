@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Using Pulumi to automate the Snyk Kubernetes integration for containers
 
-`UC_2614_0` · phase: **exploit** · confidence: **High**
+`UC_2617_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

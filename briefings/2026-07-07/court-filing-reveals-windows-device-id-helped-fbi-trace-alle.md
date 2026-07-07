@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### Scattered Spider help-desk takeover: admin password reset chained to MFA re-registration
 
-`UC_3_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ CloudAppEvents
 
 ### Scattered Spider ngrok tunnel setup/C2 (dashboard.ngrok.com + ngrok tunnel domains)
 
-`UC_3_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceNetworkEvents
 
 ### Scattered Spider Teleport.sh tunnel client used for staging/exfiltration
 
-`UC_3_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

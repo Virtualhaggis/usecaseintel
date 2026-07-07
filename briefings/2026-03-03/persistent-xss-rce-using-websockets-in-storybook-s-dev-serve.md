@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Storybook WebSocket XSS/RCE — malicious .stories file written to src/stories (CVE-2026-27148)
 
-`UC_550_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_553_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Storybook portable-stories RCE — vitest/node spawning shell, recon or secret-grep child (CVE-2026-27148)
 
-`UC_550_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_553_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Persistent XSS/RCE using WebSockets in Storybook’s dev server
 
-`UC_550_4` · phase: **exploit** · confidence: **High**
+`UC_553_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

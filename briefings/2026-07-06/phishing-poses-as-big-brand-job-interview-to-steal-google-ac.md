@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound recruiter-themed job-interview phish linking to Salesforce/exct.net → wiseagent redirect infra
 
-`UC_23_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_28_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
