@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2563 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2565 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,6 +11,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-07
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
 - [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
+- [chinese hackers develop longleash malware to expand orb netw](./2026-07-07/chinese-hackers-develop-longleash-malware-to-expand-orb-netw.md)
+- [cisa kev cve 2026 48282 adobe coldfusion path traversal vuln](./2026-07-07/cisa-kev-cve-2026-48282-adobe-coldfusion-path-traversal-vuln.md)
 - [cisa kev cve 2026 48908 joomshaper sp page builder unrestric](./2026-07-07/cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric.md)
 - [cisa kev cve 2026 55255 langflow authorization bypass throug](./2026-07-07/cisa-kev-cve-2026-55255-langflow-authorization-bypass-throug.md)
 - [cisa kev cve 2026 56290 joomlack page builder improper acces](./2026-07-07/cisa-kev-cve-2026-56290-joomlack-page-builder-improper-acces.md)
@@ -20,6 +22,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft to enable windows settings backup by default for o](./2026-07-07/microsoft-to-enable-windows-settings-backup-by-default-for-o.md)
 - [new januscape linux flaw allows vm escape on intel amd devic](./2026-07-07/new-januscape-linux-flaw-allows-vm-escape-on-intel-amd-devic.md)
 - [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
+- [redwing maas packages android bank fraud as a telegram renta](./2026-07-07/redwing-maas-packages-android-bank-fraud-as-a-telegram-renta.md)
+- [rogue agent flaw could have let attackers hijack google dial](./2026-07-07/rogue-agent-flaw-could-have-let-attackers-hijack-google-dial.md)
 - [spain arrests suspected member of pro russian hacktivist gro](./2026-07-07/spain-arrests-suspected-member-of-pro-russian-hacktivist-gro.md)
 - [suspected china aligned hackers exploit roundcube flaws agai](./2026-07-07/suspected-china-aligned-hackers-exploit-roundcube-flaws-agai.md)
 - [the github actions attack pattern your ci security scanners ](./2026-07-07/the-github-actions-attack-pattern-your-ci-security-scanners-.md)
@@ -54,7 +58,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when checking the url isn t enough a device code phishing at](./2026-07-06/when-checking-the-url-isn-t-enough-a-device-code-phishing-at.md)
 
 ## 2026-07-04
-- [jadepuffer ransomware used ai agent to automate entire attac](./2026-07-04/jadepuffer-ransomware-used-ai-agent-to-automate-entire-attac.md)
 - [north korean hackers publish 108 malicious packages and exte](./2026-07-04/north-korean-hackers-publish-108-malicious-packages-and-exte.md)
 - [u s government entity paid kairos 1 million in data theft ex](./2026-07-04/u-s-government-entity-paid-kairos-1-million-in-data-theft-ex.md)
 
@@ -80,9 +83,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 52735 zebrad has consensus divergence](./2026-07-02/ghsa-critical-cve-2026-52735-zebrad-has-consensus-divergence.md)
 - [ghsa critical cve 2026 52830 fast mcp telegram bearer token ](./2026-07-02/ghsa-critical-cve-2026-52830-fast-mcp-telegram-bearer-token-.md)
 - [ghsa critical cve 2026 54617 launchserver fileserverhandler ](./2026-07-02/ghsa-critical-cve-2026-54617-launchserver-fileserverhandler-.md)
+- [ghsa critical cve 2026 59800 9router missing authorization a](./2026-07-02/ghsa-critical-cve-2026-59800-9router-missing-authorization-a.md)
 - [ghsa critical cve 2026 9558 mautic has server side template ](./2026-07-02/ghsa-critical-cve-2026-9558-mautic-has-server-side-template-.md)
 - [ghsa critical cve 2026 9559 mautic vulnerable to path traver](./2026-07-02/ghsa-critical-cve-2026-9559-mautic-vulnerable-to-path-traver.md)
-- [ghsa critical ghsa g6g7 pvmx m74p 9router missing authorizat](./2026-07-02/ghsa-critical-ghsa-g6g7-pvmx-m74p-9router-missing-authorizat.md)
 - [google disrupts netnut residential proxy network spanning 2 ](./2026-07-02/google-disrupts-netnut-residential-proxy-network-spanning-2-.md)
 - [how we added webauthn to a browser based rdp client](./2026-07-02/how-we-added-webauthn-to-a-browser-based-rdp-client.md)
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
@@ -99,7 +102,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [2026 cybersecurity assessment the gap between awareness and ](./2026-07-01/2026-cybersecurity-assessment-the-gap-between-awareness-and-.md)
 - [ai generated browser ransomware abuses chromium api on windo](./2026-07-01/ai-generated-browser-ransomware-abuses-chromium-api-on-windo.md)
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
-- [azure cli password spray hits at least 78 microsoft accounts](./2026-07-01/azure-cli-password-spray-hits-at-least-78-microsoft-accounts.md)
 - [cisa kev cve 2026 45659 microsoft sharepoint server deserial](./2026-07-01/cisa-kev-cve-2026-45659-microsoft-sharepoint-server-deserial.md)
 - [codfish semantic release action github action has been compr](./2026-07-01/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [critical cursor flaws could let prompt injection escape sand](./2026-07-01/critical-cursor-flaws-could-let-prompt-injection-escape-sand.md)

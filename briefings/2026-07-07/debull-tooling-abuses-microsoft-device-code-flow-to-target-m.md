@@ -47,6 +47,12 @@ A Microsoft 365 device code phishing campaign has been observed leveraging colla
 - **T1656** — Impersonation
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102** — Web Service
+- **T1114.002** — Email Collection: Remote Email Collection
+- **T1530** — Data from Cloud Storage
+- **T1213.002** — Data from Information Repositories: SharePoint
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1098.003** — Account Manipulation: Additional Cloud Roles
 
 ## Kill chain phases observed
 
@@ -56,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### M365 device-code flow sign-in (Storm-2372/DEBULL token theft)
 
-`UC_2_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +83,7 @@ AADSignInEventsBeta
 
 ### Attacker device registration / PRT persistence via Auth Broker after device-code
 
-`UC_2_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +103,7 @@ AADSignInEventsBeta
 
 ### Inbound collaboration lure linking to DEBULL device-code orchestrator
 
-`UC_2_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +126,7 @@ EmailEvents
 
 ### Endpoint DNS/network connection to DEBULL C2 (pamconj.com / workers.dev)
 
-`UC_2_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,6 +139,57 @@ DeviceNetworkEvents
 | where Timestamp > ago(14d)
 | where RemoteUrl has_any ("spx.pamconj.com","dashboard-bl.pamconj.com","pamconj.com","clear90489058903-document.workers.dev")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Bulk M365 mail/file access within 30 min of device-code sign-in
+
+`UC_5_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let DeviceCodeUsers = AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where AuthenticationProcessingDetails has "deviceCodeFlow"
+    | where ErrorCode == 0
+    | summarize DeviceCodeSignInTime = min(Timestamp) by AccountObjectId, AccountUpn;
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileDownloaded","FileSyncDownloadedFull","FileAccessed","MailItemsAccessed")
+| join kind=inner DeviceCodeUsers on AccountObjectId
+| where Timestamp between (DeviceCodeSignInTime .. DeviceCodeSignInTime + 30m)
+| summarize Actions = count(), DistinctObjects = dcount(ObjectName), FirstAction = min(Timestamp), LastAction = max(Timestamp), SrcIPs = make_set(IPAddress, 5) by AccountObjectId, AccountUpn, AccountDisplayName, ActionType, DeviceCodeSignInTime
+| where Actions > 50   // 50 = bulk-read burst; tune to P99 per-user 30-min access baseline
+| order by Actions desc
+```
+
+### Device-code Auth Broker token replayed from multiple countries
+
+`UC_5_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker
+| where ErrorCode == 0
+| where isnotempty(Country)
+| summarize CountryCount = dcount(Country), Countries = make_set(Country, 10), IPCount = dcount(IPAddress), UserAgents = make_set(UserAgent, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountUpn
+| where CountryCount >= 2   // same broker token authenticating from 2+ countries in 7d = impossible-travel token replay
+| order by CountryCount desc
+```
+
+### Illicit OAuth consent to high-privilege Graph scopes (post device-code ATO)
+
+`UC_5_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("Consent to application.","Add app role assignment to service principal.","Add delegated permission grant.","Add OAuth2PermissionGrant.")
+| where RawEventData has_any ("Mail.ReadWrite","Mail.Read","Mail.Send","Files.ReadWrite.All","Files.Read.All","Directory.Read.All","offline_access","MailboxSettings.ReadWrite")
+| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, ObjectName, IPAddress, UserAgent, RawEventData
 | order by Timestamp desc
 ```
 
@@ -514,4 +571,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 19 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

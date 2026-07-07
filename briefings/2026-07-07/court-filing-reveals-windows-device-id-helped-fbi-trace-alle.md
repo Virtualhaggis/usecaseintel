@@ -48,12 +48,13 @@ Microsoft records tied that ID first to the account the attackers used to keep a
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1098.005** — Account Manipulation: Device Registration
-- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
 - **T1572** — Protocol Tunneling
 - **T1090** — Proxy
 - **T1567.002** — Exfiltration to Cloud Storage
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1556** — Modify Authentication Process
+- **T1098.005** — Account Manipulation: Device Registration
+- **T1048** — Exfiltration Over Alternative Protocol
 
 ## Kill chain phases observed
 
@@ -61,83 +62,89 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Scattered Spider help-desk takeover: admin password reset chained to MFA re-registration
+### ngrok tunneling agent execution / signup by Scattered Spider on corporate host
 
-`UC_5_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(All_Changes.command) as command min(_time) as firstTime max(_time) as lastTime from datamodel=Change where nodename=All_Changes All_Changes.object_category=user All_Changes.vendor_product="Azure Active Directory" by All_Changes.user _time span=30m
-| `drop_dm_object_name(All_Changes)`
-| eval joined=mvjoin(command, ";")
-| where like(joined, "%eset%assword%") AND like(joined, "%security info%")
-| table firstTime lastTime user command
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name="ngrok.exe" OR Processes.process="*ngrok authtoken*" OR Processes.process="*ngrok tcp*" OR Processes.process="*ngrok http*" OR Processes.process="*ngrok start*" OR Processes.process="*--authtoken*") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | where NOT match(user,"\$$") | convert ctime(firstTime) | convert ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let window = 30m;
-let resets = CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType has_any ("Reset user password", "Reset password (by admin)")
-| project ResetTime = Timestamp, TargetUser = tostring(ObjectName), Initiator = AccountDisplayName, InitiatorIP = IPAddress;
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType has_any ("registered security info", "User registered security info", "Admin registered security info", "User started security info registration")
-| project Timestamp, TargetUser = tostring(ObjectName), MfaAction = ActionType, ActorIP = IPAddress
-| join kind=inner resets on TargetUser
-| where Timestamp between (ResetTime .. ResetTime + window)
-| project Timestamp, TargetUser, MfaAction, ResetTime, Initiator, InitiatorIP, ActorIP
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName =~ "ngrok.exe"
+    or ProcessCommandLine has_any ("ngrok authtoken", "ngrok tcp", "ngrok http", "ngrok start", "--authtoken")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Scattered Spider ngrok tunnel setup/C2 (dashboard.ngrok.com + ngrok tunnel domains)
+### Teleport.sh tunneling / data-transfer to Amazon S3 by Scattered Spider
 
-`UC_5_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src from datamodel=Network_Resolution where nodename=DNS (DNS.query="*ngrok.io" OR DNS.query="*ngrok.com" OR DNS.query="*ngrok.app" OR DNS.query="*ngrok-free.app") by DNS.query
-| `drop_dm_object_name(DNS)`
-| sort - lastTime
+| tstats `summariesonly` count values(All_Traffic.app) as app values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="*teleport.sh*" OR All_Traffic.app="teleport.exe" OR All_Traffic.app="tsh.exe") by All_Traffic.src All_Traffic.user All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any ("ngrok.io", "ngrok.com", "ngrok.app", "ngrok-free.app")
+| where RemoteUrl has "teleport.sh"
+    or InitiatingProcessFileName in~ ("teleport.exe","tsh.exe")
 | where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
+| summarize Connections=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+            RemoteHosts=make_set(RemoteUrl,20), RemoteIPs=make_set(RemoteIP,20)
+        by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Connections desc
 ```
 
-### Scattered Spider Teleport.sh tunnel client used for staging/exfiltration
+### Scattered Spider help-desk account takeover: Entra password reset + MFA re-registration then sign-in
 
-`UC_5_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Processes.process) as process values(Processes.parent_process_name) as parent_process min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where nodename=Processes (Processes.process_name IN ("tsh.exe","teleport.exe","tbot.exe")) by Processes.dest Processes.user Processes.process_name
-| `drop_dm_object_name(Processes)`
-| sort - lastTime
+| tstats `summariesonly` count from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user Authentication.src _time | `drop_dm_object_name(Authentication)` | join type=inner user [| tstats `summariesonly` count from datamodel=Change.All_Changes where (All_Changes.action=modified AND (All_Changes.command="Reset password*" OR All_Changes.command="*registered security info*")) by All_Changes.user All_Changes.command _time | `drop_dm_object_name(All_Changes)` | rename _time as resetTime command as resetOp] | eval delta=_time-resetTime | where delta>=0 AND delta<=3600 | table resetTime resetOp _time user src count
 ```
 
 **Defender KQL:**
 ```kql
-let TeleportProcs = DeviceProcessEvents
+let ssIPs = dynamic(["146.70.134.82","79.127.222.213","146.70.126.237","193.32.127.231","146.70.126.215","138.199.6.242","46.19.136.247","138.199.6.216","193.32.248.138","146.70.126.183","23.234.88.97","146.70.134.23"]);
+AADSignInEventsBeta
 | where Timestamp > ago(30d)
-| where FileName in~ ("tsh.exe", "teleport.exe", "tbot.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256;
-let TeleportNet = DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl endswith ".teleport.sh" or RemoteUrl == "teleport.sh"
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, FileName = InitiatingProcessFileName, FolderPath = InitiatingProcessFolderPath, ProcessCommandLine = InitiatingProcessCommandLine, RemoteUrl, RemoteIP;
-union TeleportProcs, TeleportNet
+| where IPAddress in (ssIPs)
+| where ErrorCode == 0
+| project Timestamp, AccountUpn, IPAddress, City, Country, Application, ClientAppUsed, DeviceTrustType, UserAgent, ConditionalAccessStatus
 | order by Timestamp desc
+```
+
+### Bulk data egress to Amazon S3 from tunneling/transfer tooling (77GB exfil pattern)
+
+`UC_8_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` sum(All_Traffic.bytes_out) as bytes_out count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host="*.amazonaws.com" AND (All_Traffic.app IN ("ngrok.exe","teleport.exe","tsh.exe","rclone.exe","curl.exe","winscp.exe","powershell.exe","pwsh.exe","python.exe")) by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | where bytes_out > 1073741824 | sort - bytes_out
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl endswith "amazonaws.com" or RemoteUrl has ".s3."
+| where InitiatingProcessFileName in~ ("ngrok.exe","teleport.exe","tsh.exe","rclone.exe","curl.exe","winscp.exe","powershell.exe","pwsh.exe","python.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize Connections=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+            S3Hosts=make_set(RemoteUrl,25) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Connections > 20   // sustained upload session, not a one-off API call
+| order by Connections desc
 ```
 
 ### Suspicious browser extension installation
@@ -489,4 +496,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

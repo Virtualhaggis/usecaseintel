@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk and Atlassian, Sitting in a Tree
 
-`UC_3609_0` · phase: **exploit** · confidence: **High**
+`UC_3610_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

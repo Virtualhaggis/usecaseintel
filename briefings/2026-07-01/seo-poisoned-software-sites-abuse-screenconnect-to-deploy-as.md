@@ -36,10 +36,7 @@ The ColdFusion updates "resolves critical and important vulnerabilities that c
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1083** — File and Directory Discovery
-- **T1005** — Data from Local System
-- **T1203** — Exploitation for Client Execution
-- **T1059** — Command and Scripting Interpreter
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
@@ -48,69 +45,63 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Path-traversal / dangerous-upload exploit requests to Adobe ColdFusion & Campaign Classic endpoints (APSB26-68/71)
+### Vulnerable Adobe ColdFusion 2023/2025 exposed to CVE-2026-48276 upload RCE chain
 
-`UC_103_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_106_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status from datamodel=Web.Web where (Web.url="*/CFIDE/*" OR Web.url="*/cf_scripts/*" OR Web.url="*/nl/*" OR Web.url="*/nms/*" OR Web.url="*.cfm*" OR Web.url="*.cfc*") AND (Web.url="*../*" OR Web.url="*..%2f*" OR Web.url="*..%252f*" OR Web.url="*%2e%2e*") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-48276","CVE-2026-48283","CVE-2026-48277","CVE-2026-48281","CVE-2026-48316","CVE-2026-48282","CVE-2026-48313","CVE-2026-48315","CVE-2026-48307","CVE-2026-48286") by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - severity
 ```
 
-### Adobe ColdFusion / Campaign Classic service spawning a command interpreter
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in ("CVE-2026-48276","CVE-2026-48283","CVE-2026-48277","CVE-2026-48281","CVE-2026-48316","CVE-2026-48282","CVE-2026-48313","CVE-2026-48315","CVE-2026-48307","CVE-2026-48286")
+| summarize CVEs = make_set(CveId), MaxSeverity = max(VulnerabilitySeverityLevel), Software = make_set(strcat(SoftwareVendor," ",SoftwareName," ",SoftwareVersion)) by DeviceId, DeviceName, OSPlatform
+| order by DeviceName asc
+```
 
-`UC_103_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+### ColdFusion server process spawning cmd/PowerShell/LOLBin (post-upload RCE)
+
+`UC_106_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("coldfusion.exe","cfexec.exe","jvm.exe","java.exe","nlserver.exe")) AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","bitsadmin.exe","certutil.exe","curl.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("coldfusion.exe","jrunsvc.exe","cfexec.exe") OR Processes.parent_process IN ("*\\ColdFusion2023\\*","*\\ColdFusion2025\\*","*\\cfusion\\*")) AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","mshta.exe","bitsadmin.exe","certutil.exe","curl.exe","whoami.exe","net.exe","rundll32.exe","regsvr32.exe") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("coldfusion.exe", "cfexec.exe", "jvm.exe", "java.exe", "nlserver.exe")
-| where InitiatingProcessFolderPath has_any ("ColdFusion", "cfusion", "Campaign", "Adobe", "neolane")
-| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "wscript.exe", "cscript.exe", "mshta.exe", "bitsadmin.exe", "certutil.exe", "curl.exe", "bash.exe", "sh.exe")
+| where Timestamp > ago(14d)
+| where (InitiatingProcessFileName =~ "java.exe" and InitiatingProcessFolderPath has_any ("ColdFusion2023","ColdFusion2025","\\cfusion\\"))
+    or InitiatingProcessFileName in~ ("coldfusion.exe","jrunsvc.exe","cfexec.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","mshta.exe","bitsadmin.exe","certutil.exe","curl.exe","whoami.exe","net.exe","rundll32.exe","regsvr32.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine, ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Web shell written to web root by ColdFusion / Campaign Classic runtime
+### ColdFusion writing web-executable file (jspf/cfmail/war/jsp/cfm) to webroot — webshell drop
 
-`UC_103_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_106_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("coldfusion.exe","cfexec.exe","jvm.exe","java.exe","nlserver.exe")) AND (Filesystem.file_name="*.cfm" OR Filesystem.file_name="*.cfml" OR Filesystem.file_name="*.cfc" OR Filesystem.file_name="*.jsp" OR Filesystem.file_name="*.jspx" OR Filesystem.file_name="*.aspx") AND (Filesystem.file_path="*wwwroot*" OR Filesystem.file_path="*CFIDE*" OR Filesystem.file_path="*webroot*" OR Filesystem.file_path="*neolane*") by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name="java.exe" OR Filesystem.process_name="coldfusion.exe" OR Filesystem.process_name="jrunsvc.exe") AND (Filesystem.file_path IN ("*\\wwwroot\\*","*\\cfusion\\*","*\\ColdFusion2023\\*","*\\ColdFusion2025\\*")) AND (Filesystem.file_name IN ("*.jsp","*.jspf","*.cfm","*.cfml","*.cfc","*.cfmail","*.war")) by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated", "FileModified")
-| where FileName endswith ".cfm" or FileName endswith ".cfml" or FileName endswith ".cfc" or FileName endswith ".jsp" or FileName endswith ".jspx" or FileName endswith ".aspx"
-| where InitiatingProcessFileName in~ ("coldfusion.exe", "cfexec.exe", "jvm.exe", "java.exe", "nlserver.exe")
-| where FolderPath has_any ("wwwroot", "CFIDE", "webroot", "neolane", "Campaign")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where Timestamp > ago(14d)
+| where FileName endswith ".jsp" or FileName endswith ".jspf" or FileName endswith ".cfm" or FileName endswith ".cfml" or FileName endswith ".cfc" or FileName endswith ".cfmail" or FileName endswith ".war"
+| where FolderPath has_any ("\\wwwroot\\","\\cfusion\\","ColdFusion2023","ColdFusion2025")
+| where InitiatingProcessFileName in~ ("java.exe","coldfusion.exe","jrunsvc.exe") or InitiatingProcessFolderPath has_any ("ColdFusion2023","ColdFusion2025","\\cfusion\\")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FolderPath, FileName, SHA256
 | order by Timestamp desc
-```
-
-### Adobe ColdFusion / Campaign Classic hosts exposed to APSB26-68 CVSS 10.0 RCE CVE
-
-`UC_103_9` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-48276", "CVE-2026-48283", "CVE-2026-48277", "CVE-2026-48281", "CVE-2026-48316", "CVE-2026-48282", "CVE-2026-48313", "CVE-2026-48315", "CVE-2026-48307", "CVE-2026-48286")
-| summarize ExposedCves = make_set(CveId), MaxSeverity = max(VulnerabilitySeverityLevel), RecommendedUpdate = any(RecommendedSecurityUpdate) by DeviceId, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion
-| join kind=leftouter (DeviceInfo | where Timestamp > ago(7d) | summarize arg_max(Timestamp, IsInternetFacing) by DeviceId) on DeviceId
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, ExposedCves, MaxSeverity, RecommendedUpdate, IsInternetFacing
-| order by IsInternetFacing desc, DeviceName asc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -319,4 +310,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
