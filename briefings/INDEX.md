@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-08
 - [15 year old ghostlock flaw enables root and container escape](./2026-07-08/15-year-old-ghostlock-flaw-enables-root-and-container-escape.md)
 - [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
+- [ubiquiti warns of new max severity unifi os vulnerability](./2026-07-08/ubiquiti-warns-of-new-max-severity-unifi-os-vulnerability.md)
 
 ## 2026-07-07
 - [accenture confirms breach after hacker offers stolen data fo](./2026-07-07/accenture-confirms-breach-after-hacker-offers-stolen-data-fo.md)
@@ -59,7 +60,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [phishing poses as big brand job interview to steal google ac](./2026-07-06/phishing-poses-as-big-brand-job-interview-to-steal-google-ac.md)
 - [predicting mongodb objectid continuously in rocket chat](./2026-07-06/predicting-mongodb-objectid-continuously-in-rocket-chat.md)
 - [skillcloak lets malicious ai agent skills evade static scann](./2026-07-06/skillcloak-lets-malicious-ai-agent-skills-evade-static-scann.md)
-- [software is now written at the speed of thought security isn](./2026-07-06/software-is-now-written-at-the-speed-of-thought-security-isn.md)
 - [suspected china nexus hackers use fake indian tax filing uti](./2026-07-06/suspected-china-nexus-hackers-use-fake-indian-tax-filing-uti.md)
 - [threat actors probe gitea docker flaw cve 2026 20896 13 days](./2026-07-06/threat-actors-probe-gitea-docker-flaw-cve-2026-20896-13-days.md)
 - [when checking the url isn t enough a device code phishing at](./2026-07-06/when-checking-the-url-isn-t-enough-a-device-code-phishing-at.md)

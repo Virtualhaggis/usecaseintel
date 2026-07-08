@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### Fake Windows Defender MpClient.dll side-loaded from non-Defender path (Vidar/Factory-v3 Cluster B)
 
-`UC_5_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceImageLoadEvents
 
 ### XMRig Monero mining to supportxmr pool / 136.243.203.109 (Vidar loader crypto-hijack)
 
-`UC_5_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### File-size-inflated Go loader EXE (>300MB null-padded) dropped to disk (Vidar Cluster A/C)
 
-`UC_5_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceFileEvents
 
 ### Password-protected .bin archive from browser masquerading as cracked software (Vidar malvertising delivery)
 
-`UC_5_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -438,7 +438,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Vidar Stealer Unmasked: Code Signing Abuse, Go Loaders and File Inflation
 
-`UC_5_9` · phase: **exploit** · confidence: **High**
+`UC_6_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

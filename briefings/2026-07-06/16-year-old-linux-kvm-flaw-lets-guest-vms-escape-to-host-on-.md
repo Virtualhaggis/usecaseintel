@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Suspicious Linux kernel module load from world-writable path (Januscape PoC delivery)
 
-`UC_44_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_45_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### KVM host kernel panic / shadow-MMU BUG referencing kvm_mmu_get_child_sp (Januscape trigger)
 
-`UC_44_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_45_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ index=* sourcetype=linux_secure OR sourcetype=syslog OR sourcetype=linux_message
 
 ### Unpatched KVM hosts exposed to Januscape (CVE-2026-53359) — asset exposure
 
-`UC_44_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_45_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -220,7 +220,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 16-Year-Old Linux KVM Flaw Lets Guest VMs Escape to Host on Intel and AMD x86 Sy
 
-`UC_44_6` · phase: **install** · confidence: **High**
+`UC_45_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

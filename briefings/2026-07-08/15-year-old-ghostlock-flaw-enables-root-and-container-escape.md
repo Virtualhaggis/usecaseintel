@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### GhostLock/IonStack Linux kernel LPE exposure hunt (CVE-2026-43499 + cousins) on shared hosts
 
-`UC_1_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
