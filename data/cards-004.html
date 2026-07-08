@@ -11445,10 +11445,10 @@ DeviceFileEvents
   data-techs="T1190,T1204.002,T1219,T1528"
   data-sources="The Hacker News"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,web"
+  data-splunk-cats="application,cloud,endpoint,network,web"
   data-targets="azure,kubernetes,linux,m365,windows"
-  data-uc-count="11" data-llm-uc-count="5"
-  data-search="Unpatched Argo CD Repo-Server Flaw Could Let Attackers Take Over Kubernetes Clusters Argo CD, a widely used tool for deploying software to Kubernetes, has an unpatched flaw in its repo-server component that lets an unauthenticated attacker run code, provided they can reach the component&#x27;s internal network port. Synacktiv, which found the bug, says it can lead to a full cluster takeover. There is no fix and no CVE. The firm says it reported the flaw to Argo CD&#x27;s maintainers in CVE-2024-31989 CVE-2025-55190 CVE-2026-42880 T1190 T1204.002 T1219 T1528 [LLM] Argo CD repo-server exploit: kustomize --helm-command points to non-helm script [LLM] Argo CD repo-server / kustomize spawning shell or network tooling [LLM] Argo CD service account deploys privileged / host-escape workload [LLM] ClusterRoleBinding granting elevated rights to Argo CD service account [LLM] New Argo CD Application/ApplicationSet pointing to external Git repo Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard">
+  data-uc-count="12" data-llm-uc-count="6"
+  data-search="Unpatched Argo CD Repo-Server Flaw Could Let Attackers Take Over Kubernetes Clusters Argo CD, a widely used tool for deploying software to Kubernetes, has an unpatched flaw in its repo-server component that lets an unauthenticated attacker run code, provided they can reach the component&#x27;s internal network port. Synacktiv, which found the bug, says it can lead to a full cluster takeover. There is no fix and no CVE. The firm says it reported the flaw to Argo CD&#x27;s maintainers in CVE-2024-31989 CVE-2025-55190 CVE-2026-42880 T1190 T1204.002 T1219 T1528 [LLM] Argo CD repo-server RCE via kustomize --helm-command script hijack [LLM] Privileged/hostPath workload deployed through Argo CD (cluster takeover payload) [LLM] ClusterRoleBinding granting cluster-admin to an Argo CD service account [LLM] Argo CD service-account secret enumeration fan-out (Git creds / plaintext secrets) [LLM] Argo CD Application pointing to an untrusted/IP-literal Git repo or plaintext registry [LLM] Non-Argo CD process connecting to the Argo CD Redis cache (port 6379) — cache poisoning Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-01-unpatched-argo-cd-repo-server-flaw-could-let-attackers-take-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -11457,9 +11457,9 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-07-01</span>
-    <span>11 use cases</span>
+    <span>12 use cases</span>
     <span>4 techniques</span>
-    <span>5 kill-chain phases detected</span>
+    <span>6 kill-chain phases detected</span>
   </div>
   <p class="summary">Argo CD, a widely used tool for deploying software to Kubernetes, has an unpatched flaw in its repo-server component that lets an unauthenticated attacker run code, provided they can reach the component&#x27;s internal network port. Synacktiv, which found the bug, says it can lead to a full cluster takeover. There is no fix and no CVE. The firm says it reported the flaw to Argo CD&#x27;s maintainers in</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2024-31989</span> <span class="ind cve">CVE-2025-55190</span> <span class="ind cve">CVE-2026-42880</span></div>
@@ -11495,10 +11495,10 @@ DeviceFileEvents
   <div class="name">Installation</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 6</div>
   <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 7</div>
@@ -11508,31 +11508,31 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Argo CD repo-server exploit: kustomize --helm-command points to non-helm script · [LLM] Argo CD repo-server / kustomize spawning shell or network tooling · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Argo CD service account deploys privileged / host-escape workload · [LLM] New Argo CD Application/ApplicationSet pointing to external Git repo · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] ClusterRoleBinding granting elevated rights to Argo CD service account · Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Argo CD repo-server RCE via kustomize --helm-command script hijack · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] ClusterRoleBinding granting cluster-admin to an Argo CD service account · [LLM] Argo CD Application pointing to an untrusted/IP-literal Git repo or plaintext registry · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Non-Argo CD process connecting to the Argo CD Redis cache (port 6379) — cache poisoning</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Privileged/hostPath workload deployed through Argo CD (cluster takeover payload) · [LLM] Argo CD service-account secret enumeration fan-out (Git creds / plaintext secrets) · Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="82e0b8986c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="929c83679e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">Argo CD repo-server exploit: kustomize --helm-command points to non-helm script</span>
+    <span class="uc-title">Argo CD repo-server RCE via kustomize --helm-command script hijack</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="82e0b8986c" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="929c83679e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Synacktiv unauthenticated RCE against Argo CD repo-server, where an attacker sets kustomize&#x27;s --helm-command to an attacker-supplied script (pulled from a rogue Git repo) instead of the helm binary. Fires when a kustomize process runs with --helm-command whose target does not resolve to helm.
+    <div class="uc-desc">Hunts the core Synacktiv bug: the argocd-repo-server container running kustomize with --helm-command pointed at an attacker script (fetched from a Git repo) instead of the helm binary, or the repo-server spawning a shell/network tool. This is the unauthenticated GenerateManifest RCE primitive that leads to cluster takeover.
 
-Rationale: Uses the article&#x27;s exact exploit primitive — kustomize&#x27;s --helm-command re-pointed away from the helm binary. Cross-checked with Synacktiv reporting relayed via The Hacker News; legitimate kustomize-with-helm always calls a path ending in &#x27;helm&#x27;, so a non-helm target is high fidelity.
+Rationale: Uses the exact Synacktiv primitive (kustomize --helm-command) and the argocd-repo-server process identity; helm never legitimately invokes --helm-command with a non-helm target, making the parent+child and cmdline pair high-fidelity.
 
 Cross-checked against:
-  • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
-  • https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/</div>
+  • https://www.synacktiv.com/en/publications/caught-in-the-octopus-trap-unauthenticated-rce-in-argo-cd-with-codeql
+  • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate custom kustomize helm plugin wrapper script that ends in something other than &#x27;helm&#x27; (e.g. a vendored &#x27;helm-wrapper.sh&#x27;)</li><li>In-house CI that shims helm via a shell script for private OCI auth</li><li>Config Management Plugin (CMP) that legitimately templates via a custom binary</li><li>Debugging/troubleshooting by a platform engineer manually running kustomize with a custom helm path</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HelmCmd !in~ (&quot;/custom/bin/helm-wrapper.sh&quot;) and InitiatingProcessFileName in~ (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full ProcessCommandLine and the value of --helm-command; confirm whether the target is an approved helm binary path or an unexpected script/temp path. Identify the host — it should be an argocd-repo-server pod/node. 2) Contain: cordon the node, kill the repo-server pod, and apply the Argo CD network policies (networkPolicy.create=true) so only Argo CD components can reach repo-server (TCP 8081) and Redis (6379). Rotate the Redis password. 3) Hunt: review DeviceNetworkEvents from repo-server for egress to attacker Git/registry, check Redis &#x27;mfst&#x27; cache integrity, and audit recently synced Applications for attacker-supplied workloads.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Custom Argo CD config-management plugins that legitimately shell out from repo-server</li><li>Debugging: an operator running kubectl exec into the repo-server pod and launching bash/curl</li><li>Helm plugins invoked via kustomize that wrap curl/wget for chart fetch</li><li>Home-grown init scripts that call kustomize with non-standard flags</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;kubectl&quot;,&quot;exec&quot;) and IsInitiatingProcessRemoteSession == true)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ProcessCommandLine — inspect the --helm-command target and any Git URL it references; confirm the parent is genuinely the argocd-repo-server container and not an interactive exec session. 2) Contain: cordon/isolate the node, kill the repo-server pod, and immediately apply the Argo CD NetworkPolicy set so only argocd components reach the repo-server/Redis ports; rotate the Redis password and any Git credentials the repo-server held. 3) Hunt: check DeviceNetworkEvents/NetworkConnectIP4 for outbound connections from repo-server to unknown IPs, look for connections to Redis 6379 from non-argocd pods, and review K8s audit for Applications/RBAC created right after this event.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
@@ -11543,25 +11543,25 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where ProcessCommandLine has &quot;--helm-command&quot;
-| extend HelmCmd = extract(@&quot;--helm-command[=\s]+([^\s]+)&quot;, 1, ProcessCommandLine)
-| where isnotempty(HelmCmd)
-| where HelmCmd !endswith &quot;helm&quot; and HelmCmd !endswith &quot;helm.exe&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, HelmCmd, ProcessCommandLine, FolderPath, SHA256
+| where (InitiatingProcessFileName has_any (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;) and FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;))
+     or (FileName =~ &quot;kustomize&quot; and ProcessCommandLine has &quot;--helm-command&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+    <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ASCDeviceEvents
 | where TimeGenerated &gt; ago(7d)
-| where TargetProcessCommandLine has &quot;--helm-command&quot;
-| extend HelmCmd = extract(@&quot;--helm-command[=\s]+([^\s]+)&quot;, 1, TargetProcessCommandLine)
-| where isnotempty(HelmCmd) and HelmCmd !endswith &quot;helm&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, TargetProcessName, HelmCmd, TargetProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Argo CD Kustomize helm-command Points to Non-Helm Payload
-id: 6f1c2a9e-4d2b-4d1a-9d6e-7a1b2c3d4e5f
-description: Detects kustomize invoked with --helm-command whose target is a shell/script path rather than helm, matching the Synacktiv Argo CD repo-server RCE.
+| where (InitiatingProcessFileName has_any (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;) and FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;))
+     or (FileName =~ &quot;kustomize&quot; and ProcessCommandLine has &quot;--helm-command&quot;)
+| project TimeGenerated, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Argo CD repo-server kustomize --helm-command script hijack
+id: 6b2a1c4e-9d3f-4a71-b0e2-7c8f1a2d3e4b
+description: Detects the Synacktiv Argo CD unauthenticated RCE where kustomize --helm-command runs an attacker script, or argocd-repo-server spawns a shell / network tool.
 references:
+  - https://www.synacktiv.com/en/publications/caught-in-the-octopus-trap-unauthenticated-rce-in-argo-cd-with-codeql
   - https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
 author: SOC Detection Engineering
-date: 2026/07/02
+date: 2026/07/08
 tags:
   - attack.t1190
   - attack.t1059.004
@@ -11569,80 +11569,10 @@ logsource:
   category: process_creation
   product: linux
 detection:
-  selection:
+  selection_helmcmd:
+    Image|endswith: &#x27;/kustomize&#x27;
     CommandLine|contains: &#x27;--helm-command&#x27;
-  suspicious:
-    CommandLine|contains:
-      - &#x27;.sh&#x27;
-      - &#x27;/tmp/&#x27;
-      - &#x27;bash&#x27;
-      - &#x27;curl&#x27;
-      - &#x27;wget&#x27;
-      - &#x27;python&#x27;
-  condition: selection and suspicious
-level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*--helm-command* AND (@process.command_line:*.sh* OR @process.command_line:*\/tmp\/* OR @process.command_line:*bash* OR @process.command_line:*curl* OR @process.command_line:*wget* OR @process.command_line:*python*)</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/kustomize/i
-| regex(&quot;--helm-command&quot;, field=CommandLine)
-| CommandLine=/--helm-command[=\s]+\S*(\.sh|\/tmp\/|bash|curl|wget|python)/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*--helm-command*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process=&quot;--helm-command[=\s]+(?!\S*helm(\s|$))&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*--helm-command*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process=&quot;--helm-command[=\s]+(?!\S*helm(\s|$))&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6eae52e324" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Argo CD repo-server / kustomize spawning shell or network tooling</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6eae52e324" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects code execution on the Argo CD repo-server: the parent process argocd-repo-server or kustomize spawning an interactive shell or network utility (sh, bash, curl, wget, nc, python). This is the observable outcome of the --helm-command RCE where an attacker-controlled script runs in place of helm.
-
-Rationale: The repo-server normally only execs git, helm, kustomize and gpg; a shell or curl/wget/nc child is the direct execution artifact of the article&#x27;s script-injection RCE. Parent-child pairing keeps this far tighter than a bare LOLBin hunt.
-
-Cross-checked against:
-  • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
-  • https://argo-cd.readthedocs.io/en/stable/operator-manual/security/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Deploy Container">T1610</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Custom Config Management Plugins that legitimately shell out to curl/python for private repo auth</li><li>Init scripts or entrypoint wrappers baked into a custom repo-server image</li><li>Helm hooks or pre-render scripts that fetch dependency charts via curl/wget</li><li>Platform-engineer debugging inside the repo-server pod via kubectl exec (would show sh/bash)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FileName in~ (&quot;curl&quot;,&quot;wget&quot;) and InitiatingProcessCommandLine has &quot;registry-1.docker.io&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the child ProcessCommandLine and grandparent chain; confirm it is not a known CMP or debugging session (correlate with kubectl exec / DeviceLogonEvents). 2) Contain: kill the repo-server pod, enable Argo CD network policies, and block the repo-server pod&#x27;s egress to any non-Git/non-Redis destination. 3) Hunt: pivot to the destination IP/URL of any curl/wget, check for a subsequent Redis connection and cache &#x27;mfst&#x27; modification, and review new Applications synced after the event.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-102-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;busybox&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName in~ (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;)
-| where TargetProcessName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;busybox&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, TargetProcessName, TargetProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Argo CD repo-server or kustomize Spawns Shell/Network Tool
-id: 2b8e5d17-1a3c-4c9f-8b2e-9f0a1b2c3d4e
-description: Argo CD repo-server or kustomize spawning an interactive shell or network utility, the execution artifact of the Synacktiv repo-server RCE.
-references:
-  - https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
-author: SOC Detection Engineering
-date: 2026/07/02
-tags:
-  - attack.t1059.004
-  - attack.t1610
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
+  selection_spawn:
     ParentImage|endswith:
       - &#x27;/argocd-repo-server&#x27;
       - &#x27;/kustomize&#x27;
@@ -11652,40 +11582,78 @@ detection:
       - &#x27;/dash&#x27;
       - &#x27;/curl&#x27;
       - &#x27;/wget&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
       - &#x27;/nc&#x27;
       - &#x27;/ncat&#x27;
-      - &#x27;/busybox&#x27;
-  condition: selection
+  condition: selection_helmcmd or selection_spawn
 level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(sh OR bash OR dash OR curl OR wget OR python OR python3 OR nc OR ncat OR busybox) @process.command_line:(*kustomize* OR *argocd-repo-server* OR *helm-command*)</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(argocd-repo-server|kustomize)/i
-| ImageFileName=/\/(sh|bash|dash|curl|wget|python3?|nc|ncat|busybox)$/i
+    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:*--helm-command* OR (@process.executable.path:(*argocd-repo-server* OR */kustomize) AND @process.command_line:(*\/bin\/sh* OR *curl* OR *wget*)))</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 (ParentBaseFileName=/(argocd-repo-server|kustomize)/i ImageFileName=/\/(sh|bash|dash|curl|wget|python3?|nc|ncat)$/i) OR (ImageFileName=/kustomize$/i CommandLine=/--helm-command/i)
 | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;) Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;busybox&quot;) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;) Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;busybox&quot;) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process_name IN (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;)) OR (Processes.process_name=&quot;kustomize&quot; AND Processes.process=&quot;*--helm-command*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process_name IN (&quot;argocd-repo-server&quot;,&quot;kustomize&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;)) OR (Processes.process_name=&quot;kustomize&quot; AND Processes.process=&quot;*--helm-command*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="51fbab20f2" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes">
+<details class="uc" data-uc-slug="223df0eb18" data-platforms="datadog,sent,spl" data-targets="kubernetes">
   <summary>
-    <span class="uc-title">Argo CD service account deploys privileged / host-escape workload</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="51fbab20f2" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Privileged/hostPath workload deployed through Argo CD (cluster takeover payload)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="223df0eb18" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the cluster-takeover payload: after poisoning the Argo CD Redis cache, the Argo CD service account syncs a workload whose pod spec requests privileged mode, hostPID/hostNetwork/hostIPC, or a hostPath mount of the Docker/container socket. Targets the Kubernetes API audit trail of the malicious manifest being applied.
+    <div class="uc-desc">Hunts the takeover payload step: Argo CD syncing a manifest that creates a privileged container, hostPID/hostNetwork pod, or a docker.sock/hostPath mount. This is the &#x27;attacker-supplied workload deployed on next sync&#x27; outcome described by Synacktiv, scoped to the argocd service account/user-agent.
 
-Rationale: Ties the article&#x27;s outcome (&#x27;Argo CD deployed an attacker-supplied workload&#x27;) to the concrete host-escape primitives (privileged, hostPID, docker.sock) that a takeover payload needs, scoped to the Argo CD service account as the requestor so normal privileged system pods don&#x27;t match.
+Rationale: Scopes generic &#x27;privileged pod&#x27; logic to the argocd service account/user-agent as the actor, matching the article&#x27;s &#x27;Argo CD deployed an attacker-supplied workload&#x27; outcome; privileged/docker.sock/hostPID are the concrete escape primitives an attacker would inject.
 
 Cross-checked against:
-  • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
+  • https://www.synacktiv.com/en/publications/caught-in-the-octopus-trap-unauthenticated-rce-in-argo-cd-with-codeql
   • https://cycode.com/blog/revealing-argo-cd-critical-vulnerability/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Deploy Container">T1610</span> <span class="ind tech" title="Software Deployment Tools">T1072</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate privileged DaemonSets (CNI, CSI, node-exporter, Falco) that Argo CD genuinely manages via GitOps</li><li>A platform team intentionally deploying a privileged monitoring agent through Argo CD</li><li>hostNetwork ingress controllers deployed by Argo CD</li><li>Cluster bootstrap/app-of-apps sync that includes system components with hostPath mounts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Namespace !in (&quot;kube-system&quot;,&quot;monitoring&quot;,&quot;argocd&quot;) and not (Name has_any (&quot;cni&quot;,&quot;csi&quot;,&quot;node-exporter&quot;,&quot;falco&quot;,&quot;ingress&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: diff the offending manifest against the Git source of truth — if the privileged spec is not in the declared repo, it is Redis cache poisoning. Confirm the source Application and repoURL. 2) Contain: pause auto-sync on the affected Application, delete the malicious workload, rotate the Redis password, and enable network policies isolating repo-server/Redis. 3) Hunt: enumerate all pods created by the argocd SA in the window, check for reverse shells / crypto miners in those pods, and validate no ClusterRoleBinding was added for the argocd SA.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate privileged infrastructure DaemonSets (CNI, CSI drivers, node-exporter) that are genuinely managed by Argo CD</li><li>A platform team deliberately deploying a debug/troubleshooting pod with hostPath via GitOps</li><li>Service mesh sidecar injectors that add privileged init containers</li><li>Log/metrics agents (Datadog/Falcon sensor) shipped via Argo CD that mount host paths</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Name has_any (&quot;aws-node&quot;,&quot;kube-proxy&quot;,&quot;cilium&quot;,&quot;csi-&quot;,&quot;node-exporter&quot;,&quot;falcon-sensor&quot;,&quot;datadog-agent&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: diff this manifest against the app&#x27;s known-good Git revision — is the privileged/hostPath spec present in the source repo, or did it appear only in the synced object (indicative of Redis cache poisoning)? Identify the image and registry. 2) Contain: pause the Argo CD Application auto-sync, delete the offending workload, and quarantine the node if a docker.sock/hostPath escape was possible. 3) Hunt: pull the image from the registry and inspect for miners/reverse shells; review AKSAudit for RBAC bindings or secret reads by the same argocd principal in the same window.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Stage == &quot;ResponseComplete&quot; and Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| extend Resource = tostring(ObjectRef.resource)
+| where Resource in (&quot;pods&quot;,&quot;deployments&quot;,&quot;daemonsets&quot;,&quot;statefulsets&quot;,&quot;jobs&quot;,&quot;replicasets&quot;)
+| extend ReqStr = tostring(RequestObject)
+| where (UserAgent has &quot;argocd&quot; or Username has &quot;argocd&quot;)
+| where ReqStr has &#x27;&quot;privileged&quot;:true&#x27; or ReqStr has &quot;docker.sock&quot; or ReqStr has &#x27;&quot;hostPID&quot;:true&#x27; or ReqStr has &#x27;&quot;hostNetwork&quot;:true&#x27; or ReqStr has &#x27;&quot;hostPath&quot;&#x27;
+| project TimeGenerated, Username, UserAgent, Verb, Resource, Namespace=tostring(ObjectRef.namespace), Name=tostring(ObjectRef.name), ReqStr
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(pods OR deployments OR daemonsets OR statefulsets OR jobs OR replicasets) @user.username:*argocd* (@requestObject.spec.containers.securityContext.privileged:true OR @requestObject.spec.template.spec.containers.securityContext.privileged:true OR @requestObject.spec.hostPID:true OR @requestObject.spec.hostNetwork:true OR @requestObject.spec.volumes.hostPath.path:*docker.sock* OR @requestObject.spec.template.spec.volumes.hostPath.path:*docker.sock*)</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; stage=ResponseComplete verb IN (create,update,patch) &quot;objectRef.resource&quot; IN (pods,deployments,daemonsets,statefulsets,jobs,replicasets) (&quot;user.username&quot;=&quot;*argocd*&quot; OR userAgent=&quot;argocd*&quot;)
+| search (&quot;requestObject.spec.containers{}.securityContext.privileged&quot;=true OR &quot;requestObject.spec.template.spec.containers{}.securityContext.privileged&quot;=true OR &quot;docker.sock&quot; OR &quot;requestObject.spec.hostPID&quot;=true OR &quot;requestObject.spec.hostNetwork&quot;=true OR &quot;requestObject.spec.template.spec.hostPID&quot;=true)
+| table _time user.username userAgent verb objectRef.resource objectRef.namespace objectRef.name
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ca36a1dba9" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes">
+  <summary>
+    <span class="uc-title">ClusterRoleBinding granting cluster-admin to an Argo CD service account</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ca36a1dba9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the privilege-escalation step of a cluster takeover: creation/modification of a ClusterRoleBinding or RoleBinding that binds cluster-admin (or a wildcard role) to an argocd/repo-server/application-controller service account. Argo CD already concentrates access; a fresh cluster-admin grant to its SA is a strong takeover indicator.
+
+Rationale: cluster-admin bound to an argocd/repo-server SA is a rare, high-severity event that directly realises the article&#x27;s &#x27;full cluster takeover&#x27;; scoping the subject to argocd component SA names removes generic RBAC noise.
+
+Cross-checked against:
+  • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
+  • https://www.csoonline.com/article/4192188/argo-cd-flaw-shows-why-gitops-infrastructure-should-be-treated-as-tier-zero.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation">T1098</span> <span class="ind tech" title="Valid Accounts: Local Accounts">T1078.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Initial Argo CD install/upgrade via Helm that legitimately creates the argocd-application-controller cluster-admin binding</li><li>A platform engineer intentionally widening Argo CD permissions during a migration</li><li>GitOps-of-RBAC where the binding itself is managed by Argo CD and re-applied on sync</li><li>Disaster-recovery restore that re-creates all RBAC objects</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Username in~ (&quot;system:serviceaccount:argocd:argocd-server&quot;) and Name startswith &quot;argocd-application-controller&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the requesting principal (user.username) and whether it maps to a human/CI pipeline or to an anomalous in-cluster identity; check if the binding exists in the trusted Git source. 2) Contain: delete the ClusterRoleBinding, and if the actor is unexpected, revoke/rotate the argocd service-account token and restrict RBAC back to least privilege. 3) Hunt: enumerate all objects created by that SA since the binding (workloads, secrets read, new bindings) and correlate with the repo-server RCE and Redis-poisoning detections.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc2-sigma">Sigma</button>
@@ -11693,93 +11661,26 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(24h)
-| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| extend Res = tostring(ObjectRef.resource)
-| where Res in (&quot;pods&quot;,&quot;deployments&quot;,&quot;daemonsets&quot;,&quot;statefulsets&quot;,&quot;replicasets&quot;)
-| extend Requestor = tostring(Username)
-| where Requestor has &quot;argocd&quot;
+| where TimeGenerated &gt; ago(7d)
+| where Stage == &quot;ResponseComplete&quot; and Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| extend Resource = tostring(ObjectRef.resource)
+| where Resource in (&quot;clusterrolebindings&quot;,&quot;rolebindings&quot;)
 | extend ReqStr = tostring(RequestObject)
-| where ReqStr has_any (&#x27;&quot;privileged&quot;:true&#x27;,&#x27;&quot;hostPID&quot;:true&#x27;,&#x27;&quot;hostNetwork&quot;:true&#x27;,&#x27;&quot;hostIPC&quot;:true&#x27;,&#x27;/var/run/docker.sock&#x27;,&#x27;/var/run/crio/crio.sock&#x27;,&#x27;&quot;hostPath&quot;&#x27;)
-| project TimeGenerated, Requestor, Verb, Res, Namespace=tostring(ObjectRef.namespace), Name=tostring(ObjectRef.name), UserAgent, RequestUri</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Argo CD Service Account Deploys Privileged or Host-Escape Pod
-id: 9c3d6e21-7f4a-4b1d-8c2e-0a1b2c3d4e5f
-description: Kubernetes audit event where the Argo CD service account creates/updates a workload requesting privileged, hostPID/hostNetwork, or hostPath docker.sock - the cluster-takeover payload after Redis cache poisoning.
+| where ReqStr has &quot;cluster-admin&quot;
+| where ReqStr has &quot;argocd&quot; or ReqStr has &quot;repo-server&quot; or ReqStr has &quot;application-controller&quot;
+| project TimeGenerated, Username, UserAgent, Verb, Resource, Name=tostring(ObjectRef.name), ReqStr
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Argo CD service account bound to cluster-admin
+id: c1f7d2a9-4b6e-4c33-9a1d-2e5f8b7c9d10
+description: Detects a ClusterRoleBinding/RoleBinding that grants cluster-admin to an Argo CD service account, a likely privilege-escalation step after repo-server compromise.
 references:
   - https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
-  - https://cycode.com/blog/revealing-argo-cd-critical-vulnerability/
+  - https://www.synacktiv.com/en/publications/caught-in-the-octopus-trap-unauthenticated-rce-in-argo-cd-with-codeql
 author: SOC Detection Engineering
-date: 2026/07/02
-tags:
-  - attack.t1610
-  - attack.t1072
-logsource:
-  product: kubernetes
-  service: audit
-detection:
-  selection:
-    verb:
-      - create
-      - update
-      - patch
-    user.username|contains: &#x27;argocd&#x27;
-  payload:
-    requestObject|contains:
-      - &#x27;&quot;privileged&quot;:true&#x27;
-      - &#x27;&quot;hostPID&quot;:true&#x27;
-      - &#x27;&quot;hostNetwork&quot;:true&#x27;
-      - &#x27;/var/run/docker.sock&#x27;
-  condition: selection and payload
-level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(pods OR deployments OR daemonsets OR statefulsets) @user.username:*argocd* (@requestObject.spec.hostPID:true OR @requestObject.spec.hostNetwork:true OR @requestObject.spec.volumes.hostPath.path:\/var\/run\/docker.sock OR @requestObject.spec.containers.securityContext.privileged:true)</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype=&quot;kube:apiserver:audit&quot; verb IN (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;) &quot;objectRef.resource&quot; IN (&quot;pods&quot;,&quot;deployments&quot;,&quot;daemonsets&quot;,&quot;statefulsets&quot;,&quot;replicasets&quot;) &quot;user.username&quot;=&quot;*argocd*&quot; | spath | search (&quot;requestObject.spec.hostPID&quot;=true OR &quot;requestObject.spec.hostNetwork&quot;=true OR &quot;requestObject.spec.hostIPC&quot;=true OR &quot;requestObject.spec.containers{}.securityContext.privileged&quot;=true OR &quot;requestObject.spec.template.spec.containers{}.securityContext.privileged&quot;=true OR &quot;requestObject.spec.volumes{}.hostPath.path&quot;=&quot;/var/run/docker.sock&quot;) | table _time user.username verb objectRef.namespace objectRef.name objectRef.resource</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4db9c2489e" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes">
-  <summary>
-    <span class="uc-title">ClusterRoleBinding granting elevated rights to Argo CD service account</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="4db9c2489e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects post-compromise privilege escalation where a RoleBinding/ClusterRoleBinding is created referencing an Argo CD service account and grants cluster-admin or wildcard verbs, consolidating the &#x27;full cluster takeover&#x27; the article warns about. Targets the Kubernetes RBAC audit trail.
-
-Rationale: The article&#x27;s stated impact is &#x27;full cluster takeover&#x27;, which requires elevated RBAC; a new binding tying the argocd SA to cluster-admin is the highest-fidelity signal of that escalation and rarely happens outside of initial install.
-
-Cross-checked against:
-  • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
-  • https://github.com/advisories/GHSA-9766-5277-j5hr</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation">T1098</span> <span class="ind tech" title="Abuse Elevation Control Mechanism">T1548</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Initial Argo CD install/upgrade via Helm that legitimately binds the argocd application-controller to broad roles</li><li>GitOps-managed RBAC where the argocd SA role is declared in Git and reconciled</li><li>Platform team intentionally granting Argo CD cluster-admin for multi-cluster management</li><li>Disaster-recovery re-provisioning of the Argo CD namespace</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has &quot;helm&quot; and Requestor !has &quot;system:serviceaccount:kube-system&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify who (user.username / UserAgent) created the binding — an install via &#x27;helm&#x27;/&#x27;argocd&#x27; user agent during a maintenance window is likely benign; an ad-hoc kubectl or the argocd SA itself creating its own escalation is not. 2) Contain: delete the offending ClusterRoleBinding, revoke/rotate the argocd SA token, and enable network policies. 3) Hunt: review all actions taken by the argocd SA after the binding, enumerate new workloads and secrets accessed, and check Redis cache integrity.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(24h)
-| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| extend Res = tostring(ObjectRef.resource)
-| where Res in (&quot;clusterrolebindings&quot;,&quot;rolebindings&quot;)
-| extend ReqStr = tostring(RequestObject)
-| where ReqStr has_any (&quot;argocd&quot;,&quot;argo-cd&quot;)
-| where ReqStr has_any (&quot;cluster-admin&quot;,&quot;\&quot;verbs\&quot;:[\&quot;*\&quot;]&quot;,&quot;\&quot;*\&quot;&quot;)
-| project TimeGenerated, Requestor=tostring(Username), Verb, Res, Name=tostring(ObjectRef.name), UserAgent, RequestObject</code></pre></div>
-    <div class="tab-content" id="art-102-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: RBAC Binding Elevates Argo CD Service Account to Cluster-Admin
-id: 4a7f1c92-3b6d-4e2a-9f1c-2b3c4d5e6f70
-description: Creation of a Role/ClusterRoleBinding referencing an Argo CD service account and granting cluster-admin or wildcard verbs, the privilege-escalation step of an Argo CD cluster takeover.
-references:
-  - https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
-author: SOC Detection Engineering
-date: 2026/07/02
+date: 2026/07/08
 tags:
   - attack.t1098
-  - attack.t1548
+  - attack.t1078.003
 logsource:
   product: kubernetes
   service: audit
@@ -11792,56 +11693,174 @@ detection:
     objectRef.resource:
       - clusterrolebindings
       - rolebindings
-  subject:
-    requestObject|contains:
-      - &#x27;argocd&#x27;
-      - &#x27;argo-cd&#x27;
-  role:
-    requestObject|contains:
-      - &#x27;cluster-admin&#x27;
-  condition: selection and subject and role
+    requestObject.roleRef.name: &#x27;cluster-admin&#x27;
+    requestObject.subjects|contains: &#x27;argocd&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(clusterrolebindings OR rolebindings) @requestObject.subjects.name:*argocd* @requestObject.roleRef.name:(cluster-admin OR *admin*)</code></pre></div>
-    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype=&quot;kube:apiserver:audit&quot; verb IN (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;) &quot;objectRef.resource&quot; IN (&quot;clusterrolebindings&quot;,&quot;rolebindings&quot;) | spath | search (&quot;requestObject.subjects{}.name&quot;=&quot;*argocd*&quot; OR &quot;requestObject.subjects{}.name&quot;=&quot;*argo-cd*&quot;) AND (&quot;requestObject.roleRef.name&quot;=&quot;cluster-admin&quot; OR &quot;requestObject.roleRef.name&quot;=&quot;*admin*&quot;) | table _time user.username verb objectRef.name requestObject.roleRef.name requestObject.subjects{}.name</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(clusterrolebindings OR rolebindings) @requestObject.roleRef.name:cluster-admin @requestObject.subjects.name:(*argocd* OR *repo-server* OR *application-controller*)</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; stage=ResponseComplete verb IN (create,update,patch) &quot;objectRef.resource&quot; IN (clusterrolebindings,rolebindings) &quot;requestObject.roleRef.name&quot;=cluster-admin
+| search (&quot;requestObject.subjects{}.name&quot;=&quot;*argocd*&quot; OR &quot;requestObject.subjects{}.name&quot;=&quot;*repo-server*&quot; OR &quot;requestObject.subjects{}.name&quot;=&quot;*application-controller*&quot;)
+| table _time user.username verb objectRef.resource objectRef.name requestObject.roleRef.name requestObject.subjects{}.name
+| sort - _time</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="caeb5fb7ec" data-platforms="datadog,sent,spl" data-targets="kubernetes">
+<details class="uc" data-uc-slug="4ed4fb60f0" data-platforms="datadog,sent,spl" data-targets="kubernetes">
   <summary>
-    <span class="uc-title">New Argo CD Application/ApplicationSet pointing to external Git repo</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Argo CD service-account secret enumeration fan-out (Git creds / plaintext secrets)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="caeb5fb7ec" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="4ed4fb60f0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts persistence via a backdoored Argo CD Application: creation or mutation of an applications.argoproj.io / applicationsets.argoproj.io resource whose source repoURL points at an external or untrusted Git host, which would let an attacker continuously reconcile malicious manifests into the cluster. Surfaces the repoURL for analyst triage against the org allowlist.
+    <div class="uc-desc">Detects a compromised Argo CD principal reading an unusually large number of Kubernetes secrets in a short window — the credential-harvesting behaviour behind CVE-2025-55190 (repo credential exposure) and CVE-2026-42880 (plaintext secret read). Threshold fan-out on get/list of secrets by the argocd identity.
 
-Rationale: The attack reconciles workloads from an attacker-controlled Git repo; monitoring Application/ApplicationSet CRD writes and surfacing repoURL lets analysts spot a source pointed at an untrusted host. Left as hunting because the trusted-repo allowlist is org-specific and cannot be hardcoded.
+Rationale: Ties the article&#x27;s mentioned Argo CD credential-exposure CVEs to a concrete fan-out signal (dcount of distinct secrets by the argocd principal); normal Argo CD reads a small, stable set of repo-credential secrets, so &gt;10 distinct secrets in 10m is anomalous.
 
 Cross-checked against:
   • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
-  • https://argo-cd.readthedocs.io/en/stable/operator-manual/security/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Implant Internal Image">T1525</span> <span class="ind tech" title="Software Deployment Tools">T1072</span></div>
+  • https://www.synacktiv.com/en/publications/caught-in-the-octopus-trap-unauthenticated-rce-in-argo-cd-with-codeql</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Container API">T1552.007</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Routine GitOps onboarding of a new legitimate Application by the platform team</li><li>App-of-apps pattern generating many child Applications from a template</li><li>Developers self-servicing new Applications pointed at approved internal GitLab/GitHub Enterprise</li><li>Migration of Applications between repos during a repo consolidation</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: compare RepoURL against the approved Git host allowlist; a public/raw-IP or newly registered domain source is suspicious. Confirm who created it (Requestor/UserAgent). 2) Contain: pause auto-sync and delete the Application if the repo is untrusted; enable network policies. 3) Hunt: inspect the manifests that repo would render (privileged specs, external images), correlate with UC3/UC4, and rotate Argo CD repo credentials given CVE-2025-55190/CVE-2026-42880 secret-exposure history.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Argo CD startup/resync after a controller restart re-reading all repo-credential secrets</li><li>A newly onboarded large Application with many source repos, each with its own credential secret</li><li>Argo CD ApplicationSet generator that legitimately lists secrets across namespaces</li><li>Backup tooling running under the argocd service account</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the read burst aligns with a controller restart/resync (benign) or is out-of-band; list which namespaces/secret names were touched and whether any are non-repo credentials (e.g. cloud/DB secrets). 2) Contain: rotate every secret the principal accessed and the argocd service-account token; enable Redis auth + restrict NetworkPolicies. 3) Hunt: look for subsequent use of harvested creds — new cloud API calls, git clones from new source IPs, or new Applications pointing at external repos.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Stage == &quot;ResponseComplete&quot; and Verb in (&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;)
+| extend Resource = tostring(ObjectRef.resource)
+| where Resource == &quot;secrets&quot;
+| where Username has &quot;argocd&quot; or UserAgent has &quot;argocd&quot;
+| summarize SecretCount = dcount(tostring(ObjectRef.name)), Namespaces = make_set(tostring(ObjectRef.namespace), 15), SampleUri = any(RequestUri)
+         by Username, bin(TimeGenerated, 10m)
+| where SecretCount &gt; 10   // 10 = per-app repo-cred read baseline; a poisoned repo-server enumerating cluster secrets exceeds this
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(get OR list OR watch) @objectRef.resource:secrets @user.username:*argocd*</code></pre></div>
+    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; stage=ResponseComplete verb IN (get,list,watch) &quot;objectRef.resource&quot;=secrets &quot;user.username&quot;=&quot;*argocd*&quot;
+| bin _time span=10m
+| stats dc(objectRef.name) as SecretCount values(objectRef.namespace) as Namespaces by _time user.username
+| where SecretCount &gt; 10
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="525f444bd3" data-platforms="datadog,sent,spl" data-targets="kubernetes">
+  <summary>
+    <span class="uc-title">Argo CD Application pointing to an untrusted/IP-literal Git repo or plaintext registry</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="525f444bd3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces creation/modification of Argo CD Application/ApplicationSet objects whose source repoURL is an IP-literal or plaintext http:// endpoint — the persistence vector where an attacker registers a backdoored app sourced from attacker-controlled infrastructure. Hunting-tier review of GitOps source drift.
+
+Rationale: Directly targets the Argo CD Application CRD repoURL field named in the attack (attacker script/workload pulled from an attacker-controlled Git repo); IP-literal or http:// sources are concrete high-signal anomalies vs. normal https git hosts, avoiding org-specific allowlists.
+
+Cross-checked against:
+  • https://www.synacktiv.com/en/publications/caught-in-the-octopus-trap-unauthenticated-rce-in-argo-cd-with-codeql
+  • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Implant Internal Image">T1525</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate internal Git server exposed over http:// on the cluster network</li><li>In-cluster Gitea/GitLab reached by ClusterIP (IP-literal repoURL) as intended</li><li>Dev/test Applications temporarily pointed at a local repo</li><li>Helm OCI registries referenced by IP in air-gapped environments</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: validate the repoURL — is the host a sanctioned internal Git service or unknown external/attacker infrastructure? Check who created the Application (user.username) and whether it exists in the App-of-Apps source of truth. 2) Contain: if unsanctioned, disable auto-sync and delete the Application/ApplicationSet before the next sync deploys its workload; block the repo host at egress. 3) Hunt: inspect the target repo/registry contents, and review whether the Application requests privileged specs (link to the privileged-workload detection) or elevated RBAC.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc4-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc4-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc4-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-102-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(24h)
-| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| extend Res = tostring(ObjectRef.resource)
-| where Res in (&quot;applications&quot;,&quot;applicationsets&quot;)
-| extend RepoURL = tostring(RequestObject.spec.source.repoURL)
-| extend RepoSources = tostring(RequestObject.spec.sources)
-| extend RepoTemplate = tostring(RequestObject.spec.template.spec.source.repoURL)
-| where isnotempty(RepoURL) or isnotempty(RepoSources) or isnotempty(RepoTemplate)
-| project TimeGenerated, Requestor=tostring(Username), Verb, Res, AppName=tostring(ObjectRef.name), RepoURL, RepoTemplate, RepoSources, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-102-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(applications OR applicationsets) (@requestObject.spec.source.repoURL:* OR @requestObject.spec.template.spec.source.repoURL:*)</code></pre></div>
-    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype=&quot;kube:apiserver:audit&quot; verb IN (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;) &quot;objectRef.resource&quot; IN (&quot;applications&quot;,&quot;applicationsets&quot;) | spath | eval repoURL=coalesce(&#x27;requestObject.spec.source.repoURL&#x27;,&#x27;requestObject.spec.template.spec.source.repoURL&#x27;) | where isnotnull(repoURL) | table _time user.username verb objectRef.namespace objectRef.name repoURL</code></pre></div>
+| where TimeGenerated &gt; ago(7d)
+| where Stage == &quot;ResponseComplete&quot; and Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| extend Resource = tostring(ObjectRef.resource)
+| where Resource in (&quot;applications&quot;,&quot;applicationsets&quot;)
+| extend ReqStr = tostring(RequestObject)
+| extend repoURL = extract(@&#x27;repoURL&quot;\s*:\s*&quot;([^&quot;]+)&quot;&#x27;, 1, ReqStr)
+| where isnotempty(repoURL)
+| extend Suspicious = iif(repoURL startswith &quot;http://&quot; or repoURL matches regex @&quot;https?://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}&quot;, &quot;yes&quot;, &quot;no&quot;)
+| project TimeGenerated, Username, Verb, Resource, Name=tostring(ObjectRef.name), repoURL, Suspicious
+| order by Suspicious desc, TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(applications OR applicationsets) (@requestObject.spec.source.repoURL:http\://* OR @requestObject.spec.sources.repoURL:http\://*)</code></pre></div>
+    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; stage=ResponseComplete verb IN (create,update,patch) &quot;objectRef.resource&quot; IN (applications,applicationsets)
+| rex field=_raw &quot;repoURL\&quot;\s*:\s*\&quot;(?&lt;repoURL&gt;[^\&quot;]+)\&quot;&quot;
+| eval suspicious=if((match(repoURL,&quot;^http://&quot;) OR match(repoURL,&quot;\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}&quot;)),&quot;yes&quot;,&quot;no&quot;)
+| table _time user.username objectRef.name repoURL suspicious
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="480e9c1e4f" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Non-Argo CD process connecting to the Argo CD Redis cache (port 6379) — cache poisoning</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="480e9c1e4f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the CVE-2024-31989 revival step: a process/pod that is not an Argo CD component connecting to the Argo CD Redis cache on TCP 6379 to poison the stored &#x27;mfst&#x27; deployment data. Because only argocd-repo-server / application-controller / server legitimately reach this Redis, any other client is suspicious.
+
+Rationale: Uses the article/CVE-2024-31989-specific fact that the Argo CD Redis (6379) should only be reached by argocd components; a non-argocd client to 6379 is the poisoning primitive. Query surfaces the initiating process so no runtime placeholder is needed. Datadog left empty — no pod-to-pod network source in this tenant.
+
+Cross-checked against:
+  • https://cycode.com/blog/revealing-argo-cd-critical-vulnerability/
+  • https://github.com/argoproj/argo-cd/security/advisories/GHSA-9766-5277-j5hr
+  • https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Adversary-in-the-Middle">T1557</span> <span class="ind tech" title="Data Manipulation: Stored Data Manipulation">T1565.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A separate application in the cluster running its own Redis on 6379 that shares nodes (co-located, unrelated)</li><li>Monitoring/exporter agents (redis_exporter) scraping the Argo CD Redis for metrics</li><li>An operator using redis-cli to troubleshoot the cache</li><li>Backup jobs performing RDB/AOF snapshots against Redis</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;redis_exporter&quot;,&quot;redis-cli&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process/pod and confirm it is not a sanctioned Redis client or exporter; check whether it also performed SET/HSET commands against the mfst/cache keys (if command-level logging exists). 2) Contain: apply the Argo CD NetworkPolicy set to wall off Redis, rotate the Redis password (env var value the attacker read), and force an Argo CD hard-refresh to invalidate poisoned cache entries. 3) Hunt: review what workloads Argo CD synced immediately after the connection (link to the privileged-workload detection) and check the source pod for the repo-server RCE indicators.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc5-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-102-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemotePort == 6379
+| where InitiatingProcessFileName !startswith &quot;argocd&quot;
+| where InitiatingProcessFileName !in~ (&quot;redis-server&quot;,&quot;redis-sentinel&quot;,&quot;redis-check-aof&quot;,&quot;haproxy&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, LocalIP
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ASCDeviceEvents
+| where TimeGenerated &gt; ago(7d)
+| where RemotePort == 6379
+| where InitiatingProcessFileName !startswith &quot;argocd&quot;
+| where InitiatingProcessFileName !in~ (&quot;redis-server&quot;,&quot;redis-sentinel&quot;,&quot;redis-check-aof&quot;,&quot;haproxy&quot;)
+| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Non-Argo CD process connecting to Argo CD Redis cache (6379)
+id: a4e9b1c7-8d2f-4e56-b3a1-9c0d7e2f4a58
+description: Detects a process other than an Argo CD component or redis/haproxy connecting to TCP 6379, the Argo CD Redis cache targeted for poisoning in the CVE-2024-31989 revival.
+references:
+  - https://cycode.com/blog/revealing-argo-cd-critical-vulnerability/
+  - https://thehackernews.com/2026/07/unpatched-argo-cd-repo-server-flaw.html
+author: SOC Detection Engineering
+date: 2026/07/08
+tags:
+  - attack.t1565.001
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection:
+    DestinationPort: 6379
+    Initiated: true
+  filter_argocd:
+    Image|contains:
+      - &#x27;argocd&#x27;
+      - &#x27;redis&#x27;
+      - &#x27;haproxy&#x27;
+  condition: selection and not filter_argocd
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-102-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=6379
+| NOT (ContextImageFileName=/argocd/i OR ContextImageFileName=/redis-(server|sentinel)/i OR ContextImageFileName=/haproxy/i)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=6379 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | where NOT match(app,&quot;(?i)argocd|redis|haproxy&quot;)</code></pre><pre class="spl-mode-body" id="art-102-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=6379 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | where NOT match(app,&quot;(?i)argocd|redis|haproxy&quot;)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
@@ -11859,12 +11878,12 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-102-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
@@ -11872,7 +11891,7 @@ Cross-checked against:
 | where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+    <div class="tab-content" id="art-102-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
 ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
@@ -11884,7 +11903,7 @@ ImFileEvent
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
           TargetFilePath, TargetFileName, EventType
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+    <div class="tab-content" id="art-102-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
 status: experimental
 description: |
@@ -11928,7 +11947,7 @@ falsepositives:
     - Browser sync agents from non-stock vendors
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -11937,7 +11956,7 @@ level: high
         OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-102-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-102-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -11964,11 +11983,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-102-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -11977,7 +11996,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-102-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -11989,12 +12008,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2024-31989&quot;, &quot;CVE-2025-55190&quot;, &quot;CVE-2026-42880&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2024-31989&quot;, &quot;CVE-2025-55190&quot;, &quot;CVE-2026-42880&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -12017,17 +12036,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc7-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-102-uc8-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-102-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-102-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -12038,7 +12057,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-102-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -12064,7 +12083,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc8-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -12073,7 +12092,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-102-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-102-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -12109,11 +12128,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-102-uc9-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -12153,7 +12172,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-102-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -12178,7 +12197,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc8-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-102-uc9-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc9-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -12210,7 +12229,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-102-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-102-uc9-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -12260,19 +12279,19 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-102-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-102-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -12286,7 +12305,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-102-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -12330,7 +12349,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -12338,7 +12357,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -12364,12 +12383,12 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-102-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
@@ -12377,7 +12396,7 @@ level: high
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
    or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-102-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -12394,7 +12413,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+    <div class="tab-content" id="art-102-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
 status: experimental
 description: |
@@ -12429,13 +12448,13 @@ falsepositives:
       tool exclusion list per environment.
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
@@ -12451,9 +12470,9 @@ level: high
   data-sources="The Hacker News"
   data-platforms="datadog,def,sent,sigma,spl"
   data-splunk-cats="application,cloud,endpoint,web"
-  data-targets="azure,m365,windows"
+  data-targets="azure,identity,m365,windows"
   data-uc-count="13" data-llm-uc-count="2"
-  data-search="19-Year-Old Scattered Spider Suspect Extradited to Face U.S. Hacking Charges A teenager accused of belonging to the hacking group Scattered Spider has been extradited from Finland to face U.S. charges of conspiracy, computer intrusion, and fraud, the U.S. Department of Justice&amp;nbsp;announced&amp;nbsp;on July 1. Peter Stokes, 19, a dual U.S. and Estonian citizen, appeared in a Chicago federal court on June 30, where a judge ordered him held in custody. Finnish police  T1190 T1204.002 T1219 T1486 T1528 T1566 [LLM] Scattered Spider MFA push-bombing (fatigue) followed by successful Entra ID sign-in [LLM] Scattered Spider help-desk MFA/security-info reset then sign-in from a different IP Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard OAuth consent / suspicious app grant Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement">
+  data-search="19-Year-Old Scattered Spider Suspect Extradited to Face U.S. Hacking Charges A teenager accused of belonging to the hacking group Scattered Spider has been extradited from Finland to face U.S. charges of conspiracy, computer intrusion, and fraud, the U.S. Department of Justice&amp;nbsp;announced&amp;nbsp;on July 1. Peter Stokes, 19, a dual U.S. and Estonian citizen, appeared in a Chicago federal court on June 30, where a judge ordered him held in custody. Finnish police  T1190 T1204.002 T1219 T1486 T1528 T1566 [LLM] Entra help-desk MFA/password reset followed by sign-in from new IP (Scattered Spider ATO) [LLM] External/guest identity active in Teams during breach response (Scattered Spider watching defenders) Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard OAuth consent / suspicious app grant Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-01-19-year-old-scattered-spider-suspect-extradited-to-face-u-s-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -12512,116 +12531,120 @@ level: high
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender · Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Scattered Spider MFA push-bombing (fatigue) followed by successful Entra ID sign-in · [LLM] Scattered Spider help-desk MFA/security-info reset then sign-in from a different IP · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Entra help-desk MFA/password reset followed by sign-in from new IP (Scattered Spider ATO) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] External/guest identity active in Teams during breach response (Scattered Spider watching defenders) · Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="1b9f4be203" data-platforms="datadog,def,sent,spl" data-targets="azure" open>
+  <div class="usecases"><details class="uc" data-uc-slug="f23f0d9f78" data-platforms="datadog,def,sent" data-targets="azure,identity" open>
   <summary>
-    <span class="uc-title">Scattered Spider MFA push-bombing (fatigue) followed by successful Entra ID sign-in</span>
+    <span class="uc-title">Entra help-desk MFA/password reset followed by sign-in from new IP (Scattered Spider ATO)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1b9f4be203" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="f23f0d9f78" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Scattered Spider / Octo Tempest signature of hammering a user with repeated MFA prompts (push bombing) until one is approved, evidenced by a burst of MFA-denied/uncompleted sign-ins clustered within an hour and then a successful sign-in for the same user within 30 minutes. Article-specific: the piece and the CISA AA23-320A advisory both call out the group talking staff into &#x27;approving a login&#x27; and using push bombing to defeat MFA.
+    <div class="uc-desc">Hunts Scattered Spider&#x27;s signature account-takeover: an IT-help-desk-driven credential or MFA-method reset immediately followed by a successful sign-in for that same user from a different IP within one hour. Article-specific because the body explicitly states the group phones help desks to &#x27;reset a password or approve a login&#x27; — this correlates the reset event to the first attacker login.
 
-Rationale: Grounded in the article&#x27;s explicit description of the group talking staff into &#x27;approving a login&#x27; and defeating MFA; corroborated by CISA AA23-320A which documents push bombing and MFA-fatigue as core Scattered Spider TTPs. Uses Entra MFA-failure result codes (500121/50074/50076/50072) clustered then followed by a success — a high-fidelity fatigue-then-approve shape rather than a generic failed-login count.
+Rationale: Uses the article&#x27;s explicit claim that Scattered Spider convinces help desks to &#x27;reset a password or approve a login&#x27;; correlates the Entra/AD reset event to the first successful sign-in from a different IP within 1h — the actual ATO moment. Cross-checked against CISA AA23-320A which documents help-desk MFA-method reset (T1556.006).
 
 Cross-checked against:
   • https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-320a
-  • https://www.cisa.gov/sites/default/files/2023-11/aa23-320a_scattered_spider_0.pdf</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Multi-Factor Authentication Request Generation">T1621</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>User genuinely fat-fingers or ignores several legitimate prompts (bad phone signal, wrong device) then finally approves</li><li>Shared/service mailbox with automation triggering repeated Conditional Access re-auth</li><li>Newly enrolled authenticator where the user rejects prompts on the old device before accepting on the new one</li><li>Traveling employee whose token expires and re-prompts repeatedly across a flaky connection</li><li>Pen-test / red-team MFA-fatigue exercise</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where IPAddress !in (dynamic([])) and not (AppDisplayName in~ (&quot;Windows Sign In&quot;,&quot;Microsoft Authenticator App&quot;) and DenialCount &lt; 8)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the burst is one user from unfamiliar IP/UA/geo and that the DenialCount&gt;=5 preceded the success by &lt;30m; check whether the approving device matches the user&#x27;s registered device. 2) Contain: revoke the user&#x27;s refresh tokens (Revoke-AzureADUserAllRefreshToken), force password reset, and temporarily require re-registration of a phishing-resistant (FIDO2) factor. 3) Hunt: pivot on the successful IP/UA across SigninLogs for other accounts (spray), review AuditLogs for any &#x27;registered security info&#x27; / password-reset events on this account in the prior 24h, and check for inbox rules or app-consent grants created post-login.</div></details>
+  • https://www.ic3.gov/CSA/2025/250729.pdf
+  • https://attack.mitre.org/groups/G1015/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process: Multi-Factor Authentication">T1556.006</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate help-desk password reset when a genuinely-locked-out employee then signs in from home (different IP than the help-desk agent)</li><li>User travels and legitimately re-registers MFA from a new location after losing a device</li><li>VPN/proxy egress causes the post-reset sign-in IP to differ from the reset-request IP for the same real user</li><li>Bulk password-reset campaigns after an org-wide forced credential rotation</li><li>Self-service password reset from a mobile network (carrier IP) immediately followed by desktop sign-in</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceTrustType != &quot;Compliant&quot; and Country != &quot;&lt;user home country&gt;&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the reset event&#x27;s InitiatedBy — was it a help-desk/admin account or true self-service? Compare ResetIP vs FirstSignInIP geolocation/ASN and check if the sign-in device is compliant/known. Contact the user out-of-band (not via Teams/chat) to confirm they requested the reset. 2) Contain: if unconfirmed, revoke all refresh tokens (Revoke-MgUserSignInSession), disable the account, and force a re-registration of MFA under IT supervision. 3) Hunt: review the same account&#x27;s sign-ins, mailbox-rule creation, OAuth app consents, and Teams/chat joins in the following 24h; check whether the help-desk agent handled other suspicious resets in the same shift.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let PushWindowMin = 60;
-let SuccessWindow = 30m;
-let Fatigue = AADSignInEventsBeta
+    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let win = 1h;
+let resets = IdentityDirectoryEvents
 | where Timestamp &gt; ago(7d)
-| where ErrorCode in (500121, 50074, 50076, 50072)   // MFA denied / not satisfied / not completed
-| summarize DenialCount = count(), FirstDenial = min(Timestamp), LastDenial = max(Timestamp) by AccountUpn
-| where DenialCount &gt;= 5                              // &gt;=5 MFA prompts denied = push-bombing / fatigue
-| where datetime_diff(&#x27;minute&#x27;, LastDenial, FirstDenial) &lt;= PushWindowMin;
-AADSignInEventsBeta
-| where Timestamp &gt; ago(7d)
-| where ErrorCode == 0                                // successful sign-in
-| join kind=inner Fatigue on AccountUpn
-| where Timestamp between (LastDenial .. LastDenial + SuccessWindow)
-| project SuccessTime = Timestamp, AccountUpn, DenialCount, FirstDenial, LastDenial, IPAddress, Application, Country, City, UserAgent
-| order by SuccessTime desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let PushWindowMin = 60;
-let SuccessWindow = 30m;
-let Fatigue = SigninLogs
+| where ActionType in (&quot;Account Password reset&quot;,&quot;Account Password changed&quot;)
+| project ResetTime = Timestamp, TargetUpn = AccountUpn, ResetActor = AccountName, ResetDetail = tostring(AdditionalFields)
+| where isnotempty(TargetUpn);
+resets
+| join kind=inner (
+    AADSignInEventsBeta
+    | where Timestamp &gt; ago(7d)
+    | where ErrorCode == 0
+    | project SignInTime = Timestamp, AccountUpn, IPAddress, Country, City, Application, DeviceTrustType
+) on $left.TargetUpn == $right.AccountUpn
+| where SignInTime between (ResetTime .. ResetTime + win)
+| summarize arg_min(SignInTime, *), FirstSignInIP = any(IPAddress) by TargetUpn, ResetTime
+| extend DelayMin = datetime_diff(&#x27;minute&#x27;, SignInTime, ResetTime)
+| project ResetTime, SignInTime, DelayMin, TargetUpn, ResetActor, FirstSignInIP, Country, City, Application, DeviceTrustType
+| order by ResetTime desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 1h;
+let resets = AuditLogs
 | where TimeGenerated &gt; ago(7d)
-| where ResultType in (&quot;500121&quot;,&quot;50074&quot;,&quot;50076&quot;,&quot;50072&quot;)   // MFA denied / not satisfied / not completed
-| summarize DenialCount = count(), FirstDenial = min(TimeGenerated), LastDenial = max(TimeGenerated) by UserPrincipalName
-| where DenialCount &gt;= 5                                    // &gt;=5 MFA prompts denied = push-bombing / fatigue
-| where datetime_diff(&#x27;minute&#x27;, LastDenial, FirstDenial) &lt;= PushWindowMin;
-SigninLogs
-| where TimeGenerated &gt; ago(7d)
-| where ResultType == &quot;0&quot;                                   // successful sign-in
-| join kind=inner Fatigue on UserPrincipalName
-| where TimeGenerated between (LastDenial .. LastDenial + SuccessWindow)
-| project SuccessTime = TimeGenerated, UserPrincipalName, DenialCount, FirstDenial, LastDenial, IPAddress, AppDisplayName, Location = tostring(Location), UserAgent
-| order by SuccessTime desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot; @properties.status.errorCode:(500121 OR 50074 OR 50076 OR 50072)</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Authentication.Authentication where (Authentication.action=failure OR Authentication.signature_id IN (500121,50074,50076,50072)) by Authentication.user Authentication.src _time span=1h | `drop_dm_object_name(Authentication)` | rename count as DenialCount | where DenialCount&gt;=5 | join type=inner user [| tstats `summariesonly` min(_time) as SuccessTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user Authentication.src | `drop_dm_object_name(Authentication)`] | where SuccessTime&gt;=_time AND SuccessTime&lt;=_time+1800 | table _time user src DenialCount SuccessTime</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Authentication.Authentication where (Authentication.action=failure OR Authentication.signature_id IN (500121,50074,50076,50072)) by Authentication.user Authentication.src _time span=1h | `drop_dm_object_name(Authentication)` | rename count as DenialCount | where DenialCount&gt;=5 | join type=inner user [| tstats summariesonly=false min(_time) as SuccessTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user Authentication.src | `drop_dm_object_name(Authentication)`] | where SuccessTime&gt;=_time AND SuccessTime&lt;=_time+1800 | table _time user src DenialCount SuccessTime</code></pre></div></div>
+| where LoggedByService in (&quot;Authentication Methods&quot;,&quot;Core Directory&quot;,&quot;Self-service Password Management&quot;,&quot;Account Provisioning&quot;)
+| where ActivityDisplayName has_any (&quot;Reset user password&quot;,&quot;Reset password (by admin)&quot;,&quot;Admin registered security info&quot;,&quot;User registered security info&quot;,&quot;Admin updated security info&quot;,&quot;User started security info registration&quot;)
+| extend TargetUpn = tostring(TargetResources[0].userPrincipalName)
+| extend InitiatedByUpn = tostring(InitiatedBy.user.userPrincipalName)
+| extend ResetIP = tostring(InitiatedBy.user.ipAddress)
+| where isnotempty(TargetUpn)
+| project ResetTime = TimeGenerated, ActivityDisplayName, TargetUpn, InitiatedByUpn, ResetIP;
+resets
+| join kind=inner (
+    SigninLogs
+    | where TimeGenerated &gt; ago(7d)
+    | where ResultType == 0
+    | project SignInTime = TimeGenerated, UserPrincipalName, SignInIP = IPAddress, AppDisplayName, Location
+) on $left.TargetUpn == $right.UserPrincipalName
+| where SignInTime between (ResetTime .. ResetTime + win)
+| where SignInIP != ResetIP
+| summarize arg_min(SignInTime, *) by TargetUpn, ResetTime
+| extend DelayMin = datetime_diff(&#x27;minute&#x27;, SignInTime, ResetTime)
+| project ResetTime, SignInTime, DelayMin, TargetUpn, ActivityDisplayName, InitiatedByUpn, ResetIP, SignInIP, AppDisplayName, Location
+| order by ResetTime desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:(&quot;Reset user password&quot; OR &quot;Reset password (by admin)&quot; OR &quot;Admin registered security info&quot; OR &quot;User registered security info&quot; OR &quot;Admin updated security info&quot;)</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="d4e525f44f" data-platforms="datadog,sent,spl" data-targets="azure">
+<details class="uc" data-uc-slug="1e74feb778" data-platforms="def,sent" data-targets="azure,m365">
   <summary>
-    <span class="uc-title">Scattered Spider help-desk MFA/security-info reset then sign-in from a different IP</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d4e525f44f" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">External/guest identity active in Teams during breach response (Scattered Spider watching defenders)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="1e74feb778" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the group&#x27;s signature help-desk social-engineering chain: an actor resets a victim&#x27;s password or registers new MFA/security info, then the account signs in from an IP different than the actor who made the change within hours. Article-specific: the piece states members &#x27;talk the staff into resetting a password or approving a login&#x27; and CISA AA23-320A documents transferring MFA to an attacker-controlled device.
+    <div class="uc-desc">Hunts the joint-advisory behaviour the article calls out: once inside, Scattered Spider &#x27;lurk in a company&#x27;s chat tools and join the calls it holds to respond to the breach.&#x27; Surfaces guest/external (#EXT#) identities joining Teams meetings, being added to teams/chats, or reading messages — a signal an intruder is monitoring the incident-response effort.
 
-Rationale: Directly targets the article&#x27;s stated &#x27;reset a password or approve a login&#x27; help-desk trick and CISA AA23-320A&#x27;s &#x27;transfer the employee&#x27;s MFA to a device they control&#x27;. The pivot is an Entra AuditLogs security-info/password change joined to a subsequent successful sign-in from a different IP than the change actor — a specific abuse shape, not a generic sign-in alert.
+Rationale: Directly implements the article&#x27;s quoted advisory line about intruders joining the breach-response calls/chat; pivots on guest/#EXT# identity performing Teams meeting-join and message-read operations, which is not covered by generic phishing/exec rules. Corroborated by CISA AA23-320A on Scattered Spider persistence in collaboration tooling.
 
 Cross-checked against:
   • https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-320a
-  • https://www.cisa.gov/sites/default/files/2023-11/aa23-320a_scattered_spider_0.pdf</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process: Multi-Factor Authentication">T1556.006</span> <span class="ind tech" title="Account Manipulation: Device Registration">T1098.005</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span> <span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate help-desk password reset for a genuinely locked-out user who then logs in remotely (VPN/home IP)</li><li>Employee self-service registering a new authenticator during a device upgrade</li><li>Onboarding flow where security info is registered then the user signs in from a corporate branch NAT different from the admin console IP</li><li>Roaming user whose sign-in egresses a different proxy IP than the admin who reset them</li><li>Bulk MFA re-registration campaign after an authenticator app migration</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Actor !in~ (dynamic([&quot;helpdesk-serviceaccount@contoso.com&quot;])) and OperationName !in (&quot;User registered all required security info&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: verify the reset was a legitimate help-desk ticket for that user; compare the post-change sign-in IP/geo/UA and registered-device against the user&#x27;s baseline and confirm the actor identity on the AuditLog change. 2) Contain: if unverified, revoke sessions/refresh tokens, remove the newly registered MFA method, force a fresh reset via an out-of-band verified channel, and disable the account if a different device signed in. 3) Hunt: search AuditLogs for other accounts reset by the same actor/IP in a 48h window, review app-consent grants, new inbox rules, and Teams/chat access (the advisory notes intruders lurk in response calls), and check for VPN/remote-access tool installs on any endpoint the account touched.</div></details>
+  • https://attack.mitre.org/groups/G1015/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories: Messaging Applications">T1213.005</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate external partners/MSSP/DFIR retainer consultants invited into the actual incident-response bridge (expected guests)</li><li>Vendor or auditor guest accounts routinely joining recurring cross-org meetings</li><li>Contractors with B2B guest access participating in normal project chats</li><li>New guest onboarding during M&amp;A or partner integration generating MemberAdded events</li><li>External Teams federation for legitimate customer-support conversations</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserId !has_any (&quot;@trusted-mssp.com&quot;,&quot;@dfir-retainer.com&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each guest identity, verify the invitation provenance — who added them (check the corresponding AuditLogs &#x27;Add member to group&#x27;/&#x27;Invite external user&#x27; event), when the guest tenant/domain was first seen, and whether it aligns with a sanctioned partner. Prioritize guests added AFTER the breach-response channel was created. 2) Contain: if unrecognized, remove the guest from all teams/meetings, block the external domain in Teams federation/guest-access policy, and move IR coordination to an out-of-band channel the attacker cannot see. 3) Hunt: correlate the guest&#x27;s AccountId/IP with SigninLogs and the reset-correlation detection above; review what channels/files the guest accessed and whether the same external domain appears in OAuth consents or mailbox forwarding.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
     </div>
-    <div class="tab-content active" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 14d;
-let CorrWindow = 6h;
-let MfaChanges = AuditLogs
-| where TimeGenerated &gt; ago(LookbackDays)
-| where OperationName in (&quot;User registered security info&quot;,&quot;Admin registered security info&quot;,&quot;User registered all required security info&quot;,&quot;Admin updated security info&quot;,&quot;User changed default security info&quot;,&quot;Reset user&#x27;s password&quot;,&quot;Reset password (by admin)&quot;)
-| extend TargetUpn = tostring(TargetResources[0].userPrincipalName)
-| extend Actor = coalesce(tostring(InitiatedBy.user.userPrincipalName), tostring(InitiatedBy.app.displayName))
-| extend ActorIP = tostring(InitiatedBy.user.ipAddress)
-| where isnotempty(TargetUpn)
-| project ChangeTime = TimeGenerated, OperationName, TargetUpn, Actor, ActorIP;
-SigninLogs
-| where TimeGenerated &gt; ago(LookbackDays)
-| where ResultType == &quot;0&quot;
-| join kind=inner MfaChanges on $left.UserPrincipalName == $right.TargetUpn
-| where TimeGenerated between (ChangeTime .. ChangeTime + CorrWindow)
-| where isempty(ActorIP) or tostring(IPAddress) != ActorIP     // sign-in IP differs from the actor who reset the factor
-| summarize SignInCount = count(), SignInIPs = make_set(IPAddress, 10), Apps = make_set(AppDisplayName, 10), FirstSignIn = min(TimeGenerated) by UserPrincipalName, OperationName, ChangeTime, Actor, ActorIP
-| order by ChangeTime desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:(&quot;User registered security info&quot; OR &quot;Admin registered security info&quot; OR &quot;Reset password (by admin)&quot; OR &quot;Reset user&#x27;s password&quot; OR &quot;User registered all required security info&quot;)</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` min(_time) as ChangeTime from datamodel=Change.All_Changes where (Change.action=modified OR Change.command IN (&quot;User registered security info&quot;,&quot;Admin registered security info&quot;,&quot;Reset user&#x27;s password&quot;,&quot;Reset password (by admin)&quot;)) by Change.user Change.command | `drop_dm_object_name(Change)` | rename user as TargetUser | join type=inner TargetUser [| tstats `summariesonly` min(_time) as SignInTime values(Authentication.src) as SignInIPs from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as TargetUser] | where SignInTime&gt;=ChangeTime AND SignInTime&lt;=ChangeTime+21600 | table ChangeTime command TargetUser SignInTime SignInIPs</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false min(_time) as ChangeTime from datamodel=Change.All_Changes where (Change.action=modified OR Change.command IN (&quot;User registered security info&quot;,&quot;Admin registered security info&quot;,&quot;Reset user&#x27;s password&quot;,&quot;Reset password (by admin)&quot;)) by Change.user Change.command | `drop_dm_object_name(Change)` | rename user as TargetUser | join type=inner TargetUser [| tstats summariesonly=false min(_time) as SignInTime values(Authentication.src) as SignInIPs from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as TargetUser] | where SignInTime&gt;=ChangeTime AND SignInTime&lt;=ChangeTime+21600 | table ChangeTime command TargetUser SignInTime SignInIPs</code></pre></div></div>
+    <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Microsoft Teams&quot;
+| where ActionType in (&quot;MemberAdded&quot;,&quot;TeamsSessionStarted&quot;,&quot;MeetingParticipantDetail&quot;,&quot;MessagesListed&quot;,&quot;ChatCreated&quot;,&quot;MessageSent&quot;)
+| extend RawUpn = tostring(RawEventData.UserId)
+| where AccountType == &quot;Guest&quot; or RawUpn has &quot;#EXT#&quot; or AccountDisplayName has &quot;#EXT#&quot;
+| project Timestamp, ActionType, AccountDisplayName, AccountId, AccountType, RawUpn, IPAddress, CountryCode, City, ObjectName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>OfficeActivity
+| where TimeGenerated &gt; ago(7d)
+| where OfficeWorkload == &quot;MicrosoftTeams&quot;
+| where Operation in (&quot;MemberAdded&quot;,&quot;TeamsSessionStarted&quot;,&quot;MeetingParticipantDetail&quot;,&quot;MeetingDetail&quot;,&quot;MessagesListed&quot;,&quot;ChatCreated&quot;,&quot;MessageSent&quot;,&quot;MemberRoleChanged&quot;)
+| where ExternalAccess == true or UserType == &quot;Guest&quot; or UserId has &quot;#EXT#&quot;
+| project TimeGenerated, Operation, UserId, UserType, ExternalAccess, ClientIP, UserAgent, ObjectId
+| order by TimeGenerated desc</code></pre></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">

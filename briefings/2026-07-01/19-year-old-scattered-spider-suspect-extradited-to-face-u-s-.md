@@ -37,10 +37,10 @@ Peter Stokes , 19, a dual U.S. and Estonian citizen, appeared in a Chicago feder
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1621** — Multi-Factor Authentication Request Generation
-- **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
-- **T1098.005** — Account Manipulation: Device Registration
+- **T1078** — Valid Accounts
+- **T1213.005** — Data from Information Repositories: Messaging Applications
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
@@ -48,41 +48,46 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Scattered Spider MFA push-bombing (fatigue) followed by successful Entra ID sign-in
+### Entra help-desk MFA/password reset followed by sign-in from new IP (Scattered Spider ATO)
 
 `UC_103_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Authentication.Authentication where (Authentication.action=failure OR Authentication.signature_id IN (500121,50074,50076,50072)) by Authentication.user Authentication.src _time span=1h | `drop_dm_object_name(Authentication)` | rename count as DenialCount | where DenialCount>=5 | join type=inner user [| tstats `summariesonly` min(_time) as SuccessTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user Authentication.src | `drop_dm_object_name(Authentication)`] | where SuccessTime>=_time AND SuccessTime<=_time+1800 | table _time user src DenialCount SuccessTime
+**Defender KQL:**
+```kql
+let win = 1h;
+let resets = IdentityDirectoryEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("Account Password reset","Account Password changed")
+| project ResetTime = Timestamp, TargetUpn = AccountUpn, ResetActor = AccountName, ResetDetail = tostring(AdditionalFields)
+| where isnotempty(TargetUpn);
+resets
+| join kind=inner (
+    AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where ErrorCode == 0
+    | project SignInTime = Timestamp, AccountUpn, IPAddress, Country, City, Application, DeviceTrustType
+) on $left.TargetUpn == $right.AccountUpn
+| where SignInTime between (ResetTime .. ResetTime + win)
+| summarize arg_min(SignInTime, *), FirstSignInIP = any(IPAddress) by TargetUpn, ResetTime
+| extend DelayMin = datetime_diff('minute', SignInTime, ResetTime)
+| project ResetTime, SignInTime, DelayMin, TargetUpn, ResetActor, FirstSignInIP, Country, City, Application, DeviceTrustType
+| order by ResetTime desc
 ```
+
+### External/guest identity active in Teams during breach response (Scattered Spider watching defenders)
+
+`UC_103_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-let PushWindowMin = 60;
-let SuccessWindow = 30m;
-let Fatigue = AADSignInEventsBeta
+CloudAppEvents
 | where Timestamp > ago(7d)
-| where ErrorCode in (500121, 50074, 50076, 50072)   // MFA denied / not satisfied / not completed
-| summarize DenialCount = count(), FirstDenial = min(Timestamp), LastDenial = max(Timestamp) by AccountUpn
-| where DenialCount >= 5                              // >=5 MFA prompts denied = push-bombing / fatigue
-| where datetime_diff('minute', LastDenial, FirstDenial) <= PushWindowMin;
-AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ErrorCode == 0                                // successful sign-in
-| join kind=inner Fatigue on AccountUpn
-| where Timestamp between (LastDenial .. LastDenial + SuccessWindow)
-| project SuccessTime = Timestamp, AccountUpn, DenialCount, FirstDenial, LastDenial, IPAddress, Application, Country, City, UserAgent
-| order by SuccessTime desc
-```
-
-### Scattered Spider help-desk MFA/security-info reset then sign-in from a different IP
-
-`UC_103_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` min(_time) as ChangeTime from datamodel=Change.All_Changes where (Change.action=modified OR Change.command IN ("User registered security info","Admin registered security info","Reset user's password","Reset password (by admin)")) by Change.user Change.command | `drop_dm_object_name(Change)` | rename user as TargetUser | join type=inner TargetUser [| tstats `summariesonly` min(_time) as SignInTime values(Authentication.src) as SignInIPs from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as TargetUser] | where SignInTime>=ChangeTime AND SignInTime<=ChangeTime+21600 | table ChangeTime command TargetUser SignInTime SignInIPs
+| where Application == "Microsoft Teams"
+| where ActionType in ("MemberAdded","TeamsSessionStarted","MeetingParticipantDetail","MessagesListed","ChatCreated","MessageSent")
+| extend RawUpn = tostring(RawEventData.UserId)
+| where AccountType == "Guest" or RawUpn has "#EXT#" or AccountDisplayName has "#EXT#"
+| project Timestamp, ActionType, AccountDisplayName, AccountId, AccountType, RawUpn, IPAddress, CountryCode, City, ObjectName
+| order by Timestamp desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs

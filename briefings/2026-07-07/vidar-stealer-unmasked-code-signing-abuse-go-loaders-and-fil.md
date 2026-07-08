@@ -49,8 +49,13 @@ Execut…
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1496** — Resource Hijacking
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1027.001** — Obfuscated Files or Information: Binary Padding
+- **T1497** — Virtualization/Sandbox Evasion
+- **T1189** — Drive-by Compromise
+- **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
 
@@ -58,68 +63,89 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Fake Windows Defender MpClient.dll search-order hijack (Vidar Factory-v3 Cluster B)
+### Fake Windows Defender MpClient.dll side-loaded from non-Defender path (Vidar/Factory-v3 Cluster B)
 
 `UC_3_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="mpclient.dll" NOT Filesystem.file_path="*\\Windows Defender*" NOT Filesystem.file_path="*\\Windows Defender\\Platform*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="MpClient.dll" AND NOT (Filesystem.file_path="*\\Program Files\\Windows Defender\\*" OR Filesystem.file_path="*\\Program Files (x86)\\Windows Defender\\*" OR Filesystem.file_path="*\\ProgramData\\Microsoft\\Windows Defender\\Platform\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceImageLoadEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "mpclient.dll"
-| where FolderPath !startswith @"C:\Program Files\Windows Defender"
-| where FolderPath !startswith @"C:\Program Files (x86)\Windows Defender"
-| where FolderPath !has @"\Windows Defender\Platform\"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| where FileName =~ "MpClient.dll"
+| where FolderPath !startswith @"C:\Program Files\Windows Defender\"
+| where FolderPath !startswith @"C:\Program Files (x86)\Windows Defender\"
+| where FolderPath !startswith @"C:\ProgramData\Microsoft\Windows Defender\Platform\"
+| project Timestamp, DeviceName, ImageLoadedPath = FolderPath, SHA256,
+          Loader = InitiatingProcessFileName, LoaderPath = InitiatingProcessFolderPath,
+          LoaderCmd = InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### XMRig Monero mining to pool.supportxmr.com / 136.243.203.109 (Vidar drop)
+### XMRig Monero mining to supportxmr pool / 136.243.203.109 (Vidar loader crypto-hijack)
 
 `UC_3_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="136.243.203.109" OR All_Traffic.dest_host="pool.supportxmr.com" OR All_Traffic.dest_host="*.supportxmr.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="136.243.203.109" OR All_Traffic.dest="*supportxmr.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "supportxmr.com" or RemoteIP == "136.243.203.109"
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256
+| where RemoteIP == "136.243.203.109" or RemoteUrl has "supportxmr.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          Process = InitiatingProcessFileName, ProcessPath = InitiatingProcessFolderPath,
+          ProcessCmd = InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### Oversized (>100 MB) PE dropped in user path - null-byte file inflation (Vidar loader)
+### File-size-inflated Go loader EXE (>300MB null-padded) dropped to disk (Vidar Cluster A/C)
 
 `UC_3_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.exe" OR Filesystem.file_name="*.dll") Filesystem.file_size>104857600 (Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\AppData\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_size Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - file_size
+| tstats `summariesonly` count values(Filesystem.file_size) as file_size min(_time) as firstTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.exe" Filesystem.file_size>300000000 by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType == "FileCreated"
-| where FileName endswith ".exe" or FileName endswith ".dll"
-| where FileSize > 104857600   // 100 MB; article loaders reached 491 MB, real content only ~2.3 MB
-| where FolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\")
-| project Timestamp, DeviceName, FileName, FolderPath, FileSize, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where ActionType in ("FileCreated","FileModified")
+| where FileName endswith ".exe"
+| where FileSize > 300000000   // real payload ~2.3MB; ~489MB null padding pushes total to 491MB
+| project Timestamp, DeviceName, FileName, FolderPath, FileSizeMB = FileSize/1024/1024,
+          SHA256, FileOriginUrl, DroppedBy = InitiatingProcessFileName,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by FileSize desc
+```
+
+### Password-protected .bin archive from browser masquerading as cracked software (Vidar malvertising delivery)
+
+`UC_3_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.bin" (Filesystem.process_name="chrome.exe" OR Filesystem.process_name="msedge.exe" OR Filesystem.process_name="firefox.exe" OR Filesystem.process_name="brave.exe" OR Filesystem.process_name="opera.exe") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName endswith ".bin"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath,
+          FileOriginUrl, FileOriginReferrerUrl, Browser = InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -469,4 +495,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

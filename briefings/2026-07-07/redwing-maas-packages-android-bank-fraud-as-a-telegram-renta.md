@@ -33,11 +33,10 @@ Zimperium's zLabs , which found the operation, says it looks like a new variant 
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1660** — Phishing (Mobile)
-- **T1655** — Masquerading (Mobile)
-- **T1407** — Download New Code at Runtime
 - **T1437.001** — Application Layer Protocol: Web Protocols
-- **T1521** — Encrypted Channel (Mobile)
+- **T1481** — Web Service
+- **T1660** — Phishing
+- **T1655** — Masquerading
 
 ## Kill chain phases observed
 
@@ -45,40 +44,41 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### RedWing Android MaaS: fake-store APK delivery infrastructure contact
+### RedWing Android banking trojan C2 beaconing to named panel domains
 
-`UC_8_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_8_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*manyrei.live/Proton_VPN.apk","*manyrei.live*","*wmanyrei.icu*","*yandex-disk.net*","*offservers.ru*") OR Web.dest IN ("manyrei.live","wmanyrei.icu","yandex-disk.net","offservers.ru")) by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("redwing.top","redwingqq.top","krusty-crabs.sbs","api-sync-service.mdkd1184.workers.dev","*.redwing.top","*.redwingqq.top")) by DNS.src, DNS.query, DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+let C2Hosts = dynamic(["redwing.top","redwingqq.top","krusty-crabs.sbs","api-sync-service.mdkd1184.workers.dev"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any ("manyrei.live/Proton_VPN.apk","manyrei.live","wmanyrei.icu","yandex-disk.net","offservers.ru")
-| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| where RemoteUrl has_any (C2Hosts)
+| project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### RedWing Android banking trojan C2 beacon (krusty-crabs.sbs / redwing.top / workers.dev)
+### RedWing dropper delivery: fake ProtonVPN APK and app-store-lookalike download hosts
 
-`UC_8_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("*krusty-crabs.sbs","*redwing.top","*redwingqq.top","*api-sync-service.mdkd1184.workers.dev") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*manyrei.live*","*wmanyrei.icu*","*yandex-disk.net*","*offservers.ru*","*Proton_VPN.apk*") OR Web.dest IN ("manyrei.live","wmanyrei.icu","yandex-disk.net","offservers.ru")) by Web.src, Web.dest, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let c2 = dynamic(["krusty-crabs.sbs","redwing.top","redwingqq.top","api-sync-service.mdkd1184.workers.dev"]);
+let DropHosts = dynamic(["manyrei.live","wmanyrei.icu","yandex-disk.net","offservers.ru"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any (c2)
-| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| where RemoteUrl has_any (DropHosts) or RemoteUrl has "Proton_VPN.apk"
+| project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -399,4 +399,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
