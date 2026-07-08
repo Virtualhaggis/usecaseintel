@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### ReDoS in ms time-parser: oversized web request body with multi-second server processing time
 
-`UC_3521_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3522_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

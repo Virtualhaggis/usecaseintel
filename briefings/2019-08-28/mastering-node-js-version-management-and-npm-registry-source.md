@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Mastering Node.js version management and npm registry sources like a pro
 
-`UC_3458_0` · phase: **exploit** · confidence: **High**
+`UC_3459_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -14,18 +14,9 @@ CVE-2026-50746 (CVSS score: 10.0) - An improper access control vulnerability…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-50746`
-- **CVE:** `CVE-2026-50747`
-- **CVE:** `CVE-2026-50748`
-- **CVE:** `CVE-2026-54400`
-- **CVE:** `CVE-2026-55115`
-- **CVE:** `CVE-2026-54402`
-- **CVE:** `CVE-2026-55116`
 - **CVE:** `CVE-2026-34908`
 - **CVE:** `CVE-2026-34909`
 - **CVE:** `CVE-2026-34910`
-- **CVE:** `CVE-2026-55200`
-- **CVE:** `CVE-2026-46817`
 
 ## MITRE ATT&CK Techniques
 
@@ -188,7 +179,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-50746`, `CVE-2026-50747`, `CVE-2026-50748`, `CVE-2026-54400`, `CVE-2026-55115`, `CVE-2026-54402`, `CVE-2026-55116`, `CVE-2026-34908` _(+4 more)_
+  - CVE(s): `CVE-2026-34908`, `CVE-2026-34909`, `CVE-2026-34910`
 
 
 ## Why this matters

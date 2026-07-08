@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow flow-ID enumeration chained to /api/v1/responses IDOR (CVE-2026-55255)
 
-`UC_9_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_13_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow unauth RCE payload POST to /api/v1/build_public_tmp (CVE-2026-33017)
 
-`UC_9_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_13_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow host runs curl/wget piped to sh fetching /slt loader (45.207.216.55)
 
-`UC_9_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_13_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Langflow host beacons to JadePuffer/CVE-2026-55255 C2 (45.207.216.55:8084)
 
-`UC_9_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_13_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### Langflow exploitation marker file /tmp/lang_pwn created
 
-`UC_9_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_13_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

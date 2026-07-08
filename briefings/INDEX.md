@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2566 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2567 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,12 +10,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-08
 - [15 year old ghostlock flaw enables root and container escape](./2026-07-08/15-year-old-ghostlock-flaw-enables-root-and-container-escape.md)
+- [ai coding agents found triggering endpoint security rules bu](./2026-07-08/ai-coding-agents-found-triggering-endpoint-security-rules-bu.md)
 - [china linked uat 7810 expands orb network with new longleash](./2026-07-08/china-linked-uat-7810-expands-orb-network-with-new-longleash.md)
 - [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
 - [cisa orders feds to prioritize patching langflow auth bypass](./2026-07-08/cisa-orders-feds-to-prioritize-patching-langflow-auth-bypass.md)
+- [entra passkey enrollment vishing targets microsoft 365 users](./2026-07-08/entra-passkey-enrollment-vishing-targets-microsoft-365-users.md)
 - [github copilot refuses harmful requests in chat then writes ](./2026-07-08/github-copilot-refuses-harmful-requests-in-chat-then-writes-.md)
 - [github verified commits can be rewritten into new hashes wit](./2026-07-08/github-verified-commits-can-be-rewritten-into-new-hashes-wit.md)
 - [new ghost phishing wave is breaking traditional email securi](./2026-07-08/new-ghost-phishing-wave-is-breaking-traditional-email-securi.md)
+- [new hallusquatting attack could trick ai coding assistants i](./2026-07-08/new-hallusquatting-attack-could-trick-ai-coding-assistants-i.md)
+- [protecting microsoft at ai speed how sfi proactively hardens](./2026-07-08/protecting-microsoft-at-ai-speed-how-sfi-proactively-hardens.md)
 - [scmbanker malware uses clickfix lures to target mexican bank](./2026-07-08/scmbanker-malware-uses-clickfix-lures-to-target-mexican-bank.md)
 - [the verification step is the new ato battleground in 2026](./2026-07-08/the-verification-step-is-the-new-ato-battleground-in-2026.md)
 - [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
@@ -111,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-01
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-07-01/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
-- [19 year old scattered spider suspect extradited to face u s ](./2026-07-01/19-year-old-scattered-spider-suspect-extradited-to-face-u-s-.md)
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [cisa kev cve 2026 45659 microsoft sharepoint server deserial](./2026-07-01/cisa-kev-cve-2026-45659-microsoft-sharepoint-server-deserial.md)
 - [codfish semantic release action github action has been compr](./2026-07-01/codfish-semantic-release-action-github-action-has-been-compr.md)
@@ -126,7 +129,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [openclaw risks for the users and how to mitigate them](./2026-07-01/openclaw-risks-for-the-users-and-how-to-mitigate-them.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
-- [seo poisoned software sites abuse screenconnect to deploy as](./2026-07-01/seo-poisoned-software-sites-abuse-screenconnect-to-deploy-as.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)
 - [the soc files screenconnect masked as freeware an inside loo](./2026-07-01/the-soc-files-screenconnect-masked-as-freeware-an-inside-loo.md)
 - [unpatched argo cd repo server flaw could let attackers take ](./2026-07-01/unpatched-argo-cd-repo-server-flaw-could-let-attackers-take-.md)
@@ -182,7 +184,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [photo zip campaign targeting hospitality industry delivers n](./2026-06-25/photo-zip-campaign-targeting-hospitality-industry-delivers-n.md)
 
 ## 2026-06-24
-- [cnapp evolution how microsoft aligns with leading cloud risk](./2026-06-24/cnapp-evolution-how-microsoft-aligns-with-leading-cloud-risk.md)
 - [compromised github action codfish semantic release action st](./2026-06-24/compromised-github-action-codfish-semantic-release-action-st.md)
 - [eset takes part in operation endgame to disrupt amadey and s](./2026-06-24/eset-takes-part-in-operation-endgame-to-disrupt-amadey-and-s.md)
 - [ghsa critical cve 2026 45051 openam pre auth rce via java de](./2026-06-24/ghsa-critical-cve-2026-45051-openam-pre-auth-rce-via-java-de.md)

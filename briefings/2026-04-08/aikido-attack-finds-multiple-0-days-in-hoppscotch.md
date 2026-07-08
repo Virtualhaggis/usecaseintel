@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Hoppscotch device-login open redirect token theft via localhost.* / sslip.io bypass
 
-`UC_469_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_470_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceNetworkEvents
 
 ### Hoppscotch Mock Server stored XSS via GraphQL updateRESTUserRequest content-type override
 
-`UC_469_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_470_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### Hoppscotch cross-team request injection via moveRequest GraphQL with null nextRequestID
 
-`UC_469_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_470_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

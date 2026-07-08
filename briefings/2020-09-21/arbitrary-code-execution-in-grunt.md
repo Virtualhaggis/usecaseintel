@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Grunt < 1.3.0 exposed to YAML deserialization ACE (CVE-2020-7729)
 
-`UC_3271_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3272_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -42,7 +42,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Grunt task-runner (node.exe) spawning a command shell — possible js-yaml load() ACE
 
-`UC_3271_2` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_3272_2` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
