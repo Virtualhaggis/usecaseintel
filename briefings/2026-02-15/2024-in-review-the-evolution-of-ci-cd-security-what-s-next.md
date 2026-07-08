@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### XZ Utils (CVE-2024-3094) build-time backdoor extraction from disguised test corpus
 
-`UC_599_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_598_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### Ultralytics PyPI supply-chain XMRig coinminer execution from /tmp/ultralytics_runner
 
-`UC_599_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_598_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Ultralytics coinminer C2 — Stratum to connect.consrensys.com:8080 mining pool
 
-`UC_599_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_598_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

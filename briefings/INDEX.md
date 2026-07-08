@@ -8,6 +8,10 @@ _2565 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-08
+- [15 year old ghostlock flaw enables root and container escape](./2026-07-08/15-year-old-ghostlock-flaw-enables-root-and-container-escape.md)
+- [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
+
 ## 2026-07-07
 - [accenture confirms breach after hacker offers stolen data fo](./2026-07-07/accenture-confirms-breach-after-hacker-offers-stolen-data-fo.md)
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
@@ -49,7 +53,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55615 langroid neo4jchatagent execute](./2026-07-06/ghsa-critical-cve-2026-55615-langroid-neo4jchatagent-execute.md)
 - [ghsa critical ghsa vjc7 jrh9 9j86 9router has unauthenticate](./2026-07-06/ghsa-critical-ghsa-vjc7-jrh9-9j86-9router-has-unauthenticate.md)
 - [iran linked hackers use new cavern c2 framework to target is](./2026-07-06/iran-linked-hackers-use-new-cavern-c2-framework-to-target-is.md)
-- [max severity adobe coldfusion flaw now exploited in attacks](./2026-07-06/max-severity-adobe-coldfusion-flaw-now-exploited-in-attacks.md)
 - [new java based quimarat maas built to run on windows linux a](./2026-07-06/new-java-based-quimarat-maas-built-to-run-on-windows-linux-a.md)
 - [new trojpix attack leaks data from air gapped systems via vi](./2026-07-06/new-trojpix-attack-leaks-data-from-air-gapped-systems-via-vi.md)
 - [opera gx flaw let malicious sites auto install mods to steal](./2026-07-06/opera-gx-flaw-let-malicious-sites-auto-install-mods-to-steal.md)
@@ -120,7 +123,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [openclaw risks for the users and how to mitigate them](./2026-07-01/openclaw-risks-for-the-users-and-how-to-mitigate-them.md)
 - [ousaban banking trojan targets iberian bank users with fake ](./2026-07-01/ousaban-banking-trojan-targets-iberian-bank-users-with-fake-.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
-- [phantom squatting uses ai hallucinated domains for phishing ](./2026-07-01/phantom-squatting-uses-ai-hallucinated-domains-for-phishing-.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [seo poisoned software sites abuse screenconnect to deploy as](./2026-07-01/seo-poisoned-software-sites-abuse-screenconnect-to-deploy-as.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)

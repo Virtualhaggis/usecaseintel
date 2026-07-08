@@ -170,7 +170,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Build a software bill of materials (SBOM) for open source supply chain security
 
-`UC_2448_4` · phase: **exploit** · confidence: **High**
+`UC_2447_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

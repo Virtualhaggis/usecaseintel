@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Connection to PamStealer fake Maccy typosquat domains (maccyapp[.]com / .net)
 
-`UC_70_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_71_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### osascript / Script Editor making outbound internet connection (PamStealer JXA downloader)
 
-`UC_70_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_71_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### PamStealer encrypted exfiltration to avenger-sync[.]live
 
-`UC_70_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_71_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceNetworkEvents
 
 ### Finder or System Settings Mach-O executing from non-system path (PamStealer masquerade)
 
-`UC_70_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_71_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### Login-item persistence plist written by non-Apple process (PamStealer SMAppService/legacy)
 
-`UC_70_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_71_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

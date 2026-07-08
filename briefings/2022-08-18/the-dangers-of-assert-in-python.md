@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — The dangers of assert in Python
 
-`UC_2033_0` · phase: **exploit** · confidence: **High**
+`UC_2032_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

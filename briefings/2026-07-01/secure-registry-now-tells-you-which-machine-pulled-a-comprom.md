@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious easy-day-js npm typosquat pulled into node_modules (Mastra supply-chain compromise)
 
-`UC_104_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_105_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### easy-day-js second-stage RAT C2 beacon to 23.254.164.92 / 23.254.164.123
 
-`UC_104_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_105_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### easy-day-js dropper temp artifacts (.pkg_history / .pkg_logs) written by node
 
-`UC_104_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

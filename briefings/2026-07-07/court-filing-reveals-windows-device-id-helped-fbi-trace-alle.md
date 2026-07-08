@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### ngrok / Teleport tunneling service resolution & egress (Scattered Spider C2)
 
-`UC_14_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_16_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### ngrok / Teleport tunneling binary execution
 
-`UC_14_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_16_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Inbound extortion email matching campaign subject string
 
-`UC_14_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_16_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ EmailEvents
 
 ### Authentication & network activity from court-filing operator proxy IPs
 
-`UC_14_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_16_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Process memory read via /proc/<pid>/mem targeting GitHub Actions Runner.Worker (TeamPCP Trivy stealer)
 
-`UC_73_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_74_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Exfiltration to TeamPCP typosquat C2 scan.aquasecurtiy.org / stealer IPs from CI runner
 
-`UC_73_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_74_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### Org-wide DNS lookups to TeamPCP campaign domains (Trivy / Checkmarx KICS / LiteLLM)
 
-`UC_73_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_74_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### GitHub-native fallback exfil: creation of public 'tpcp-docs' repo by TeamPCP stealer
 
-`UC_73_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_74_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
