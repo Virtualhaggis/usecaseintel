@@ -11,20 +11,16 @@ By Bill Toulas
 July 8, 2026
 12:47 PM
 0 
-
-
 A threat actor has been targeting organizations across multiple sectors with voice-based fake security requests that ask Microsoft 365 users to enroll a new Entra passkey.
-
-
 The attacker is taking advantage of a new capability Microsoft opened to administrators in May, allowing them to run “passkey registration campaigns” to entice users to enrol passkeys for more secure authentication.
-…
+The campa…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `passkeydeploy.com`
 - **Domain (defanged):** `passkeyadd.com`
-- **Domain (defanged):** `assignpasskey.com`
 - **Domain (defanged):** `deploypasskey.com`
+- **Domain (defanged):** `assignpasskey.com`
 - **Domain (defanged):** `setpasskey.com`
 
 ## MITRE ATT&CK Techniques
@@ -52,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Pink (O-UNC-066) Entra passkey vishing — connection to passkey-themed phishing domains
 
-`UC_2_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +68,7 @@ DeviceNetworkEvents
 
 ### Attacker-controlled Entra passkey (FIDO2) registration after off-pattern sign-in
 
-`UC_2_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +87,7 @@ CloudAppEvents
 
 ### Pink post-compromise SharePoint/OneDrive bulk download (data extortion staging)
 
-`UC_2_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -262,7 +258,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `passkeydeploy.com`, `passkeyadd.com`, `assignpasskey.com`, `deploypasskey.com`, `setpasskey.com`
+  - IP / domain IOC(s): `passkeydeploy.com`, `passkeyadd.com`, `deploypasskey.com`, `assignpasskey.com`, `setpasskey.com`
 
 
 ## Why this matters

@@ -77,7 +77,7 @@ _(none detected from narrative keywords)_
 
 ### EvilTokens Microsoft device-code phishing: successful deviceCode auth flow sign-in
 
-`UC_6_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_7_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ AADSignInEventsBeta
 
 ### EvilTokens ghost-phishing infrastructure: connection to named campaign domains
 
-`UC_6_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceNetworkEvents
 
 ### EvilTokens kit backend: web request to /api/device/start or /api/device/status endpoint
 
-`UC_6_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
