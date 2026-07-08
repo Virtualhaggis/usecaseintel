@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2566 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2565 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -238,7 +238,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa p75f 6fp4 p57w praisonai missing authenti](./2026-06-18/ghsa-critical-ghsa-p75f-6fp4-p57w-praisonai-missing-authenti.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
 - [ghsa critical ghsa vmmj pfw7 fjwp npm praisonai codemode san](./2026-06-18/ghsa-critical-ghsa-vmmj-pfw7-fjwp-npm-praisonai-codemode-san.md)
-- [ghsa critical ghsa x8cv xmq7 p8xp praisonai agentteam launch](./2026-06-18/ghsa-critical-ghsa-x8cv-xmq7-p8xp-praisonai-agentteam-launch.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)

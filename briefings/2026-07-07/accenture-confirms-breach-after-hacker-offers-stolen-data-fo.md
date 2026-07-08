@@ -11,15 +11,9 @@ By Lawrence Abrams
 July 7, 2026
 06:06 PM
 0 
-
-
 IT services giant Accenture has confirmed it suffered a security breach after a threat actor claimed to have stolen 35 GB of source code and other data from the company.
-
-
 "We are aware of this isolated matter, and we have remediated its source. There is no impact to Accenture operations and service delivery," Accenture told BleepingComputer.
-
-
-Accenture is a global profession…
+Accenture is a global professional services …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -32,12 +26,68 @@ Accenture is a global profession…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1528** — Steal Application Access Token
+- **T1580** — Cloud Infrastructure Discovery
+- **T1213.003** — Data from Information Repositories: Code Repositories
+- **T1213** — Data from Information Repositories
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Anomalous Azure Storage account key listing (listKeys) by first-seen caller
+
+`UC_1_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as key_list_ops, values(All_Changes.object) as storage_accounts, values(All_Changes.src) as src_ips, min(_time) as firstSeen from datamodel=Change.All_Changes where All_Changes.command="Microsoft.Storage/storageAccounts/listKeys/action" All_Changes.status IN ("success","Succeeded") by All_Changes.user _time span=1d | `drop_dm_object_name(All_Changes)` | where key_list_ops >= 3 | sort - key_list_ops
+```
+
+### Bulk Azure DevOps repository clone/download by a single identity
+
+`UC_1_4` · phase: **actions** · confidence: **Low** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(1d)
+| where Application has "DevOps"
+| where ActionType has_any ("Clone","Download","Git","Repository","Export")
+| summarize Actions = count(), DistinctRepos = dcount(ObjectName), ActionTypes = make_set(ActionType, 20), SourceIPs = make_set(IPAddress, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountDisplayName, AccountObjectId
+| where DistinctRepos >= 5 or Actions >= 50     // 5 repos / 50 ops = bulk staging, well above interactive dev browsing
+| order by Actions desc
+```
+
+### First-seen network origin authenticating to Azure DevOps resource
+
+`UC_1_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as auths, values(Authentication.src) as src_ips, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Authentication.Authentication where Authentication.action=success Authentication.app="Azure DevOps" by Authentication.user, Authentication.src | `drop_dm_object_name(Authentication)` | sort - firstSeen
+```
+
+**Defender KQL:**
+```kql
+let lookback = 14d;
+let recent = 1d;
+let Baseline = AADSignInEventsBeta
+| where Timestamp between (ago(lookback) .. ago(recent))
+| where ResourceDisplayName has "DevOps"
+| summarize by AccountUpn, Country;
+AADSignInEventsBeta
+| where Timestamp > ago(recent)
+| where ResourceDisplayName has "DevOps"
+| where ErrorCode == 0
+| join kind=leftanti Baseline on AccountUpn, Country
+| project Timestamp, AccountUpn, IPAddress, Country, City, Application, ResourceDisplayName, ClientAppUsed, IsAnonymousProxy
+| order by Timestamp desc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -126,4 +176,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -24,9 +24,15 @@ GitHub's new public monitoring finds your enterprise's leaked secre…
 
 - **T1190** — Exploit Public-Facing Application
 - **T1071** — Application Layer Protocol
-- **T1567** — Exfiltration Over Web Service
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1543** — Create or Modify System Process
+- **T1102** — Web Service
+- **T1485** — Data Destruction
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1567.001** — Exfiltration Over Web Service: Exfiltration to Code Repository
 
 ## Kill chain phases observed
 
@@ -34,41 +40,144 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### GhostAction CI/CD secret exfiltration egress to attacker infrastructure
+### Sha1-Hulud 2.0 npm worm payload files (setup_bun.js / bun_environment.js) written or executed
 
-`UC_1_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="45.139.104.115" OR All_Traffic.dest_ip="216.126.225.129" OR All_Traffic.dest="bold-dhawan.45-139-104-115.plesk.page" OR All_Traffic.dest="objective-hopper.45-139-104-115.plesk.page" OR All_Traffic.dest="carte-avantage.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("setup_bun.js","bun_environment.js") OR Filesystem.file_hash IN ("a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_id
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("45.139.104.115","216.126.225.129")
-    or RemoteUrl has_any ("bold-dhawan.45-139-104-115.plesk.page","objective-hopper.45-139-104-115.plesk.page","carte-avantage.com")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, ActionType
+| where FileName in~ ("setup_bun.js","bun_environment.js")
+   or SHA256 in~ ("a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### GhostAction exfil-domain DNS resolution (blocked-egress early warning)
+### Cloud IMDS credential harvesting by node/npm/bun during package install (Sha1-Hulud/Megalodon)
 
-`UC_1_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_2_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="bold-dhawan.45-139-104-115.plesk.page" OR DNS.query="objective-hopper.45-139-104-115.plesk.page" OR DNS.query="carte-avantage.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest="169.254.169.254" AND All_Traffic.app IN ("node.exe","node","npm","npm.cmd","bun","bun.exe","yarn","pnpm") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user
+| `drop_dm_object_name(All_Traffic)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where ActionType == "DnsQueryResponse"
-| where RemoteUrl has_any ("bold-dhawan.45-139-104-115.plesk.page","objective-hopper.45-139-104-115.plesk.page","carte-avantage.com")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
+| where RemoteIP == "169.254.169.254" or RemoteUrl has "metadata.google.internal"
+| where InitiatingProcessFileName in~ ("node.exe","node","npm","npm.cmd","bun","bun.exe","yarn","pnpm")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### TruffleHog secret scanner spawned from an npm/bun package-install context (Sha1-Hulud)
+
+`UC_2_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog*" OR Processes.process="*trufflehog*") AND Processes.parent_process_name IN ("node.exe","node","bun","bun.exe","npm","npm.cmd","yarn","pnpm","sh","bash") by Processes.dest Processes.user Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName has "trufflehog" or ProcessCommandLine has "trufflehog"
+| where InitiatingProcessFileName in~ ("node.exe","node","bun","bun.exe","npm","npm.cmd","yarn","pnpm","sh","bash")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Malicious 'SHA1HULUD' self-hosted GitHub Actions runner installation / persistence
+
+`UC_2_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*SHA1HULUD*" OR Processes.process="*RUNNER_ALLOW_RUNASROOT*" OR Processes.process="*.dev-env*" OR Processes.process="*actions-runner-linux-x64-2.330.0*") by Processes.dest Processes.user Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("SHA1HULUD","RUNNER_ALLOW_RUNASROOT",".dev-env","actions-runner-linux-x64-2.330.0")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Sha1-Hulud destructive wiper fallback (cipher /W, recursive del, shred over home dir)
+
+`UC_2_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="cipher.exe" AND Processes.process="*/W:*") OR (Processes.process="*shred*" AND Processes.process="*-uvz*") OR (Processes.process="*del*" AND Processes.process="*/F*" AND Processes.process="*/Q*" AND Processes.process="*/S*" AND Processes.process="*USERPROFILE*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "cipher.exe" and ProcessCommandLine has "/W:")
+    or (ProcessCommandLine has "shred" and ProcessCommandLine has "-uvz")
+    or (ProcessCommandLine has_all ("del","/F","/Q","/S") and ProcessCommandLine has "USERPROFILE")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### CI/dev host exfiltrating to api.github.com shortly after cloud IMDS harvest (Sha1-Hulud exfil chain)
+
+`UC_2_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Network_Traffic where All_Traffic.app IN ("node.exe","node","bun","bun.exe","npm","yarn","pnpm","git","git.exe","curl","curl.exe") by All_Traffic.src All_Traffic.dest All_Traffic.app _time span=1s
+| `drop_dm_object_name(All_Traffic)`
+| eval isImds=if(dest=="169.254.169.254",1,0), isGh=if(match(dest,"(?i)github\.com"),1,0)
+| where isImds=1 OR isGh=1
+| stats min(eval(if(isImds=1,_time,null()))) as imdsTime max(eval(if(isGh=1,_time,null()))) as ghTime values(app) as apps by src
+| where isnotnull(imdsTime) AND isnotnull(ghTime) AND ghTime>=imdsTime AND (ghTime-imdsTime)<=1800
+| sort - ghTime
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 30d;
+let WindowMinutes = 30m;
+let Imds = DeviceNetworkEvents
+    | where Timestamp > ago(LookbackDays)
+    | where RemoteIP == "169.254.169.254" or RemoteUrl has "metadata.google.internal"
+    | where InitiatingProcessFileName in~ ("node.exe","node","bun","bun.exe","npm","yarn","pnpm")
+    | project ImdsTime = Timestamp, DeviceId, HarvestProc = InitiatingProcessFileName;
+DeviceNetworkEvents
+| where Timestamp > ago(LookbackDays)
+| where RemoteUrl has_any ("api.github.com","github.com")
+| where InitiatingProcessFileName in~ ("node.exe","node","bun","bun.exe","npm","yarn","pnpm","git","git.exe","curl","curl.exe")
+| join kind=inner Imds on DeviceId
+| where Timestamp between (ImdsTime .. ImdsTime + WindowMinutes)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, ImdsTime, HarvestProc, DelayMin = datetime_diff('minute', Timestamp, ImdsTime)
 | order by Timestamp desc
 ```
 
@@ -85,4 +194,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

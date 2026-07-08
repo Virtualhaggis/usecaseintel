@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### RedWing Android MaaS: fake-store APK delivery infrastructure contact
 
-`UC_7_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_8_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### RedWing Android banking trojan C2 beacon (krusty-crabs.sbs / redwing.top / workers.dev)
 
-`UC_7_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

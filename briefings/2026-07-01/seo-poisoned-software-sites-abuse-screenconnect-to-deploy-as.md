@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe ColdFusion 2023/2025 exposed to CVE-2026-48276 upload RCE chain
 
-`UC_110_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_111_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### ColdFusion server process spawning cmd/PowerShell/LOLBin (post-upload RCE)
 
-`UC_110_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_111_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### ColdFusion writing web-executable file (jspf/cfmail/war/jsp/cfm) to webroot — webshell drop
 
-`UC_110_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_111_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

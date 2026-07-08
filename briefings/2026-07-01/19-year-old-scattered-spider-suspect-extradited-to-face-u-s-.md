@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Scattered Spider MFA push-bombing (fatigue) followed by successful Entra ID sign-in
 
-`UC_102_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_103_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ AADSignInEventsBeta
 
 ### Scattered Spider help-desk MFA/security-info reset then sign-in from a different IP
 
-`UC_102_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_103_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

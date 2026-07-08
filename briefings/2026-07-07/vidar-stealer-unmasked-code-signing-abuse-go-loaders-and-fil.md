@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Fake Windows Defender MpClient.dll search-order hijack (Vidar Factory-v3 Cluster B)
 
-`UC_2_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceImageLoadEvents
 
 ### XMRig Monero mining to pool.supportxmr.com / 136.243.203.109 (Vidar drop)
 
-`UC_2_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### Oversized (>100 MB) PE dropped in user path - null-byte file inflation (Vidar loader)
 
-`UC_2_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -412,7 +412,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Vidar Stealer Unmasked: Code Signing Abuse, Go Loaders and File Inflation
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_3_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
