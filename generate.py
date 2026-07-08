@@ -13244,13 +13244,56 @@ if (window.__pendingView && window.__pendingView !== 'home') {
     'threat-actors': 'actors',
     'detection-library': 'library',
   };
+  // Library deep-link params — the static target/technique pages link in
+  // with #tab-library?target=<tag> (pre-filter the target pills),
+  // ?q=<text> (seed the search box) and ?uc=<matrix idx> (open the query
+  // drawer for one specific UC). Params were previously ignored, which
+  // made every "Open Detection Library" CTA land on the unfiltered view.
+  function applyLibParams(params){
+    if (!params) return;
+    var target = params.get('target'), q = params.get('q'), uc = params.get('uc');
+    if (!target && !q && uc === null) return;
+    try {
+      if (typeof renderLibrary === 'function') renderLibrary();
+      if (target) {
+        LIB_STATE.filters.targets = new Set([target]);
+        document.querySelectorAll('.lib-pill.lib-target').forEach(function(p){
+          p.classList.toggle('on', p.dataset.target === target);
+        });
+      }
+      if (q) {
+        LIB_STATE.filters.search = q.trim().toLowerCase();
+        var box = document.getElementById('libSearch');
+        if (box) box.value = q;
+      }
+      if (typeof _libRenderCards === 'function') _libRenderCards();
+      if (uc !== null && uc !== '') {
+        var idx = parseInt(uc, 10);
+        if (!isNaN(idx) && typeof _libPrepare === 'function') {
+          var p = _libPrepare().find(function(x){ return x._idx === idx; });
+          if (p && typeof openLibraryDrawer === 'function') openLibraryDrawer(p);
+          var card = document.querySelector('.lib-card[data-uc-idx="' + idx + '"]');
+          if (card) card.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+      }
+    } catch (err) { console.error('[tabHashRouter] lib params failed:', err); }
+  }
   function applyTabHash(){
-    var h = (location.hash || '').replace(/^#/, '').toLowerCase();
-    var m = h.match(/^tab-([a-z0-9-]+)/);
+    var raw = (location.hash || '').replace(/^#/, '');
+    var m = raw.toLowerCase().match(/^tab-([a-z0-9-]+)/);
     if (!m) return;
     var name = aliasMap[m[1]] || m[1];
     var btn = document.querySelector('.view-tab[data-view="' + name + '"]');
-    if (btn) showView(name);
+    if (!btn) return;
+    // Parse params from the RAW hash — lowercasing would corrupt ?q= text.
+    var qi = raw.indexOf('?');
+    var params = qi >= 0 ? new URLSearchParams(raw.slice(qi + 1)) : null;
+    // showView is async (library data may still be loading on a cold
+    // navigation from a static page) — apply params only once the view
+    // has actually rendered.
+    Promise.resolve(showView(name)).then(function(){
+      if (name === 'library') applyLibParams(params);
+    }).catch(function(err){ console.error('[tabHashRouter]', err); });
   }
   applyTabHash();
   window.addEventListener('hashchange', applyTabHash);
@@ -16569,6 +16612,11 @@ def build_matrix_data(articles_meta):
         art_records.append({
             "i": a_idx,
             "id": a["id"],
+            # Stable share slug — target/technique landing pages deep-link
+            # with #article-<sl> (the hash router's format). The positional
+            # art-NN id shifts every run, so it must never be used in a
+            # static page's href.
+            "sl": _art_slug(a),
             "title": a["title"][:140],
             "sev": a["sev"],
             "techs": art_techs,
@@ -18746,7 +18794,12 @@ def _render_target_page(tag: str, label: str, icon: str, blurb: str,
             src_label = {"internal": "Internal", "bespoke": "Bespoke", "escu": "ESCU"}.get(src, src.title())
             tier = u.get("tier", "")
             tier_html = f' · {html.escape(tier)}' if tier else ""
-            href = f"{base_url}/#uc-{u.get('i')}"
+            # Library-drawer deep link. The old '#uc-<matrix idx>' format
+            # never resolved — the hash router looks cards up by content
+            # slug (data-uc-slug), and ESCU records have no article card at
+            # all. '#tab-library?uc=<idx>' opens the Library and pops the
+            # query drawer for exactly this UC (tabHashRouter handles it).
+            href = f"{base_url}/#tab-library?uc={u.get('i')}"
             cards.append(
                 f'<a class="uc-card" href="{href}">'
                 f'  <span class="t">{html.escape(title)}</span>'
@@ -18783,7 +18836,11 @@ def _render_target_page(tag: str, label: str, icon: str, blurb: str,
         arts_for_target = arts_for_target[:60]
         rows = "".join(
             f'<div class="art-row">'
-            f'  <a class="at" href="{base_url}/#{html.escape(a.get("id",""))}">'
+            # #article-<slug> is the hash-router format (retries until the
+            # paginated card loads, then switches view + scrolls). The old
+            # bare '#art-NN' anchor pointed at a hidden/paginated element
+            # AND shifted position every run.
+            f'  <a class="at" href="{base_url}/#article-{html.escape(a.get("sl") or a.get("id",""))}">'
             f'    <span class="sev {a.get("sev","low")}">{html.escape(a.get("sev","low"))}</span>'
             f'    {html.escape(a.get("title",""))}'
             f'  </a>'
