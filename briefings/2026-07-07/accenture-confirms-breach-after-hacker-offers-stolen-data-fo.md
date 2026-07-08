@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Anomalous Azure Storage account key listing (listKeys) by first-seen caller
 
-`UC_4_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Bulk Azure DevOps repository clone/download by a single identity
 
-`UC_4_4` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_7_4` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -65,7 +65,7 @@ CloudAppEvents
 
 ### First-seen network origin authenticating to Azure DevOps resource
 
-`UC_4_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_7_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

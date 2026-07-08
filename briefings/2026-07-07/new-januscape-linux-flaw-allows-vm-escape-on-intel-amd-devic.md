@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Non-virtualization process accessing /dev/kvm on KVM host (Januscape CVE-2026-53359 LPE precursor)
 
-`UC_22_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_25_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### KVM/x86 hosts unpatched for Januscape CVE-2026-53359 and chained Dirty Frag CVEs
 
-`UC_22_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_25_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Article-specific behavioural hunt — New Januscape Linux flaw allows VM escape on Intel, AMD devices
 
-`UC_22_1` · phase: **install** · confidence: **High**
+`UC_25_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

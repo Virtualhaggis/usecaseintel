@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### BeepRAT (DCRat variant) delivered as HFY.exe telephone-management .NET app from archive
 
-`UC_88_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_89_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### BeepRAT scheduled-task persistence created by HFY.exe loader
 
-`UC_88_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_89_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### BeepRAT DoH-based C2 resolution and api.service.bio beacon
 
-`UC_88_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_89_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceNetworkEvents
 
 ### INTERPOL law-enforcement lure delivering ransomware via Proton Drive archive
 
-`UC_88_19` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_89_19` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ EmailEvents
 
 ### Platform-aware phishing: Ninite Loader delivering ConnectWise/Itarian RAT on Windows
 
-`UC_88_20` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_89_20` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -636,7 +636,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: AI Compute Hijacking, Apple Email Flaw, BlueHammer Ransomware + 14 S
 
-`UC_88_15` · phase: **exploit** · confidence: **High**
+`UC_89_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

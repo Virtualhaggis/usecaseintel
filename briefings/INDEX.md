@@ -10,7 +10,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-08
 - [15 year old ghostlock flaw enables root and container escape](./2026-07-08/15-year-old-ghostlock-flaw-enables-root-and-container-escape.md)
+- [china linked uat 7810 expands orb network with new longleash](./2026-07-08/china-linked-uat-7810-expands-orb-network-with-new-longleash.md)
 - [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
+- [cisa orders feds to prioritize patching langflow auth bypass](./2026-07-08/cisa-orders-feds-to-prioritize-patching-langflow-auth-bypass.md)
 - [ubiquiti warns of new max severity unifi os vulnerability](./2026-07-08/ubiquiti-warns-of-new-max-severity-unifi-os-vulnerability.md)
 
 ## 2026-07-07
@@ -44,7 +46,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-06
 - [16 year old linux kvm flaw lets guest vms escape to host on ](./2026-07-06/16-year-old-linux-kvm-flaw-lets-guest-vms-escape-to-host-on-.md)
 - [5 insights from frost sullivan s 2025 frost radar for cloud ](./2026-07-06/5-insights-from-frost-sullivan-s-2025-frost-radar-for-cloud-.md)
-- [fake it support calls on microsoft teams push etherrat malwa](./2026-07-06/fake-it-support-calls-on-microsoft-teams-push-etherrat-malwa.md)
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
 - [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)
 - [ghsa critical cve 2026 53486 decompress archive extraction c](./2026-07-06/ghsa-critical-cve-2026-53486-decompress-archive-extraction-c.md)
@@ -106,7 +107,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-01
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-07-01/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [19 year old scattered spider suspect extradited to face u s ](./2026-07-01/19-year-old-scattered-spider-suspect-extradited-to-face-u-s-.md)
-- [2026 cybersecurity assessment the gap between awareness and ](./2026-07-01/2026-cybersecurity-assessment-the-gap-between-awareness-and-.md)
 - [ai generated browser ransomware abuses chromium api on windo](./2026-07-01/ai-generated-browser-ransomware-abuses-chromium-api-on-windo.md)
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [cisa kev cve 2026 45659 microsoft sharepoint server deserial](./2026-07-01/cisa-kev-cve-2026-45659-microsoft-sharepoint-server-deserial.md)

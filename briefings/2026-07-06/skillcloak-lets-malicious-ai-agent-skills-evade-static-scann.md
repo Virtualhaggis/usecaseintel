@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### AI coding-agent detonates payload from scanner-skipped .git/ directory (SkillCloak SFS packing)
 
-`UC_58_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_59_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### Poisoned-repo runtime payload fetch via DNS TXT record by AI coding agent (0DIN axiom chain)
 
-`UC_58_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_59_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### AI coding agent spawns reverse shell referencing cloud/AI secret env vars
 
-`UC_58_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_59_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

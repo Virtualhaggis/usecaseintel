@@ -39,27 +39,30 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### GhostLock/IonStack Linux kernel LPE exposure hunt (CVE-2026-43499 + cousins) on shared hosts
+### GhostLock (CVE-2026-43499) & kernel-LPE cousins — unpatched Linux host exposure hunt
 
-`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2026-43499","CVE-2026-46242","CVE-2026-31431","CVE-2026-53166")) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - severity lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity values(Vulnerabilities.category) as category from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-43499","CVE-2026-46242","CVE-2026-31431","CVE-2026-53166") by Vulnerabilities.dest Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let TargetCves = dynamic(["CVE-2026-43499","CVE-2026-46242","CVE-2026-31431","CVE-2026-53166"]);
 DeviceTvmSoftwareVulnerabilities
-| where CveId in (TargetCves)
-| summarize Cves = make_set(CveId), VulnSoftware = make_set(strcat(SoftwareName, "/", SoftwareVersion)), FixAvailable = any(RecommendedSecurityUpdate), LastSeen = max(Timestamp) by DeviceId, DeviceName, OSPlatform, OSVersion
+| where Timestamp > ago(1d)
+| where CveId in~ ("CVE-2026-43499","CVE-2026-46242","CVE-2026-31431","CVE-2026-53166")
+| where OSPlatform startswith "Linux"
+| summarize arg_max(Timestamp, *) by DeviceId, CveId
 | join kind=leftouter (
     DeviceInfo
-    | summarize arg_max(Timestamp, IsInternetFacing, DeviceType, PublicIP, LoggedOnUsers) by DeviceId
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, IsInternetFacing, OSDistribution, LoggedOnUsers
   ) on DeviceId
-| project LastSeen, DeviceName, OSPlatform, OSVersion, Cves, VulnSoftware, FixAvailable, IsInternetFacing, DeviceType, PublicIP, LoggedOnUsers
-| sort by IsInternetFacing desc, LastSeen desc
+| project Timestamp, DeviceName, DeviceId, CveId, SoftwareName, SoftwareVersion, OSVersion, OSDistribution, IsInternetFacing, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by IsInternetFacing desc, CveId asc
 ```
 
 ### Suspicious browser extension installation

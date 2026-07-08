@@ -30,14 +30,14 @@ Synacktiv , which found the bug, says it can lead to a full cluster takeover. Th
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1552.007** — Unsecured Credentials: Container API
-- **T1555.001** — Credentials from Password Stores: Keychain
+- **T1210** — Exploitation of Remote Services
+- **T1565.001** — Data Manipulation: Stored Data Manipulation
 - **T1610** — Deploy Container
-- **T1072** — Software Deployment Tools
+- **T1611** — Escape to Host
 - **T1098** — Account Manipulation
 - **T1548** — Abuse Elevation Control Mechanism
-- **T1525** — Implant Internal Image
-- **T1562.007** — Impair Defenses: Disable or Modify Cloud Firewall
+- **T1552.007** — Unsecured Credentials: Container API
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 
 ## Kill chain phases observed
 
@@ -45,88 +45,87 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Argo CD repo-server spawns shell/network tool or abuses kustomize --helm-command
+### Argo CD repo-server / kustomize spawning shell or network utility (unauth GenerateManifest RCE)
 
-`UC_103_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("argocd-repo-server","kustomize","helm") AND Processes.process_name IN ("sh","bash","dash","curl","wget","nc","ncat","python","python3","perl","ruby","socat")) OR (Processes.parent_process_name IN ("argocd-repo-server","kustomize") AND Processes.process="*--helm-command*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("argocd-repo-server","kustomize","helm","git") AND Processes.process_name IN ("bash","sh","dash","zsh","curl","wget","nc","ncat","socat","python","python3","perl")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process
 | `drop_dm_object_name(Processes)`
-| where NOT match(process, "(?i)--helm-command\s+\S*helm($|\s)")
 | convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("argocd-repo-server","kustomize","helm")
-| where (FileName in~ ("sh","bash","dash","curl","wget","nc","ncat","python","python3","perl","ruby","socat")) or (ProcessCommandLine has "--helm-command")
-| where not(ProcessCommandLine has "--helm-command" and ProcessCommandLine matches regex @"(?i)--helm-command\s+\S*helm($|\s)")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildImage=FolderPath, ChildCmd=ProcessCommandLine, SHA256
+| where InitiatingProcessFileName in~ ("argocd-repo-server","kustomize","helm","git")
+| where FileName in~ ("bash","sh","dash","zsh","curl","wget","nc","ncat","socat","python","python3","perl")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Unexpected read of Argo CD namespace secrets by non-Argo-CD principal
+### Non-Argo-CD process connecting to Argo CD Redis on 6379 (cache-poisoning path, CVE-2024-31989 revival)
 
-`UC_103_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb IN ("get","list","watch") "objectRef.resource"=secrets "objectRef.namespace"=argocd
-| search NOT "user.username"="system:serviceaccount:argocd:*" NOT "user.username"="system:node:*" NOT "user.username"="system:apiserver"
-| stats count min(_time) as firstTime max(_time) as lastTime values("objectRef.name") as secrets values(sourceIPs{}) as srcIPs by "user.username" userAgent
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=6379 AND NOT All_Traffic.app IN ("argocd-repo-server","argocd-application-controller","argocd-server","argocd-applicationset-controller","redis","redis-server") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
 | convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
-### Argo CD application-controller deploys privileged / host-namespace workload
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 6379
+| where isnotempty(InitiatingProcessFileName)
+| where InitiatingProcessFileName !in~ ("argocd-repo-server","argocd-application-controller","argocd-server","argocd-applicationset-controller","redis-server","redis")
+| summarize Count=count(), FirstSeen=min(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort
+| order by FirstSeen desc
+```
 
-`UC_103_8` · phase: **install** · confidence: **High** · AI-generated for this article
+### Privileged / host-namespace workload created by Argo CD service account
+
+`UC_104_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb IN ("create","update","patch") "user.username"="system:serviceaccount:argocd:*" "objectRef.resource" IN ("pods","deployments","daemonsets","statefulsets","replicasets")
-| search _raw="*\"privileged\":true*" OR _raw="*\"hostPID\":true*" OR _raw="*\"hostNetwork\":true*" OR _raw="*docker.sock*"
-| table _time "user.username" verb "objectRef.resource" "objectRef.name" "objectRef.namespace"
-```
-
-### Argo CD-linked RBAC privilege escalation (cluster-admin binding)
-
-`UC_103_9` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb IN ("create","update","patch") "objectRef.resource" IN ("clusterrolebindings","rolebindings")
-| search _raw="*cluster-admin*" OR (_raw="*\"kind\":\"ServiceAccount\"*" AND _raw="*\"namespace\":\"argocd\"*")
-| table _time "user.username" verb "objectRef.resource" "objectRef.name" "objectRef.namespace"
-```
-
-### Argo CD Application/ApplicationSet pointed at first-seen external Git repo
-
-`UC_103_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=* sourcetype="kube:apiserver:audit" verb IN ("create","update","patch") "objectRef.resource" IN ("applications","applicationsets")
-| spath output=repo path=requestObject.spec.source.repoURL
-| where isnotnull(repo)
-| eventstats earliest(_time) as first_seen by repo
-| where first_seen > relative_time(now(), "-1d@d")
-| table _time "user.username" verb "objectRef.name" repo
+index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb IN ("create","update","patch") "objectRef.resource" IN ("pods","deployments","daemonsets","statefulsets","replicasets") "user.username"="system:serviceaccount:argocd*"
+| where like(_raw,"%\"privileged\":true%") OR like(_raw,"%\"hostPID\":true%") OR like(_raw,"%\"hostNetwork\":true%") OR like(_raw,"%\"hostIPC\":true%") OR like(_raw,"%docker.sock%")
+| table _time user.username verb objectRef.namespace objectRef.resource objectRef.name userAgent sourceIPs{}
 | sort - _time
 ```
 
-### NetworkPolicy deleted in Argo CD namespace (containment disabled)
+### ClusterRoleBinding granting cluster-admin to an Argo CD service account
 
-`UC_103_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb=delete "objectRef.resource"=networkpolicies "objectRef.namespace"=argocd
-| search NOT "user.username"="system:serviceaccount:argocd:*"
-| table _time "user.username" verb "objectRef.name" userAgent sourceIPs{}
+index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb="create" "objectRef.resource" IN ("clusterrolebindings","rolebindings")
+| spath input=_raw path=requestObject.roleRef.name output=roleRefName
+| where like(roleRefName,"cluster-admin") OR like(roleRefName,"admin")
+| search _raw="*argocd*"
+| table _time user.username verb objectRef.resource objectRef.name roleRefName requestObject.subjects{} userAgent
+| sort - _time
+```
+
+### Argo CD namespace secret enumeration (Redis password / repo credential harvest)
+
+`UC_104_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb IN ("get","list","watch") "objectRef.resource"="secrets" "objectRef.namespace"="argocd"
+| bucket _time span=10m
+| stats dc(objectRef.name) as DistinctSecrets values(objectRef.name) as Secrets count as Reads by _time user.username userAgent sourceIPs{}
+| where DistinctSecrets >= 5
 | sort - _time
 ```
 
@@ -336,4 +335,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
