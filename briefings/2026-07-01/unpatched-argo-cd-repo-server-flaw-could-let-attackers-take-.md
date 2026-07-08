@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Argo CD repo-server / kustomize spawning shell or network utility (unauth GenerateManifest RCE)
 
-`UC_107_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_110_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### Non-Argo-CD process connecting to Argo CD Redis on 6379 (cache-poisoning path, CVE-2024-31989 revival)
 
-`UC_107_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_110_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### Privileged / host-namespace workload created by Argo CD service account
 
-`UC_107_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_110_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb IN ("creat
 
 ### ClusterRoleBinding granting cluster-admin to an Argo CD service account
 
-`UC_107_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_110_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ index=* sourcetype="kube:apiserver:audit" stage=ResponseComplete verb="create" "
 
 ### Argo CD namespace secret enumeration (Redis password / repo credential harvest)
 
-`UC_107_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_110_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

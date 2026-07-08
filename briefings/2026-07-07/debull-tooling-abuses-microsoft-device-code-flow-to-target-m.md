@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### M365 device-code flow sign-in (Storm-2372/DEBULL token theft)
 
-`UC_21_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_25_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ AADSignInEventsBeta
 
 ### Attacker device registration / PRT persistence via Auth Broker after device-code
 
-`UC_21_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_25_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ AADSignInEventsBeta
 
 ### Inbound collaboration lure linking to DEBULL device-code orchestrator
 
-`UC_21_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_25_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ EmailEvents
 
 ### Endpoint DNS/network connection to DEBULL C2 (pamconj.com / workers.dev)
 
-`UC_21_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_25_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceNetworkEvents
 
 ### Bulk M365 mail/file access within 30 min of device-code sign-in
 
-`UC_21_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_25_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -165,7 +165,7 @@ CloudAppEvents
 
 ### Device-code Auth Broker token replayed from multiple countries
 
-`UC_21_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_25_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -181,7 +181,7 @@ AADSignInEventsBeta
 
 ### Illicit OAuth consent to high-privilege Graph scopes (post device-code ATO)
 
-`UC_21_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_25_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

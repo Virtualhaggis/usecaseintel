@@ -39,30 +39,37 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### GhostLock (CVE-2026-43499) & kernel-LPE cousins — unpatched Linux host exposure hunt
+### Host exposure to GhostLock IonStack kernel-to-root chain CVEs (CVE-2026-43499 et al.)
 
-`UC_9_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity values(Vulnerabilities.category) as category from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-43499","CVE-2026-46242","CVE-2026-31431","CVE-2026-53166") by Vulnerabilities.dest Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
+`UC_13_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId in~ ("CVE-2026-43499","CVE-2026-46242","CVE-2026-31431","CVE-2026-53166")
-| where OSPlatform startswith "Linux"
-| summarize arg_max(Timestamp, *) by DeviceId, CveId
-| join kind=leftouter (
-    DeviceInfo
-    | where Timestamp > ago(1d)
-    | summarize arg_max(Timestamp, *) by DeviceId
-    | project DeviceId, IsInternetFacing, OSDistribution, LoggedOnUsers
-  ) on DeviceId
-| project Timestamp, DeviceName, DeviceId, CveId, SoftwareName, SoftwareVersion, OSVersion, OSDistribution, IsInternetFacing, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by IsInternetFacing desc, CveId asc
+| where CveId in ("CVE-2026-43499","CVE-2026-10702","CVE-2026-46242","CVE-2026-31431","CVE-2026-53166")
+| project DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| sort by CveId asc, DeviceName asc
+```
+
+### Linux unprivileged process escalates to root without sudo/su/pkexec (kernel-LPE / container-escape shape)
+
+`UC_13_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.user="root" Processes.parent_process_name!="sudo" Processes.parent_process_name!="su" Processes.parent_process_name!="pkexec" Processes.parent_process_name!="doas" Processes.parent_process_name!="sudoedit" Processes.parent_process_name!="runuser" Processes.parent_process_name!="login" Processes.parent_process_name!="sshd" Processes.parent_process_name!="systemd" Processes.parent_process_name!="runc" Processes.parent_process_name!="containerd-shim" Processes.process_name!="passwd" Processes.process_name!="mount" Processes.process_name!="umount" Processes.process_name!="fusermount" Processes.process_name!="ping" by Processes.dest Processes.user Processes.parent_process_user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where parent_process_user!="root" AND isnotnull(parent_process_user) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName =~ "root"
+| where isnotempty(InitiatingProcessAccountName) and InitiatingProcessAccountName !~ "root"
+| where InitiatingProcessFileName !in~ ("sudo","su","pkexec","sudoedit","doas","gksudo","gksu","runuser","login","sshd","systemd","init","runc","containerd-shim","crond","cron","polkitd","lightdm","gdm","sddm")
+| where FileName !in~ ("sudo","su","pkexec","sudoedit","doas","passwd","chsh","chfn","gpasswd","newgrp","mount","umount","fusermount","fusermount3","ping","ping6","ntfs-3g","pmount","mount.nfs")
+| project Timestamp, DeviceName, RanAsUser = AccountName, ParentUser = InitiatingProcessAccountName, ParentProcess = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -213,4 +220,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

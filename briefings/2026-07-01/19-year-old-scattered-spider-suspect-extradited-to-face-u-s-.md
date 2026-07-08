@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Entra help-desk MFA/password reset followed by sign-in from new IP (Scattered Spider ATO)
 
-`UC_108_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_111_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -76,7 +76,7 @@ resets
 
 ### External/guest identity active in Teams during breach response (Scattered Spider watching defenders)
 
-`UC_108_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_111_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

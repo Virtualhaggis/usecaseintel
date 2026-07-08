@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2565 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2566 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,7 +15,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa orders feds to prioritize patching langflow auth bypass](./2026-07-08/cisa-orders-feds-to-prioritize-patching-langflow-auth-bypass.md)
 - [github copilot refuses harmful requests in chat then writes ](./2026-07-08/github-copilot-refuses-harmful-requests-in-chat-then-writes-.md)
 - [github verified commits can be rewritten into new hashes wit](./2026-07-08/github-verified-commits-can-be-rewritten-into-new-hashes-wit.md)
+- [new ghost phishing wave is breaking traditional email securi](./2026-07-08/new-ghost-phishing-wave-is-breaking-traditional-email-securi.md)
+- [scmbanker malware uses clickfix lures to target mexican bank](./2026-07-08/scmbanker-malware-uses-clickfix-lures-to-target-mexican-bank.md)
 - [the verification step is the new ato battleground in 2026](./2026-07-08/the-verification-step-is-the-new-ato-battleground-in-2026.md)
+- [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
 - [ubiquiti warns of new max severity unifi os vulnerability](./2026-07-08/ubiquiti-warns-of-new-max-severity-unifi-os-vulnerability.md)
 
 ## 2026-07-07
@@ -121,14 +124,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft named a leader in the frost radar for cloud and ap](./2026-07-01/microsoft-named-a-leader-in-the-frost-radar-for-cloud-and-ap.md)
 - [multiple immobiliarelabs backstage plugins compromised on np](./2026-07-01/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
 - [openclaw risks for the users and how to mitigate them](./2026-07-01/openclaw-risks-for-the-users-and-how-to-mitigate-them.md)
-- [ousaban banking trojan targets iberian bank users with fake ](./2026-07-01/ousaban-banking-trojan-targets-iberian-bank-users-with-fake-.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [seo poisoned software sites abuse screenconnect to deploy as](./2026-07-01/seo-poisoned-software-sites-abuse-screenconnect-to-deploy-as.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)
 - [the soc files screenconnect masked as freeware an inside loo](./2026-07-01/the-soc-files-screenconnect-masked-as-freeware-an-inside-loo.md)
 - [unpatched argo cd repo server flaw could let attackers take ](./2026-07-01/unpatched-argo-cd-repo-server-flaw-could-let-attackers-take-.md)
-- [veil drop malware chain uses blogger platform to deliver pur](./2026-07-01/veil-drop-malware-chain-uses-blogger-platform-to-deliver-pur.md)
 
 ## 2026-06-30
 - [ghsa critical cve 2026 50566 fission environment runtime con](./2026-06-30/ghsa-critical-cve-2026-50566-fission-environment-runtime-con.md)

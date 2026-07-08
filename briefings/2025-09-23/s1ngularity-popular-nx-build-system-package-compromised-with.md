@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### s1ngularity nx: AI CLI assistant invoked with permission-bypass flags (Claude/Gemini/Q)
 
-`UC_815_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_816_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### s1ngularity nx: /tmp/inventory.txt staging file created on host
 
-`UC_815_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_816_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceFileEvents
 
 ### s1ngularity nx: node modifies ~/.bashrc or ~/.zshrc to inject `sudo shutdown -h 0`
 
-`UC_815_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_816_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -240,7 +240,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — s1ngularity: Popular Nx Build System Package Compromised with Data-Stealing Malw
 
-`UC_815_6` · phase: **exploit** · confidence: **High**
+`UC_816_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

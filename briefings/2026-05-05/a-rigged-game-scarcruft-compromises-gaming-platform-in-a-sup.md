@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### ScarCruft sqgame supply-chain delivery domain contact (BirdCall/RokRAT)
 
-`UC_393_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_394_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### BirdCall trojanized APK/mono.dll SHA1 match on Windows endpoints
 
-`UC_393_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_394_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### BirdCall RokRAT cloud-storage C2 beacon (Dropbox/pCloud) from non-browser process
 
-`UC_393_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_394_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A rigged game: ScarCruft compromises gaming platform in a supply-chain attack
 
-`UC_393_6` · phase: **exploit** · confidence: **High**
+`UC_394_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -6,23 +6,16 @@
 
 ## Threat Profile
 
-Adobe Patches 7 CVSS 10.0 Flaws in ColdFusion and Campaign Classic 
- Ravie Lakshmanan  Jul 01, 2026 Artificial Intelligence / Vulnerability 
-Adobe has released patches for multiple maximum-severity security flaws impacting Adobe ColdFusion and Adobe Campaign Classic.
-The ColdFusion updates "resolves critical and important vulnerabilities that could lead to arbitrary code execution, privilege escalation, arbitrary file system read, and security feature bypass," Adobe said in an alert released T…
+SEO-Poisoned Software Sites Abuse ScreenConnect to Deploy AsyncRAT 
+ Ravie Lakshmanan  Jul 01, 2026 Malware / SEO Poisoning 
+Unknown threat actors are leveraging the ScreenConnect remote access tool as a way to deploy and execute AsyncRAT .
+Kaspersky said the activity is part of a "massive, multi-domain, multi-language" campaign that distributes malicious installer archives hosted on spoofed websites.
+These installers masquerade as popular software like OBS Studio, DNS Jumper, DS4Windows, and …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-48276`
-- **CVE:** `CVE-2026-48283`
-- **CVE:** `CVE-2026-48277`
-- **CVE:** `CVE-2026-48281`
-- **CVE:** `CVE-2026-48316`
-- **CVE:** `CVE-2026-48282`
-- **CVE:** `CVE-2026-48313`
-- **CVE:** `CVE-2026-48315`
-- **CVE:** `CVE-2026-48307`
-- **CVE:** `CVE-2026-48286`
+- **CVE:** `CVE-2026-20245`
+- **Domain (defanged):** `mora1987.work.gd`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,11 +24,16 @@ The ColdFusion updates "resolves critical and important vulnerabilities that c
 - **T1190** — Exploit Public-Facing Application
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1053.005** — Scheduled Task
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
+- **T1071** — Application Layer Protocol
+- **T1053.005** — Persistence (article-specific)
+- **T1543.003** — Persistence (article-specific)
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1505.003** — Server Software Component: Web Shell
 
@@ -47,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe ColdFusion 2023/2025 exposed to CVE-2026-48276 upload RCE chain
 
-`UC_116_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_119_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +63,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### ColdFusion server process spawning cmd/PowerShell/LOLBin (post-upload RCE)
 
-`UC_116_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_119_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +84,7 @@ DeviceProcessEvents
 
 ### ColdFusion writing web-executable file (jspf/cfmail/war/jsp/cfm) to webroot — webshell drop
 
-`UC_116_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_119_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,6 +156,34 @@ CloudAppEvents
 | where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent
+```
+
+### Scheduled task created with suspicious image / encoded args
+
+`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
+      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
+        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
+        OR Processes.process="*\AppData\*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -273,6 +299,35 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### PowerShell encoded / obfuscated command
+
+`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+```
+
 ### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
 
 `UC_RMM_TOOLS` · phase: **install** · confidence: **High**
@@ -300,14 +355,66 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
+### Article-specific behavioural hunt — SEO-Poisoned Software Sites Abuse ScreenConnect to Deploy AsyncRAT
+
+`UC_119_9` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — SEO-Poisoned Software Sites Abuse ScreenConnect to Deploy AsyncRAT ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("install.res.1033.dll","fj5nmesp9eukrun.ps1","installer_method3_stream.vbs","cap.ps1","script.vbs"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("install.res.1033.dll","fj5nmesp9eukrun.ps1","installer_method3_stream.vbs","cap.ps1","script.vbs"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — SEO-Poisoned Software Sites Abuse ScreenConnect to Deploy AsyncRAT
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("install.res.1033.dll", "fj5nmesp9eukrun.ps1", "installer_method3_stream.vbs", "cap.ps1", "script.vbs"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("install.res.1033.dll", "fj5nmesp9eukrun.ps1", "installer_method3_stream.vbs", "cap.ps1", "script.vbs"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-48276`, `CVE-2026-48283`, `CVE-2026-48277`, `CVE-2026-48281`, `CVE-2026-48316`, `CVE-2026-48282`, `CVE-2026-48313`, `CVE-2026-48315` _(+2 more)_
+  - CVE(s): `CVE-2026-20245`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `mora1987.work.gd`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

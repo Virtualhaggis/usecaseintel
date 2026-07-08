@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable BeyondTrust Remote Support / PRA appliance exposed (CVE-2026-40138/40139/40140/40141)
 
-`UC_35_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_39_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
