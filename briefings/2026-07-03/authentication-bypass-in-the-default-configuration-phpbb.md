@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### phpBB CVE-2026-48611 auth bypass: login_link flow forced to 'apache' provider
 
-`UC_72_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_74_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### phpBB post-bypass privileged panel access from CVE-2026-48611 source IP
 
-`UC_72_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_74_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

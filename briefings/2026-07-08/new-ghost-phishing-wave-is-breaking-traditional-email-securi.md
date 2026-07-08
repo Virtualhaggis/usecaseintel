@@ -66,8 +66,10 @@ For security leaders, the risk is clear: traditional URL checks may miss the att
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1528** — Steal Application Access Token
-- **T1566.002** — Phishing: Spearphishing Link
 - **T1621** — Multi-Factor Authentication Request Generation
+- **T1098.005** — Account Manipulation: Device Registration
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
@@ -75,50 +77,115 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### EvilTokens Microsoft device-code phishing: successful deviceCode auth flow sign-in
+### EvilTokens device-code phishing: new-IP sign-in to Microsoft Authentication Broker
 
-`UC_7_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where nodename=Authentication Authentication.authentication_method="deviceCode" Authentication.action="success" by Authentication.user Authentication.app Authentication.src Authentication.dest | `drop_dm_object_name(Authentication)` | where count > 0 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.app="29d9ed98-a469-4536-ade2-f981bc1d605e" Authentication.action=success by Authentication.user Authentication.src Authentication.app
+| `drop_dm_object_name(Authentication)`
+| iplocation src
+| eventstats dc(src) as src_history by user
+| where src_history<=2
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let broker = "29d9ed98-a469-4536-ade2-f981bc1d605e";
+let Baseline = AADSignInEventsBeta
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where ApplicationId == broker
+    | summarize by AccountUpn, IPAddress;
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker
+| where ErrorCode == 0                                            // successful token issuance
+| where AuthenticationProcessingDetails has "Device Code" or ClientAppUsed == "Mobile Apps and Desktop clients"
+| join kind=leftanti Baseline on AccountUpn, IPAddress            // first time this user+IP hit the broker
+| project Timestamp, AccountUpn, IPAddress, Application, ResourceDisplayName, ClientAppUsed, Country, City, UserAgent
+| order by Timestamp desc
+```
+
+### Entra device registration to DRS via Authentication Broker (EvilTokens PRT follow-on)
+
+`UC_11_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.app="29d9ed98-a469-4536-ade2-f981bc1d605e" Authentication.dest="Device Registration Service" Authentication.action=success by Authentication.user Authentication.src
+| `drop_dm_object_name(Authentication)`
+| iplocation src
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where AuthenticationProcessingDetails has "Device Code"
+| where Timestamp > ago(7d)
+| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker
+| where ResourceDisplayName == "Device Registration Service"
 | where ErrorCode == 0
-| project Timestamp, AccountUpn, Application, ApplicationId, ResourceDisplayName, IPAddress, Country, City, DeviceName, DeviceTrustType, UserAgent, ClientAppUsed
+| project Timestamp, AccountUpn, IPAddress, Country, City, UserAgent, ClientAppUsed, ResourceDisplayName
 | order by Timestamp desc
 ```
 
-### EvilTokens ghost-phishing infrastructure: connection to named campaign domains
+### Endpoint DNS/HTTP contact to EvilTokens ghost-phishing infrastructure
 
-`UC_7_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_11_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where nodename=DNS DNS.query IN ("emp01825.workers.dev","adobe-lar.denise-chxhistory-com-s-account.workers.dev","docusign-vs4.finance-zltnservices-org-s-account.workers.dev","onedrive-au8.hayixa9795-pazard-com-s-account.workers.dev","authdocspro.com","backdoor-hub.com","bumpgames.net","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","macmamo.com","carbatterygurgaon.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","pelangiservice.com","prcservis.com") by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("emp01825.workers.dev","adobe-lar.denise-chxhistory-com-s-account.workers.dev","docusign-vs4.finance-zltnservices-org-s-account.workers.dev","onedrive-au8.hayixa9795-pazard-com-s-account.workers.dev","authdocspro.com","backdoor-hub.com","bumpgames.net","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","macmamo.com","carbatterygurgaon.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","pelangiservice.com","prcservis.com") by DNS.src DNS.query
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+let iocDomains = dynamic(["emp01825.workers.dev","adobe-lar.denise-chxhistory-com-s-account.workers.dev","docusign-vs4.finance-zltnservices-org-s-account.workers.dev","onedrive-au8.hayixa9795-pazard-com-s-account.workers.dev","authdocspro.com","backdoor-hub.com","bumpgames.net","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","macmamo.com","carbatterygurgaon.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","pelangiservice.com","prcservis.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any ("emp01825.workers.dev","adobe-lar.denise-chxhistory-com-s-account.workers.dev","docusign-vs4.finance-zltnservices-org-s-account.workers.dev","onedrive-au8.hayixa9795-pazard-com-s-account.workers.dev","authdocspro.com","backdoor-hub.com","bumpgames.net","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","macmamo.com","carbatterygurgaon.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","pelangiservice.com","prcservis.com")
+| where RemoteUrl has_any (iocDomains)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### EvilTokens kit backend: web request to /api/device/start or /api/device/status endpoint
+### EvilTokens phishing email delivered with workers.dev / lookalike device-code lures
 
-`UC_7_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_11_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where nodename=Web (Web.uri_path="/api/device/start" OR Web.uri_path="/api/device/status/*") by Web.src Web.user Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+**Defender KQL:**
+```kql
+let iocDomains = dynamic(["emp01825.workers.dev","adobe-lar.denise-chxhistory-com-s-account.workers.dev","docusign-vs4.finance-zltnservices-org-s-account.workers.dev","onedrive-au8.hayixa9795-pazard-com-s-account.workers.dev","authdocspro.com","backdoor-hub.com","bumpgames.net","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","macmamo.com","carbatterygurgaon.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","pelangiservice.com","prcservis.com"]);
+EmailEvents
+| where Timestamp > ago(30d)
+| where EmailDirection == "Inbound"
+| join kind=inner (EmailUrlInfo | where Timestamp > ago(30d) | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| where UrlDomain in~ (iocDomains) or Url has_any (iocDomains)
+| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation, ThreatTypes
+| order by Timestamp desc
+```
+
+### Phishing verdict bypass: malicious workers.dev mail landing in Inbox
+
+`UC_11_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let iocDomains = dynamic(["emp01825.workers.dev","adobe-lar.denise-chxhistory-com-s-account.workers.dev","docusign-vs4.finance-zltnservices-org-s-account.workers.dev","onedrive-au8.hayixa9795-pazard-com-s-account.workers.dev","authdocspro.com","backdoor-hub.com","bumpgames.net","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","macmamo.com","carbatterygurgaon.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","pelangiservice.com","prcservis.com"]);
+EmailEvents
+| where Timestamp > ago(30d)
+| where EmailDirection == "Inbound"
+| where DeliveryLocation == "Inbox"
+| where ThreatTypes has_any ("Phish", "Malware")
+| join kind=inner (EmailUrlInfo | where Timestamp > ago(30d) | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| where UrlDomain endswith "workers.dev" or UrlDomain in~ (iocDomains) or Url has_any (iocDomains)
+| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, ThreatTypes, DetectionMethods, DeliveryAction, DeliveryLocation, Url, UrlDomain
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -448,4 +515,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

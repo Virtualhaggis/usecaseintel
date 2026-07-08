@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Python Mocking 101: Fake it before you make it
 
-`UC_3594_0` · phase: **exploit** · confidence: **High**
+`UC_3593_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

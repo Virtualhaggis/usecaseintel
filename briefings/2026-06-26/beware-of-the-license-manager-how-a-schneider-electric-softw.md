@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Schneider FLM CVE-2024-2658: rogue openssl.cnf planted in hardcoded cygwin search path
 
-`UC_158_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_160_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### lmadmin.exe (Schneider FLM) loads DLL from user-writeable path — CVE-2024-2658 payload execution
 
-`UC_158_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_160_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceImageLoadEvents
 
 ### lmadmin.exe spawns shell/LOLBin or SYSTEM-integrity child — CVE-2024-2658 potato escalation
 
-`UC_158_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_160_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Beware of the license manager: how a Schneider Electric software vulnerability p
 
-`UC_158_3` · phase: **exploit** · confidence: **High**
+`UC_160_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

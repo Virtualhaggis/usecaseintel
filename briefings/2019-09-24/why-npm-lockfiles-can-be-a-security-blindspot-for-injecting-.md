@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### npm/yarn dependency fetched from non-registry source (lockfile resolved-URL hijack)
 
-`UC_3450_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3449_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceNetworkEvents
 
 ### npm/yarn install lifecycle (postinstall) spawning download or LOLBin tooling
 
-`UC_3450_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_3449_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Why npm lockfiles can be a security blindspot for injecting malicious modules
 
-`UC_3450_1` · phase: **install** · confidence: **High**
+`UC_3449_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

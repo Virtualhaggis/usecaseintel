@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Cavern Manticore uxtheme.dll side-load via WinDirStat/SysAid (Cavern Agent)
 
-`UC_55_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_57_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceImageLoadEvents
 
 ### Cavern C2 module DLLs loaded (n-HTCommp/n-ten/n-sws/mhm/ode/db)
 
-`UC_55_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_57_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceImageLoadEvents
 
 ### Cavern Manticore C2 beacon to hospitalinstallation.com (HTTPS/WebSocket)
 
-`UC_55_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_57_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -453,7 +453,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Iran-Linked Hackers Use New Cavern C2 Framework to Target Israeli Organizations
 
-`UC_55_12` · phase: **exploit** · confidence: **High**
+`UC_57_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — The art of conditional rendering: Tips and tricks for React and Next.js develope
 
-`UC_1494_0` · phase: **exploit** · confidence: **High**
+`UC_1493_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

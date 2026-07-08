@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Using UBI images to minimize container vulnerabilities
 
-`UC_3366_0` · phase: **exploit** · confidence: **High**
+`UC_3365_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
