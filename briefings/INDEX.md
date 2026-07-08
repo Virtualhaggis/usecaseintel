@@ -13,6 +13,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china linked uat 7810 expands orb network with new longleash](./2026-07-08/china-linked-uat-7810-expands-orb-network-with-new-longleash.md)
 - [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
 - [cisa orders feds to prioritize patching langflow auth bypass](./2026-07-08/cisa-orders-feds-to-prioritize-patching-langflow-auth-bypass.md)
+- [github copilot refuses harmful requests in chat then writes ](./2026-07-08/github-copilot-refuses-harmful-requests-in-chat-then-writes-.md)
+- [github verified commits can be rewritten into new hashes wit](./2026-07-08/github-verified-commits-can-be-rewritten-into-new-hashes-wit.md)
+- [the verification step is the new ato battleground in 2026](./2026-07-08/the-verification-step-is-the-new-ato-battleground-in-2026.md)
 - [ubiquiti warns of new max severity unifi os vulnerability](./2026-07-08/ubiquiti-warns-of-new-max-severity-unifi-os-vulnerability.md)
 
 ## 2026-07-07
@@ -58,7 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new java based quimarat maas built to run on windows linux a](./2026-07-06/new-java-based-quimarat-maas-built-to-run-on-windows-linux-a.md)
 - [new trojpix attack leaks data from air gapped systems via vi](./2026-07-06/new-trojpix-attack-leaks-data-from-air-gapped-systems-via-vi.md)
 - [opera gx flaw let malicious sites auto install mods to steal](./2026-07-06/opera-gx-flaw-let-malicious-sites-auto-install-mods-to-steal.md)
-- [phishing poses as big brand job interview to steal google ac](./2026-07-06/phishing-poses-as-big-brand-job-interview-to-steal-google-ac.md)
 - [predicting mongodb objectid continuously in rocket chat](./2026-07-06/predicting-mongodb-objectid-continuously-in-rocket-chat.md)
 - [skillcloak lets malicious ai agent skills evade static scann](./2026-07-06/skillcloak-lets-malicious-ai-agent-skills-evade-static-scann.md)
 - [suspected china nexus hackers use fake indian tax filing uti](./2026-07-06/suspected-china-nexus-hackers-use-fake-indian-tax-filing-uti.md)
@@ -107,11 +109,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-01
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-07-01/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [19 year old scattered spider suspect extradited to face u s ](./2026-07-01/19-year-old-scattered-spider-suspect-extradited-to-face-u-s-.md)
-- [ai generated browser ransomware abuses chromium api on windo](./2026-07-01/ai-generated-browser-ransomware-abuses-chromium-api-on-windo.md)
 - [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [cisa kev cve 2026 45659 microsoft sharepoint server deserial](./2026-07-01/cisa-kev-cve-2026-45659-microsoft-sharepoint-server-deserial.md)
 - [codfish semantic release action github action has been compr](./2026-07-01/codfish-semantic-release-action-github-action-has-been-compr.md)
-- [critical cursor flaws could let prompt injection escape sand](./2026-07-01/critical-cursor-flaws-could-let-prompt-injection-escape-sand.md)
 - [ghsa critical cve 2026 41052 rancher has privilege escalatio](./2026-07-01/ghsa-critical-cve-2026-41052-rancher-has-privilege-escalatio.md)
 - [ghsa critical cve 2026 44935 rancher fleet vulnerable to cro](./2026-07-01/ghsa-critical-cve-2026-44935-rancher-fleet-vulnerable-to-cro.md)
 - [ghsa critical cve 2026 44939 rancher vulnerable to command i](./2026-07-01/ghsa-critical-cve-2026-44939-rancher-vulnerable-to-command-i.md)

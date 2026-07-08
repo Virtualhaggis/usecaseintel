@@ -11,19 +11,15 @@ By Sergiu Gatlan
 July 8, 2026
 05:58 AM
 0 
-
-
 The U.S. Cybersecurity and Infrastructure Security Agency (CISA) gave federal agencies until Friday to patch an actively exploited vulnerability in the Langflow visual framework for building AI agents.
-
-
-Langflow is an attractive target for hackers since it's a popular tool in the AI development ecosystem, offering a drag-and-drop interface to connect nodes into executable pipeline…
+Langflow is an attractive target for hackers since it's a popular tool in the AI development ecosystem, offering a drag-and-drop interface to connect nodes into executable pipelines and a …
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-55255`
 - **CVE:** `CVE-2026-33017`
-- **CVE:** `CVE-2026-5027`
 - **CVE:** `CVE-2025-3248`
+- **CVE:** `CVE-2026-5027`
 - **CVE:** `CVE-2021-29441`
 - **IPv4 (defanged):** `45.207.216.55`
 - **IPv4 (defanged):** `45.131.66.106`
@@ -52,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow flow-ID enumeration chained to /api/v1/responses IDOR (CVE-2026-55255)
 
-`UC_1_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow unauth RCE payload POST to /api/v1/build_public_tmp (CVE-2026-33017)
 
-`UC_1_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow host runs curl/wget piped to sh fetching /slt loader (45.207.216.55)
 
-`UC_1_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +84,7 @@ DeviceProcessEvents
 
 ### Langflow host beacons to JadePuffer/CVE-2026-55255 C2 (45.207.216.55:8084)
 
-`UC_1_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +102,7 @@ DeviceNetworkEvents
 
 ### Langflow exploitation marker file /tmp/lang_pwn created
 
-`UC_1_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,7 +208,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-55255`, `CVE-2026-33017`, `CVE-2026-5027`, `CVE-2025-3248`, `CVE-2021-29441`
+  - CVE(s): `CVE-2026-55255`, `CVE-2026-33017`, `CVE-2025-3248`, `CVE-2026-5027`, `CVE-2021-29441`
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `45.207.216.55`, `45.131.66.106`, `64.20.53.230`

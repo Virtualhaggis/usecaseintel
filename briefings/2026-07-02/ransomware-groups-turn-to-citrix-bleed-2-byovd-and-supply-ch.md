@@ -87,7 +87,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen Go backdoor C2 beacon to 81.177.215.15:9443
 
-`UC_84_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_87_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### Kontron ktapi.sys vulnerable driver load (The Gentlemen BYOVD)
 
-`UC_84_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_87_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceImageLoadEvents
 
 ### Citrix Bleed 2 (CVE-2025-5777) exploitation attempts against NetScaler Gateway
 
-`UC_84_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_87_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceImageLoadEvents
 
 ### Cloudflare Tunnel (cloudflared) deployment for persistent covert access
 
-`UC_84_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_87_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ DeviceProcessEvents
 
 ### Anubis defense impairment: Defender RTP disable + SophosUninstall + PCHunter
 
-`UC_84_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_87_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ DeviceProcessEvents
 
 ### Anubis exfiltration tooling: rclone/s5cmd/S3 Browser/WinSCP cloud transfer
 
-`UC_84_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_87_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -196,7 +196,7 @@ DeviceProcessEvents
 
 ### Anubis encryptor /WIPEMODE destructive command execution
 
-`UC_84_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_87_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -519,7 +519,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware Groups Turn to Citrix Bleed 2, BYOVD, and Supply Chain Credentials
 
-`UC_84_12` · phase: **exploit** · confidence: **High**
+`UC_87_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

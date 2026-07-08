@@ -1,27 +1,26 @@
-# [CRIT] AI-Generated Browser Ransomware Abuses Chromium API on Windows, Linux, macOS, Android
+# [HIGH] The Verification Step Is the New ATO Battleground in 2026
 
 **Source:** The Hacker News
-**Published:** 2026-07-01
-**Article:** https://thehackernews.com/2026/07/ai-generated-browser-ransomware-abuses.html
+**Published:** 2026-07-08
+**Article:** https://thehackernews.com/2026/07/the-verification-step-is-new-ato.html
 
 ## Threat Profile
 
-AI-Generated Browser Ransomware Abuses Chromium API on Windows and Android 
- Ravie Lakshmanan  Jul 01, 2026 Browser Security / Ransomware 
-Cybersecurity researchers have flagged a new malware artifact generated using DeepSeek that constructed a novel attack path combining "unrealistic browser-malware concepts with a real browser capability" to turn it into a working ransomware technique that runs entirely inside the browser on both Windows and Android devices.
-"This is the first documented cas…
+The Verification Step Is the New ATO Battleground in 2026 
+ The Hacker News  Jul 08, 2026 Identity Security / Compliance 
+For years, account takeover (ATO) followed a predictable script. Attackers bought stolen credentials in bulk, ran them through automated tools, and waited for matches. Credential stuffing was cheap, scalable, and for defenders, relatively well understood.
+That era is ending. Not because attackers gave up, but because the front door finally got harder to kick in.
+Passkeys ar…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2023-4863`
-- **Domain (defanged):** `deepseek.com`
-- **SHA256:** `07c39f79ab92fb21557b82283472dce1c112f577d796111fb752c3c6d84c86b5`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
+- **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -29,23 +28,42 @@ Cybersecurity researchers have flagged a new malware artifact generated using De
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1219** — Remote Access Software
-- **T1071** — Application Layer Protocol
-- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Suspicious browser extension installation
+
+`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -224,61 +242,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### OAuth consent / suspicious app grant
-
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
-```
-
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
-
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -363,96 +326,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
-### Article-specific behavioural hunt — AI-Generated Browser Ransomware Abuses Chromium API on Windows, Linux, macOS, An
-
-`UC_118_13` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — AI-Generated Browser Ransomware Abuses Chromium API on Windows, Linux, macOS, An ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("deepseek_python_20260125_da0631.py"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("deepseek_python_20260125_da0631.py"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — AI-Generated Browser Ransomware Abuses Chromium API on Windows, Linux, macOS, An
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("deepseek_python_20260125_da0631.py"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("deepseek_python_20260125_da0631.py"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2023-4863`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `deepseek.com`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `07c39f79ab92fb21557b82283472dce1c112f577d796111fb752c3c6d84c86b5`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

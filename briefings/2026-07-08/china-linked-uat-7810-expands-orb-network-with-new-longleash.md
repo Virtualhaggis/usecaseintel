@@ -39,9 +39,7 @@ According to findings from Cisco Talos, UAT-7810 is an advanced persistent threa
 - **T1090.003** — Proxy: Multi-hop Proxy
 - **T1571** — Non-Standard Port
 - **T1105** — Ingress Tool Transfer
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1071.002** — Application Layer Protocol: File Transfer Protocols
-- **T1090** — Proxy
+- **T1543** — Create or Modify System Process
 
 ## Kill chain phases observed
 
@@ -49,13 +47,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UAT-7810 LapDogs/LONGLEASH ORB relay C2 egress on ports 99/2222/8088
+### Outbound C2 to UAT-7810 / LONGLEASH ORB relay infrastructure
 
-`UC_2_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.transport, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -63,45 +64,28 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, LocalIP, Protocol
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### UAT-7810 implant on host by SHA256 (LONGLEASH / JARLEASH / LEASHTEST)
+### LONGLEASH / DOGLEASH / JARLEASH / LEASHTEST malware hash on Linux endpoints
 
-`UC_2_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_6_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823") by Processes.dest, Processes.user, Processes.process_name, Processes.process_path, Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823","755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c","3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let iocs = dynamic(["755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823"]);
-union
-  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (iocs) | project Timestamp, DeviceName, Kind="FileEvent", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
-  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (iocs) | project Timestamp, DeviceName, Kind="ProcessEvent", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
-| order by Timestamp desc
-```
-
-### JARLEASH Java backdoor spawning FTP/SFTP/Netcat admin tooling
-
-`UC_2_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("java","java.exe") AND Processes.process_name IN ("nc","ncat","netcat","nc.traditional","ftp","sftp","vsftpd","proftpd","pure-ftpd") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process, Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
+let iocs = dynamic(["1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823","755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c","3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1"]);
+union DeviceFileEvents, DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName has "java"
-| where FileName in~ ("nc","ncat","netcat","nc.traditional","ftp","sftp","vsftpd","proftpd","pure-ftpd")
-| where ProcessCommandLine has_any ("-l","-e","-p ","listen","/bin/sh","/bin/bash") or FileName in~ ("nc","ncat","netcat","sftp","vsftpd","proftpd")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| where SHA256 in (iocs)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -291,4 +275,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

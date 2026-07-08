@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Typosquatted PyPI package install: jeIlyfish / python3-dateutil
 
-`UC_3414_0` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3416_0` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ DeviceFileEvents
 
 ### Exfil to jeIlyfish C2 68.183.212.246:32258
 
-`UC_3414_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3416_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### Python interpreter reading SSH/GPG private keys (jeIlyfish key theft)
 
-`UC_3414_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3416_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

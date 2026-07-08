@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### GhostLock (CVE-2026-43499) & kernel-LPE cousins — unpatched Linux host exposure hunt
 
-`UC_5_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
