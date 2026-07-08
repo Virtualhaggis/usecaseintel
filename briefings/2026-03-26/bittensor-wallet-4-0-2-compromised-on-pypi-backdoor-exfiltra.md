@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### bittensor-wallet 4.0.2 backdoor C2 domain contact (opentensor-* lookalikes)
 
-`UC_491_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_492_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ union isfuzzy=true
 
 ### DNS tunneling exfiltration pattern to *.t.opentensor-cdn.com (hex chunk/index/total/session)
 
-`UC_491_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_492_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceEvents
 
 ### Compromised bittensor-wallet 4.0.2 source-tarball SHA256 on disk
 
-`UC_491_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_492_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -249,7 +249,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys
 
-`UC_491_6` · phase: **exploit** · confidence: **High**
+`UC_492_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

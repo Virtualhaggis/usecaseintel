@@ -30,13 +30,11 @@ On June 17, 2026, an attacker compromised the @mastra npm organization and quiet
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1195.001** — Compromised Software Dependencies and Development Tools
-- **T1195.002** — Compromised Software Supply Chain
+- **T1195.001** — Compromise Software Dependencies and Development Tools
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
 - **T1070.004** — Indicator Removal: File Deletion
-- **T1555.003** — Credentials from Web Browsers
-- **T1005** — Data from Local System
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
@@ -44,81 +42,59 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Machine that pulled compromised easy-day-js npm package (node_modules write)
+### Malicious easy-day-js npm typosquat pulled into node_modules (Mastra supply-chain compromise)
 
-`UC_101_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_103_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\node_modules\\easy-day-js\\*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\node_modules\\easy-day-js\\*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort 0 + firstTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has @"\node_modules\easy-day-js\"
-| where InitiatingProcessFileName has_any ("node.exe","npm.cmd","npm.exe","npx.cmd","pnpm.exe","yarn.exe","node")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Files=make_set(FileName, 20), any(SHA256) by DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FolderPath
-| order by LastSeen desc
+| where FolderPath has "node_modules" and FolderPath has "easy-day-js"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Files=make_set(FileName, 20), SamplePath=any(FolderPath) by DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessAccountName
+| order by FirstSeen asc
 ```
 
-### easy-day-js dropper C2 beacon to Sapphire Sleet Hostwinds infrastructure
+### easy-day-js second-stage RAT C2 beacon to 23.254.164.92 / 23.254.164.123
 
-`UC_101_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("23.254.164.92","23.254.164.123") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("23.254.164.92","23.254.164.123") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("23.254.164.92","23.254.164.123")
+| where RemoteIP in ("23.254.164.92", "23.254.164.123")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### easy-day-js self-deleting postinstall dropper temp artifacts (.pkg_history/.pkg_logs)
+### easy-day-js dropper temp artifacts (.pkg_history / .pkg_logs) written by node
 
-`UC_101_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_103_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=".pkg_history" OR Filesystem.file_name=".pkg_logs") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=".pkg_history" OR Filesystem.file_name=".pkg_logs") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName in~ (".pkg_history",".pkg_logs")
-| where InitiatingProcessFileName has_any ("node.exe","npm.cmd","npm.exe","pnpm.exe","yarn.exe","node")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessCommandLine
+| where FileName in~ (".pkg_history", ".pkg_logs")
+| where InitiatingProcessFileName in~ ("node.exe", "node", "npm.exe", "pnpm.exe", "yarn.exe")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
-```
-
-### easy-day-js second-stage infostealer reading browser secrets & crypto-wallet extensions via node
-
-`UC_101_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name="node.exe" OR Filesystem.process_name="node") AND (Filesystem.file_name IN ("Login Data","Local State","Cookies","Web Data") OR Filesystem.file_path="*Local Extension Settings*") by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "node.exe"
-| where (FileName in~ ("Login Data","Local State","Cookies","Web Data"))
-     or FolderPath has_any (@"\User Data\Default\Local Extension Settings", "Local Extension Settings", @"\Mozilla\Firefox\Profiles")
-| where FolderPath has_any (@"\Google\Chrome\", @"\Microsoft\Edge\", @"\BraveSoftware\", @"\Mozilla\Firefox\", @"\Chromium\")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Targets=make_set(FolderPath, 30) by DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine
-| order by LastSeen desc
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -187,4 +163,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

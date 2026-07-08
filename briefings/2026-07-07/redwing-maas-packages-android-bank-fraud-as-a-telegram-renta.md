@@ -33,12 +33,54 @@ Zimperium's zLabs , which found the operation, says it looks like a new variant 
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1660** — Phishing (Mobile)
+- **T1655** — Masquerading (Mobile)
+- **T1407** — Download New Code at Runtime
+- **T1437.001** — Application Layer Protocol: Web Protocols
+- **T1521** — Encrypted Channel (Mobile)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### RedWing Android MaaS: fake-store APK delivery infrastructure contact
+
+`UC_7_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*manyrei.live/Proton_VPN.apk","*manyrei.live*","*wmanyrei.icu*","*yandex-disk.net*","*offservers.ru*") OR Web.dest IN ("manyrei.live","wmanyrei.icu","yandex-disk.net","offservers.ru")) by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("manyrei.live/Proton_VPN.apk","manyrei.live","wmanyrei.icu","yandex-disk.net","offservers.ru")
+| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### RedWing Android banking trojan C2 beacon (krusty-crabs.sbs / redwing.top / workers.dev)
+
+`UC_7_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("*krusty-crabs.sbs","*redwing.top","*redwingqq.top","*api-sync-service.mdkd1184.workers.dev") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let c2 = dynamic(["krusty-crabs.sbs","redwing.top","redwingqq.top","api-sync-service.mdkd1184.workers.dev"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (c2)
+| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -357,4 +399,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### External Microsoft Teams chat/call from unfamiliar tenant impersonating IT/helpdesk
 
-`UC_35_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_38_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ CloudAppEvents
 
 ### Dual remote-access tools (HopToDesk + AnyDesk) installed on same host within short window
 
-`UC_35_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_38_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### Msiexec installing remote EtherRAT loader MSI (v#.msi) from camorreado.click
 
-`UC_35_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### Endpoint DNS/network egress to EtherRAT delivery & C2 domain camorreado.click
 
-`UC_35_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_38_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -400,7 +400,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake IT support calls on Microsoft Teams push EtherRAT malware
 
-`UC_35_8` · phase: **exploit** · confidence: **High**
+`UC_38_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

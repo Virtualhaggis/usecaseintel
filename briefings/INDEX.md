@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2564 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2566 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-07
+- [accenture confirms breach after hacker offers stolen data fo](./2026-07-07/accenture-confirms-breach-after-hacker-offers-stolen-data-fo.md)
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
 - [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
 - [chinese hackers develop longleash malware to expand orb netw](./2026-07-07/chinese-hackers-develop-longleash-malware-to-expand-orb-netw.md)
@@ -20,6 +21,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [debull tooling abuses microsoft device code flow to target m](./2026-07-07/debull-tooling-abuses-microsoft-device-code-flow-to-target-m.md)
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
+- [github secret scanning public monitoring for enterprises cov](./2026-07-07/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
 - [microsoft to enable windows settings backup by default for o](./2026-07-07/microsoft-to-enable-windows-settings-backup-by-default-for-o.md)
 - [new januscape linux flaw allows vm escape on intel amd devic](./2026-07-07/new-januscape-linux-flaw-allows-vm-escape-on-intel-amd-devic.md)
 - [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
@@ -30,6 +32,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the github actions attack pattern your ci security scanners ](./2026-07-07/the-github-actions-attack-pattern-your-ci-security-scanners-.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
+- [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 - [what changes when your software supply chain includes ai wri](./2026-07-07/what-changes-when-your-software-supply-chain-includes-ai-wri.md)
 - [writer ai flaw could let agent previews leak session tokens ](./2026-07-07/writer-ai-flaw-could-let-agent-previews-leak-session-tokens-.md)
 
@@ -210,7 +213,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-19
 - [ghsa critical cve 2026 48814 network ai cve 2026 46701 fix i](./2026-06-19/ghsa-critical-cve-2026-48814-network-ai-cve-2026-46701-fix-i.md)
 - [ghsa critical cve 2026 54051 network ai improper neutralizat](./2026-06-19/ghsa-critical-cve-2026-54051-network-ai-improper-neutralizat.md)
-- [ghsa critical cve 2026 55255 langflow idor vulnerability in ](./2026-06-19/ghsa-critical-cve-2026-55255-langflow-idor-vulnerability-in-.md)
 - [ghsa critical cve 2026 55447 langflow basefilecomponent base](./2026-06-19/ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base.md)
 - [ghsa critical cve 2026 55791 craft cms blind ssrf and arbitr](./2026-06-19/ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr.md)
 - [ghsa critical cve 2026 57168 openremote manager removealarms](./2026-06-19/ghsa-critical-cve-2026-57168-openremote-manager-removealarms.md)
@@ -236,6 +238,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa p75f 6fp4 p57w praisonai missing authenti](./2026-06-18/ghsa-critical-ghsa-p75f-6fp4-p57w-praisonai-missing-authenti.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
 - [ghsa critical ghsa vmmj pfw7 fjwp npm praisonai codemode san](./2026-06-18/ghsa-critical-ghsa-vmmj-pfw7-fjwp-npm-praisonai-codemode-san.md)
+- [ghsa critical ghsa x8cv xmq7 p8xp praisonai agentteam launch](./2026-06-18/ghsa-critical-ghsa-x8cv-xmq7-p8xp-praisonai-agentteam-launch.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
@@ -316,7 +319,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [laravel lang supply chain attack every tag across multiple c](./2026-06-02/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [multiple redhat cloud services npm packages compromised](./2026-06-02/multiple-redhat-cloud-services-npm-packages-compromised.md)
 - [nx console vs code extension compromised](./2026-06-02/nx-console-vs-code-extension-compromised.md)
-- [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [why edr and proxy won t save you from supply chain malware](./2026-06-02/why-edr-and-proxy-won-t-save-you-from-supply-chain-malware.md)

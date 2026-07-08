@@ -38,17 +38,9 @@ Peter Stokes , 19, a dual U.S. and Estonian citizen, appeared in a Chicago feder
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1621** — Multi-Factor Authentication Request Generation
-- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
-- **T1110.003** — Brute Force: Password Spraying
-- **T1110.004** — Brute Force: Credential Stuffing
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1021.001** — Remote Services: Remote Desktop Protocol
-- **T1087.002** — Account Discovery: Domain Account
-- **T1482** — Domain Trust Discovery
-- **T1567.002** — Exfiltration to Cloud Storage
-- **T1560.001** — Archive Collected Data: Archive via Utility
-- **T1213.005** — Data from Information Repositories: Messaging Applications
-- **T1580** — Cloud Infrastructure Discovery
+- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
+- **T1098.005** — Account Manipulation: Device Registration
 
 ## Kill chain phases observed
 
@@ -56,128 +48,41 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Suspicious MFA Bypass or MFA Reset Activity
+### Scattered Spider MFA push-bombing (fatigue) followed by successful Entra ID sign-in
 
-`UC_100_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_102_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Authentication.Authentication where Authentication.action=failure Authentication.signature_id="500121" by Authentication.user _time span=1h | `drop_dm_object_name(Authentication)` | rename count as DenialCount | where DenialCount>=5 | join type=inner user [| tstats `summariesonly` min(_time) as SuccessTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user Authentication.src | `drop_dm_object_name(Authentication)`] | where SuccessTime>=_time AND SuccessTime<=(_time+5400) | table user DenialCount SuccessTime src
+| tstats `summariesonly` count from datamodel=Authentication.Authentication where (Authentication.action=failure OR Authentication.signature_id IN (500121,50074,50076,50072)) by Authentication.user Authentication.src _time span=1h | `drop_dm_object_name(Authentication)` | rename count as DenialCount | where DenialCount>=5 | join type=inner user [| tstats `summariesonly` min(_time) as SuccessTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user Authentication.src | `drop_dm_object_name(Authentication)`] | where SuccessTime>=_time AND SuccessTime<=_time+1800 | table _time user src DenialCount SuccessTime
 ```
 
 **Defender KQL:**
 ```kql
-let denials = AADSignInEventsBeta
+let PushWindowMin = 60;
+let SuccessWindow = 30m;
+let Fatigue = AADSignInEventsBeta
 | where Timestamp > ago(7d)
-| where ErrorCode == 500121   // MFA denied / not completed = push-bombing
-| summarize DenialCount = count(), FirstDenial = min(Timestamp), LastDenial = max(Timestamp) by AccountUpn, bin(Timestamp, 1h)
-| where DenialCount >= 5;      // 5 rejected pushes/hr = fatigue attempt (P99 legit <=2)
-let successes = AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ErrorCode == 0
-| project SuccessTime = Timestamp, AccountUpn, IPAddress, Country;
-denials
-| join kind=inner successes on AccountUpn
-| where SuccessTime between (FirstDenial .. LastDenial + 30m)
-| project AccountUpn, FirstDenial, LastDenial, DenialCount, SuccessTime, IPAddress, Country
-| order by LastDenial desc
-```
-
-### Credential Stuffing and Brute Force Against Enterprise Accounts
-
-`UC_100_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` dc(Authentication.user) as TargetedUsers count as FailedAttempts from datamodel=Authentication.Authentication where Authentication.action=failure Authentication.signature_id="50126" by Authentication.src _time span=1h | `drop_dm_object_name(Authentication)` | where TargetedUsers>=20 | sort - TargetedUsers
-```
-
-**Defender KQL:**
-```kql
+| where ErrorCode in (500121, 50074, 50076, 50072)   // MFA denied / not satisfied / not completed
+| summarize DenialCount = count(), FirstDenial = min(Timestamp), LastDenial = max(Timestamp) by AccountUpn
+| where DenialCount >= 5                              // >=5 MFA prompts denied = push-bombing / fatigue
+| where datetime_diff('minute', LastDenial, FirstDenial) <= PushWindowMin;
 AADSignInEventsBeta
-| where Timestamp > ago(1d)
-| where ErrorCode == 50126   // invalid username or password
-| summarize TargetedUsers = dcount(AccountUpn), FailedAttempts = count(), Users = make_set(AccountUpn, 50) by IPAddress, Country, bin(Timestamp, 1h)
-| where TargetedUsers >= 20   // >=20 distinct users sprayed from one IP/hr
-| order by TargetedUsers desc
+| where Timestamp > ago(7d)
+| where ErrorCode == 0                                // successful sign-in
+| join kind=inner Fatigue on AccountUpn
+| where Timestamp between (LastDenial .. LastDenial + SuccessWindow)
+| project SuccessTime = Timestamp, AccountUpn, DenialCount, FirstDenial, LastDenial, IPAddress, Application, Country, City, UserAgent
+| order by SuccessTime desc
 ```
 
-### Lateral Movement via Valid Compromised Credentials
+### Scattered Spider help-desk MFA/security-info reset then sign-in from a different IP
 
-`UC_100_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(Authentication.src) as IPCount values(Authentication.src) as IPs from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user _time span=1h | `drop_dm_object_name(Authentication)` | where IPCount>=5 | sort - IPCount
-```
-
-**Defender KQL:**
-```kql
-AADSignInEventsBeta
-| where Timestamp > ago(1d)
-| where ErrorCode == 0
-| summarize IPCount = dcount(IPAddress), CountryCount = dcount(Country), IPs = make_set(IPAddress, 20), Countries = make_set(Country, 20) by AccountUpn, bin(Timestamp, 1h)
-| where CountryCount >= 2 or IPCount >= 5   // same account, many geos/IPs within an hour
-| order by IPCount desc
-```
-
-### Reconnaissance and Information Gathering Pre-Exploitation
-
-`UC_100_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Processes.process) as Cmds from datamodel=Endpoint.Processes where (Processes.process_name IN ("net.exe","net1.exe","nltest.exe","adfind.exe") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process IN ("*Get-ADUser*","*Get-ADGroup*","*Get-ADComputer*","*Get-ADDomainController*"))) AND NOT Processes.user IN ("*$") by Processes.dest Processes.user _time span=1h | `drop_dm_object_name(Processes)` | where count>=5 | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where (FileName in~ ("net.exe","net1.exe") and ProcessCommandLine has_any ("group \"domain admins\"","group /domain","user /domain","group \"enterprise admins\""))
-    or (FileName =~ "nltest.exe" and ProcessCommandLine has_any ("/domain_trusts","/dclist","/trusted_domains"))
-    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Get-ADUser","Get-ADGroup","Get-ADGroupMember","Get-ADComputer","Get-ADDomainController"))
-    or (FileName =~ "adfind.exe")
-| summarize CmdCount = count(), Cmds = make_set(ProcessCommandLine, 20), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, AccountName, bin(Timestamp, 1h)
-| where CmdCount >= 5   // burst of directory recon in one hour
-| order by CmdCount desc
-```
-
-### Bulk data staging and exfiltration via MEGA / rclone
-
-`UC_100_15` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Processes.process) as Cmds min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("rclone.exe","megacmd.exe","megasync.exe","mega.exe") OR (Processes.process_name IN ("7z.exe","7za.exe","winrar.exe","rar.exe") AND Processes.process IN ("* a *","*-hp*","*-p *","*-mx*")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*Compress-Archive*")) AND NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("rclone.exe","megacmd.exe","megasync.exe","mega.exe")
-    or (FileName in~ ("7z.exe","7za.exe","winrar.exe","rar.exe") and ProcessCommandLine has_any (" a "," -hp"," -p ","-mx"))
-    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Compress-Archive")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, SHA256
-| order by Timestamp desc
-```
-
-### Adversary lurking in incident-response chat tools and calls
-
-`UC_100_16` · phase: **actions** · confidence: **Low** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Microsoft Teams"
-| where ActionType in ("MessagesListed","MessageRead","ChatRetrieved","MeetingParticipantDetail")
-| summarize DistinctObjects = dcount(ObjectId), Ops = count(), Actions = make_set(ActionType, 10) by AccountObjectId, AccountDisplayName, bin(Timestamp, 1h)
-| where DistinctObjects >= 15   // reading across >=15 channels/chats in an hour = harvesting
-| order by DistinctObjects desc
+| tstats `summariesonly` min(_time) as ChangeTime from datamodel=Change.All_Changes where (Change.action=modified OR Change.command IN ("User registered security info","Admin registered security info","Reset user's password","Reset password (by admin)")) by Change.user Change.command | `drop_dm_object_name(Change)` | rename user as TargetUser | join type=inner TargetUser [| tstats `summariesonly` min(_time) as SignInTime values(Authentication.src) as SignInIPs from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as TargetUser] | where SignInTime>=ChangeTime AND SignInTime<=ChangeTime+21600 | table ChangeTime command TargetUser SignInTime SignInIPs
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -552,4 +457,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 17 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### netlicensing-mcp get_product called with path-traversal product_number (../token)
 
-`UC_222_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_223_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ index=* "netlicensing_get_product" ("../" OR "..\\" OR "%2e%2e" OR "%2f" OR "%5c
 
 ### NetLicensing REST request URL containing both /product/ and traversal-to-token (wire signature)
 
-`UC_222_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_223_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ index=* "netlicensing_get_product" ("../" OR "..\\" OR "%2e%2e" OR "%2f" OR "%5c
 
 ### netlicensing-mcp get_product response leaking APIKEY/token fields (redaction bypass)
 
-`UC_222_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_223_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ index=* "netlicensing_get_product" ("ROLE_APIKEY_ADMIN" OR "tokenType" OR "/#/to
 
 ### First-seen access to NetLicensing /token REST endpoint from MCP egress source
 
-`UC_222_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_223_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ index=* "netlicensing_get_product" ("ROLE_APIKEY_ADMIN" OR "tokenType" OR "/#/to
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp
 
-`UC_222_0` · phase: **exploit** · confidence: **High**
+`UC_223_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
