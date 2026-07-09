@@ -11,6 +11,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-09
 - [fake 7 zip installers turn devices into residential proxy no](./2026-07-09/fake-7-zip-installers-turn-devices-into-residential-proxy-no.md)
 - [ghostapproval symlink flaws could let malicious repos run co](./2026-07-09/ghostapproval-symlink-flaws-could-let-malicious-repos-run-co.md)
+- [microsoft patches rogueplanet defender zero day vulnerabilit](./2026-07-09/microsoft-patches-rogueplanet-defender-zero-day-vulnerabilit.md)
+- [top ai agents built to catch malicious code can be tricked i](./2026-07-09/top-ai-agents-built-to-catch-malicious-code-can-be-tricked-i.md)
 
 ## 2026-07-08
 - [15 year old ghostlock flaw enables root and container escape](./2026-07-08/15-year-old-ghostlock-flaw-enables-root-and-container-escape.md)
@@ -53,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [rogue agent flaw could have let attackers hijack google dial](./2026-07-07/rogue-agent-flaw-could-have-let-attackers-hijack-google-dial.md)
 - [spain arrests suspected member of pro russian hacktivist gro](./2026-07-07/spain-arrests-suspected-member-of-pro-russian-hacktivist-gro.md)
 - [suspected china aligned hackers exploit roundcube flaws agai](./2026-07-07/suspected-china-aligned-hackers-exploit-roundcube-flaws-agai.md)
-- [the github actions attack pattern your ci security scanners ](./2026-07-07/the-github-actions-attack-pattern-your-ci-security-scanners-.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
@@ -113,7 +114,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [google disrupts netnut residential proxy network spanning 2 ](./2026-07-02/google-disrupts-netnut-residential-proxy-network-spanning-2-.md)
 - [how we added webauthn to a browser based rdp client](./2026-07-02/how-we-added-webauthn-to-a-browser-based-rdp-client.md)
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
-- [new chocopoc rat targets vulnerability researchers via fake ](./2026-07-02/new-chocopoc-rat-targets-vulnerability-researchers-via-fake-.md)
 - [ransomware groups turn to citrix bleed 2 byovd and supply ch](./2026-07-02/ransomware-groups-turn-to-citrix-bleed-2-byovd-and-supply-ch.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-02/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 - [threatsday ai compute hijacking apple email flaw bluehammer ](./2026-07-02/threatsday-ai-compute-hijacking-apple-email-flaw-bluehammer-.md)

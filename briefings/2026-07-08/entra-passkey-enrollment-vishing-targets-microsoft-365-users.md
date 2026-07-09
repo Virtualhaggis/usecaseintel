@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Pink (O-UNC-066) Entra passkey vishing — connection to passkey-themed phishing domains
 
-`UC_9_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_11_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### Attacker-controlled Entra passkey (FIDO2) registration after off-pattern sign-in
 
-`UC_9_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ CloudAppEvents
 
 ### Pink post-compromise SharePoint/OneDrive bulk download (data extortion staging)
 
-`UC_9_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
