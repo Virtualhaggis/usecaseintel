@@ -11,16 +11,15 @@ By Bill Toulas
 July 8, 2026
 03:54 PM
 0 
-
-
 Malicious packages on the Node Package Manager (npm) and the Python Package Index (PyPI) delivered stealer malware to developers and users of Paysafe, Skrill, and Neteller payment applications.
-
-
-The threat actor published at least 17 malicious packages simultaneously, each tasked to exfiltrate credentials and access tokens to a command-and-control server hosted on Amazon Web Services (AWS…
+The threat actor published at least 17 malicious packages simultaneously, each tasked to exfiltrate credentials and access tokens to a command-and-control server hosted on Amazon Web Services (AWS).
+All t…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `caliber-spinner-finishing.ngrok-free.dev`
+- **SHA256:** `ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c`
+- **SHA256:** `c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,6 +28,7 @@ The threat actor published at least 17 malicious packages simultaneously, each t
 - **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
 - **T1204.003** — User Execution: Malicious Image / Package
 - **T1567** — Exfiltration Over Web Service
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Install of fake Paysafe/Skrill/Neteller npm & PyPI credential-stealer packages
 
-`UC_3_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### C2 exfil to Paysafe-stealer ngrok endpoint caliber-spinner-finishing.ngrok-free.dev
 
-`UC_3_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `caliber-spinner-finishing.ngrok-free.dev`
 
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c`, `c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

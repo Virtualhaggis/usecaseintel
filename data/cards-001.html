@@ -809,8 +809,8 @@ DeviceFileEvents
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network"
   data-targets="windows"
-  data-uc-count="5" data-llm-uc-count="2"
-  data-search="Fake Paysafe, Skrill SDKs on NPM and PyPi steal credentials Malicious packages on the Node Package Manager (npm) and the Python Package Index (PyPI) delivered stealer malware to developers and users of Paysafe, Skrill, and Neteller payment applications. [...]  T1190 T1555.003 [LLM] Install of fake Paysafe/Skrill/Neteller npm &amp; PyPI credential-stealer packages [LLM] C2 exfil to Paysafe-stealer ngrok endpoint caliber-spinner-finishing.ngrok-free.dev Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Infostealer — non-browser process accessing browser cookie/login DBs">
+  data-uc-count="6" data-llm-uc-count="2"
+  data-search="Fake Paysafe, Skrill SDKs on NPM and PyPi steal credentials Malicious packages on the Node Package Manager (npm) and the Python Package Index (PyPI) delivered stealer malware to developers and users of Paysafe, Skrill, and Neteller payment applications. [...]  T1190 T1555.003 [LLM] Install of fake Paysafe/Skrill/Neteller npm &amp; PyPI credential-stealer packages [LLM] C2 exfil to Paysafe-stealer ngrok endpoint caliber-spinner-finishing.ngrok-free.dev Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Infostealer — non-browser process accessing browser cookie/login DBs File hash IOCs — endpoint file/process match">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-07-08-fake-paysafe-skrill-sdks-on-npm-and-pypi-steal-credentials" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -819,13 +819,14 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge bc">BleepingComputer</span></div>
   <div class="pubmeta">
     <span>2026-07-08</span>
-    <span>5 use cases</span>
+    <span>6 use cases</span>
     <span>2 techniques</span>
     <span>4 kill-chain phases detected</span>
   </div>
   <p class="summary">Malicious packages on the Node Package Manager (npm) and the Python Package Index (PyPI) delivered stealer malware to developers and users of Paysafe, Skrill, and Neteller payment applications. [...]</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
 <div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">caliber-spinner-finishing.ngrok-free.dev</span></div>
+<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">ce09810adca70ebe…</span> <span class="ind ">c6af37a6739f0d91…</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-03-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-03"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -871,7 +872,7 @@ DeviceFileEvents
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Install of fake Paysafe/Skrill/Neteller npm &amp; PyPI credential-stealer packages</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Install of fake Paysafe/Skrill/Neteller npm &amp; PyPI credential-stealer packages · File hash IOCs — endpoint file/process match</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] C2 exfil to Paysafe-stealer ngrok endpoint caliber-spinner-finishing.ngrok-free.dev · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
 </div>
@@ -1284,6 +1285,114 @@ level: high
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
 | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-03-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-03-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-03-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-03-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-03-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+// (Initiating only) so column-projection has to differ per side.
+union
+    ( DeviceFileEvents
+        | where Timestamp &gt; ago(7d)
+        | where InitiatingProcessAccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;) or SHA1 in~ (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;) or MD5 in~ (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
+    ( DeviceProcessEvents
+        | where Timestamp &gt; ago(7d)
+        | where AccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;) or SHA1 in~ (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;) or MD5 in~ (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-03-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+// Defender version so the engine can push hash predicates per-side.
+let BadHashes = dynamic([&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;]);
+union
+    ( ImFileEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where TargetFileSHA256 in~ (BadHashes)
+           or TargetFileSHA1 in~ (BadHashes)
+           or TargetFileMD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType,
+                  TargetFileName, TargetFilePath, TargetFileSHA256,
+                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
+    ( ImProcessCreate
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
+                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
+                  TargetFileSHA256 = SHA256,
+                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-03-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-03-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-03-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;ce09810adca70ebec87bc455380ef629ceaa2a0d926149d9115604060167682c&quot;, &quot;c6af37a6739f0d919ab7049caf3a85831cab44bdbea27e0d9de7adec80334e2b&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>
