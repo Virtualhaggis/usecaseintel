@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Install of fake Paysafe/Skrill/Neteller npm & PyPI credential-stealer packages
 
-`UC_9_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### C2 exfil to Paysafe-stealer ngrok endpoint caliber-spinner-finishing.ngrok-free.dev
 
-`UC_9_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_11_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -14,8 +14,6 @@ That is the finding in a  proof-of-concept published Wednesday by the AI Now I
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-39861`
-- **CVE:** `CVE-2026-55200`
-- **CVE:** `CVE-2026-46817`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,12 +29,91 @@ That is the finding in a  proof-of-concept published Wednesday by the AI Now I
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### AI coding agent (Claude Code / Codex) executes README-suggested security.sh
+
+`UC_5_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*security.sh*") AND (Processes.parent_process_name IN ("node","node.exe","claude","claude.exe","codex","codex.exe") OR Processes.parent_process="*claude*" OR Processes.parent_process="*codex*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "security.sh"
+| where InitiatingProcessFileName in~ ("node","node.exe","claude","claude.exe","codex","codex.exe")
+    or InitiatingProcessCommandLine has_any ("claude-code","@anthropic-ai/claude-code","@openai/codex","claude","codex")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### security.sh launches hidden payload binary (code_policies) disguised as Go build
+
+`UC_5_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*security.sh*") AND NOT (Processes.process_name IN ("sh","bash","dash","zsh","cat","ls","grep","egrep","awk","sed","echo","cut","tr","which","dirname","basename","env","go","gofmt","node")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessCommandLine has "security.sh"
+| where FileName !in~ ("sh","bash","dash","zsh","cat","ls","grep","egrep","awk","sed","echo","cut","tr","which","dirname","basename","env","go","gofmt","node")
+| extend IsKnownPoCPayload = (FileName =~ "code_policies")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, IsKnownPoCPayload,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### AI coding agent lineage executing a local repo binary outside the standard toolchain
+
+`UC_5_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","claude","claude.exe","codex","codex.exe") OR Processes.parent_process="*claude*" OR Processes.parent_process="*codex*") AND NOT (Processes.process_name IN ("sh","bash","dash","zsh","node","node.exe","git","git.exe","npm","npx","python","python3","go","gofmt","cat","ls","grep","awk","sed","env","which","cmd.exe","conhost.exe")) AND NOT (Processes.process_path IN ("*/usr/*","*/bin/*","*/sbin/*","*/node_modules/.bin/*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node","node.exe","claude","claude.exe","codex","codex.exe")
+    or InitiatingProcessCommandLine has_any ("claude-code","@anthropic-ai/claude-code","@openai/codex","codex")
+| where FileName !in~ ("sh","bash","dash","zsh","node","node.exe","git","git.exe","npm","npx","python","python3","go","gofmt","cat","ls","grep","awk","sed","env","which","cmd.exe","conhost.exe")
+| where not (FolderPath startswith "/usr/" or FolderPath startswith "/bin/" or FolderPath startswith "/sbin/"
+    or FolderPath has "/node_modules/.bin/" or FolderPath has @"\Program Files" or FolderPath has @"\WindowsApps")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -229,7 +306,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Top AI Agents Built to Catch Malicious Code Can Be Tricked Into Running It
 
-`UC_3_8` · phase: **exploit** · confidence: **High**
+`UC_5_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -281,9 +358,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-39861`, `CVE-2026-55200`, `CVE-2026-46817`
+  - CVE(s): `CVE-2026-39861`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

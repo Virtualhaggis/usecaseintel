@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### SPECTRALVIPER DLL side-load: IntelAudioService.exe (renamed dtlupdate.exe) loads DtlCrashCatch.dll
 
-`UC_274_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_273_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceImageLoadEvents
 
 ### OceanLotus SPECTRALVIPER C2 communication to FireAnt-campaign domains/IPs
 
-`UC_274_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_273_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### FireAnt MetaKit trojanized setup.exe (SPECTRALVIPER downloader) by known hash
 
-`UC_274_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_273_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ union DeviceProcessEvents, DeviceFileEvents
 
 ### SPECTRALVIPER injected OneDrive.Sync.Service.exe beaconing (Cookie-header C2)
 
-`UC_274_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_273_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -330,7 +330,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_274_8` · phase: **exploit** · confidence: **High**
+`UC_273_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

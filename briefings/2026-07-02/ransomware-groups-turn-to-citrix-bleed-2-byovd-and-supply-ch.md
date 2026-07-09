@@ -66,18 +66,16 @@ Threat actors associated with the Anubis ransomware operation have been observed
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1095** — Non-Application Layer Protocol
 - **T1571** — Non-Standard Port
-- **T1090** — Proxy
+- **T1095** — Non-Application Layer Protocol
 - **T1068** — Exploitation for Privilege Escalation
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1547.006** — Boot or Logon Autostart Execution: Kernel Modules and Extensions
-- **T1212** — Exploitation for Credential Access
 - **T1572** — Protocol Tunneling
-- **T1089** — Disabling Security Tools
+- **T1090** — Proxy
 - **T1567.002** — Exfiltration to Cloud Storage
 - **T1048** — Exfiltration Over Alternative Protocol
 - **T1485** — Data Destruction
+- **T1070.001** — Indicator Removal: Clear Windows Event Logs
 
 ## Kill chain phases observed
 
@@ -85,132 +83,146 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### The Gentlemen Go backdoor C2 beacon to 81.177.215.15:9443
+### Citrix Bleed 2 (CVE-2025-5777) exploitation via malformed doAuthentication.do POST
 
-`UC_101_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_101_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="81.177.215.15" All_Traffic.dest_port=9443 by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Web.http_user_agent) as user_agents from datamodel=Web.Web where Web.http_method=POST Web.url="*/p/u/doAuthentication.do*" by Web.src, Web.dest, Web.url, Web.http_method, Web.status
+| `drop_dm_object_name(Web)`
+| where count > 3
+| sort - count
+```
+
+### The Gentlemen Go backdoor C2 beacon to 81.177.215.15:9443
+
+`UC_101_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="81.177.215.15" by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP == "81.177.215.15" and RemotePort == 9443
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, ActionType
-| order by Timestamp desc
+| where RemoteIP == "81.177.215.15"
+| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName
+| sort by Timestamp desc
 ```
 
-### Kontron ktapi.sys vulnerable driver load (The Gentlemen BYOVD)
+### BYOVD: Kontron ktapi.sys vulnerable driver dropped/loaded (The Gentlemen GentleKiller)
 
-`UC_101_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_101_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Filesystem.file_path) as file_path, min(_time) as firstTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="ktapi.sys" by Filesystem.dest, Filesystem.file_name, Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_name="ktapi.sys" by Filesystem.dest, Filesystem.file_name, Filesystem.process_id
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceImageLoadEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "ktapi.sys"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| sort by Timestamp desc
 ```
 
-### Citrix Bleed 2 (CVE-2025-5777) exploitation attempts against NetScaler Gateway
-
-`UC_101_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(Web.http_user_agent) as user_agents, values(Web.dest) as dest from datamodel=Web.Web where Web.http_method=POST Web.url="*/p/u/doAuthentication.do*" by Web.src, Web.http_user_agent | `drop_dm_object_name(Web)` | eval ua_len=len(http_user_agent) | where ua_len>200 OR count>50 | sort - count
-```
-
-### Cloudflare Tunnel (cloudflared) deployment for persistent covert access
+### Anubis affiliate Cloudflare Tunnel (cloudflared) covert-access setup
 
 `UC_101_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Processes.process) as cmdline, min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name="cloudflared.exe" OR Processes.process="*tunnel run*" OR Processes.process="*trycloudflare.com*") by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where (Processes.process_name="cloudflared.exe" OR Processes.process="*tunnel* run*" OR Processes.process="*trycloudflare.com*") Processes.user!="*$" by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where AccountName !endswith "$"
 | where FileName =~ "cloudflared.exe"
-   or ProcessCommandLine has_any ("tunnel run","--token ","trycloudflare.com","cloudflared tunnel")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
+   or ProcessCommandLine has_all ("tunnel","run")
+   or ProcessCommandLine has_any ("trycloudflare.com","--token ey")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| sort by Timestamp desc
 ```
 
-### Anubis defense impairment: Defender RTP disable + SophosUninstall + PCHunter
+### Anubis exfiltration tooling: rclone / s5cmd / S3 Browser / WinSCP to cloud storage
 
-`UC_101_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_101_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Processes.process) as cmdline, values(Processes.process_name) as procs from datamodel=Endpoint.Processes where (Processes.process_name IN ("PCHunter64.exe","PCHunter.exe","PCHunter32.exe") OR Processes.process="*SophosUninstall*" OR (Processes.process="*Set-MpPreference*" AND Processes.process="*-DisableRealtimeMonitoring*") OR Processes.process="*DisableRealtimeMonitoring $true*") by Processes.dest, Processes.user, Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT user IN ("*$")
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where (Processes.process_name IN ("rclone.exe","s5cmd.exe","winscp.exe","s3browser.exe","putty.exe") OR Processes.process="*rclone*" OR Processes.process="*s5cmd*") Processes.user!="*$" by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(14d)
 | where AccountName !endswith "$"
-| where FileName in~ ("PCHunter64.exe","PCHunter.exe","PCHunter32.exe")
-   or FileName has "SophosUninstall"
-   or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Set-MpPreference" and ProcessCommandLine has "DisableRealtimeMonitoring")
-   or ProcessCommandLine has "DisableRealtimeMonitoring $true"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
+| where FileName in~ ("rclone.exe","s5cmd.exe","winscp.exe","s3browser.exe","putty.exe")
+   or ProcessCommandLine has_any ("rclone","s5cmd")
+   or (ProcessCommandLine has_any ("copy","sync","copyto") and ProcessCommandLine has_any ("--config","--multi-thread-streams","s3:","b2:"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| sort by Timestamp desc
 ```
 
-### Anubis exfiltration tooling: rclone/s5cmd/S3 Browser/WinSCP cloud transfer
+### Anubis /WIPEMODE data-wiper activation (files truncated to 0 KB)
 
-`UC_101_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_101_18` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Processes.process) as cmdline, min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("rclone.exe","s5cmd.exe","s3browser.exe","winscp.exe","winscp.com","pscp.exe") OR Processes.process="*rclone*" OR Processes.process="*s5cmd*") AND (Processes.process="*copy*" OR Processes.process="*sync*" OR Processes.process="*--config*" OR Processes.process="*remote:*" OR Processes.process="* cp *" OR Processes.process_name IN ("s3browser.exe","winscp.exe","winscp.com")) by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT user IN ("*$") | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count, min(_time) as firstTime, values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.process="*WIPEMODE*" by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "WIPEMODE"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| sort by Timestamp desc
+```
+
+### Pre-ransom defense evasion: Defender RTP disable + SophosUninstall + PCHunter + log clearing
+
+`UC_101_19` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, min(_time) as firstTime, values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where (Processes.process="*DisableRealtimeMonitoring*" OR Processes.process_name IN ("SophosUninstall.exe","PCHunter64.exe","PCHunter.exe") OR (Processes.process_name="wevtutil.exe" AND Processes.process="* cl *") OR Processes.process="*Clear-EventLog*") Processes.user!="*$" by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
 | where AccountName !endswith "$"
-| where FileName in~ ("rclone.exe","s5cmd.exe","s3browser.exe","winscp.exe","winscp.com","pscp.exe")
-   or ProcessCommandLine has_any ("rclone ","s5cmd ")
-| where FileName in~ ("s3browser.exe","winscp.exe","winscp.com")
-   or ProcessCommandLine has_any ("copy","sync","--config","remote:"," cp "," mb ","cat ")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### Anubis encryptor /WIPEMODE destructive command execution
-
-`UC_101_19` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(Processes.process) as cmdline, values(Processes.process_path) as paths from datamodel=Endpoint.Processes where (Processes.process="*/WIPEMODE*" OR (Processes.process="*/KEY*" AND Processes.process="*/PATH*" AND Processes.process="*/elevated*")) by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has "/WIPEMODE"
-   or (ProcessCommandLine has "/KEY" and ProcessCommandLine has "/PATH" and ProcessCommandLine has "/elevated")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
+| where ProcessCommandLine has "DisableRealtimeMonitoring"
+   or FileName in~ ("SophosUninstall.exe","PCHunter64.exe","PCHunter.exe")
+   or (FileName =~ "wevtutil.exe" and ProcessCommandLine has " cl ")
+   or ProcessCommandLine has_any ("Clear-EventLog","wevtutil cl")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| sort by Timestamp desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -582,4 +594,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 20 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 20 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

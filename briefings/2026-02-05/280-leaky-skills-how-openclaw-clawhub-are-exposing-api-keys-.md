@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Installation of credential-leaking ClawHub skills (moltyverse-email, buy-anything, prompt-log, youtube-data)
 
-`UC_633_0` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_632_0` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### AI agent skill leaks Stripe key or card PAN/CVC verbatim in curl command line
 
-`UC_633_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_632_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### AI session-log harvest via prompt-log extract.sh writing markdown with embedded secrets
 
-`UC_633_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_632_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

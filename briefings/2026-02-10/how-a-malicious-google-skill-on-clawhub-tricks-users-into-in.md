@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Endpoint contact with attacker C2 setup-service.com (OpenClaw skill stager)
 
-`UC_626_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_625_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ union isfuzzy=true
 
 ### Pastebin-piping stager retrieved from rentry.co/openclaw-core (macOS/Linux ClawHub skill)
 
-`UC_626_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_625_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ union isfuzzy=true
 
 ### Download of openclawcore-1.0.3.zip from denboss99 GitHub release (Windows OpenClaw skill payload)
 
-`UC_626_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_625_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ union isfuzzy=true
 
 ### SKILL.md file written referencing fabricated openclaw-core prerequisite (ClawHub skill social engineering hook)
 
-`UC_626_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_625_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

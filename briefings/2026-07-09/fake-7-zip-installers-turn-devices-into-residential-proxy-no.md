@@ -1,4 +1,4 @@
-# [CRIT] Fake 7-Zip Installers Turn Devices Into Residential Proxy Nodes
+# [HIGH] Fake 7-Zip Installers Turn Devices Into Residential Proxy Nodes
 
 **Source:** The Hacker News
 **Published:** 2026-07-09
@@ -13,18 +13,29 @@ The activity dates back to at least August 2022, according to DNS threat intelli
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-55200`
-- **CVE:** `CVE-2026-46817`
 - **Domain (defanged):** `7zip.com`
-- **Domain (defanged):** `7-zip.org`
-- **Domain (defanged):** `iplogger.com`
+- **Domain (defanged):** `whtatsapp.net`
+- **Domain (defanged):** `wirevpn.app`
+- **Domain (defanged):** `wirevpn.cc`
+- **Domain (defanged):** `wirevpn.io`
+- **Domain (defanged):** `betflixfree.net`
+- **Domain (defanged):** `isharkvpn.com`
+- **Domain (defanged):** `snaptik.io`
+- **Domain (defanged):** `bintangwarisanhotel.com`
+- **Domain (defanged):** `proxyreviews.org`
+- **Domain (defanged):** `norton-com-nu16.com`
+- **Domain (defanged):** `breakoursilence.com`
+- **Domain (defanged):** `visitbenin.org`
+- **Domain (defanged):** `smartproxy.org`
+- **Domain (defanged):** `ipidea.org`
+- **Domain (defanged):** `911proxy.com`
+- **Domain (defanged):** `iplogger.com/mnWD`
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
@@ -32,12 +43,130 @@ The activity dates back to at least August 2022, according to DNS threat intelli
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1102** — Web Service
+- **T1090** — Proxy
+- **T1204.002** — User Execution: Malicious File
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Lurking Lizard proxyware lookalike distribution/proxy-brand domain resolution
+
+`UC_7_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("7zip.com","*.7zip.com","whtatsapp.net","*.whtatsapp.net","wirevpn.app","wirevpn.cc","wirevpn.io","snaptik.io","isharkvpn.com","betflixfree.net","smartproxy.org","ipidea.org","911proxy.com") by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("7zip.com","whtatsapp.net","wirevpn.app","wirevpn.cc","wirevpn.io","snaptik.io","isharkvpn.com","betflixfree.net","smartproxy.org","ipidea.org","911proxy.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### IPLogger tracking beacon (iplogger.com/mnWD) from non-browser process
+
+`UC_7_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*iplogger.com/mnWD*" OR Web.dest="iplogger.com") by Web.src Web.dest Web.url Web.http_user_agent Web.app
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl contains "iplogger.com"
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Residential-proxy client check-in to /client_v1/config/http and /client_v1/version/server
+
+`UC_7_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/client_v1/config/http*" OR Web.url="*/client_v1/version/server*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("/client_v1/config/http","/client_v1/version/server")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Fake installer (7-Zip/WhatsApp/WireVPN) written to disk from Lurking Lizard domain
+
+`UC_7_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest IN ("7zip.com","whtatsapp.net","wirevpn.app","wirevpn.cc","wirevpn.io","snaptik.io","isharkvpn.com","betflixfree.net")) AND (Web.url="*.exe" OR Web.url="*.msi") by Web.src Web.dest Web.url Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileOriginUrl has_any ("7zip.com","whtatsapp.net","wirevpn.app","wirevpn.cc","wirevpn.io","snaptik.io","isharkvpn.com","betflixfree.net")
+| where FileName endswith ".exe" or FileName endswith ".msi"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, FileOriginUrl, FileOriginReferrerUrl, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### Trojanized 7-Zip/WireVPN installer spawning command interpreter or LOLBin
+
+`UC_7_11` · phase: **install** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("7z.exe","7zFM.exe","7zG.exe","7zip.exe","7-zip.exe","wirevpn.exe","snaptik.exe","isharkvpn.exe") OR Processes.parent_process="*7-zip*setup*" OR Processes.parent_process="*wirevpn*setup*" OR Processes.parent_process="*snaptik*setup*") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","curl.exe","bitsadmin.exe","certutil.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName has_any ("7z","7zip","7-zip","wirevpn","snaptik","isharkvpn","whatsapp")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","curl.exe","bitsadmin.exe","certutil.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -205,13 +334,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-55200`, `CVE-2026-46817`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `7zip.com`, `7-zip.org`, `iplogger.com`
+  - IP / domain IOC(s): `7zip.com`, `whtatsapp.net`, `wirevpn.app`, `wirevpn.cc`, `wirevpn.io`, `betflixfree.net`, `isharkvpn.com`, `snaptik.io` _(+9 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI multiedit arbitrary write to SSH/shell/cloud-cred files by python process
 
-`UC_236_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_235_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### PraisonAI multiedit secret-file read (/etc/shadow, id_rsa, .aws/credentials, .env) by python
 
-`UC_236_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_235_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceFileEvents
 
 ### Vulnerable PraisonAI install/upgrade activity (verify version >= 4.6.61)
 
-`UC_236_3` · phase: **weapon** · confidence: **Low** · AI-generated for this article
+`UC_235_3` · phase: **weapon** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-29w3-p9w9-wc47: PraisonAI: Arbitrary File Read/Write via
 
-`UC_236_0` · phase: **exploit** · confidence: **High**
+`UC_235_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

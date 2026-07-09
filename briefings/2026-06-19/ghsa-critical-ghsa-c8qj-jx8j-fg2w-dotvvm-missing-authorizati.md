@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Anonymous HTTP 200 to DotVVM endpoints (AuthorizeActionFilter bypass exploitation)
 
-`UC_220_0` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_219_0` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable DotVVM framework version present on host (GHSA-c8qj-jx8j-fg2w)
 
-`UC_220_1` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_219_1` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

@@ -11,7 +11,20 @@ Artificial intelligence is playing a growing role in this development. In H1 202
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `54.67.2.84`
+- **IPv4 (defanged):** `52.222.205.45`
+- **IPv4 (defanged):** `104.21.91.170`
+- **Domain (defanged):** `m-mgarg.com`
+- **Domain (defanged):** `mgardownload.com`
+- **SHA1:** `6bbc9ab132ba066f63676e05da13d108598bc29b`
+- **SHA1:** `375d7423e63c8f5f2cc814e8cfe697ba25168afa`
+- **SHA1:** `3978ac5cd14e357320e127d6c87f10cb70a1dcc2`
+- **SHA1:** `e60d12017d2da579df87368f5596a0244621ae86`
+- **SHA1:** `9b1723284e311794987997cb7e8814eb6014713f`
+- **SHA1:** `076801bd9c6eb78fc0331a4c7a22c73199cc3824`
+- **SHA1:** `8364730e9bb2cf3a4b016de1b34f38341c0ee2fa`
+- **SHA1:** `f8f4c5bc498bcce907dc975dd88be8d594629909`
+- **SHA1:** `c14e9b062ed28115ede096788f62b47a6ed841ac`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,12 +44,57 @@ Artificial intelligence is playing a growing role in this development. In H1 202
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### PromptSpy Android GenAI malware C2/distribution domain contact (mgardownload.com, m-mgarg.com)
+
+`UC_28_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*mgardownload.com*" OR DNS.query="*m-mgarg.com*") by DNS.src DNS.dest DNS.query 
+| `drop_dm_object_name(DNS)` 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("mgardownload.com","m-mgarg.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### PromptSpy dropper APK sample hash landing on monitored endpoint
+
+`UC_28_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("6bbc9ab132ba066f63676e05da13d108598bc29b","375d7423e63c8f5f2cc814e8cfe697ba25168afa","3978ac5cd14e357320e127d6c87f10cb70a1dcc2","e60d12017d2da579df87368f5596a0244621ae86","9b1723284e311794987997cb7e8814eb6014713f","076801bd9c6eb78fc0331a4c7a22c73199cc3824","8364730e9bb2cf3a4b016de1b34f38341c0ee2fa","f8f4c5bc498bcce907dc975dd88be8d594629909","c14e9b062ed28115ede096788f62b47a6ed841ac") by Filesystem.dest Filesystem.file_hash 
+| `drop_dm_object_name(Filesystem)` 
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA1 in ("6bbc9ab132ba066f63676e05da13d108598bc29b","375d7423e63c8f5f2cc814e8cfe697ba25168afa","3978ac5cd14e357320e127d6c87f10cb70a1dcc2","e60d12017d2da579df87368f5596a0244621ae86","9b1723284e311794987997cb7e8814eb6014713f","076801bd9c6eb78fc0331a4c7a22c73199cc3824","8364730e9bb2cf3a4b016de1b34f38341c0ee2fa","f8f4c5bc498bcce907dc975dd88be8d594629909","c14e9b062ed28115ede096788f62b47a6ed841ac")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, FileOriginUrl, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -352,7 +410,17 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `54.67.2.84`, `52.222.205.45`, `104.21.91.170`, `m-mgarg.com`, `mgardownload.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `6bbc9ab132ba066f63676e05da13d108598bc29b`, `375d7423e63c8f5f2cc814e8cfe697ba25168afa`, `3978ac5cd14e357320e127d6c87f10cb70a1dcc2`, `e60d12017d2da579df87368f5596a0244621ae86`, `9b1723284e311794987997cb7e8814eb6014713f`, `076801bd9c6eb78fc0331a4c7a22c73199cc3824`, `8364730e9bb2cf3a4b016de1b34f38341c0ee2fa`, `f8f4c5bc498bcce907dc975dd88be8d594629909` _(+1 more)_
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

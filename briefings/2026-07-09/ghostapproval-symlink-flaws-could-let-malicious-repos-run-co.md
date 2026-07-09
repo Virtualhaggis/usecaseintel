@@ -16,8 +16,6 @@ The affected tools are Amazon Q Developer, Anthropic's Claude Code, Augment, Cur
 - **CVE:** `CVE-2026-12958`
 - **CVE:** `CVE-2026-50549`
 - **CVE:** `CVE-2026-12957`
-- **CVE:** `CVE-2026-55200`
-- **CVE:** `CVE-2026-46817`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,12 +29,118 @@ The affected tools are Amazon Q Developer, Anthropic's Claude Code, Augment, Cur
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1098.004** — Account Manipulation: SSH Authorized Keys
+- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
+- **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1021.004** — Remote Services: SSH
+- **T1078** — Valid Accounts
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### AI coding agent writes SSH authorized_keys or shell rc via GhostApproval symlink
+
+`UC_6_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=created OR Filesystem.action=modified) AND (Filesystem.file_name="authorized_keys" OR Filesystem.file_name=".zshrc" OR Filesystem.file_name=".bashrc" OR Filesystem.file_name=".bash_profile" OR Filesystem.file_name=".profile" OR Filesystem.file_name=".zshenv" OR Filesystem.file_name=".zprofile") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where match(process_name, "(?i)(node|code|cursor|windsurf|claude|antigravity|augment|amazonq)") | where NOT match(process_name, "(?i)(ssh-keygen|sshd)") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileModified")
+| where InitiatingProcessAccountName !endswith "$"
+| where (FileName == "authorized_keys" and FolderPath has "/.ssh/")
+    or FileName in~ (".zshrc",".bashrc",".bash_profile",".profile",".zshenv",".zprofile",".zlogin")
+| where InitiatingProcessFileName in~ ("node","node.exe","code","Code.exe","cursor","Cursor","cursor.exe","windsurf","Windsurf","windsurf.exe","claude","antigravity","augment","python","python3")
+    or InitiatingProcessCommandLine has_any ("amazonq","amazon-q","language-server","cursor","windsurf","claude","augment","antigravity")
+| where not(InitiatingProcessFileName in~ ("ssh-keygen","sshd"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Amazon Q / AI agent spawns shell child from poisoned .amazonq/mcp.json (CVE-2026-12957)
+
+`UC_6_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","code","Code.exe","cursor","windsurf","claude","antigravity","augment") OR Processes.parent_process="*amazonq*" OR Processes.parent_process="*mcp.json*" OR Processes.parent_process="*language-server*") AND (Processes.process_name IN ("bash","sh","zsh","dash","cmd.exe","powershell.exe","pwsh","python","python3","osascript")) AND (Processes.process="*curl*" OR Processes.process="*wget*" OR Processes.process="*chmod*" OR Processes.process="*base64*" OR Processes.process="*.aws*" OR Processes.process="*authorized_keys*" OR Processes.parent_process="*mcp.json*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("node","node.exe","code","Code.exe","cursor","Cursor","cursor.exe","windsurf","Windsurf","windsurf.exe","claude","antigravity","augment")
+    or InitiatingProcessCommandLine has_any ("amazonq","amazon-q","language-server",".amazonq/mcp.json","mcp.json")
+| where FileName in~ ("bash","sh","zsh","dash","cmd.exe","powershell.exe","pwsh","python","python3","osascript")
+| where ProcessCommandLine has_any ("curl","wget","chmod","base64",".aws/credentials",".aws\\credentials","authorized_keys","aws_access_key")
+    or InitiatingProcessCommandLine has "mcp.json"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### SSH authorized_keys planted then remote SSH logon (GhostApproval key-injection use)
+
+`UC_6_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as KeyWriteTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="authorized_keys" AND Filesystem.file_path="*/.ssh/*" AND (Filesystem.action=created OR Filesystem.action=modified) by Filesystem.dest Filesystem.process_name | `drop_dm_object_name(Filesystem)` | join type=inner dest [| tstats `summariesonly` min(_time) as LogonTime from datamodel=Authentication where Authentication.action=success AND (Authentication.app="sshd" OR Authentication.signature="ssh") by Authentication.dest Authentication.src Authentication.user | `drop_dm_object_name(Authentication)`] | where LogonTime >= KeyWriteTime AND LogonTime <= KeyWriteTime+3600 | eval DelaySec=LogonTime-KeyWriteTime | convert ctime(KeyWriteTime) ctime(LogonTime) | table dest process_name KeyWriteTime LogonTime DelaySec src user
+```
+
+**Defender KQL:**
+```kql
+let win = 1h;
+let keyWrites = DeviceFileEvents
+    | where Timestamp > ago(14d)
+    | where FileName == "authorized_keys" and FolderPath has "/.ssh/"
+    | where ActionType in ("FileCreated","FileModified")
+    | project KeyWriteTime = Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine;
+DeviceLogonEvents
+| where Timestamp > ago(14d)
+| where ActionType == "LogonSuccess"
+| where LogonType in ("Network","RemoteInteractive") or Protocol =~ "Ssh"
+| where RemoteIPType == "Public"
+| join kind=inner keyWrites on DeviceId
+| where Timestamp between (KeyWriteTime .. KeyWriteTime + win)
+| extend DelaySec = datetime_diff('second', Timestamp, KeyWriteTime)
+| project KeyWriteTime, LogonTime = Timestamp, DeviceName, AccountName, RemoteIP, DelaySec, KeyWriter = InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by LogonTime desc
+```
+
+### Symlink created in repo pointing to SSH/AWS/shell files (GhostApproval staging)
+
+`UC_6_10` · phase: **weapon** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="ln" AND Processes.process="*-s*") OR (Processes.process="*mklink*") OR (Processes.process="*SymbolicLink*")) AND (Processes.process="*authorized_keys*" OR Processes.process="*/.ssh*" OR Processes.process="*.zshrc*" OR Processes.process="*.bashrc*" OR Processes.process="*.aws*" OR Processes.process="*/etc/*" OR Processes.process="*System32*" OR Processes.process="*..*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where (FileName =~ "ln" and ProcessCommandLine has "-s")
+    or (FileName in~ ("cmd.exe") and ProcessCommandLine has "mklink")
+    or (FileName in~ ("powershell.exe","pwsh") and ProcessCommandLine has "SymbolicLink")
+| where ProcessCommandLine has_any ("authorized_keys","/.ssh",".zshrc",".bashrc",".bash_profile",".aws","/etc/","System32","..\\..","../..")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -205,9 +309,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-12958`, `CVE-2026-50549`, `CVE-2026-12957`, `CVE-2026-55200`, `CVE-2026-46817`
+  - CVE(s): `CVE-2026-12958`, `CVE-2026-50549`, `CVE-2026-12957`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
