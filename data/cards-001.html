@@ -352,8 +352,8 @@ DeviceTvmSoftwareVulnerabilities
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,cloud,endpoint"
   data-targets="linux,vcs,windows"
-  data-uc-count="5" data-llm-uc-count="1"
-  data-search="[GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers/body injected into CronJob shell command leads to persistent RCE Nuclio: Unsanitized cron trigger event headers/body injected into CronJob shell command leads to persistent RCE CVE-2026-52831 T1190 [LLM] Nuclio CronJob pod running curl that reads the serviceaccount token / shell breakout Asset exposure — vulnerability matches article CVE(s) Remote service execution — PsExec / SMB lateral movement RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers">
+  data-uc-count="6" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers/body injected into CronJob shell command leads to persistent RCE Nuclio: Unsanitized cron trigger event headers/body injected into CronJob shell command leads to persistent RCE CVE-2026-52831 T1190 [LLM] Nuclio CronJob shell runtime reads serviceaccount token via injected curl --header (CVE-2026-52831) [LLM] Nuclio pod egress from injected curl/shell carrying serviceaccount token to external host (CVE-2026-52831) Asset exposure — vulnerability matches article CVE(s) Remote service execution — PsExec / SMB lateral movement RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-08-ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -362,7 +362,7 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-08</span>
-    <span>5 use cases</span>
+    <span>6 use cases</span>
     <span>1 technique</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -414,30 +414,30 @@ DeviceTvmSoftwareVulnerabilities
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Nuclio CronJob shell runtime reads serviceaccount token via injected curl --header (CVE-2026-52831) · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Nuclio CronJob pod running curl that reads the serviceaccount token / shell breakout · Remote service execution — PsExec / SMB lateral movement</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Nuclio pod egress from injected curl/shell carrying serviceaccount token to external host (CVE-2026-52831) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="a3073891dc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="d600aaf65a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
   <summary>
-    <span class="uc-title">Nuclio CronJob pod running curl that reads the serviceaccount token / shell breakout</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-title">Nuclio CronJob shell runtime reads serviceaccount token via injected curl --header (CVE-2026-52831)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="a3073891dc" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="d600aaf65a" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the in-pod execution stage of CVE-2026-52831: a /bin/sh -c curl command that also reads /var/run/secrets/kubernetes.io/serviceaccount/token or contains shell breakout after --header. Legitimate Nuclio cron curl jobs never read the pod&#x27;s Kubernetes serviceaccount token.
+    <div class="uc-desc">Hunts the runtime exploitation of CVE-2026-52831: a Nuclio-generated CronJob runs &#x27;/bin/sh -c curl --header ...&#x27; where an injected header key or $(...) body substitution has broken the shell quoting and appended attacker commands that read the pod serviceaccount token. Article-specific because it anchors on the exact curl --header shape concatenated with a read of /var/run/secrets/kubernetes.io/serviceaccount/token or a command substitution the sink at lazy.go:2212 executes.
 
-Rationale: Uses the PoC&#x27;s exact runtime behaviour — a /bin/sh -c curl string that also cats /var/run/secrets/kubernetes.io/serviceaccount/token — which is high-fidelity because a benign Nuclio cron curl job has no reason to touch the SA token. The --header + shell-metachar clause catches Path-A quote-breakout even without the token read. Grounded in the GHSA advisory PoC output.
+Rationale: Anchors on the exact sink shape from lazy.go:2212 (&#x27;/bin/sh -c curl ... --header ...&#x27;) combined with the article&#x27;s serviceaccount token path and the $()/backtick command-substitution primitive (Path-B, lazy.go:2188); the curl+--header+token triad is not a shape legitimate cron curls emit.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-v5px-423j-pf7p
-  • https://advisories.gitlab.com/golang/github.com/nuclio/nuclio/CVE-2026-29042/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+  • https://advisories.gitlab.com/golang/github.com/nuclio/nuclio/CVE-2026-52831/
+  • https://pkg.go.dev/vuln/GO-2026-4598</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A DevOps init script that legitimately curls the Kubernetes API using the SA token as a bearer header (common in-cluster automation)</li><li>Service-mesh or sidecar bootstrap reading the token to authenticate to the API server</li><li>A monitoring agent packaged in a curl image that self-reports to the API</li><li>Security scanner/PoC validation running inside a lab pod</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&#x27;kube-apiserver&#x27;,&#x27;istio&#x27;,&#x27;linkerd&#x27;,&#x27;fluent&#x27;) or FolderPath startswith &#x27;/var/lib/rancher&#x27;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full process command line and parent (should be a Nuclio cron pod); confirm the curl is reading the SA token rather than sending it as an intended bearer auth to the legitimate API server. 2) Contain: kill the pod and suspend/delete its CronJob (UC2), then rotate/invalidate the pod&#x27;s serviceaccount token and review RBAC bound to that SA. 3) Hunt: check DeviceNetworkEvents/NetworkConnectIP4 for outbound egress carrying the token value, and back-trace to the NuclioFunction spec (UC1) and CronJob (UC2) that seeded the command.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimately authored Nuclio cron function that intentionally reads its own serviceaccount token inside the request body for a self-referential health check</li><li>An operator debugging a CronJob by running curl with an inline $(date) or $(hostname) substitution in a --header value</li><li>Backtick or $() present in a benign custom header value used for correlation IDs</li><li>Security scanner/pentest replaying the PoC in a sanctioned test namespace</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;healthcheck&quot;,&quot;liveness&quot;) and AccountName in~ (&quot;nuclio&quot;,&quot;nobody&quot;) and ProcessCommandLine !contains &quot;; &quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ProcessCommandLine and the parent chain; confirm the parent is a Nuclio-named CronJob pod and identify the injected segment after the closing --header quote or inside $(). Capture the namespace/pod and whether the token was actually cat&#x27;d or piped outbound. 2) Contain: suspend the offending CronJob (kubectl patch cronjob ... -p &#x27;{&quot;spec&quot;:{&quot;suspend&quot;:true}}&#x27;), delete the parent NuclioFunction, and rotate the pod serviceaccount token / bound secrets. 3) Hunt: enumerate all CronJobs whose args contain &#x27;/bin/sh -c&#x27; + &#x27;curl&#x27; + shell metacharacters across namespaces, and review Nuclio version — upgrade past 1.15.27 (fixed in 0.0.0-20260601075854-3356b86a8bfa).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-02-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-02-uc0-sentinel">Sentinel KQL</button>
@@ -448,51 +448,116 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-02-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where ProcessCommandLine has &#x27;curl&#x27;
-| where ProcessCommandLine has &#x27;/var/run/secrets/kubernetes.io/serviceaccount/token&#x27;
-   or (ProcessCommandLine has &#x27;--header&#x27; and ProcessCommandLine has_any (&#x27;$(&#x27;, &#x27;; echo&#x27;, &#x27;&amp;&amp; &#x27;, &#x27;| sh&#x27;, &#x27;| bash&#x27;))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FileName in~ (&quot;sh&quot;,&quot;dash&quot;,&quot;bash&quot;,&quot;curl&quot;)
+| where ProcessCommandLine has &quot;curl&quot; and ProcessCommandLine contains &quot;--header&quot;
+| where ProcessCommandLine contains &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;
+    or ProcessCommandLine contains &quot;$(&quot;
+    or ProcessCommandLine contains &quot;`&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-02-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
-| where TargetProcessCommandLine has &#x27;curl&#x27;
-| where TargetProcessCommandLine has &#x27;/var/run/secrets/kubernetes.io/serviceaccount/token&#x27;
-   or (TargetProcessCommandLine has &#x27;--header&#x27; and TargetProcessCommandLine has_any (&#x27;$(&#x27;, &#x27;; echo&#x27;, &#x27;&amp;&amp; &#x27;))
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, ParentProcessName, TargetProcessCommandLine
+| where ActingProcessName has_any (&quot;sh&quot;,&quot;dash&quot;,&quot;bash&quot;,&quot;curl&quot;)
+| where ActingProcessCommandLine has &quot;curl&quot; and ActingProcessCommandLine contains &quot;--header&quot;
+| where ActingProcessCommandLine contains &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;
+    or ActingProcessCommandLine contains &quot;$(&quot;
+    or ActingProcessCommandLine contains &quot;`&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Nuclio CronJob Pod Curl Reads Kubernetes Serviceaccount Token (CVE-2026-52831)
-id: c4e8f1a3-6b9d-4c2e-8f5a-1d7b3e9c6a2f
-status: experimental
-description: Detects a curl-based shell command in a container that reads the mounted Kubernetes serviceaccount token or breaks out of --header quoting, the execution stage of CVE-2026-52831.
+    <div class="tab-content" id="art-02-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Nuclio CronJob curl --header shell injection reads serviceaccount token
+id: 6f2c8d1a-4e3b-49c7-9a11-2b7f0c5d8e42
+description: Detects a shell running a Nuclio cron curl invocation whose command line also contains a serviceaccount token read or command substitution, indicating CVE-2026-52831 header/body injection.
 references:
   - https://github.com/advisories/GHSA-v5px-423j-pf7p
+  - https://advisories.gitlab.com/golang/github.com/nuclio/nuclio/CVE-2026-52831/
 author: SOC Detection Engineering
-date: 2026/07/08
+date: 2026/07/09
 tags:
-  - attack.t1552.001
   - attack.t1059.004
+  - attack.t1552.001
+  - attack.t1190
 logsource:
   category: process_creation
   product: linux
 detection:
-  selection_curl:
-    CommandLine|contains: &#x27;curl&#x27;
-  selection_token:
-    CommandLine|contains: &#x27;/var/run/secrets/kubernetes.io/serviceaccount/token&#x27;
-  condition: selection_curl and selection_token
+  selection_shape:
+    CommandLine|contains|all:
+      - &#x27;curl&#x27;
+      - &#x27;--header&#x27;
+  selection_sink:
+    CommandLine|contains:
+      - &#x27;/var/run/secrets/kubernetes.io/serviceaccount/token&#x27;
+      - &#x27;$(&#x27;
+      - &#x27;`&#x27;
+  condition: selection_shape and selection_sink
 level: high</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*curl* @process.command_line:*serviceaccount/token*</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*curl* @process.command_line:*--header* @process.command_line:*serviceaccount/token*</code></pre></div>
     <div class="tab-content" id="art-02-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| regex(&quot;curl&quot;, field=CommandLine)
-| regex(&quot;serviceaccount/token&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, ImageFileName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*curl*&quot; AND (Processes.process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Processes.process=&quot;*$(*&quot;)) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-02-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*curl*&quot; AND (Processes.process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Processes.process=&quot;*$(*&quot;)) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre></div></div>
+| ImageFileName=/\/(sh|dash|bash|curl)$/i
+| CommandLine=/curl/i
+| CommandLine=/--header/i
+| regex(&quot;(/var/run/secrets/kubernetes\\.io/serviceaccount/token|\\$\\(|`)&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;sh&quot;,&quot;dash&quot;,&quot;bash&quot;,&quot;curl&quot;) AND Processes.process=&quot;*curl*&quot; AND Processes.process=&quot;*--header*&quot;) AND (Processes.process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Processes.process=&quot;*$(*&quot; OR Processes.process=&quot;*`*&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-02-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;sh&quot;,&quot;dash&quot;,&quot;bash&quot;,&quot;curl&quot;) AND Processes.process=&quot;*curl*&quot; AND Processes.process=&quot;*--header*&quot;) AND (Processes.process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Processes.process=&quot;*$(*&quot; OR Processes.process=&quot;*`*&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="036620665b" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Nuclio pod egress from injected curl/shell carrying serviceaccount token to external host (CVE-2026-52831)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="036620665b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects exfiltration after CVE-2026-52831 exploitation: a curl/wget/nc/shell process spawned inside a Nuclio CronJob pod makes an outbound connection to a public IP while its command line references the pod serviceaccount token path or a $() substitution — i.e. the injected payload is shipping the stolen token off-cluster. Distinct network pivot from the endpoint process detection.
+
+Rationale: Combines the injected exfil primitive (curl/nc reading the serviceaccount token or running $()) with a public-IP destination, so it only fires when the stolen token/output actually leaves the cluster — the article confirms the token path is readable and the sink is a curl invocation reaching the network.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/golang/github.com/nuclio/nuclio/CVE-2026-52831/
+  • https://pkg.go.dev/vuln/GO-2026-4598</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over Web Service">T1567</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate Nuclio cron function that curls an external webhook and happens to include a token-bearing header from a mounted secret (not the SA token path)</li><li>Container image pulling telemetry/metrics to a SaaS endpoint via curl with a $() timestamp in the URL</li><li>Break-glass debugging where an operator curls an external paste service with dynamic content</li><li>NAT/egress-gateway rewriting internal IPs so the destination appears public</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl endswith &quot;.svc.cluster.local&quot; or RemoteUrl has &quot;metadata.google.internal&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the destination IP/URL is untrusted and correlate the same pod&#x27;s process events for a preceding serviceaccount token read; capture bytes-out and whether the token value appears in the request. 2) Contain: kill the pod, suspend the parent CronJob, block the destination IP at egress, and rotate the pod serviceaccount token plus any secrets it could reach. 3) Hunt: search Kubernetes audit for API calls authenticated with that serviceaccount from off-cluster or unusual source IPs, and review whether the token was used to list secrets or modify RBAC; upgrade Nuclio past 1.15.27.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-02-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-02-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-02-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-02-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;bash&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| where InitiatingProcessCommandLine contains &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;
+    or (InitiatingProcessCommandLine has &quot;curl&quot; and InitiatingProcessCommandLine contains &quot;$(&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where NetworkDirection == &quot;Outbound&quot;
+| where DstIpAddr !startswith &quot;10.&quot; and DstIpAddr !startswith &quot;192.168.&quot; and DstIpAddr !startswith &quot;172.16.&quot;
+| join kind=inner (
+    ImProcessCreate
+    | where TimeGenerated &gt; ago(7d)
+    | where ActingProcessName has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+    | where ActingProcessCommandLine contains &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;
+        or (ActingProcessCommandLine has &quot;curl&quot; and ActingProcessCommandLine contains &quot;$(&quot;)
+    | project DvcHostname, ActingProcessName, ActingProcessCommandLine
+) on DvcHostname
+| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, DstIpAddr, DstPortNumber, Url
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(curl OR wget OR nc OR ncat) @process.command_line:*serviceaccount/token*</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/\/(curl|wget|sh|bash|nc|ncat)$/i
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;nc&quot;,&quot;ncat&quot;) AND (Processes.process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR (Processes.process=&quot;*curl*&quot; AND Processes.process=&quot;*$(*&quot;))) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-02-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;nc&quot;,&quot;ncat&quot;) AND (Processes.process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR (Processes.process=&quot;*curl*&quot; AND Processes.process=&quot;*$(*&quot;))) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -510,11 +575,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-02-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -523,7 +588,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-02-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -535,12 +600,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-52831&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-02-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-02-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-52831&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -563,12 +628,12 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-02-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
@@ -576,7 +641,7 @@ DeviceTvmSoftwareVulnerabilities
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-02-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688            // process-create (audit-policy required)
 | where Account !endswith &quot;$&quot;
@@ -588,7 +653,7 @@ DeviceTvmSoftwareVulnerabilities
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
+    <div class="tab-content" id="art-02-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
 status: experimental
 description: |
@@ -628,12 +693,12 @@ falsepositives:
       a known-admin-host watchlist
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
@@ -656,12 +721,12 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-02-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
@@ -669,7 +734,7 @@ level: high
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
    or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-02-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-02-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -686,7 +751,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+    <div class="tab-content" id="art-02-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
 status: experimental
 description: |
@@ -721,13 +786,13 @@ falsepositives:
       tool exclusion list per environment.
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
@@ -751,11 +816,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers
+    <div class="tab-content active" id="art-02-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -768,7 +833,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-02-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers
@@ -784,14 +849,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers ```
+    <div class="tab-content" id="art-02-uc5-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/tmp/eventbody.out*&quot; OR Filesystem.file_path=&quot;*/usr/local/bin/kind*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-02-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-02-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
@@ -1404,7 +1469,7 @@ level: critical
   data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,linux,m365,windows"
   data-uc-count="12" data-llm-uc-count="5"
-  data-search="Hackers exploit Roundcube flaw to spy on academic researchers A China-linked threat cluster has been exploiting vulnerable Roundcube servers at U.S. and Canadian universities to steal credentials and deploy backdoor malware. [...] CVE-2024-42009 CVE-2025-49113 T1190 T1555.003 T1566 T1566.001 [LLM] Spear-phishing of academic/national-security researchers carrying UNK_MassTraction sslip.io lure link [LLM] IceCube stealer load &amp; session exfil via browser fetch of decimal-decoded JS from sslip.io host [LLM] SquareShell PHP webshell dropped at Roundcube plugins/newmail_notifier/mail_preview.php [LLM] Roundcube web/PHP process spawns shell or downloader after CVE-2025-49113 deserialization RCE [LLM] UNK_MassTraction C2 beacon to sslip.io / VShell infrastructure (45.150.109.151, 194.213.18.133, 45.86.229.111) Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  data-search="Hackers exploit Roundcube flaw to spy on academic researchers A China-linked threat cluster has been exploiting vulnerable Roundcube servers at U.S. and Canadian universities to steal credentials and deploy backdoor malware. [...] CVE-2024-42009 CVE-2025-49113 T1190 T1555.003 T1566 T1566.001 [LLM] SquareShell webshell dropped as Roundcube newmail_notifier/mail_preview.php [LLM] CVE-2025-49113 RCE: Roundcube web daemon spawns shell fetching VShell loader [LLM] VShell C2 egress from mail server to UNK_MassTraction sslip.io infrastructure [LLM] VShell in-memory implant masquerading as kernel worker [kworker/0:2] [LLM] SquareShell webshell interaction via HTTP request to mail_preview.php Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-08-hackers-exploit-roundcube-flaw-to-spy-on-academic-researcher" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1466,85 +1531,102 @@ level: critical
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Spear-phishing of academic/national-security researchers carrying UNK_MassTraction sslip.io lure link · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Roundcube web/PHP process spawns shell or downloader after CVE-2025-49113 deserialization RCE · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] SquareShell PHP webshell dropped at Roundcube plugins/newmail_notifier/mail_preview.php · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] UNK_MassTraction C2 beacon to sslip.io / VShell infrastructure (45.150.109.151, 194.213.18.133, 45.86.229.111) · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] IceCube stealer load &amp; session exfil via browser fetch of decimal-decoded JS from sslip.io host</em></div></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] CVE-2025-49113 RCE: Roundcube web daemon spawns shell fetching VShell loader · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] SquareShell webshell dropped as Roundcube newmail_notifier/mail_preview.php · [LLM] VShell in-memory implant masquerading as kernel worker [kworker/0:2] · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] VShell C2 egress from mail server to UNK_MassTraction sslip.io infrastructure · [LLM] SquareShell webshell interaction via HTTP request to mail_preview.php · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="e20b602dbd" data-platforms="def,sent,spl" data-targets="m365" open>
+  <div class="usecases"><details class="uc" data-uc-slug="b300e03436" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">Spear-phishing of academic/national-security researchers carrying UNK_MassTraction sslip.io lure link</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">SquareShell webshell dropped as Roundcube newmail_notifier/mail_preview.php</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e20b602dbd" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="b300e03436" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound email delivered to Roundcube/university users that carries a link to the campaign&#x27;s confirmed C2 infrastructure (*.sslip.io or the three hard IPs). Ties the generic-lure spear-phish to concrete IOCs so it isn&#x27;t a generic phishing template.
+    <div class="uc-desc">Hunts creation of the SquareShell PHP webshell that UNK_MassTraction installs after exploiting CVE-2025-49113, masquerading inside the legitimate Roundcube newmail_notifier plugin directory as mail_preview.php. The genuine newmail_notifier plugin ships no such file, so a web-server user writing it is a webshell drop.
 
-Rationale: Anchored on the campaign&#x27;s confirmed C2 domains (45.150.109.151.sslip.io, 194.213.18.133.sslip.io) and IPs appearing inside a delivered inbound message body/link — a definitive indicator rather than a generic lure heuristic. Corroborated by Proofpoint and CyberScoop write-ups.
+Rationale: Uses the exact webshell path plugins/newmail_notifier/mail_preview.php confirmed in Proofpoint&#x27;s IOC list; the real newmail_notifier plugin has no mail_preview.php, so any write of that file by the web daemon is high-fidelity. Cross-checked against Proofpoint blog and CVE-2025-49113 advisory.
 
 Cross-checked against:
   • https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
-  • https://cyberscoop.com/china-espionage-attacks-us-canada-universities-proofpoint/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Link">T1566.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher forwarding the campaign IOC list internally (email body legitimately contains sslip.io/the IPs)</li><li>Threat-intel newsletter or vendor advisory quoting the same indicators</li><li>Phishing-simulation platform reusing the IOCs as test content</li><li>SOC analyst emailing a ticket that pastes the C2 URL</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(SenderFromDomain in~ (&quot;proofpoint.com&quot;,&quot;your-threat-intel-vendor.com&quot;) or RecipientEmailAddress startswith &quot;soc-&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the recipient is in a targeted cohort (physics/engineering/astrophysics/national-security research) and that the sslip.io link was actually clicked (check UrlClickEvents / proxy). 2) Contain: quarantine/purge the message tenant-wide via EmailPostDeliveryEvents purge, block the three IPs and *.sslip.io at the mail gateway and web proxy, force-reset the recipient&#x27;s Roundcube credentials. 3) Hunt: pivot to any host that resolved sslip.io or connected to the three IPs, and review the org&#x27;s internet-facing Roundcube version for CVE-2024-42009/CVE-2025-49113 exposure.</div></details>
+  • https://github.com/advisories/GHSA-8j8w-wwqc-x596
+  • https://thehackernews.com/2026/07/suspected-china-aligned-hackers-exploit.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Roundcube plugin/theme update or reinstall by a package manager writing PHP files into plugins</li><li>Administrator manually editing/deploying a custom newmail_notifier plugin file</li><li>Backup/restore of the webroot re-writing .php files under /var/www</li><li>Configuration-management tooling (Ansible/Puppet) templating PHP into the plugins directory</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;apt&quot;,&quot;apt-get&quot;,&quot;dpkg&quot;,&quot;yum&quot;,&quot;dnf&quot;,&quot;rpm&quot;,&quot;composer&quot;,&quot;git&quot;,&quot;rsync&quot;,&quot;tar&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the dropped file and hash it; confirm mail_preview.php does not belong to the upstream newmail_notifier plugin and inspect for system/exec/passthru/shell_exec/assert/popen. Identify the writing process (php-fpm/apache) and preceding requests. 2) Contain: quarantine the file, isolate the mail server from egress, and rotate all Roundcube/IMAP credentials and session secrets (des_key) as sessions may be stolen. 3) Hunt: review web-access logs for GET/POST to newmail_notifier/mail_preview.php, look for a child shell spawned by the web daemon, and pivot to outbound connections to 45.150.109.151 / 194.213.18.133 / 45.86.229.111 and *.sslip.io.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-04-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc0-kql"><pre><button class="copy-btn">COPY</button><code>EmailEvents
+    <div class="tab-content active" id="art-04-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(30d)
-| where EmailDirection == &quot;Inbound&quot;
-| join kind=inner (
-    EmailUrlInfo
-    | where Timestamp &gt; ago(30d)
-    | where UrlDomain endswith &quot;sslip.io&quot; or Url has_any (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;)
-    | project NetworkMessageId, Url, UrlDomain
-  ) on NetworkMessageId
-| project Timestamp, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation
+| where FileName =~ &quot;mail_preview.php&quot; or (FileName endswith &quot;.php&quot; and FolderPath has &quot;newmail_notifier&quot;)
+| where FolderPath has_any (&quot;roundcube&quot;,&quot;roundcubemail&quot;,&quot;newmail_notifier&quot;,&quot;/plugins/&quot;,&quot;/var/www&quot;)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-EmailEvents
+    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(30d)
-| where EmailDirection == &quot;Inbound&quot;
-| join kind=inner (
-    EmailUrlInfo
-    | where TimeGenerated &gt; ago(30d)
-    | where UrlDomain endswith &quot;sslip.io&quot; or Url has_any (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;)
-    | project NetworkMessageId, Url, UrlDomain
-  ) on NetworkMessageId
-| project TimeGenerated, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation
+| where EventType == &quot;FileCreated&quot;
+| where TargetFileName =~ &quot;mail_preview.php&quot; or (TargetFileName endswith &quot;.php&quot; and TargetFilePath has &quot;newmail_notifier&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where (All_Email.url=&quot;*sslip.io*&quot; OR All_Email.url=&quot;*45.150.109.151*&quot; OR All_Email.url=&quot;*194.213.18.133*&quot; OR All_Email.url=&quot;*45.86.229.111*&quot;) by All_Email.src_user All_Email.recipient All_Email.subject All_Email.url | `drop_dm_object_name(All_Email)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where (All_Email.url=&quot;*sslip.io*&quot; OR All_Email.url=&quot;*45.150.109.151*&quot; OR All_Email.url=&quot;*194.213.18.133*&quot; OR All_Email.url=&quot;*45.86.229.111*&quot;) by All_Email.src_user All_Email.recipient All_Email.subject All_Email.url | `drop_dm_object_name(All_Email)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-04-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SquareShell Webshell Drop in Roundcube newmail_notifier Plugin
+id: 6b1e2c4a-8f3d-4a19-9c77-2d5e1a9f4b01
+description: Detects creation of the SquareShell PHP webshell (mail_preview.php) inside the Roundcube newmail_notifier plugin directory, used by UNK_MassTraction after CVE-2025-49113 exploitation.
+references:
+  - https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
+  - https://www.bleepingcomputer.com/news/security/hackers-exploit-roundcube-flaw-to-spy-on-academic-researchers/
+author: SOC Detection Engineering
+date: 2026/07/09
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - attack.t1190
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection:
+    TargetFilename|endswith: &#x27;/newmail_notifier/mail_preview.php&#x27;
+  selection_alt:
+    TargetFilename|endswith: &#x27;/mail_preview.php&#x27;
+  condition: selection or selection_alt
+level: high</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/mail_preview\.php$/i
+| regex(&quot;(newmail_notifier|roundcube|/var/www|/plugins/)&quot;, field=TargetFileName)
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name=&quot;mail_preview.php&quot; OR Filesystem.file_path=&quot;*newmail_notifier*mail_preview.php*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name=&quot;mail_preview.php&quot; OR Filesystem.file_path=&quot;*newmail_notifier*mail_preview.php*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="23667da2d9" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="f835616f63" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">IceCube stealer load &amp; session exfil via browser fetch of decimal-decoded JS from sslip.io host</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="23667da2d9" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">CVE-2025-49113 RCE: Roundcube web daemon spawns shell fetching VShell loader</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f835616f63" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the client-side of the CVE-2024-42009 XSS: a researcher&#x27;s browser, after rendering a malicious message in Roundcube webmail, fetches the IceCube loader/JS and exfiltrates the hijacked Roundcube session (credentials, cookies, 2FA) to the campaign&#x27;s decimal-encoded *.sslip.io hosts or the three C2 IPs.
+    <div class="uc-desc">Hunts the CVE-2025-49113 Crypt_GPG_Engine deserialization RCE outcome where the Roundcube PHP/web process (php-fpm, apache2, httpd, nginx) spawns a shell or download tool that pulls the SNOWLIGHT/VShell loader from the campaign C2 (sslip.io:23088/app/js/jquery.min.js or 45.86.229.111/slw). Anchors on web-daemon parent plus the campaign C2 strings so it fires on the specific chain, not generic shell use.
 
-Rationale: Uses the campaign&#x27;s confirmed decimal-encoded sslip.io C2 hosts and three fixed IPs, scoped to browser-initiated egress — the observable client-side manifestation of the CVE-2024-42009 XSS loading IceCube and exfiltrating the webmail session. sslip.io wildcard DNS is a hallmark decimal-IP encoding technique confirmed across Proofpoint/CyberScoop reporting.
+Rationale: Pairs the web-daemon parent (the CVE-2025-49113 execution context, which runs as the web user) with the exact campaign C2 strings from Proofpoint&#x27;s IOC list (sslip.io:23088/app/js/jquery.min.js, 45.86.229.111/slw). The C2-string requirement drives FP to near zero. Cross-checked against Proofpoint blog and Sysdig VShell/UNC5174 write-up.
 
 Cross-checked against:
   • https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
-  • https://thehackernews.com/2026/07/suspected-china-aligned-hackers-exploit.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A user legitimately using a sslip.io wildcard-DNS dev/test service (rare in academia but possible in engineering labs)</li><li>Security researcher intentionally browsing the C2 in a sandbox from a corporate browser</li><li>Proxy log replay / IOC validation traffic generated by the SOC</li><li>Browser extension telemetry hitting an unrelated *.sslip.io host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(DeviceName startswith &quot;sandbox-&quot; or InitiatingProcessAccountName startswith &quot;soc-&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the source host/user and confirm the browser had an active Roundcube session; pull the exact URL/UA from ImWebSession or proxy to see the decimal-encoded host. 2) Contain: isolate the endpoint, revoke the user&#x27;s Roundcube session and reset credentials + 2FA seeds, block the three IPs and *.sslip.io. 3) Hunt: check whether the same session token appears from attacker IPs, and pivot to the mail server for SquareShell (mail_preview.php) and VShell activity.</div></details>
+  • https://www.sysdig.com/blog/unc5174-chinese-threat-actor-vshell
+  • https://github.com/advisories/GHSA-8j8w-wwqc-x596</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Roundcube plugin invoking curl/wget to an internal update mirror (would not contain the campaign C2 strings)</li><li>Monitoring/APM agent shelling out from a web worker (no sslip.io / campaign-IP match)</li><li>Security scanner replaying the CVE-2025-49113 PoC during an authorized pentest</li><li>Admin debugging PHP by running shell commands under the www-data user</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;internal-mirror&quot; and ProcessCommandLine !has &quot;127.0.0.1&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full command line and the parent PHP request; confirm the destination is a campaign IP/sslip.io host and whether the download succeeded (check for the fetched jquery.min.js on disk / in memory). 2) Contain: kill the process tree, block egress to 45.150.109.151, 194.213.18.133, 45.86.229.111 and *.sslip.io:23088, and isolate the host — VShell loads in memory so a reboot may be needed to clear the implant. 3) Hunt: look for a masqueraded [kworker/0:2] process, the mail_preview.php webshell, new IMAP/webmail sessions from unusual IPs, and lateral movement or port-forwarding from the mail server into the internal network.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc1-sentinel">Sentinel KQL</button>
@@ -1553,139 +1635,151 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-04-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-04-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;chrome&quot;,&quot;firefox&quot;,&quot;msedge&quot;)
-| where RemoteUrl has &quot;sslip.io&quot; or RemoteIP in (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;)
-| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, Browser = InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| where InitiatingProcessFileName in~ (&quot;apache2&quot;,&quot;httpd&quot;,&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;nginx&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
+| where ProcessCommandLine has_any (&quot;sslip.io&quot;,&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;,&quot;jquery.min.js&quot;,&quot;/slw&quot;,&quot;| sh&quot;,&quot;|sh&quot;,&quot;| bash&quot;,&quot;|bash&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let c2ips = dynamic([&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;]);
-union isfuzzy=true
-( ImWebSession
-  | where TimeGenerated &gt; ago(30d)
-  | where DstIpAddr in (c2ips) or Url has &quot;sslip.io&quot; or HttpHostName has &quot;sslip.io&quot;
-  | project TimeGenerated, SrcHostname, SrcIpAddr, Dst = coalesce(HttpHostName, DstIpAddr), Url, UserAgent = HttpRequestHeaderUserAgent, Source = &quot;ImWebSession&quot; ),
-( DnsEvents
-  | where TimeGenerated &gt; ago(30d)
-  | where Name has &quot;sslip.io&quot;
-  | project TimeGenerated, SrcHostname = Computer, SrcIpAddr = ClientIP, Dst = Name, Url = &quot;&quot;, UserAgent = &quot;&quot;, Source = &quot;DnsEvents&quot; )
+    <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where ParentProcessName has_any (&quot;apache2&quot;,&quot;httpd&quot;,&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;nginx&quot;)
+| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;perl&quot;)
+| where ActingProcessCommandLine has_any (&quot;sslip.io&quot;,&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;,&quot;jquery.min.js&quot;,&quot;/slw&quot;,&quot;| sh&quot;,&quot;|sh&quot;,&quot;| bash&quot;,&quot;|bash&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: IceCube C2 Fetch to UNK_MassTraction sslip.io Infrastructure
-id: 6b6f6c2e-2a1d-4c9e-9f0b-2c1a7e5d4a11
-description: Browser connecting to UNK_MassTraction C2 (three fixed IPs or *.sslip.io) consistent with IceCube loader fetch and Roundcube session exfiltration.
+    <div class="tab-content" id="art-04-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Roundcube Web Daemon Spawns Shell Fetching UNK_MassTraction C2 Payload
+id: 2f9a7d31-4c6b-4e88-b1a2-7e0c9d5f3a12
+description: Detects a Roundcube PHP/web process spawning a shell or downloader that references the UNK_MassTraction VShell C2 (sslip.io / campaign IPs), indicating CVE-2025-49113 deserialization RCE.
 references:
   - https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
 author: SOC Detection Engineering
-date: 2026/07/08
+date: 2026/07/09
 tags:
-  - attack.t1539
-  - attack.t1203
-  - attack.t1059.007
+  - attack.execution
+  - attack.t1190
+  - attack.t1059.004
+  - attack.t1105
 logsource:
-  category: network_connection
-  product: windows
+  category: process_creation
+  product: linux
 detection:
-  selection_ip:
-    DestinationIp:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/apache2&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/php-fpm&#x27;
+      - &#x27;/php&#x27;
+      - &#x27;/php-cgi&#x27;
+      - &#x27;/nginx&#x27;
+  selection_c2:
+    CommandLine|contains:
+      - &#x27;sslip.io&#x27;
       - &#x27;45.150.109.151&#x27;
       - &#x27;194.213.18.133&#x27;
       - &#x27;45.86.229.111&#x27;
-  selection_host:
-    DestinationHostname|contains: &#x27;sslip.io&#x27;
-  condition: selection_ip or selection_host
+      - &#x27;jquery.min.js&#x27;
+      - &#x27;/slw&#x27;
+  condition: selection_parent and selection_c2
 level: high</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationIp:(45.150.109.151 OR 194.213.18.133 OR 45.86.229.111) OR @DestinationHostname:*sslip.io*) @Image:(*\chrome.exe OR *\Chrome.exe OR *\msedge.exe OR *\firefox.exe OR *\Firefox.exe)</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/sslip\.io$/i
-| ContextImageFileName=/(chrome|firefox|msedge|brave)\.exe$/i
-| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*sslip.io*&quot; OR Web.dest IN (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;)) by Web.src Web.dest Web.url Web.http_user_agent Web.site | `drop_dm_object_name(Web)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*sslip.io*&quot; OR Web.dest IN (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;)) by Web.src Web.dest Web.url Web.http_user_agent Web.site | `drop_dm_object_name(Web)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-04-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*sslip.io* OR *jquery.min.js* OR *45.150.109.151* OR *194.213.18.133* OR *45.86.229.111* OR *&quot;/slw&quot;*)</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(apache2|httpd|php-fpm|php|php-cgi|nginx)/i ImageFileName=/(sh|bash|dash|curl|wget|python3?|perl)$/i
+| CommandLine=/(sslip\.io|jquery\.min\.js|45\.150\.109\.151|194\.213\.18\.133|45\.86\.229\.111|\/slw|\|\s*(sh|bash))/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;apache2&quot;,&quot;httpd&quot;,&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;nginx&quot;)) (Processes.process IN (&quot;*sslip.io*&quot;,&quot;*jquery.min.js*&quot;,&quot;*45.150.109.151*&quot;,&quot;*194.213.18.133*&quot;,&quot;*45.86.229.111*&quot;,&quot;*/slw*&quot;,&quot;*| sh*&quot;,&quot;*|sh*&quot;,&quot;*| bash*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;apache2&quot;,&quot;httpd&quot;,&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;nginx&quot;)) (Processes.process IN (&quot;*sslip.io*&quot;,&quot;*jquery.min.js*&quot;,&quot;*45.150.109.151*&quot;,&quot;*194.213.18.133*&quot;,&quot;*45.86.229.111*&quot;,&quot;*/slw*&quot;,&quot;*| sh*&quot;,&quot;*|sh*&quot;,&quot;*| bash*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="453a6582bb" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="e3676aeab9" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">SquareShell PHP webshell dropped at Roundcube plugins/newmail_notifier/mail_preview.php</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="453a6582bb" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">VShell C2 egress from mail server to UNK_MassTraction sslip.io infrastructure</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="e3676aeab9" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects creation/modification of the SquareShell webshell at its exact drop path (plugins/newmail_notifier/mail_preview.php) — a file that does not exist in the legitimate newmail_notifier plugin — by a web/PHP service account on the Roundcube mail server.
+    <div class="uc-desc">Alerts on outbound connections to the confirmed UNK_MassTraction / VShell C2 endpoints: IPs 45.150.109.151, 194.213.18.133, 45.86.229.111 and the IP-encoding domains 45.150.109.151.sslip.io / 194.213.18.133.sslip.io (port 23088 and 8080). Catches both mail-server VShell beaconing and IceCube in-browser exfil to the same infrastructure.
 
-Rationale: Anchored on the exact SquareShell drop path (plugins/newmail_notifier/mail_preview.php) confirmed by Proofpoint — a filename absent from the genuine newmail_notifier plugin, so any write there by www-data/php is high-fidelity webshell installation following CVE-2025-49113 deserialization.
+Rationale: Ships the three C2 IPs and the two IP-encoding sslip.io domains confirmed in Proofpoint&#x27;s IOC block (also carried on ports 23088 and 8080). Static IOCs with essentially no legitimate reason for a university mail server to contact, so low FP. Corroborated by Proofpoint primary blog and second-source reporting on VShell/sslip.io C2 tradecraft.
 
 Cross-checked against:
   • https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
-  • https://gbhackers.com/china-aligned-unk_masstraction/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Roundcube plugin update or reinstall that lays down plugin files (verify the exact filename — genuine plugin has newmail_notifier.php, not mail_preview.php)</li><li>Backup/restore tool rewriting the webroot</li><li>Admin manually copying a custom preview plugin with a coincidentally similar name</li><li>Config-management (Ansible/Puppet) deploying plugin assets</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;composer&quot;,&quot;apt&quot;,&quot;dpkg&quot;,&quot;yum&quot;) or InitiatingProcessFileName in~ (&quot;dpkg&quot;,&quot;apt&quot;,&quot;composer&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: retrieve and read the file — confirm it contains PHP RCE primitives (system, passthru, exec, shell_exec, assert, popen) and check for timestomping vs sibling plugin files. 2) Contain: quarantine the file, kill any php-fpm worker holding it, block inbound to /plugins/newmail_notifier/mail_preview.php at the reverse proxy/WAF, and snapshot the host for IR. 3) Hunt: review Apache access logs for POST/GET to that path, look for php spawning shells/downloaders (CVE-2025-49113 RCE) and outbound VShell beacons to the three C2 IPs.</div></details>
+  • https://www.sysdig.com/blog/unc5174-chinese-threat-actor-vshell
+  • https://www.theregister.com/security/2026/07/08/suspected-chinese-snoops-caught-breaking-into-universities-roundcube-mailservers/5268778</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Protocol Tunneling">T1572</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel/sandbox appliance deliberately detonating the sample and beaconing to the C2 (expected from a sinkhole/analysis host)</li><li>Security researcher validating the IOCs from a lab box</li><li>Another tenant reusing the same sslip.io wildcard for benign purposes (rare — sslip.io encodes the destination IP, so the domains map to the same attacker IPs)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the source host and the process/user that initiated the connection (mail-server VShell vs. workstation browser running IceCube). 2) Contain: block the three IPs and *.sslip.io at the perimeter, isolate the source host, and revoke Roundcube sessions/tokens if the source is a mail server. 3) Hunt: sweep all hosts for any prior connection to these IPs/domains over 90 days, correlate to the mail_preview.php webshell and web-daemon-spawned shells, and check for port-forwarding/SOCKS sessions establishing internal pivots from the mail server.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-04-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-04-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-04-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-04-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;mail_preview.php&quot;
-| where FolderPath has &quot;newmail_notifier&quot;
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| project Timestamp, DeviceName, FolderPath, FileName, ActionType, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where RemoteIP in (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;)
+    or RemoteUrl has_any (&quot;45.150.109.151.sslip.io&quot;,&quot;194.213.18.133.sslip.io&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, LocalIP
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-04-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(30d)
-| where TargetFileName =~ &quot;mail_preview.php&quot;
-| where TargetFilePath has &quot;newmail_notifier&quot;
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileCreate&quot;,&quot;FileModify&quot;)
-| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine, ActorUsername, TargetFileSHA256
+| where DstIpAddr in (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;)
+    or DstHostname in~ (&quot;45.150.109.151.sslip.io&quot;,&quot;194.213.18.133.sslip.io&quot;)
+| project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername, DstIpAddr, DstHostname, DstPortNumber, NetworkApplicationProtocol
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: SquareShell Webshell Drop at Roundcube newmail_notifier Plugin
-id: 9d4a1f77-8b23-4e5c-a1f2-0c7b6e3d9a22
-description: Creation of mail_preview.php under the Roundcube newmail_notifier plugin directory, the SquareShell webshell path used by UNK_MassTraction. This file is not part of the legitimate plugin.
+    <div class="tab-content" id="art-04-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: UNK_MassTraction / VShell C2 Network Connection
+id: 8d4c1f60-2a7e-4b93-9f18-3c6a5d2e7b44
+description: Detects outbound connections to confirmed UNK_MassTraction VShell C2 IP addresses used to compromise Roundcube mail servers at universities.
 references:
   - https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
 author: SOC Detection Engineering
-date: 2026/07/08
+date: 2026/07/09
 tags:
-  - attack.t1505.003
-  - attack.t1190
+  - attack.command_and_control
+  - attack.t1071.001
+  - attack.t1572
 logsource:
-  category: file_event
+  category: network_connection
   product: linux
 detection:
   selection:
-    TargetFilename|contains: &#x27;newmail_notifier/mail_preview.php&#x27;
+    DestinationIp:
+      - &#x27;45.150.109.151&#x27;
+      - &#x27;194.213.18.133&#x27;
+      - &#x27;45.86.229.111&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/newmail_notifier[\/\\]mail_preview\.php$/i
-| ContextImageFileName=/(php|php-fpm|httpd|apache2|nginx)/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;mail_preview.php&quot; AND Filesystem.file_path=&quot;*newmail_notifier*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;mail_preview.php&quot; AND Filesystem.file_path=&quot;*newmail_notifier*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-04-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.auditd OR source:linux.syslog OR source:windows.sysmon) (@network.destination.ip:45.150.109.151 OR @network.destination.ip:194.213.18.133 OR @network.destination.ip:45.86.229.111 OR @DestinationIp:45.150.109.151 OR @DestinationIp:194.213.18.133 OR @DestinationIp:45.86.229.111 OR @DestinationHostname:(*.sslip.io))</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(45\.150\.109\.151|194\.213\.18\.133|45\.86\.229\.111)$/
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="55cc480d88" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="f16b3178e1" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Roundcube web/PHP process spawns shell or downloader after CVE-2025-49113 deserialization RCE</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">VShell in-memory implant masquerading as kernel worker [kworker/0:2]</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="55cc480d88" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="f16b3178e1" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the post-exploitation execution step: a Roundcube web service process (php, php-fpm, httpd, apache2, nginx) spawning a Unix shell or downloader (sh/bash/curl/wget/python) — the fallback path where UNK_MassTraction downloads a shell script that loads VShell in memory.
+    <div class="uc-desc">Hunts a user-space process presenting the process name &#x27;[kworker/0:2]&#x27; — the disguise Proofpoint reports the in-memory VShell implant uses on compromised Roundcube servers. Genuine kworker entries are kernel threads with no on-disk image, parent PID 2, and no network; a userland binary or one making egress under that name is the implant.
 
-Rationale: Targets the web-server-user process lineage (php/apache2 -&gt; sh/curl/wget) that CVE-2025-49113 exploitation produces on a mail server, refined with the campaign&#x27;s C2 IOCs and the SHA256 a02f124c...4926c0 in the command line/hash to raise fidelity above baseline webshell noise.
+Rationale: Uses the exact VShell process-masquerade name &#x27;[kworker/0:2]&#x27; from Proofpoint&#x27;s malware analysis. Real kworkers are kernel threads (no image path, parented to kthreadd/PID 2); the queries require a real on-disk image path, isolating the impostor. Tier=hunting because the presented process name depends on the collector capturing prctl-set comm names. Cross-checked against Proofpoint blog and VShell tradecraft reporting.
 
 Cross-checked against:
   • https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
-  • https://www.cryptika.com/hackers-exploit-roundcube-n-day-flaws-to-steal-credentials-and-deploy-vshell/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
+  • https://www.sysdig.com/blog/unc5174-chinese-threat-actor-vshell</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="Reflective Code Loading">T1620</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Roundcube/PHP app legitimately shelling out to sendmail, ImageMagick, or clamscan during normal operation</li><li>Admin cron or deployment script running as www-data that curls updates</li><li>Monitoring agents invoking shell health-checks under the web service account</li><li>Composer/package install spawning shells during a maintenance window</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ActingProcessCommandLine has_any (&quot;clamscan&quot;,&quot;sendmail&quot;,&quot;convert &quot;,&quot;composer&quot;,&quot;apt-get&quot;,&quot;/etc/cron&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child command line for downloads of a shell script or references to the three C2 IPs/sslip.io; confirm the parent is a web-facing PHP worker, not a maintenance job. 2) Contain: isolate the mail server, kill the process tree, block egress to the C2 IPs, and preserve memory (VShell runs in-memory). 3) Hunt: dump process memory for the Go/VShell payload, check for the SHA256 a02f124c...4926c0, and correlate with SquareShell writes and inbound exploitation requests in Apache logs.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>EDR/telemetry parsing quirk surfacing a genuine kernel thread with an inferred image path</li><li>A benign monitoring script literally containing the string [kworker/0:2] in an argument (e.g. grepping process lists)</li><li>Custom kernel-tuning tooling referencing kworker names</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FolderPath !in~ (&quot;/proc&quot;,&quot;&quot;) and isnotempty(SHA256)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: on the host, compare against /proc — confirm the PID has a real /proc/&lt;pid&gt;/exe and network sockets (kernel workers have neither); dump the process memory for VShell/Go strings. 2) Contain: isolate the host and capture volatile memory before reboot (VShell is memory-resident); block the campaign C2 IPs. 3) Hunt: correlate the masqueraded process to the web-daemon-spawned loader, the mail_preview.php webshell, and outbound sessions to *.sslip.io; check for interactive shell and port-forwarding activity from the same PID.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc3-sentinel">Sentinel KQL</button>
@@ -1696,129 +1790,91 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-04-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;php&quot;,&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;www-data&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;fetch&quot;)
-| where AccountName !endswith &quot;$&quot;
-| where ProcessCommandLine has_any (&quot;sslip.io&quot;,&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;,&quot;-o &quot;,&quot;| sh&quot;,&quot;| bash&quot;,&quot;curl&quot;,&quot;wget&quot;) or SHA256 =~ &quot;a02f124c5ce4180bd130a62ee03262f399c33491de3aed36e0b15155ae4926c0&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, ChildProc = FileName, ChildCmd = ProcessCommandLine, SHA256
+| where ProcessCommandLine has &quot;[kworker/0:2]&quot; or FileName == &quot;[kworker/0:2]&quot;
+| where isnotempty(FolderPath) and FolderPath !startswith &quot;/proc&quot;
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-04-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has_any (&quot;php&quot;,&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
-| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python3&quot;,&quot;perl&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| where ActingProcessCommandLine has &quot;[kworker/0:2]&quot; or ActingProcessName =~ &quot;[kworker/0:2]&quot;
+| where isnotempty(ActingProcessName)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, SHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Roundcube Web Process Spawning Shell or Downloader (CVE-2025-49113 RCE)
-id: 2f8c5a19-7d64-4b31-9e0a-5b1c8f2e7d33
-description: A PHP/web-server process on a Roundcube host spawning a Unix shell or downloader, consistent with UNK_MassTraction post-exploitation of CVE-2025-49113 to stage VShell.
+    <div class="tab-content" id="art-04-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: VShell Process Masquerading as Kernel Worker kworker/0:2
+id: b3f7a2d9-5e14-4c60-8a91-6d0f2c8b7e33
+description: Detects a user-space process disguised as the kernel worker thread [kworker/0:2], the masquerade Proofpoint attributes to the in-memory VShell implant in the UNK_MassTraction campaign.
 references:
   - https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
 author: SOC Detection Engineering
-date: 2026/07/08
+date: 2026/07/09
 tags:
-  - attack.t1190
-  - attack.t1059.004
-  - attack.t1203
+  - attack.defense_evasion
+  - attack.t1036.005
+  - attack.t1620
 logsource:
   category: process_creation
   product: linux
 detection:
   selection:
-    ParentImage|endswith:
-      - &#x27;/php&#x27;
-      - &#x27;/php-fpm&#x27;
-      - &#x27;/php-cgi&#x27;
-      - &#x27;/httpd&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/nginx&#x27;
-    Image|endswith:
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/python3&#x27;
+    CommandLine|contains: &#x27;[kworker/0:2]&#x27;
   condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*sslip.io* OR *45.150.109.151* OR *194.213.18.133* OR *45.86.229.111*)</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php|php-fpm|php-cgi|httpd|apache2|nginx)/i
-| ImageFileName=/\/(sh|bash|dash|curl|wget|python3|perl)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php&quot;,&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python3&quot;,&quot;perl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php&quot;,&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python3&quot;,&quot;perl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-04-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*&quot;[kworker/0:2]&quot;*</code></pre></div>
+    <div class="tab-content" id="art-04-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 CommandLine=/\[kworker\/0:2\]/
+| ImageFileName=/.+/
+| groupBy([aid, ComputerName, ImageFileName, CommandLine, SHA256HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*[kworker/0:2]*&quot; Processes.process_path=&quot;*/*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*[kworker/0:2]*&quot; Processes.process_path=&quot;*/*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="7f37c5dc4e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="1dcc930464" data-platforms="sent,sigma,spl" data-targets="">
   <summary>
-    <span class="uc-title">UNK_MassTraction C2 beacon to sslip.io / VShell infrastructure (45.150.109.151, 194.213.18.133, 45.86.229.111)</span>
+    <span class="uc-title">SquareShell webshell interaction via HTTP request to mail_preview.php</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="7f37c5dc4e" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="1dcc930464" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects any host — especially a Roundcube mail server — beaconing to the campaign&#x27;s three fixed C2 IPs or their *.sslip.io decimal-encoded hostnames, indicative of the in-memory VShell Go backdoor establishing interactive shell/port-forwarding channels.
+    <div class="uc-desc">Alerts on any web request to plugins/newmail_notifier/mail_preview.php on a Roundcube host — the SquareShell webshell endpoint Proofpoint identified. Because the legitimate newmail_notifier plugin exposes no such endpoint, any GET/POST to it indicates operator interaction with the webshell (post-CVE-2025-49113 remote code execution).
 
-Rationale: Built directly on the campaign&#x27;s confirmed C2 IOCs (three fixed IPs, two *.sslip.io decimal-encoded C2 hostnames, and the SHA256 a02f124c...4926c0 as the beaconing binary), matching VShell&#x27;s in-memory Go backdoor egress. sslip.io wildcard-DNS-to-fixed-IP is an infrastructure hallmark corroborated by Proofpoint and secondary reporting.
+Rationale: Matches the exact webshell URI plugins/newmail_notifier/mail_preview.php from Proofpoint&#x27;s IOCs; unlike the deserialization POST body, this path appears in web-access logs, making it directly detectable. Distinct log-source pivot (web/access logs) from the file-drop and process UCs. defender_kql left empty because HTTP access logs are not a Defender Advanced Hunting table; use Sentinel ImWebSession/W3CIISLog or the CIM Web datamodel.
 
 Cross-checked against:
   • https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
-  • https://cyberpress.org/hackers-pivot-through-roundcube/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Protocol Tunneling">T1572</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SOC-operated IOC-validation or sandbox detonation reaching the C2 from a known analysis host</li><li>A researcher legitimately using a *.sslip.io wildcard-DNS dev endpoint that resolves elsewhere (hostname match without the fixed IPs)</li><li>Threat-intel scanner/crawler in the org probing the indicators</li><li>Passive DNS resolver caching sslip.io lookups without an actual connection</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(DeviceName startswith &quot;sandbox-&quot; or InitiatingProcessAccountName startswith &quot;soc-&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process and host — a mail server or PHP worker beaconing is critical; capture InitiatingProcessSHA256 and compare to a02f124c...4926c0. 2) Contain: block the three IPs and *.sslip.io at perimeter/DNS, isolate the host, and capture volatile memory before reboot (VShell is memory-resident). 3) Hunt: enumerate all internal hosts that contacted the C2, review the mail server for SquareShell (mail_preview.php) and php-spawned shells, and check for lateral movement / port-forwarding from the compromised mail server into internal networks.</div></details>
+  • https://github.com/advisories/GHSA-8j8w-wwqc-x596</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerability scanner probing known webshell paths during an authorized assessment</li><li>DFIR/IR team manually browsing to the file to confirm the compromise</li><li>Web crawler or monitoring tool following a link to the plugins directory (would return 404 if the shell is absent — filter on 200 status to reduce noise)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HttpStatusCode == 200</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the source IP and user-agent hitting mail_preview.php and whether the response was 200 (webshell present and answering); pull the request body/query for command strings. 2) Contain: remove the webshell file, block the source IP if external, and rotate Roundcube/IMAP credentials and session secrets. 3) Hunt: reconstruct the operator&#x27;s command history from access logs, pivot to any child processes spawned by the web daemon and outbound C2 to the sslip.io infrastructure, and check for VShell ([kworker/0:2]) persistence.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-04-uc4-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-04-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-04-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-04-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP in (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;) or RemoteUrl has &quot;sslip.io&quot; or InitiatingProcessSHA256 =~ &quot;a02f124c5ce4180bd130a62ee03262f399c33491de3aed36e0b15155ae4926c0&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessSHA256, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let c2ips = dynamic([&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;]);
-union isfuzzy=true
-( CommonSecurityLog
-  | where TimeGenerated &gt; ago(30d)
-  | where DestinationIP in (c2ips) or DestinationHostName has &quot;sslip.io&quot;
-  | project TimeGenerated, SrcIP = SourceIP, SrcHost = SourceHostName, DstIP = DestinationIP, DstHost = DestinationHostName, DstPort = DestinationPort, Source = &quot;CommonSecurityLog&quot; ),
-( DnsEvents
-  | where TimeGenerated &gt; ago(30d)
-  | where Name has &quot;sslip.io&quot;
-  | project TimeGenerated, SrcIP = ClientIP, SrcHost = Computer, DstIP = RemoteIp, DstHost = Name, DstPort = int(0), Source = &quot;DnsEvents&quot; )
+    <div class="tab-content active" id="art-04-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(30d)
+| where Url has &quot;newmail_notifier/mail_preview.php&quot;
+| project TimeGenerated, SrcIpAddr, DvcHostname, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: UNK_MassTraction VShell C2 Beacon (sslip.io / fixed IPs)
-id: c1e7b4d2-3a56-4f88-b902-7d3c1a9e6f44
-description: Network connection or DNS resolution to UNK_MassTraction C2 infrastructure - three fixed IPs and their *.sslip.io decimal-encoded hostnames - consistent with in-memory VShell backdoor beaconing.
+    <div class="tab-content" id="art-04-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: SquareShell Webshell Access via Roundcube mail_preview.php
+id: 4a0c9e7b-1d38-4f52-a6c4-9b7e2f1d6c05
+description: Detects HTTP requests to the SquareShell webshell endpoint plugins/newmail_notifier/mail_preview.php on Roundcube servers compromised by UNK_MassTraction.
 references:
   - https://www.proofpoint.com/us/blog/threat-insight/one-email-closer-edge-unkmasstraction-physics-exploitation
 author: SOC Detection Engineering
-date: 2026/07/08
+date: 2026/07/09
 tags:
+  - attack.persistence
+  - attack.t1505.003
   - attack.t1071.001
-  - attack.t1572
-  - attack.t1105
 logsource:
-  category: network_connection
-  product: windows
+  category: webserver
 detection:
-  selection_ip:
-    DestinationIp:
-      - &#x27;45.150.109.151&#x27;
-      - &#x27;194.213.18.133&#x27;
-      - &#x27;45.86.229.111&#x27;
-  selection_dns:
-    DestinationHostname|endswith: &#x27;.sslip.io&#x27;
-  condition: selection_ip or selection_dns
+  selection:
+    cs-uri-stem|contains: &#x27;newmail_notifier/mail_preview.php&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-04-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationIp:(45.150.109.151 OR 194.213.18.133 OR 45.86.229.111) OR @DestinationHostname:*sslip.io*)</code></pre></div>
-    <div class="tab-content" id="art-04-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(45\.150\.109\.151|194\.213\.18\.133|45\.86\.229\.111)$/
-| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-04-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest IN (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest IN (&quot;45.150.109.151&quot;,&quot;194.213.18.133&quot;,&quot;45.86.229.111&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-04-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*newmail_notifier/mail_preview.php*&quot; by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*newmail_notifier/mail_preview.php*&quot; by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
