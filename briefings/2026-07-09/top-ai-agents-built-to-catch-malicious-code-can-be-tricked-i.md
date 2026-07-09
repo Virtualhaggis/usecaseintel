@@ -229,7 +229,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Top AI Agents Built to Catch Malicious Code Can Be Tricked Into Running It
 
-`UC_1_8` · phase: **exploit** · confidence: **High**
+`UC_3_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

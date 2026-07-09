@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2567 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2566 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-09
 - [fake 7 zip installers turn devices into residential proxy no](./2026-07-09/fake-7-zip-installers-turn-devices-into-residential-proxy-no.md)
 - [ghostapproval symlink flaws could let malicious repos run co](./2026-07-09/ghostapproval-symlink-flaws-could-let-malicious-repos-run-co.md)
+- [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
 - [microsoft patches rogueplanet defender zero day vulnerabilit](./2026-07-09/microsoft-patches-rogueplanet-defender-zero-day-vulnerabilit.md)
 - [top ai agents built to catch malicious code can be tricked i](./2026-07-09/top-ai-agents-built-to-catch-malicious-code-can-be-tricked-i.md)
 
@@ -53,7 +54,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
 - [redwing maas packages android bank fraud as a telegram renta](./2026-07-07/redwing-maas-packages-android-bank-fraud-as-a-telegram-renta.md)
 - [rogue agent flaw could have let attackers hijack google dial](./2026-07-07/rogue-agent-flaw-could-have-let-attackers-hijack-google-dial.md)
-- [spain arrests suspected member of pro russian hacktivist gro](./2026-07-07/spain-arrests-suspected-member-of-pro-russian-hacktivist-gro.md)
 - [suspected china aligned hackers exploit roundcube flaws agai](./2026-07-07/suspected-china-aligned-hackers-exploit-roundcube-flaws-agai.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
@@ -102,7 +102,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
 - [ai agent exploits langflow rce to automate database ransomwa](./2026-07-02/ai-agent-exploits-langflow-rce-to-automate-database-ransomwa.md)
 - [catan and mouse](./2026-07-02/catan-and-mouse.md)
-- [fortibleed credential theft linked to inc and lynx ransomwar](./2026-07-02/fortibleed-credential-theft-linked-to-inc-and-lynx-ransomwar.md)
 - [ghsa critical cve 2026 49352 9router s hardcoded default fal](./2026-07-02/ghsa-critical-cve-2026-49352-9router-s-hardcoded-default-fal.md)
 - [ghsa critical cve 2026 50027 mcp memory service missing auth](./2026-07-02/ghsa-critical-cve-2026-50027-mcp-memory-service-missing-auth.md)
 - [ghsa critical cve 2026 52735 zebrad has consensus divergence](./2026-07-02/ghsa-critical-cve-2026-52735-zebrad-has-consensus-divergence.md)

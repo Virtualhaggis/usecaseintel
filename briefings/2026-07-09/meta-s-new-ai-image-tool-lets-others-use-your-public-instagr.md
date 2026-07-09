@@ -1,103 +1,39 @@
-# [HIGH] Opera GX Flaw Let Malicious Sites Auto-Install Mods to Steal Data From Visited Pages
+# [CRIT] Meta's New AI Image Tool Lets Others Use Your Public Instagram Photos in AI Images
 
 **Source:** The Hacker News
-**Published:** 2026-07-06
-**Article:** https://thehackernews.com/2026/07/opera-gx-flaw-let-malicious-sites-auto.html
+**Published:** 2026-07-09
+**Article:** https://thehackernews.com/2026/07/metas-new-ai-image-tool-lets-others-use.html
 
 ## Threat Profile
 
-Opera GX Flaw Let Malicious Sites Auto-Install Mods to Steal Data From Visited Pages 
- Swati Khandelwal  Jul 06, 2026 Vulnerability / Web Security 
-Researchers found a flaw in  Opera GX , the gaming-focused version of the Opera browser, that let a malicious website silently install a browser add-on and use it to lift specific data from the pages a victim visits.
-In a proof of concept, they reconstructed a signed-in user's full Gmail address from a single visit, with no click. Opera has patched…
+Meta's New AI Image Tool Lets Others Use Your Public Instagram Photos in AI Images 
+ Ravie Lakshmanan  Jul 09, 2026 Privacy / Artificial Intelligence 
+Meta has announced that its new artificial intelligence (AI) model Muse Image lets people use public Instagram posts and reels to generate AI content, and it's enabled by default.
+"You can also @-mention Instagram accounts in the Meta AI app to bring specific Instagram profiles right into your images," the social media giant said in a post.
+"Whe…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2026-55200`
+- **CVE:** `CVE-2026-46817`
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1189** — Drive-by Compromise
-- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Opera GX below patched build 130.0.5847.89 (silent mod-install / universal CSS injection exposure)
-
-`UC_75_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareInventory
-| where SoftwareName contains "Opera GX" or (SoftwareVendor has "Opera" and SoftwareName has "GX")
-| where isnotempty(SoftwareVersion)
-| extend Ver = parse_version(SoftwareVersion), Fixed = parse_version("130.0.5847.89")   // build that patched the GX Mods auto-install flaw
-| where Ver < Fixed
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform
-| sort by SoftwareVersion asc
-```
-
-### Silent Opera GX mod (.crx) written by browser from a non-Opera origin
-
-`UC_75_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.crx" Filesystem.file_path="*Opera GX*" by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where FileName endswith ".crx"
-| where InitiatingProcessFileName =~ "opera.exe"
-| where FolderPath has "Opera GX" or InitiatingProcessFolderPath has "Opera GX"
-| where not((FileOriginUrl has "opera.com") or (FileOriginReferrerUrl has "opera.com"))   // legit GX mods come from Opera's own store/CDN
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Opera GX background-image request burst to a single host (universal CSS injection XS-Leak exfil)
-
-`UC_75_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="opera.exe" All_Traffic.direction=outbound by All_Traffic.src, All_Traffic.dest, _time span=1m
-| `drop_dm_object_name(All_Traffic)`
-| where count > 30
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessFileName =~ "opera.exe"
-| where InitiatingProcessFolderPath has "Opera GX"
-| where RemoteIPType == "Public"
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
-| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, RemoteIP, RemoteUrl, bin(Timestamp, 1m)
-| where ConnCount > 30   // burst of attribute-selector background-image fetches from the mod CSS to one attacker host in <=1 min
-| order by ConnCount desc
-```
 
 ### Suspicious browser extension installation
 
@@ -237,7 +173,14 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-55200`, `CVE-2026-46817`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -100,7 +100,7 @@ _(none detected from narrative keywords)_
 
 ### Armored Likho dropper writes twin VBScript files (trace-eraser + scheduled-task launcher) from archive extract dir
 
-`UC_84_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_85_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceFileEvents
 
 ### CVE-2025-9491 LNK exploitation: Explorer spawns obfuscated PowerShell loader + decoy document
 
-`UC_84_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_85_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceProcessEvents
 
 ### BusySnake persistence: VBScript (wscript/cscript) registers scheduled task launching pythonw/.pyw stealer
 
-`UC_84_18` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_85_18` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### BusySnake C2 beacon to Armored Likho infrastructure (named domains + IPs)
 
-`UC_84_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_85_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ DeviceNetworkEvents
 
 ### BusySnake deploys remote-access tooling: Python stealer spawns RustDesk / Go2Tunnel reverse SSH tunnel
 
-`UC_84_20` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_85_20` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -210,7 +210,7 @@ DeviceProcessEvents
 
 ### BusySnake credential collection: pythonw stages browser cred stores, Telegram session, and crypto-wallet JSON
 
-`UC_84_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_85_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

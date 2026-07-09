@@ -11,14 +11,9 @@ By Sergiu Gatlan
 July 9, 2026
 01:42 AM
 0 
-
-
 Microsoft has released a security patch to address a Defender zero-day vulnerability known as "RoguePlanet," disclosed after the June 2026 Patch Tuesday.
-
-
 The flaw (tracked as CVE-2026-50656 ) was disclosed by a security researcher using the "Nightmare Eclipse" handle as part of an ongoing dispute with Microsoft over the company's bug bounty and vulnerability disclosure practices.
-
-…
+They also s…
 
 ## Indicators of Compromise (high-fidelity only)
 

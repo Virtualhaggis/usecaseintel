@@ -1,253 +1,3 @@
-<article class="card" id="art-3580" data-art-slug="2018-06-05-public-disclosure-of-a-critical-arbitrary-file-overwrite-vul"
-  data-phases="actions,c2,exploit,install" data-sev="low"
-  data-techs=""
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="2" data-llm-uc-count="2"
-  data-search="Public Disclosure of a Critical Arbitrary File Overwrite Vulnerability: Zip Slip The Snyk Security team is today announcing the public disclosure of a critical arbitrary file overwrite vulnerability called Zip Slip. It is a widespread vulnerability which typically results in remote command execution. The vulnerability affects thousands of projects.   [LLM] Zip Slip: archive-handler process writes shell script / web shell outside extraction dir [LLM] Zip Slip RCE: archive-extraction process spawns command interpreter">
-  <div class="sev-ribbon low">Low</div>
-  <button class="share-btn card-share" data-share-art="2018-06-05-public-disclosure-of-a-critical-arbitrary-file-overwrite-vul" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/zip-slip-vulnerability/" target="_blank" rel="noopener">Public Disclosure of a Critical Arbitrary File Overwrite Vulnerability: Zip Slip</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2018-06-05</span>
-    <span>2 use cases</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">The Snyk Security team is today announcing the public disclosure of a critical arbitrary file overwrite vulnerability called Zip Slip. It is a widespread vulnerability which typically results in remote command execution. The vulnerability affects thousands of projects.</p>
-  
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3580-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3580"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3580-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Zip Slip RCE: archive-extraction process spawns command interpreter</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Zip Slip: archive-handler process writes shell script / web shell outside extraction dir</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="97abeae2d6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Zip Slip: archive-handler process writes shell script / web shell outside extraction dir</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="97abeae2d6" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the Zip Slip arbitrary-file-write primitive: a Java or archive-extraction binary (jar/tar/7z/unzip/rar/cpio) creating a *.sh / *.jsp / *.war / *.aspx payload on disk, as happens when a crafted archive carries a traversal entry like ../../evil.sh. Article-specific because it anchors on the exact archive formats Snyk named and the script payload extension from the disclosed PoC.
-
-Rationale: Anchors on the exact archive-handler binaries Snyk listed (jar/tar/7z/rar/cpio) plus the script/web-shell payload extension implied by the disclosed PoC path ../../evil.sh — the file-write is the Zip Slip exploitation primitive that precedes RCE.
-
-Cross-checked against:
-  • https://security.snyk.io/research/zip-slip-vulnerability
-  • https://github.com/snyk/zip-slip-vulnerability
-  • https://www.cesarsotovalero.net/blog/zip-slip-attacks.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow">T1574</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CI/CD build agents extracting a .war/.jar and dropping deployment shell scripts (Jenkins, Maven, Gradle)</li><li>Legitimate software installers that unpack archives containing .sh helper scripts</li><li>Backup/restore tooling using 7z/tar to expand archives onto application servers</li><li>Java application servers (Tomcat/Spring) legitimately hot-deploying WAR files</li><li>Developer workstations unzipping source archives containing .sh build scripts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFolderPath has_any (&quot;\\jenkins\\&quot;,&quot;\\buildagent\\&quot;,&quot;\\.m2\\&quot;,&quot;\\gradle\\&quot;) and FolderPath has_any (&quot;\\workspace\\&quot;,&quot;\\build\\&quot;,&quot;\\target\\&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: pull the InitiatingProcessCommandLine — identify which archive was being extracted and whether the written path landed OUTSIDE the expected extraction/temp/webapp directory (the Zip Slip tell). Inspect the dropped file&#x27;s contents for shell/web-shell code. 2) CONTAIN: if the path escaped the extraction dir and the file is a live web shell or startup script, isolate the host, quarantine the dropped file and the source archive, and revoke the service account the extractor ran under. 3) HUNT: search for execution of the dropped file (child process from the same parent / web-server spawning a shell), look for the same source archive on other hosts, and review the upload/ingest path that delivered the malicious archive.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3580-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3580-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3580-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3580-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3580-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3580-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3580-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType == &quot;FileCreated&quot;
-| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;jar.exe&quot;,&quot;7z.exe&quot;,&quot;7za.exe&quot;,&quot;7zG.exe&quot;,&quot;tar.exe&quot;,&quot;unzip.exe&quot;,&quot;WinRAR.exe&quot;,&quot;Rar.exe&quot;,&quot;UnRAR.exe&quot;,&quot;cpio.exe&quot;)
-| where FileName endswith &quot;.sh&quot; or FileName endswith &quot;.jsp&quot; or FileName endswith &quot;.jspx&quot; or FileName endswith &quot;.war&quot; or FileName endswith &quot;.aspx&quot; or FileName endswith &quot;.bat&quot; or FileName endswith &quot;.bash&quot; or FileName endswith &quot;.py&quot;
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3580-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType == &quot;FileCreated&quot;
-| where ActingProcessName has_any (&quot;java&quot;,&quot;jar.exe&quot;,&quot;7z&quot;,&quot;tar.exe&quot;,&quot;unzip&quot;,&quot;WinRAR&quot;,&quot;Rar.exe&quot;,&quot;UnRAR&quot;,&quot;cpio&quot;)
-| where TargetFileExtension in~ (&quot;sh&quot;,&quot;jsp&quot;,&quot;jspx&quot;,&quot;war&quot;,&quot;aspx&quot;,&quot;bat&quot;,&quot;bash&quot;,&quot;py&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath, Hash
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3580-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Zip Slip Archive Handler Writes Script or Web Shell Payload
-id: 6f3b2a4e-9c1d-4e77-8b2a-1f0c7d4e5a91
-description: Detects an archive-extraction or Java process creating a shell script or web shell payload on disk, consistent with Zip Slip directory-traversal arbitrary file write (e.g. ../../evil.sh)
-references:
-  - https://snyk.io/blog/zip-slip-vulnerability/
-  - https://security.snyk.io/research/zip-slip-vulnerability
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1574
-  - attack.t1505.003
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;\java.exe&#x27;
-      - &#x27;\javaw.exe&#x27;
-      - &#x27;\jar.exe&#x27;
-      - &#x27;\7z.exe&#x27;
-      - &#x27;\7za.exe&#x27;
-      - &#x27;\tar.exe&#x27;
-      - &#x27;\unzip.exe&#x27;
-      - &#x27;\WinRAR.exe&#x27;
-      - &#x27;\Rar.exe&#x27;
-      - &#x27;\UnRAR.exe&#x27;
-      - &#x27;\cpio.exe&#x27;
-  selection_file:
-    TargetFilename|endswith:
-      - &#x27;.sh&#x27;
-      - &#x27;.jsp&#x27;
-      - &#x27;.jspx&#x27;
-      - &#x27;.war&#x27;
-      - &#x27;.aspx&#x27;
-      - &#x27;.bat&#x27;
-  condition: selection_proc and selection_file
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-3580-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @Image:(*\java.exe OR *\javaw.exe OR *\jar.exe OR *\7z.exe OR *\7za.exe OR *\tar.exe OR *\unzip.exe OR *\WinRAR.exe OR *\Rar.exe OR *\UnRAR.exe OR *\cpio.exe) @TargetFilename:(*.sh OR *.jsp OR *.jspx OR *.war OR *.aspx OR *.bat)</code></pre></div>
-    <div class="tab-content" id="art-3580-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/\\(java|javaw|jar|7z|7za|tar|unzip|winrar|rar|unrar|cpio)\.exe$/i
-| TargetFileName=/\.(sh|jsp|jspx|war|aspx|bat|bash|py)$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3580-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3580-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3580-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3580-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=created) AND (Filesystem.process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;jar.exe&quot;,&quot;7z.exe&quot;,&quot;7za.exe&quot;,&quot;tar.exe&quot;,&quot;unzip.exe&quot;,&quot;WinRAR.exe&quot;,&quot;Rar.exe&quot;,&quot;UnRAR.exe&quot;,&quot;cpio.exe&quot;)) AND (Filesystem.file_name=&quot;*.sh&quot; OR Filesystem.file_name=&quot;*.jsp&quot; OR Filesystem.file_name=&quot;*.jspx&quot; OR Filesystem.file_name=&quot;*.war&quot; OR Filesystem.file_name=&quot;*.aspx&quot; OR Filesystem.file_name=&quot;*.bat&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-3580-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=created) AND (Filesystem.process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;jar.exe&quot;,&quot;7z.exe&quot;,&quot;7za.exe&quot;,&quot;tar.exe&quot;,&quot;unzip.exe&quot;,&quot;WinRAR.exe&quot;,&quot;Rar.exe&quot;,&quot;UnRAR.exe&quot;,&quot;cpio.exe&quot;)) AND (Filesystem.file_name=&quot;*.sh&quot; OR Filesystem.file_name=&quot;*.jsp&quot; OR Filesystem.file_name=&quot;*.jspx&quot; OR Filesystem.file_name=&quot;*.war&quot; OR Filesystem.file_name=&quot;*.aspx&quot; OR Filesystem.file_name=&quot;*.bat&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="9104265817" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Zip Slip RCE: archive-extraction process spawns command interpreter</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="9104265817" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the post-exploitation step of Zip Slip where the overwritten executable/script is invoked: a Java or archive-handler binary (jar/tar/7z/unzip/rar/cpio) spawning cmd/powershell/bash/sh. Distinct pivot from the file-write UC — this catches the RCE outcome on process telemetry rather than the dropped artifact.
-
-Rationale: Pairs the archive-handler parent binaries Snyk named with a command-interpreter child — the &#x27;overwrite an executable then invoke it&#x27; RCE outcome the Snyk research and corroborating write-ups describe as Zip Slip&#x27;s typical impact.
-
-Cross-checked against:
-  • https://security.snyk.io/research/zip-slip-vulnerability
-  • https://www.cesarsotovalero.net/blog/zip-slip-attacks.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Java applications that legitimately shell out to cmd/bash for post-deploy hooks</li><li>7-Zip/WinRAR &#x27;run after extract&#x27; workflows configured by users</li><li>CI build steps where tar/unzip is followed by a build script in the same process tree</li><li>Installer archives that self-extract and then launch a setup .bat</li><li>Admin scripting that pipes archive extraction into a shell on the same parent</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;\\jenkins\\&quot;,&quot;\\buildagent\\&quot;,&quot;gradlew&quot;,&quot;mvnw&quot;) or InitiatingProcessFolderPath has &quot;\\buildagent\\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: examine the child ProcessCommandLine — benign post-extract hooks have predictable paths; reverse-shell / download cradles, base64, or references to a file just written outside the extraction dir are red flags. Correlate against the file-write UC on the same host/parent PID. 2) CONTAIN: if the command line shows attacker behaviour, isolate the host, kill the process tree, and freeze the service account the extractor ran as. 3) HUNT: look for outbound C2 from the spawned interpreter, the source archive on peer hosts, and persistence (cron/Run keys/services) created in the minutes after the spawn.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3580-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3580-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3580-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3580-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3580-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3580-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3580-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;jar.exe&quot;,&quot;7z.exe&quot;,&quot;7za.exe&quot;,&quot;tar.exe&quot;,&quot;unzip.exe&quot;,&quot;WinRAR.exe&quot;,&quot;Rar.exe&quot;,&quot;UnRAR.exe&quot;,&quot;cpio.exe&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3580-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;java&quot;,&quot;jar.exe&quot;,&quot;7z&quot;,&quot;tar.exe&quot;,&quot;unzip&quot;,&quot;WinRAR&quot;,&quot;Rar.exe&quot;,&quot;UnRAR&quot;,&quot;cpio&quot;)
-| where ActingProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell&quot;,&quot;pwsh&quot;,&quot;\\bash&quot;,&quot;\\sh&quot;,&quot;wscript&quot;,&quot;cscript&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3580-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Zip Slip RCE Archive Handler Spawns Command Interpreter
-id: c2d8e1f4-7a6b-4c33-9d10-5b8e2f3a6c47
-description: Detects an archive-extraction or Java process spawning a command interpreter, consistent with Zip Slip arbitrary-file-write leading to remote command execution
-references:
-  - https://snyk.io/blog/zip-slip-vulnerability/
-  - https://security.snyk.io/research/zip-slip-vulnerability
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1059.003
-  - attack.t1059.004
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection:
-    ParentImage|endswith:
-      - &#x27;\java.exe&#x27;
-      - &#x27;\javaw.exe&#x27;
-      - &#x27;\jar.exe&#x27;
-      - &#x27;\7z.exe&#x27;
-      - &#x27;\7za.exe&#x27;
-      - &#x27;\tar.exe&#x27;
-      - &#x27;\unzip.exe&#x27;
-      - &#x27;\WinRAR.exe&#x27;
-      - &#x27;\Rar.exe&#x27;
-      - &#x27;\UnRAR.exe&#x27;
-      - &#x27;\cpio.exe&#x27;
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\bash.exe&#x27;
-      - &#x27;\sh.exe&#x27;
-      - &#x27;\wscript.exe&#x27;
-      - &#x27;\cscript.exe&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-3580-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\java.exe OR *\javaw.exe OR *\jar.exe OR *\7z.exe OR *\7za.exe OR *\tar.exe OR *\unzip.exe OR *\WinRAR.exe OR *\Rar.exe OR *\UnRAR.exe OR *\cpio.exe) @Image:(*\cmd.exe OR *\powershell.exe OR *\pwsh.exe OR *\bash.exe OR *\sh.exe OR *\wscript.exe OR *\cscript.exe)</code></pre></div>
-    <div class="tab-content" id="art-3580-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(java|javaw|jar|7z|7za|tar|unzip|winrar|rar|unrar|cpio)\.exe$/i
-| ImageFileName=/\\(cmd|powershell|pwsh|bash|sh|wscript|cscript)\.exe$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3580-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3580-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3580-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3580-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;jar.exe&quot;,&quot;7z.exe&quot;,&quot;7za.exe&quot;,&quot;tar.exe&quot;,&quot;unzip.exe&quot;,&quot;WinRAR.exe&quot;,&quot;Rar.exe&quot;,&quot;UnRAR.exe&quot;,&quot;cpio.exe&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-3580-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;jar.exe&quot;,&quot;7z.exe&quot;,&quot;7za.exe&quot;,&quot;tar.exe&quot;,&quot;unzip.exe&quot;,&quot;WinRAR.exe&quot;,&quot;Rar.exe&quot;,&quot;UnRAR.exe&quot;,&quot;cpio.exe&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3585" data-art-slug="2018-04-11-javascript-and-node-js-security-the-common-pitfalls"
   data-phases="c2,exploit,install" data-sev="med"
   data-techs="T1190"
@@ -6212,6 +5962,176 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre><pre class="spl-mode-body" id="art-3636-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Differences in version handling between RubyGems and npm ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3639" data-art-slug="2016-11-03-launching-serverless-snyk"
+  data-phases="c2,exploit,install,recon" data-sev="med"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Launching serverless Snyk Today we’re releasing the Serverless Snyk plugin—a plugin for the Serverless framework that helps you to prevent vulnerable packages in your application, using Snyk!  T1190 Article-specific behavioural hunt — Launching serverless Snyk">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2016-11-03-launching-serverless-snyk" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/launching-serverless-snyk/" target="_blank" rel="noopener">Launching serverless Snyk</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2016-11-03</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Today we’re releasing the Serverless Snyk plugin—a plugin for the Serverless framework that helps you to prevent vulnerable packages in your application, using Snyk!</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3639-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3639"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3639-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Launching serverless Snyk</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="eb2489602a" data-platforms="def,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Launching serverless Snyk</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="eb2489602a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3639-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3639-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3639-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3639-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Launching serverless Snyk
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3639-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Launching serverless Snyk
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3639-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3639-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3639-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3639-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Launching serverless Snyk ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3639-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Launching serverless Snyk ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))

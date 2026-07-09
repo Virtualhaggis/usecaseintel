@@ -26,7 +26,7 @@ _(none detected from narrative keywords)_
 
 ### Rocket.Chat Livechat file-upload ID enumeration sweep (ObjectId harvest)
 
-`UC_64_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_65_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Rocket.Chat anonymous Livechat visitor bootstrap chained to file-upload access
 
-`UC_64_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_65_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Rocket.Chat file-upload request carrying Livechat auth params (IDOR signature)
 
-`UC_64_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_65_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
