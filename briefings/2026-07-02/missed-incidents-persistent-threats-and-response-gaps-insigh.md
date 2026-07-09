@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Long-lived cryptomining C2 (stratum) from SYSTEM context on servers / domain controllers
 
-`UC_107_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_110_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### PurpleFox in-memory install: msiexec.exe fetching a remote MSI
 
-`UC_107_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_110_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### LionTail IIS backdoor: unexpected DLL written to / loaded by an IIS worker (w3wp)
 
-`UC_107_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_110_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceImageLoadEvents
 
 ### Web-server process (w3wp/httpd) spawning a command shell or LOLBin
 
-`UC_107_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_110_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### Mass execution of binaries from SYSVOL/NETLOGON (abused GPO software distribution)
 
-`UC_107_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_110_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceProcessEvents
 
 ### Remote management tool executing from a non-install (temp/download) path
 
-`UC_107_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_110_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -353,7 +353,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Missed incidents, persistent threats, and response gaps: Insights from compromis
 
-`UC_107_6` · phase: **exploit** · confidence: **High**
+`UC_110_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

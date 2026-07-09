@@ -8,6 +8,10 @@ _2567 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-09
+- [fake 7 zip installers turn devices into residential proxy no](./2026-07-09/fake-7-zip-installers-turn-devices-into-residential-proxy-no.md)
+- [ghostapproval symlink flaws could let malicious repos run co](./2026-07-09/ghostapproval-symlink-flaws-could-let-malicious-repos-run-co.md)
+
 ## 2026-07-08
 - [15 year old ghostlock flaw enables root and container escape](./2026-07-08/15-year-old-ghostlock-flaw-enables-root-and-container-escape.md)
 - [ai coding agents found triggering endpoint security rules bu](./2026-07-08/ai-coding-agents-found-triggering-endpoint-security-rules-bu.md)
@@ -15,6 +19,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
 - [cisa orders feds to prioritize patching langflow auth bypass](./2026-07-08/cisa-orders-feds-to-prioritize-patching-langflow-auth-bypass.md)
 - [entra passkey enrollment vishing targets microsoft 365 users](./2026-07-08/entra-passkey-enrollment-vishing-targets-microsoft-365-users.md)
+- [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
 - [fake paysafe skrill sdks on npm and pypi steal credentials](./2026-07-08/fake-paysafe-skrill-sdks-on-npm-and-pypi-steal-credentials.md)
 - [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
 - [ghsa critical cve 2026 53649 joro unauthenticated cross orig](./2026-07-08/ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig.md)
@@ -110,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
 - [new chocopoc rat targets vulnerability researchers via fake ](./2026-07-02/new-chocopoc-rat-targets-vulnerability-researchers-via-fake-.md)
 - [ransomware groups turn to citrix bleed 2 byovd and supply ch](./2026-07-02/ransomware-groups-turn-to-citrix-bleed-2-byovd-and-supply-ch.md)
-- [sharepoint rce cve 2026 45659 added to cisa kev after active](./2026-07-02/sharepoint-rce-cve-2026-45659-added-to-cisa-kev-after-active.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-02/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 - [threatsday ai compute hijacking apple email flaw bluehammer ](./2026-07-02/threatsday-ai-compute-hijacking-apple-email-flaw-bluehammer-.md)
 - [toddycat linked umbrij malware abuses oauth to access gmail ](./2026-07-02/toddycat-linked-umbrij-malware-abuses-oauth-to-access-gmail-.md)
@@ -133,7 +137,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)
 - [the soc files screenconnect masked as freeware an inside loo](./2026-07-01/the-soc-files-screenconnect-masked-as-freeware-an-inside-loo.md)
-- [unpatched argo cd repo server flaw could let attackers take ](./2026-07-01/unpatched-argo-cd-repo-server-flaw-could-let-attackers-take-.md)
 
 ## 2026-06-30
 - [ghsa critical cve 2026 50566 fission environment runtime con](./2026-06-30/ghsa-critical-cve-2026-50566-fission-environment-runtime-con.md)
@@ -901,9 +904,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-11-04
 - [cisa kev cve 2025 11371 gladinet centrestack and triofox fil](./2025-11-04/cisa-kev-cve-2025-11371-gladinet-centrestack-and-triofox-fil.md)
 - [cisa kev cve 2025 48703 cwp control web panel os command inj](./2025-11-04/cisa-kev-cve-2025-48703-cwp-control-web-panel-os-command-inj.md)
-
-## 2025-11-03
-- [ground zero 5 things to do after discovering a cyberattack](./2025-11-03/ground-zero-5-things-to-do-after-discovering-a-cyberattack.md)
 
 ## 2025-10-30
 - [cisa kev cve 2025 24893 xwiki platform eval injection vulner](./2025-10-30/cisa-kev-cve-2025-24893-xwiki-platform-eval-injection-vulner.md)

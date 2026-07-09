@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Opera GX below patched build 130.0.5847.89 (silent mod-install / universal CSS injection exposure)
 
-`UC_70_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_73_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -51,7 +51,7 @@ DeviceTvmSoftwareInventory
 
 ### Silent Opera GX mod (.crx) written by browser from a non-Opera origin
 
-`UC_70_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_73_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### Opera GX background-image request burst to a single host (universal CSS injection XS-Leak exfil)
 
-`UC_70_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_73_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

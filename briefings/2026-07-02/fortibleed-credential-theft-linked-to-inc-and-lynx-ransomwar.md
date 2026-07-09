@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### FortiClient EMS exploit chain (CVE-2026-35616) deploying EKZ Infostealer via fortitray/ipsec → PowerShell
 
-`UC_108_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_111_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### EKZ Infostealer C2 download and HTTP-POST exfiltration to 83.138.53.110
 
-`UC_108_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_111_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### EKZ Infostealer browser credential theft and staging to C:\ProgramData\log.txt
 
-`UC_108_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_111_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceFileEvents
 
 ### EKZ Infostealer / FortiBleed known-bad file hash execution sweep
 
-`UC_108_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_111_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
