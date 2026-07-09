@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Generating fake security data with Python and faker-security
 
-`UC_2253_0` · phase: **exploit** · confidence: **High**
+`UC_2252_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

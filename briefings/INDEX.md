@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2565 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2564 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -18,8 +18,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
 - [microsoft patches rogueplanet defender zero day vulnerabilit](./2026-07-09/microsoft-patches-rogueplanet-defender-zero-day-vulnerabilit.md)
 - [new forg365 phishing platform uses ai to target microsoft 36](./2026-07-09/new-forg365-phishing-platform-uses-ai-to-target-microsoft-36.md)
+- [new helix vishing group emerges in sharepoint data theft att](./2026-07-09/new-helix-vishing-group-emerges-in-sharepoint-data-theft-att.md)
+- [npm 12 disables install scripts by default to reduce supply ](./2026-07-09/npm-12-disables-install-scripts-by-default-to-reduce-supply-.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
 - [summer of clearinghouses](./2026-07-09/summer-of-clearinghouses.md)
+- [threatsday cloud bucket hijacking windows lpe chain global f](./2026-07-09/threatsday-cloud-bucket-hijacking-windows-lpe-chain-global-f.md)
 - [top ai agents built to catch malicious code can be tricked i](./2026-07-09/top-ai-agents-built-to-catch-malicious-code-can-be-tricked-i.md)
 
 ## 2026-07-08
@@ -27,7 +30,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ai coding agents found triggering endpoint security rules bu](./2026-07-08/ai-coding-agents-found-triggering-endpoint-security-rules-bu.md)
 - [china linked uat 7810 expands orb network with new longleash](./2026-07-08/china-linked-uat-7810-expands-orb-network-with-new-longleash.md)
 - [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
-- [cisa orders feds to prioritize patching langflow auth bypass](./2026-07-08/cisa-orders-feds-to-prioritize-patching-langflow-auth-bypass.md)
 - [entra passkey enrollment vishing targets microsoft 365 users](./2026-07-08/entra-passkey-enrollment-vishing-targets-microsoft-365-users.md)
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
 - [fake paysafe skrill sdks on npm and pypi steal credentials](./2026-07-08/fake-paysafe-skrill-sdks-on-npm-and-pypi-steal-credentials.md)
@@ -42,7 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [scmbanker malware uses clickfix lures to target mexican bank](./2026-07-08/scmbanker-malware-uses-clickfix-lures-to-target-mexican-bank.md)
 - [the verification step is the new ato battleground in 2026](./2026-07-08/the-verification-step-is-the-new-ato-battleground-in-2026.md)
 - [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
-- [ubiquiti warns of new max severity unifi os vulnerability](./2026-07-08/ubiquiti-warns-of-new-max-severity-unifi-os-vulnerability.md)
 
 ## 2026-07-07
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
@@ -114,10 +115,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 59800 9router missing authorization a](./2026-07-02/ghsa-critical-cve-2026-59800-9router-missing-authorization-a.md)
 - [ghsa critical cve 2026 9558 mautic has server side template ](./2026-07-02/ghsa-critical-cve-2026-9558-mautic-has-server-side-template-.md)
 - [ghsa critical cve 2026 9559 mautic vulnerable to path traver](./2026-07-02/ghsa-critical-cve-2026-9559-mautic-vulnerable-to-path-traver.md)
-- [google disrupts netnut residential proxy network spanning 2 ](./2026-07-02/google-disrupts-netnut-residential-proxy-network-spanning-2-.md)
 - [how we added webauthn to a browser based rdp client](./2026-07-02/how-we-added-webauthn-to-a-browser-based-rdp-client.md)
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
-- [ransomware groups turn to citrix bleed 2 byovd and supply ch](./2026-07-02/ransomware-groups-turn-to-citrix-bleed-2-byovd-and-supply-ch.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-02/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 
 ## 2026-07-01

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Docker for Node.js developers: 5 things you need to know not to fail your securi
 
-`UC_3196_0` · phase: **exploit** · confidence: **High**
+`UC_3195_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,273 +1,3 @@
-<article class="card" id="art-150" data-art-slug="2026-06-26-ghsa-critical-ghsa-q6xx-5vr8-p898-nezha-vulnerable-to-cross-"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint,web"
-  data-targets="windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] GHSA-q6xx-5vr8-p898: Nezha vulnerable to cross-tenant terminal/file-manager session hijack via WebSocket stream UUID without ownership check Nezha vulnerable to cross-tenant terminal/file-manager session hijack via WebSocket stream UUID without ownership check  T1190 [LLM] Nezha WebSocket terminal/file-manager session hijack — one stream UUID attached from 2+ source IPs [LLM] Nezha harvested stream-UUID replay — one client attaching to many distinct terminal/file WebSocket UUIDs Infostealer — non-browser process accessing browser cookie/login DBs">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-26-ghsa-critical-ghsa-q6xx-5vr8-p898-nezha-vulnerable-to-cross-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-q6xx-5vr8-p898" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-q6xx-5vr8-p898: Nezha vulnerable to cross-tenant terminal/file-manager session hijack via WebSocket stream UUID without ownership check</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-26</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Nezha vulnerable to cross-tenant terminal/file-manager session hijack via WebSocket stream UUID without ownership check</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-150-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-150"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-150-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Nezha WebSocket terminal/file-manager session hijack — one stream UUID attached from 2+ source IPs · [LLM] Nezha harvested stream-UUID replay — one client attaching to many distinct terminal/file WebSocket UUIDs</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="beb9ba1acf" data-platforms="sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Nezha WebSocket terminal/file-manager session hijack — one stream UUID attached from 2+ source IPs</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="beb9ba1acf" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the GHSA-q6xx-5vr8-p898 cross-tenant RCE: the same live /ws/terminal/&lt;uuid&gt; or /ws/file/&lt;uuid&gt; stream UUID is attached to from two or more distinct client IPs. Legitimately exactly one client (the creator) connects per stream UUID, so a second concurrent attach on a live UUID is the hijack itself.
-
-Rationale: Uses the article&#x27;s exact vulnerable endpoints /ws/terminal/:id and /ws/file/:id and the invariant that createTerminal returns one UUID to one client, so &gt;1 distinct attaching source IP on a single UUID is high-fidelity for the hijack. Defender/Datadog/Falcon/CloudWatch left empty because the discriminating field (the UUID in the WebSocket URL path) lives only in reverse-proxy HTTP logs, which EDR/endpoint/cloud-audit telemetry does not carry.
-
-Cross-checked against:
-  • https://dailycve.com/nezha-monitoring-websocket-session-hijacking-cross-tenant-rce-ghsa-q6xx-5vr8-p898-critical-dc-jun2026-727/
-  • https://advisories.gitlab.com/golang/github.com/nezhahq/nezha/CVE-2026-47124/
-  • https://github.com/nezhahq/nezha</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Remote Service Session Hijacking">T1563</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Single user roaming mid-session (laptop→phone, VPN/Wi-Fi flip) so one live UUID legitimately sees two source IPs.</li><li>Dashboard client opening dual-stack connections logged as separate IPv4 and IPv6 client addresses for the same session.</li><li>Reverse proxy behind Cloudflare/LB not forwarding X-Forwarded-For — real client IP collapses to edge IP (causes false negatives) or NAT makes two users share one IP.</li><li>Link-preview / error-reporter bots (Slack unfurl, Sentry) fetching the WebSocket URL harvested from a Referer/breadcrumb — benign but non-owner attach.</li><li>Uptime/synthetic monitor replaying a captured session URL.</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| extend DistinctSubnets = array_length(set_difference(Clients, dynamic([]))) | extend NetSet = set_difference(zip(Clients), dynamic([])) | where DistinctClients &gt; 1 and not (Endpoint == &quot;&quot; ) // narrow to cross-subnet: replace with dcount over strcat(split(SrcIpAddr,&#x27;.&#x27;)[0..2]) computed in summarize to drop same-/24 roaming and dual-stack pairs</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Pull every request for the flagged StreamId, order by time; the first source IP is the creator, later IP(s) are suspect. Correlate each source IP&#x27;s dashboard session (proxy auth cookie / SigninLogs) to a user and confirm the second IP is a different principal, not the owner&#x27;s dual-stack/VPN address. 2) Contain: If a distinct principal, terminate the live session (kill the ws / restart dashboard), treat the target server as compromised — rotate its SSH keys and credentials (terminal = full shell) — disable the suspected RoleMember, and upgrade Nezha to ≥ v2.0.10. 3) Hunt: Sweep that source IP for other /ws/terminal//ws/file/ UUIDs it touched, inspect the target host for post-exploit artifacts (files written via /ws/file/, new cron, reverse shells), and audit who can read the reverse-proxy logs / Sentry breadcrumbs where UUIDs leak.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-150-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-150-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-150-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 3d;
-ImWebSession
-| where TimeGenerated &gt; ago(lookback)
-| where Url has &quot;/ws/terminal/&quot; or Url has &quot;/ws/file/&quot;
-| extend StreamId = extract(@&quot;/ws/(?:terminal|file)/([0-9a-fA-F\-]{16,})&quot;, 1, Url)
-| where isnotempty(StreamId)
-| extend Endpoint = extract(@&quot;/ws/(terminal|file)/&quot;, 1, Url)
-| summarize DistinctClients = dcount(SrcIpAddr), Clients = make_set(SrcIpAddr, 20), Users = make_set(SrcUsername, 20), Hits = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by StreamId, Endpoint
-| where DistinctClients &gt; 1   // exactly one legitimate client attaches per stream UUID; 2+ distinct source IPs on one live UUID = cross-tenant hijack
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-150-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t dc(Web.src) as distinct_clients values(Web.src) as clients values(Web.user) as users count as hits min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/ws/terminal/*&quot; OR Web.url=&quot;*/ws/file/*&quot;) by Web.url
-| `drop_dm_object_name(Web)`
-| rex field=url &quot;/ws/(?&lt;endpoint&gt;terminal|file)/(?&lt;stream_id&gt;[0-9a-fA-F\-]{16,})&quot;
-| where isnotnull(stream_id) AND distinct_clients&gt;1
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-150-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Web.src) as distinct_clients values(Web.src) as clients values(Web.user) as users count as hits min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/ws/terminal/*&quot; OR Web.url=&quot;*/ws/file/*&quot;) by Web.url
-| `drop_dm_object_name(Web)`
-| rex field=url &quot;/ws/(?&lt;endpoint&gt;terminal|file)/(?&lt;stream_id&gt;[0-9a-fA-F\-]{16,})&quot;
-| where isnotnull(stream_id) AND distinct_clients&gt;1
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="060e376393" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Nezha harvested stream-UUID replay — one client attaching to many distinct terminal/file WebSocket UUIDs</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="060e376393" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the leaked-UUID abuse path in GHSA-q6xx-5vr8-p898: an attacker who scraped stream UUIDs from proxy logs / Referer / Sentry breadcrumbs replays them, causing one source IP (or account) to attach to an abnormally high number of distinct /ws/terminal/ or /ws/file/ UUIDs in a short window.
-
-Rationale: Targets a different pivot than UC1 (fan-out by one client across many UUIDs vs. one UUID across many clients), matching the article&#x27;s note that attackers passively harvest UUIDs from side channels then replay them. Threshold of &gt;5 distinct UUIDs/hour separates a UUID sweep from a normal operator opening a single session. Non-web telemetry left empty for the same reason as UC1 — the UUID only exists in the reverse-proxy URL path.
-
-Cross-checked against:
-  • https://dailycve.com/nezha-monitoring-websocket-session-hijacking-cross-tenant-rce-ghsa-q6xx-5vr8-p898-critical-dc-jun2026-727/
-  • https://advisories.gitlab.com/golang/github.com/nezhahq/nezha/CVE-2026-47120/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate RoleAdmin/operator managing many servers who opens terminals/file managers across the fleet in one session.</li><li>Automated provisioning or bulk-maintenance tooling that opens file-manager sessions to many hosts from one jump box IP.</li><li>Shared NAT/VPN egress collapsing several distinct operators to a single source IP, inflating per-IP UUID counts.</li><li>A single long troubleshooting session that reconnects repeatedly, generating multiple UUIDs from one client.</li><li>Load balancer or WAF re-issuing requests so the same logical session appears as several UUID hits.</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcUsername !in~ (&quot;&quot;) and DistinctStreams &gt; 5 and SrcUsername !has &quot;admin&quot;  // optional: exclude known fleet-admin service accounts once their normal per-hour session baseline is established</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm whether the high-fan-out SrcIpAddr/SrcUsername maps to a known admin/operator with legitimate multi-server duties; if unknown or a RoleMember, treat as suspicious. Check whether the UUIDs it hit were created by other users (cross-tenant) vs. its own. 2) Contain: If cross-tenant replay is confirmed, disable the account, block the source IP at the proxy, terminate active sessions, and upgrade Nezha to ≥ v2.0.10 to enforce IsStreamAuthorizedForUser. 3) Hunt: Pivot each hijacked UUID into UC1 to find the true owner and target servers, review those hosts for shell/file-write abuse, and identify the leak channel (proxy log access, Sentry/Bugsnag breadcrumbs, Referer) that exposed the UUIDs.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-150-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-150-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-150-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 1d;
-ImWebSession
-| where TimeGenerated &gt; ago(lookback)
-| where Url has &quot;/ws/terminal/&quot; or Url has &quot;/ws/file/&quot;
-| extend StreamId = extract(@&quot;/ws/(?:terminal|file)/([0-9a-fA-F\-]{16,})&quot;, 1, Url)
-| where isnotempty(StreamId)
-| summarize DistinctStreams = dcount(StreamId), Streams = make_set(StreamId, 50), Hits = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SrcIpAddr, SrcUsername, bin(TimeGenerated, 1h)
-| where DistinctStreams &gt; 5   // one client hitting &gt;5 distinct terminal/file stream UUIDs in an hour indicates replay of harvested UUIDs, not normal single-session use
-| order by DistinctStreams desc</code></pre></div>
-    <div class="tab-content" id="art-150-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t dc(Web.url) as distinct_streams values(Web.url) as streams count as hits min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/ws/terminal/*&quot; OR Web.url=&quot;*/ws/file/*&quot;) by Web.src Web.user _time span=1h
-| `drop_dm_object_name(Web)`
-| where distinct_streams&gt;5
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - distinct_streams</code></pre><pre class="spl-mode-body" id="art-150-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Web.url) as distinct_streams values(Web.url) as streams count as hits min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/ws/terminal/*&quot; OR Web.url=&quot;*/ws/file/*&quot;) by Web.src Web.user _time span=1h
-| `drop_dm_object_name(Web)`
-| where distinct_streams&gt;5
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - distinct_streams</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-150-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-150-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-150-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-150-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-150-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-150-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-150-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-150-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-150-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-151" data-art-slug="2026-06-26-ghsa-critical-cve-2026-49257-mcp-pinot-unauthenticated-tool-"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1528"
@@ -11788,6 +11518,226 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-179-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-48713&quot;, &quot;CVE-2026-48714&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-180" data-art-slug="2026-06-25-ghsa-critical-cve-2026-48714-i18next-http-middleware-missing"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,web"
+  data-targets="vcs"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-48714: i18next-http-middleware: MissingKeyHandler does not reject keys whose segments contain prototype-polluting names i18next-http-middleware: MissingKeyHandler does not reject keys whose segments contain prototype-polluting names CVE-2026-48714 CVE-2026-48713 T1190 [LLM] i18next-http-middleware dotted prototype-pollution key in HTTP request (CVE-2026-48714) [LLM] Unauthenticated external POST to i18next missingKey route /locales/add/ (CVE-2026-48714 exposure) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-25-ghsa-critical-cve-2026-48714-i18next-http-middleware-missing" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-f49m-vf83-692w" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-48714: i18next-http-middleware: MissingKeyHandler does not reject keys whose segments contain prototype-polluting names</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-25</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">i18next-http-middleware: MissingKeyHandler does not reject keys whose segments contain prototype-polluting names</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48714</span> <span class="ind cve">CVE-2026-48713</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-180-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-180"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-180-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Unauthenticated external POST to i18next missingKey route /locales/add/ (CVE-2026-48714 exposure)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] i18next-http-middleware dotted prototype-pollution key in HTTP request (CVE-2026-48714)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="7c5771d7af" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">i18next-http-middleware dotted prototype-pollution key in HTTP request (CVE-2026-48714)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7c5771d7af" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound web requests carrying a translation key whose segment is a reserved name followed by the keySeparator (e.g. &#x27;__proto__.polluted&#x27;, &#x27;constructor.prototype.x&#x27;) — the exact dotted bypass of the &lt;=3.9.6 literal denylist that i18next-http-middleware&#x27;s missingKeyHandler passes to i18next-fs-backend&#x27;s unguarded setPath(). Article-specific: the &#x27;(__proto__|constructor|prototype).&#x27; segment shape is the CVE-2026-48714 payload signature, not a generic prototype-pollution template.
+
+Rationale: Uses the article&#x27;s exact bypass string — a reserved segment (__proto__/constructor/prototype) followed by the default &#x27;.&#x27; keySeparator — which the 3.9.3 literal denylist misses. Legit i18next keys (&#x27;header.title&#x27;) never start a segment with these names, so the &#x27;(reserved).&#x27; regex is high-fidelity; %2e branch catches URL-encoded delivery.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-f49m-vf83-692w
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-48714
+  • https://github.com/i18next/i18next-http-middleware/commit/7c6d26f137d3e940b8d229ca148bca38845faf49</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal DAST/vuln scanner (Burp, Nessus, ZAP) fuzzing the app with __proto__ payloads</li><li>Security research / red-team validation traffic against a staging host</li><li>A backend that legitimately uses a dotted key literally containing the word &#x27;constructor&#x27; as free text (rare)</li><li>WAF that reflects the offending payload into its own alert Message field, double-counting the same request</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestURL has &quot;/locales/add/&quot; or Message has &quot;/locales/add/&quot; or RequestContext has &quot;/locales/add/&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request from the WAF/proxy log — confirm the payload targets &#x27;/locales/add/&lt;lng&gt;/&lt;ns&gt;&#x27; and that the segment is a reserved name + &#x27;.&#x27;, then check whether the request returned 2xx (delivered) vs blocked. 2) Contain: block the source IP at the WAF and, if missingKeyHandler is exposed unauthenticated, disable the route or set saveMissing:false immediately; verify the app runs i18next-http-middleware &gt;=3.9.7 and i18next-fs-backend &gt;=2.6.6. 3) Hunt: search for the same source IP hitting other endpoints, look for post-request app crashes/500s or anomalous auth-bypass behaviour indicating successful Object.prototype pollution, and review whether persisted locale files were modified.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-180-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-180-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-180-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-180-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestURL has_any (&quot;__proto__&quot;,&quot;constructor&quot;,&quot;prototype&quot;) or Message has_any (&quot;__proto__&quot;,&quot;constructor&quot;,&quot;prototype&quot;) or RequestContext has_any (&quot;__proto__&quot;,&quot;constructor&quot;,&quot;prototype&quot;)
+| where (RequestURL matches regex @&quot;(?i)(__proto__|constructor|prototype)(\.|%2e)&quot;)
+     or (Message matches regex @&quot;(?i)(__proto__|constructor|prototype)(\.|%2e)&quot;)
+     or (RequestContext matches regex @&quot;(?i)(__proto__|constructor|prototype)(\.|%2e)&quot;)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication, Message
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-180-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: i18next-http-middleware Prototype Pollution Dotted-Key Payload (CVE-2026-48714)
+id: f49a1c2e-8b73-4d61-9a2f-6928b7f4c883
+status: experimental
+description: Detects a web request whose translation key contains a reserved segment (__proto__/constructor/prototype) immediately followed by the i18next keySeparator, the dotted bypass exploited in CVE-2026-48714 against i18next-http-middleware &lt;=3.9.6 backed by i18next-fs-backend &lt;=2.6.5.
+references:
+  - https://github.com/advisories/GHSA-f49m-vf83-692w
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-48714
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection:
+    c-uri|re: &#x27;(?i)(__proto__|constructor|prototype)(\.|%2e)&#x27;
+  condition: selection
+falsepositives:
+  - Legitimate dotted translation keys never begin a segment with a reserved prototype name; internal DAST/security scanners probing the endpoint.
+level: high</code></pre></div>
+    <div class="tab-content" id="art-180-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-180-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-180-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-180-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*__proto__.*&quot; OR Web.url=&quot;*constructor.*&quot; OR Web.url=&quot;*prototype.*&quot; OR Web.uri_query=&quot;*__proto__.*&quot; OR Web.uri_query=&quot;*constructor.*&quot; OR Web.uri_query=&quot;*prototype.*&quot; OR Web.url=&quot;*__proto__%2e*&quot; OR Web.url=&quot;*prototype%2e*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.url Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-180-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*__proto__.*&quot; OR Web.url=&quot;*constructor.*&quot; OR Web.url=&quot;*prototype.*&quot; OR Web.uri_query=&quot;*__proto__.*&quot; OR Web.uri_query=&quot;*constructor.*&quot; OR Web.uri_query=&quot;*prototype.*&quot; OR Web.url=&quot;*__proto__%2e*&quot; OR Web.url=&quot;*prototype%2e*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.url Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bea394e3f9" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Unauthenticated external POST to i18next missingKey route /locales/add/ (CVE-2026-48714 exposure)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bea394e3f9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces the CVE-2026-48714 attack surface directly: anonymous, external-source POST requests to the i18next-http-middleware default missing-key route &#x27;/locales/add/&lt;lng&gt;/&lt;ns&gt;&#x27;. This catches exposure and probing even when the WAF does not log request bodies, keying on the advisory&#x27;s core precondition — missingKeyHandler reachable by untrusted input.
+
+Rationale: Pivots on the corroborated default missing-key route (&#x27;POST /locales/add/:lng/:ns&#x27;) plus an external, non-RFC1918 source — the exact &#x27;missingKeyHandler exposed to untrusted input&#x27; condition the advisory says makes an app exploitable. Route-based so it works even without request-body capture.
+
+Cross-checked against:
+  • https://github.com/i18next/i18next-http-middleware
+  • https://github.com/advisories/GHSA-f49m-vf83-692w
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-48714</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A reverse proxy / CDN egress IP mis-classified as external while forwarding legitimate app missing-key writes</li><li>Client-side i18next instances with saveMissing enabled genuinely posting missing keys from real users</li><li>Uptime/synthetic monitoring probing the locale endpoints</li><li>Internal QA reachable via a public load-balancer VIP that NATs the source to a public IP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserName == &quot;-&quot; and cIP !in (&quot;127.0.0.1&quot;, &quot;::1&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the target host actually runs i18next-http-middleware and whether missingKeyHandler/saveMissing is enabled and reachable without auth; review the posting IPs&#x27; reputation and request volume. 2) Contain: put the &#x27;/locales/add/&#x27; route behind authentication or remove it, or set saveMissing:false; upgrade middleware to &gt;=3.9.7 and i18next-fs-backend to &gt;=2.6.6. 3) Hunt: cross-reference these source IPs against UC1 (dotted __proto__ payloads) to distinguish benign missing-key writes from pollution attempts, and inspect persisted namespace JSON files for injected __proto__/constructor keys.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-180-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-180-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-180-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csMethod == &quot;POST&quot;
+| where csUriStem has &quot;/locales/add/&quot;
+| where ipv4_is_private(cIP) == false
+| summarize Requests = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), UserAgents = make_set(csUserAgent, 8), Paths = make_set(csUriStem, 8) by cIP, sSiteName, Computer
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-180-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-180-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-180-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-180-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as requests min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.uri_path) as uri_paths from datamodel=Web.Web where Web.http_method=POST Web.uri_path=&quot;*/locales/add/*&quot; by Web.src Web.dest | `drop_dm_object_name(Web)` | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16 OR src=127.0.0.0/8) | convert ctime(firstTime) ctime(lastTime) | sort - requests</code></pre><pre class="spl-mode-body" id="art-180-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as requests min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.uri_path) as uri_paths from datamodel=Web.Web where Web.http_method=POST Web.uri_path=&quot;*/locales/add/*&quot; by Web.src Web.dest | `drop_dm_object_name(Web)` | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16 OR src=127.0.0.0/8) | convert ctime(firstTime) ctime(lastTime) | sort - requests</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-180-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-180-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-180-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-180-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48714&quot;, &quot;CVE-2026-48713&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-180-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48714&quot;, &quot;CVE-2026-48713&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-180-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-180-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-180-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-180-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48714&quot;, &quot;CVE-2026-48713&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-180-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48714&quot;, &quot;CVE-2026-48713&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

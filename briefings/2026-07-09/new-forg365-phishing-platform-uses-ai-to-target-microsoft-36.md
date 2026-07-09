@@ -11,15 +11,9 @@ By Bill Toulas
 July 9, 2026
 10:39 AM
 0 
-
-
 A new phishing-as-a-service (PhaaS) operation called Forg365 focuses on stealing Microsoft 365 accounts by combining adversary-in-the-middle (AiTM) and device code methods with AI-assisted lure generation.
-
-
 The platform also provides a browser extension for continued access to the Microsoft services linked to the compromised accounts without the need to re-authenticate.
-
-
-Res…
+Researchers at …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -57,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Forg365 device-code phishing: successful auth via Microsoft Authentication Broker
 
-`UC_2_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +75,7 @@ AADSignInEventsBeta
 
 ### Forg365 phishing email to Cloudflare workers.dev lure via Amazon SES / SendGrid
 
-`UC_2_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_6_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +105,7 @@ EmailEvents
 
 ### Malicious inbox rule created by a device-code-compromised Forg365 victim
 
-`UC_2_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +133,7 @@ CloudAppEvents
 
 ### Illicit OAuth app consent / permission grant during Forg365 takeover
 
-`UC_2_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_6_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +153,7 @@ CloudAppEvents
 
 ### ForgCookie SSO token replay: non-interactive sign-in from a never-before-seen IP
 
-`UC_2_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
