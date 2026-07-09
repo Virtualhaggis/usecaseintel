@@ -46,9 +46,6 @@ I guess it captures the asymmetry of this industry, but I’ve never been entire
 - **T1569.002** — Service Execution
 - **T1090.003** — Proxy: Multi-hop Proxy
 - **T1571** — Non-Standard Port
-- **T1105** — Ingress Tool Transfer
-- **T1059** — Command and Scripting Interpreter
-- **T1562.004** — Impair Defenses: Disable or Modify System Firewall
 
 ## Kill chain phases observed
 
@@ -56,81 +53,40 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UAT-7810 ORB network C2 beacon to LONGLEASH/DOGLEASH relay IPs (ports 99/2222/8088)
+### UAT-7810 ORB relay C2 egress to LONGLEASH/DOGLEASH infrastructure IPs
 
-`UC_3_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_7_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | eval known_orb_port=if(dest_port IN ("8088","2222","99"),"yes","no") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let orbIps = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (orbIps)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, LocalPort
+| where RemoteIP in ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")
+| extend KnownOrbPort = iff(RemotePort in (8088, 2222, 99), "yes", "no")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, KnownOrbPort, RemoteUrl, LocalIP, Protocol
 | order by Timestamp desc
 ```
 
-### UAT-7810 LONGLEASH/JARLEASH/LEASHTEST backdoor file hash on host
+### Unpatched Ruckus / ASUS edge devices exposed to UAT-7810 n-day exploits
 
-`UC_3_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_7_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)` | convert ctime(lastSeen) | sort - severity
 ```
-
-**Defender KQL:**
-```kql
-let iocHashes = dynamic(["755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823"]);
-union DeviceFileEvents, DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where SHA256 in (iocHashes)
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### UAT-7810 DOGLEASH deploy: download from ORB IP then iptables INPUT ACCEPT on Linux
-
-`UC_3_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name=iptables Processes.process="*INPUT*ACCEPT*" by Processes.dest Processes.user Processes.parent_process_name Processes.process _time | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name IN ("wget","curl")) AND (Processes.process="*194.233.92.26*" OR Processes.process="*217.15.160.247*" OR Processes.process="*217.15.164.147*" OR Processes.process="*95.182.100.231*") by Processes.dest Processes.process | `drop_dm_object_name(Processes)` | rename process as download_cmd]
-```
-
-**Defender KQL:**
-```kql
-let orbIps = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
-let downloads = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName in~ ("wget","curl")
-    | where ProcessCommandLine has_any (orbIps)
-    | project DlTime = Timestamp, DeviceId, DeviceName, DlCmd = ProcessCommandLine;
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName == "iptables"
-| where ProcessCommandLine has "INPUT" and ProcessCommandLine has "ACCEPT"
-| where InitiatingProcessFileName in~ ("sh","bash","dash","ash","busybox")
-| join kind=inner downloads on DeviceId
-| where Timestamp between (DlTime .. DlTime + 5m)
-| project Timestamp, DeviceName, AccountName, DlTime, DlCmd, IptablesCmd = ProcessCommandLine
-| order by Timestamp desc
-```
-
-### UAT-7810 exploited edge-device CVE exposure (Ruckus & ASUS AiCloud n-days)
-
-`UC_3_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(7d)
 | where CveId in ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492")
-| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by CveId asc
 ```
 
@@ -403,7 +359,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Winning 54% of the time
 
-`UC_3_9` · phase: **exploit** · confidence: **High**
+`UC_7_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -463,4 +419,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### AI coding assistant fetches known slopsquatted package/repo (react-codeshift, clever-utils)
 
-`UC_33_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_37_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### AI coding assistant clones/installs then auto-runs commands (HalluSquatting fetch→exec chain)
 
-`UC_33_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_37_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

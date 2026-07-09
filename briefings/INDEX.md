@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2564 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2565 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,8 +14,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dormant github accounts help attackers blend in while mappin](./2026-07-09/dormant-github-accounts-help-attackers-blend-in-while-mappin.md)
 - [fake 7 zip installers turn devices into residential proxy no](./2026-07-09/fake-7-zip-installers-turn-devices-into-residential-proxy-no.md)
 - [ghostapproval symlink flaws could let malicious repos run co](./2026-07-09/ghostapproval-symlink-flaws-could-let-malicious-repos-run-co.md)
+- [ghsa critical cve 2026 52766 yeswiki vulnerable to unauthent](./2026-07-09/ghsa-critical-cve-2026-52766-yeswiki-vulnerable-to-unauthent.md)
+- [ghsa critical cve 2026 52777 yeswiki vulnerable to authentic](./2026-07-09/ghsa-critical-cve-2026-52777-yeswiki-vulnerable-to-authentic.md)
+- [ghsa critical cve 2026 52778 yeswiki has unsafe eval in its ](./2026-07-09/ghsa-critical-cve-2026-52778-yeswiki-has-unsafe-eval-in-its-.md)
 - [gigawiper anatomy of a destructive backdoor assembled from m](./2026-07-09/gigawiper-anatomy-of-a-destructive-backdoor-assembled-from-m.md)
 - [goddamn ransomware uses poisonx driver to disable endpoint d](./2026-07-09/goddamn-ransomware-uses-poisonx-driver-to-disable-endpoint-d.md)
+- [injective sdk on npm infected with cryptocurrency wallet ste](./2026-07-09/injective-sdk-on-npm-infected-with-cryptocurrency-wallet-ste.md)
 - [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
 - [microsoft patches rogueplanet defender zero day vulnerabilit](./2026-07-09/microsoft-patches-rogueplanet-defender-zero-day-vulnerabilit.md)
 - [new forg365 phishing platform uses ai to target microsoft 36](./2026-07-09/new-forg365-phishing-platform-uses-ai-to-target-microsoft-36.md)
@@ -238,13 +242,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 58399 acastellon auth authentication ](./2026-06-18/ghsa-critical-cve-2026-58399-acastellon-auth-authentication-.md)
 - [ghsa critical ghsa 29w3 p9w9 wc47 praisonai arbitrary file r](./2026-06-18/ghsa-critical-ghsa-29w3-p9w9-wc47-praisonai-arbitrary-file-r.md)
 - [ghsa critical ghsa 2jq4 q6vv 4cp3 crawl4ai arbitrary file wr](./2026-06-18/ghsa-critical-ghsa-2jq4-q6vv-4cp3-crawl4ai-arbitrary-file-wr.md)
-- [ghsa critical ghsa 9752 mhqh h34f npm praisonai agentos expo](./2026-06-18/ghsa-critical-ghsa-9752-mhqh-h34f-npm-praisonai-agentos-expo.md)
 - [ghsa critical ghsa f38v 77qj h4jq praisonai platform 0 1 4 s](./2026-06-18/ghsa-critical-ghsa-f38v-77qj-h4jq-praisonai-platform-0-1-4-s.md)
 - [ghsa critical ghsa hxpf 9xvq wph8 netlicensing mcp rest path](./2026-06-18/ghsa-critical-ghsa-hxpf-9xvq-wph8-netlicensing-mcp-rest-path.md)
 - [ghsa critical ghsa j4f3 55x4 r6q2 npm praisonai mcpserver ex](./2026-06-18/ghsa-critical-ghsa-j4f3-55x4-r6q2-npm-praisonai-mcpserver-ex.md)
-- [ghsa critical ghsa p69m 4f92 2v84 praisonai remote code exec](./2026-06-18/ghsa-critical-ghsa-p69m-4f92-2v84-praisonai-remote-code-exec.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
-- [ghsa critical ghsa vmmj pfw7 fjwp npm praisonai codemode san](./2026-06-18/ghsa-critical-ghsa-vmmj-pfw7-fjwp-npm-praisonai-codemode-san.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
