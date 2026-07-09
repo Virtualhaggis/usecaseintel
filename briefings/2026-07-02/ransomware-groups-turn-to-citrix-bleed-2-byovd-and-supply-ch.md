@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### Citrix Bleed 2 (CVE-2025-5777) exploitation via malformed doAuthentication.do POST
 
-`UC_106_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_109_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen Go backdoor C2 beacon to 81.177.215.15:9443
 
-`UC_106_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_109_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### BYOVD: Kontron ktapi.sys vulnerable driver dropped/loaded (The Gentlemen GentleKiller)
 
-`UC_106_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_109_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceFileEvents
 
 ### Anubis affiliate Cloudflare Tunnel (cloudflared) covert-access setup
 
-`UC_106_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_109_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceProcessEvents
 
 ### Anubis exfiltration tooling: rclone / s5cmd / S3 Browser / WinSCP to cloud storage
 
-`UC_106_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_109_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -183,7 +183,7 @@ DeviceProcessEvents
 
 ### Anubis /WIPEMODE data-wiper activation (files truncated to 0 KB)
 
-`UC_106_18` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_109_18` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -203,7 +203,7 @@ DeviceProcessEvents
 
 ### Pre-ransom defense evasion: Defender RTP disable + SophosUninstall + PCHunter + log clearing
 
-`UC_106_19` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_109_19` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -531,7 +531,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware Groups Turn to Citrix Bleed 2, BYOVD, and Supply Chain Credentials
 
-`UC_106_12` · phase: **exploit** · confidence: **High**
+`UC_109_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Lazarus rollup-polyfill lookalike npm packages installed into node_modules
 
-`UC_89_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_92_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceFileEvents
 
 ### npm/node egress to Lazarus rollup-polyfill C2 216.126.236.244
 
-`UC_89_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_92_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### node.exe resolving jsonkeeper.com dead-drop resolver
 
-`UC_89_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_92_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### node.exe bulk-reading developer, cloud & AI-tool secrets (rollup-polyfill collector)
 
-`UC_89_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_92_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### security-alerts-sdk PyPI backdoor beacon to 142.93.211.30:5000
 
-`UC_89_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_92_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -29,8 +29,10 @@ That is the finding in a  proof-of-concept published Wednesday by the AI Now I
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.001** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1027** — Obfuscated Files or Information
 - **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
@@ -39,79 +41,81 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AI coding agent (Claude Code / Codex) executes README-suggested security.sh
+### Poisoned repo drop: security.sh + disguised 'code_policies' Go binary on host
 
-`UC_10_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_14_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*security.sh*") AND (Processes.parent_process_name IN ("node","node.exe","claude","claude.exe","codex","codex.exe") OR Processes.parent_process="*claude*" OR Processes.parent_process="*codex*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name="security.sh" OR Filesystem.file_name="code_policies" OR Filesystem.file_name="code_policies.go" OR Filesystem.file_name="code_policies.exe") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has "security.sh"
-| where InitiatingProcessFileName in~ ("node","node.exe","claude","claude.exe","codex","codex.exe")
-    or InitiatingProcessCommandLine has_any ("claude-code","@anthropic-ai/claude-code","@openai/codex","claude","codex")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| where ActionType == "FileCreated"
+| where FileName in~ ("security.sh","code_policies","code_policies.go","code_policies.exe")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### security.sh launches hidden payload binary (code_policies) disguised as Go build
+### AI coding agent (Claude Code / Codex) executing README-suggested security.sh
 
-`UC_10_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*security.sh*") AND NOT (Processes.process_name IN ("sh","bash","dash","zsh","cat","ls","grep","egrep","awk","sed","echo","cut","tr","which","dirname","basename","env","go","gofmt","node")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*security.sh*" OR Processes.process="*code_policies*" OR Processes.process_name="code_policies") (Processes.parent_process_name="node" OR Processes.parent_process_name="node.exe" OR Processes.parent_process_name="claude" OR Processes.parent_process_name="claude.exe" OR Processes.parent_process_name="codex" OR Processes.parent_process_name="codex.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessCommandLine has "security.sh"
-| where FileName !in~ ("sh","bash","dash","zsh","cat","ls","grep","egrep","awk","sed","echo","cut","tr","which","dirname","basename","env","go","gofmt","node")
-| extend IsKnownPoCPayload = (FileName =~ "code_policies")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, IsKnownPoCPayload,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where AccountName !endswith "$"
+| where (ProcessCommandLine has "security.sh" or ProcessCommandLine has "code_policies" or FileName in~ ("code_policies","code_policies.exe"))
+| where InitiatingProcessFileName in~ ("claude","claude.exe","codex","codex.exe","node","node.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### AI coding agent lineage executing a local repo binary outside the standard toolchain
+### Disguised 'code_policies' payload binary executed (masquerades as Go build)
 
-`UC_10_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","claude","claude.exe","codex","codex.exe") OR Processes.parent_process="*claude*" OR Processes.parent_process="*codex*") AND NOT (Processes.process_name IN ("sh","bash","dash","zsh","node","node.exe","git","git.exe","npm","npx","python","python3","go","gofmt","cat","ls","grep","awk","sed","env","which","cmd.exe","conhost.exe")) AND NOT (Processes.process_path IN ("*/usr/*","*/bin/*","*/sbin/*","*/node_modules/.bin/*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count values(Processes.process) as process values(Processes.process_hash) as hash min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="code_policies" OR Processes.process="*code_policies*" OR Processes.parent_process="*code_policies*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node","node.exe","claude","claude.exe","codex","codex.exe")
-    or InitiatingProcessCommandLine has_any ("claude-code","@anthropic-ai/claude-code","@openai/codex","codex")
-| where FileName !in~ ("sh","bash","dash","zsh","node","node.exe","git","git.exe","npm","npx","python","python3","go","gofmt","cat","ls","grep","awk","sed","env","which","cmd.exe","conhost.exe")
-| where not (FolderPath startswith "/usr/" or FolderPath startswith "/bin/" or FolderPath startswith "/sbin/"
-    or FolderPath has "/node_modules/.bin/" or FolderPath has @"\Program Files" or FolderPath has @"\WindowsApps")
+| where FileName has "code_policies" or ProcessCommandLine has "code_policies" or InitiatingProcessCommandLine has "code_policies"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### AI coding agent executes a repo-local binary during autonomous review (Friendly Fire port)
+
+`UC_14_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="claude" OR Processes.parent_process_name="claude.exe" OR Processes.parent_process_name="codex" OR Processes.parent_process_name="codex.exe") (Processes.process_path="*\\Downloads\\*" OR Processes.process_path="*\\Documents\\*" OR Processes.process_path="*/repos/*" OR Processes.process_path="*/projects/*" OR Processes.process_path="*/home/*" OR Processes.process_path="*/Users/*") NOT (Processes.process_name IN ("node","node.exe","npm","git","git.exe","python","python3","pip","go","cargo","bash","sh","cmd.exe","powershell.exe","pwsh")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
+| where InitiatingProcessFileName in~ ("claude","claude.exe","codex","codex.exe")
+| where FolderPath has_any (@"\Downloads\", @"\Documents\", @"\repos\", @"\projects\", @"\src\", "/home/", "/Users/", "/tmp/")
+| where FileName !in~ ("node","node.exe","npm","npm.cmd","git","git.exe","python","python3","python.exe","pip","pip3","go","cargo","rustc","tsc","jest","pytest","bash","bash.exe","sh","dash","zsh","cmd.exe","pwsh","powershell.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -306,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Top AI Agents Built to Catch Malicious Code Can Be Tricked Into Running It
 
-`UC_10_8` · phase: **exploit** · confidence: **High**
+`UC_14_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -363,4 +367,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

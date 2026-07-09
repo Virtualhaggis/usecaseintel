@@ -38,8 +38,9 @@ All these actors converged on Balochistan Police over this period, bringing both
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573** — Encrypted Channel
 - **T1219** — Remote Access Software
-- **T1105** — Ingress Tool Transfer
+- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
@@ -47,13 +48,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### China/India-nexus espionage C2 beacon to named PlugX/ShadowPad/CobaltStrike/Remcos IPs (Pakistani LE campaign)
+### Outbound C2 to PlugX/ShadowPad/Cobalt Strike/Remcos infrastructure targeting Pakistani law enforcement
 
-`UC_0_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("172.111.233.36","172.111.233.96","172.111.233.12","172.111.233.105","172.111.233.26","172.94.9.49","172.94.9.43","172.94.9.19","45.74.6.17","45.125.32.218","142.171.183.8","193.42.25.65","89.31.121.220") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("172.111.233.36","172.111.233.96","172.111.233.12","172.111.233.105","172.111.233.26","172.94.9.49","172.94.9.43","172.94.9.19","45.74.6.17","45.125.32.218","142.171.183.8","193.42.25.65","89.31.121.220") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name("All_Traffic")` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -62,28 +63,28 @@ let C2 = dynamic(["172.111.233.36","172.111.233.96","172.111.233.12","172.111.23
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in (C2)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), Ports=make_set(RemotePort, 20) by DeviceName, RemoteIP, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by LastSeen desc
 ```
 
-### Sustained low-and-slow beaconing to Pakistani-LE espionage C2 cluster IPs
+### Compromised web-application server beaconing to espionage C2 (portal-update implant)
 
-`UC_0_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("172.111.233.36","172.111.233.96","172.111.233.12","172.111.233.105","172.111.233.26","172.94.9.49","172.94.9.43","172.94.9.19","45.74.6.17","45.125.32.218","142.171.183.8","193.42.25.65","89.31.121.220") by All_Traffic.src_ip All_Traffic.dest_ip _time span=1h | `drop_dm_object_name(All_Traffic)` | stats sum(count) as total_conns dc(_time) as active_hours min(_time) as firstTime max(_time) as lastTime by src_ip dest_ip | where active_hours >= 6 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - active_hours
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("172.111.233.36","172.111.233.96","172.111.233.12","172.111.233.105","172.111.233.26","172.94.9.49","172.94.9.43","172.94.9.19","45.74.6.17","45.125.32.218","142.171.183.8","193.42.25.65","89.31.121.220") AND (All_Traffic.process="*\\w3wp.exe" OR All_Traffic.process="*\\java.exe" OR All_Traffic.process="*\\httpd.exe" OR All_Traffic.process="*\\nginx.exe" OR All_Traffic.process="*\\php-cgi.exe" OR All_Traffic.process="*\\tomcat*.exe") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process | `drop_dm_object_name("All_Traffic")` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 let C2 = dynamic(["172.111.233.36","172.111.233.96","172.111.233.12","172.111.233.105","172.111.233.26","172.94.9.49","172.94.9.43","172.94.9.19","45.74.6.17","45.125.32.218","142.171.183.8","193.42.25.65","89.31.121.220"]);
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(90d)
 | where RemoteIP in (C2)
-| summarize ConnCount=count(), ActiveHours=dcount(bin(Timestamp,1h)), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(RemotePort,10), SampleProc=any(InitiatingProcessFileName) by DeviceName, RemoteIP
-| where ActiveHours >= 6   // 6+ distinct beacon hours = sustained, not a one-off
-| order by ConnCount desc
+| where InitiatingProcessFileName in~ ("w3wp.exe","java.exe","httpd.exe","nginx.exe","php-cgi.exe","tomcat.exe","javaw.exe","node.exe")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -123,7 +124,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — One Target, Two Flags | Rival Espionage Actors Converge On Pakistani Law Enforce
 
-`UC_0_2` · phase: **exploit** · confidence: **High**
+`UC_4_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,4 +181,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

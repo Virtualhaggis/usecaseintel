@@ -10,11 +10,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-09
 - [ai attacks move in minutes join this webinar on building a d](./2026-07-09/ai-attacks-move-in-minutes-join-this-webinar-on-building-a-d.md)
+- [compromised injectivelabs sdk ts exfiltrates wallet keys thr](./2026-07-09/compromised-injectivelabs-sdk-ts-exfiltrates-wallet-keys-thr.md)
 - [fake 7 zip installers turn devices into residential proxy no](./2026-07-09/fake-7-zip-installers-turn-devices-into-residential-proxy-no.md)
 - [ghostapproval symlink flaws could let malicious repos run co](./2026-07-09/ghostapproval-symlink-flaws-could-let-malicious-repos-run-co.md)
+- [gigawiper anatomy of a destructive backdoor assembled from m](./2026-07-09/gigawiper-anatomy-of-a-destructive-backdoor-assembled-from-m.md)
 - [goddamn ransomware uses poisonx driver to disable endpoint d](./2026-07-09/goddamn-ransomware-uses-poisonx-driver-to-disable-endpoint-d.md)
 - [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
 - [microsoft patches rogueplanet defender zero day vulnerabilit](./2026-07-09/microsoft-patches-rogueplanet-defender-zero-day-vulnerabilit.md)
+- [new forg365 phishing platform uses ai to target microsoft 36](./2026-07-09/new-forg365-phishing-platform-uses-ai-to-target-microsoft-36.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
 - [summer of clearinghouses](./2026-07-09/summer-of-clearinghouses.md)
 - [top ai agents built to catch malicious code can be tricked i](./2026-07-09/top-ai-agents-built-to-catch-malicious-code-can-be-tricked-i.md)
@@ -42,7 +45,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ubiquiti warns of new max severity unifi os vulnerability](./2026-07-08/ubiquiti-warns-of-new-max-severity-unifi-os-vulnerability.md)
 
 ## 2026-07-07
-- [accenture confirms breach after hacker offers stolen data fo](./2026-07-07/accenture-confirms-breach-after-hacker-offers-stolen-data-fo.md)
 - [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
 - [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
 - [cisa kev cve 2026 48282 adobe coldfusion path traversal vuln](./2026-07-07/cisa-kev-cve-2026-48282-adobe-coldfusion-path-traversal-vuln.md)
@@ -183,7 +185,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48713 i18next fs backend vulnerable t](./2026-06-25/ghsa-critical-cve-2026-48713-i18next-fs-backend-vulnerable-t.md)
 - [ghsa critical cve 2026 48714 i18next http middleware missing](./2026-06-25/ghsa-critical-cve-2026-48714-i18next-http-middleware-missing.md)
 - [ghsa critical cve 2026 55166 lemur acme ssrf creator equalit](./2026-06-25/ghsa-critical-cve-2026-55166-lemur-acme-ssrf-creator-equalit.md)
-- [microsoft a leader in the forrester wave for endpoint manage](./2026-06-25/microsoft-a-leader-in-the-forrester-wave-for-endpoint-manage.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 - [photo zip campaign targeting hospitality industry delivers n](./2026-06-25/photo-zip-campaign-targeting-hospitality-industry-delivers-n.md)
 
@@ -678,9 +679,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 2441 google chromium css use after free vu](./2026-02-17/cisa-kev-cve-2026-2441-google-chromium-css-use-after-free-vu.md)
 - [securing the agent skill ecosystem how snyk and vercel are l](./2026-02-17/securing-the-agent-skill-ecosystem-how-snyk-and-vercel-are-l.md)
 - [weaving security into the flow new snyk studio capabilities ](./2026-02-17/weaving-security-into-the-flow-new-snyk-studio-capabilities-.md)
-
-## 2026-02-16
-- [from detection to prevention how zen stops idor vulnerabilit](./2026-02-16/from-detection-to-prevention-how-zen-stops-idor-vulnerabilit.md)
 
 ## 2026-02-15
 - [10 000 open source projects now secured by harden runner com](./2026-02-15/10-000-open-source-projects-now-secured-by-harden-runner-com.md)

@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### BusySnake NSIS dropper: pnx.exe injected from Temp\ns*.tmp staging folder
 
-`UC_93_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_96_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### BusySnake Python stealer executed from %APPDATA%\WindowsHelper (module.pyw)
 
-`UC_93_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_96_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### BusySnake VBScript persistence: wh_selfdelete.vbs / run.vbs in WindowsHelper
 
-`UC_93_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_96_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### ZDI-CAN-25373 (CVE-2025-9491) LNK spawning PowerShell to fetch BusySnake loader
 
-`UC_93_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_96_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceProcessEvents
 
 ### BusySnake reverse SSH tunnel: ssh.exe -R launched by bundled Python payload
 
-`UC_93_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_96_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -524,7 +524,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Armored Likho digging a snake pit: inside the covert BusySnake Stealer campaign
 
-`UC_93_11` · phase: **exploit** · confidence: **High**
+`UC_96_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
