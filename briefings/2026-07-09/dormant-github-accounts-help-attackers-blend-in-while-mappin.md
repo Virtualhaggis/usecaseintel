@@ -1,155 +1,41 @@
-# [CRIT] PamStealer Uses Fake Maccy Sites and PAM Checks to Steal Mac Login Passwords
+# [HIGH] Dormant GitHub Accounts Help Attackers Blend In While Mapping Corporate Orgs
 
 **Source:** The Hacker News
-**Published:** 2026-07-03
-**Article:** https://thehackernews.com/2026/07/pamstealer-uses-fake-maccy-sites-and.html
+**Published:** 2026-07-09
+**Article:** https://thehackernews.com/2026/07/dormant-github-accounts-help-attackers.html
 
 ## Threat Profile
 
-PamStealer Uses Fake Maccy Sites and PAM Checks to Steal Mac Login Passwords 
- Ravie Lakshmanan  Jul 03, 2026 Credential Theft / Cryptocurrency 
-Cybersecurity researchers have flagged a new macOS information stealer called PamStealer that employs a series of clever tricks to infect systems and siphon sensitive data.
-The stealer, discovered by Jamf Threat Labs, is distributed as a compiled AppleScript (.scpt) file impersonating Maccy, a legitimate open-source clipboard manager. It has been code…
+Dormant GitHub Accounts Help Attackers Blend In While Mapping Corporate Orgs 
+ Ravie Lakshmanan  Jul 09, 2026 Developer Security / Supply Chain Security 
+Datadog Security Labs is warning of "several overlapping campaigns" that are systematically enumerating corporate GitHub organizations, repositories, and user accounts through the GitHub API.
+"Operators rely on automated scraping tooling with custom or legitimate-sounding user agents, leveraging GitHub 'ghost' accounts that are often years ol…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `maccyapp.com`
-- **Domain (defanged):** `maccyapp.net`
-- **Domain (defanged):** `avenger-sync.live`
+- **Domain (defanged):** `3xktech.cloud`
+- **Domain (defanged):** `cherryservers.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1528** — Steal Application Access Token
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1189** — Drive-by Compromise
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1059.002** — Command and Scripting Interpreter: AppleScript
-- **T1105** — Ingress Tool Transfer
-- **T1041** — Exfiltration Over C2 Channel
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1547.015** — Boot or Logon Autostart Execution: Login Items
-- **T1543.001** — Create or Modify System Process: Launch Agent
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Connection to PamStealer fake Maccy typosquat domains (maccyapp[.]com / .net)
-
-`UC_99_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.query IN ("maccyapp.com","maccyapp.net","*.maccyapp.com","*.maccyapp.net") by Network_Resolution.src, Network_Resolution.query, Network_Resolution.answer
-| `drop_dm_object_name(Network_Resolution)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("maccyapp.com","maccyapp.net")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### osascript / Script Editor making outbound internet connection (PamStealer JXA downloader)
-
-`UC_99_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where Network_Traffic.process_name IN ("osascript","Script Editor") by Network_Traffic.src, Network_Traffic.dest, Network_Traffic.dest_port, Network_Traffic.process_name
-| `drop_dm_object_name(Network_Traffic)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("osascript","Script Editor")
-| where RemoteIPType == "Public"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### PamStealer encrypted exfiltration to avenger-sync[.]live
-
-`UC_99_8` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.query IN ("avenger-sync.live","*.avenger-sync.live") by Network_Resolution.src, Network_Resolution.query, Network_Resolution.answer
-| `drop_dm_object_name(Network_Resolution)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "avenger-sync.live"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Finder or System Settings Mach-O executing from non-system path (PamStealer masquerade)
-
-`UC_99_9` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name IN ("Finder","System Settings") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.process_name, Endpoint.Processes.process_path, Endpoint.Processes.process, Endpoint.Processes.parent_process_name
-| `drop_dm_object_name(Endpoint.Processes)`
-| where NOT match(process_path,"^/System/")
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("Finder","System Settings")
-| where FolderPath !startswith "/System/"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Login-item persistence plist written by non-Apple process (PamStealer SMAppService/legacy)
-
-`UC_99_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.action=created AND Endpoint.Filesystem.file_path IN ("*/Library/LaunchAgents/*","*/Library/LaunchDaemons/*") AND Endpoint.Filesystem.file_name="*.plist" by Endpoint.Filesystem.dest, Endpoint.Filesystem.process_name, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name
-| `drop_dm_object_name(Endpoint.Filesystem)`
-| where NOT match(process_name,"^(launchd|installd|package_script_service)$")
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType == "FileCreated"
-| where FileName endswith ".plist"
-| where FolderPath has_any ("/Library/LaunchAgents/","/Library/LaunchDaemons/")
-| where InitiatingProcessFolderPath !startswith "/System/" and InitiatingProcessFolderPath !startswith "/usr/" and InitiatingProcessFolderPath !startswith "/Library/Apple/"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath
-| order by Timestamp desc
-```
 
 ### Suspicious browser extension installation
 
@@ -203,6 +89,33 @@ DeviceFileEvents
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
+### OAuth consent / suspicious app grant
+
+`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success"
+      AND Authentication.signature IN (
+        "Consent to application",
+        "Add app role assignment grant to user",
+        "Add OAuth2PermissionGrant",
+        "Add delegated permission grant")
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -289,14 +202,38 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### Trusted vendor binary / installer launching unusual children
+
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `maccyapp.com`, `maccyapp.net`, `avenger-sync.live`
+  - IP / domain IOC(s): `3xktech.cloud`, `cherryservers.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

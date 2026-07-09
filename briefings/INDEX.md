@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-09
 - [ai attacks move in minutes join this webinar on building a d](./2026-07-09/ai-attacks-move-in-minutes-join-this-webinar-on-building-a-d.md)
 - [compromised injectivelabs sdk ts exfiltrates wallet keys thr](./2026-07-09/compromised-injectivelabs-sdk-ts-exfiltrates-wallet-keys-thr.md)
+- [dormant github accounts help attackers blend in while mappin](./2026-07-09/dormant-github-accounts-help-attackers-blend-in-while-mappin.md)
 - [fake 7 zip installers turn devices into residential proxy no](./2026-07-09/fake-7-zip-installers-turn-devices-into-residential-proxy-no.md)
 - [ghostapproval symlink flaws could let malicious repos run co](./2026-07-09/ghostapproval-symlink-flaws-could-let-malicious-repos-run-co.md)
 - [gigawiper anatomy of a destructive backdoor assembled from m](./2026-07-09/gigawiper-anatomy-of-a-destructive-backdoor-assembled-from-m.md)
@@ -18,12 +19,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
 - [microsoft patches rogueplanet defender zero day vulnerabilit](./2026-07-09/microsoft-patches-rogueplanet-defender-zero-day-vulnerabilit.md)
 - [new forg365 phishing platform uses ai to target microsoft 36](./2026-07-09/new-forg365-phishing-platform-uses-ai-to-target-microsoft-36.md)
+- [new gigawiper windows backdoor bundles disk wiping fake rans](./2026-07-09/new-gigawiper-windows-backdoor-bundles-disk-wiping-fake-rans.md)
 - [new helix vishing group emerges in sharepoint data theft att](./2026-07-09/new-helix-vishing-group-emerges-in-sharepoint-data-theft-att.md)
 - [npm 12 disables install scripts by default to reduce supply ](./2026-07-09/npm-12-disables-install-scripts-by-default-to-reduce-supply-.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
 - [summer of clearinghouses](./2026-07-09/summer-of-clearinghouses.md)
 - [threatsday cloud bucket hijacking windows lpe chain global f](./2026-07-09/threatsday-cloud-bucket-hijacking-windows-lpe-chain-global-f.md)
 - [top ai agents built to catch malicious code can be tricked i](./2026-07-09/top-ai-agents-built-to-catch-malicious-code-can-be-tricked-i.md)
+- [winning 54 of the time](./2026-07-09/winning-54-of-the-time.md)
 
 ## 2026-07-08
 - [15 year old ghostlock flaw enables root and container escape](./2026-07-08/15-year-old-ghostlock-flaw-enables-root-and-container-escape.md)
@@ -97,11 +100,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [armored likho targets government agencies power sector with ](./2026-07-03/armored-likho-targets-government-agencies-power-sector-with-.md)
 - [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
 - [cyber readiness for smbs getting the basics right](./2026-07-03/cyber-readiness-for-smbs-getting-the-basics-right.md)
-- [european parliament member investigating spyware was hacked ](./2026-07-03/european-parliament-member-investigating-spyware-was-hacked-.md)
 - [new avalon malware framework packs crownx ransomware capabil](./2026-07-03/new-avalon-malware-framework-packs-crownx-ransomware-capabil.md)
 - [new bad epoll linux kernel flaw lets unprivileged users gain](./2026-07-03/new-bad-epoll-linux-kernel-flaw-lets-unprivileged-users-gain.md)
 - [north korea linked npm packages mimic rollup polyfills to st](./2026-07-03/north-korea-linked-npm-packages-mimic-rollup-polyfills-to-st.md)
-- [pamstealer uses fake maccy sites and pam checks to steal mac](./2026-07-03/pamstealer-uses-fake-maccy-sites-and-pam-checks-to-steal-mac.md)
 - [unpatched flaws disclosed in filesystem bundled into million](./2026-07-03/unpatched-flaws-disclosed-in-filesystem-bundled-into-million.md)
 
 ## 2026-07-02
@@ -340,7 +341,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-28
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
-- [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [what mdm can t protect on developer machines and what to do ](./2026-05-28/what-mdm-can-t-protect-on-developer-machines-and-what-to-do-.md)
 
 ## 2026-05-27

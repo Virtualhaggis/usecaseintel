@@ -1,27 +1,37 @@
-# [HIGH] European Parliament Member Investigating Spyware Was Hacked With Pegasus
+# [CRIT] Winning 54% of the time
 
-**Source:** The Hacker News
-**Published:** 2026-07-03
-**Article:** https://thehackernews.com/2026/07/european-parliament-member.html
+**Source:** Cisco Talos
+**Published:** 2026-07-09
+**Article:** https://blog.talosintelligence.com/winning-54-of-the-time/
 
 ## Threat Profile
 
-European Parliament Member Investigating Spyware Was Hacked With Pegasus 
- Ravie Lakshmanan  Jul 03, 2026 Mobile Security / Spyware 
-A new report from the Citizen Lab has revealed that former Member of the European Parliament Stelios Kouloglou had his mobile device repeatedly hacked with the notorious Pegasus spyware while serving on a committee that was tasked with investigating the abuse of such commercial surveillance tools in the bloc.
-"Through forensic analysis of his device, we found tha…
+Winning 54% of the time 
+By 
+Hazel Burton 
+Thursday, July 9, 2026 14:00
+Threat Source newsletter
+Welcome to this week’s Threat Source newsletter. 
+There’s a fairly cliché phrase in cybersecurity that I’m sure our audience is familiar with: Attackers only need to be right once, whereas defenders need to be right 100% of the time.  
+I guess it captures the asymmetry of this industry, but I’ve never been entirely comfortable with the phrase because it assumes cybersecurity is a game of perfection. …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2020-22653`
+- **CVE:** `CVE-2020-22658`
+- **CVE:** `CVE-2023-25717`
+- **CVE:** `CVE-2025-2492`
+- **IPv4 (defanged):** `194.233.92.26`
+- **IPv4 (defanged):** `217.15.160.247`
+- **IPv4 (defanged):** `217.15.164.147`
+- **IPv4 (defanged):** `95.182.100.231`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1176** — Browser Extensions
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
+- **T1071** — Application Layer Protocol
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -34,7 +44,11 @@ A new report from the Citizen Lab has revealed that former Member of the Europea
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1585.002** — Establish Accounts: Email Accounts
+- **T1090.003** — Proxy: Multi-hop Proxy
+- **T1571** — Non-Standard Port
+- **T1105** — Ingress Tool Transfer
+- **T1059** — Command and Scripting Interpreter
+- **T1562.004** — Impair Defenses: Disable or Modify System Firewall
 
 ## Kill chain phases observed
 
@@ -42,22 +56,82 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Pegasus HomeKit operator email IOC (rauharepo888@gmail.com) in mail flow
+### UAT-7810 ORB network C2 beacon to LONGLEASH/DOGLEASH relay IPs (ports 99/2222/8088)
 
-`UC_97_9` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_3_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
 
 **Defender KQL:**
 ```kql
-let ioc = "rauharepo888@gmail.com";
-EmailEvents
+let orbIps = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
+DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where SenderFromAddress =~ ioc
-    or SenderMailFromAddress =~ ioc
-    or SenderDisplayName has "rauharepo888"
-    or RecipientEmailAddress =~ ioc
-| project Timestamp, NetworkMessageId, EmailDirection, DeliveryAction, DeliveryLocation,
-          SenderFromAddress, SenderMailFromAddress, SenderDisplayName, RecipientEmailAddress, Subject
+| where RemoteIP in (orbIps)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, LocalPort
 | order by Timestamp desc
+```
+
+### UAT-7810 LONGLEASH/JARLEASH/LEASHTEST backdoor file hash on host
+
+`UC_3_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let iocHashes = dynamic(["755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823"]);
+union DeviceFileEvents, DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA256 in (iocHashes)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### UAT-7810 DOGLEASH deploy: download from ORB IP then iptables INPUT ACCEPT on Linux
+
+`UC_3_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name=iptables Processes.process="*INPUT*ACCEPT*" by Processes.dest Processes.user Processes.parent_process_name Processes.process _time | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name IN ("wget","curl")) AND (Processes.process="*194.233.92.26*" OR Processes.process="*217.15.160.247*" OR Processes.process="*217.15.164.147*" OR Processes.process="*95.182.100.231*") by Processes.dest Processes.process | `drop_dm_object_name(Processes)` | rename process as download_cmd]
+```
+
+**Defender KQL:**
+```kql
+let orbIps = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
+let downloads = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("wget","curl")
+    | where ProcessCommandLine has_any (orbIps)
+    | project DlTime = Timestamp, DeviceId, DeviceName, DlCmd = ProcessCommandLine;
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName == "iptables"
+| where ProcessCommandLine has "INPUT" and ProcessCommandLine has "ACCEPT"
+| where InitiatingProcessFileName in~ ("sh","bash","dash","ash","busybox")
+| join kind=inner downloads on DeviceId
+| where Timestamp between (DlTime .. DlTime + 5m)
+| project Timestamp, DeviceName, AccountName, DlTime, DlCmd, IptablesCmd = ProcessCommandLine
+| order by Timestamp desc
+```
+
+### UAT-7810 exploited edge-device CVE exposure (Ruckus & ASUS AiCloud n-days)
+
+`UC_3_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492")
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by CveId asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -93,60 +167,6 @@ DeviceNetworkEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
 | order by conn_count desc
-```
-
-### Suspicious browser extension installation
-
-`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Registry
-    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
-        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
-        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
-    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
-          InitiatingProcessFileName, InitiatingProcessAccountName
-```
-
-### Infostealer — non-browser process accessing browser cookie/login DBs
-
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -381,7 +401,66 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### Article-specific behavioural hunt — Winning 54% of the time
+
+`UC_3_9` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — Winning 54% of the time ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("vid001.exe","9b512ba139304c247ddd3d2c4b9179fd.exe","secoh-qad.exe","sample.exe"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("vid001.exe","9b512ba139304c247ddd3d2c4b9179fd.exe","secoh-qad.exe","sample.exe"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — Winning 54% of the time
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("vid001.exe", "9b512ba139304c247ddd3d2c4b9179fd.exe", "secoh-qad.exe", "sample.exe"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("vid001.exe", "9b512ba139304c247ddd3d2c4b9179fd.exe", "secoh-qad.exe", "sample.exe"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `194.233.92.26`, `217.15.160.247`, `217.15.164.147`, `95.182.100.231`
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2020-22653`, `CVE-2020-22658`, `CVE-2023-25717`, `CVE-2025-2492`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

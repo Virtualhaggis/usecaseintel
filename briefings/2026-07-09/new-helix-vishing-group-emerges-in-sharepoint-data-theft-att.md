@@ -11,17 +11,14 @@ By Bill Toulas
 July 9, 2026
 01:08 PM
 0 
-
-
 A new data-extortion group called Helix is using identity-focused tactics such as voice phishing (vishing), device code phishing, and multi-factor authentication (MFA) abuse to steal data from SharePoint environments.
-
-
-Initial contact is made through vishing. In some cases, the threat actor called employees while impersonating their manager, using either the manager's name or caller …
+Initial contact is made through vishing. In some cases, the threat actor called employees while impersonating their manager, using either the manager's name or caller ID spoof…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `179.43.185.230`
 - **IPv4 (defanged):** `179.43.185.226`
+- **IPv4 (defanged):** `179.43.171.42`
 - **Domain (defanged):** `oskeysync.com`
 
 ## MITRE ATT&CK Techniques
@@ -53,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Entra ID device-code authentication success (Helix vishing entry vector)
 
-`UC_0_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_4_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +73,7 @@ AADSignInEventsBeta
 
 ### New MFA method registered within 2h of a device-code sign-in (Helix persistence)
 
-`UC_0_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +86,7 @@ index=o365 sourcetype="o365:management:activity" Workload=AzureActiveDirectory (
 
 ### Automated SharePoint enumeration via python-requests/2.28.1 from Helix IP
 
-`UC_0_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +108,7 @@ CloudAppEvents
 
 ### Bulk SharePoint download spike from Helix python-requests client
 
-`UC_0_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +134,7 @@ CloudAppEvents
 
 ### Endpoint contact to Helix device-code phishing domain oskeysync.com
 
-`UC_0_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_4_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -308,7 +305,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `179.43.185.230`, `179.43.185.226`, `oskeysync.com`
+  - IP / domain IOC(s): `179.43.185.230`, `179.43.185.226`, `179.43.171.42`, `oskeysync.com`
 
 
 ## Why this matters

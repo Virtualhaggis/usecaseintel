@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### EvilTokens device-code phishing: new-IP sign-in to Microsoft Authentication Broker
 
-`UC_32_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_36_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ AADSignInEventsBeta
 
 ### Entra device registration to DRS via Authentication Broker (EvilTokens PRT follow-on)
 
-`UC_32_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_36_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ AADSignInEventsBeta
 
 ### Endpoint DNS/HTTP contact to EvilTokens ghost-phishing infrastructure
 
-`UC_32_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceNetworkEvents
 
 ### EvilTokens phishing email delivered with workers.dev / lookalike device-code lures
 
-`UC_32_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_36_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -172,7 +172,7 @@ EmailEvents
 
 ### Phishing verdict bypass: malicious workers.dev mail landing in Inbox
 
-`UC_32_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_36_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Microsoft Defender engine (MsMpEng.exe) overwriting System32\wermgr.exe — RoguePlanet CVE-2026-50656
 
-`UC_17_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_21_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceFileEvents
 
 ### Trojanized wermgr.exe spawning SYSTEM command shell — RoguePlanet privilege escalation
 
-`UC_17_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_21_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### Devices exposed to RoguePlanet — Malware Protection Engine below 1.1.26060.3008 (CVE-2026-50656)
 
-`UC_17_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_21_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
