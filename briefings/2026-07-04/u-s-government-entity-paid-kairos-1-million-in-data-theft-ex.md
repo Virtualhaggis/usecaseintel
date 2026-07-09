@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Data exfiltration to temp.sh burner file-sharing service (Kairos extortion)
 
-`UC_77_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_82_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### Password-guessing burst followed by successful logon (Kairos initial access)
 
-`UC_77_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_82_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceLogonEvents
 
 ### Outbound connection to Kairos data-leak-site backend 62.182.81.38
 
-`UC_77_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_82_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -255,7 +255,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — U.S. Government Entity Paid Kairos $1 Million in Data-Theft Extortion Case
 
-`UC_77_6` · phase: **exploit** · confidence: **High**
+`UC_82_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

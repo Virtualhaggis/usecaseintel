@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### AI coding agent (Claude Code / Codex) executes README-suggested security.sh
 
-`UC_5_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### security.sh launches hidden payload binary (code_policies) disguised as Go build
 
-`UC_5_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### AI coding agent lineage executing a local repo binary outside the standard toolchain
 
-`UC_5_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_10_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -306,7 +306,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Top AI Agents Built to Catch Malicious Code Can Be Tricked Into Running It
 
-`UC_5_8` · phase: **exploit** · confidence: **High**
+`UC_10_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

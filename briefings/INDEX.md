@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2564 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2565 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,10 +9,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-09
+- [ai attacks move in minutes join this webinar on building a d](./2026-07-09/ai-attacks-move-in-minutes-join-this-webinar-on-building-a-d.md)
 - [fake 7 zip installers turn devices into residential proxy no](./2026-07-09/fake-7-zip-installers-turn-devices-into-residential-proxy-no.md)
 - [ghostapproval symlink flaws could let malicious repos run co](./2026-07-09/ghostapproval-symlink-flaws-could-let-malicious-repos-run-co.md)
+- [goddamn ransomware uses poisonx driver to disable endpoint d](./2026-07-09/goddamn-ransomware-uses-poisonx-driver-to-disable-endpoint-d.md)
 - [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
-- [microsoft patches rogueplanet defender flaw that can grant s](./2026-07-09/microsoft-patches-rogueplanet-defender-flaw-that-can-grant-s.md)
+- [microsoft patches rogueplanet defender zero day vulnerabilit](./2026-07-09/microsoft-patches-rogueplanet-defender-zero-day-vulnerabilit.md)
+- [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
+- [summer of clearinghouses](./2026-07-09/summer-of-clearinghouses.md)
 - [top ai agents built to catch malicious code can be tricked i](./2026-07-09/top-ai-agents-built-to-catch-malicious-code-can-be-tricked-i.md)
 
 ## 2026-07-08
@@ -113,8 +117,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [missed incidents persistent threats and response gaps insigh](./2026-07-02/missed-incidents-persistent-threats-and-response-gaps-insigh.md)
 - [ransomware groups turn to citrix bleed 2 byovd and supply ch](./2026-07-02/ransomware-groups-turn-to-citrix-bleed-2-byovd-and-supply-ch.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-02/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
-- [threatsday ai compute hijacking apple email flaw bluehammer ](./2026-07-02/threatsday-ai-compute-hijacking-apple-email-flaw-bluehammer-.md)
-- [toddycat linked umbrij malware abuses oauth to access gmail ](./2026-07-02/toddycat-linked-umbrij-malware-abuses-oauth-to-access-gmail-.md)
 
 ## 2026-07-01
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-07-01/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
@@ -679,7 +681,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-02-16
 - [from detection to prevention how zen stops idor vulnerabilit](./2026-02-16/from-detection-to-prevention-how-zen-stops-idor-vulnerabilit.md)
-- [npm backdoor lets hackers hijack gambling outcomes](./2026-02-16/npm-backdoor-lets-hackers-hijack-gambling-outcomes.md)
 
 ## 2026-02-15
 - [10 000 open source projects now secured by harden runner com](./2026-02-15/10-000-open-source-projects-now-secured-by-harden-runner-com.md)

@@ -1,8 +1,8 @@
-# [CRIT] Microsoft Patches RoguePlanet Defender Flaw That Can Grant SYSTEM Privileges
+# [CRIT] AI Attacks Move in Minutes. Join This Webinar on Building a Defense That Keeps Up
 
-**Source:** The Hacker News, BleepingComputer
+**Source:** The Hacker News
 **Published:** 2026-07-09
-**Article:** https://thehackernews.com/2026/07/microsoft-patches-rogueplanet-defender.html
+**Article:** https://thehackernews.com/2026/07/ai-attacks-move-in-minutes-join-this.html
 
 ## Threat Profile
 
@@ -14,9 +14,7 @@ The vulnerability, tracked as CVE-2026-50656 (CVSS score: 7.8), is a privilege e
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-50656`
-- **CVE:** `CVE-2026-33825`
-- **CVE:** `CVE-2026-45498`
-- **CVE:** `CVE-2026-41091`
+- **Domain (defanged):** `github.com/MSNightmare/RoguePlanet`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,10 +27,12 @@ The vulnerability, tracked as CVE-2026-50656 (CVSS score: 7.8), is a privilege e
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1068** — Exploitation for Privilege Escalation
 - **T1211** — Exploitation for Defense Evasion
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1105** — Ingress Tool Transfer
+- **T1588.002** — Obtain Capabilities: Tool
 
 ## Kill chain phases observed
 
@@ -40,13 +40,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Microsoft Defender engine (MsMpEng.exe) spawns interactive shell as SYSTEM - RoguePlanet CVE-2026-50656
+### Microsoft Defender engine (MsMpEng.exe) spawns shell/LOLBin — RoguePlanet CVE-2026-50656 exploitation
 
-`UC_2_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="MsMpEng.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","net.exe","whoami.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_integrity_level | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="MsMpEng.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","net.exe","whoami.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_integrity_level | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -55,32 +55,44 @@ DeviceProcessEvents
 | where Timestamp > ago(14d)
 | where InitiatingProcessFileName =~ "MsMpEng.exe"
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","net.exe","whoami.exe")
-| project Timestamp, DeviceName, AccountName, AccountDomain,
-          ParentProcess = InitiatingProcessFileName,
-          ParentPath    = InitiatingProcessFolderPath,
-          ChildProcess  = FileName,
-          ChildCmd      = ProcessCommandLine,
-          ChildIntegrity= ProcessIntegrityLevel,
-          ChildTokenElevation = ProcessTokenElevation,
-          SHA256
+| project Timestamp, DeviceName, AccountName, ProcessIntegrityLevel, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Vulnerable Microsoft Malware Protection Engine below 1.1.26060.3008 - RoguePlanet CVE-2026-50656 exposure
+### Hosts running vulnerable Microsoft Malware Protection Engine below 1.1.26060.3008 (RoguePlanet exposure)
 
-`UC_2_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_1_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-50656" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-50656" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
 | where CveId == "CVE-2026-50656"
-| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by DeviceName asc
+```
+
+### RoguePlanet PoC (github.com/MSNightmare/RoguePlanet) download or execution
+
+`UC_1_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*MSNightmare/RoguePlanet*" OR Processes.process="*RoguePlanet.exe*" OR Processes.process="*RoguePlanet-main*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("MSNightmare/RoguePlanet","RoguePlanet.exe","RoguePlanet-main","RoguePlanet.sln")
+    or InitiatingProcessCommandLine has_any ("MSNightmare/RoguePlanet","RoguePlanet.exe")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -221,13 +233,13 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### Article-specific behavioural hunt — Microsoft Patches RoguePlanet Defender Flaw That Can Grant SYSTEM Privileges
+### Article-specific behavioural hunt — AI Attacks Move in Minutes. Join This Webinar on Building a Defense That Keeps U
 
-`UC_2_6` · phase: **exploit** · confidence: **High**
+`UC_1_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Microsoft Patches RoguePlanet Defender Flaw That Can Grant SYSTEM Privileges ```
+``` Article-specific bespoke detection — AI Attacks Move in Minutes. Join This Webinar on Building a Defense That Keeps U ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("mpengine.dll"))
@@ -248,7 +260,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Microsoft Patches RoguePlanet Defender Flaw That Can Grant SYSTEM Privileges
+// Article-specific bespoke detection — AI Attacks Move in Minutes. Join This Webinar on Building a Defense That Keeps U
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -275,9 +287,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-50656`, `CVE-2026-33825`, `CVE-2026-45498`, `CVE-2026-41091`
+  - CVE(s): `CVE-2026-50656`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `github.com/MSNightmare/RoguePlanet`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

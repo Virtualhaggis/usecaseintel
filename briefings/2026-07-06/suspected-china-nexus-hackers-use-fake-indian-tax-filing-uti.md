@@ -95,7 +95,7 @@ _(none detected from narrative keywords)_
 
 ### Fake 'Common Offline Utility ITR' tax tool download from govtop[.]one (Operation DragonReturn delivery)
 
-`UC_71_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_76_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceFileEvents
 
 ### nvdaHelperRemote.dll side-loaded from Windows Media Player folder (DcRAT stage-2)
 
-`UC_71_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_76_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceImageLoadEvents
 
 ### DcRAT steganographic payload staged as C:\Windows\background.jpg (lllyd.jpg from 204.194.48[.]250)
 
-`UC_71_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_76_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceFileEvents
 
 ### MixedSvc auto-start service persistence via 'Mixed Reality.exe' (DcRAT)
 
-`UC_71_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_76_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +176,7 @@ DeviceEvents
 
 ### DcRAT C2 beacon to 223.26.63[.]40:2671 / exfil to kkxqbh[.]top
 
-`UC_71_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_76_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -544,7 +544,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Suspected China-Nexus Hackers Use Fake Indian Tax Filing Utility to Deploy DcRAT
 
-`UC_71_12` · phase: **exploit** · confidence: **High**
+`UC_76_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

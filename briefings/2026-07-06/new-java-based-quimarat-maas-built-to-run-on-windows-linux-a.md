@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Java payload executed from browser-download/temp path (QuimaRAT Quima Loader SmartScreen bypass)
 
-`UC_74_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_79_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### Java runtime (java/javaw) writing a Registry Run/RunOnce autostart value (QuimaRAT persistence)
 
-`UC_74_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_79_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceRegistryEvents
 
 ### Java runtime beaconing to Pastebin dead-drop for C2 host rotation (QuimaRAT)
 
-`UC_74_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_79_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
