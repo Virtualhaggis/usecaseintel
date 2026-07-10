@@ -11,15 +11,9 @@ By Bill Toulas
 July 10, 2026
 01:46 PM
 0 
-
-
 A 34-year-old Armenian man has pleaded guilty to hacking U.S. companies and deploying the infamous Ryuk ransomware to encrypt their systems.
-
-
 Karen Serobovich Vardanyan was extradited to the United States after being arrested in Kyiv in April 2025 for providing initial access to corporate networks.
-
-
-According to court documents, Vardanyan helped deploy Ryuk ransomware on …
+According to court documents, Vardanyan helped deploy Ryuk ransomware on the networks…
 
 ## Indicators of Compromise (high-fidelity only)
 

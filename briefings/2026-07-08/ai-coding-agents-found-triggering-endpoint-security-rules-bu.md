@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### DPAPI browser-credential decrypt via PowerShell (GStack /browse skill under AI coding agent)
 
-`UC_58_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_62_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### Windows Credential Manager enumeration via cmdkey /list under coding agent
 
-`UC_58_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_62_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### certutil-blocked-then-bitsadmin LOLBin download pivot on same host
 
-`UC_58_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_62_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ certutil
 
 ### Startup-folder script drop via PowerShell (Cursor persistence pattern)
 
-`UC_58_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_62_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceFileEvents
 
 ### Claude Code launched with --dangerously-skip-permissions guardrail bypass
 
-`UC_58_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_62_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -325,7 +325,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI Coding Agents Found Triggering Endpoint Security Rules Built to Catch Attacke
 
-`UC_58_6` · phase: **exploit** · confidence: **High**
+`UC_62_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

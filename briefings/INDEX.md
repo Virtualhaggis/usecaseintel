@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2574 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,10 +15,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [exposed hacker server reveals wp shellstorm backdooring thou](./2026-07-10/exposed-hacker-server-reveals-wp-shellstorm-backdooring-thou.md)
 - [former ransomware negotiator gets 4 years for blackcat attac](./2026-07-10/former-ransomware-negotiator-gets-4-years-for-blackcat-attac.md)
 - [from 17 000 to 1 1 million assets how lumen technologies reb](./2026-07-10/from-17-000-to-1-1-million-assets-how-lumen-technologies-reb.md)
+- [ghsa critical cve 2026 50551 siyuan stored xss to rce via un](./2026-07-10/ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un.md)
 - [ghsa critical cve 2026 54067 siyuan stored xss to rce via cs](./2026-07-10/ghsa-critical-cve-2026-54067-siyuan-stored-xss-to-rce-via-cs.md)
 - [ghsa critical cve 2026 54069 siyuan unauthenticated admin ap](./2026-07-10/ghsa-critical-cve-2026-54069-siyuan-unauthenticated-admin-ap.md)
 - [ghsa critical cve 2026 54072 authorizer unvalidated redirect](./2026-07-10/ghsa-critical-cve-2026-54072-authorizer-unvalidated-redirect.md)
+- [ghsa critical cve 2026 54088 file browser command injection ](./2026-07-10/ghsa-critical-cve-2026-54088-file-browser-command-injection-.md)
 - [ghsa critical cve 2026 54089 file browser authentication byp](./2026-07-10/ghsa-critical-cve-2026-54089-file-browser-authentication-byp.md)
+- [ghsa critical ghsa 99j7 fhr2 xfj4 exploration was removed fr](./2026-07-10/ghsa-critical-ghsa-99j7-fhr2-xfj4-exploration-was-removed-fr.md)
 - [hackers exploit critical auth bypass in gitea docker image](./2026-07-10/hackers-exploit-critical-auth-bypass-in-gitea-docker-image.md)
 - [hackers use fake microsoft entra passkey enrollment to gain ](./2026-07-10/hackers-use-fake-microsoft-entra-passkey-enrollment-to-gain-.md)
 - [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
@@ -248,8 +251,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
-- [ghsa critical cve 2026 11718 googleapis mcp toolbox authenti](./2026-06-18/ghsa-critical-cve-2026-11718-googleapis-mcp-toolbox-authenti.md)
-- [ghsa critical cve 2026 54003 kirby external initialization o](./2026-06-18/ghsa-critical-cve-2026-54003-kirby-external-initialization-o.md)
 - [ghsa critical cve 2026 58399 acastellon auth authentication ](./2026-06-18/ghsa-critical-cve-2026-58399-acastellon-auth-authentication-.md)
 - [ghsa critical ghsa 2jq4 q6vv 4cp3 crawl4ai arbitrary file wr](./2026-06-18/ghsa-critical-ghsa-2jq4-q6vv-4cp3-crawl4ai-arbitrary-file-wr.md)
 - [ghsa critical ghsa hxpf 9xvq wph8 netlicensing mcp rest path](./2026-06-18/ghsa-critical-ghsa-hxpf-9xvq-wph8-netlicensing-mcp-rest-path.md)

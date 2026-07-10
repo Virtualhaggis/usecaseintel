@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Tenda /bin/httpd backdoor auth artifact (rzadmin / sys.rzadmin.password) in router syslog
 
-`UC_88_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_92_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ index=* (sourcetype=syslog OR sourcetype=cisco:asa OR sourcetype=tenda:httpd) ("
 
 ### Exposed vulnerable Tenda firmware builds (CVE-2026-11405) in asset/vuln inventory
 
-`UC_88_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_92_7` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Inbound internet access to Tenda router web-management ports (remote-mgmt exposure)
 
-`UC_88_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_92_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

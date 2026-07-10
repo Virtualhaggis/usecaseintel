@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### ASPX web shell dropped into ShareFile StorageZones Controller webroot by w3wp
 
-`UC_6_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceFileEvents
 
 ### ShareFile IIS worker (w3wp) spawning shell / recon LOLBins — web shell command execution
 
-`UC_6_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### Pre-auth exploitation requests to ShareFile StorageZones Controller upload endpoints
 
-`UC_6_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_10_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
