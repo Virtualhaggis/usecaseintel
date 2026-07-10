@@ -26,12 +26,49 @@ FoxIO researcher Sébastien Féry  disclosed the flaw on July 8  and nicknamed
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Tengine/XQUIC HTTP/3 worker crash-loop via glibc fortify abort (XRING DoS)
+
+`UC_4_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=os OR index=linux sourcetype IN ("linux_messages_syslog","syslog") (process=tengine OR process=nginx OR "xquic" OR "libxquic") ("buffer overflow detected" OR "stack smashing detected" OR "segfault" OR "signal 6" OR "SIGABRT" OR "general protection")
+| stats count as CrashCount min(_time) as firstSeen max(_time) as lastSeen values(_raw) as SampleMsg by host
+| where CrashCount>=3
+| sort - CrashCount
+```
+
+### Tengine/nginx HTTP/3 worker respawn storm (XRING crash-loop symptom)
+
+`UC_4_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name IN ("nginx","tengine") AND Processes.process="*worker process*") by Processes.dest, _time span=5m
+| `drop_dm_object_name(Processes)`
+| where count>=10
+| rename count as WorkerSpawns
+| sort - _time
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(6h)
+| where FileName in~ ("nginx","tengine")
+| where ProcessCommandLine has "worker process"
+| summarize WorkerSpawns = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Host = any(DeviceName) by DeviceId, bin(Timestamp, 5m)
+| where WorkerSpawns >= 10   // steady-state nginx/tengine rarely respawns workers; 10+ in 5m = crash-loop
+| order by LastSeen desc
+```
 
 ### Suspicious browser extension installation
 
@@ -181,4 +218,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

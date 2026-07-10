@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound C2 to UAT-7810 / LONGLEASH ORB relay infrastructure
 
-`UC_55_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### LONGLEASH / DOGLEASH / JARLEASH / LEASHTEST malware hash on Linux endpoints
 
-`UC_55_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_57_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

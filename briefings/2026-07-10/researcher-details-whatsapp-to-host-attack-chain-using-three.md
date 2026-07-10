@@ -1,32 +1,40 @@
-# [HIGH] Opera GX Flaw Let Malicious Sites Auto-Install Mods to Steal Data From Visited Pages
+# [CRIT] Researcher Details WhatsApp-to-Host Attack Chain Using Three OpenClaw Flaws
 
 **Source:** The Hacker News
-**Published:** 2026-07-06
-**Article:** https://thehackernews.com/2026/07/opera-gx-flaw-let-malicious-sites-auto.html
+**Published:** 2026-07-10
+**Article:** https://thehackernews.com/2026/07/researcher-details-whatsapp-to-host.html
 
 ## Threat Profile
 
-Opera GX Flaw Let Malicious Sites Auto-Install Mods to Steal Data From Visited Pages 
- Swati Khandelwal  Jul 06, 2026 Vulnerability / Web Security 
-Researchers found a flaw in  Opera GX , the gaming-focused version of the Opera browser, that let a malicious website silently install a browser add-on and use it to lift specific data from the pages a victim visits.
-In a proof of concept, they reconstructed a signed-in user's full Gmail address from a single visit, with no click. Opera has patched…
+Researcher Details WhatsApp-to-Host Attack Chain Using Three OpenClaw Flaws 
+ Ravie Lakshmanan  Jul 10, 2026 AI Security / Vulnerability 
+Details have emerged about three now-patched security flaws in the OpenClaw personal artificial intelligence (AI) assistant that, if successfully exploited, could enable credential theft, privilege escalation, and arbitrary code execution on the host.
+A brief description of the high-severity vulnerabilities is as follows -
+GHSA-hjr6-g723-hmfm (CVSS score: 8.…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `GHSA-hjr6-g723-hmfm`
+- **CVE:** `GHSA-9969-8g9h-rxwm`
+- **CVE:** `GHSA-575v-8hfq-m3mc`
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1189** — Drive-by Compromise
-- **T1567** — Exfiltration Over Web Service
+- **T1059** — Command and Scripting Interpreter
+- **T1203** — Exploitation for Client Execution
+- **T1610** — Deploy Container
+- **T1611** — Escape to Host
+- **T1552.001** — Credentials In Files
+- **T1552.004** — Private Keys
 
 ## Kill chain phases observed
 
@@ -34,69 +42,97 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Opera GX below patched build 130.0.5847.89 (silent mod-install / universal CSS injection exposure)
+### Git ext:: external transport helper command execution (OpenClaw WhatsApp-to-host RCE)
 
-`UC_101_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareInventory
-| where SoftwareName contains "Opera GX" or (SoftwareVendor has "Opera" and SoftwareName has "GX")
-| where isnotempty(SoftwareVersion)
-| extend Ver = parse_version(SoftwareVersion), Fixed = parse_version("130.0.5847.89")   // build that patched the GX Mods auto-install flaw
-| where Ver < Fixed
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform
-| sort by SoftwareVersion asc
-```
-
-### Silent Opera GX mod (.crx) written by browser from a non-Opera origin
-
-`UC_101_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_1_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.crx" Filesystem.file_path="*Opera GX*" by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*ext::*" (Processes.process_name=git OR Processes.process="*git *") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "ext::"
+| where FileName =~ "git" or ProcessCommandLine has "git"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Container bind-mount of parent /home or /var (OpenClaw denylist parent-directory bypass)
+
+`UC_1_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("docker","podman","nerdctl","runc","mount")) AND (Processes.process="*-v /home:*" OR Processes.process="*-v /var:*" OR Processes.process="*--volume /home:*" OR Processes.process="*--volume /var:*" OR Processes.process="*source=/home,*" OR Processes.process="*source=/var,*" OR Processes.process="*--bind /home *" OR Processes.process="*--bind /var *") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("docker","podman","nerdctl","runc","mount")
+| where ProcessCommandLine has_any ("-v /home:","-v /var:","--volume /home:","--volume /var:","source=/home,","source=/var,","--bind /home ","--bind /var ")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Docker socket access by non-Docker process (OpenClaw /var mount host escape)
+
+`UC_1_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*docker.sock*" AND NOT Processes.process_name IN ("docker","dockerd","containerd","podman","dockerd-current") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "docker.sock"
+| where FileName !in~ ("docker","dockerd","containerd","podman")
+| where ProcessCommandLine has_any ("--unix-socket","unix://","/containers/","/exec","socat","curl")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Single process reading multiple users' SSH/AWS/GPG secrets under /home (OpenClaw mount harvest)
+
+`UC_1_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(Filesystem.file_path) as distinct_secret_files values(Filesystem.file_name) as file_name min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/home/*/.ssh/*" OR Filesystem.file_path="/home/*/.aws/credentials" OR Filesystem.file_path="/home/*/.gnupg/*") by Filesystem.dest Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| where distinct_secret_files >= 3
+| convert ctime(firstTime) ctime(lastTime)
+| sort - distinct_secret_files
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where FileName endswith ".crx"
-| where InitiatingProcessFileName =~ "opera.exe"
-| where FolderPath has "Opera GX" or InitiatingProcessFolderPath has "Opera GX"
-| where not((FileOriginUrl has "opera.com") or (FileOriginReferrerUrl has "opera.com"))   // legit GX mods come from Opera's own store/CDN
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Opera GX background-image request burst to a single host (universal CSS injection XS-Leak exfil)
-
-`UC_101_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="opera.exe" All_Traffic.direction=outbound by All_Traffic.src, All_Traffic.dest, _time span=1m
-| `drop_dm_object_name(All_Traffic)`
-| where count > 30
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessFileName =~ "opera.exe"
-| where InitiatingProcessFolderPath has "Opera GX"
-| where RemoteIPType == "Public"
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
-| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, RemoteIP, RemoteUrl, bin(Timestamp, 1m)
-| where ConnCount > 30   // burst of attribute-selector background-image fetches from the mod CSS to one attacker host in <=1 min
-| order by ConnCount desc
+| where FolderPath startswith "/home/"
+| where FolderPath has_any ("/.ssh/", "/.aws/", "/.gnupg/")
+| where FileName in~ ("id_rsa","id_ed25519","id_ecdsa","id_dsa","credentials") or FolderPath has "/.gnupg/"
+| extend HomeUser = extract(@"/home/([^/]+)/", 1, FolderPath)
+| summarize DistinctHomeUsers = dcount(HomeUser), Users = make_set(HomeUser, 20), Files = make_set(FolderPath, 50), FileCount = count() by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, bin(Timestamp, 10m)
+| where DistinctHomeUsers >= 2
+| order by DistinctHomeUsers desc
 ```
 
 ### Suspicious browser extension installation
@@ -237,7 +273,14 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `GHSA-hjr6-g723-hmfm`, `GHSA-9969-8g9h-rxwm`, `GHSA-575v-8hfq-m3mc`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

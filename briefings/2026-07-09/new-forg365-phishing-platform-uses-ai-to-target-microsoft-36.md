@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Forg365 device-code phishing: successful auth via Microsoft Authentication Broker
 
-`UC_25_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_28_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ AADSignInEventsBeta
 
 ### Forg365 phishing email to Cloudflare workers.dev lure via Amazon SES / SendGrid
 
-`UC_25_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_28_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ EmailEvents
 
 ### Malicious inbox rule created by a device-code-compromised Forg365 victim
 
-`UC_25_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_28_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ CloudAppEvents
 
 ### Illicit OAuth app consent / permission grant during Forg365 takeover
 
-`UC_25_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_28_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ CloudAppEvents
 
 ### ForgCookie SSO token replay: non-interactive sign-in from a never-before-seen IP
 
-`UC_25_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_28_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

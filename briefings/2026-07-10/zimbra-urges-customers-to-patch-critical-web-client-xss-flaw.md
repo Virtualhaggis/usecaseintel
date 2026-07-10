@@ -11,12 +11,8 @@ By Sergiu Gatlan
 July 10, 2026
 07:47 AM
 0 
-
-
 The Zimbra security team urged customers to patch a critical vulnerability affecting the Classic Web Client used to access the Zimbra Collaboration suite.
-
-
-Zimbra is a very popular email and collaboration software suite used by hundreds of millions of people, including thousands of businesses and hundreds of government agencies worldwide. Also known as the Classic UI, this Ajax-based …
+Zimbra is a very popular email and collaboration software suite used by hundreds of millions of people, including thousands of businesses and hundreds of government agencies worldwide. Also known as the Classic UI, this Ajax-based webmail …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -37,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-facing Zimbra Collaboration exposed to Classic Web Client XSS (10.1.19 / CVE-2025-66376 / CVE-2025-48700)
 
-`UC_2_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +55,7 @@ DeviceTvmSoftwareInventory
 
 ### Zimbra webmail mailbox mass-scrape via burst of /service/soap requests (GhostMail post-XSS collection)
 
-`UC_2_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
