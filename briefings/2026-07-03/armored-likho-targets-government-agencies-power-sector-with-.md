@@ -80,19 +80,14 @@ A previously undocumented threat actor known as Armored Likho has been attribute
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
 - **T1105** — Ingress Tool Transfer
-- **T1102** — Web Service
-- **T1203** — Exploitation for Client Execution
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1053.005** — Scheduled Task/Job
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1070.004** — File Deletion
-- **T1113** — Screen Capture
-- **T1115** — Clipboard Data
-- **T1572** — Protocol Tunneling
-- **T1021.004** — Remote Services: SSH
+- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
+- **T1572** — Protocol Tunneling
 
 ## Kill chain phases observed
 
@@ -100,171 +95,130 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Armored Likho dropper EXE fetching second-stage payload from GitHub
+### Armored Likho dropper EXE writes paired VBScript (trace-eraser + scheduled-task registrar)
 
-`UC_103_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host IN ("raw.githubusercontent.com","codeload.github.com","objects.githubusercontent.com","github.com") AND (All_Traffic.process_path="*\\Temp\\*" OR All_Traffic.process_path="*\\Downloads\\*" OR All_Traffic.process_path="*\\AppData\\Roaming\\*" OR All_Traffic.process_path="*\\Public\\*") AND NOT All_Traffic.process IN ("git.exe","code.exe","msedge.exe","chrome.exe","firefox.exe","brave.exe","curl.exe") by All_Traffic.src All_Traffic.dest_host All_Traffic.process All_Traffic.process_path | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has_any ("raw.githubusercontent.com","codeload.github.com","objects.githubusercontent.com","github.com")
-| where InitiatingProcessFolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\", @"\Downloads\", @"\Public\", @"\AppData\Roaming\")
-| where InitiatingProcessFileName !in~ ("git.exe","code.exe","msedge.exe","chrome.exe","firefox.exe","brave.exe","curl.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Armored Likho spear-phishing RAR attachment with government/social-program lure
-
-`UC_103_17` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-let LookbackDays = 14d;
-EmailAttachmentInfo
-| where Timestamp > ago(LookbackDays)
-| where FileType =~ "rar" or FileName endswith ".rar"
-| join kind=inner (
-    EmailEvents
-    | where Timestamp > ago(LookbackDays)
-    | where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
-    | project NetworkMessageId, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, AuthenticationDetails
-  ) on NetworkMessageId
-| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, FileName, FileType, SHA256, AuthenticationDetails
-| order by Timestamp desc
-```
-
-### CVE-2025-9491 LNK padded-argument loader spawned by Explorer
-
-`UC_103_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_103_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" AND Processes.process_name IN ("powershell.exe","cmd.exe") AND (Processes.process="*                    *") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | eval cmd_len=len(process) | where cmd_len>260 | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName =~ "explorer.exe"
-| where FileName in~ ("powershell.exe","cmd.exe")
-| where strlen(ProcessCommandLine) > 260
-| where ProcessCommandLine matches regex @"\s{20,}"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, CmdLen = strlen(ProcessCommandLine), ProcessCommandLine, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### BusySnake Stealer pythonw.exe .pyw hidden-window execution and persistence
-
-`UC_103_19` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("pythonw.exe","python.exe") AND Processes.process="*.pyw*" AND Processes.parent_process_name IN ("wscript.exe","cscript.exe","svchost.exe","schtasks.exe","explorer.exe","cmd.exe","taskeng.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("pythonw.exe","python.exe")
-| where ProcessCommandLine has ".pyw"
-| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","svchost.exe","schtasks.exe","explorer.exe","cmd.exe","taskeng.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Armored Likho VBScript-registered scheduled task persistence for stealer
-
-`UC_103_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" AND Processes.process="*/create*" AND (Processes.process="*.vbs*" OR Processes.process="*.pyw*" OR Processes.process="*wscript*" OR Processes.process="*pythonw*") by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any (".vbs",".pyw","wscript","cscript","pythonw")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### BusySnake credential access via browser cookie, Telegram session and wallet theft
-
-`UC_103_21` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Processes.process_name IN ("pythonw.exe","python.exe") AND (Filesystem.file_path="*\\Google\\Chrome\\User Data*" OR Filesystem.file_path="*\\Microsoft\\Edge\\User Data*" OR Filesystem.file_path="*\\Mozilla\\Firefox\\Profiles*" OR Filesystem.file_path="*\\Telegram Desktop\\tdata*" OR Filesystem.file_name IN ("Cookies","Login Data","key4.db","logins.json","cookies.sqlite")) by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name dc(Filesystem.file_name) as vbs_count from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.vbs" (Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\AppData\\Roaming\\*") by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where vbs_count>=2 | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("pythonw.exe","python.exe")
-| where FolderPath has_any (@"\Google\Chrome\User Data", @"\Microsoft\Edge\User Data", @"\Mozilla\Firefox\Profiles", @"\Telegram Desktop\tdata")
-    or FileName in~ ("Cookies","Login Data","key4.db","logins.json","cookies.sqlite")
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName endswith ".vbs"
+| where FolderPath has_any (@"\Temp\", @"\Downloads\", @"\AppData\Roaming\", @"\AppData\Local\Temp\")
+| where InitiatingProcessFileName endswith ".exe"
+| where InitiatingProcessFolderPath has_any (@"\Temp\", @"\Downloads\", @"\AppData\")
 | where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
+| summarize VbsFiles=make_set(FileName), VbsCount=dcount(FileName), FirstSeen=min(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessAccountName
+| where VbsCount >= 2   // campaign drops two VBScripts (trace-eraser + task-registrar) per dropper
+| order by FirstSeen desc
 ```
 
-### Armored Likho Go2Tunnel reverse SSH tunnel and RustDesk remote access
+### CVE-2025-9491 LNK exploitation: explorer-spawned PowerShell with whitespace-padded arguments
 
-`UC_103_22` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_17` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="ssh.exe" AND Processes.process="* -R *") OR Processes.process="*go2tunnel*" OR Processes.process_name="rustdesk.exe" OR Processes.process="*rustdesk*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="\s{20,}" | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where (FileName =~ "ssh.exe" and ProcessCommandLine has " -R ")
-    or ProcessCommandLine has "go2tunnel"
-    or FileName =~ "rustdesk.exe"
-    or ProcessCommandLine has "rustdesk"
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "explorer.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"\s{20,}"    // CVE-2025-9491 whitespace-padded LNK arguments
 | where AccountName !endswith "$"
-| extend ViaStealer = InitiatingProcessFileName in~ ("pythonw.exe","python.exe","wscript.exe","cscript.exe")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, ViaStealer, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Armored Likho / BusySnake C2 connections to known infrastructure
+### BusySnake stealer: pythonw.exe executing .pyw payload with scheduled-task persistence
 
-`UC_103_23` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_18` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("159.198.41.140","159.198.75.219","159.198.32.222","69.67.173.153") OR All_Traffic.dest_host IN ("winupdate.live","arvax.xyz","varenie.live","lvl99.store","onetoken.ink","winupdate.ink","grked.online","ndrt.ink","myboard.chickenkiller.com","myboard.twilightparadox.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="pythonw.exe" Processes.process="*.pyw*") OR (Processes.process_name="schtasks.exe" Processes.process="*create*" (Processes.process="*.pyw*" OR Processes.process="*pythonw*" OR Processes.process="*.vbs*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "pythonw.exe" and ProcessCommandLine has ".pyw")
+     or (FileName =~ "schtasks.exe" and ProcessCommandLine has "/create" and ProcessCommandLine has_any ("pythonw",".pyw",".vbs"))
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### BusySnake credential harvesting: pythonw.exe touching browser stores, Telegram tdata, and wallet JSON
+
+`UC_103_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="Login Data" OR Filesystem.file_name="Cookies" OR Filesystem.file_name="cookies.sqlite" OR Filesystem.file_name="key4.db" OR Filesystem.file_name="logins.json" OR Filesystem.file_path="*\\Telegram Desktop\\tdata*") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("pythonw.exe","python.exe")
+| where (FileName in~ ("Login Data","Cookies","cookies.sqlite","key4.db","logins.json"))
+     or FolderPath has @"\Telegram Desktop\tdata"
+     or (FileName endswith ".json" and FolderPath has_any (@"\wallets\", @"\Ethereum\", @"\Bitcoin\", @"\Exodus\"))
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### BusySnake C2 callback to named Armored Likho infrastructure
+
+`UC_103_20` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("159.198.41.140","159.198.75.219","159.198.32.222","69.67.173.153") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("159.198.41.140","159.198.75.219","159.198.32.222","69.67.173.153")
-    or RemoteUrl has_any ("winupdate.live","arvax.xyz","varenie.live","lvl99.store","onetoken.ink","winupdate.ink","grked.online","ndrt.ink","myboard.chickenkiller.com","myboard.twilightparadox.com")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| where RemoteUrl in~ ("winupdate.live","arvax.xyz","varenie.live","lvl99.store","onetoken.ink","winupdate.ink","grked.online","ndrt.ink","myboard.chickenkiller.com","myboard.twilightparadox.com")
+     or RemoteIP in ("159.198.41.140","159.198.75.219","159.198.32.222","69.67.173.153")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Armored Likho hands-on-keyboard: Go2Tunnel reverse SSH tunnel and RustDesk deployment
+
+`UC_103_21` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="ssh.exe" Processes.process="*-R *" Processes.process="*-i *") OR (Processes.process_name="rustdesk.exe") OR (Processes.process_name="go2tunnel.exe") OR (Processes.process="*rustdesk*install*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "ssh.exe" and ProcessCommandLine has "-R" and ProcessCommandLine has "-i")
+     or FileName in~ ("rustdesk.exe","go2tunnel.exe")
+     or (ProcessCommandLine has "rustdesk" and ProcessCommandLine has_any ("--install","--service","--connect"))
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
@@ -717,4 +671,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 24 use case(s) fired, 36 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 22 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

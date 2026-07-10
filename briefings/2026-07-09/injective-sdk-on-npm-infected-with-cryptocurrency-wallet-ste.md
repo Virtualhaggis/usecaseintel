@@ -23,8 +23,8 @@ Back to Blog Threat Intel Injective npm Supply Chain Attack: 18 Packages Backdoo
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1041** — Exfiltration Over C2 Channel
-- **T1567** — Exfiltration Over Web Service
-- **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
 
@@ -32,31 +32,31 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Injective SDK wallet-stealer exfil to char-code-obfuscated grpc-web lookalike domain
+### Exfil beacon to fake Injective gRPC-Web domain (testnet.archival.chain.grpc-web.injective.network)
 
-`UC_4_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host="testnet.archival.chain.grpc-web.injective.network" OR All_Traffic.url="*testnet.archival.chain.grpc-web.injective.network*" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_host, All_Traffic.app, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query="testnet.archival.chain.grpc-web.injective.network" by DNS.src, DNS.dest, DNS.query, DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "testnet.archival.chain.grpc-web.injective.network"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFolderPath
+| where RemoteUrl =~ "testnet.archival.chain.grpc-web.injective.network"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Backdoored @injectivelabs/sdk-ts payload file dropped in node_modules (key-derivation-telemetry)
+### Malicious npm payload file key-derivation-telemetry.(js|ts) dropped under node_modules/@injectivelabs
 
 `UC_4_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="key-derivation-telemetry.js" OR Filesystem.file_name="key-derivation-telemetry.ts") AND Filesystem.file_path="*injectivelabs*" by Filesystem.dest, Filesystem.file_name, Filesystem.file_path, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="key-derivation-telemetry.js" OR Filesystem.file_name="key-derivation-telemetry.ts") AND Filesystem.file_path="*@injectivelabs*" by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -64,26 +64,26 @@ DeviceNetworkEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where FileName in~ ("key-derivation-telemetry.js","key-derivation-telemetry.ts")
-| where FolderPath has "injectivelabs"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FolderPath has "@injectivelabs"
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Install of pinned malicious @injectivelabs 1.20.21 package version
+### Install/pin of backdoored @injectivelabs packages at malicious version 1.20.21
 
 `UC_4_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*injectivelabs*" AND Processes.process="*1.20.21*") AND Processes.process_name IN ("npm.exe","node.exe","pnpm.exe","yarn.exe","cmd.exe","bash.exe","sh") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*@injectivelabs*" AND Processes.process="*1.20.21*" by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has "injectivelabs" and ProcessCommandLine has "1.20.21"
-| where FileName in~ ("npm.exe","node.exe","pnpm.exe","yarn.exe","cmd.exe","bash.exe","sh") or InitiatingProcessFileName in~ ("npm.exe","node.exe","pnpm.exe","yarn.exe")
+| where FileName in~ ("node.exe","npm.exe","npm.cmd","pnpm.exe","pnpm.cmd","yarn.exe","yarn.cmd") or InitiatingProcessFileName in~ ("node.exe","npm.exe","pnpm.exe","yarn.exe")
+| where ProcessCommandLine has "@injectivelabs" and ProcessCommandLine has "1.20.21"
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```

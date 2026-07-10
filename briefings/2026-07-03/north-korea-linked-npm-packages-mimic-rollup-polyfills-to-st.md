@@ -36,7 +36,7 @@ According to JFrog, the packages "rollup-packages-polyfill-core" and "rollup-run
 - **T1071** — Application Layer Protocol
 - **T1195.001** — Compromise Software Dependencies and Development Tools
 - **T1105** — Ingress Tool Transfer
-- **T1102** — Web Service
+- **T1102.001** — Web Service: Dead Drop Resolver
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1555** — Credentials from Password Stores
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### node.exe fetching JSONKeeper dead-drop for second-stage eval
 
-`UC_102_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
