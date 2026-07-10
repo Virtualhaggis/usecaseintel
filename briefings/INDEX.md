@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2565 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2567 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -28,6 +28,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [npm 12 disables install scripts by default to reduce supply ](./2026-07-09/npm-12-disables-install-scripts-by-default-to-reduce-supply-.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
 - [summer of clearinghouses](./2026-07-09/summer-of-clearinghouses.md)
+- [symlinks are still scary and yes you can commit them to git](./2026-07-09/symlinks-are-still-scary-and-yes-you-can-commit-them-to-git.md)
 - [threatsday cloud bucket hijacking windows lpe chain global f](./2026-07-09/threatsday-cloud-bucket-hijacking-windows-lpe-chain-global-f.md)
 - [top ai agents built to catch malicious code can be tricked i](./2026-07-09/top-ai-agents-built-to-catch-malicious-code-can-be-tricked-i.md)
 - [winning 54 of the time](./2026-07-09/winning-54-of-the-time.md)
@@ -4207,6 +4208,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2018-11-27
 - [malicious code found in npm package event stream downloaded ](./2018-11-27/malicious-code-found-in-npm-package-event-stream-downloaded-.md)
+
+## 2018-10-17
+- [jvm ecosystem report 2018 about your platform and applicatio](./2018-10-17/jvm-ecosystem-report-2018-about-your-platform-and-applicatio.md)
 
 ## 2018-08-15
 - [behind the disclosure the zip slip vulnerability](./2018-08-15/behind-the-disclosure-the-zip-slip-vulnerability.md)

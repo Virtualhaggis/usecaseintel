@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Celery task injected into Apache Airflow message broker (unacked queue / execute_command)
 
-`UC_3294_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3295_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### Apache Airflow Celery worker spawns non-airflow child (command-injection RCE, CVE-2020-11981)
 
-`UC_3294_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3295_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### Apache Airflow task run with --pickle flag (pickle deserialization, CVE-2020-11982)
 
-`UC_3294_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3295_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### Hosts exposed to Apache Airflow Celery broker RCE (CVE-2020-11981 / CVE-2020-11982)
 
-`UC_3294_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_3295_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Breaking out of message brokers
 
-`UC_3294_2` · phase: **install** · confidence: **High**
+`UC_3295_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### RedWing Android banking trojan C2 beaconing to named panel domains
 
-`UC_55_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_56_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### RedWing dropper delivery: fake ProtonVPN APK and app-store-lookalike download hosts
 
-`UC_55_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_56_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
