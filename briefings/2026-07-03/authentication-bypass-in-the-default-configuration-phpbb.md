@@ -19,7 +19,6 @@ To get you up to speed, phpBB is an old forum software that's st…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
-- **T1556** — Modify Authentication Process
 - **T1078** — Valid Accounts
 
 ## Kill chain phases observed
@@ -28,35 +27,47 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### phpBB CVE-2026-48611 auth bypass: login_link flow invoking apache provider
+### phpBB CVE-2026-48611 auth bypass via login_link auth_provider=apache
 
 `UC_97_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.user) as user from datamodel=Web where Web.uri_path="*ucp.php*" Web.uri_query="*mode=login_link*" Web.uri_query="*auth_provider=apache*" by Web.src Web.dest Web.uri_path Web.uri_query
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path="*ucp.php" Web.uri_query="*mode=login_link*" Web.uri_query="*auth_provider=apache*" by Web.src Web.dest Web.uri_path Web.uri_query
 | `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
-### phpBB admin control panel (/adm/) access following CVE-2026-48611 bypass from same source IP
+### phpBB CVE-2026-48611 post-exploit ACP access from exploiting IP
 
 `UC_97_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as admTime values(Web.status) as status from datamodel=Web where Web.uri_path="*/adm/*" (Web.status=200 OR Web.status=302) by Web.src Web.dest Web.uri_path
+| tstats summariesonly=t min(_time) as exploit_time from datamodel=Web where Web.uri_path="*ucp.php" Web.uri_query="*mode=login_link*" Web.uri_query="*auth_provider=apache*" by Web.src Web.dest
 | `drop_dm_object_name(Web)`
-| join type=inner src [
-    | tstats `summariesonly` min(_time) as exploitTime from datamodel=Web where Web.uri_path="*ucp.php*" Web.uri_query="*mode=login_link*" Web.uri_query="*auth_provider=apache*" by Web.src
+| rename dest as forum_host
+| join type=inner src forum_host [
+    | tstats summariesonly=t min(_time) as admin_time values(Web.uri_path) as admin_paths from datamodel=Web where Web.uri_path="*/adm/index.php" by Web.src Web.dest
     | `drop_dm_object_name(Web)`
-  ]
-| where admTime >= exploitTime AND admTime <= (exploitTime + 3600)
-| eval delaySeconds=admTime-exploitTime
-| convert ctime(exploitTime) ctime(admTime)
-| table src dest uri_path exploitTime admTime delaySeconds status
-| sort - admTime
+    | rename dest as forum_host ]
+| where admin_time >= exploit_time AND admin_time <= exploit_time + 3600
+| eval delay_sec = admin_time - exploit_time
+| convert ctime(exploit_time) ctime(admin_time)
+| table src forum_host exploit_time admin_time delay_sec admin_paths
+```
+
+### HTTP Basic Authorization header sent to phpBB login_link endpoint
+
+`UC_97_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path="*ucp.php" Web.uri_query="*mode=login_link*" Web.http_method=POST by Web.src Web.dest Web.uri_path Web.uri_query
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 ### OAuth consent / suspicious app grant
@@ -120,4 +131,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
