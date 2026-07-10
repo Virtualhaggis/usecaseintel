@@ -11,12 +11,8 @@ By Sergiu Gatlan
 July 10, 2026
 04:17 AM
 0 
-
-
 A former employee of cybersecurity incident response company DigitalMint was sentenced to 70 months in prison for targeting U.S. companies in BlackCat (ALPHV) ransomware attacks.
-
-
-The FBI linked the BlackCat ransomware gang to more than 60 breaches between November 2021 and March 2022, adding in a separate advisory that the cybercrime group had collected at least $300 million in ran…
+The FBI linked the BlackCat ransomware gang to more than 60 breaches between November 2021 and March 2022, adding in a separate advisory that the cybercrime group had collected at least $300 million in ransom paym…
 
 ## Indicators of Compromise (high-fidelity only)
 

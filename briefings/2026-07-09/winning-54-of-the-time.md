@@ -44,10 +44,10 @@ I guess it captures the asymmetry of this industry, but I’ve never been entire
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1090.003** — Proxy: Multi-hop Proxy
 - **T1571** — Non-Standard Port
-- **T1090** — Proxy
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1105** — Ingress Tool Transfer
-- **T1543** — Create or Modify System Process
 
 ## Kill chain phases observed
 
@@ -55,13 +55,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UAT-7810 ORB C2 / payload-host egress on ports 8088, 2222, 99
+### UAT-7810 ORB C2 relay connection to LONGLEASH/DOGLEASH infrastructure
 
 `UC_11_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") by All_Traffic.src_ip All_Traffic.src, All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -69,42 +69,35 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
 | order by Timestamp desc
 ```
 
-### Exposed Ruckus / ASUS edge devices vulnerable to UAT-7810 n-day CVEs
+### UAT-7810 Ruckus router RCE via /forms/doLogin command injection (CVE-2023-25717)
 
 `UC_11_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - severity
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as method from datamodel=Web.Web where Web.url="*/forms/doLogin*" by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | where match(url, "[;|`&$><]|%3B|%7C|%60|%24|%26|%3E") OR src IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492")
-| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by CveId asc
-```
-
-### UAT-7810 LONGLEASH / JARLEASH / LEASHTEST implant hashes on endpoints
+### UAT-7810 LONGLEASH / DOGLEASH / JARLEASH backdoor binaries by SHA256
 
 `UC_11_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_hash IN ("755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823") by Endpoint.Processes.dest Endpoint.Processes.process_name Endpoint.Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.file_hash IN ("755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","604b53f87d6c070bf387e80c70a6df8d272fa3fc143148d41f13e59d52ab1f13","c92541f273eeb576d39235d0a5c6f18f2574b132a1022598edfa38065783ab98") by Endpoint.dest Endpoint.file_name Endpoint.file_path Endpoint.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+let iocs = dynamic(["755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","604b53f87d6c070bf387e80c70a6df8d272fa3fc143148d41f13e59d52ab1f13","c92541f273eeb576d39235d0a5c6f18f2574b132a1022598edfa38065783ab98"]);
+union DeviceFileEvents, DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where SHA256 in ("755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where SHA256 in (iocs)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
