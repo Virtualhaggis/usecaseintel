@@ -23,9 +23,8 @@ Back to Blog Threat Intel Injective npm Supply Chain Attack: 18 Packages Backdoo
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1041** — Exfiltration Over C2 Channel
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
-- **T1195.001** — Compromise Software Supply Chain: Compromise Software Dependencies
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -33,59 +32,68 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Injective SDK wallet-stealer C2: egress to testnet.archival.chain.grpc-web.injective.network
+### Wallet-key exfil to spoofed Injective host (@injectivelabs/sdk-ts backdoor)
 
-`UC_7_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_14_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="testnet.archival.chain.grpc-web.injective.network" OR DNS.query="*.archival.chain.grpc-web.injective.network" by DNS.src DNS.query DNS.answer DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="testnet.archival.chain.grpc-web.injective.network" by DNS.src, DNS.dest, DNS.query, index, sourcetype
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "testnet.archival.chain.grpc-web.injective.network"
+| where RemoteUrl =~ "testnet.archival.chain.grpc-web.injective.network" or RemoteUrl endswith ".archival.chain.grpc-web.injective.network"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Backdoored @injectivelabs payload file dropped into node_modules (key-derivation-telemetry.js)
+### Malicious payload artifact key-derivation-telemetry.js dropped in @injectivelabs node_modules
 
-`UC_7_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*node_modules*injectivelabs*" (Filesystem.file_name IN ("key-derivation-telemetry.js","key-derivation-telemetry.ts","accounts-Cy0p4lLW.cjs","accounts-jQ1GSgaW.js")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="key-derivation-telemetry.js" OR Filesystem.file_name="key-derivation-telemetry.ts") Filesystem.file_path="*injectivelabs*" by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.process_id
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has "node_modules" and FolderPath has "injectivelabs"
-| where FileName in~ ("key-derivation-telemetry.js","key-derivation-telemetry.ts","accounts-Cy0p4lLW.cjs","accounts-jQ1GSgaW.js")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| where FileName in~ ("key-derivation-telemetry.js","key-derivation-telemetry.ts")
+| where FolderPath has "injectivelabs"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Install/pin of malicious @injectivelabs 1.20.21 supply-chain version
+### Install/CI pull of pinned malicious @injectivelabs 1.20.21 SDK version
 
-`UC_7_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_14_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*@injectivelabs*" Processes.process="*1.20.21*" by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process="*@injectivelabs*" Endpoint.Processes.process="*1.20.21*" by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has "@injectivelabs" and ProcessCommandLine has "1.20.21"
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
+| where ProcessCommandLine has "@injectivelabs" and ProcessCommandLine has "1.20.21"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -209,7 +217,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Injective SDK on npm infected with cryptocurrency wallet stealer
 
-`UC_7_5` · phase: **exploit** · confidence: **High**
+`UC_14_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -266,4 +274,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

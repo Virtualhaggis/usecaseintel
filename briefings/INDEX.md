@@ -9,9 +9,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-10
-- [attackers exploit ill bloom vulnerability to drain 3 1 milli](./2026-07-10/attackers-exploit-ill-bloom-vulnerability-to-drain-3-1-milli.md)
+- [attackers exploit ill bloom vulnerability to drain over 5 mi](./2026-07-10/attackers-exploit-ill-bloom-vulnerability-to-drain-over-5-mi.md)
+- [exposed hacker server reveals wp shellstorm backdooring thou](./2026-07-10/exposed-hacker-server-reveals-wp-shellstorm-backdooring-thou.md)
 - [former ransomware negotiator gets 4 years for blackcat attac](./2026-07-10/former-ransomware-negotiator-gets-4-years-for-blackcat-attac.md)
+- [from 17 000 to 1 1 million assets how lumen technologies reb](./2026-07-10/from-17-000-to-1-1-million-assets-how-lumen-technologies-reb.md)
+- [hackers use fake microsoft entra passkey enrollment to gain ](./2026-07-10/hackers-use-fake-microsoft-entra-passkey-enrollment-to-gain-.md)
+- [new modbeacon rat uses grpc streaming for encrypted c2 traff](./2026-07-10/new-modbeacon-rat-uses-grpc-streaming-for-encrypted-c2-traff.md)
 - [ransomware negotiator gets 70 months in prison for aiding bl](./2026-07-10/ransomware-negotiator-gets-70-months-in-prison-for-aiding-bl.md)
+- [study of 281 free android vpn apps finds traffic leaks unenc](./2026-07-10/study-of-281-free-android-vpn-apps-finds-traffic-leaks-unenc.md)
+- [unpatched xring flaw in xquic lets remote clients crash http](./2026-07-10/unpatched-xring-flaw-in-xquic-lets-remote-clients-crash-http.md)
+- [zimbra urges customers to patch critical web client xss flaw](./2026-07-10/zimbra-urges-customers-to-patch-critical-web-client-xss-flaw.md)
 
 ## 2026-07-09
 - [ai attacks move in minutes join this webinar on building a d](./2026-07-09/ai-attacks-move-in-minutes-join-this-webinar-on-building-a-d.md)
@@ -43,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ai coding agents found triggering endpoint security rules bu](./2026-07-08/ai-coding-agents-found-triggering-endpoint-security-rules-bu.md)
 - [china linked uat 7810 expands orb network with new longleash](./2026-07-08/china-linked-uat-7810-expands-orb-network-with-new-longleash.md)
 - [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
-- [entra passkey enrollment vishing targets microsoft 365 users](./2026-07-08/entra-passkey-enrollment-vishing-targets-microsoft-365-users.md)
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
 - [fake paysafe skrill sdks on npm and pypi steal credentials](./2026-07-08/fake-paysafe-skrill-sdks-on-npm-and-pypi-steal-credentials.md)
 - [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
@@ -96,22 +102,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new trojpix attack leaks data from air gapped systems via vi](./2026-07-06/new-trojpix-attack-leaks-data-from-air-gapped-systems-via-vi.md)
 - [opera gx flaw let malicious sites auto install mods to steal](./2026-07-06/opera-gx-flaw-let-malicious-sites-auto-install-mods-to-steal.md)
 - [predicting mongodb objectid continuously in rocket chat](./2026-07-06/predicting-mongodb-objectid-continuously-in-rocket-chat.md)
-- [skillcloak lets malicious ai agent skills evade static scann](./2026-07-06/skillcloak-lets-malicious-ai-agent-skills-evade-static-scann.md)
 - [suspected china nexus hackers use fake indian tax filing uti](./2026-07-06/suspected-china-nexus-hackers-use-fake-indian-tax-filing-uti.md)
 - [threat actors probe gitea docker flaw cve 2026 20896 13 days](./2026-07-06/threat-actors-probe-gitea-docker-flaw-cve-2026-20896-13-days.md)
 - [when checking the url isn t enough a device code phishing at](./2026-07-06/when-checking-the-url-isn-t-enough-a-device-code-phishing-at.md)
-
-## 2026-07-04
-- [north korean hackers publish 108 malicious packages and exte](./2026-07-04/north-korean-hackers-publish-108-malicious-packages-and-exte.md)
-- [u s government entity paid kairos 1 million in data theft ex](./2026-07-04/u-s-government-entity-paid-kairos-1-million-in-data-theft-ex.md)
 
 ## 2026-07-03
 - [armored likho digging a snake pit inside the covert busysnak](./2026-07-03/armored-likho-digging-a-snake-pit-inside-the-covert-busysnak.md)
 - [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
 - [cyber readiness for smbs getting the basics right](./2026-07-03/cyber-readiness-for-smbs-getting-the-basics-right.md)
-- [new avalon malware framework packs crownx ransomware capabil](./2026-07-03/new-avalon-malware-framework-packs-crownx-ransomware-capabil.md)
-- [new bad epoll linux kernel flaw lets unprivileged users gain](./2026-07-03/new-bad-epoll-linux-kernel-flaw-lets-unprivileged-users-gain.md)
-- [unpatched flaws disclosed in filesystem bundled into million](./2026-07-03/unpatched-flaws-disclosed-in-filesystem-bundled-into-million.md)
 
 ## 2026-07-02
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
