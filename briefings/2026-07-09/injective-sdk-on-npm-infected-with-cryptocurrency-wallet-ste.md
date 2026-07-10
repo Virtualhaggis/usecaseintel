@@ -24,9 +24,7 @@ Back to Blog Threat Intel Injective npm Supply Chain Attack: 18 Packages Backdoo
 - **T1204.002** — User Execution: Malicious File
 - **T1041** — Exfiltration Over C2 Channel
 - **T1567** — Exfiltration Over Web Service
-- **T1132.001** — Standard Encoding
-- **T1027.010** — Command Obfuscation
-- **T1567.002** — Exfiltration to Cloud Storage/Web Service
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -34,59 +32,59 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Injective SDK wallet-stealer exfil to char-code-obfuscated domain testnet.archival.chain.grpc-web.injective.network
+### Injective SDK wallet-stealer exfil to char-code-obfuscated grpc-web lookalike domain
 
 `UC_4_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host="testnet.archival.chain.grpc-web.injective.network" OR All_Traffic.url="*testnet.archival.chain.grpc-web.injective.network*" by All_Traffic.src All_Traffic.dest_host All_Traffic.app All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host="testnet.archival.chain.grpc-web.injective.network" OR All_Traffic.url="*testnet.archival.chain.grpc-web.injective.network*" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_host, All_Traffic.app, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl =~ "testnet.archival.chain.grpc-web.injective.network"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), Procs=make_set(InitiatingProcessFileName, 10) by DeviceName, RemoteUrl, RemoteIP, RemotePort
-| order by FirstSeen desc
+| where RemoteUrl has "testnet.archival.chain.grpc-web.injective.network"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFolderPath
+| order by Timestamp desc
 ```
 
-### Malicious key-derivation-telemetry.js dropped under node_modules/@injectivelabs (sdk-ts 1.20.21 backdoor)
+### Backdoored @injectivelabs/sdk-ts payload file dropped in node_modules (key-derivation-telemetry)
 
 `UC_4_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="key-derivation-telemetry.js" AND Filesystem.file_path="*node_modules*injectivelabs*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="key-derivation-telemetry.js" OR Filesystem.file_name="key-derivation-telemetry.ts") AND Filesystem.file_path="*injectivelabs*" by Filesystem.dest, Filesystem.file_name, Filesystem.file_path, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "key-derivation-telemetry.js"
-| where FolderPath has @"\node_modules\@injectivelabs\" or FolderPath has "/node_modules/@injectivelabs/"
-| project Timestamp, DeviceName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FileName in~ ("key-derivation-telemetry.js","key-derivation-telemetry.ts")
+| where FolderPath has "injectivelabs"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Node/dev process HTTP POST egress to Injective wallet-stealer sink (base64 seed-phrase exfil channel)
+### Install of pinned malicious @injectivelabs 1.20.21 package version
 
-`UC_4_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_4_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="testnet.archival.chain.grpc-web.injective.network" OR All_Traffic.url="*testnet.archival.chain.grpc-web.injective.network*") AND (All_Traffic.app="node.exe" OR All_Traffic.app="node" OR All_Traffic.app="electron.exe" OR All_Traffic.app="npm") by All_Traffic.src All_Traffic.app All_Traffic.dest_host All_Traffic.http_method | `drop_dm_object_name(All_Traffic)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*injectivelabs*" AND Processes.process="*1.20.21*") AND Processes.process_name IN ("npm.exe","node.exe","pnpm.exe","yarn.exe","cmd.exe","bash.exe","sh") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl =~ "testnet.archival.chain.grpc-web.injective.network"
-| where InitiatingProcessFileName in~ ("node.exe","node","electron.exe","npm.cmd","npm","pnpm.exe","yarn.cmd")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where ProcessCommandLine has "injectivelabs" and ProcessCommandLine has "1.20.21"
+| where FileName in~ ("npm.exe","node.exe","pnpm.exe","yarn.exe","cmd.exe","bash.exe","sh") or InitiatingProcessFileName in~ ("npm.exe","node.exe","pnpm.exe","yarn.exe")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -267,4 +265,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

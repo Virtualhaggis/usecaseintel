@@ -36,13 +36,14 @@ According to JFrog, the packages "rollup-packages-polyfill-core" and "rollup-run
 - **T1071** — Application Layer Protocol
 - **T1195.001** — Compromise Software Dependencies and Development Tools
 - **T1105** — Ingress Tool Transfer
-- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102** — Web Service
-- **T1219** — Remote Access Software
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1555** — Credentials from Password Stores
+- **T1528** — Steal Application Access Token
+- **T1219** — Remote Access Software
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1041** — Exfiltration Over C2 Channel
 
 ## Kill chain phases observed
 
@@ -50,118 +51,116 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Lazarus rollup-polyfill lookalike npm package install (rollup-packages/runtime-polyfill-core chain)
+### Install of Lazarus rollup-polyfill lookalike npm/second-stage packages by name
 
-`UC_102_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process IN ("*rollup-packages-polyfill-core*","*rollup-runtime-polyfill-core*","*swift-parse-stream*","*quirky-token*","*react-icon-svgs*","*rollup-plugin-polyfill-connect*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("node.exe","npm.cmd","npm.exe","pnpm.cmd","yarn.cmd") OR Processes.parent_process_name IN ("node.exe","npm.cmd")) AND (Processes.process="*rollup-packages-polyfill-core*" OR Processes.process="*rollup-runtime-polyfill-core*" OR Processes.process="*swift-parse-stream*" OR Processes.process="*quirky-token*" OR Processes.process="*react-icon-svgs*" OR Processes.process="*rollup-plugin-polyfill-connect*" OR Processes.process="*rollup-plugin-polyfill-route*" OR Processes.process="*express-session-js*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("rollup-packages-polyfill-core","rollup-runtime-polyfill-core","swift-parse-stream","quirky-token","react-icon-svgs","rollup-plugin-polyfill-connect")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where InitiatingProcessFileName in~ ("npm.cmd","node.exe","npm.exe","pnpm.cmd","yarn.cmd") or FileName in~ ("node.exe","npm.cmd")
+| where ProcessCommandLine has_any ("rollup-packages-polyfill-core","rollup-runtime-polyfill-core","swift-parse-stream","quirky-token","react-icon-svgs","rollup-plugin-polyfill-connect","rollup-plugin-polyfill-route","express-session-js")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Egress to DPRK npm payload/backdoor servers 216.126.236.244 & 142.93.211.30
+### node.exe fetching JSONKeeper dead-drop for second-stage eval
 
-`UC_102_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("216.126.236.244","142.93.211.30") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("node.exe","npm.cmd") AND (All_Traffic.dest="*jsonkeeper.com*" OR All_Traffic.url="*jsonkeeper.com*") by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.url | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("216.126.236.244","142.93.211.30")
-| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd")
+| where RemoteUrl has "jsonkeeper.com"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### node/npm process fetching JSONKeeper dead-drop (jsonkeeper.com) second-stage payload
+### Outbound C2 to Lazarus payload host 216.126.236.244 from developer host
 
 `UC_102_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest LIKE "%jsonkeeper.com%" OR All_Traffic.url LIKE "%jsonkeeper.com%" by All_Traffic.src All_Traffic.dest All_Traffic.url All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="216.126.236.244" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "jsonkeeper.com"
-| where InitiatingProcessFileName in~ ("node.exe","node","npm.exe","npm-cli.js")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where RemoteIP == "216.126.236.244"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### @nut-tree-fork/nut-js remote input-control package dropped by node (RAT capability)
+### node.exe touching developer secret stores (AWS/SSH/npmrc/Cursor/Windsurf)
 
-`UC_102_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_102_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*nut-tree-fork*nut-js*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","npm.cmd") AND (Filesystem.file_path="*\\.ssh\\*" OR Filesystem.file_path="*\\.aws\\*" OR Filesystem.file_path="*\\.npmrc*" OR Filesystem.file_path="*\\.azure\\*" OR Filesystem.file_path="*\\.config\\gcloud*" OR Filesystem.file_path="*\\Cursor\\*" OR Filesystem.file_path="*\\Windsurf\\*" OR Filesystem.file_path="*\\Code\\User\\*") by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where FolderPath has "nut-tree-fork"
-| where InitiatingProcessFileName in~ ("node.exe","node","npm.exe")
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd")
+| where FolderPath has_any (@"\.ssh", @"\.aws", @"\.npmrc", @"\.azure", @"\.config\gcloud", @"\Cursor\", @"\Windsurf\", @"\Code\User\History", @"\.git-credentials", @"\.netrc")
+| summarize DistinctSecretPaths = dcount(FolderPath), Paths = make_set(FolderPath, 20), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine
+| where DistinctSecretPaths >= 2
+| order by DistinctSecretPaths desc
 ```
 
-### node process reading developer credential & AI-tool secret files (dev-secret theft)
+### Install of @nut-tree-fork/nut-js remote input-control package on dev/build host
 
-`UC_102_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("node.exe","node")) AND (Filesystem.file_path IN ("*/.aws/*","*/.ssh/*","*.npmrc","*.git-credentials","*.env","*Login Data*","*Cursor*History*","*Windsurf*History*") OR Filesystem.file_name IN ("credentials","id_rsa",".npmrc",".git-credentials",".env","Login Data")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","npm.cmd") AND (Filesystem.file_path="*@nut-tree-fork*nut-js*" OR Filesystem.file_path="*\\@nut-tree-fork\\*") by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where FolderPath has_any (".aws",".ssh",".npmrc",".git-credentials",".env","Login Data","Cursor","Windsurf","globalStorage")
-    or FileName in~ ("credentials","id_rsa",".npmrc",".git-credentials",".env","Login Data")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd")
+| where FolderPath has "@nut-tree-fork" or (FolderPath has "nut-js" and FolderPath has "node_modules")
+| summarize FileCount = count(), Files = make_set(FileName, 20), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine
+| order by FirstSeen desc
 ```
 
-### npm install-time hook spawning shell or network downloader (hidden postinstall execution)
+### Beaconing to security-alerts-sdk PyPI backdoor C2 142.93.211.30:5000
 
-`UC_102_15` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_102_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","node","npm.exe","npm") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","dash","curl.exe","curl","wget","certutil.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="142.93.211.30" AND All_Traffic.dest_port="5000" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node.exe","node","npm.exe") or InitiatingProcessCommandLine has_any ("npm install","npm ci","postinstall")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","curl.exe","curl","wget","certutil.exe")
-| where ProcessCommandLine has_any ("http","base64","atob","Buffer.from","-enc","Invoke-","iwr","curl","wget") or InitiatingProcessCommandLine has "postinstall"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "142.93.211.30" and RemotePort == 5000
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
@@ -480,4 +479,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

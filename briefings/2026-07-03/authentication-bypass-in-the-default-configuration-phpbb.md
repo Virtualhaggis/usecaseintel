@@ -19,7 +19,7 @@ To get you up to speed, phpBB is an old forum software that's st…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
-- **T1078.001** — Valid Accounts: Default Accounts
+- **T1556** — Modify Authentication Process
 - **T1078** — Valid Accounts
 
 ## Kill chain phases observed
@@ -28,22 +28,35 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### phpBB CVE-2026-48611 auth bypass: login_link flow forced to 'apache' provider
+### phpBB CVE-2026-48611 auth bypass: login_link flow invoking apache provider
 
 `UC_97_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count as request_count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web.Web where Web.url="*ucp.php*" AND Web.url="*mode=login_link*" AND Web.url="*auth_provider=apache*" by Web.src, Web.dest, Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.user) as user from datamodel=Web where Web.uri_path="*ucp.php*" Web.uri_query="*mode=login_link*" Web.uri_query="*auth_provider=apache*" by Web.src Web.dest Web.uri_path Web.uri_query
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
-### phpBB post-bypass privileged panel access from CVE-2026-48611 source IP
+### phpBB admin control panel (/adm/) access following CVE-2026-48611 bypass from same source IP
 
-`UC_97_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_97_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count as exploit_hits min(_time) as exploit_time from datamodel=Web.Web where Web.url="*ucp.php*" AND Web.url="*mode=login_link*" AND Web.url="*auth_provider=apache*" by Web.src, Web.dest | `drop_dm_object_name(Web)` | join type=inner src, dest [| tstats summariesonly=true count as panel_hits max(_time) as panel_time values(Web.uri_path) as panel_paths from datamodel=Web.Web where Web.uri_path IN ("/adm/index.php","/mcp.php") by Web.src, Web.dest | `drop_dm_object_name(Web)`] | where panel_time >= exploit_time AND (panel_time - exploit_time) <= 3600 | eval delay_min=round((panel_time-exploit_time)/60,1) | convert ctime(exploit_time) ctime(panel_time) | table src, dest, exploit_time, panel_time, delay_min, panel_paths, panel_hits
+| tstats `summariesonly` min(_time) as admTime values(Web.status) as status from datamodel=Web where Web.uri_path="*/adm/*" (Web.status=200 OR Web.status=302) by Web.src Web.dest Web.uri_path
+| `drop_dm_object_name(Web)`
+| join type=inner src [
+    | tstats `summariesonly` min(_time) as exploitTime from datamodel=Web where Web.uri_path="*ucp.php*" Web.uri_query="*mode=login_link*" Web.uri_query="*auth_provider=apache*" by Web.src
+    | `drop_dm_object_name(Web)`
+  ]
+| where admTime >= exploitTime AND admTime <= (exploitTime + 3600)
+| eval delaySeconds=admTime-exploitTime
+| convert ctime(exploitTime) ctime(admTime)
+| table src dest uri_path exploitTime admTime delaySeconds status
+| sort - admTime
 ```
 
 ### OAuth consent / suspicious app grant
