@@ -1,36 +1,92 @@
-# [HIGH] New TrojPix Attack Leaks Data From Air-Gapped Systems via Video Cable Emissions
+# [CRIT] URGENT - Progress Tells ShareFile Customers to Shut Down Storage Zone Controllers Over Security Threat
 
 **Source:** The Hacker News
-**Published:** 2026-07-06
-**Article:** https://thehackernews.com/2026/07/new-trojpix-attack-leaks-data-from-air.html
+**Published:** 2026-07-10
+**Article:** https://thehackernews.com/2026/07/urgent-progress-tells-sharefile.html
 
 ## Threat Profile
 
-New TrojPix Attack Leaks Data From Air-Gapped Systems via Video Cable Emissions 
- Swati Khandelwal  Jul 06, 2026 Cyber Espionage / Endpoint Security 
-Researchers at  Shandong University  have shown a fast new way to pull data off computers that are cut off from every network. The technique, called  TrojPix , tweaks on-screen pixels in ways the eye cannot see, so that the video cable carrying them radiates a faint radio signal a nearby receiver can decode.
-But TrojPix works only once malware is…
+URGENT - Progress Tells ShareFile Customers to Shut Down Storage Zone Controllers Over Security Threat 
+ Swati Khandelwal  Jul 10, 2026 Enterprise Security / Security Incident 
+Progress Software has told ShareFile customers to shut down the Windows servers running their Storage Zone Controllers, confirming to The Hacker News that it is responding to a "credible external security threat."
+The company has temporarily disabled access to the affected accounts, a step it says it took "out of an abu…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2026-2699`
+- **CVE:** `CVE-2026-2701`
+- **CVE:** `CVE-2023-24489`
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### ASPX web shell dropped into ShareFile StorageZones Controller webroot by w3wp
+
+`UC_6_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN ("created","modified","renamed")) (Filesystem.file_name IN ("*.aspx","*.ashx","*.asmx")) (Filesystem.file_path IN ("*\\inetpub\\wwwroot\\ShareFile\\*","*\\ShareFile\\StorageCenter\\*","*\\StorageCenter\\documentum\\*","*\\files\\ul-*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName endswith ".aspx" or FileName endswith ".ashx" or FileName endswith ".asmx"
+| where FolderPath has_any (@"\inetpub\wwwroot\ShareFile\", @"\ShareFile\StorageCenter\", @"\StorageCenter\documentum\", @"\files\ul-")
+| where InitiatingProcessFileName in~ ("w3wp.exe","ShareFile.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### ShareFile IIS worker (w3wp) spawning shell / recon LOLBins — web shell command execution
+
+`UC_6_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="w3wp.exe") (Processes.parent_process IN ("*ShareFile*","*StorageZone*","*StorageCenter*","*documentum*")) (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","net.exe","net1.exe","whoami.exe","nltest.exe","certutil.exe","bitsadmin.exe","curl.exe","reg.exe","systeminfo.exe","ipconfig.exe")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| where InitiatingProcessCommandLine has_any ("ShareFile","StorageZone","StorageCenter","documentum")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","net.exe","net1.exe","whoami.exe","nltest.exe","certutil.exe","bitsadmin.exe","curl.exe","reg.exe","systeminfo.exe","ipconfig.exe")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Pre-auth exploitation requests to ShareFile StorageZones Controller upload endpoints
+
+`UC_6_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*documentum/upload.aspx*","*/documentum/*.aspx*") OR Web.uri_path IN ("*documentum*upload.aspx*","*/documentum/*")) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | sort - lastTime
+```
 
 ### Suspicious browser extension installation
 
@@ -170,7 +226,14 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-2699`, `CVE-2026-2701`, `CVE-2023-24489`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

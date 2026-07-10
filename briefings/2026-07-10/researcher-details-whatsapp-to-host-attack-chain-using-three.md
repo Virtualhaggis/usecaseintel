@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Git ext:: external transport helper command execution (OpenClaw WhatsApp-to-host RCE)
 
-`UC_6_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Container bind-mount of parent /home or /var (OpenClaw denylist parent-directory bypass)
 
-`UC_6_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Docker socket access by non-Docker process (OpenClaw /var mount host escape)
 
-`UC_6_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Single process reading multiple users' SSH/AWS/GPG secrets under /home (OpenClaw mount harvest)
 
-`UC_6_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_14_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 10, 2026
 12:26 PM
 0 
-
-
 Progress Software is emailing ShareFile customers who use Storage Zone Controllers to immediately shut down their servers after identifying what it describes as a "credible external security threat" targeting the on-premises secure file-sharing software.
-
-
-ShareFile is Progress Software's enterprise secure file sharing and collaboration platform that allows customers t…
+ShareFile is Progress Software's enterprise secure file sharing and collaboration platform that allows customers to host t…
 
 ## Indicators of Compromise (high-fidelity only)
 

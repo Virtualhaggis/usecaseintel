@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2571 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2574 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,18 +15,26 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [exposed hacker server reveals wp shellstorm backdooring thou](./2026-07-10/exposed-hacker-server-reveals-wp-shellstorm-backdooring-thou.md)
 - [former ransomware negotiator gets 4 years for blackcat attac](./2026-07-10/former-ransomware-negotiator-gets-4-years-for-blackcat-attac.md)
 - [from 17 000 to 1 1 million assets how lumen technologies reb](./2026-07-10/from-17-000-to-1-1-million-assets-how-lumen-technologies-reb.md)
+- [ghsa critical cve 2026 54067 siyuan stored xss to rce via cs](./2026-07-10/ghsa-critical-cve-2026-54067-siyuan-stored-xss-to-rce-via-cs.md)
+- [ghsa critical cve 2026 54069 siyuan unauthenticated admin ap](./2026-07-10/ghsa-critical-cve-2026-54069-siyuan-unauthenticated-admin-ap.md)
+- [ghsa critical cve 2026 54072 authorizer unvalidated redirect](./2026-07-10/ghsa-critical-cve-2026-54072-authorizer-unvalidated-redirect.md)
+- [ghsa critical cve 2026 54089 file browser authentication byp](./2026-07-10/ghsa-critical-cve-2026-54089-file-browser-authentication-byp.md)
 - [hackers exploit critical auth bypass in gitea docker image](./2026-07-10/hackers-exploit-critical-auth-bypass-in-gitea-docker-image.md)
 - [hackers use fake microsoft entra passkey enrollment to gain ](./2026-07-10/hackers-use-fake-microsoft-entra-passkey-enrollment-to-gain-.md)
+- [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
 - [laser attack resets tangem wallet passwords on cards that ca](./2026-07-10/laser-attack-resets-tangem-wallet-passwords-on-cards-that-ca.md)
 - [new modbeacon rat uses grpc streaming for encrypted c2 traff](./2026-07-10/new-modbeacon-rat-uses-grpc-streaming-for-encrypted-c2-traff.md)
 - [police suspects dutch hackers were involved in odido breach](./2026-07-10/police-suspects-dutch-hackers-were-involved-in-odido-breach.md)
 - [progress urges sharefile admins to shut down servers over cr](./2026-07-10/progress-urges-sharefile-admins-to-shut-down-servers-over-cr.md)
 - [ransomware negotiator gets 70 months in prison for aiding bl](./2026-07-10/ransomware-negotiator-gets-70-months-in-prison-for-aiding-bl.md)
 - [researcher details whatsapp to host attack chain using three](./2026-07-10/researcher-details-whatsapp-to-host-attack-chain-using-three.md)
+- [ryuk ransomware member pleads guilty in the us faces 15 year](./2026-07-10/ryuk-ransomware-member-pleads-guilty-in-the-us-faces-15-year.md)
 - [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
+- [six new u boot flaws could let malicious images crash device](./2026-07-10/six-new-u-boot-flaws-could-let-malicious-images-crash-device.md)
 - [study of 281 free android vpn apps finds traffic leaks unenc](./2026-07-10/study-of-281-free-android-vpn-apps-finds-traffic-leaks-unenc.md)
 - [the replicant in your directory ai agents and the identity s](./2026-07-10/the-replicant-in-your-directory-ai-agents-and-the-identity-s.md)
 - [unpatched xring flaw in xquic lets remote clients crash http](./2026-07-10/unpatched-xring-flaw-in-xquic-lets-remote-clients-crash-http.md)
+- [urgent progress tells sharefile customers to shut down stora](./2026-07-10/urgent-progress-tells-sharefile-customers-to-shut-down-stora.md)
 - [zimbra urges customers to patch critical web client xss flaw](./2026-07-10/zimbra-urges-customers-to-patch-critical-web-client-xss-flaw.md)
 
 ## 2026-07-09
@@ -104,9 +112,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55615 langroid neo4jchatagent execute](./2026-07-06/ghsa-critical-cve-2026-55615-langroid-neo4jchatagent-execute.md)
 - [ghsa critical ghsa vjc7 jrh9 9j86 9router has unauthenticate](./2026-07-06/ghsa-critical-ghsa-vjc7-jrh9-9j86-9router-has-unauthenticate.md)
 - [iran linked hackers use new cavern c2 framework to target is](./2026-07-06/iran-linked-hackers-use-new-cavern-c2-framework-to-target-is.md)
-- [new trojpix attack leaks data from air gapped systems via vi](./2026-07-06/new-trojpix-attack-leaks-data-from-air-gapped-systems-via-vi.md)
 - [predicting mongodb objectid continuously in rocket chat](./2026-07-06/predicting-mongodb-objectid-continuously-in-rocket-chat.md)
-- [suspected china nexus hackers use fake indian tax filing uti](./2026-07-06/suspected-china-nexus-hackers-use-fake-indian-tax-filing-uti.md)
 - [threat actors probe gitea docker flaw cve 2026 20896 13 days](./2026-07-06/threat-actors-probe-gitea-docker-flaw-cve-2026-20896-13-days.md)
 - [when checking the url isn t enough a device code phishing at](./2026-07-06/when-checking-the-url-isn-t-enough-a-device-code-phishing-at.md)
 
@@ -245,11 +251,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 11718 googleapis mcp toolbox authenti](./2026-06-18/ghsa-critical-cve-2026-11718-googleapis-mcp-toolbox-authenti.md)
 - [ghsa critical cve 2026 54003 kirby external initialization o](./2026-06-18/ghsa-critical-cve-2026-54003-kirby-external-initialization-o.md)
 - [ghsa critical cve 2026 58399 acastellon auth authentication ](./2026-06-18/ghsa-critical-cve-2026-58399-acastellon-auth-authentication-.md)
-- [ghsa critical ghsa 29w3 p9w9 wc47 praisonai arbitrary file r](./2026-06-18/ghsa-critical-ghsa-29w3-p9w9-wc47-praisonai-arbitrary-file-r.md)
 - [ghsa critical ghsa 2jq4 q6vv 4cp3 crawl4ai arbitrary file wr](./2026-06-18/ghsa-critical-ghsa-2jq4-q6vv-4cp3-crawl4ai-arbitrary-file-wr.md)
-- [ghsa critical ghsa f38v 77qj h4jq praisonai platform 0 1 4 s](./2026-06-18/ghsa-critical-ghsa-f38v-77qj-h4jq-praisonai-platform-0-1-4-s.md)
 - [ghsa critical ghsa hxpf 9xvq wph8 netlicensing mcp rest path](./2026-06-18/ghsa-critical-ghsa-hxpf-9xvq-wph8-netlicensing-mcp-rest-path.md)
-- [ghsa critical ghsa j4f3 55x4 r6q2 npm praisonai mcpserver ex](./2026-06-18/ghsa-critical-ghsa-j4f3-55x4-r6q2-npm-praisonai-mcpserver-ex.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)

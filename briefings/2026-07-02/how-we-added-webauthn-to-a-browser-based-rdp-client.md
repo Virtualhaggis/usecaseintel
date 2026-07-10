@@ -275,7 +275,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How We Added WebAuthn to a Browser-Based RDP Client
 
-`UC_109_6` · phase: **exploit** · confidence: **High**
+`UC_113_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

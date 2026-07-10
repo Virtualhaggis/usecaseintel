@@ -11,12 +11,8 @@ By Sergiu Gatlan
 July 10, 2026
 12:37 PM
 0 
-
-
 The Dutch National Police (Politie) says it has found "strong indications" that Dutch hackers have been involved in a February breach at the telecommunications provider Odido.
-
-
-"This includes a telephone conversation that was made with Odido customer service shortly before the hack. In this conversation, a Dutch-speaking man posed as Odido's IT employee. The company was then misled thr…
+"This includes a telephone conversation that was made with Odido customer service shortly before the hack. In this conversation, a Dutch-speaking man posed as Odido's IT employee. The company was then misled through phi…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -55,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Odido lookalike Okta/SSO phishing-portal domain resolution (ShinyHunters vishing)
 
-`UC_0_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +74,7 @@ DeviceNetworkEvents
 
 ### ShinyHunters Okta AiTM: failure-heavy auth flow then success (~10 min)
 
-`UC_0_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +88,7 @@ DeviceNetworkEvents
 
 ### Rogue Okta MFA factor enrolled as 'Passkey' from Genymobile-emulated Android
 
-`UC_0_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +100,7 @@ index=okta (eventType="user.mfa.factor.activate" OR eventType="system.mfa.factor
 
 ### Post-compromise SSO burst: single account rapidly accessing many SaaS apps
 
-`UC_0_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +123,7 @@ CloudAppEvents
 
 ### Bulk SaaS data exfil: high-volume automated downloads (Salesforce/SharePoint/Drive/Slack)
 
-`UC_0_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
