@@ -17318,11 +17318,11 @@ level: critical
   data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190,T1195.002,T1555.003"
   data-sources="StepSecurity"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network"
   data-targets="linux,windows"
   data-uc-count="7" data-llm-uc-count="3"
-  data-search="10 Layers Deep: How StepSecurity Stops TeamPCP&#x27;s Trivy Supply Chain Attack on GitHub Actions TeamPCP weaponized 76 Trivy version tags overnight. The KICS attack followed the same playbook days later. One security control is not enough. Here is how the StepSecurity platform&#x27;s ten independent security layers work together to prevent credential exfiltration, detect compromised actions at runtime, and respond to incidents across your entire organization before attackers can succeed. CVE-2026-33634 T1190 T1195.002 T1555.003 [LLM] Process memory read via /proc/&lt;pid&gt;/mem on GitHub Actions runner (TeamPCP Trivy stealer) [LLM] Egress to TeamPCP exfiltration infrastructure (scan.aquasecurtiy.org / 45.148.10.212) [LLM] GitHub Actions Runner.Worker spawns interpreter fetching TeamPCP stealer payload Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Trusted vendor binary / installer launching unusual children">
+  data-search="10 Layers Deep: How StepSecurity Stops TeamPCP&#x27;s Trivy Supply Chain Attack on GitHub Actions TeamPCP weaponized 76 Trivy version tags overnight. The KICS attack followed the same playbook days later. One security control is not enough. Here is how the StepSecurity platform&#x27;s ten independent security layers work together to prevent credential exfiltration, detect compromised actions at runtime, and respond to incidents across your entire organization before attackers can succeed. CVE-2026-33634 T1190 T1195.002 T1555.003 [LLM] CI runner egress to TeamPCP Trivy/KICS exfil infrastructure (scan.aquasecurtiy.org + IPs) [LLM] Runner.Worker process-memory read via /proc/&lt;pid&gt;/mem on GitHub Actions runner [LLM] Execution of known-compromised trivy-action / KICS GitHub Action on CI runner Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Trusted vendor binary / installer launching unusual children">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-02-10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -17384,32 +17384,27 @@ level: critical
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] GitHub Actions Runner.Worker spawns interpreter fetching TeamPCP stealer payload · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Egress to TeamPCP exfiltration infrastructure (scan.aquasecurtiy.org / 45.148.10.212) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Process memory read via /proc/&lt;pid&gt;/mem on GitHub Actions runner (TeamPCP Trivy stealer)</em></div></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Execution of known-compromised trivy-action / KICS GitHub Action on CI runner</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] CI runner egress to TeamPCP Trivy/KICS exfil infrastructure (scan.aquasecurtiy.org + IPs) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Runner.Worker process-memory read via /proc/&lt;pid&gt;/mem on GitHub Actions runner</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="8ac26991e4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="5247f3b7af" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">Process memory read via /proc/&lt;pid&gt;/mem on GitHub Actions runner (TeamPCP Trivy stealer)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8ac26991e4" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">CI runner egress to TeamPCP Trivy/KICS exfil infrastructure (scan.aquasecurtiy.org + IPs)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="5247f3b7af" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the TeamPCP credential-stealer behaviour where a spawned Python process reads /proc/&lt;pid&gt;/mem of the GitHub Actions Runner.Worker to extract marked secrets from memory. Reading another process&#x27;s memory map via the proc filesystem is extremely rare on a CI runner and is the exact harvest step described for the trivy-action / KICS compromises.
+    <div class="uc-desc">Hunts outbound connections or DNS lookups from GitHub Actions runners to the TeamPCP credential-exfil endpoints used across the trivy-action (CVE-2026-33634), Checkmarx KICS, and litellm/telnyx compromises. Any hit means a compromised action attempted to POST harvested secrets off the runner.
 
-Rationale: Anchors on the article&#x27;s exact harvest primitive (/proc/pid/mem read of Runner.Worker) which second sources (Microsoft, Wiz) confirm targeted &#x27;the memory of the runner process&#x27;; excludes legitimate debuggers to keep FP near zero on CI hosts.
-
-Cross-checked against:
-  • https://www.microsoft.com/en-us/security/blog/2026/03/24/detecting-investigating-defending-against-trivy-supply-chain-compromise/
-  • https://www.wiz.io/blog/trivy-compromised-teampcp-supply-chain-attack
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-33634</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping: Proc Filesystem">T1003.007</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer/SRE running gdb, lldb, gcore or CRIU for live debugging or checkpoint/restore on the runner</li><li>APM or profiler agents (e.g. async-profiler, py-spy) sampling process memory</li><li>Container runtime or security agent legitimately inspecting /proc during a scan</li><li>Core-dump collection tooling reading /proc for crash analysis</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;gdb&quot;,&quot;lldb&quot;,&quot;strace&quot;,&quot;criu&quot;,&quot;gcore&quot;,&quot;py-spy&quot;,&quot;async-profiler&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the InitiatingProcess reading /proc/*/mem and confirm the target PID belongs to Runner.Worker / the GitHub Actions job; pull the parent chain and the workflow that was executing. 2) Contain: cancel/kill the job, isolate the runner (or terminate the ARC pod), and rotate every secret the job could access (GITHUB_TOKEN, cloud keys, registry creds). 3) Hunt: search the same runner and org for egress to TeamPCP infrastructure (UC2), for use of aquasecurity/trivy-action or Checkmarx KICS, and for a newly created &#x27;tpcp-docs&#x27; repo indicating successful fallback exfil.</div></details>
+Rationale: Anchors on the exact typosquat domain scan.aquasecurtiy.org (article code block 3) resolving to 45.148.10.212 plus the two secondary exfil IPs and sibling-campaign domains (checkmarx.zone / audit.checkmarx.cx / models.litellm.cloud). These are fixed IOCs with no legitimate CI use, so any hit is a true positive.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Exfiltration to Cloud Storage">T1567.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher or IR team deliberately detonating the compromised action in a sandbox runner</li><li>Threat-intel enrichment tooling actively resolving the typosquat domain for validation</li><li>Deception/honeypot runner intentionally allowed to beacon</li><li>Passive DNS or scanner infrastructure sharing the same egress IP block (verify PTR/port)</li><li>A retired StepSecurity Threat Center test job replaying the IOC</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !has &quot;/sandbox/&quot; and DeviceName !startswith &quot;ir-detonation-&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the workflow/repo and the exact runner; pull the job log and confirm which third-party action step ran immediately before the egress (expect trivy-action or KICS at a mutable tag). 2) Contain: cancel the run, disable the workflow, and immediately rotate every secret exposed to that job — GITHUB_TOKEN, cloud OIDC/keys, npm/PyPI tokens — assume all are burned. 3) Hunt: sweep all repos for usage of aquasecurity/trivy-action and checkmarx KICS at mutable tags, pin to verified SHAs, and search org-wide network telemetry for the other IOC IPs/domains over the last 30 days.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-108-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-108-uc0-sentinel">Sentinel KQL</button>
@@ -17418,150 +17413,130 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-108-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-108-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-108-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where FolderPath startswith &quot;/proc/&quot;
-| where FileName == &quot;mem&quot;
-| where InitiatingProcessFileName !in~ (&quot;gdb&quot;,&quot;lldb&quot;,&quot;strace&quot;,&quot;criu&quot;,&quot;gcore&quot;,&quot;dumpcap&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FolderPath, FileName
+    <div class="tab-content active" id="art-108-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(14d)
+| where RemoteIP in (&quot;45.148.10.212&quot;,&quot;83.142.209.203&quot;,&quot;94.154.172.43&quot;)
+   or RemoteUrl has_any (&quot;scan.aquasecurtiy.org&quot;,&quot;checkmarx.zone&quot;,&quot;audit.checkmarx.cx&quot;,&quot;models.litellm.cloud&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where TargetFileName == &quot;mem&quot;
-| where TargetFilePath startswith &quot;/proc/&quot;
-| where not (ActingProcessName has_any (&quot;gdb&quot;,&quot;lldb&quot;,&quot;strace&quot;,&quot;criu&quot;,&quot;gcore&quot;))
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath
+    <div class="tab-content" id="art-108-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(14d)
+| where DstIpAddr in (&quot;45.148.10.212&quot;,&quot;83.142.209.203&quot;,&quot;94.154.172.43&quot;)
+   or Url has_any (&quot;scan.aquasecurtiy.org&quot;,&quot;checkmarx.zone&quot;,&quot;audit.checkmarx.cx&quot;,&quot;models.litellm.cloud&quot;)
+| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, Url, DstDomain
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Process Memory Read via /proc PID mem on CI Runner (TeamPCP Trivy Stealer)
-id: 8f3c1a92-6d21-4b0c-9f4e-2a1c7e5b91d4
-description: Detects a process reading /proc/&lt;pid&gt;/mem, the memory-harvest step of the TeamPCP credential stealer injected into aquasecurity/trivy-action and Checkmarx KICS GitHub Actions.
+    <div class="tab-content" id="art-108-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: TeamPCP Supply-Chain Exfil Endpoint Contact from CI Runner
+id: 6f3b2c8a-1d4e-4a7b-9c2f-8e5a1b0d7c33
+description: Outbound connection to TeamPCP trivy-action/KICS credential exfil IPs and typosquat domains
 references:
   - https://www.stepsecurity.io/blog/10-layers-deep-how-stepsecurity-stops-teampcps-trivy-supply-chain-attack-on-github-actions
-  - https://www.microsoft.com/en-us/security/blog/2026/03/24/detecting-investigating-defending-against-trivy-supply-chain-compromise/
 author: SOC Detection Engineering
 date: 2026/07/10
 tags:
-  - attack.t1003.007
-  - attack.credential_access
+  - attack.t1041
+  - attack.t1567.002
 logsource:
-  category: file_access
+  category: network_connection
   product: linux
 detection:
-  selection:
-    TargetFilename|re: &#x27;/proc/[0-9]+/mem&#x27;
-  filter:
-    Image|endswith:
-      - &#x27;/gdb&#x27;
-      - &#x27;/lldb&#x27;
-      - &#x27;/strace&#x27;
-      - &#x27;/criu&#x27;
-      - &#x27;/gcore&#x27;
-  condition: selection and not filter
+  selection_ip:
+    DestinationIp:
+      - &#x27;45.148.10.212&#x27;
+      - &#x27;83.142.209.203&#x27;
+      - &#x27;94.154.172.43&#x27;
+  selection_host:
+    DestinationHostname:
+      - &#x27;scan.aquasecurtiy.org&#x27;
+      - &#x27;checkmarx.zone&#x27;
+      - &#x27;audit.checkmarx.cx&#x27;
+      - &#x27;models.litellm.cloud&#x27;
+  condition: selection_ip or selection_host
 level: high</code></pre></div>
-    <div class="tab-content" id="art-108-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd (@auditd.type:PATH OR @auditd.type:SYSCALL) *&quot;/proc/&quot;* *&quot;/mem&quot;* -@process.name:(gdb OR lldb OR strace OR criu OR gcore)</code></pre></div>
-    <div class="tab-content" id="art-108-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo
-| TargetFileName=/\/proc\/[0-9]+\/mem$/
-| NOT ContextImageFileName=/(gdb|lldb|strace|criu|gcore)/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-108-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;mem&quot; AND Filesystem.file_path=&quot;/proc/*/mem&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-108-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;mem&quot; AND Filesystem.file_path=&quot;/proc/*/mem&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-108-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) (CIDR(@network.destination.ip, 45.148.10.212/32, 83.142.209.203/32, 94.154.172.43/32) OR @network.destination.ip:(45.148.10.212 OR 83.142.209.203 OR 94.154.172.43))</code></pre></div>
+    <div class="tab-content" id="art-108-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(scan\.aquasecurtiy\.org|checkmarx\.zone|audit\.checkmarx\.cx|models\.litellm\.cloud)/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-108-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;45.148.10.212&quot;,&quot;83.142.209.203&quot;,&quot;94.154.172.43&quot;) OR All_Traffic.dest IN (&quot;scan.aquasecurtiy.org&quot;,&quot;checkmarx.zone&quot;,&quot;audit.checkmarx.cx&quot;,&quot;models.litellm.cloud&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-108-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;45.148.10.212&quot;,&quot;83.142.209.203&quot;,&quot;94.154.172.43&quot;) OR All_Traffic.dest IN (&quot;scan.aquasecurtiy.org&quot;,&quot;checkmarx.zone&quot;,&quot;audit.checkmarx.cx&quot;,&quot;models.litellm.cloud&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="5003818043" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="e8fdffe364" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Egress to TeamPCP exfiltration infrastructure (scan.aquasecurtiy.org / 45.148.10.212)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="5003818043" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Runner.Worker process-memory read via /proc/&lt;pid&gt;/mem on GitHub Actions runner</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e8fdffe364" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on any outbound connection or DNS lookup to the TeamPCP credential-exfil infrastructure used across the Trivy and Checkmarx KICS compromises: the aquasecurity typosquat scan.aquasecurtiy.org (45.148.10.212) plus related actor domains/IPs. A single hit from a build runner means a compromised action attempted to POST stolen secrets.
+    <div class="uc-desc">Hunts the TeamPCP credential stealer&#x27;s core behaviour: a spawned Python process reading /proc/&lt;pid&gt;/mem of the GitHub Actions Runner.Worker process to scrape marked secrets from memory. This is the article&#x27;s signature harvesting step, independent of the exfil endpoint.
 
-Rationale: Uses the verbatim typosquat domain scan.aquasecurtiy.org and its resolved IP 45.148.10.212 (confirmed by Wiz/Microsoft) plus sibling TeamPCP domains/IPs; any hit is a direct IOC match with near-zero legitimate use.
-
-Cross-checked against:
-  • https://www.wiz.io/blog/trivy-compromised-teampcp-supply-chain-attack
-  • https://www.microsoft.com/en-us/security/blog/2026/03/24/detecting-investigating-defending-against-trivy-supply-chain-compromise/
-  • https://thehackernews.com/2026/03/trivy-security-scanner-github-actions.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel/sandbox detonation environment deliberately resolving the IOC domain</li><li>Security researcher or red team reproducing the IOCs in a lab</li><li>Passive DNS / EDR telemetry replay from an old capture inflating counts</li><li>Sinkhole or DNS-firewall product logging the blocked lookup (benign, already contained)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the source host is a GitHub Actions runner and identify the initiating process and workflow; determine whether the connection succeeded or was blocked (Harden Runner block mode). 2) Contain: block the domains/IPs at the egress firewall, isolate the runner, and immediately rotate all secrets exposed to that job. 3) Hunt: pivot to UC1 (/proc/mem harvest) and UC3 (Runner.Worker child) on the same host, enumerate every repo using aquasecurity/trivy-action or Checkmarx KICS, and check the org for a &#x27;tpcp-docs&#x27; repo signalling successful fallback exfil.</div></details>
+Rationale: Uses the article&#x27;s exact tradecraft strings (article code block 2 &#x27;/proc/pid/mem&#x27; and the target process name &#x27;Runner.Worker&#x27;) — a Python process reading another process&#x27;s memory on a CI runner has no benign explanation, making this a high-fidelity host-side detection that survives IOC rotation.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping: Proc Filesystem">T1003.007</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate profiler/debugger (py-spy, gdb, memray) attaching to a process during a CI diagnostics job</li><li>Security-tooling in the pipeline that intentionally reads process memory for scanning</li><li>Core-dump collection scripts referencing /proc/&lt;pid&gt;/mem paths</li><li>An IR/red-team validation job replaying the stealer behaviour</li><li>Custom observability agent sampling process memory maps</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;py-spy&quot; and ProcessCommandLine !has &quot;memray&quot; and InitiatingProcessCommandLine !has &quot;gdb&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree for the Runner.Worker on that host and confirm the parent chain — a third-party action step (trivy-action/KICS) spawning python that reads Runner.Worker memory is confirmation. 2) Contain: kill the job, isolate/decommission the runner (ephemeral runners should be destroyed), and rotate all secrets scoped to that workflow — they were resident in the memory that was read. 3) Hunt: search for the same /proc/*/mem pattern across all runners in the last 30 days and correlate each hit with the UC1 exfil-endpoint contacts to scope the blast radius.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-108-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-108-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-108-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-108-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-108-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-108-uc1-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-108-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-108-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;scan.aquasecurtiy.org&quot;,&quot;checkmarx.zone&quot;,&quot;audit.checkmarx.cx&quot;,&quot;models.litellm.cloud&quot;,&quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;)
-   or RemoteIP in (&quot;45.148.10.212&quot;,&quot;83.142.209.203&quot;,&quot;94.154.172.43&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+    <div class="tab-content active" id="art-108-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(14d)
+| where ProcessCommandLine matches regex @&quot;/proc/[0-9]+/mem&quot;
+| where FileName has &quot;python&quot; or InitiatingProcessCommandLine has &quot;Runner.Worker&quot; or InitiatingProcessFileName has &quot;Runner.Worker&quot;
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(30d)
-| where DestinationHostName has_any (&quot;scan.aquasecurtiy.org&quot;,&quot;checkmarx.zone&quot;,&quot;audit.checkmarx.cx&quot;,&quot;models.litellm.cloud&quot;,&quot;tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io&quot;)
-   or DestinationIP in (&quot;45.148.10.212&quot;,&quot;83.142.209.203&quot;,&quot;94.154.172.43&quot;)
-| project TimeGenerated, SourceIP, SourceHostName, DestinationHostName, DestinationIP, DestinationPort, RequestURL, DeviceProduct, DeviceVendor
+    <div class="tab-content" id="art-108-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(14d)
+| where ActingProcessCommandLine matches regex @&quot;/proc/[0-9]+/mem&quot;
+| where ActingProcessName has &quot;python&quot; or ParentProcessName has &quot;Runner.Worker&quot; or ParentProcessCommandLine has &quot;Runner.Worker&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: DNS Lookup to TeamPCP Trivy/KICS Exfil Infrastructure
-id: b21e7d54-9c88-4f3a-8a17-6f0d2c4b1e39
-description: Detects DNS resolution of TeamPCP credential-exfil domains used in the aquasecurity/trivy-action and Checkmarx KICS supply chain compromises.
+    <div class="tab-content" id="art-108-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Runner.Worker Memory Read via /proc/pid/mem on CI Runner
+id: b2e91f47-6c3a-4d9e-8b1c-2f7a0e5d4c19
+description: Python process reading /proc/&lt;pid&gt;/mem of the GitHub Actions Runner.Worker to scrape secrets from memory
 references:
   - https://www.stepsecurity.io/blog/10-layers-deep-how-stepsecurity-stops-teampcps-trivy-supply-chain-attack-on-github-actions
-  - https://www.wiz.io/blog/trivy-compromised-teampcp-supply-chain-attack
 author: SOC Detection Engineering
 date: 2026/07/10
 tags:
-  - attack.t1041
-  - attack.exfiltration
-  - attack.command_and_control
+  - attack.t1003.007
+  - attack.t1552.001
 logsource:
-  category: dns
+  category: process_creation
+  product: linux
 detection:
   selection:
-    query:
-      - &#x27;scan.aquasecurtiy.org&#x27;
-      - &#x27;checkmarx.zone&#x27;
-      - &#x27;audit.checkmarx.cx&#x27;
-      - &#x27;models.litellm.cloud&#x27;
-  condition: selection
+    CommandLine|re: &#x27;/proc/[0-9]+/mem&#x27;
+  selection_bin:
+    Image|contains: &#x27;python&#x27;
+  condition: selection and selection_bin
 level: high</code></pre></div>
-    <div class="tab-content" id="art-108-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(*scan.aquasecurtiy.org* OR *checkmarx.zone* OR *audit.checkmarx.cx* OR *models.litellm.cloud*) OR CIDR(@network.destination.ip, 45.148.10.212/32, 83.142.209.203/32, 94.154.172.43/32)</code></pre></div>
-    <div class="tab-content" id="art-108-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| DomainName=/(scan\.aquasecurtiy\.org|checkmarx\.zone|audit\.checkmarx\.cx|models\.litellm\.cloud)/i
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-108-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
-| filter dstAddr in [&quot;45.148.10.212&quot;, &quot;83.142.209.203&quot;, &quot;94.154.172.43&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;45.148.10.212&quot;,&quot;83.142.209.203&quot;,&quot;94.154.172.43&quot;) OR All_Traffic.dest IN (&quot;scan.aquasecurtiy.org&quot;,&quot;checkmarx.zone&quot;,&quot;audit.checkmarx.cx&quot;,&quot;models.litellm.cloud&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-108-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;45.148.10.212&quot;,&quot;83.142.209.203&quot;,&quot;94.154.172.43&quot;) OR All_Traffic.dest IN (&quot;scan.aquasecurtiy.org&quot;,&quot;checkmarx.zone&quot;,&quot;audit.checkmarx.cx&quot;,&quot;models.litellm.cloud&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-108-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.name:python OR @process.name:python3) @process.command_line:*/proc/* @process.command_line:*mem*</code></pre></div>
+    <div class="tab-content" id="art-108-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/python[0-9.]*$/i
+| regex(&quot;/proc/\\d+/mem&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-108-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*/proc/*/mem*&quot; (Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;python3.10&quot;,&quot;python3.11&quot;,&quot;python3.12&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | rex field=process &quot;\/proc\/(?&lt;target_pid&gt;\d+)\/mem&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-108-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*/proc/*/mem*&quot; (Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;python3.10&quot;,&quot;python3.11&quot;,&quot;python3.12&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | rex field=process &quot;\/proc\/(?&lt;target_pid&gt;\d+)\/mem&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="bbf62be4c0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="8220f1d408" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">GitHub Actions Runner.Worker spawns interpreter fetching TeamPCP stealer payload</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="bbf62be4c0" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Execution of known-compromised trivy-action / KICS GitHub Action on CI runner</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="8220f1d408" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the execution stage of the TeamPCP compromise: the GitHub Actions Runner.Worker process spawning a shell/interpreter/downloader (bash, python, curl, wget, node) whose command line references the stealer domain scan.aquasecurtiy.org, the compromised aquasecurity/trivy-action path, or a /proc memory read. This catches the malicious action code running at runtime before exfil completes.
+    <div class="uc-desc">Hunts CI runners checking out and executing the compromised aquasecurity/trivy-action (CVE-2026-33634) or Checkmarx KICS action, especially at mutable version tags rather than pinned SHAs. Surfaces the initial-access/execution vector before the memory-scrape and exfil stages fire.
 
-Rationale: Combines the article&#x27;s runtime parent (GitHub Actions Runner.Worker) with the exact stealer IOC strings (scan.aquasecurtiy.org, aquasecurity/trivy-action, /proc read), so it fires only when the compromised action actually executes its payload on the runner.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/10-layers-deep-how-stepsecurity-stops-teampcps-trivy-supply-chain-attack-on-github-actions
-  • https://www.microsoft.com/en-us/security/blog/2026/03/24/detecting-investigating-defending-against-trivy-supply-chain-compromise/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+Rationale: Anchors on the exact compromised action slugs named in the article (aquasecurity/trivy-action, CVE-2026-33634; Checkmarx KICS) and the GitHub Actions on-disk checkout path /_actions/&lt;owner&gt;/&lt;repo&gt;/. Medium FP because benign runs of these actions at pinned/safe SHAs also match — correlate with UC1/UC2 to escalate.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate workflow step that genuinely uses aquasecurity/trivy-action at a pinned safe SHA (path string present but benign) — verify the tag/commit against the compromised list</li><li>Internal CI tooling that curls an internal host whose name coincidentally contains &#x27;checkmarx&#x27;</li><li>Debug workflow intentionally reading /proc for diagnostics</li><li>Security team detonating the compromised action in a sandbox runner</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has &quot;aquasecurity/trivy-action@&quot; and ProcessCommandLine matches regex @&quot;trivy-action@[0-9a-f]{40}&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the full child command line and confirm whether the referenced action tag/commit is on the StepSecurity/GitHub known-compromised list; capture the workflow, repo, and triggering commit. 2) Contain: cancel the run, isolate the runner/pod, revoke the workflow&#x27;s GITHUB_TOKEN and rotate any cloud/registry secrets it could reach. 3) Hunt: correlate with UC1 (proc/mem read) and UC2 (egress to scan.aquasecurtiy.org) on the same aid/host, then sweep the org for all repos referencing aquasecurity/trivy-action, aquasecurity/setup-trivy or Checkmarx KICS at mutable tags and pin/replace them.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Repos legitimately running trivy-action or KICS pinned to a verified pre-compromise SHA</li><li>Post-incident jobs re-running the action after pinning to the patched version</li><li>Internal fork of the action mirrored under the same path name</li><li>Security team&#x27;s own scanning pipeline that still references the action by name</li><li>CI cache warm-up jobs that clone the action without executing the payload</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !matches regex @&quot;@[0-9a-f]{40}&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each hit, extract the ref/tag the action was resolved at — a mutable tag (v0.x, master, a branch) rather than a full 40-char SHA is the risk signal; check whether the run window overlaps the March 2026 compromise. 2) Contain: block the action via policy, pin all usages to a verified SHA, and rotate secrets for any job that ran it at a mutable tag. 3) Hunt: enumerate every repo/workflow referencing these actions, then pivot each affected runner into UC2 (memory read) and UC1 (exfil egress) to confirm whether the payload actually detonated.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-108-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-108-uc2-sentinel">Sentinel KQL</button>
@@ -17572,49 +17547,44 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-108-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName has &quot;Runner.Worker&quot; or InitiatingProcessCommandLine has &quot;Runner.Worker&quot;
-| where FileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;node&quot;)
-| where ProcessCommandLine has_any (&quot;scan.aquasecurtiy.org&quot;,&quot;aquasecurity/trivy-action&quot;,&quot;checkmarx.zone&quot;,&quot;/proc/&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
+| where ProcessCommandLine has_any (&quot;aquasecurity/trivy-action&quot;,&quot;checkmarx/kics-github-action&quot;)
+   or FolderPath has_any (&quot;/_actions/aquasecurity/trivy-action/&quot;,&quot;/_actions/checkmarx/kics-github-action/&quot;)
+   or InitiatingProcessCommandLine has_any (&quot;aquasecurity/trivy-action&quot;,&quot;checkmarx/kics-github-action&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-108-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has &quot;Runner.Worker&quot;
-| where ActingProcessName has_any (&quot;python&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;node&quot;)
-| where ActingProcessCommandLine has_any (&quot;scan.aquasecurtiy.org&quot;,&quot;aquasecurity/trivy-action&quot;,&quot;checkmarx.zone&quot;,&quot;/proc/&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine
+| where ActingProcessCommandLine has_any (&quot;aquasecurity/trivy-action&quot;,&quot;checkmarx/kics-github-action&quot;)
+   or ActingProcessCommandLine has_any (&quot;/_actions/aquasecurity/trivy-action/&quot;,&quot;/_actions/checkmarx/kics-github-action/&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: GitHub Actions Runner.Worker Spawns Interpreter Fetching TeamPCP Payload
-id: c47a9f18-2e63-4d5b-b1a0-9d3e6f2c8b57
-description: Detects Runner.Worker spawning a shell/interpreter/downloader whose command line references TeamPCP stealer IOCs (scan.aquasecurtiy.org, aquasecurity/trivy-action, checkmarx.zone, /proc read).
+    <div class="tab-content" id="art-108-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Compromised trivy-action / KICS GitHub Action Execution
+id: d4a7c1e2-9b58-4f3a-a6d0-3c9e7b2f1a84
+description: CI runner executing the TeamPCP-compromised aquasecurity/trivy-action or Checkmarx KICS action
 references:
   - https://www.stepsecurity.io/blog/10-layers-deep-how-stepsecurity-stops-teampcps-trivy-supply-chain-attack-on-github-actions
 author: SOC Detection Engineering
 date: 2026/07/10
 tags:
+  - attack.t1195.001
   - attack.t1195.002
-  - attack.execution
-  - attack.t1059.006
 logsource:
   category: process_creation
   product: linux
 detection:
-  selection_parent:
-    ParentImage|endswith: &#x27;/Runner.Worker&#x27;
-  selection_cmd:
+  selection:
     CommandLine|contains:
-      - &#x27;scan.aquasecurtiy.org&#x27;
       - &#x27;aquasecurity/trivy-action&#x27;
-      - &#x27;checkmarx.zone&#x27;
-      - &#x27;/proc/&#x27;
-  condition: selection_parent and selection_cmd
-level: high</code></pre></div>
-    <div class="tab-content" id="art-108-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*scan.aquasecurtiy.org* OR *aquasecurity/trivy-action* OR *checkmarx.zone* OR */proc/*)</code></pre></div>
+      - &#x27;checkmarx/kics-github-action&#x27;
+      - &#x27;/_actions/aquasecurity/trivy-action/&#x27;
+      - &#x27;/_actions/checkmarx/kics-github-action/&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-108-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:*aquasecurity/trivy-action* OR @process.command_line:*checkmarx/kics-github-action* OR @process.command_line:*/_actions/aquasecurity/trivy-action/* OR @process.command_line:*/_actions/checkmarx/kics-github-action/*)</code></pre></div>
     <div class="tab-content" id="art-108-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/Runner\.Worker/i
-| regex(&quot;(scan\\.aquasecurtiy\\.org|aquasecurity/trivy-action|checkmarx\\.zone|/proc/[0-9]+/mem)&quot;, field=CommandLine)
+| regex(&quot;(aquasecurity/trivy-action|checkmarx/kics-github-action|/_actions/aquasecurity/trivy-action/|/_actions/checkmarx/kics-github-action/)&quot;, field=CommandLine)
 | groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-108-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;Runner.Worker&quot; AND Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;node&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | search process IN (&quot;*scan.aquasecurtiy.org*&quot;,&quot;*/proc/*&quot;,&quot;*aquasecurity/trivy-action*&quot;,&quot;*checkmarx.zone*&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-108-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;Runner.Worker&quot; AND Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;node&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | search process IN (&quot;*scan.aquasecurtiy.org*&quot;,&quot;*/proc/*&quot;,&quot;*aquasecurity/trivy-action*&quot;,&quot;*checkmarx.zone*&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-108-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*aquasecurity/trivy-action*&quot; OR Processes.process=&quot;*/_actions/aquasecurity/trivy-action/*&quot; OR Processes.process=&quot;*checkmarx/kics-github-action*&quot; OR Processes.process=&quot;*/_actions/checkmarx/kics-github-action/*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-108-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*aquasecurity/trivy-action*&quot; OR Processes.process=&quot;*/_actions/aquasecurity/trivy-action/*&quot; OR Processes.process=&quot;*checkmarx/kics-github-action*&quot; OR Processes.process=&quot;*/_actions/checkmarx/kics-github-action/*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">

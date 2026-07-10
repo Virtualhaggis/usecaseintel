@@ -27,11 +27,12 @@ Back to Blog Product 10 Layers Deep: How StepSecurity Stops TeamPCP's Trivy Supp
 - **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567.002** — Exfiltration to Cloud Storage
 - **T1003.007** — OS Credential Dumping: Proc Filesystem
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1041** — Exfiltration Over C2 Channel
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -39,62 +40,61 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Process memory read via /proc/<pid>/mem on GitHub Actions runner (TeamPCP Trivy stealer)
+### CI runner egress to TeamPCP Trivy/KICS exfil infrastructure (scan.aquasecurtiy.org + IPs)
 
-`UC_108_4` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="mem" AND Filesystem.file_path="/proc/*/mem" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath startswith "/proc/"
-| where FileName == "mem"
-| where InitiatingProcessFileName !in~ ("gdb","lldb","strace","criu","gcore","dumpcap")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FolderPath, FileName
-| order by Timestamp desc
-```
-
-### Egress to TeamPCP exfiltration infrastructure (scan.aquasecurtiy.org / 45.148.10.212)
-
-`UC_108_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_108_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.148.10.212","83.142.209.203","94.154.172.43") OR All_Traffic.dest IN ("scan.aquasecurtiy.org","checkmarx.zone","audit.checkmarx.cx","models.litellm.cloud") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.148.10.212","83.142.209.203","94.154.172.43") OR All_Traffic.dest IN ("scan.aquasecurtiy.org","checkmarx.zone","audit.checkmarx.cx","models.litellm.cloud") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("scan.aquasecurtiy.org","checkmarx.zone","audit.checkmarx.cx","models.litellm.cloud","tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io")
-   or RemoteIP in ("45.148.10.212","83.142.209.203","94.154.172.43")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where Timestamp > ago(14d)
+| where RemoteIP in ("45.148.10.212","83.142.209.203","94.154.172.43")
+   or RemoteUrl has_any ("scan.aquasecurtiy.org","checkmarx.zone","audit.checkmarx.cx","models.litellm.cloud")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### GitHub Actions Runner.Worker spawns interpreter fetching TeamPCP stealer payload
+### Runner.Worker process-memory read via /proc/<pid>/mem on GitHub Actions runner
 
-`UC_108_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_108_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="Runner.Worker" AND Processes.process_name IN ("python","python3","curl","wget","bash","sh","node") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | search process IN ("*scan.aquasecurtiy.org*","*/proc/*","*aquasecurity/trivy-action*","*checkmarx.zone*") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*/proc/*/mem*" (Processes.process_name IN ("python","python3","python3.10","python3.11","python3.12")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | rex field=process "\/proc\/(?<target_pid>\d+)\/mem" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where ProcessCommandLine matches regex @"/proc/[0-9]+/mem"
+| where FileName has "python" or InitiatingProcessCommandLine has "Runner.Worker" or InitiatingProcessFileName has "Runner.Worker"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Execution of known-compromised trivy-action / KICS GitHub Action on CI runner
+
+`UC_108_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*aquasecurity/trivy-action*" OR Processes.process="*/_actions/aquasecurity/trivy-action/*" OR Processes.process="*checkmarx/kics-github-action*" OR Processes.process="*/_actions/checkmarx/kics-github-action/*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName has "Runner.Worker" or InitiatingProcessCommandLine has "Runner.Worker"
-| where FileName in~ ("python","python3","curl","wget","bash","sh","node")
-| where ProcessCommandLine has_any ("scan.aquasecurtiy.org","aquasecurity/trivy-action","checkmarx.zone","/proc/")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
+| where ProcessCommandLine has_any ("aquasecurity/trivy-action","checkmarx/kics-github-action")
+   or FolderPath has_any ("/_actions/aquasecurity/trivy-action/","/_actions/checkmarx/kics-github-action/")
+   or InitiatingProcessCommandLine has_any ("aquasecurity/trivy-action","checkmarx/kics-github-action")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -170,4 +170,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

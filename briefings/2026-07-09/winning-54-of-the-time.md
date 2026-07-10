@@ -44,10 +44,10 @@ I guess it captures the asymmetry of this industry, but I’ve never been entire
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1090.002** — Proxy: External Proxy
+- **T1090.003** — Proxy: Multi-hop Proxy
 - **T1571** — Non-Standard Port
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
@@ -55,59 +55,62 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UAT-7810 ORB network C2 beacon to known relay IPs (ports 99/2222/8088)
+### Egress to UAT-7810 ORB/C2 relay infrastructure (LONGLEASH/DOGLEASH)
 
 `UC_8_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") OR All_Traffic.src_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval orb_port=if(dest_port IN (99,2222,8088),"yes","no") | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval relay_port=if(dest_port IN ("99","2222","8088"),"UAT7810_relay_port","other") | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+let orbIPs = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")
-| extend OrbPort = iff(RemotePort in (99,2222,8088), "campaign-port", "other")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, OrbPort, RemoteUrl, LocalIP, ActionType
+| where Timestamp > ago(14d)
+| where RemoteIP in (orbIPs)
+| extend RelayPortMatch = RemotePort in (99, 2222, 8088)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RelayPortMatch, RemoteUrl, LocalIP, ActionType
 | order by Timestamp desc
 ```
 
-### UAT-7810 LONGLEASH / JARLEASH / LEASHTEST backdoor hash on host
+### Inbound access from UAT-7810 infrastructure to internet-facing edge assets
 
-`UC_8_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_hash IN ("755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823","3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1","e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let uatHashes = dynamic(["755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823","3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1","e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257","bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf"]);
+let orbIPs = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteIP in (orbIPs)
+| where ActionType == "InboundConnectionAccepted"
+| project Timestamp, DeviceName, LocalIP, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, ActionType
+| order by Timestamp desc
+```
+
+### LONGLEASH backdoor binary (SHA256) present on managed hosts
+
+`UC_8_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let leashHash = "755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f";
 union
-  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in~ (uatHashes) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
-  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in~ (uatHashes) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
+  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 == leashHash | project Timestamp, DeviceName, EventKind="FileEvent", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 == leashHash | project Timestamp, DeviceName, EventKind="ProcessEvent", ActionType="ProcessCreated", FileName, FolderPath, SHA256, InitiatingProcessFileName=InitiatingProcessFileName, InitiatingProcessCommandLine=ProcessCommandLine)
 | order by Timestamp desc
-```
-
-### Ruckus/ASUS edge devices exposed to UAT-7810 n-day router CVEs
-
-`UC_8_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true allow_old_summaries=true count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)` | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492")
-| summarize arg_max(Timestamp, *) by DeviceId, CveId
-| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by CveId asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations

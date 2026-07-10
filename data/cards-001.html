@@ -4278,10 +4278,10 @@ DeviceFileEvents
   data-techs="T1190,T1486,T1566"
   data-sources="Cisco Talos"
   data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network,web"
+  data-splunk-cats="application,cloud,endpoint,network,web"
   data-targets="azure,m365,windows"
   data-uc-count="13" data-llm-uc-count="3"
-  data-search="Winning 54% of the time With Wimbledon&#x27;s help, Hazel argues against the popular myth that &quot;Attackers only need to be right once, but defenders need to be right 100% of the time.&quot; CVE-2020-22653 CVE-2020-22658 CVE-2023-25717 CVE-2025-2492 T1190 T1486 T1566 [LLM] UAT-7810 ORB network C2 beacon to known relay IPs (ports 99/2222/8088) [LLM] UAT-7810 LONGLEASH / JARLEASH / LEASHTEST backdoor hash on host [LLM] Ruckus/ASUS edge devices exposed to UAT-7810 n-day router CVEs Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Article-specific behavioural hunt — Winning 54% of the time">
+  data-search="Winning 54% of the time With Wimbledon&#x27;s help, Hazel argues against the popular myth that &quot;Attackers only need to be right once, but defenders need to be right 100% of the time.&quot; CVE-2020-22653 CVE-2020-22658 CVE-2023-25717 CVE-2025-2492 T1190 T1486 T1566 [LLM] Egress to UAT-7810 ORB/C2 relay infrastructure (LONGLEASH/DOGLEASH) [LLM] Inbound access from UAT-7810 infrastructure to internet-facing edge assets [LLM] LONGLEASH backdoor binary (SHA256) present on managed hosts Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Article-specific behavioural hunt — Winning 54% of the time">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-09-winning-54-of-the-time" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -4342,32 +4342,32 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Ruckus/ASUS edge devices exposed to UAT-7810 n-day router CVEs · Office app spawning script/LOLBin child process · Article-specific behavioural hunt — Winning 54% of the time</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] UAT-7810 LONGLEASH / JARLEASH / LEASHTEST backdoor hash on host</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] UAT-7810 ORB network C2 beacon to known relay IPs (ports 99/2222/8088) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Inbound access from UAT-7810 infrastructure to internet-facing edge assets · Office app spawning script/LOLBin child process · Article-specific behavioural hunt — Winning 54% of the time</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] LONGLEASH backdoor binary (SHA256) present on managed hosts</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Egress to UAT-7810 ORB/C2 relay infrastructure (LONGLEASH/DOGLEASH) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="0f0bb6e254" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="3af44d85b7" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">UAT-7810 ORB network C2 beacon to known relay IPs (ports 99/2222/8088)</span>
+    <span class="uc-title">Egress to UAT-7810 ORB/C2 relay infrastructure (LONGLEASH/DOGLEASH)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0f0bb6e254" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="3af44d85b7" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts for any internal host communicating with the four UAT-7810 Operational Relay Box C2/payload-hosting IPs, especially on the campaign&#x27;s non-standard ports 99, 2222 and 8088. Because these are hardcoded ORB relay nodes fronting LONGLEASH/DOGLEASH implants, any bidirectional connection is high-fidelity compromise or the ORB being used against the environment.
+    <div class="uc-desc">Hunts outbound connections from managed hosts to the four confirmed UAT-7810 Operational Relay Box IPs, which host LONGLEASH intermediate-C2 relays on non-standard ports 99/2222/8088. Any internal asset reaching this dedicated China-nexus proxy infrastructure indicates either a compromised node beaconing home or a host being routed through the ORB.
 
-Rationale: Uses the four hardcoded C2/payload IPs (194.233.92.26, 217.15.160.247, 217.15.164.147, 95.182.100.231) and campaign ports 99/2222/8088 from the Talos UAT-7810 IOC bundle — cross-checked against BleepingComputer and The Hacker News write-ups which cite the same four IPs. Fixed adversary infrastructure = near-zero legitimate use.
+Rationale: Anchored on the four ORB IPs and the three relay ports (99/2222/8088) confirmed in the Talos blog IOC list and reproduced by The Hacker News / BleepingComputer; dedicated single-purpose C2 IPs make raw destination-IP match high-fidelity, and the port set adds the LONGLEASH relay signature.
 
 Cross-checked against:
   • https://blog.talosintelligence.com/uat-7810/
-  • https://www.bleepingcomputer.com/news/security/chinese-hackers-develop-longleash-malware-to-expand-orb-network/
-  • https://thehackernews.com/2026/07/china-linked-uat-7810-expands-orb.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Proxy: External Proxy">T1090.002</span> <span class="ind tech" title="Non-Standard Port">T1571</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal threat-intel/blue-team host actively validating the published IOCs</li><li>Security vendor sandbox detonating a related sample and reaching the relay</li><li>Shared cloud/hosting IP that has since been reassigned to a benign tenant (recycled 217.15.x.x space)</li><li>Honeypot or deception node intentionally interacting with the C2</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the internal src host and the initiating process/user; confirm the connection direction and whether it hit campaign ports 99/2222/8088. Check whether the host is an edge/embedded device (router, IoT) vs a workstation. 2) Contain: block all four IPs at the perimeter/EDR, isolate the host, and capture volatile network state before reboot (ORB implants live on flash). 3) Hunt: pivot on the src host for the LONGLEASH/JARLEASH SHA256 hashes, look for other hosts touching these IPs, and check firmware/patch state of any Ruckus/ASUS routers on the same segment.</div></details>
+  • https://thehackernews.com/2026/07/china-linked-uat-7810-expands-orb.html
+  • https://www.bleepingcomputer.com/news/security/chinese-hackers-develop-longleash-malware-to-expand-orb-network/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Proxy: Multi-hop Proxy">T1090.003</span> <span class="ind tech" title="Non-Standard Port">T1571</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel validation / IOC-testing tooling that deliberately connects to known-bad IPs from a sanctioned scanning host</li><li>217.15.x.x and 194.233.x.x are VPS/hosting ranges — a benign service later re-provisioned on the same IP after takedown</li><li>Security researcher or blue-team sandbox host detonating the sample and beaconing out</li><li>Corporate egress proxy re-using the IP address in logs, causing the proxy host (not the true origin) to surface as src_ip</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceName !in~ (&quot;ti-scanner01&quot;,&quot;threatintel-sandbox&quot;) // exclude sanctioned IOC-validation hosts if present</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the internal src host/process making the connection (InitiatingProcessFileName / ContextImageFileName) and whether the port is a relay port (99/2222/8088); pull the full network history for that host to these IPs. 2) Contain: block all four ORB IPs at the perimeter firewall/EDR, network-isolate the beaconing host, and preserve the initiating binary for hashing. 3) Hunt: sweep for LONGLEASH SHA256 755fcee1..., check any internet-facing ASUS AiCloud (CVE-2025-2492) / Ruckus routers for iptables ALLOW rules and listeners on ports 99/2222/8088, and pivot on any host that also received inbound from these IPs.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-08-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-08-uc0-sentinel">Sentinel KQL</button>
@@ -4377,30 +4377,31 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-08-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-08-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-08-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP in (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)
-| extend OrbPort = iff(RemotePort in (99,2222,8088), &quot;campaign-port&quot;, &quot;other&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, OrbPort, RemoteUrl, LocalIP, ActionType
+    <div class="tab-content active" id="art-08-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let orbIPs = dynamic([&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;]);
+DeviceNetworkEvents
+| where Timestamp &gt; ago(14d)
+| where RemoteIP in (orbIPs)
+| extend RelayPortMatch = RemotePort in (99, 2222, 8088)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RelayPortMatch, RemoteUrl, LocalIP, ActionType
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(30d)
-| where SourceIP in (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)
-   or DestinationIP in (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)
-| extend OrbPort = iff(toint(DestinationPort) in (99,2222,8088), &quot;campaign-port&quot;, &quot;other&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, OrbPort, DeviceAction, RequestURL
+    <div class="tab-content" id="art-08-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let orbIPs = dynamic([&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;]);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(14d)
+| where DestinationIP in (orbIPs)
+| extend RelayPortMatch = DestinationPort in (99, 2222, 8088)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourceHostName, DestinationIP, DestinationPort, RelayPortMatch, RequestClientApplication, ApplicationProtocol, DeviceAction
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-7810 ORB Network C2 IP Connection
-id: 6f3a1c2e-8b44-4d19-9a1e-0d7e5c9b2a11
-description: Detects network connections to UAT-7810 Operational Relay Box C2/payload IPs (LONGLEASH/DOGLEASH campaign).
+    <div class="tab-content" id="art-08-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to UAT-7810 ORB C2 Infrastructure
+id: 6f2a1d84-9c3e-4b7a-8e21-0d5f7c9a1b34
+description: Detects egress to the four confirmed UAT-7810 Operational Relay Box IPs hosting LONGLEASH/DOGLEASH C2 relays
 references:
   - https://blog.talosintelligence.com/uat-7810/
-  - https://blog.talosintelligence.com/winning-54-of-the-time/
+  - https://thehackernews.com/2026/07/china-linked-uat-7810-expands-orb.html
 author: SOC Detection Engineering
 date: 2026/07/10
 tags:
   - attack.command_and_control
-  - attack.t1090.002
+  - attack.t1090.003
   - attack.t1571
 logsource:
   category: network_connection
@@ -4413,61 +4414,134 @@ detection:
       - &#x27;217.15.164.147&#x27;
       - &#x27;95.182.100.231&#x27;
   condition: selection
-falsepositives:
-  - Security scanning or threat-intel validation from a sanctioned host
 level: high</code></pre></div>
     <div class="tab-content" id="art-08-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(194.233.92.26 OR 217.15.160.247 OR 217.15.164.147 OR 95.182.100.231)</code></pre></div>
-    <div class="tab-content" id="art-08-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(194\.233\.92\.26|217\.15\.160\.247|217\.15\.164\.147|95\.182\.100\.231)$/
+    <div class="tab-content" id="art-08-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 (RemoteAddressIP4=/^194\.233\.92\.26$/ OR RemoteAddressIP4=/^217\.15\.160\.247$/ OR RemoteAddressIP4=/^217\.15\.164\.147$/ OR RemoteAddressIP4=/^95\.182\.100\.231$/)
 | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
     <div class="tab-content" id="art-08-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, action, bytes
-| filter dstAddr in [&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;] or srcAddr in [&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;]
-| stats count(*) as flows, sum(bytes) as totalBytes by srcAddr, dstAddr, dstPort, action
-| sort flows desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;) OR All_Traffic.src_ip IN (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval orb_port=if(dest_port IN (99,2222,8088),&quot;yes&quot;,&quot;no&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre><pre class="spl-mode-body" id="art-08-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;) OR All_Traffic.src_ip IN (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval orb_port=if(dest_port IN (99,2222,8088),&quot;yes&quot;,&quot;no&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre></div></div>
+fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
+| filter dstAddr in [&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;]
+| stats sum(bytes) as totalBytes, count(*) as flows by srcAddr, dstAddr, dstPort, action
+| sort totalBytes desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval relay_port=if(dest_port IN (&quot;99&quot;,&quot;2222&quot;,&quot;8088&quot;),&quot;UAT7810_relay_port&quot;,&quot;other&quot;) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-08-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval relay_port=if(dest_port IN (&quot;99&quot;,&quot;2222&quot;,&quot;8088&quot;),&quot;UAT7810_relay_port&quot;,&quot;other&quot;) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="f105dba5a9" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="058dbee8dd" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">UAT-7810 LONGLEASH / JARLEASH / LEASHTEST backdoor hash on host</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Inbound access from UAT-7810 infrastructure to internet-facing edge assets</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f105dba5a9" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="058dbee8dd" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts when any file-write or process execution matches the published SHA256 hashes for UAT-7810&#x27;s LONGLEASH backdoor, LEASHTEST probe, or JARLEASH Java backdoor (config, startup script and samples). These are the group&#x27;s covert implant binaries; a match on any managed endpoint or Linux server indicates a staged or landed implant.
+    <div class="uc-desc">Hunts inbound connections sourced from the four UAT-7810 IPs against internet-facing devices — the same infrastructure used to exploit n-day flaws in Ruckus (CVE-2020-22653/22658, CVE-2023-25717) and ASUS AiCloud (CVE-2025-2492) routers. Surfaces the initial-access/exploitation attempt from the actor&#x27;s staging servers.
 
-Rationale: Uses exact SHA256 hashes from the Talos UAT-7810 IOC package (LONGLEASH 755fcee..., LEASHTEST 1b5649..., JARLEASH config/startup/samples). Hash matches are zero-FP unless the sample is in a sanctioned analysis sandbox. Datadog/CloudWatch left empty — these are ELF/router implants that don&#x27;t ship SHA256 through those pipelines.
+Rationale: Uses the same four confirmed staging IPs (Talos IOC list) but pivots on source direction against internet-facing assets, mapping to the T1190 router-exploitation vector (CVE-2025-2492 ASUS AiCloud auth bypass corroborated by ASUS PSIRT/BleepingComputer); inbound from dedicated actor IPs is inherently high-signal.
 
 Cross-checked against:
   • https://blog.talosintelligence.com/uat-7810/
-  • https://thehackernews.com/2026/07/china-linked-uat-7810-expands-orb.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Malware-analysis workstation or reverse-engineering VM holding the samples</li><li>EDR/AV quarantine store containing a captured copy of the binary</li><li>Threat-intel repository or IOC-validation host syncing the samples</li><li>Backup/forensic image mount surfacing the file hash</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceName !in~ (&quot;malware-analysis-vm&quot;, &quot;ir-sandbox01&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the hash match, the file path, and the writing process; determine whether the host is a sanctioned analysis box (whitelist) or a production/edge asset. 2) Contain: isolate the host, preserve the binary and surrounding directory, and block the hashes org-wide; on Linux/router assets capture running processes before power state changes. 3) Hunt: correlate the host against UC1&#x27;s four C2 IPs, search for JARLEASH startup scripts and Simplified-Chinese-commented config files, and review edge-device patch state for the named Ruckus/ASUS CVEs.</div></details>
+  • https://www.bleepingcomputer.com/news/security/asus-warns-of-new-critical-auth-bypass-flaw-in-aicloud-routers/
+  • https://cybersecuritynews.com/china-nexus-hackers-exploit-ruckus-routers/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Opportunistic internet background scanning from a VPS IP later attributed to the actor range but hitting an unrelated service</li><li>IP re-provisioned to a benign tenant after infrastructure takedown</li><li>Sanctioned external pentest re-using an overlapping hosting IP</li><li>Firewall logging the NAT/proxy address rather than the true external source</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceAction !in~ (&quot;deny&quot;,&quot;drop&quot;,&quot;blocked&quot;) // prioritise connections the firewall actually permitted</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: determine which internet-facing asset (DestinationIP/DestinationHostName) was contacted and whether it is a Ruckus/ASUS edge device or exposed service; check DeviceAction (allow vs deny) and any RequestURL for exploit patterns. 2) Contain: block the four source IPs at the perimeter, and if the target is an ASUS AiCloud/Ruckus device, take it offline or disable WAN-facing services and confirm firmware patch level for CVE-2025-2492 / CVE-2023-25717. 3) Hunt: inspect the device for iptables ALLOW rules on ports 99/2222/8088, unexpected listeners, and outbound to the ORB IPs (UC1); review auth/access logs on the device for the crafted unauthenticated request.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-08-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-08-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-08-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-08-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-08-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-08-uc1-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-08-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-08-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let uatHashes = dynamic([&quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;,&quot;1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823&quot;,&quot;3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1&quot;,&quot;e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c&quot;,&quot;324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257&quot;,&quot;bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf&quot;]);
-union
-  (DeviceFileEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (uatHashes) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
-  (DeviceProcessEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (uatHashes) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
+    <div class="tab-content active" id="art-08-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let orbIPs = dynamic([&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;]);
+DeviceNetworkEvents
+| where Timestamp &gt; ago(14d)
+| where RemoteIP in (orbIPs)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| project Timestamp, DeviceName, LocalIP, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, ActionType
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let uatHashes = dynamic([&quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;,&quot;1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823&quot;,&quot;3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1&quot;,&quot;e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c&quot;,&quot;324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257&quot;,&quot;bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf&quot;]);
+    <div class="tab-content" id="art-08-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let orbIPs = dynamic([&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;]);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(14d)
+| where SourceIP in (orbIPs)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationHostName, DestinationPort, RequestURL, ApplicationProtocol, DeviceAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Inbound Connection From UAT-7810 Staging Infrastructure
+id: b1c47e29-5a0d-4f36-9c88-7e2a3d61f0aa
+description: Detects inbound traffic sourced from the four UAT-7810 IPs used to exploit Ruckus/ASUS edge devices
+references:
+  - https://blog.talosintelligence.com/uat-7810/
+  - https://www.bleepingcomputer.com/news/security/asus-warns-of-new-critical-auth-bypass-flaw-in-aicloud-routers/
+author: SOC Detection Engineering
+date: 2026/07/10
+tags:
+  - attack.initial_access
+  - attack.t1190
+logsource:
+  category: firewall
+detection:
+  selection:
+    src_ip:
+      - &#x27;194.233.92.26&#x27;
+      - &#x27;217.15.160.247&#x27;
+      - &#x27;217.15.164.147&#x27;
+      - &#x27;95.182.100.231&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @SourceIp:(194.233.92.26 OR 217.15.160.247 OR 217.15.164.147 OR 95.182.100.231)</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ConnectionDirection=1 (RemoteAddressIP4=/^194\.233\.92\.26$/ OR RemoteAddressIP4=/^217\.15\.160\.247$/ OR RemoteAddressIP4=/^217\.15\.164\.147$/ OR RemoteAddressIP4=/^95\.182\.100\.231$/)
+| groupBy([aid, ComputerName, LocalAddressIP4, LocalPort, RemoteAddressIP4], function=count())</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
+fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action
+| filter srcAddr in [&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;]
+| sort @timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src_ip IN (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-08-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src_ip IN (&quot;194.233.92.26&quot;,&quot;217.15.160.247&quot;,&quot;217.15.164.147&quot;,&quot;95.182.100.231&quot;)) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="376afa8d0b" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">LONGLEASH backdoor binary (SHA256) present on managed hosts</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="376afa8d0b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for the confirmed LONGLEASH implant hash on any EDR-monitored host (including Linux/MDE) via file-write or process-execution telemetry. LONGLEASH is UAT-7810&#x27;s upgraded SHORTLEASH backdoor providing reverse shell and HTTP/DNS/SOCKS/ICMP proxying; its presence on any corporate asset is a confirmed compromise.
+
+Rationale: Exact SHA256 (755fcee1...) for LONGLEASH pulled from the Talos blog IOC section; a single hardcoded hash match is definitionally high-fidelity and non-generic. Datadog/CloudWatch left empty because the implant is a Linux/MIPS binary that lives on router/Linux hosts observed through EDR file/process telemetry, not CloudTrail or Windows Sysmon hash streams.
+
+Cross-checked against:
+  • https://blog.talosintelligence.com/uat-7810/
+  • https://thehackernews.com/2026/07/china-linked-uat-7810-expands-orb.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Proxy: Multi-hop Proxy">T1090.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>EDR/AV sample submission or cloud-detonation host holding the collected sample</li><li>Malware-research or IR analyst copying the artifact to a jump box for analysis</li><li>Backup/quarantine subsystem writing the file into a vaulted path</li><li>Threat-intel enrichment pipeline caching the binary for hashing</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;,&quot;malware-lab&quot;,&quot;ir-jumpbox&quot;) or FolderPath has_any (&quot;/quarantine/&quot;,&quot;\\Quarantine\\&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host and path where the hash landed, the writing/executing process, and whether the host is a router-adjacent Linux system or an analyst sandbox; check for a listener bound to ports 99/2222/8088. 2) Contain: isolate the host, kill the LONGLEASH process, capture memory, and remove any iptables ALLOW rules and startup-script persistence. 3) Hunt: pivot to network telemetry for connections to the four ORB IPs (UC1), search neighbouring edge devices for the same hash and for DOGLEASH/JARLEASH artifacts, and validate that exposed ASUS AiCloud/Ruckus routers are patched.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-08-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-08-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-08-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-08-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-08-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-08-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let leashHash = &quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;;
+union
+  (DeviceFileEvents | where Timestamp &gt; ago(30d) | where SHA256 == leashHash | project Timestamp, DeviceName, EventKind=&quot;FileEvent&quot;, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+  (DeviceProcessEvents | where Timestamp &gt; ago(30d) | where SHA256 == leashHash | project Timestamp, DeviceName, EventKind=&quot;ProcessEvent&quot;, ActionType=&quot;ProcessCreated&quot;, FileName, FolderPath, SHA256, InitiatingProcessFileName=InitiatingProcessFileName, InitiatingProcessCommandLine=ProcessCommandLine)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let leashHash = &quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;;
 ImFileEvent
 | where TimeGenerated &gt; ago(30d)
-| where TargetFileSHA256 in~ (uatHashes)
-| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
+| where TargetFileSHA256 =~ leashHash
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-7810 LONGLEASH/JARLEASH/LEASHTEST Backdoor Hash
-id: b2d47f19-6c3a-4e88-a5f2-1c9e0a4b7d33
-description: Detects file events matching UAT-7810 implant SHA256 hashes (LONGLEASH, LEASHTEST, JARLEASH).
+    <div class="tab-content" id="art-08-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: LONGLEASH Backdoor Hash Observed (UAT-7810)
+id: 3d9f80c1-6e42-4a15-b7d3-1c8a5f2e4b90
+description: Detects the confirmed LONGLEASH implant SHA256 on host telemetry
 references:
   - https://blog.talosintelligence.com/uat-7810/
 author: SOC Detection Engineering
@@ -4475,64 +4549,17 @@ date: 2026/07/10
 tags:
   - attack.command_and_control
   - attack.t1105
+  - attack.t1090.003
 logsource:
   category: file_event
 detection:
   selection:
-    SHA256:
-      - &#x27;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&#x27;
-      - &#x27;1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823&#x27;
-      - &#x27;3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1&#x27;
-      - &#x27;e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c&#x27;
-      - &#x27;324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257&#x27;
-      - &#x27;bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf&#x27;
+    SHA256: &#x27;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&#x27;
   condition: selection
-falsepositives:
-  - Sanctioned malware-analysis or IOC-validation host holding the samples
 level: high</code></pre></div>
-    <div class="tab-content" id="art-08-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten SHA256HashData=/^(755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f|1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823|3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1|e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c|324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257|bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf)$/i
-| groupBy([aid, ComputerName, TargetFileName, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-08-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_hash IN (&quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;,&quot;1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823&quot;,&quot;3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1&quot;,&quot;e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c&quot;,&quot;324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257&quot;,&quot;bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf&quot;) by Endpoint.Filesystem.dest Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-08-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_hash IN (&quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;,&quot;1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823&quot;,&quot;3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1&quot;,&quot;e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c&quot;,&quot;324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257&quot;,&quot;bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf&quot;) by Endpoint.Filesystem.dest Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0766e0f6a4" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Ruckus/ASUS edge devices exposed to UAT-7810 n-day router CVEs</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0766e0f6a4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces managed devices whose vulnerability inventory reports the specific Ruckus (CVE-2020-22653, CVE-2020-22658, CVE-2023-25717) or ASUS AiCloud (CVE-2025-2492) flaws UAT-7810 exploits for initial access. This is the exposure-hunting pivot behind Talos&#x27;s guidance to fully patch edge devices before they are recruited into the ORB.
-
-Rationale: Uses the exact four CVEs (CVE-2020-22653/22658, CVE-2023-25717 Ruckus; CVE-2025-2492 ASUS AiCloud) named in the Talos report and confirmed via NVD and The Hacker News. Directly operationalises the article&#x27;s remediation guidance to patch Ruckus/ASUS edge devices.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2025-2492
-  • https://nvd.nist.gov/vuln/detail/cve-2023-25717
-  • https://blog.talosintelligence.com/uat-7810/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Device already patched but scanner inventory is stale (rescan resolves)</li><li>Isolated lab/test router intentionally kept vulnerable</li><li>Vendor firmware version string mismatch causing an over-report</li><li>Decommissioned device still lingering in the asset inventory</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the device is a real internet-facing Ruckus/ASUS router (not a false-positive inventory string) and validate current firmware vs the fixed version. 2) Contain: prioritise patching/firmware update, restrict AiCloud/web-management exposure to the internet, and rotate admin credentials. 3) Hunt: for any device that was exposed, check UC1 for connections to the four ORB C2 IPs and UC2 for LONGLEASH/JARLEASH implants to determine whether exposure became compromise.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-08-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-08-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-08-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-08-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId in (&quot;CVE-2020-22653&quot;,&quot;CVE-2020-22658&quot;,&quot;CVE-2023-25717&quot;,&quot;CVE-2025-2492&quot;)
-| summarize arg_max(Timestamp, *) by DeviceId, CveId
-| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by CveId asc</code></pre></div>
-    <div class="tab-content" id="art-08-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId in (&quot;CVE-2020-22653&quot;,&quot;CVE-2020-22658&quot;,&quot;CVE-2023-25717&quot;,&quot;CVE-2025-2492&quot;)
-| summarize arg_max(TimeGenerated, *) by DeviceId, CveId
-| project TimeGenerated, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by CveId asc</code></pre></div>
-    <div class="tab-content" id="art-08-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2020-22653&quot;,&quot;CVE-2020-22658&quot;,&quot;CVE-2023-25717&quot;,&quot;CVE-2025-2492&quot;) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)` | sort - count</code></pre><pre class="spl-mode-body" id="art-08-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2020-22653&quot;,&quot;CVE-2020-22658&quot;,&quot;CVE-2023-25717&quot;,&quot;CVE-2025-2492&quot;) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)` | sort - count</code></pre></div></div>
+    <div class="tab-content" id="art-08-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 SHA256HashData=/^755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f$/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-08-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash=&quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-08-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash=&quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
