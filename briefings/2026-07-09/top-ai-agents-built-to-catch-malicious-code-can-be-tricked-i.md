@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Poisoned repo drop: security.sh + disguised 'code_policies' Go binary on host
 
-`UC_40_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_45_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### AI coding agent (Claude Code / Codex) executing README-suggested security.sh
 
-`UC_40_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_45_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Disguised 'code_policies' payload binary executed (masquerades as Go build)
 
-`UC_40_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_45_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### AI coding agent executes a repo-local binary during autonomous review (Friendly Fire port)
 
-`UC_40_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_45_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Top AI Agents Built to Catch Malicious Code Can Be Tricked Into Running It
 
-`UC_40_8` · phase: **exploit** · confidence: **High**
+`UC_45_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

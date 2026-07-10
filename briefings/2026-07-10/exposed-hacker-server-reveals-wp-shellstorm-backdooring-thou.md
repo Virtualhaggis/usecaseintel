@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### VShell backdoor masquerading as Linux kernel thread [kworker/0:2]
 
-`UC_7_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_12_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### Nacos auth bypass via spoofed 'Nacos-Server' User-Agent (CVE-2021-29441)
 
-`UC_7_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_12_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### WordPress/Joomla webshell (down.php / BestShell) written by web-server account
 
-`UC_7_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceFileEvents
 
 ### Web-server process spawning shell/recon binaries (webshell command execution)
 
-`UC_7_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_12_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable OpenSSL 3.0.0–3.0.6 exposure (CVE-2022-3602 / CVE-2022-3786, 'SpookySSL')
 
-`UC_1912_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1914_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Add a SECURITY.md file to your Azure Repos
 
-`UC_3502_0` · phase: **exploit** · confidence: **High**
+`UC_3504_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-facing Zimbra Collaboration exposed to Classic Web Client XSS (10.1.19 / CVE-2025-66376 / CVE-2025-48700)
 
-`UC_5_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceTvmSoftwareInventory
 
 ### Zimbra webmail mailbox mass-scrape via burst of /service/soap requests (GhostMail post-XSS collection)
 
-`UC_5_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

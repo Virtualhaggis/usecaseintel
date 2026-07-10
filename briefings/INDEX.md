@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2568 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2571 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,14 +10,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-10
 - [attackers exploit ill bloom vulnerability to drain over 5 mi](./2026-07-10/attackers-exploit-ill-bloom-vulnerability-to-drain-over-5-mi.md)
+- [cisa kev cve 2026 48939 icagenda unrestricted upload of file](./2026-07-10/cisa-kev-cve-2026-48939-icagenda-unrestricted-upload-of-file.md)
+- [cisa kev cve 2026 56291 balbooa forms unrestricted upload of](./2026-07-10/cisa-kev-cve-2026-56291-balbooa-forms-unrestricted-upload-of.md)
 - [exposed hacker server reveals wp shellstorm backdooring thou](./2026-07-10/exposed-hacker-server-reveals-wp-shellstorm-backdooring-thou.md)
 - [former ransomware negotiator gets 4 years for blackcat attac](./2026-07-10/former-ransomware-negotiator-gets-4-years-for-blackcat-attac.md)
 - [from 17 000 to 1 1 million assets how lumen technologies reb](./2026-07-10/from-17-000-to-1-1-million-assets-how-lumen-technologies-reb.md)
+- [hackers exploit critical auth bypass in gitea docker image](./2026-07-10/hackers-exploit-critical-auth-bypass-in-gitea-docker-image.md)
 - [hackers use fake microsoft entra passkey enrollment to gain ](./2026-07-10/hackers-use-fake-microsoft-entra-passkey-enrollment-to-gain-.md)
 - [laser attack resets tangem wallet passwords on cards that ca](./2026-07-10/laser-attack-resets-tangem-wallet-passwords-on-cards-that-ca.md)
 - [new modbeacon rat uses grpc streaming for encrypted c2 traff](./2026-07-10/new-modbeacon-rat-uses-grpc-streaming-for-encrypted-c2-traff.md)
+- [police suspects dutch hackers were involved in odido breach](./2026-07-10/police-suspects-dutch-hackers-were-involved-in-odido-breach.md)
+- [progress urges sharefile admins to shut down servers over cr](./2026-07-10/progress-urges-sharefile-admins-to-shut-down-servers-over-cr.md)
 - [ransomware negotiator gets 70 months in prison for aiding bl](./2026-07-10/ransomware-negotiator-gets-70-months-in-prison-for-aiding-bl.md)
 - [researcher details whatsapp to host attack chain using three](./2026-07-10/researcher-details-whatsapp-to-host-attack-chain-using-three.md)
+- [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
 - [study of 281 free android vpn apps finds traffic leaks unenc](./2026-07-10/study-of-281-free-android-vpn-apps-finds-traffic-leaks-unenc.md)
 - [the replicant in your directory ai agents and the identity s](./2026-07-10/the-replicant-in-your-directory-ai-agents-and-the-identity-s.md)
 - [unpatched xring flaw in xquic lets remote clients crash http](./2026-07-10/unpatched-xring-flaw-in-xquic-lets-remote-clients-crash-http.md)
@@ -36,7 +42,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [goddamn ransomware uses poisonx driver to disable endpoint d](./2026-07-09/goddamn-ransomware-uses-poisonx-driver-to-disable-endpoint-d.md)
 - [injective sdk on npm infected with cryptocurrency wallet ste](./2026-07-09/injective-sdk-on-npm-infected-with-cryptocurrency-wallet-ste.md)
 - [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
-- [microsoft patches rogueplanet defender zero day vulnerabilit](./2026-07-09/microsoft-patches-rogueplanet-defender-zero-day-vulnerabilit.md)
 - [new forg365 phishing platform uses ai to target microsoft 36](./2026-07-09/new-forg365-phishing-platform-uses-ai-to-target-microsoft-36.md)
 - [new gigawiper windows backdoor bundles disk wiping fake rans](./2026-07-09/new-gigawiper-windows-backdoor-bundles-disk-wiping-fake-rans.md)
 - [new helix vishing group emerges in sharepoint data theft att](./2026-07-09/new-helix-vishing-group-emerges-in-sharepoint-data-theft-att.md)
@@ -54,7 +59,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china linked uat 7810 expands orb network with new longleash](./2026-07-08/china-linked-uat-7810-expands-orb-network-with-new-longleash.md)
 - [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
-- [fake paysafe skrill sdks on npm and pypi steal credentials](./2026-07-08/fake-paysafe-skrill-sdks-on-npm-and-pypi-steal-credentials.md)
 - [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
 - [ghsa critical cve 2026 53649 joro unauthenticated cross orig](./2026-07-08/ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig.md)
 - [github copilot refuses harmful requests in chat then writes ](./2026-07-08/github-copilot-refuses-harmful-requests-in-chat-then-writes-.md)
@@ -192,7 +196,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48714 i18next http middleware missing](./2026-06-25/ghsa-critical-cve-2026-48714-i18next-http-middleware-missing.md)
 - [ghsa critical cve 2026 55166 lemur acme ssrf creator equalit](./2026-06-25/ghsa-critical-cve-2026-55166-lemur-acme-ssrf-creator-equalit.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
-- [photo zip campaign targeting hospitality industry delivers n](./2026-06-25/photo-zip-campaign-targeting-hospitality-industry-delivers-n.md)
 
 ## 2026-06-24
 - [compromised github action codfish semantic release action st](./2026-06-24/compromised-github-action-codfish-semantic-release-action-st.md)
