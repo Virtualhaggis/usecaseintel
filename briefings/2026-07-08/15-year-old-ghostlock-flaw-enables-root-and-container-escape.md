@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Host exposure to GhostLock IonStack kernel-to-root chain CVEs (CVE-2026-43499 et al.)
 
-`UC_49_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_51_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -53,7 +53,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Linux unprivileged process escalates to root without sudo/su/pkexec (kernel-LPE / container-escape shape)
 
-`UC_49_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_51_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

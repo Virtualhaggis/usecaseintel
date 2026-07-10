@@ -1,12 +1,17 @@
 # Briefings — full archive
 
-_2567 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2568 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-10
+- [attackers exploit ill bloom vulnerability to drain 3 1 milli](./2026-07-10/attackers-exploit-ill-bloom-vulnerability-to-drain-3-1-milli.md)
+- [former ransomware negotiator gets 4 years for blackcat attac](./2026-07-10/former-ransomware-negotiator-gets-4-years-for-blackcat-attac.md)
+- [ransomware negotiator gets 70 months in prison for aiding bl](./2026-07-10/ransomware-negotiator-gets-70-months-in-prison-for-aiding-bl.md)
 
 ## 2026-07-09
 - [ai attacks move in minutes join this webinar on building a d](./2026-07-09/ai-attacks-move-in-minutes-join-this-webinar-on-building-a-d.md)
@@ -102,12 +107,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-03
 - [armored likho digging a snake pit inside the covert busysnak](./2026-07-03/armored-likho-digging-a-snake-pit-inside-the-covert-busysnak.md)
-- [armored likho targets government agencies power sector with ](./2026-07-03/armored-likho-targets-government-agencies-power-sector-with-.md)
 - [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
 - [cyber readiness for smbs getting the basics right](./2026-07-03/cyber-readiness-for-smbs-getting-the-basics-right.md)
 - [new avalon malware framework packs crownx ransomware capabil](./2026-07-03/new-avalon-malware-framework-packs-crownx-ransomware-capabil.md)
 - [new bad epoll linux kernel flaw lets unprivileged users gain](./2026-07-03/new-bad-epoll-linux-kernel-flaw-lets-unprivileged-users-gain.md)
-- [north korea linked npm packages mimic rollup polyfills to st](./2026-07-03/north-korea-linked-npm-packages-mimic-rollup-polyfills-to-st.md)
 - [unpatched flaws disclosed in filesystem bundled into million](./2026-07-03/unpatched-flaws-disclosed-in-filesystem-bundled-into-million.md)
 
 ## 2026-07-02

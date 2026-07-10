@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Microsoft Defender engine (MsMpEng.exe) spawns shell/LOLBin — RoguePlanet CVE-2026-50656 exploitation
 
-`UC_18_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_21_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### Hosts running vulnerable Microsoft Malware Protection Engine below 1.1.26060.3008 (RoguePlanet exposure)
 
-`UC_18_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_21_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### RoguePlanet PoC (github.com/MSNightmare/RoguePlanet) download or execution
 
-`UC_18_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_21_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -235,7 +235,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI Attacks Move in Minutes. Join This Webinar on Building a Defense That Keeps U
 
-`UC_18_7` · phase: **exploit** · confidence: **High**
+`UC_21_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
