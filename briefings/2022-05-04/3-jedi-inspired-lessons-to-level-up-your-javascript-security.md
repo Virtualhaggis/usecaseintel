@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 3 Jedi-inspired lessons to level up your JavaScript security
 
-`UC_2238_2` · phase: **exploit** · confidence: **High**
+`UC_2239_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

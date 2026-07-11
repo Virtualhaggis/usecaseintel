@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ruby gem installations can expose you to lockfile injection attacks
 
-`UC_2045_1` · phase: **install** · confidence: **High**
+`UC_2046_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

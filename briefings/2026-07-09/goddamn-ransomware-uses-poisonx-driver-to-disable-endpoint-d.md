@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### PoisonX BYOVD kernel driver (g11.sys) load / drop by GodDamn ransomware
 
-`UC_53_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_55_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceImageLoadEvents
 
 ### Masquerading 'symantec.exe' user-mode EDR-killer (fake Symantec company info)
 
-`UC_53_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_55_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### NirSoft-based credential harvesting toolkit execution (browsers, VNC, Wi-Fi, mail, sniffer)
 
-`UC_53_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_55_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### AnyDesk deployed as silent auto-start service (GodDamn reusable installer)
 
-`UC_53_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_55_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### GodDamn ransomware mass file rename to .God8Damn extension
 
-`UC_53_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_55_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -460,7 +460,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GodDamn Ransomware Uses PoisonX Driver to Disable Endpoint Defenses
 
-`UC_53_10` · phase: **exploit** · confidence: **High**
+`UC_55_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

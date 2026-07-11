@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### UNC6395 Salesloft Drift OAuth abuse: Salesforce access from campaign Tor/API infra
 
-`UC_19_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_22_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ CloudAppEvents
 
 ### UNC6395 bulk SOQL export fan-out from Salesforce (mass record harvesting)
 
-`UC_19_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_22_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ CloudAppEvents
 
 ### UNC6395 follow-on AWS API use from Drift-harvested AKIA keys via Tor egress
 
-`UC_19_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_22_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

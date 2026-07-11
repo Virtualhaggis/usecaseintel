@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2576 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -22,11 +22,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54088 file browser command injection ](./2026-07-10/ghsa-critical-cve-2026-54088-file-browser-command-injection-.md)
 - [ghsa critical cve 2026 54089 file browser authentication byp](./2026-07-10/ghsa-critical-cve-2026-54089-file-browser-authentication-byp.md)
 - [ghsa critical ghsa 99j7 fhr2 xfj4 exploration was removed fr](./2026-07-10/ghsa-critical-ghsa-99j7-fhr2-xfj4-exploration-was-removed-fr.md)
+- [ghsa critical ghsa g936 7jqj mwv8 tsdproxy internal proxy au](./2026-07-10/ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au.md)
 - [hackers exploit critical auth bypass in gitea docker image](./2026-07-10/hackers-exploit-critical-auth-bypass-in-gitea-docker-image.md)
 - [hackers use fake microsoft entra passkey enrollment to gain ](./2026-07-10/hackers-use-fake-microsoft-entra-passkey-enrollment-to-gain-.md)
 - [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
 - [laser attack resets tangem wallet passwords on cards that ca](./2026-07-10/laser-attack-resets-tangem-wallet-passwords-on-cards-that-ca.md)
 - [new modbeacon rat uses grpc streaming for encrypted c2 traff](./2026-07-10/new-modbeacon-rat-uses-grpc-streaming-for-encrypted-c2-traff.md)
+- [no manners here the ruthless rise of the gentlemen ransomwar](./2026-07-10/no-manners-here-the-ruthless-rise-of-the-gentlemen-ransomwar.md)
 - [police suspects dutch hackers were involved in odido breach](./2026-07-10/police-suspects-dutch-hackers-were-involved-in-odido-breach.md)
 - [progress urges sharefile admins to shut down servers over cr](./2026-07-10/progress-urges-sharefile-admins-to-shut-down-servers-over-cr.md)
 - [ransomware negotiator gets 70 months in prison for aiding bl](./2026-07-10/ransomware-negotiator-gets-70-months-in-prison-for-aiding-bl.md)
@@ -253,7 +255,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
 - [ghsa critical cve 2026 58399 acastellon auth authentication ](./2026-06-18/ghsa-critical-cve-2026-58399-acastellon-auth-authentication-.md)
 - [ghsa critical ghsa 2jq4 q6vv 4cp3 crawl4ai arbitrary file wr](./2026-06-18/ghsa-critical-ghsa-2jq4-q6vv-4cp3-crawl4ai-arbitrary-file-wr.md)
-- [ghsa critical ghsa hxpf 9xvq wph8 netlicensing mcp rest path](./2026-06-18/ghsa-critical-ghsa-hxpf-9xvq-wph8-netlicensing-mcp-rest-path.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
@@ -332,11 +333,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-02
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
+- [dev machine guard now scans extensions across every modern i](./2026-06-02/dev-machine-guard-now-scans-extensions-across-every-modern-i.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-06-02/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [multiple redhat cloud services npm packages compromised](./2026-06-02/multiple-redhat-cloud-services-npm-packages-compromised.md)
 - [nx console vs code extension compromised](./2026-06-02/nx-console-vs-code-extension-compromised.md)
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
-- [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [why edr and proxy won t save you from supply chain malware](./2026-06-02/why-edr-and-proxy-won-t-save-you-from-supply-chain-malware.md)
 
 ## 2026-06-01

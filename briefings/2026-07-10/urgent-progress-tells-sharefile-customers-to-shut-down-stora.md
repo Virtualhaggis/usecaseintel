@@ -30,6 +30,7 @@ The company has temporarily disabled access to the affected accounts, a step it 
 - **T1569.002** — Service Execution
 - **T1505.003** — Server Software Component: Web Shell
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 
 ## Kill chain phases observed
 
@@ -37,35 +38,22 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ASPX web shell dropped into ShareFile StorageZones Controller webroot by w3wp
+### ShareFile Storage Zone Controller pre-auth exploit URIs in IIS logs (CVE-2026-2699/2701)
 
-`UC_10_6` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN ("created","modified","renamed")) (Filesystem.file_name IN ("*.aspx","*.ashx","*.asmx")) (Filesystem.file_path IN ("*\\inetpub\\wwwroot\\ShareFile\\*","*\\ShareFile\\StorageCenter\\*","*\\StorageCenter\\documentum\\*","*\\files\\ul-*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName endswith ".aspx" or FileName endswith ".ashx" or FileName endswith ".asmx"
-| where FolderPath has_any (@"\inetpub\wwwroot\ShareFile\", @"\ShareFile\StorageCenter\", @"\StorageCenter\documentum\", @"\files\ul-")
-| where InitiatingProcessFileName in~ ("w3wp.exe","ShareFile.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### ShareFile IIS worker (w3wp) spawning shell / recon LOLBins — web shell command execution
-
-`UC_10_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_13_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="w3wp.exe") (Processes.parent_process IN ("*ShareFile*","*StorageZone*","*StorageCenter*","*documentum*")) (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","net.exe","net1.exe","whoami.exe","nltest.exe","certutil.exe","bitsadmin.exe","curl.exe","reg.exe","systeminfo.exe","ipconfig.exe")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/ConfigService/Admin.aspx*" OR Web.url="*/ConfigService/api/StroageZoneConfig*" OR Web.url="*/documentum/upload.aspx*" OR (Web.url="*/upload.aspx*" AND Web.url="*unzip*")) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+### ShareFile Storage Zone Controller IIS worker (w3wp.exe) spawns shell/recon child
+
+`UC_13_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="w3wp.exe") (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","whoami.exe","ipconfig.exe","systeminfo.exe","nltest.exe","hostname.exe","tasklist.exe","cscript.exe","wscript.exe","certutil.exe","bitsadmin.exe","curl.exe","reg.exe","sc.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -73,19 +61,29 @@ DeviceFileEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where InitiatingProcessFileName =~ "w3wp.exe"
-| where InitiatingProcessCommandLine has_any ("ShareFile","StorageZone","StorageCenter","documentum")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","net.exe","net1.exe","whoami.exe","nltest.exe","certutil.exe","bitsadmin.exe","curl.exe","reg.exe","systeminfo.exe","ipconfig.exe")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, SHA256
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","whoami.exe","ipconfig.exe","systeminfo.exe","nltest.exe","hostname.exe","tasklist.exe","cscript.exe","wscript.exe","certutil.exe","bitsadmin.exe","curl.exe","reg.exe","sc.exe")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Pre-auth exploitation requests to ShareFile StorageZones Controller upload endpoints
+### ASPX webshell written under ShareFile Storage Zone Controller storage path
 
-`UC_10_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_13_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*documentum/upload.aspx*","*/documentum/*.aspx*") OR Web.uri_path IN ("*documentum*upload.aspx*","*/documentum/*")) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=created) (Filesystem.file_path="*\\StorageCenter\\*") (Filesystem.file_name="*.aspx" OR Filesystem.file_name="*.ashx" OR Filesystem.file_name="*.asmx" OR Filesystem.file_name="*.asp") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FolderPath has @"\StorageCenter\"
+| where FileName endswith ".aspx" or FileName endswith ".ashx" or FileName endswith ".asmx" or FileName endswith ".asp"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -236,4 +234,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

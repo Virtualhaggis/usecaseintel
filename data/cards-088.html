@@ -1,26 +1,27 @@
-<article class="card" id="art-2841" data-art-slug="2021-11-03-cisa-kev-cve-2021-21166-google-chromium-race-condition-vulne"
+<article class="card" id="art-2841" data-art-slug="2021-11-03-cisa-kev-cve-2020-16010-google-chrome-for-android-ui-heap-bu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
+  data-techs="T1190"
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-21166 — Google Chromium Race Condition Vulnerability Google Chromium contains a race condition vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2021-11-17. CVE-2021-21166  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2020-16010 — Google Chrome for Android UI Heap Buffer Overflow Vulnerability Google Chrome uses FreeType, an open-source software library to render fonts, which contains a heap buffer overflow vulnerability in the function Load_SBit_Png when processing PNG images embedded into fonts. This vulnerability is part of an exploit chain with CVE-2020-17087 on Windows and CVE-2020-16010 on Android. Vendor: Google, Product: Chrome FreeType. Federal patch due: 2021-11-17. CVE-2020-15999 CVE-2020-17087 CVE-2020-16010 CVE-2020-16009 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21166-google-chromium-race-condition-vulne" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-16010-google-chrome-for-android-ui-heap-bu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21166 — Google Chromium Race Condition Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-16010 — Google Chrome for Android UI Heap Buffer Overflow Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
     <span>1 use case</span>
-    <span>0 techniques</span>
+    <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium contains a race condition vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21166</span></div>
+  <p class="summary">Google Chrome uses FreeType, an open-source software library to render fonts, which contains a heap buffer overflow vulnerability in the function Load_SBit_Png when processing PNG images embedded into fonts. This vulnerability is part of an exploit chain with CVE-2020-17087 on Windows and CVE-2020-16010 on Android. Vendor: Google, Product: Chrome FreeType. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-15999</span> <span class="ind cve">CVE-2020-17087</span> <span class="ind cve">CVE-2020-16010</span> <span class="ind cve">CVE-2020-16009</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2841-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2841"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -93,7 +94,7 @@
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21166&quot;)
+| where CveId in~ (&quot;CVE-2020-15999&quot;, &quot;CVE-2020-17087&quot;, &quot;CVE-2020-16010&quot;, &quot;CVE-2020-16009&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -104,7 +105,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21166&quot;)
+| where CveId in~ (&quot;CVE-2020-15999&quot;, &quot;CVE-2020-17087&quot;, &quot;CVE-2020-16010&quot;, &quot;CVE-2020-16009&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -112,19 +113,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2841-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2841-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2841-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2841-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21166&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-15999&quot;, &quot;CVE-2020-17087&quot;, &quot;CVE-2020-16010&quot;, &quot;CVE-2020-16009&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2841-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21166&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-15999&quot;, &quot;CVE-2020-17087&quot;, &quot;CVE-2020-16010&quot;, &quot;CVE-2020-16009&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2842" data-art-slug="2021-11-03-cisa-kev-cve-2020-16017-google-chrome-use-after-free-vulnera"
+<article class="card" id="art-2842" data-art-slug="2021-11-03-cisa-kev-cve-2021-21166-google-chromium-race-condition-vulne"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -132,12 +133,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2020-16017 — Google Chrome Use-After-Free Vulnerability Google Chrome contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page.   Vendor: Google, Product: Chrome. Federal patch due: 2022-05-03. CVE-2020-16017  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-21166 — Google Chromium Race Condition Vulnerability Google Chromium contains a race condition vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2021-11-17. CVE-2021-21166  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-16017-google-chrome-use-after-free-vulnera" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21166-google-chromium-race-condition-vulne" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-16017 — Google Chrome Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21166 — Google Chromium Race Condition Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -145,8 +146,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chrome contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page.   Vendor: Google, Product: Chrome. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-16017</span></div>
+  <p class="summary">Google Chromium contains a race condition vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21166</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2842-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2842"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -219,7 +220,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-16017&quot;)
+| where CveId in~ (&quot;CVE-2021-21166&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -230,7 +231,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-16017&quot;)
+| where CveId in~ (&quot;CVE-2021-21166&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -238,19 +239,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2842-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2842-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2842-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2842-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-16017&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21166&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2842-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-16017&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21166&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2843" data-art-slug="2021-11-03-cisa-kev-cve-2021-37976-google-chromium-information-disclosu"
+<article class="card" id="art-2843" data-art-slug="2021-11-03-cisa-kev-cve-2020-16017-google-chrome-use-after-free-vulnera"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -258,12 +259,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-37976 — Google Chromium Information Disclosure Vulnerability Google Chromium contains an information disclosure vulnerability within the core memory component that allows a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2021-11-17. CVE-2021-37976  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2020-16017 — Google Chrome Use-After-Free Vulnerability Google Chrome contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page.   Vendor: Google, Product: Chrome. Federal patch due: 2022-05-03. CVE-2020-16017  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-37976-google-chromium-information-disclosu" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-16017-google-chrome-use-after-free-vulnera" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-37976 — Google Chromium Information Disclosure Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-16017 — Google Chrome Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -271,8 +272,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium contains an information disclosure vulnerability within the core memory component that allows a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-37976</span></div>
+  <p class="summary">Google Chrome contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page.   Vendor: Google, Product: Chrome. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-16017</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2843-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2843"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -345,7 +346,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-37976&quot;)
+| where CveId in~ (&quot;CVE-2020-16017&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -356,7 +357,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-37976&quot;)
+| where CveId in~ (&quot;CVE-2020-16017&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -364,19 +365,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2843-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2843-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2843-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2843-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-37976&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-16017&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2843-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-37976&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-16017&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2844" data-art-slug="2021-11-03-cisa-kev-cve-2020-16009-google-chromium-v8-type-confusion-vu"
+<article class="card" id="art-2844" data-art-slug="2021-11-03-cisa-kev-cve-2021-37976-google-chromium-information-disclosu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -384,12 +385,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2020-16009 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03. CVE-2020-16009  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-37976 — Google Chromium Information Disclosure Vulnerability Google Chromium contains an information disclosure vulnerability within the core memory component that allows a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2021-11-17. CVE-2021-37976  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-16009-google-chromium-v8-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-37976-google-chromium-information-disclosu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-16009 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-37976 — Google Chromium Information Disclosure Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -397,8 +398,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-16009</span></div>
+  <p class="summary">Google Chromium contains an information disclosure vulnerability within the core memory component that allows a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-37976</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2844-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2844"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -471,7 +472,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-16009&quot;)
+| where CveId in~ (&quot;CVE-2021-37976&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -482,7 +483,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-16009&quot;)
+| where CveId in~ (&quot;CVE-2021-37976&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -490,19 +491,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2844-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2844-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2844-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2844-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-16009&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-37976&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2844-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-16009&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-37976&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2845" data-art-slug="2021-11-03-cisa-kev-cve-2021-30632-google-chromium-v8-out-of-bounds-wri"
+<article class="card" id="art-2845" data-art-slug="2021-11-03-cisa-kev-cve-2020-16009-google-chromium-v8-type-confusion-vu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -510,12 +511,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-30632 — Google Chromium V8 Out-of-Bounds Write Vulnerability Google Chromium V8 Engine contains an out-of-bounds write vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-30632 CVE-2021-30633  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2020-16009 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03. CVE-2020-16009  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30632-google-chromium-v8-out-of-bounds-wri" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-16009-google-chromium-v8-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30632 — Google Chromium V8 Out-of-Bounds Write Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-16009 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -523,8 +524,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains an out-of-bounds write vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30632</span> <span class="ind cve">CVE-2021-30633</span></div>
+  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-16009</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2845-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2845"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -597,7 +598,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30632&quot;, &quot;CVE-2021-30633&quot;)
+| where CveId in~ (&quot;CVE-2020-16009&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -608,7 +609,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30632&quot;, &quot;CVE-2021-30633&quot;)
+| where CveId in~ (&quot;CVE-2020-16009&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -616,19 +617,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2845-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2845-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2845-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2845-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30632&quot;, &quot;CVE-2021-30633&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-16009&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2845-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30632&quot;, &quot;CVE-2021-30633&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-16009&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2846" data-art-slug="2021-11-03-cisa-kev-cve-2020-16013-google-chromium-v8-incorrect-impleme"
+<article class="card" id="art-2846" data-art-slug="2021-11-03-cisa-kev-cve-2021-30632-google-chromium-v8-out-of-bounds-wri"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -636,12 +637,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2020-16013 — Google Chromium V8 Incorrect Implementation Vulnerabililty Google Chromium V8 Engine contains an inappropriate implementation vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03. CVE-2020-16013  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-30632 — Google Chromium V8 Out-of-Bounds Write Vulnerability Google Chromium V8 Engine contains an out-of-bounds write vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-30632 CVE-2021-30633  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-16013-google-chromium-v8-incorrect-impleme" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30632-google-chromium-v8-out-of-bounds-wri" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-16013 — Google Chromium V8 Incorrect Implementation Vulnerabililty</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30632 — Google Chromium V8 Out-of-Bounds Write Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -649,8 +650,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains an inappropriate implementation vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-16013</span></div>
+  <p class="summary">Google Chromium V8 Engine contains an out-of-bounds write vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30632</span> <span class="ind cve">CVE-2021-30633</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2846-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2846"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -723,7 +724,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-16013&quot;)
+| where CveId in~ (&quot;CVE-2021-30632&quot;, &quot;CVE-2021-30633&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -734,7 +735,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-16013&quot;)
+| where CveId in~ (&quot;CVE-2021-30632&quot;, &quot;CVE-2021-30633&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -742,19 +743,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2846-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2846-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2846-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2846-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-16013&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30632&quot;, &quot;CVE-2021-30633&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2846-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-16013&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30632&quot;, &quot;CVE-2021-30633&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2847" data-art-slug="2021-11-03-cisa-kev-cve-2021-30633-google-chromium-indexed-db-api-use-a"
+<article class="card" id="art-2847" data-art-slug="2021-11-03-cisa-kev-cve-2020-16013-google-chromium-v8-incorrect-impleme"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -762,12 +763,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-30633 — Google Chromium Indexed DB API Use-After-Free Vulnerability Google Chromium Indexed DB API contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Indexed DB API. Federal patch due: 2021-11-17. CVE-2021-30633  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2020-16013 — Google Chromium V8 Incorrect Implementation Vulnerabililty Google Chromium V8 Engine contains an inappropriate implementation vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03. CVE-2020-16013  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30633-google-chromium-indexed-db-api-use-a" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-16013-google-chromium-v8-incorrect-impleme" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30633 — Google Chromium Indexed DB API Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-16013 — Google Chromium V8 Incorrect Implementation Vulnerabililty</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -775,8 +776,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium Indexed DB API contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Indexed DB API. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30633</span></div>
+  <p class="summary">Google Chromium V8 Engine contains an inappropriate implementation vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-16013</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2847-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2847"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -849,7 +850,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30633&quot;)
+| where CveId in~ (&quot;CVE-2020-16013&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -860,7 +861,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30633&quot;)
+| where CveId in~ (&quot;CVE-2020-16013&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -868,19 +869,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2847-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2847-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2847-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2847-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30633&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-16013&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2847-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30633&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-16013&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2848" data-art-slug="2021-11-03-cisa-kev-cve-2021-21148-google-chromium-v8-heap-buffer-overf"
+<article class="card" id="art-2848" data-art-slug="2021-11-03-cisa-kev-cve-2021-30633-google-chromium-indexed-db-api-use-a"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -888,12 +889,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-21148 — Google Chromium V8 Heap Buffer Overflow Vulnerability Google Chromium V8 Engine contains a heap buffer overflow vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-21148  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-30633 — Google Chromium Indexed DB API Use-After-Free Vulnerability Google Chromium Indexed DB API contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Indexed DB API. Federal patch due: 2021-11-17. CVE-2021-30633  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21148-google-chromium-v8-heap-buffer-overf" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30633-google-chromium-indexed-db-api-use-a" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21148 — Google Chromium V8 Heap Buffer Overflow Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30633 — Google Chromium Indexed DB API Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -901,8 +902,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains a heap buffer overflow vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21148</span></div>
+  <p class="summary">Google Chromium Indexed DB API contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Indexed DB API. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30633</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2848-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2848"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -975,7 +976,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21148&quot;)
+| where CveId in~ (&quot;CVE-2021-30633&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -986,7 +987,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21148&quot;)
+| where CveId in~ (&quot;CVE-2021-30633&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -994,19 +995,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2848-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2848-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2848-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2848-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21148&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30633&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2848-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21148&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30633&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2849" data-art-slug="2021-11-03-cisa-kev-cve-2021-37973-google-chromium-portals-use-after-fr"
+<article class="card" id="art-2849" data-art-slug="2021-11-03-cisa-kev-cve-2021-21148-google-chromium-v8-heap-buffer-overf"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1014,12 +1015,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-37973 — Google Chromium Portals Use-After-Free Vulnerability Google Chromium Portals contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability affects web browsers that utilize Chromium, including Google Chrome and Microsoft Edge. Vendor: Google, Product: Chromium Portals. Federal patch due: 2021-11-17. CVE-2021-37973  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-21148 — Google Chromium V8 Heap Buffer Overflow Vulnerability Google Chromium V8 Engine contains a heap buffer overflow vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-21148  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-37973-google-chromium-portals-use-after-fr" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21148-google-chromium-v8-heap-buffer-overf" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-37973 — Google Chromium Portals Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21148 — Google Chromium V8 Heap Buffer Overflow Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -1027,8 +1028,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium Portals contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability affects web browsers that utilize Chromium, including Google Chrome and Microsoft Edge. Vendor: Google, Product: Chromium Portals. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-37973</span></div>
+  <p class="summary">Google Chromium V8 Engine contains a heap buffer overflow vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21148</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2849-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2849"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1101,7 +1102,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-37973&quot;)
+| where CveId in~ (&quot;CVE-2021-21148&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1112,7 +1113,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-37973&quot;)
+| where CveId in~ (&quot;CVE-2021-21148&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1120,19 +1121,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2849-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2849-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2849-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2849-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-37973&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21148&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2849-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-37973&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21148&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2850" data-art-slug="2021-11-03-cisa-kev-cve-2021-30551-google-chromium-v8-type-confusion-vu"
+<article class="card" id="art-2850" data-art-slug="2021-11-03-cisa-kev-cve-2021-37973-google-chromium-portals-use-after-fr"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1140,12 +1141,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-30551 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-30551  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-37973 — Google Chromium Portals Use-After-Free Vulnerability Google Chromium Portals contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability affects web browsers that utilize Chromium, including Google Chrome and Microsoft Edge. Vendor: Google, Product: Chromium Portals. Federal patch due: 2021-11-17. CVE-2021-37973  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30551-google-chromium-v8-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-37973-google-chromium-portals-use-after-fr" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30551 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-37973 — Google Chromium Portals Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -1153,8 +1154,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30551</span></div>
+  <p class="summary">Google Chromium Portals contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability affects web browsers that utilize Chromium, including Google Chrome and Microsoft Edge. Vendor: Google, Product: Chromium Portals. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-37973</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2850-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2850"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1227,7 +1228,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30551&quot;)
+| where CveId in~ (&quot;CVE-2021-37973&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1238,7 +1239,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30551&quot;)
+| where CveId in~ (&quot;CVE-2021-37973&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1246,19 +1247,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2850-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2850-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2850-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2850-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30551&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-37973&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2850-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30551&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-37973&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2851" data-art-slug="2021-11-03-cisa-kev-cve-2021-37975-google-chromium-v8-use-after-free-vu"
+<article class="card" id="art-2851" data-art-slug="2021-11-03-cisa-kev-cve-2021-30551-google-chromium-v8-type-confusion-vu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1266,12 +1267,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-37975 — Google Chromium V8 Use-After-Free Vulnerability Google Chromium V8 Engine contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-37975  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-30551 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-30551  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-37975-google-chromium-v8-use-after-free-vu" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30551-google-chromium-v8-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-37975 — Google Chromium V8 Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30551 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -1279,8 +1280,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-37975</span></div>
+  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30551</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2851-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2851"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1353,7 +1354,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-37975&quot;)
+| where CveId in~ (&quot;CVE-2021-30551&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1364,7 +1365,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-37975&quot;)
+| where CveId in~ (&quot;CVE-2021-30551&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1372,19 +1373,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2851-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2851-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2851-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2851-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-37975&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30551&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2851-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-37975&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30551&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2852" data-art-slug="2021-11-03-cisa-kev-cve-2020-6418-google-chromium-v8-type-confusion-vul"
+<article class="card" id="art-2852" data-art-slug="2021-11-03-cisa-kev-cve-2021-37975-google-chromium-v8-use-after-free-vu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1392,12 +1393,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2020-6418 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03. CVE-2020-6418 CVE-2020-0938 CVE-2020-1020 CVE-2020-1027  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-37975 — Google Chromium V8 Use-After-Free Vulnerability Google Chromium V8 Engine contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-37975  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-6418-google-chromium-v8-type-confusion-vul" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-37975-google-chromium-v8-use-after-free-vu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-6418 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-37975 — Google Chromium V8 Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -1405,8 +1406,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-6418</span> <span class="ind cve">CVE-2020-0938</span> <span class="ind cve">CVE-2020-1020</span> <span class="ind cve">CVE-2020-1027</span></div>
+  <p class="summary">Google Chromium V8 Engine contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-37975</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2852-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2852"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1479,7 +1480,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-6418&quot;, &quot;CVE-2020-0938&quot;, &quot;CVE-2020-1020&quot;, &quot;CVE-2020-1027&quot;)
+| where CveId in~ (&quot;CVE-2021-37975&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1490,7 +1491,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-6418&quot;, &quot;CVE-2020-0938&quot;, &quot;CVE-2020-1020&quot;, &quot;CVE-2020-1027&quot;)
+| where CveId in~ (&quot;CVE-2021-37975&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1498,19 +1499,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2852-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2852-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2852-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2852-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-6418&quot;, &quot;CVE-2020-0938&quot;, &quot;CVE-2020-1020&quot;, &quot;CVE-2020-1027&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-37975&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2852-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-6418&quot;, &quot;CVE-2020-0938&quot;, &quot;CVE-2020-1020&quot;, &quot;CVE-2020-1027&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-37975&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2853" data-art-slug="2021-11-03-cisa-kev-cve-2021-30554-google-chromium-webgl-use-after-free"
+<article class="card" id="art-2853" data-art-slug="2021-11-03-cisa-kev-cve-2020-6418-google-chromium-v8-type-confusion-vul"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1518,12 +1519,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-30554 — Google Chromium WebGL Use-After-Free Vulnerability Google Chromium WebGL contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium WebGL. Federal patch due: 2021-11-17. CVE-2021-30554  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2020-6418 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03. CVE-2020-6418 CVE-2020-0938 CVE-2020-1020 CVE-2020-1027  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30554-google-chromium-webgl-use-after-free" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-6418-google-chromium-v8-type-confusion-vul" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30554 — Google Chromium WebGL Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-6418 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -1531,8 +1532,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium WebGL contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium WebGL. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30554</span></div>
+  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-6418</span> <span class="ind cve">CVE-2020-0938</span> <span class="ind cve">CVE-2020-1020</span> <span class="ind cve">CVE-2020-1027</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2853-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2853"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1605,7 +1606,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30554&quot;)
+| where CveId in~ (&quot;CVE-2020-6418&quot;, &quot;CVE-2020-0938&quot;, &quot;CVE-2020-1020&quot;, &quot;CVE-2020-1027&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1616,7 +1617,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30554&quot;)
+| where CveId in~ (&quot;CVE-2020-6418&quot;, &quot;CVE-2020-0938&quot;, &quot;CVE-2020-1020&quot;, &quot;CVE-2020-1027&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1624,19 +1625,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2853-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2853-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2853-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2853-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30554&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-6418&quot;, &quot;CVE-2020-0938&quot;, &quot;CVE-2020-1020&quot;, &quot;CVE-2020-1027&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2853-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30554&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-6418&quot;, &quot;CVE-2020-0938&quot;, &quot;CVE-2020-1020&quot;, &quot;CVE-2020-1027&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2854" data-art-slug="2021-11-03-cisa-kev-cve-2021-21206-google-chromium-blink-use-after-free"
+<article class="card" id="art-2854" data-art-slug="2021-11-03-cisa-kev-cve-2021-30554-google-chromium-webgl-use-after-free"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1644,12 +1645,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-21206 — Google Chromium Blink Use-After-Free Vulnerability Google Chromium Blink contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Blink. Federal patch due: 2021-11-17. CVE-2021-21206  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-30554 — Google Chromium WebGL Use-After-Free Vulnerability Google Chromium WebGL contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium WebGL. Federal patch due: 2021-11-17. CVE-2021-30554  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21206-google-chromium-blink-use-after-free" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30554-google-chromium-webgl-use-after-free" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21206 — Google Chromium Blink Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30554 — Google Chromium WebGL Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -1657,8 +1658,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium Blink contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Blink. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21206</span></div>
+  <p class="summary">Google Chromium WebGL contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium WebGL. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30554</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2854-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2854"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1731,7 +1732,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21206&quot;)
+| where CveId in~ (&quot;CVE-2021-30554&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1742,7 +1743,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21206&quot;)
+| where CveId in~ (&quot;CVE-2021-30554&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1750,19 +1751,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2854-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2854-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2854-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2854-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21206&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30554&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2854-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21206&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30554&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2855" data-art-slug="2021-11-03-cisa-kev-cve-2021-38000-google-chromium-intents-improper-inp"
+<article class="card" id="art-2855" data-art-slug="2021-11-03-cisa-kev-cve-2021-21206-google-chromium-blink-use-after-free"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1770,12 +1771,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-38000 — Google Chromium Intents Improper Input Validation Vulnerability Google Chromium Intents contains an improper input validation vulnerability that allows a remote attacker to arbitrarily browser to a malicious URL via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Intents. Federal patch due: 2021-11-17. CVE-2021-38000 CVE-2021-38003  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-21206 — Google Chromium Blink Use-After-Free Vulnerability Google Chromium Blink contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Blink. Federal patch due: 2021-11-17. CVE-2021-21206  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-38000-google-chromium-intents-improper-inp" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21206-google-chromium-blink-use-after-free" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-38000 — Google Chromium Intents Improper Input Validation Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21206 — Google Chromium Blink Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -1783,8 +1784,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium Intents contains an improper input validation vulnerability that allows a remote attacker to arbitrarily browser to a malicious URL via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Intents. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-38000</span> <span class="ind cve">CVE-2021-38003</span></div>
+  <p class="summary">Google Chromium Blink contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Blink. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21206</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2855-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2855"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1857,7 +1858,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-38000&quot;, &quot;CVE-2021-38003&quot;)
+| where CveId in~ (&quot;CVE-2021-21206&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1868,7 +1869,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-38000&quot;, &quot;CVE-2021-38003&quot;)
+| where CveId in~ (&quot;CVE-2021-21206&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1876,19 +1877,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2855-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2855-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2855-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2855-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-38000&quot;, &quot;CVE-2021-38003&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21206&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2855-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-38000&quot;, &quot;CVE-2021-38003&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21206&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2856" data-art-slug="2021-11-03-cisa-kev-cve-2021-38003-google-chromium-v8-memory-corruption"
+<article class="card" id="art-2856" data-art-slug="2021-11-03-cisa-kev-cve-2021-38000-google-chromium-intents-improper-inp"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1896,12 +1897,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-38003 — Google Chromium V8 Memory Corruption Vulnerability Google Chromium V8 Engine has a bug in JSON.stringify, where the internal TheHole value can leak to script code, causing memory corruption. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-38003  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-38000 — Google Chromium Intents Improper Input Validation Vulnerability Google Chromium Intents contains an improper input validation vulnerability that allows a remote attacker to arbitrarily browser to a malicious URL via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Intents. Federal patch due: 2021-11-17. CVE-2021-38000 CVE-2021-38003  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-38003-google-chromium-v8-memory-corruption" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-38000-google-chromium-intents-improper-inp" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-38003 — Google Chromium V8 Memory Corruption Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-38000 — Google Chromium Intents Improper Input Validation Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -1909,8 +1910,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine has a bug in JSON.stringify, where the internal TheHole value can leak to script code, causing memory corruption. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-38003</span></div>
+  <p class="summary">Google Chromium Intents contains an improper input validation vulnerability that allows a remote attacker to arbitrarily browser to a malicious URL via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Intents. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-38000</span> <span class="ind cve">CVE-2021-38003</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2856-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2856"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1983,7 +1984,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-38003&quot;)
+| where CveId in~ (&quot;CVE-2021-38000&quot;, &quot;CVE-2021-38003&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1994,7 +1995,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-38003&quot;)
+| where CveId in~ (&quot;CVE-2021-38000&quot;, &quot;CVE-2021-38003&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2002,19 +2003,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2856-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2856-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2856-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2856-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-38003&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-38000&quot;, &quot;CVE-2021-38003&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2856-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-38003&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-38000&quot;, &quot;CVE-2021-38003&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2857" data-art-slug="2021-11-03-cisa-kev-cve-2021-21224-google-chromium-v8-type-confusion-vu"
+<article class="card" id="art-2857" data-art-slug="2021-11-03-cisa-kev-cve-2021-38003-google-chromium-v8-memory-corruption"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2022,12 +2023,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-21224 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to execute code inside a sandbox via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-21224  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-38003 — Google Chromium V8 Memory Corruption Vulnerability Google Chromium V8 Engine has a bug in JSON.stringify, where the internal TheHole value can leak to script code, causing memory corruption. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-38003  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21224-google-chromium-v8-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-38003-google-chromium-v8-memory-corruption" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21224 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-38003 — Google Chromium V8 Memory Corruption Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -2035,8 +2036,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to execute code inside a sandbox via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21224</span></div>
+  <p class="summary">Google Chromium V8 Engine has a bug in JSON.stringify, where the internal TheHole value can leak to script code, causing memory corruption. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-38003</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2857-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2857"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2109,7 +2110,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21224&quot;)
+| where CveId in~ (&quot;CVE-2021-38003&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2120,7 +2121,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21224&quot;)
+| where CveId in~ (&quot;CVE-2021-38003&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2128,19 +2129,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2857-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2857-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2857-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2857-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21224&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-38003&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2857-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21224&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-38003&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2858" data-art-slug="2021-11-03-cisa-kev-cve-2021-21193-google-chromium-blink-use-after-free"
+<article class="card" id="art-2858" data-art-slug="2021-11-03-cisa-kev-cve-2021-21224-google-chromium-v8-type-confusion-vu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2148,12 +2149,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-21193 — Google Chromium Blink Use-After-Free Vulnerability Google Chromium Blink contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Blink. Federal patch due: 2021-11-17. CVE-2021-21193  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-21224 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to execute code inside a sandbox via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-21224  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21193-google-chromium-blink-use-after-free" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21224-google-chromium-v8-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21193 — Google Chromium Blink Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21224 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -2161,8 +2162,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium Blink contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Blink. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21193</span></div>
+  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to execute code inside a sandbox via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21224</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2858-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2858"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2235,7 +2236,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21193&quot;)
+| where CveId in~ (&quot;CVE-2021-21224&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2246,7 +2247,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21193&quot;)
+| where CveId in~ (&quot;CVE-2021-21224&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2254,19 +2255,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2858-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2858-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2858-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2858-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21193&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21224&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2858-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21193&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21224&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2859" data-art-slug="2021-11-03-cisa-kev-cve-2021-21220-google-chromium-v8-improper-input-va"
+<article class="card" id="art-2859" data-art-slug="2021-11-03-cisa-kev-cve-2021-21193-google-chromium-blink-use-after-free"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2274,12 +2275,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-21220 — Google Chromium V8 Improper Input Validation Vulnerability Google Chromium V8 Engine contains an improper input validation vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-21220  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-21193 — Google Chromium Blink Use-After-Free Vulnerability Google Chromium Blink contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Blink. Federal patch due: 2021-11-17. CVE-2021-21193  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21220-google-chromium-v8-improper-input-va" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21193-google-chromium-blink-use-after-free" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21220 — Google Chromium V8 Improper Input Validation Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21193 — Google Chromium Blink Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -2287,8 +2288,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains an improper input validation vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21220</span></div>
+  <p class="summary">Google Chromium Blink contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium Blink. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21193</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2859-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2859"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2361,7 +2362,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21220&quot;)
+| where CveId in~ (&quot;CVE-2021-21193&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2372,7 +2373,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21220&quot;)
+| where CveId in~ (&quot;CVE-2021-21193&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2380,19 +2381,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2859-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2859-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2859-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2859-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21220&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21193&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2859-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21220&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21193&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2860" data-art-slug="2021-11-03-cisa-kev-cve-2021-30563-google-chromium-v8-type-confusion-vu"
+<article class="card" id="art-2860" data-art-slug="2021-11-03-cisa-kev-cve-2021-21220-google-chromium-v8-improper-input-va"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2400,12 +2401,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-30563 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-30563  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-21220 — Google Chromium V8 Improper Input Validation Vulnerability Google Chromium V8 Engine contains an improper input validation vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-21220  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30563-google-chromium-v8-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-21220-google-chromium-v8-improper-input-va" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30563 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-21220 — Google Chromium V8 Improper Input Validation Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -2413,8 +2414,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30563</span></div>
+  <p class="summary">Google Chromium V8 Engine contains an improper input validation vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21220</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2860-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2860"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2487,7 +2488,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30563&quot;)
+| where CveId in~ (&quot;CVE-2021-21220&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2498,7 +2499,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-30563&quot;)
+| where CveId in~ (&quot;CVE-2021-21220&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2506,19 +2507,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2860-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2860-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2860-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2860-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30563&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21220&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2860-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-30563&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21220&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2861" data-art-slug="2021-11-03-cisa-kev-cve-2020-4430-ibm-data-risk-manager-directory-trave"
+<article class="card" id="art-2861" data-art-slug="2021-11-03-cisa-kev-cve-2021-30563-google-chromium-v8-type-confusion-vu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2526,12 +2527,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2020-4430 — IBM Data Risk Manager Directory Traversal Vulnerability IBM Data Risk Manager contains a directory traversal vulnerability that could allow a remote authenticated attacker to traverse directories and send a specially crafted URL request to download arbitrary files from the system. Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03. CVE-2020-4430  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2021-30563 — Google Chromium V8 Type Confusion Vulnerability Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17. CVE-2021-30563  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-4430-ibm-data-risk-manager-directory-trave" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2021-30563-google-chromium-v8-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-4430 — IBM Data Risk Manager Directory Traversal Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-30563 — Google Chromium V8 Type Confusion Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -2539,8 +2540,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">IBM Data Risk Manager contains a directory traversal vulnerability that could allow a remote authenticated attacker to traverse directories and send a specially crafted URL request to download arbitrary files from the system. Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-4430</span></div>
+  <p class="summary">Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera. Vendor: Google, Product: Chromium V8. Federal patch due: 2021-11-17.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-30563</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2861-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2861"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2613,7 +2614,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-4430&quot;)
+| where CveId in~ (&quot;CVE-2021-30563&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2624,7 +2625,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-4430&quot;)
+| where CveId in~ (&quot;CVE-2021-30563&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2632,19 +2633,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2861-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2861-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2861-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2861-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-4430&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30563&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2861-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-4430&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2021-30563&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2862" data-art-slug="2021-11-03-cisa-kev-cve-2020-4427-ibm-data-risk-manager-security-bypass"
+<article class="card" id="art-2862" data-art-slug="2021-11-03-cisa-kev-cve-2020-4430-ibm-data-risk-manager-directory-trave"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2652,12 +2653,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2020-4427 — IBM Data Risk Manager Security Bypass Vulnerability IBM Data Risk Manager contains a security bypass vulnerability that could allow a remote attacker to bypass security restrictions when configured with SAML authentication. By sending a specially crafted HTTP request, an attacker could exploit this vulnerability to bypass the authentication process and gain full administrative access to the system. Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03. CVE-2020-4427  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2020-4430 — IBM Data Risk Manager Directory Traversal Vulnerability IBM Data Risk Manager contains a directory traversal vulnerability that could allow a remote authenticated attacker to traverse directories and send a specially crafted URL request to download arbitrary files from the system. Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03. CVE-2020-4430  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-4427-ibm-data-risk-manager-security-bypass" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-4430-ibm-data-risk-manager-directory-trave" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-4427 — IBM Data Risk Manager Security Bypass Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-4430 — IBM Data Risk Manager Directory Traversal Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -2665,8 +2666,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">IBM Data Risk Manager contains a security bypass vulnerability that could allow a remote attacker to bypass security restrictions when configured with SAML authentication. By sending a specially crafted HTTP request, an attacker could exploit this vulnerability to bypass the authentication process and gain full administrative access to the system. Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-4427</span></div>
+  <p class="summary">IBM Data Risk Manager contains a directory traversal vulnerability that could allow a remote authenticated attacker to traverse directories and send a specially crafted URL request to download arbitrary files from the system. Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-4430</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2862-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2862"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2739,7 +2740,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-4427&quot;)
+| where CveId in~ (&quot;CVE-2020-4430&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2750,7 +2751,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-4427&quot;)
+| where CveId in~ (&quot;CVE-2020-4430&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2758,42 +2759,41 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2862-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2862-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2862-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2862-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-4427&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-4430&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2862-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-4427&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-4430&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2863" data-art-slug="2021-11-03-cisa-kev-cve-2020-4428-ibm-data-risk-manager-remote-code-exe"
+<article class="card" id="art-2863" data-art-slug="2021-11-03-cisa-kev-cve-2020-4427-ibm-data-risk-manager-security-bypass"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
+  data-techs=""
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2020-4428 — IBM Data Risk Manager Remote Code Execution Vulnerability IBM Data Risk Manager contains an unspecified vulnerability which could allow a remote, authenticated attacker to execute commands on the system.� Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03. CVE-2020-4428 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2020-4427 — IBM Data Risk Manager Security Bypass Vulnerability IBM Data Risk Manager contains a security bypass vulnerability that could allow a remote attacker to bypass security restrictions when configured with SAML authentication. By sending a specially crafted HTTP request, an attacker could exploit this vulnerability to bypass the authentication process and gain full administrative access to the system. Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03. CVE-2020-4427  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-4428-ibm-data-risk-manager-remote-code-exe" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-4427-ibm-data-risk-manager-security-bypass" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-4428 — IBM Data Risk Manager Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-4427 — IBM Data Risk Manager Security Bypass Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
     <span>1 use case</span>
-    <span>1 technique</span>
+    <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">IBM Data Risk Manager contains an unspecified vulnerability which could allow a remote, authenticated attacker to execute commands on the system.� Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-4428</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <p class="summary">IBM Data Risk Manager contains a security bypass vulnerability that could allow a remote attacker to bypass security restrictions when configured with SAML authentication. By sending a specially crafted HTTP request, an attacker could exploit this vulnerability to bypass the authentication process and gain full administrative access to the system. Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-4427</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2863-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2863"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2866,7 +2866,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-4428&quot;)
+| where CveId in~ (&quot;CVE-2020-4427&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2877,7 +2877,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-4428&quot;)
+| where CveId in~ (&quot;CVE-2020-4427&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2885,19 +2885,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2863-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2863-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2863-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2863-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-4428&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-4427&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2863-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-4428&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-4427&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2864" data-art-slug="2021-11-03-cisa-kev-cve-2019-4716-ibm-planning-analytics-remote-code-ex"
+<article class="card" id="art-2864" data-art-slug="2021-11-03-cisa-kev-cve-2020-4428-ibm-data-risk-manager-remote-code-exe"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="CISA KEV"
@@ -2905,12 +2905,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2019-4716 — IBM Planning Analytics Remote Code Execution Vulnerability IBM Planning Analytics is vulnerable to a configuration overwrite that allows an unauthenticated user to login as &quot;admin&quot;, and then execute code as root or SYSTEM via TM1 scripting. Vendor: IBM, Product: Planning Analytics. Federal patch due: 2022-05-03. CVE-2019-4716 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2020-4428 — IBM Data Risk Manager Remote Code Execution Vulnerability IBM Data Risk Manager contains an unspecified vulnerability which could allow a remote, authenticated attacker to execute commands on the system.� Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03. CVE-2020-4428 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2019-4716-ibm-planning-analytics-remote-code-ex" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-4428-ibm-data-risk-manager-remote-code-exe" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2019-4716 — IBM Planning Analytics Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-4428 — IBM Data Risk Manager Remote Code Execution Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
@@ -2918,8 +2918,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">IBM Planning Analytics is vulnerable to a configuration overwrite that allows an unauthenticated user to login as &quot;admin&quot;, and then execute code as root or SYSTEM via TM1 scripting. Vendor: IBM, Product: Planning Analytics. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2019-4716</span></div>
+  <p class="summary">IBM Data Risk Manager contains an unspecified vulnerability which could allow a remote, authenticated attacker to execute commands on the system.� Vendor: IBM, Product: Data Risk Manager. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-4428</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2864-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -2993,7 +2993,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2019-4716&quot;)
+| where CveId in~ (&quot;CVE-2020-4428&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -3004,7 +3004,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2019-4716&quot;)
+| where CveId in~ (&quot;CVE-2020-4428&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -3012,41 +3012,42 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2864-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2864-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2864-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2864-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2019-4716&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-4428&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2864-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2019-4716&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2020-4428&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2865" data-art-slug="2021-11-03-cisa-kev-cve-2016-3715-imagemagick-arbitrary-file-deletion-v"
+<article class="card" id="art-2865" data-art-slug="2021-11-03-cisa-kev-cve-2019-4716-ibm-planning-analytics-remote-code-ex"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
+  data-techs="T1190"
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2016-3715 — ImageMagick Arbitrary File Deletion Vulnerability ImageMagick contains an unspecified vulnerability that could allow users to delete files by using ImageMagick&#x27;s &#x27;ephemeral&#x27; pseudo protocol, which deletes files after reading. Vendor: ImageMagick, Product: ImageMagick. Federal patch due: 2022-05-03. CVE-2016-3715  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2019-4716 — IBM Planning Analytics Remote Code Execution Vulnerability IBM Planning Analytics is vulnerable to a configuration overwrite that allows an unauthenticated user to login as &quot;admin&quot;, and then execute code as root or SYSTEM via TM1 scripting. Vendor: IBM, Product: Planning Analytics. Federal patch due: 2022-05-03. CVE-2019-4716 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2016-3715-imagemagick-arbitrary-file-deletion-v" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2019-4716-ibm-planning-analytics-remote-code-ex" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-3715 — ImageMagick Arbitrary File Deletion Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2019-4716 — IBM Planning Analytics Remote Code Execution Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2021-11-03</span>
     <span>1 use case</span>
-    <span>0 techniques</span>
+    <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">ImageMagick contains an unspecified vulnerability that could allow users to delete files by using ImageMagick&#x27;s &#x27;ephemeral&#x27; pseudo protocol, which deletes files after reading. Vendor: ImageMagick, Product: ImageMagick. Federal patch due: 2022-05-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-3715</span></div>
+  <p class="summary">IBM Planning Analytics is vulnerable to a configuration overwrite that allows an unauthenticated user to login as &quot;admin&quot;, and then execute code as root or SYSTEM via TM1 scripting. Vendor: IBM, Product: Planning Analytics. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2019-4716</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2865-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2865"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -3119,7 +3120,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-3715&quot;)
+| where CveId in~ (&quot;CVE-2019-4716&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -3130,7 +3131,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-3715&quot;)
+| where CveId in~ (&quot;CVE-2019-4716&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -3138,12 +3139,12 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2865-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2865-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2865-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2865-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2016-3715&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2019-4716&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2865-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2016-3715&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2019-4716&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
