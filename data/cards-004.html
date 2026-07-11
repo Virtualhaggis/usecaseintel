@@ -8678,11 +8678,11 @@ DeviceFileEvents
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
+  data-platforms="datadog,def,falcon,sent,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,windows"
   data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-54496: Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness CVE-2026-54496 T1190 [LLM] Zcash node exposed to Orchard soundness bug (CVE-2026-54496) present in vuln inventory [LLM] Unpatched Zcash Orchard packages by version (zebrad/zcashd/orchard/zcash_primitives/halo2_gadgets) Asset exposure — vulnerability matches article CVE(s)">
+  data-search="[GHSA / CRITICAL] CVE-2026-54496: Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness CVE-2026-54496 T1190 [LLM] Vulnerable halo2_gadgets/Orchard/Zcash node components installed (CVE-2026-54496) [LLM] Running Zcash node (zebrad/zcashd) below NU6.2 patched version (CVE-2026-54496) Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -8742,86 +8742,112 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Zcash node exposed to Orchard soundness bug (CVE-2026-54496) present in vuln inventory · [LLM] Unpatched Zcash Orchard packages by version (zebrad/zcashd/orchard/zcash_primitives/halo2_gadgets)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable halo2_gadgets/Orchard/Zcash node components installed (CVE-2026-54496) · [LLM] Running Zcash node (zebrad/zcashd) below NU6.2 patched version (CVE-2026-54496)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="b40a41a319" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="41b57ae29c" data-platforms="def,sent" data-targets="" open>
   <summary>
-    <span class="uc-title">Zcash node exposed to Orchard soundness bug (CVE-2026-54496) present in vuln inventory</span>
+    <span class="uc-title">Vulnerable halo2_gadgets/Orchard/Zcash node components installed (CVE-2026-54496)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b40a41a319" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="41b57ae29c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Flags any managed host whose Defender TVM vulnerability feed reports CVE-2026-54496 (the halo2_gadgets missing-copy-constraint Orchard soundness flaw). This is the only SOC-detectable surface for this bug: exploitation itself is undetectable on-chain, so we hunt exposure — unpatched zebrad/zcashd/orchard/zcash_primitives/halo2_gadgets that could run a vulnerable Orchard verifier or prover.
+    <div class="uc-desc">Flags any managed host whose software inventory reports halo2_gadgets, orchard, zcash_primitives, zcashd, or zebrad below the NU6.2 patched versions, which carry the under-constrained variable-base scalar-multiplication soundness flaw. This is an attack-surface / vulnerability-posture detection: the exploit itself is undetectable at runtime, so the only defensible signal is presence of the unpatched circuit code.
 
-Rationale: Uses the exact CVE id (CVE-2026-54496) named in the GHSA advisory; this is deterministic vuln-inventory matching, not behavioral inference, because the article states exploitation leaves no on-chain or telemetry signature. Version boundaries corroborated against the Zcash Foundation NU6.2 / Zebra 5.0.0 advisory.
+Rationale: Uses the exact affected-version thresholds named in the advisory (halo2_gadgets&lt;0.5.0, orchard&lt;0.14.0, zcash_primitives&lt;0.28.0, zcashd&lt;6.20.0, zebrad&lt;5.0.0) and the CVE id; parse_version() avoids the lexical-semver trap (e.g. &#x27;0.14.0&#x27; &lt; &#x27;0.5.0&#x27; as strings). Since exploitation is undetectable on-chain, patch-state IS the detection.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-ww9q-8r59-xv46
   • https://zfnd.org/zebra-4-5-3-and-5-0-0-emergency-soft-fork-and-nu6-2-activation/
-  • https://blocksec.com/blog/web3-security-zcash-orchard-soundness-bug-analysis</div>
+  • https://blocksec.com/blog/web3-security-zcash-orchard-soundness-bug-analysis
+  • https://www.blockhead.co/2026/06/05/zcash-founder-discloses-critical-orchard-forgery-flaw-fixed-by-emergency-hard-fork/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Node already upgraded to zebrad 5.0.0 / zcashd 6.20.0 but TVM inventory is stale and not yet rescanned, so the CVE still shows as open.</li><li>Host running halo2_gadgets &lt; 0.5.0 as a transitive dependency of an unrelated (non-Orchard) zk application — vulnerable crate present but no Orchard verifier actually instantiated.</li><li>Air-gapped or offline validator whose remediation (hard-fork verifying-key swap) was applied out-of-band and TVM cannot see the running verifying-key routing.</li><li>Internal fork of zcashd/zebrad carrying a backported copy_advice fix but still reporting a pre-patch version string.</li><li>Duplicate finding across CI build agents that merely compiled the crate but never ran a consensus node.</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where TimeGenerated &gt; ago(7d)  // drop stale-inventory rows so freshly-patched nodes stop firing</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the host&#x27;s role — is it a validating full node / mining node exposed to the Zcash P2P network, or just a workstation with the crate as a build artifact? Internet-facing consensus nodes are top priority. 2) CONTAIN: Upgrade to zebrad 5.0.0 (or apply the 4.5.3 interim soft-fork) / zcashd 6.20.0 and confirm NU6.2 activation so Orchard proofs route to the FixedPostNu6_2 verifying key; if it cannot be patched immediately, disable Orchard actions or isolate the node from consensus. 3) HUNT: Inventory every host and CI/build pipeline importing halo2_gadgets &lt; 0.5.0, orchard &lt; 0.14.0, or zcash_primitives &lt; 0.28.0; grep repo Cargo.lock files for pinned pre-patch versions.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped/testnet-only Zebra or zcashd node deliberately pinned to an old version for regression testing — not consensus-facing, so not a live double-spend surface</li><li>Developer workstation with an old halo2_gadgets crate cached in a Cargo build directory but no running node</li><li>Inventory agent reporting a stale SoftwareVersion string after an in-place binary upgrade that didn&#x27;t refresh TVM catalog</li><li>Vendored/forked copy of halo2_gadgets carrying the fix backported but still reporting a pre-0.5.0 version number</li><li>Non-Zcash Rust project that happens to import halo2_gadgets for an unrelated halo2 circuit (no Orchard exposure)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where EndOfSupportStatus !contains &quot;Test&quot; | where DeviceName !has &quot;testnet&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the host actually runs a consensus-facing Zebra/zcashd node vs. holding a stale build artifact — check for a listening node process and P2P connectivity; a dev cache is low urgency. Step 2 (contain): For any live node below the patched version, upgrade to zebrad 5.0.0 / zcashd 6.20.0 (NU6.2) immediately or take the node off the network; NU6.2 routes proofs to the FixedPostNu6_2 verifying key, so unpatched nodes are the only remaining exposure. Step 3 (hunt): Enumerate all other nodes/wallets in the estate for the same crate versions, and for any wallet whose spending keys sat on a node with a compromised linked software wallet, review Orchard note activity for unexpected nullifiers (the only theft-mode signal that appears on-chain).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-101-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-54496&quot;
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, IsInternetFacing, DeviceCategory) by DeviceId) on DeviceId
-| project DeviceName, DeviceId, OSPlatform, IsInternetFacing, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
+    <div class="tab-content active" id="art-101-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+| where Timestamp &gt; ago(1d)
+| where SoftwareName in~ (&quot;halo2_gadgets&quot;,&quot;orchard&quot;,&quot;zcash_primitives&quot;,&quot;zcashd&quot;,&quot;zebrad&quot;)
+| extend ParsedVersion = parse_version(SoftwareVersion)
+| where (SoftwareName =~ &quot;halo2_gadgets&quot;    and ParsedVersion &lt; parse_version(&quot;0.5.0&quot;))
+     or (SoftwareName =~ &quot;orchard&quot;           and ParsedVersion &lt; parse_version(&quot;0.14.0&quot;))
+     or (SoftwareName =~ &quot;zcash_primitives&quot;  and ParsedVersion &lt; parse_version(&quot;0.28.0&quot;))
+     or (SoftwareName =~ &quot;zcashd&quot;            and ParsedVersion &lt; parse_version(&quot;6.20.0&quot;))
+     or (SoftwareName =~ &quot;zebrad&quot;            and ParsedVersion &lt; parse_version(&quot;5.0.0&quot;))
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus, Timestamp
+| sort by DeviceName asc</code></pre></div>
     <div class="tab-content" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId == &quot;CVE-2026-54496&quot;
-| summarize arg_max(TimeGenerated, *) by DeviceId, SoftwareName, SoftwareVersion
-| project TimeGenerated, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-54496&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve, Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort 0 dest</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-54496&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve, Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort 0 dest</code></pre></div></div>
+| where TimeGenerated &gt; ago(1d)
+| where CveId =~ &quot;CVE-2026-54496&quot;
+   or (SoftwareName in~ (&quot;halo2_gadgets&quot;,&quot;orchard&quot;,&quot;zcash_primitives&quot;,&quot;zcashd&quot;,&quot;zebrad&quot;))
+| extend ParsedVersion = parse_version(SoftwareVersion)
+| where CveId =~ &quot;CVE-2026-54496&quot;
+     or (SoftwareName =~ &quot;halo2_gadgets&quot;    and ParsedVersion &lt; parse_version(&quot;0.5.0&quot;))
+     or (SoftwareName =~ &quot;orchard&quot;           and ParsedVersion &lt; parse_version(&quot;0.14.0&quot;))
+     or (SoftwareName =~ &quot;zcash_primitives&quot;  and ParsedVersion &lt; parse_version(&quot;0.28.0&quot;))
+     or (SoftwareName =~ &quot;zcashd&quot;            and ParsedVersion &lt; parse_version(&quot;6.20.0&quot;))
+     or (SoftwareName =~ &quot;zebrad&quot;            and ParsedVersion &lt; parse_version(&quot;5.0.0&quot;))
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| sort by DeviceName asc</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="7c8fb3757a" data-platforms="def" data-targets="">
+<details class="uc" data-uc-slug="0ffc3c51aa" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Unpatched Zcash Orchard packages by version (zebrad/zcashd/orchard/zcash_primitives/halo2_gadgets)</span>
+    <span class="uc-title">Running Zcash node (zebrad/zcashd) below NU6.2 patched version (CVE-2026-54496)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7c8fb3757a" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="0ffc3c51aa" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Direct version-string comparison against the patched releases named in the advisory, independent of whether the vendor CVE KB has ingested CVE-2026-54496 yet. Catches the niche Rust crates (halo2_gadgets, orchard, zcash_primitives) that a CVE-feed-keyed rule will likely miss, and any node still below the NU6.2 fix line.
+    <div class="uc-desc">Surfaces live zebrad or zcashd node processes whose product version is below the NU6.2 fix (or has no version string), confirming an actively-running exposure surface for the Orchard under-constrained-base soundness flaw rather than a dormant on-disk artifact. Complements the static inventory UC by pivoting on process telemetry to catch nodes that inventory scans miss.
 
-Rationale: Uses the exact affected/patched version boundaries listed verbatim in the advisory (halo2_gadgets&lt;0.5.0, orchard&lt;0.14.0, zcash_primitives&lt;0.28.0, zcashd&lt;6.20.0, zebrad&lt;5.0.0) with parse_version for correct semver ordering; resilient to KB-ingestion lag and to the fact that Rust crates are rarely tracked by CVE feeds. Sentinel left empty because DeviceTvmSoftwareInventory is not exposed in this tenant&#x27;s Sentinel schema (only DeviceTvmSoftwareVulnerabilities is) — the CVE-keyed UC covers Sentinel instead; Splunk/Datadog/Falcon/CloudWatch have no equivalent crate-level software-inventory telemetry.
+Rationale: Pivots on the exact node binaries named in the advisory (zebrad, zcashd) and their patched-version thresholds (5.0.0 / 6.20.0); flags both provably-old and version-blank (0.0.0) node processes so unversioned Rust builds aren&#x27;t silently missed. Confirms a live, network-facing exposure surface rather than a dormant crate.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-ww9q-8r59-xv46
-  • https://zfnd.org/zebra-4-5-3-and-5-0-0-emergency-soft-fork-and-nu6-2-activation/</div>
+  • https://zfnd.org/zebra-4-5-3-and-5-0-0-emergency-soft-fork-and-nu6-2-activation/
+  • https://www.kucoin.com/news/flash/zcash-urges-immediate-upgrade-to-zebra-5-0-0-after-critical-orchard-bug-fix</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Development/nightly build reporting a non-semver version string (e.g. git-hash suffix) that parse_version cannot order — should be reviewed, not auto-closed.</li><li>halo2_gadgets &lt; 0.5.0 pulled transitively by a non-Zcash zk project that never instantiates the Orchard variable-base-mul gadget.</li><li>Node exactly at the patched boundary (zebrad 5.0.0 / zcashd 6.20.0) correctly excluded by the strict less-than comparison — verify it does not fire.</li><li>Vendored/renamed internal copy of the crate carrying a backported copy_advice fix while still stamped with an old version.</li><li>Test harness that compiled the vulnerable crate for regression testing but does not run a live consensus node.</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVersion matches regex @&quot;^\d+\.\d+\.\d+$&quot;  // drop non-semver/nightly strings parse_version cannot reliably order</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Determine whether the flagged package backs a live Orchard prover/verifier (running zebrad/zcashd consensus node) or is an inert build dependency; prioritize internet-facing nodes. 2) CONTAIN: Bump zebrad to 5.0.0 / zcashd to 6.20.0 (or crates to halo2_gadgets 0.5.0, orchard 0.14.0, zcash_primitives 0.28.0), rebuild, and confirm NU6.2 verifying-key routing (FixedPostNu6_2); isolate nodes that cannot be patched. 3) HUNT: Sweep source repos and Cargo.lock files org-wide for pinned pre-patch versions and pin them forward; verify no wallet-linked software importing the crate was compromised (the theft variant requires a compromised software wallet holding the incoming viewing key).</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Rust node binary built without embedded product-version metadata (fires as 0.0.0/UNKNOWN even when actually 5.0.0)</li><li>Short-lived zebrad process launched for a `--version` check or CLI subcommand rather than a persistent node</li><li>CI/build-farm host compiling and briefly running zebrad from source during test</li><li>Patched node whose EDR-reported ProcessVersionInfoProductVersion lags the actual binary after a rolling upgrade</li><li>Testnet or regtest node intentionally on an old version and not connected to mainnet consensus</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;--network=testnet&quot; and ProcessCommandLine !has &quot;regtest&quot; and ProcessCommandLine !has &quot;--version&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): For each hit, confirm it is a long-running mainnet consensus node (check command line for testnet/regtest flags and validate P2P listeners) and read the actual on-disk binary version if the reported version is blank. Step 2 (contain): Upgrade any confirmed mainnet node to zebrad 5.0.0 / zcashd 6.20.0 or isolate it from the P2P network; unpatched nodes are the sole residual exposure post-NU6.2. Step 3 (hunt): Correlate the host against the software-inventory UC, check for the same node identity elsewhere, and review whether any hardware-wallet-linked software wallet ran on the host (theft-mode vector called out in the advisory).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-101-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-101-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
-| where SoftwareName in~ (&quot;zebrad&quot;,&quot;zcashd&quot;,&quot;orchard&quot;,&quot;zcash_primitives&quot;,&quot;halo2_gadgets&quot;)
-| extend PatchedVersion = case(
-    SoftwareName =~ &quot;zebrad&quot;, &quot;5.0.0&quot;,
-    SoftwareName =~ &quot;zcashd&quot;, &quot;6.20.0&quot;,
-    SoftwareName =~ &quot;orchard&quot;, &quot;0.14.0&quot;,
-    SoftwareName =~ &quot;zcash_primitives&quot;, &quot;0.28.0&quot;,
-    SoftwareName =~ &quot;halo2_gadgets&quot;, &quot;0.5.0&quot;,
-    &quot;&quot;)
-| where isnotempty(PatchedVersion) and parse_version(SoftwareVersion) &lt; parse_version(PatchedVersion)
-| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, VulnerableVersion = SoftwareVersion, PatchedVersion, Cve = &quot;CVE-2026-54496&quot;
-| order by SoftwareName asc, DeviceName asc</code></pre></div>
+    <div class="tab-content active" id="art-101-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(1d)
+| where FileName in~ (&quot;zebrad&quot;,&quot;zebrad.exe&quot;,&quot;zcashd&quot;,&quot;zcashd.exe&quot;)
+| extend ProcVer = iff(isnotempty(ProcessVersionInfoProductVersion), parse_version(ProcessVersionInfoProductVersion), parse_version(&quot;0.0.0&quot;))
+| extend PatchThreshold = iff(FileName has &quot;zcashd&quot;, parse_version(&quot;6.20.0&quot;), parse_version(&quot;5.0.0&quot;))
+| extend VulnStatus = iff(ProcVer &lt; PatchThreshold, &quot;VULNERABLE_OR_UNKNOWN&quot;, &quot;patched&quot;)
+| where VulnStatus == &quot;VULNERABLE_OR_UNKNOWN&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessVersionInfoProductVersion, FolderPath, ProcessCommandLine
+| sort by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(1d)
+| where ActingProcessName has_any (&quot;zebrad&quot;,&quot;zcashd&quot;)
+| extend ProcVer = iff(isnotempty(ActingProcessFileVersion), parse_version(ActingProcessFileVersion), parse_version(&quot;0.0.0&quot;))
+| extend PatchThreshold = iff(ActingProcessName has &quot;zcashd&quot;, parse_version(&quot;6.20.0&quot;), parse_version(&quot;5.0.0&quot;))
+| where ProcVer &lt; PatchThreshold
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessFileVersion, ActingProcessCommandLine
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(zebrad OR zcashd)</code></pre></div>
+    <div class="tab-content" id="art-101-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(zebrad|zcashd)(\.exe)?$/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_version) as process_version from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;zebrad&quot;,&quot;zebrad.exe&quot;,&quot;zcashd&quot;,&quot;zcashd.exe&quot;)) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_version) as process_version from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;zebrad&quot;,&quot;zebrad.exe&quot;,&quot;zcashd&quot;,&quot;zcashd.exe&quot;)) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -8879,14 +8905,14 @@ DeviceTvmSoftwareVulnerabilities
 </details></div>
 </article>
 <article class="card" id="art-102" data-art-slug="2026-07-06-ghsa-critical-cve-2026-55615-langroid-neo4jchatagent-execute"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190,T1649"
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network"
-  data-targets="linux,vcs,web-app,windows"
+  data-splunk-cats="application,cloud,endpoint,network"
+  data-targets="linux,vcs,windows"
   data-uc-count="6" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-55615: Langroid: Neo4jChatAgent executes LLM-generated Cypher without validation (prompt-to-Cypher injection; config-conditional RCE), mirroring the SQLChatAgent bug f Langroid: Neo4jChatAgent executes LLM-generated Cypher without validation (prompt-to-Cypher injection; config-conditional RCE), mirroring the SQLChatAgent bug fixed in CVE-2026-25879 CVE-2026-55615 CVE-2026-25879 T1190 T1649 [LLM] Langroid Neo4jChatAgent: dangerous LLM-generated Cypher in Neo4j query.log (apoc.*/dbms.*/LOAD CSV/DETACH DELETE) [LLM] Neo4j JVM first-seen outbound fetch to public host (LOAD CSV / apoc.load SSRF + apoc.export exfil) [LLM] Neo4j server JVM spawning OS shell (APOC/dbms Cypher-to-RCE landing) [LLM] Vulnerable Langroid package present (&lt;=0.65.4) - Neo4jChatAgent unvalidated Cypher (CVE-2026-55615) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55615: Langroid: Neo4jChatAgent executes LLM-generate">
+  data-search="[GHSA / CRITICAL] CVE-2026-55615: Langroid: Neo4jChatAgent executes LLM-generated Cypher without validation (prompt-to-Cypher injection; config-conditional RCE), mirroring the SQLChatAgent bug f Langroid: Neo4jChatAgent executes LLM-generated Cypher without validation (prompt-to-Cypher injection; config-conditional RCE), mirroring the SQLChatAgent bug fixed in CVE-2026-25879 CVE-2026-55615 CVE-2026-25879 T1190 T1649 [LLM] Neo4j JVM spawning OS shell/LOLBin (APOC/dbms Cypher-injection RCE ceiling, CVE-2026-55615) [LLM] Neo4j process outbound egress to public IP (LOAD CSV / apoc.load.* SSRF, CVE-2026-55615) [LLM] Dangerous Cypher in Neo4j query log (apoc.*/dbms.*/LOAD CSV/DETACH DELETE) — CVE-2026-55615 [LLM] Vulnerable Langroid package present (CVE-2026-55615, langroid &lt;= 0.65.4) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55615: Langroid: Neo4jChatAgent executes LLM-generate">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-55615-langroid-neo4jchatagent-execute" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -8897,7 +8923,7 @@ DeviceTvmSoftwareVulnerabilities
     <span>2026-07-06</span>
     <span>6 use cases</span>
     <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
+    <span>5 kill-chain phases detected</span>
   </div>
   <p class="summary">Langroid: Neo4jChatAgent executes LLM-generated Cypher without validation (prompt-to-Cypher injection; config-conditional RCE), mirroring the SQLChatAgent bug fixed in CVE-2026-25879</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55615</span> <span class="ind cve">CVE-2026-25879</span></div>
@@ -8913,10 +8939,10 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell ">
   <div class="num">Phase 3</div>
@@ -8933,10 +8959,10 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Installation</div>
   <div class="marker">Likely</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 6</div>
   <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 7</div>
@@ -8944,75 +8970,120 @@ DeviceTvmSoftwareVulnerabilities
   <div class="marker">Detected</div>
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable Langroid package present (CVE-2026-55615, langroid &lt;= 0.65.4)</em></div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Langroid Neo4jChatAgent: dangerous LLM-generated Cypher in Neo4j query.log (apoc.*/dbms.*/LOAD CSV/DETACH DELETE) · [LLM] Neo4j server JVM spawning OS shell (APOC/dbms Cypher-to-RCE landing) · [LLM] Vulnerable Langroid package present (&lt;=0.65.4) - Neo4jChatAgent unvalidated Cypher (CVE-2026-55615) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55615: Langroid: Neo4jChatAgent executes LLM-generate</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Neo4j JVM spawning OS shell/LOLBin (APOC/dbms Cypher-injection RCE ceiling, CVE-2026-55615) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55615: Langroid: Neo4jChatAgent executes LLM-generate</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Neo4j JVM first-seen outbound fetch to public host (LOAD CSV / apoc.load SSRF + apoc.export exfil)</em></div></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Neo4j process outbound egress to public IP (LOAD CSV / apoc.load.* SSRF, CVE-2026-55615)</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Dangerous Cypher in Neo4j query log (apoc.*/dbms.*/LOAD CSV/DETACH DELETE) — CVE-2026-55615</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="927b829cea" data-platforms="datadog,sent,spl" data-targets="linux" open>
+  <div class="usecases"><details class="uc" data-uc-slug="56f85f30f7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
   <summary>
-    <span class="uc-title">Langroid Neo4jChatAgent: dangerous LLM-generated Cypher in Neo4j query.log (apoc.*/dbms.*/LOAD CSV/DETACH DELETE)</span>
+    <span class="uc-title">Neo4j JVM spawning OS shell/LOLBin (APOC/dbms Cypher-injection RCE ceiling, CVE-2026-55615)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="927b829cea" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="56f85f30f7" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Neo4j query log (query.log shipped via Syslog) for the exact unrestricted Cypher primitives an attacker steers through Langroid&#x27;s unvalidated Neo4jChatAgent (CVE-2026-55615): whole-graph destruction (MATCH (n) DETACH DELETE n), LOAD CSV remote fetch, and the code-execution ceiling procedures CALL apoc.* / apoc.load/export/import / apoc.cypher.runFile / CALL dbms.*. This is the direct on-the-wire artifact of the prompt-to-Cypher injection the SQLChatAgent validator (CVE-2026-25879) blocks but the neo4j module did not until 0.65.5.
+    <div class="uc-desc">Hunts the config-conditional RCE ceiling of the Langroid Neo4jChatAgent Cypher-injection flaw: when APOC/dbms.security procedures are enabled, attacker-steered Cypher (e.g. apoc.cypher.runFile, dbms.* admin procedures) executes OS commands, causing the Neo4j java.exe process to spawn a shell/LOLBin child. Article-specific because it keys on the Neo4j JVM as parent, not a generic office-&gt;script chain.
 
-Rationale: Uses the exact sink strings the advisory names as unrestricted on the Cypher path (MATCH (n) DETACH DELETE n at neo4j_chat_agent.py:287-293; LOAD CSV, apoc.load/export/import, apoc.cypher.runFile, CALL dbms.* as the RCE ceiling). Neo4j&#x27;s own SSRF KB and the Cypher-injection cheat sheet confirm these are the real read/destroy/SSRF/filesystem primitives, so a query.log line carrying them from an LLM-driven agent is high-fidelity.
+Rationale: Uses the article&#x27;s stated RCE ceiling (APOC/dbms procedures granting OS-command access) reified as the only host-observable artifact: the Neo4j JVM (java.exe with &#x27;neo4j&#x27; in cmdline) parenting a shell/LOLBin. Parent-JVM+shell-child is rare and high-fidelity. Cross-checked Neo4j APOC security guidelines and Varonis Neo4jection for the OS-exec surface.
 
 Cross-checked against:
-  • https://neo4j.com/developer/kb/protecting-against-ssrf/
-  • https://pentester.land/blog/cypher-injection-cheatsheet/
-  • https://github.com/langroid/langroid/security/advisories/GHSA-mxfr-6hcw-j9rq</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sanctioned ETL/data-load jobs legitimately running LOAD CSV against trusted feeds</li><li>DBA/backup automation calling apoc.export.csv.* or apoc.import.* on a schedule</li><li>Scheduled graph-cleanup jobs issuing MATCH (n) DETACH DELETE n against a scratch database</li><li>apoc.periodic / apoc.meta maintenance procedures invoked by the application itself</li><li>Developer running admin dbms.* procedures during troubleshooting from an interactive cypher-shell session</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessName has &quot;cypher-shell&quot;) and not (SyslogMessage has &quot;apoc.periodic&quot; or SyslogMessage has &quot;apoc.meta&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: pull the full query.log line and the surrounding session; confirm the query originated from the Langroid agent&#x27;s DB service account (not cypher-shell/DBA) and check whether the tenant is on langroid &lt;=0.65.4 (vulnerable). Look for LOAD CSV/apoc.load URLs pointing off-net or apoc.export writing to unexpected paths. 2) CONTAIN: rotate the Neo4j role the agent uses to a least-privilege read-only role, disable APOC file/network procedures in neo4j.conf (dbms.security.procedures.allowlist), and upgrade langroid to 0.65.5 which adds allow_dangerous_operations=False. 3) HUNT: pivot to UC on Neo4j-JVM outbound egress for the same time window to see if a LOAD CSV/apoc.load SSRF actually fetched or exfiltrated, and review app logs / RAG-ingested content for the injection source string.</div></details>
+  • https://advisories.gitlab.com/pypi/langroid/CVE-2026-55615/
+  • https://www.varonis.com/blog/neo4jection-secrets-data-and-cloud-exploits
+  • https://neo4j.com/docs/apoc/current/security-guidelines/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>neo4j-admin backup/restore or dump/load jobs that legitimately shell out (excluded via neo4j-admin filter)</li><li>APOC-based ETL pipelines that intentionally call apoc.systemexec for approved batch jobs</li><li>DevOps runbooks invoking cypher-shell wrappers that spawn cmd/powershell for orchestration</li><li>Container healthcheck scripts where the Neo4j entrypoint (java) execs sh for readiness probes</li><li>Monitoring agents attached to the JVM that periodically spawn certutil/curl for self-update</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has_any (&quot;neo4j-admin&quot;,&quot;cypher-shell&quot;,&quot;backup&quot;,&quot;restore&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the child ProcessCommandLine and the parent InitiatingProcessCommandLine; decode any base64/curl target. Confirm the parent is a production Neo4j JVM and check whether dbms.security.procedures.unrestricted / APOC is enabled on that server. 2) Contain: isolate the host, kill the child process tree, and revoke the Neo4j role&#x27;s APOC/dbms privileges (drop to a least-privilege read role); block outbound from the Neo4j host. 3) Hunt: review Neo4j query.log for the preceding Cypher (apoc.*/dbms.*/CALL) and the Langroid app logs for the injected prompt/RAG source; verify langroid is upgraded to &gt;=0.65.5.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-102-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+    <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;java.exe&quot;
+| where InitiatingProcessCommandLine has &quot;neo4j&quot;
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;bash.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;curl.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessCommandLine !has &quot;neo4j-admin&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, ChildProcess=FileName, ChildCmd=ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
-| where ProcessName has &quot;neo4j&quot; or SyslogMessage has &quot;neo4j&quot; or SyslogMessage has_cs &quot;MATCH&quot; or SyslogMessage has &quot;apoc.&quot;
-| where SyslogMessage has_any (&quot;DETACH DELETE&quot;, &quot;LOAD CSV&quot;, &quot;CALL apoc.&quot;, &quot;apoc.load&quot;, &quot;apoc.export&quot;, &quot;apoc.import&quot;, &quot;apoc.cypher.runFile&quot;, &quot;CALL dbms.&quot;, &quot;dbms.security&quot;, &quot;CALL db.index&quot;)
-| extend DangerOp = extract(@&quot;(?i)(DETACH\s+DELETE|LOAD\s+CSV|apoc\.[a-z.]+|dbms\.[a-z.]+)&quot;, 1, SyslogMessage)
-| project TimeGenerated, Computer, ProcessName, DangerOp, SyslogMessage
+| where EventID == 4688
+| where ParentProcessName endswith &quot;java.exe&quot;
+| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;curl.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
+| where CommandLine !has &quot;neo4j-admin&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.syslog OR linux.auditd) @process.name:(*neo4j* OR *java*) (&quot;DETACH DELETE&quot; OR &quot;detach delete&quot; OR &quot;LOAD CSV&quot; OR &quot;load csv&quot; OR &quot;CALL apoc.&quot; OR apoc.load OR apoc.export OR apoc.import OR apoc.cypher.runFile OR &quot;CALL dbms.&quot;)</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;neo4j:query&quot; OR source=&quot;*/logs/query.log&quot; OR source=&quot;*query.log&quot;)
-| where match(_raw, &quot;(?i)(DETACH\s+DELETE|LOAD\s+CSV|CALL\s+apoc\.|apoc\.(load|export|import)\.|apoc\.cypher\.runFile|CALL\s+dbms\.|CALL\s+db\.index)&quot;)
-| rex field=_raw &quot;(?i)(?&lt;danger_op&gt;DETACH\s+DELETE|LOAD\s+CSV|apoc\.[a-z.]+|dbms\.[a-z.]+)&quot;
-| stats count min(_time) as firstTime max(_time) as lastTime values(danger_op) as danger_ops by host source
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Neo4j JVM Spawning OS Shell or LOLBin (Cypher-injection RCE)
+id: 6f3a1c2e-9b4d-4e2a-8c11-2f7d5a9e1b04
+description: Detects the Neo4j java process spawning a command shell or LOLBin, consistent with APOC/dbms procedure abuse via LLM-generated Cypher (CVE-2026-55615).
+references:
+  - https://github.com/advisories/GHSA-2pq5-3q89-j7cc
+  - https://neo4j.com/docs/apoc/current/security-guidelines/
+author: SOC Detection Engineering
+date: 2026/07/11
+tags:
+  - attack.t1059.003
+  - attack.t1190
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith: &#x27;\java.exe&#x27;
+    ParentCommandLine|contains: &#x27;neo4j&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\mshta.exe&#x27;
+      - &#x27;\rundll32.exe&#x27;
+      - &#x27;\regsvr32.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+  filter_admin:
+    ParentCommandLine|contains: &#x27;neo4j-admin&#x27;
+  condition: selection and not filter_admin
+level: high</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\java.exe OR *\Java.exe OR *\JAVA.EXE) @ParentCommandLine:(*neo4j* OR *Neo4j* OR *NEO4J*) @Image:(*\cmd.exe OR *\powershell.exe OR *\PowerShell.exe OR *\pwsh.exe OR *\wscript.exe OR *\cscript.exe OR *\mshta.exe OR *\rundll32.exe OR *\regsvr32.exe OR *\certutil.exe OR *\bitsadmin.exe)</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^java(\.exe)?$/i
+| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32|certutil|bitsadmin)\.exe$/i
+| NOT CommandLine=/neo4j-admin/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;java.exe&quot; AND Processes.parent_process=&quot;*neo4j*&quot; AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;curl.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;java.exe&quot; AND Processes.parent_process=&quot;*neo4j*&quot; AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;curl.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="9d26245b6d" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="8fb6bb3b36" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Neo4j JVM first-seen outbound fetch to public host (LOAD CSV / apoc.load SSRF + apoc.export exfil)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-title">Neo4j process outbound egress to public IP (LOAD CSV / apoc.load.* SSRF, CVE-2026-55615)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="9d26245b6d" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="8fb6bb3b36" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Neo4j database server process (java running org.neo4j) making a first-time outbound connection to a public destination - the observable side-effect of attacker-steered LOAD CSV remote fetch, apoc.load.json/xml (SSRF) or apoc.export exfiltration driven through the unvalidated Neo4jChatAgent. This is the non-contingent &#x27;floor&#x27; primitive of CVE-2026-55615: present even without APOC for LOAD CSV, and the exfil path when APOC is enabled.
+    <div class="uc-desc">Hunts the non-contingent floor primitive of CVE-2026-55615: the built-in LOAD CSV remote-fetch and (when APOC enabled) apoc.load.* SSRF, where attacker-steered Cypher makes the Neo4j JVM fetch attacker-chosen URLs. Detects the Neo4j java process making outbound connections to public IPs, which for a database server is abnormal.
 
-Rationale: Scopes to the Neo4j server process (JVM whose command line contains &#x27;neo4j&#x27;) reaching a first-seen public host - the exact behaviour LOAD CSV remote fetch and apoc.load.*/apoc.export.* produce. Neo4j&#x27;s SSRF KB confirms LOAD CSV and APOC HTTP procedures egress to attacker-chosen URLs, making a graph DB&#x27;s unexpected outbound fetch a high-signal exfil/SSRF indicator; first-seen baselining strips routine trusted imports.
+Rationale: Grounded in the article&#x27;s floor claim (&#x27;built-in LOAD CSV remote-fetch (SSRF) primitive&#x27; plus apoc.load.* SSRF): a Neo4j database server making outbound public connections is the network-layer signature. Sentinel left empty because tying an outbound connection to the neo4j java process needs XDR/EDR network telemetry not present in native Sentinel tables (SecurityEvent/Syslog carry no per-process egress).
 
 Cross-checked against:
-  • https://neo4j.com/developer/kb/protecting-against-ssrf/
-  • https://pentester.land/blog/cypher-injection-cheatsheet/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
+  • https://advisories.gitlab.com/pypi/langroid/CVE-2026-55615/
+  • https://www.varonis.com/blog/neo4jection-secrets-data-and-cloud-exploits</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate LOAD CSV importing a dataset from a trusted external URL for the first time</li><li>apoc.load.json/xml calls to a sanctioned partner API the app newly integrated</li><li>Neo4j / APOC plugin version-update or license check to neo4j.com (mostly stripped by the RemoteUrl filter)</li><li>A co-located monitoring/APM agent sharing the same JVM command line reaching a SaaS endpoint</li><li>Backup tooling exporting to a cloud object-store endpoint via apoc.export</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteUrl !has &quot;amazonaws.com&quot; and RemoteUrl !has &quot;blob.core.windows.net&quot; and RemotePort in (80, 443, 21)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: resolve the RemoteIP/RemoteUrl and check reputation; confirm the initiating process is the Neo4j server JVM and correlate the timestamp against the Neo4j query.log (UC1) to see which LOAD CSV/apoc.load statement caused it. 2) CONTAIN: block the destination at egress, apply Neo4j&#x27;s IP-level SSRF allowlist (dbms.security.procedures / LOAD CSV allowlist), rotate the agent&#x27;s DB role to read-only, and upgrade langroid to 0.65.5. 3) HUNT: search apoc.export writes to disk and subsequent uploads on the same host, and review whether the destination was reached from any other internal service (pivot to lateral SSRF).</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Neo4j checking for plugin/APOC updates or license validation against a public endpoint</li><li>Legitimate LOAD CSV ETL jobs pulling public datasets as part of a data pipeline</li><li>apoc.load.json/apoc.load.jdbc calls against a sanctioned external API in normal operation</li><li>Neo4j Aura / cloud telemetry and crash-reporting beacons</li><li>JVM-embedded monitoring agent phoning home to a SaaS APM</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteUrl !endswith &quot;neo4j.com&quot; and RemoteUrl !endswith &quot;neo4j.io&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve the RemoteIP/RemoteUrl and check reputation; confirm whether the destination matches any sanctioned ETL/plugin-update endpoint for this Neo4j instance. 2) Contain: if unrecognized, block the destination at egress and quarantine the Neo4j host; snapshot the DB to preserve evidence. 3) Hunt: correlate to the same host&#x27;s Neo4j query.log for &#x27;LOAD CSV&#x27;/&#x27;apoc.load&#x27; statements and to Langroid app logs for the prompt/RAG content that generated them; validate least-privilege role and upgrade to langroid &gt;=0.65.5.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
@@ -9020,185 +9091,103 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-102-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let Baseline = DeviceNetworkEvents
-    | where Timestamp between (ago(30d) .. ago(LookbackDays))
-    | where InitiatingProcessCommandLine has &quot;neo4j&quot;
-    | where RemoteIPType == &quot;Public&quot;
-    | summarize by RemoteIP;
-DeviceNetworkEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where InitiatingProcessCommandLine has &quot;neo4j&quot;        // Neo4j JVM (java -cp ... org.neo4j.server)
+    <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;java.exe&quot;
+| where InitiatingProcessCommandLine has &quot;neo4j&quot;
 | where RemoteIPType == &quot;Public&quot;
 | where ActionType == &quot;ConnectionSuccess&quot;
-| join kind=leftanti Baseline on RemoteIP
-| where RemoteUrl !endswith &quot;neo4j.com&quot; and RemoteUrl !endswith &quot;graphdatabase.org&quot;   // strip product update/telemetry
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
-| order by Timestamp desc</code></pre></div>
+| summarize FirstSeen=min(Timestamp), Conns=count(), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, RemoteIP
+| order by FirstSeen desc</code></pre></div>
     <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-let LookbackDays = 7d;
-let Baseline = DeviceNetworkEvents
-    | where TimeGenerated between (ago(30d) .. ago(LookbackDays))
-    | where InitiatingProcessCommandLine has &quot;neo4j&quot;
-    | where RemoteIPType == &quot;Public&quot;
-    | summarize by RemoteIP;
 DeviceNetworkEvents
-| where TimeGenerated &gt; ago(LookbackDays)
-| where InitiatingProcessCommandLine has &quot;neo4j&quot;        // Neo4j JVM (java -cp ... org.neo4j.server)
+| where TimeGenerated &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;java.exe&quot;
+| where InitiatingProcessCommandLine has &quot;neo4j&quot;
 | where RemoteIPType == &quot;Public&quot;
 | where ActionType == &quot;ConnectionSuccess&quot;
-| join kind=leftanti Baseline on RemoteIP
-| where RemoteUrl !endswith &quot;neo4j.com&quot; and RemoteUrl !endswith &quot;graphdatabase.org&quot;   // strip product update/telemetry
-| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\\java.exe OR *\\Java.exe) NOT CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 169.254.0.0/16) NOT @DestinationHostname:(*.neo4j.com OR *.graphdatabase.org)</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/java(\.exe)?$/i
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;169.254.0.0/16&quot;, field=RemoteAddressIP4)
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())
-| count &gt; 0</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name=&quot;java&quot; OR All_Traffic.app=&quot;java&quot; OR All_Traffic.process=&quot;*neo4j*&quot;) All_Traffic.direction=&quot;outbound&quot; NOT (All_Traffic.dest_ip IN (&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;,&quot;127.0.0.0/8&quot;,&quot;169.254.0.0/16&quot;)) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| where firstTime &gt; relative_time(now(), &quot;-7d&quot;)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name=&quot;java&quot; OR All_Traffic.app=&quot;java&quot; OR All_Traffic.process=&quot;*neo4j*&quot;) All_Traffic.direction=&quot;outbound&quot; NOT (All_Traffic.dest_ip IN (&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;,&quot;127.0.0.0/8&quot;,&quot;169.254.0.0/16&quot;)) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| where firstTime &gt; relative_time(now(), &quot;-7d&quot;)
-| sort - count</code></pre></div></div>
+| summarize FirstSeen=min(TimeGenerated), Conns=count(), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, RemoteIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\java.exe OR *\Java.exe OR *\JAVA.EXE) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8)</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\\java(\.exe)?$/i
+| NOT cidr(RemoteAddressIP4, subnet=&quot;10.0.0.0/8&quot;)
+| NOT cidr(RemoteAddressIP4, subnet=&quot;172.16.0.0/12&quot;)
+| NOT cidr(RemoteAddressIP4, subnet=&quot;192.168.0.0/16&quot;)
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.app=&quot;java*&quot; AND All_Traffic.direction=&quot;outbound&quot; AND NOT (All_Traffic.dest_ip IN (&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;,&quot;127.0.0.0/8&quot;)) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.app=&quot;java*&quot; AND All_Traffic.direction=&quot;outbound&quot; AND NOT (All_Traffic.dest_ip IN (&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;,&quot;127.0.0.0/8&quot;)) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="1652fdbc07" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,web-app,windows">
+<details class="uc" data-uc-slug="9bc6e1174e" data-platforms="datadog,sent,spl" data-targets="linux">
   <summary>
-    <span class="uc-title">Neo4j server JVM spawning OS shell (APOC/dbms Cypher-to-RCE landing)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1652fdbc07" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Dangerous Cypher in Neo4j query log (apoc.*/dbms.*/LOAD CSV/DETACH DELETE) — CVE-2026-55615</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="9bc6e1174e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Neo4j database server process (java whose command line contains &#x27;neo4j&#x27;, or neo4j.exe) spawning a command interpreter (cmd/powershell/sh/bash) - the RCE ceiling of CVE-2026-55615 when APOC / dbms.security procedures are granted to the DB role, i.e. the Cypher analogue of the parent CVE-2026-25879 &#x27;COPY ... FROM PROGRAM&#x27; RCE. A graph database process launching a shell is anomalous by design and indicates an attacker-steered apoc.* / dbms.* procedure achieved OS-command execution.
+    <div class="uc-desc">Hunts the injected-payload text directly in Neo4j query/audit logs: LLM-generated Cypher containing the exact dangerous primitives the article calls out — DETACH DELETE (graph destruction floor), LOAD CSV, and APOC/dbms/db admin procedures (RCE/SSRF/file ceiling). Targets the write/destroy and code-exec statements a validated agent should never emit.
 
-Rationale: Encodes the advisory&#x27;s stated RCE ceiling: when APOC/dbms.security procedures are enabled, attacker-steered Cypher (apoc.cypher.runFile, dbms.*) achieves OS-command execution on the DB host - observable as the Neo4j JVM (parent cmdline contains &#x27;neo4j&#x27;) spawning a shell. Neo4j never legitimately spawns cmd/powershell/sh at runtime, and the advisory explicitly parallels the parent CVE-2026-25879 COPY FROM PROGRAM RCE, making this a low-FP, high-confidence pivot.
+Rationale: Uses the article&#x27;s verbatim dangerous-primitive list (DETACH DELETE, LOAD CSV, apoc.load/cypher.runFile/import/export, CALL dbms.*/db.*) — the exact statements the 0.65.5 validator now blocks — as query-log content matches. Defender/Falcon/CloudWatch left empty: Neo4j application query logs are not shipped to Defender XDR, FDR, or CloudTrail; only syslog-ingesting SIEMs (Sentinel/Datadog) or the raw Splunk index see them.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-2pq5-3q89-j7cc
-  • https://www.thehackerwire.com/langroid-sqlchatagent-rce-via-prompt-injection-cve-2026-25879/
-  • https://neo4j.com/developer/kb/protecting-against-ssrf/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Neo4j Docker/entrypoint wrapper scripts that shell out at container start (parent cmdline still contains &#x27;neo4j&#x27;)</li><li>APOC-based housekeeping that legitimately calls apoc.systemCommand in a sanctioned automation</li><li>Admin running neo4j-admin backup/restore which may fork a shell</li><li>Monitoring/APM agent injected into the JVM invoking a helper shell</li><li>Config-management (Ansible/Chef) executing under the neo4j service account during deploy</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;neo4j-admin&quot; and InitiatingProcessCommandLine !has &quot;docker-entrypoint&quot; and ProcessCommandLine !has &quot;apoc.systemCommand&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: capture the child ProcessCommandLine and full process tree; a shell with recon/download/reverse-shell args under the Neo4j JVM is a confirmed RCE - benign hits are container-init or backup wrappers. Correlate to the query.log UC for the apoc.*/dbms.* statement that triggered it. 2) CONTAIN: isolate the host, kill the child process chain, disable APOC/system procedures (dbms.security.procedures.allowlist / unrestricted=none) in neo4j.conf, rotate the agent DB role to least-privilege read-only, and upgrade langroid to 0.65.5. 3) HUNT: sweep for persistence and secondary payloads dropped by the shell (FileWritten on the host), outbound C2 from the Neo4j JVM, and any credential/graph-data access in the same session.</div></details>
+  • https://neo4j.com/developer/kb/protecting-against-cypher-injection/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate graph maintenance running DETACH DELETE to prune stale nodes</li><li>Sanctioned ETL using LOAD CSV or apoc.load.* to ingest external data</li><li>DBA running CALL dbms.listQueries / dbms.components for diagnostics</li><li>apoc.export.* used for scheduled backups/reporting</li><li>Schema migration scripts issuing apoc.import.* on deploy</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SyslogMessage !has &quot;neo4j-admin&quot; and SyslogMessage !has_any (&quot;apoc.periodic.iterate&quot;,&quot;dbms.listQueries&quot;,&quot;dbms.components&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the full Cypher statement and the connecting user/session; determine whether it originated from the Langroid agent&#x27;s DB role vs. a human DBA. 2) Contain: if agent-originated and destructive (DETACH DELETE/apoc.export/dbms.*), suspend the agent&#x27;s DB credential and restore graph from snapshot if data was deleted. 3) Hunt: pivot to Langroid app logs for the prompt/RAG document that produced the statement (indirect injection), and to host EDR for any java-&gt;shell child (see RCE UC); confirm allow_dangerous_operations is False and langroid &gt;=0.65.5.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-sigma">Sigma</button>
+      <button class="tab-btn active" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-102-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessCommandLine has &quot;neo4j&quot;        // Neo4j JVM (java -cp ... org.neo4j.server) or neo4j service
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;sh&quot;,&quot;sh.exe&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content active" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
 | where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where ParentProcessName endswith &quot;\\java.exe&quot; or ParentProcessName has &quot;neo4j&quot;
-| where NewProcessName has_any (&quot;\\cmd.exe&quot;,&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;,&quot;\\wscript.exe&quot;,&quot;\\cscript.exe&quot;,&quot;\\bash.exe&quot;,&quot;\\sh.exe&quot;)
-| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
+| where ProcessName has &quot;neo4j&quot; or SyslogMessage has &quot;neo4j&quot;
+| where SyslogMessage has_any (&quot;apoc.load&quot;,&quot;apoc.cypher.runFile&quot;,&quot;apoc.import&quot;,&quot;apoc.export&quot;,&quot;apoc.config&quot;,&quot;CALL dbms.&quot;,&quot;CALL db.&quot;,&quot;LOAD CSV&quot;,&quot;DETACH DELETE&quot;)
+| project TimeGenerated, Computer, HostName, ProcessName, SyslogMessage
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Neo4j Server Process Spawning OS Shell (APOC/dbms Cypher-to-RCE)
-id: 6f3c1a2e-9b47-4d1e-8a10-2c5f7e0d9b31
-status: experimental
-description: Detects the Neo4j database JVM spawning a command interpreter, the OS-command execution landing of prompt-to-Cypher injection via unvalidated apoc.*/dbms.* procedures (CVE-2026-55615).
-references:
-  - https://github.com/advisories/GHSA-2pq5-3q89-j7cc
-  - https://neo4j.com/developer/kb/protecting-against-ssrf/
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1190
-  - attack.t1059.001
-  - attack.t1059.004
-logsource:
-  category: process_creation
-detection:
-  selection_parent:
-    ParentCommandLine|contains: &#x27;neo4j&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\wscript.exe&#x27;
-      - &#x27;\cscript.exe&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-  condition: selection_parent and selection_child
-falsepositives:
-  - Neo4j entrypoint/wrapper scripts invoking a shell at container startup
-  - Administrative maintenance jobs launched under the neo4j service account
-level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentCommandLine:*neo4j* @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\wscript.exe OR *\\cscript.exe)</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| regex(&quot;(?i)neo4j&quot;, field=ParentImageFileName) OR ParentBaseFileName=/^(java|neo4j)(\.exe)?$/i
-| ImageFileName=/(\\(cmd|powershell|pwsh|wscript|cscript)\.exe|\/(sh|bash|dash))$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
-| count &gt; 0</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*neo4j*&quot; OR Processes.parent_process_name IN (&quot;java&quot;,&quot;java.exe&quot;,&quot;neo4j.exe&quot;)) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| where match(parent_process, &quot;(?i)neo4j&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*neo4j*&quot; OR Processes.parent_process_name IN (&quot;java&quot;,&quot;java.exe&quot;,&quot;neo4j.exe&quot;)) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| where match(parent_process, &quot;(?i)neo4j&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog @process.name:*neo4j* (*apoc.load* OR *apoc.cypher.runFile* OR *apoc.import* OR *apoc.export* OR *&quot;CALL dbms.&quot;* OR *&quot;CALL db.&quot;* OR *&quot;LOAD CSV&quot;* OR *&quot;DETACH DELETE&quot;*)</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;neo4j:query&quot; OR source=&quot;*query.log&quot; OR source=&quot;*security.log&quot;) (&quot;apoc.load&quot; OR &quot;apoc.cypher.runFile&quot; OR &quot;apoc.import&quot; OR &quot;apoc.export&quot; OR &quot;apoc.config&quot; OR &quot;CALL dbms.&quot; OR &quot;CALL db.&quot; OR &quot;LOAD CSV&quot; OR &quot;DETACH DELETE&quot;) | rex field=_raw &quot;(?i)(?&lt;cypher_verb&gt;apoc\.\w+|dbms\.\w+|LOAD CSV|DETACH DELETE)&quot; | stats count min(_time) as firstTime max(_time) as lastTime values(cypher_verb) as verbs by host source | convert ctime(firstTime) ctime(lastTime)</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="e83570c91b" data-platforms="def,sent" data-targets="">
+<details class="uc" data-uc-slug="d661e95928" data-platforms="def,sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Vulnerable Langroid package present (&lt;=0.65.4) - Neo4jChatAgent unvalidated Cypher (CVE-2026-55615)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">Vulnerable Langroid package present (CVE-2026-55615, langroid &lt;= 0.65.4)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e83570c91b" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="d661e95928" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts running a Langroid version affected by CVE-2026-55615 (pip:langroid &lt;= 0.65.4), where Neo4jChatAgent executes LLM-generated Cypher with no validation, no statement-type allowlist and no opt-out gate. This is the exploitable precondition: the fix (allow_dangerous_operations default False) only lands in 0.65.5, so any earlier version co-located with a Neo4j/APOC deployment is the attack surface.
+    <div class="uc-desc">Surfaces hosts running the vulnerable Langroid package (pip:langroid &lt;= 0.65.4) exposed to CVE-2026-55615 Neo4jChatAgent Cypher injection. A hygiene/exposure detection so the SOC can drive remediation to the fixed 0.65.5 before the injection is exploited.
 
-Rationale: Pins the exact affected-package range the advisory states (pip:langroid vuln &lt;= 0.65.4, fixed 0.65.5) and the assigned CVE-2026-55615. Version-inventory / TVM is the only telemetry that expresses the &#x27;no opt-out gate&#x27; precondition reviewer feedback asked for; parse_version gives an exact, hand-edit-free version comparison.
+Rationale: Uses the article&#x27;s concrete fixed-version fact (affected pip:langroid &lt;= 0.65.4, fixed 0.65.5) and the assigned CVE-2026-55615 as an exact TVM match. Low FP (deterministic inventory match). Datadog/Falcon/CloudWatch empty: package-vulnerability inventory is not an FDR/CloudTrail/Datadog-log event stream in this tenant.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-2pq5-3q89-j7cc
-  • https://advisories.gitlab.com/pypi/langroid/CVE-2026-25879/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer workstation with an old langroid in a venv that never connects to a live Neo4j (exploitable surface absent)</li><li>A pinned old langroid used only with SQLChatAgent/other agents, not Neo4jChatAgent</li><li>CI build agent that transiently installs langroid for tests</li><li>Air-gapped analytics host where the agent prompt is not attacker-influenceable</li><li>Vendored/forked copy already carrying the 0.65.5 validation backported despite reporting an older version string</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: for each host confirm whether Neo4jChatAgent is actually instantiated and pointed at a live Neo4j (grep app config for Neo4jChatAgentConfig / bolt:// URIs) and whether APOC/dbms procedures are granted to that DB role - that distinguishes real exposure from a dormant dependency. 2) CONTAIN: upgrade langroid to &gt;=0.65.5 (or set allow_dangerous_operations=False and restrict the Neo4j role to read-only) and disable APOC file/network procedures. 3) HUNT: on exposed hosts, run the query.log dangerous-Cypher UC and the Neo4j-JVM egress/shell UCs over the retention window to confirm no prior exploitation occurred.</div></details>
+  • https://advisories.gitlab.com/pypi/langroid/CVE-2026-55615/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Isolated dev/test host running langroid intentionally with no Neo4j backend (lower real risk but still flagged)</li><li>Vendored/virtualenv copy of langroid detected but not actually imported at runtime</li><li>Host pinned to &lt;=0.65.4 for compatibility with allow_dangerous_operations explicitly False and a least-privilege role (mitigated but still vulnerable code)</li><li>TVM lag reporting a version already upgraded but not yet rescanned</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm SoftwareVersion &lt;= 0.65.4 and whether the host actually instantiates Neo4jChatAgent/ArangoChatAgent against a live DB (check app config/query logs). 2) Contain: prioritize upgrade to langroid &gt;=0.65.5; in the interim ensure allow_dangerous_operations remains False and the Neo4j role is read-only with APOC/dbms.security procedures disabled. 3) Hunt: for confirmed-in-use hosts, review Neo4j query logs and EDR for the dangerous-Cypher and java-&gt;shell UCs above to rule out prior exploitation.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
-| where Timestamp &gt; ago(1d)
-| where SoftwareName has &quot;langroid&quot;
-| extend Ver = parse_version(SoftwareVersion)
-| where Ver &lt; parse_version(&quot;0.65.5&quot;)
-| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
+    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2026-55615&quot;
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by DeviceName asc</code></pre></div>
     <div class="tab-content" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId =~ &quot;CVE-2026-55615&quot; or (SoftwareName has &quot;langroid&quot; and not(SoftwareVersion startswith &quot;0.65.5&quot;) and not(SoftwareVersion startswith &quot;0.66&quot;) and not(SoftwareVersion startswith &quot;0.7&quot;))
-| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, RecommendedSecurityUpdate
+| where TimeGenerated &gt; ago(7d)
+| where CveId == &quot;CVE-2026-55615&quot;
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Vulnerabilities where Vulnerabilities.signature=&quot;CVE-2026-55615&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)`</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Vulnerabilities where Vulnerabilities.signature=&quot;CVE-2026-55615&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)`</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">

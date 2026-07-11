@@ -3355,11 +3355,11 @@ DeviceTvmSoftwareVulnerabilities
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-platforms="def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,web"
   data-targets="linux,vcs,windows"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calculato, Leading to Remote Code Execution &amp; Denial of Service YesWiki has Unsafe eval() in its Formula Calculato, Leading to Remote Code Execution &amp; Denial of Service CVE-2026-52778 T1190 [LLM] YesWiki CalcField eval() RCE: php/apache web process spawns shell or recon binary [LLM] YesWiki post-RCE credential access: web user reads /etc/passwd or .env [LLM] YesWiki webshell persistence: php/apache worker writes .php under Bazar webroot [LLM] YesWiki CVE-2026-52778 exploit request: Bazar formula with system() or nested-paren ReDoS Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu">
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calculato, Leading to Remote Code Execution &amp; Denial of Service YesWiki has Unsafe eval() in its Formula Calculato, Leading to Remote Code Execution &amp; Denial of Service CVE-2026-52778 T1190 [LLM] YesWiki Bazar CalcField formula RCE: PHP command-exec functions in HTTP request (CVE-2026-52778) [LLM] YesWiki CalcField ReDoS: deeply nested-parenthesis formula payload (CVE-2026-52778) [LLM] YesWiki RCE landing: web-server (php-fpm/apache) spawning shell or recon commands (CVE-2026-52778) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-09-ghsa-critical-cve-2026-52778-yeswiki-has-unsafe-eval-in-its-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -3368,7 +3368,7 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-09</span>
-    <span>6 use cases</span>
+    <span>5 use cases</span>
     <span>1 technique</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -3418,64 +3418,185 @@ DeviceTvmSoftwareVulnerabilities
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] YesWiki CVE-2026-52778 exploit request: Bazar formula with system() or nested-paren ReDoS</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] YesWiki CalcField eval() RCE: php/apache web process spawns shell or recon binary</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] YesWiki webshell persistence: php/apache worker writes .php under Bazar webroot · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] YesWiki Bazar CalcField formula RCE: PHP command-exec functions in HTTP request (CVE-2026-52778)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] YesWiki RCE landing: web-server (php-fpm/apache) spawning shell or recon commands (CVE-2026-52778)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] YesWiki post-RCE credential access: web user reads /etc/passwd or .env</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] YesWiki CalcField ReDoS: deeply nested-parenthesis formula payload (CVE-2026-52778)</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="12fc097a1d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="b99288ad2a" data-platforms="sent,sigma,spl" data-targets="vcs" open>
   <summary>
-    <span class="uc-title">YesWiki CalcField eval() RCE: php/apache web process spawns shell or recon binary</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">YesWiki Bazar CalcField formula RCE: PHP command-exec functions in HTTP request (CVE-2026-52778)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="12fc097a1d" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="b99288ad2a" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the CVE-2026-52778 execution phase where a bypass of the CalcField.php regex sandbox reaches eval() and runs OS commands (PoC: abs(1) + system(&#x27;id&#x27;)). A PHP-FPM/Apache worker forking /bin/sh, id, whoami, uname, curl or wget is the tell that the math parser was weaponised into command execution as www-data.
+    <div class="uc-desc">Hunts inbound HTTP requests to a YesWiki Bazar form/CalcField handler whose formula payload contains PHP command-execution primitives (system(), passthru(), shell_exec(), exec(), base64_decode()) — the Scenario-B RCE payload `abs(1) + system(&#x27;id&#x27;)` that slips past the flawed recursive-regex sanitizer into eval(). Article-specific because it keys on the Bazar path plus the exact PHP sinks the write-up names, not generic web attacks.
 
-Rationale: Directly models the article&#x27;s RCE PoC (abs(1) + system(&#x27;id&#x27;)) — a web interpreter (php-fpm/apache) is the parent and the child is a shell/recon binary; the parent constraint is what turns generic &#x27;id ran&#x27; into a high-fidelity CVE-2026-52778 signal.
+Rationale: Anchors on the exact Bazar/CalcField sink and the PHP command-exec functions named in the article&#x27;s Scenario-B PoC (`system(&#x27;id&#x27;)`); combining the &#x27;bazar&#x27; path token with a PHP execution primitive is extremely rare in legitimate math-formula traffic, giving high fidelity.
 
 Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-52778
   • https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8
-  • https://www.thehackerwire.com/yeswiki-rce-redos-in-bazar-calcfield-cve-2026-52778/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A YesWiki/PHP plugin legitimately shelling out to ImageMagick (convert) or ffmpeg for media processing</li><li>Backup or cron jobs run under the www-data account invoking bash wrapper scripts</li><li>CI/deploy tooling on the web host running composer post-install hooks that fork sh</li><li>Monitoring agents that php-exec &#x27;uname&#x27;/&#x27;whoami&#x27; for host inventory</li><li>Webhook handlers that legitimately call curl/wget to fetch remote resources</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;ImageMagick&quot;,&quot;convert &quot;,&quot;ffmpeg&quot;) or InitiatingProcessCommandLine has &quot;composer&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree for the alerting host — confirm the php-fpm/apache parent&#x27;s InitiatingProcessCommandLine and the child ProcessCommandLine; look for &#x27;id&#x27;,&#x27;uname&#x27;,&#x27;curl&#x27; with no matching application feature. Correlate the timestamp with web access logs for a Bazar form-save request. 2) Contain: isolate the host, kill the offending php-fpm worker, and block the source IP at the WAF; take the YesWiki instance offline pending patch to &gt;=4.6.6. 3) Hunt: on the same host search for new .php files in the webroot (webshell), www-data reads of /etc/passwd or .env, and outbound connections from php-fpm to attacker infrastructure.</div></details>
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-52778
+  • https://advisories.gitlab.com/composer/yeswiki/yeswiki/CVE-2026-52778/
+  • https://cvereports.com/reports/CVE-2026-52778</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate Bazar wiki page whose text content or form label literally contains the word &#x27;exec&#x27; or &#x27;system&#x27; in prose being saved via GET-encoded form data</li><li>Security scanners / pentest tools (Nikto, Nuclei CVE-2026-52778 template) probing the endpoint from an authorized source IP</li><li>Developer testing the CalcField patch with benign formula strings that happen to include function-like tokens</li><li>WAF that logs the full decoded body producing the same signature twice (allow + block events)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestClientApplication !has &quot;Nuclei&quot; and RequestClientApplication !has &quot;Nikto&quot; and SourceIP !in (&quot;&lt;authorized-scanner-ip&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request (URL + body) and the DestinationHostName; confirm the target is a YesWiki host &lt; 4.6.6 and check the web/PHP error log at the same timestamp for eval() output. Identify SourceIP and whether the request returned 200. 2) Contain: block the SourceIP at the WAF, take the YesWiki instance offline or virtual-patch the Bazar endpoint, and rotate any secrets in .env readable by www-data. 3) Hunt: pivot to endpoint process telemetry for php-fpm/apache spawning shells (UC3) on that host, review outbound connections from the web account, and grep the webroot for newly written PHP files (webshells).</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-36-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-36-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-36-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-36-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-36-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-36-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-36-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-36-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+    <div class="tab-content active" id="art-36-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(7d)
-| where ActingProcessName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
-| where TargetProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
+| where RequestURL has &quot;bazar&quot; or RequestContext has &quot;bazar&quot;
+| extend Payload = strcat(tostring(RequestURL), &quot; &quot;, tostring(RequestContext), &quot; &quot;, tostring(Message))
+| where Payload has_any (&quot;system(&quot;,&quot;passthru(&quot;,&quot;shell_exec(&quot;,&quot;exec(&quot;,&quot;base64_decode(&quot;,&quot;proc_open(&quot;)
+| project TimeGenerated, SourceIP, DestinationHostName, DeviceProduct, RequestMethod, RequestURL, RequestClientApplication, DeviceAction
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki CalcField eval RCE - PHP web process spawns shell or recon binary
-id: 8f2c1a44-6b7d-4e93-9c1a-2f0d7e5b9a13
-description: Detects a PHP-FPM/Apache web worker forking a shell or reconnaissance binary, indicating CVE-2026-52778 eval() command execution in YesWiki Bazar CalcField.
+    <div class="tab-content" id="art-36-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki Bazar CalcField Formula RCE Payload in HTTP Request (CVE-2026-52778)
+id: 8f2c1a34-7b90-4e21-9d6a-2c5f0a1b3e77
+description: Detects HTTP requests to a YesWiki Bazar/CalcField handler whose formula payload contains PHP command-execution functions, indicating attempted eval() sandbox bypass (CVE-2026-52778).
 references:
-  - https://github.com/advisories/GHSA-px5m-h76g-p7p8
+  - https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8
   - https://nvd.nist.gov/vuln/detail/CVE-2026-52778
 author: SOC Detection Engineering
-date: 2026/07/09
+date: 2026/07/11
 tags:
-  - attack.t1059.004
   - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: webserver
+detection:
+  selection_path:
+    c-uri|contains: &#x27;bazar&#x27;
+  selection_payload:
+    c-uri|contains:
+      - &#x27;system(&#x27;
+      - &#x27;passthru(&#x27;
+      - &#x27;shell_exec(&#x27;
+      - &#x27;exec(&#x27;
+      - &#x27;base64_decode(&#x27;
+      - &#x27;proc_open(&#x27;
+  condition: selection_path and selection_payload
+level: high</code></pre></div>
+    <div class="tab-content" id="art-36-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*bazar*&quot; AND (Web.url=&quot;*system(*&quot; OR Web.url=&quot;*passthru(*&quot; OR Web.url=&quot;*shell_exec(*&quot; OR Web.url=&quot;*exec(*&quot; OR Web.url=&quot;*base64_decode(*&quot; OR Web.url=&quot;*proc_open(*&quot; OR Web.url=&quot;*%60*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-36-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*bazar*&quot; AND (Web.url=&quot;*system(*&quot; OR Web.url=&quot;*passthru(*&quot; OR Web.url=&quot;*shell_exec(*&quot; OR Web.url=&quot;*exec(*&quot; OR Web.url=&quot;*base64_decode(*&quot; OR Web.url=&quot;*proc_open(*&quot; OR Web.url=&quot;*%60*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1e5d85b5e4" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">YesWiki CalcField ReDoS: deeply nested-parenthesis formula payload (CVE-2026-52778)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1e5d85b5e4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts HTTP requests to a YesWiki Bazar/CalcField handler carrying a formula with a long run of nested/open parentheses — the Scenario-A ReDoS/PCRE stack-overflow payload `((((...1+1...))))` (multiplied 2000–5000x) that crashes the PHP-FPM worker. Article-specific: the recursive `(?1)+` regex plus thousands of open parens is the exact DoS vector described.
+
+Rationale: The article&#x27;s Scenario-A payload is a literal run of thousands of `(` sent to the Bazar CalcField; a 20+ open-paren run (raw or URL-encoded %28) on that path is a non-ambiguous signature of the ReDoS/stack-overflow attempt and essentially never occurs in benign math formulas.
+
+Cross-checked against:
+  • https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-52778
+  • https://cvereports.com/reports/CVE-2026-52778</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Endpoint Denial of Service: Application or System Exploitation">T1499.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Automated vulnerability scanners firing the public CVE-2026-52778 ReDoS test payload from an authorized source</li><li>A genuinely complex but legitimate nested math formula authored by a power user (rare beyond ~5 nesting levels)</li><li>Fuzzing / QA tooling run by the app team against a staging YesWiki host</li><li>WAF logging the same oversized request on both the allow and block pass</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&lt;authorized-scanner-ip&gt;&quot;) and DeviceAction != &quot;allowed-staging&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: correlate the request timestamp with PHP-FPM/Apache worker crashes or 5xx spikes and host CPU on the YesWiki server; count open parens to confirm intent vs. a legit formula. 2) Contain: block the SourceIP, enable a WAF rule limiting request body length / paren count to the Bazar endpoint, and confirm PHP `pcre.recursion_limit`/stack limits; upgrade to YesWiki 4.6.6. 3) Hunt: check for repeated bursts from the same IP/subnet (sustained DoS), and verify the same actor did not also send the Scenario-B RCE payload (UC1).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-36-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-36-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-36-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-36-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestURL has &quot;bazar&quot; or RequestContext has &quot;bazar&quot;
+| extend Payload = strcat(tostring(RequestURL), &quot; &quot;, tostring(RequestContext), &quot; &quot;, tostring(Message))
+| where Payload matches regex @&quot;(\(|%28){20,}&quot;
+| project TimeGenerated, SourceIP, DestinationHostName, DeviceProduct, RequestMethod, RequestURL, DeviceAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-36-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki CalcField Nested-Parenthesis ReDoS Payload (CVE-2026-52778)
+id: 3a71d9c6-4e02-4b8f-b1a7-9f2e6c0d5481
+description: Detects HTTP requests to a YesWiki Bazar/CalcField handler carrying a long run of open parentheses, matching the recursive-regex ReDoS / PCRE stack-overflow DoS payload of CVE-2026-52778.
+references:
+  - https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-52778
+author: SOC Detection Engineering
+date: 2026/07/11
+tags:
+  - attack.t1499.004
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection_path:
+    c-uri|contains: &#x27;bazar&#x27;
+  selection_redos:
+    c-uri|re: &#x27;(\(|%28){20,}&#x27;
+  condition: selection_path and selection_redos
+level: high</code></pre></div>
+    <div class="tab-content" id="art-36-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*bazar*&quot; AND (Web.url=&quot;*((((((((((((((((((((*&quot; OR Web.url=&quot;*%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-36-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*bazar*&quot; AND (Web.url=&quot;*((((((((((((((((((((*&quot; OR Web.url=&quot;*%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28%28*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="20648c4dbc" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">YesWiki RCE landing: web-server (php-fpm/apache) spawning shell or recon commands (CVE-2026-52778)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="20648c4dbc" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a YesWiki web-server process (php-fpm, apache2, httpd, nginx) spawning a shell or reconnaissance binary (sh, bash, id, whoami, uname, cat, curl, wget) as the www-data/apache account — the post-eval() code-execution landing where `system(&#x27;id&#x27;)` runs under the web user. Article-specific because it targets the exact www-data privilege context and command (`id`) the write-up shows.
+
+Rationale: Directly targets the article&#x27;s Scenario-B outcome — `system(&#x27;id&#x27;)` executed under the www-data web user — by pairing a YesWiki web-server parent with a shell/recon child; the parent→child pair plus the web service account is a high-fidelity RCE-confirmation signal.
+
+Cross-checked against:
+  • https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-52778
+  • https://advisories.gitlab.com/composer/yeswiki/yeswiki/CVE-2026-52778/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate PHP application code that shells out (e.g. YesWiki calling git/convert/curl for exports, thumbnails, or update checks)</li><li>Server monitoring/health-check plugins that run `uname`/`id` from PHP</li><li>Cron or deploy scripts running as www-data invoking bash wrappers</li><li>Composer/package tooling executed under the web account during maintenance</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// exclude known-good app shell-outs on this fleet
+| where not (ProcessCommandLine has_any (&quot;git &quot;,&quot;composer&quot;,&quot;convert &quot;,&quot;/healthcheck&quot;) )</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect ProcessCommandLine of the child and the parent php-fpm command; confirm the host is YesWiki &lt; 4.6.6 and correlate with a UC1/UC2 web hit in the preceding seconds. Determine if the command is recon (id/whoami) or download (curl/wget of a second stage). 2) Contain: isolate the host, kill the offending php-fpm worker, block outbound from the web account, and rotate www-data-readable secrets. 3) Hunt: search FileWritten/DeviceFileEvents for new .php files under the webroot (webshells), review crontab and SUID changes for persistence, and sweep other internet-facing YesWiki hosts for the same parent→child pattern.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-36-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-36-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-36-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-36-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-36-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-36-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
+| where InitiatingProcessAccountName in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;http&quot;,&quot;httpd&quot;,&quot;daemon&quot;) or AccountName in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;http&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-36-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
+| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/id&quot;,&quot;/whoami&quot;,&quot;/uname&quot;,&quot;/cat&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/python&quot;,&quot;/perl&quot;)
+| where ActorUsername in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;http&quot;,&quot;daemon&quot;) or isempty(ActorUsername)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-36-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki Web-Server Process Spawning Shell/Recon (CVE-2026-52778 RCE Landing)
+id: c6b40e19-2d7a-4f83-8a51-71e2b9c04d3f
+description: Detects a PHP/web-server process (php-fpm, apache2, httpd, nginx) spawning a shell or reconnaissance binary, the post-eval() code-execution landing of CVE-2026-52778.
+references:
+  - https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-52778
+author: SOC Detection Engineering
+date: 2026/07/11
+tags:
+  - attack.t1190
+  - attack.t1059.004
 logsource:
   category: process_creation
   product: linux
@@ -3484,8 +3605,8 @@ detection:
     ParentImage|endswith:
       - &#x27;/php-fpm&#x27;
       - &#x27;/php&#x27;
-      - &#x27;/apache2&#x27;
       - &#x27;/httpd&#x27;
+      - &#x27;/apache2&#x27;
       - &#x27;/nginx&#x27;
     Image|endswith:
       - &#x27;/sh&#x27;
@@ -3496,231 +3617,12 @@ detection:
       - &#x27;/uname&#x27;
       - &#x27;/curl&#x27;
       - &#x27;/wget&#x27;
-      - &#x27;/nc&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/perl&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-36-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(sh OR bash OR dash OR id OR whoami OR uname OR curl OR wget OR nc)</code></pre></div>
-    <div class="tab-content" id="art-36-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|php|apache2|httpd|nginx)/i ImageFileName=/\/(sh|bash|dash|id|whoami|uname|curl|wget|nc|python3?|perl)$/i
-| table([_time, aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-36-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-36-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1af16e6c5a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">YesWiki post-RCE credential access: web user reads /etc/passwd or .env</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1af16e6c5a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts CVE-2026-52778 credential-access follow-on where code running as www-data reads local secret/identity files (/etc/passwd, .env, config.php, id_rsa) as called out in the advisory&#x27;s impact section. Pivots on a PHP/Apache web process whose child command line references those secret paths.
-
-Rationale: Uses the advisory&#x27;s explicit credential-access impact (&quot;read sensitive system files e.g. /etc/passwd, .env&quot;) anchored to a web-server parent process, so it only fires when the web tier — not a legitimate admin shell — touches those secrets.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-52778
-  • https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Data from Local System">T1005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A YesWiki bootstrap that legitimately reads its own config.php/.env at startup via an exec wrapper</li><li>Admin troubleshooting a permissions issue by grepping /etc/passwd while su&#x27;d to www-data</li><li>Backup scripts run as www-data that archive the app directory including .env</li><li>Config-management (Ansible/Puppet) runs touching /etc/passwd under the web user context</li><li>Security scanners fingerprinting the host that read /etc/passwd</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;backup&quot;,&quot;rsync&quot;,&quot;tar -&quot;) )</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the parent is genuinely php-fpm/apache (not an interactive admin shell) and inspect the exact file path read; check whether the same session also spawned recon binaries (UC1). 2) Contain: rotate any credentials in the exposed files (.env DB creds, SSH keys), isolate the host, and patch YesWiki to &gt;=4.6.6. 3) Hunt: search auth logs and cloud sign-ins for use of the leaked credentials, and look for webshell drops and outbound C2 from the same host.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-36-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-36-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-36-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-36-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-36-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-36-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-36-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
-| where ProcessCommandLine has_any (&quot;/etc/passwd&quot;,&quot;/etc/shadow&quot;,&quot;.env&quot;,&quot;config.php&quot;,&quot;id_rsa&quot;,&quot;wakka.config.php&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, FolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ActingProcessName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
-| where TargetProcessCommandLine has_any (&quot;/etc/passwd&quot;,&quot;/etc/shadow&quot;,&quot;.env&quot;,&quot;config.php&quot;,&quot;id_rsa&quot;,&quot;wakka.config.php&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki post-exploit web user reads local secret files
-id: c3a7e2b1-9d4f-4a6c-8b52-71e0f9c4d820
-description: Detects a PHP/Apache web worker whose child process reads /etc/passwd, .env or other secret files, matching CVE-2026-52778 post-RCE credential access.
-references:
-  - https://github.com/advisories/GHSA-px5m-h76g-p7p8
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-52778
-author: SOC Detection Engineering
-date: 2026/07/09
-tags:
-  - attack.t1552.001
-  - attack.t1005
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;/php-fpm&#x27;
-      - &#x27;/php&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/httpd&#x27;
-      - &#x27;/nginx&#x27;
-  selection_secret:
-    CommandLine|contains:
-      - &#x27;/etc/passwd&#x27;
-      - &#x27;/etc/shadow&#x27;
-      - &#x27;.env&#x27;
-      - &#x27;config.php&#x27;
-      - &#x27;id_rsa&#x27;
-  condition: selection_parent and selection_secret
-level: high</code></pre></div>
-    <div class="tab-content" id="art-36-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:*/etc/passwd* OR @process.command_line:*/etc/shadow* OR @process.command_line:*.env* OR @process.command_line:*id_rsa*)</code></pre></div>
-    <div class="tab-content" id="art-36-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|php|apache2|httpd|nginx)/i
-| regex(&quot;(/etc/passwd|/etc/shadow|\\.env|config\\.php|id_rsa)&quot;, field=CommandLine)
-| table([_time, aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-36-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;) AND (Processes.process=&quot;*/etc/passwd*&quot; OR Processes.process=&quot;*/etc/shadow*&quot; OR Processes.process=&quot;*.env*&quot; OR Processes.process=&quot;*config.php*&quot; OR Processes.process=&quot;*id_rsa*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-36-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;) AND (Processes.process=&quot;*/etc/passwd*&quot; OR Processes.process=&quot;*/etc/shadow*&quot; OR Processes.process=&quot;*.env*&quot; OR Processes.process=&quot;*config.php*&quot; OR Processes.process=&quot;*id_rsa*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b192e5dd0b" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">YesWiki webshell persistence: php/apache worker writes .php under Bazar webroot</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b192e5dd0b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the CVE-2026-52778 persistence step where the attacker uses eval() RCE to write a PHP backdoor into the YesWiki webroot (advisory: &quot;modify application files, inject backdoors&quot;). Fires when a PHP-FPM/Apache process creates or modifies a .php/.phtml file under the bazar/tools/yeswiki directories.
-
-Rationale: Anchored on the advisory&#x27;s persistence impact (&quot;inject backdoors&quot;) and the affected component path tools/bazar — a web worker (not a deploy pipeline) writing new .php files into its own served directory is a classic webshell drop.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-52778
-  • https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>YesWiki&#x27;s own Twig/template compile cache writing generated .php files under cache/ or tmp/</li><li>A legitimate in-app plugin/theme installer that unpacks .php files to the webroot</li><li>Admin-driven git pull / rsync deploy that runs as the web user and updates .php files</li><li>Composer autoload regeneration writing vendor .php files</li><li>WordPress/other CMS co-hosted on the same box writing plugin files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has_any (&quot;/cache/&quot;,&quot;/tmp/&quot;,&quot;/twig&quot;,&quot;/vendor/&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the written file — a short file with eval/base64_decode/assert/system or $_POST/$_GET handlers confirms a webshell; compare its hash against known-good YesWiki files. 2) Contain: quarantine/delete the file, isolate the host, block the source IP, and preserve a copy for forensics; patch to &gt;=4.6.6. 3) Hunt: grep the whole webroot for other recently-modified .php files, check web access logs for GET/POST hits to the new path, and review UC1/UC2 for the initial command execution and secret theft.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-36-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-36-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-36-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-36-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-36-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-36-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where InitiatingProcessFileName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
-| where FileName endswith &quot;.php&quot; or FileName endswith &quot;.phtml&quot; or FileName endswith &quot;.php5&quot;
-| where FolderPath has_any (&quot;bazar&quot;,&quot;/tools/&quot;,&quot;yeswiki&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where ActingProcessName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
-| where TargetFileName endswith &quot;.php&quot; or TargetFileName endswith &quot;.phtml&quot; or TargetFileName endswith &quot;.php5&quot;
-| where TargetFilePath has_any (&quot;bazar&quot;,&quot;/tools/&quot;,&quot;yeswiki&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetFilePath, TargetFileName, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki webshell drop - PHP web worker writes .php under webroot
-id: 1b9e7f0c-4d2a-4e18-a7c6-3f8b2d1e6c95
-description: Detects a PHP-FPM/Apache process creating or modifying a .php/.phtml file under the YesWiki Bazar/tools webroot, indicating CVE-2026-52778 webshell persistence.
-references:
-  - https://github.com/advisories/GHSA-px5m-h76g-p7p8
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-52778
-author: SOC Detection Engineering
-date: 2026/07/09
-tags:
-  - attack.t1505.003
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection:
-    Image|endswith:
-      - &#x27;/php-fpm&#x27;
-      - &#x27;/php&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/httpd&#x27;
-      - &#x27;/nginx&#x27;
-    TargetFilename|endswith:
-      - &#x27;.php&#x27;
-      - &#x27;.phtml&#x27;
-      - &#x27;.php5&#x27;
-    TargetFilename|contains:
-      - &#x27;bazar&#x27;
-      - &#x27;/tools/&#x27;
-      - &#x27;yeswiki&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-36-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\.(php|phtml|php5)$/i ContextImageFileName=/(php-fpm|php|apache2|httpd|nginx)/i
-| regex(&quot;(bazar|/tools/|yeswiki)&quot;, field=TargetFileName)
-| table([_time, aid, ComputerName, ContextImageFileName, TargetFileName])</code></pre></div>
-    <div class="tab-content" id="art-36-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) AND (Filesystem.file_name=&quot;*.php&quot; OR Filesystem.file_name=&quot;*.phtml&quot; OR Filesystem.file_name=&quot;*.php5&quot;) AND (Filesystem.file_path=&quot;*bazar*&quot; OR Filesystem.file_path=&quot;*/tools/*&quot; OR Filesystem.file_path=&quot;*yeswiki*&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-36-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) AND (Filesystem.file_name=&quot;*.php&quot; OR Filesystem.file_name=&quot;*.phtml&quot; OR Filesystem.file_name=&quot;*.php5&quot;) AND (Filesystem.file_path=&quot;*bazar*&quot; OR Filesystem.file_path=&quot;*/tools/*&quot; OR Filesystem.file_path=&quot;*yeswiki*&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="f764cc187c" data-platforms="sent,sigma,spl" data-targets="vcs">
-  <summary>
-    <span class="uc-title">YesWiki CVE-2026-52778 exploit request: Bazar formula with system() or nested-paren ReDoS</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="f764cc187c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the initial-access/exploit HTTP request to a YesWiki Bazar CalcField carrying either the RCE marker system( or the deeply nested-parenthesis structure used for the PCRE stack-overflow DoS. Web-tier hunting query; grounded in the advisory&#x27;s two PoC payloads.
-
-Rationale: Both PoC payloads from the advisory are used verbatim — the RCE string system( and the thousands-of-nested-parens ReDoS structure (matched as 6+ consecutive &#x27;(&#x27;). Scoped to Bazar to cut noise; low confidence because the payload often lives in the POST body rather than the URL (false negatives), so pair with UC1.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-52778
-  • https://www.thehackerwire.com/yeswiki-rce-redos-in-bazar-calcfield-cve-2026-52778/
-  • https://github.com/YesWiki/yeswiki/security/advisories/GHSA-px5m-h76g-p7p8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Endpoint Denial of Service: Application or System Exploitation">T1499.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate Bazar Calc field with a genuinely paren-heavy but valid math formula</li><li>Security scanners / DAST tooling probing the YesWiki instance with fuzz payloads</li><li>A WAF that URL-decodes and logs POST bodies producing benign &#x27;system(&#x27; substrings in unrelated content</li><li>Copy-pasted formula documentation submitted through the form</li><li>Load-testing tools replaying recorded Bazar save requests</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request (method, source IP, authenticated user, body if captured) and the HTTP status — a 5xx or dropped connection alongside a huge nested-paren body indicates a successful ReDoS crash; a 200 with system( suggests RCE attempt. 2) Contain: block the source IP at the WAF, add a rule rejecting Bazar formula fields exceeding a sane length / paren depth, and prioritise patching to YesWiki &gt;=4.6.6. 3) Hunt: on the target host correlate with UC1 (php spawning shell), php-fpm worker segfaults/restarts in syslog, and new webshell files (UC3) from the same source IP or session.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-36-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-36-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-36-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-36-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url has &quot;bazar&quot;
-| where Url contains &quot;system(&quot; or Url matches regex @&quot;\({6,}&quot;
-| project TimeGenerated, SrcIpAddr, SrcUsername, HttpMethod, Url, HttpStatusCode, DvcHostname
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki Bazar CalcField exploit request - system() or nested-paren ReDoS
-id: 5e4d2c1b-8a37-4f60-b9d2-6c1a3e7f0d48
-description: Detects an HTTP request to a YesWiki Bazar endpoint carrying the CVE-2026-52778 RCE marker system( or the nested-parenthesis PCRE stack-overflow DoS payload.
-references:
-  - https://github.com/advisories/GHSA-px5m-h76g-p7p8
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-52778
-author: SOC Detection Engineering
-date: 2026/07/09
-tags:
-  - attack.t1190
-  - attack.t1499.004
-logsource:
-  category: webserver
-detection:
-  selection_target:
-    cs-uri|contains: &#x27;bazar&#x27;
-  selection_payload:
-    cs-uri|contains:
-      - &#x27;system(&#x27;
-      - &#x27;((((((&#x27;
-  condition: selection_target and selection_payload
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-36-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*bazar*&quot; AND (Web.url=&quot;*system(*&quot; OR Web.url=&quot;*((((((*&quot;)) by Web.src Web.dest Web.http_method Web.url Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-36-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*bazar*&quot; AND (Web.url=&quot;*system(*&quot; OR Web.url=&quot;*((((((*&quot;)) by Web.src Web.dest Web.http_method Web.url Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-36-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(php-fpm|php|httpd|apache2|nginx)/i
+| ImageFileName=/\/(sh|bash|dash|id|whoami|uname|cat|curl|wget|python3?|perl)$/i
+| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-36-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)) AND (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-36-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)) AND (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -3738,11 +3640,11 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-36-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-36-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-36-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-36-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-36-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-36-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-36-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-36-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -3751,7 +3653,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-36-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-36-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -3763,12 +3665,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-36-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-36-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-52778&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-36-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-36-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-52778&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -3791,11 +3693,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-36-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-36-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-36-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-36-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-36-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-36-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-36-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu
+    <div class="tab-content active" id="art-36-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -3808,7 +3710,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-36-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu
@@ -3824,14 +3726,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-36-uc5-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu ```
+    <div class="tab-content" id="art-36-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-36-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-36-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-36-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-36-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-36-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52778: YesWiki has Unsafe eval() in its Formula Calcu ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
