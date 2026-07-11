@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### TSDProxy management API token replay to 127.0.0.1:8080 with spoofed x-tsdproxy-id
 
-`UC_3_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_4_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### TSDProxy internal auth token harvest via backend header-reflection endpoint
 
-`UC_3_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### Exposed/unpatched TSDProxy instance with vulnerable identityHeaders default
 
-`UC_3_2` · phase: **recon** · confidence: **Low** · AI-generated for this article
+`UC_4_2` · phase: **recon** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

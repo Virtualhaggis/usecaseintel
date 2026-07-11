@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Unpatched Zimbra Collaboration Suite exposed to Classic Web Client stored-XSS (pre-10.1.19)
 
-`UC_0_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

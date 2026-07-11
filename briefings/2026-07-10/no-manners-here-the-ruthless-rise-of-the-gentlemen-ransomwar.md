@@ -86,7 +86,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen: internet-facing assets exposed to the group's known-exploited edge/BYOVD CVEs
 
-`UC_1_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### The Gentlemen 'gentlemen*' scheduled task creation/execution
 
-`UC_1_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ union
 
 ### The Gentlemen BYOVD: ThrottleStop.sys/ThrottleBlood.sys load & GentleKiller EDR-killer drivers (CVE-2025-7771)
 
-`UC_1_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceImageLoadEvents
 
 ### The Gentlemen anti-forensics: wevtutil clearing Security/System event logs
 
-`UC_1_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2_17` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### The Gentlemen internal recon via Advanced IP Scanner
 
-`UC_1_18` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_2_18` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,7 +191,7 @@ DeviceProcessEvents
 
 ### The Gentlemen C2: SystemBC / Go backdoor beacon to actor infrastructure
 
-`UC_1_19` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_2_19` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -209,7 +209,7 @@ DeviceNetworkEvents
 
 ### The Gentlemen impact prep: Volume Shadow Copy deletion via vssadmin/wmic
 
-`UC_1_20` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2_20` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -229,7 +229,7 @@ DeviceProcessEvents
 
 ### The Gentlemen encryptor execution by known SHA256/SHA1 hash
 
-`UC_1_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -251,7 +251,7 @@ union
 
 ### The Gentlemen mass file encryption — .umc16h extension write/rename burst
 
-`UC_1_22` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_22` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -622,7 +622,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — No Manners Here: The Ruthless Rise of The Gentlemen Ransomware
 
-`UC_1_13` · phase: **exploit** · confidence: **High**
+`UC_2_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -9808,10 +9808,10 @@ level: critical
   data-techs="T1528"
   data-sources="GitHub Security Advisories"
   data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
+  data-splunk-cats="application,endpoint,web"
   data-targets="azure,vcs,windows"
   data-uc-count="7" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover 9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover CVE-2026-55500 T1528 [LLM] 9router CVE-2026-55500: unauthenticated DB export via GET /api/settings/database [LLM] 9router CVE-2026-55500: malicious DB import (overwrite) via POST /api/settings/database [LLM] 9router CVE-2026-55500: ALWAYS_PROTECTED bypass — auth failure then success on DB endpoint [LLM] 9router CVE-2026-55500: reconnaissance / enumeration of /api/settings/database (port 20128) Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information">
+  data-search="[GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover 9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover CVE-2026-55500 T1528 [LLM] 9routers unauthenticated full database export via GET /api/settings/database (CVE-2026-55500) [LLM] 9routers malicious database import (POST /api/settings/database) — mass credential/settings overwrite (CVE-2026-55500) [LLM] 9routers ALWAYS_PROTECTED middleware bypass — auth-denied then success on /api/settings/database (CVE-2026-55500) [LLM] 9routers endpoint reconnaissance — probing /api/settings/database for CVE-2026-55500 exposure Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-55500-9routers-has-exposure-of-sensit" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -9868,236 +9868,224 @@ level: critical
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] 9router CVE-2026-55500: reconnaissance / enumeration of /api/settings/database (port 20128) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] 9routers endpoint reconnaissance — probing /api/settings/database for CVE-2026-55500 exposure · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] 9router CVE-2026-55500: ALWAYS_PROTECTED bypass — auth failure then success on DB endpoint · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] 9routers ALWAYS_PROTECTED middleware bypass — auth-denied then success on /api/settings/database (CVE-2026-55500) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] 9router CVE-2026-55500: unauthenticated DB export via GET /api/settings/database · [LLM] 9router CVE-2026-55500: malicious DB import (overwrite) via POST /api/settings/database · OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] 9routers unauthenticated full database export via GET /api/settings/database (CVE-2026-55500) · [LLM] 9routers malicious database import (POST /api/settings/database) — mass credential/settings overwrite (CVE-2026-55500) · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="7fdf18918f" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="bb8d18d6dc" data-platforms="sent,sigma,spl" data-targets="vcs" open>
   <summary>
-    <span class="uc-title">9router CVE-2026-55500: unauthenticated DB export via GET /api/settings/database</span>
+    <span class="uc-title">9routers unauthenticated full database export via GET /api/settings/database (CVE-2026-55500)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7fdf18918f" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="bb8d18d6dc" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts successful GET requests to the 9router /api/settings/database endpoint returning large response bodies — the full database dump containing plaintext apiKeys.key values, providerConnections OAuth tokens and OIDC client secrets. Article-specific because the endpoint path, method and &#x27;complete database in one response&#x27; shape are unique to this CVE.
+    <div class="uc-desc">Hunts GET requests to the 9routers /api/settings/database endpoint that return HTTP 200 with a large response body — the full DB dump containing plaintext apiKeys.key values, OAuth tokens and OIDC client secrets. Article-specific because the endpoint path, method and unbounded secret-bearing payload are the exact export primitive described in the advisory.
 
-Rationale: Uses the exact endpoint path (/api/settings/database), GET method and the &#x27;entire DB in one response&#x27; behaviour from GHSA-qvfm-67h2-2qfx; response-byte threshold separates the credential dump from ordinary API traffic. Cross-checked GitLab GLAD (CVSS 9.9) and NVD which confirm the endpoint returns all credentials/tokens.
+Rationale: Uses the exact vulnerable primitive from the advisory: GET /api/settings/database returning 200 with a &gt;1MB body (the full DB dump). Cross-checked against GitLab Advisory DB and Endor Labs which confirm CVSS 9.9 and fix in 0.4.80.
 
 Cross-checked against:
   • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
-  • https://cve.threatint.eu/CVE/CVE-2026-55500</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Administrator using the built-in dashboard &#x27;export database&#x27; backup feature</li><li>Scheduled backup automation calling the export endpoint from an internal IP</li><li>Migration tooling pulling the DB during a version upgrade to 0.4.80</li><li>Monitoring/health-check probes that happen to hit the settings path (rare, low bytes)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where CIp !in (&quot;10.0.0.0/8 admin backup host — replace with your backup automation source IPs&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify CIp/src and CsUsername on the 200 export; confirm whether the source IP is internal admin infra or external/unexpected, and whether the request presented a valid JWT/CLI token. 2) CONTAIN: Treat all provider API keys, OAuth tokens and OIDC client secrets stored in 9router as compromised — rotate them immediately; upgrade 9router to &gt;= 0.4.80 and bind the listener to 127.0.0.1 (not 0.0.0.0:20128). 3) HUNT: Search for a subsequent POST to /api/settings/database (import overwrite / password-hash replacement) from the same source, and for use of the exfiltrated provider credentials at the upstream AI/OAuth providers.</div></details>
+  • https://www.endorlabs.com/vulnerability/cve-2026-46339</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Administrator taking a legitimate DB backup via the 9routers dashboard export button</li><li>Automated backup/cron job calling the export endpoint from a known internal management host</li><li>Version-migration tooling exporting settings before an upgrade to 0.4.80</li><li>Monitoring/synthetic-transaction probe that happens to hit the endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ipv4_is_private(SrcIpAddr))   // internet-exposed exploitation is the true-positive case; suppress internal admin/backup sources</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify SrcIpAddr — is it an internal admin/backup host or an external/unexpected IP? Pull the response size and correlate with any change/backup ticket. 2) Contain: if the source is external or unsanctioned, block the IP at the WAF/reverse proxy, take the 9routers instance off any public tunnel, and treat every apiKey.key, OAuth token and OIDC client secret in the DB as compromised — begin rotation. 3) Hunt: search for prior GETs/POSTs to /api/settings/database from the same IP or user-agent, and pivot to downstream API-key/OAuth usage from new geographies indicating the exported secrets are now in use.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-101-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-101-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AppServiceHTTPLogs
-| where TimeGenerated &gt; ago(7d)
-| where CsUriStem =~ &quot;/api/settings/database&quot;
-| where CsMethod == &quot;GET&quot;
-| where ScStatus == 200
-| where ScBytes &gt; 50000    // full DB dump is large; a normal settings API response is &lt; a few KB
-| project TimeGenerated, CIp, CsHost, CsMethod, CsUriStem, ScStatus, ScBytes, UserAgent, CsUsername
-| order by ScBytes desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: 9router CVE-2026-55500 Unauthenticated Database Export via /api/settings/database
-id: 6f2a1d4c-9b3e-4a7c-8f21-0d5e6a7b8c90
-status: experimental
-description: Detects a successful GET to the 9router /api/settings/database endpoint, which returns the full database including plaintext API keys, OAuth tokens and OIDC secrets (CVE-2026-55500).
+    <div class="tab-content active" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(24h)
+| where Url has &quot;/api/settings/database&quot;
+| where HttpMethod =~ &quot;GET&quot;
+| where HttpStatusCode == 200
+| where HttpResponseBodyBytes &gt; 1048576   // &gt;1MB = full DB dump with all secrets, not a normal settings read
+| project TimeGenerated, SrcIpAddr, DstHostname, DstPortNumber, Url, HttpMethod, HttpStatusCode, HttpResponseBodyBytes, UserAgent = HttpRequestHeaderUserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: 9routers Unauthenticated Database Export via /api/settings/database (CVE-2026-55500)
+id: 3f6b2a10-4c7e-4d21-9a8b-1e5f2c0d7a11
+description: Detects GET requests to the 9routers /api/settings/database endpoint returning HTTP 200, which exports the full database including plaintext API keys, OAuth tokens and OIDC client secrets.
 references:
-    - https://github.com/advisories/GHSA-qvfm-67h2-2qfx
-    - https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
+  - https://github.com/advisories/GHSA-qvfm-67h2-2qfx
+  - https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
 author: SOC Detection Engineering
 date: 2026/07/11
 tags:
-    - attack.credential_access
-    - attack.t1552.001
-    - attack.t1528
-    - attack.t1190
+  - attack.collection
+  - attack.t1213
+  - attack.credential_access
+  - attack.t1528
 logsource:
-    category: webserver
+  category: webserver
 detection:
-    selection:
-        cs-method: &#x27;GET&#x27;
-        cs-uri-stem: &#x27;/api/settings/database&#x27;
-        sc-status: 200
-    condition: selection
+  selection:
+    cs-method: &#x27;GET&#x27;
+    cs-uri-stem|contains: &#x27;/api/settings/database&#x27;
+    sc-status: 200
+  condition: selection
 falsepositives:
-    - Legitimate administrator running a backup/export from the 9router dashboard
+  - Authorised administrator taking a manual database backup through the 9routers UI
+  - Scheduled backup job hitting the export endpoint from a known internal host
 level: high</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as request_count, sum(Web.bytes_out) as total_bytes_out, values(Web.status) as status, values(Web.http_user_agent) as user_agent from datamodel=Web where Web.url=&quot;/api/settings/database&quot; Web.http_method=&quot;GET&quot; Web.status=200 by Web.src, Web.dest, Web.dest_port
+    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as request_count, sum(Web.bytes_out) as total_bytes_out, values(Web.status) as status, values(Web.http_user_agent) as user_agent, values(Web.dest_port) as dest_port from datamodel=Web where Web.uri_path=&quot;/api/settings/database&quot; Web.http_method=GET Web.status=200 by Web.src, Web.dest, _time span=1h
 | `drop_dm_object_name(Web)`
-| where total_bytes_out &gt; 50000
-| sort - total_bytes_out</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as request_count, sum(Web.bytes_out) as total_bytes_out, values(Web.status) as status, values(Web.http_user_agent) as user_agent from datamodel=Web where Web.url=&quot;/api/settings/database&quot; Web.http_method=&quot;GET&quot; Web.status=200 by Web.src, Web.dest, Web.dest_port
+| where total_bytes_out &gt; 1048576
+| sort - total_bytes_out</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as request_count, sum(Web.bytes_out) as total_bytes_out, values(Web.status) as status, values(Web.http_user_agent) as user_agent, values(Web.dest_port) as dest_port from datamodel=Web where Web.uri_path=&quot;/api/settings/database&quot; Web.http_method=GET Web.status=200 by Web.src, Web.dest, _time span=1h
 | `drop_dm_object_name(Web)`
-| where total_bytes_out &gt; 50000
+| where total_bytes_out &gt; 1048576
 | sort - total_bytes_out</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="22625634fe" data-platforms="sent,sigma,spl" data-targets="vcs">
+<details class="uc" data-uc-slug="85052f3c5f" data-platforms="sent,sigma,spl" data-targets="vcs">
   <summary>
-    <span class="uc-title">9router CVE-2026-55500: malicious DB import (overwrite) via POST /api/settings/database</span>
+    <span class="uc-title">9routers malicious database import (POST /api/settings/database) — mass credential/settings overwrite (CVE-2026-55500)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="22625634fe" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="85052f3c5f" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts POST requests to /api/settings/database, which trigger a full wipe-and-replace transaction (DELETE across settings, providerConnections, apiKeys, combos, etc.) and let an attacker overwrite the stored password hash with their own. Any POST to this endpoint is inherently a full-database mutation and is article-specific to CVE-2026-55500.
+    <div class="uc-desc">Hunts POST requests to /api/settings/database, which trigger the importDb() wipe-and-replace transaction that DELETEs settings, providerConnections, apiKeys and combos then inserts attacker-controlled data — overwriting the password hash and every stored secret. Any POST to this endpoint is abnormal because the primitive is a full destructive DB replacement.
 
-Rationale: POST to the exact import endpoint is the whole exploit — the article shows importDb() DELETEs every table then inserts attacker JSON, replacing the password hash. Any external POST is high-fidelity impact. Confirmed against GLAD/NVD (complete overwrite, integrity/availability impact).
+Rationale: POST /api/settings/database is the importDb() overwrite path named in the advisory (lines 102-163, DELETE FROM settings/apiKeys/providerConnections then insert attacker data). A destructive full-DB replace has no legitimate self-service trigger, so the method+path pair alone is high fidelity.
 
 Cross-checked against:
-  • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
-  • https://cve.threatint.eu/CVE/CVE-2026-55500</div>
+  • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Stored Data Manipulation">T1565.001</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Administrator restoring a legitimate DB backup via the dashboard import feature</li><li>Automated config-as-code deployment pushing settings into 9router</li><li>Disaster-recovery restore during a planned maintenance window</li><li>Version-migration tooling re-importing state after upgrade</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>AppServiceHTTPLogs | where CsMethod == &quot;POST&quot; and CsUriStem =~ &quot;/api/settings/database&quot; and CIp !in (&quot;add authorized backup/restore automation source IPs here&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the POST source IP and whether an authorized admin/change ticket exists; check ScStatus (200 = overwrite succeeded) and whether the dashboard password now fails for legitimate operators. 2) CONTAIN: If unauthorized, block the source IP, take the 9router instance offline, and restore the database from a known-good backup; force-rotate all provider credentials since import implies prior export access. 3) HUNT: Look for the preceding GET export from the same source (UC above), for new/attacker-controlled admin logins after the import, and for any downstream service that consumed the overwritten provider connections.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sanctioned DB restore during a documented maintenance window</li><li>Backup/restore automation replaying a known-good export</li><li>Upgrade tooling re-importing settings after moving to 0.4.80</li><li>Load/DR test rehearsing the import path in a staging instance mis-tagged as prod</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ipv4_is_private(SrcIpAddr))   // suppress internal restore/automation; internet-sourced import = true positive</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether a change/maintenance ticket authorises a DB import right now; check SrcIpAddr and whether it matches an admin/automation host. 2) Contain: if unauthorised, block the source, isolate the 9routers instance, and force a credential reset — the password hash and all provider secrets may now be attacker-set; restore the pre-import DB from backup. 3) Hunt: look for a preceding GET export from the same actor (steal-then-overwrite), new admin logins using the replaced password hash, and any new providerConnections/apiKeys entries pointing at attacker infrastructure.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-101-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AppServiceHTTPLogs
-| where TimeGenerated &gt; ago(7d)
-| where CsUriStem =~ &quot;/api/settings/database&quot;
-| where CsMethod == &quot;POST&quot;
-| project TimeGenerated, CIp, CsHost, CsMethod, CsUriStem, ScStatus, CsBytes, UserAgent, CsUsername
+    <div class="tab-content active" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(24h)
+| where Url has &quot;/api/settings/database&quot;
+| where HttpMethod =~ &quot;POST&quot;   // POST = importDb() wipe-and-replace; no benign self-service reason to overwrite the whole DB
+| project TimeGenerated, SrcIpAddr, DstHostname, DstPortNumber, Url, HttpMethod, HttpStatusCode, ReqBytes = HttpRequestBodyBytes, UserAgent = HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: 9router CVE-2026-55500 Unprotected Database Import/Overwrite via /api/settings/database
-id: b1c8e0a2-4f6d-4d19-9a3b-2c7e5f1a9d34
-status: experimental
-description: Detects a POST to the 9router /api/settings/database endpoint, which performs a full database wipe-and-replace and allows the stored password hash to be overwritten (CVE-2026-55500).
+    <div class="tab-content" id="art-101-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: 9routers Unauthenticated Database Import/Overwrite via /api/settings/database (CVE-2026-55500)
+id: 8c1d4e93-7a52-4b6f-9d0c-2b7a6f1e4c22
+description: Detects POST requests to the 9routers /api/settings/database endpoint, which perform a full wipe-and-replace of the database (settings, apiKeys, providerConnections, password hash) with attacker-controlled data.
 references:
-    - https://github.com/advisories/GHSA-qvfm-67h2-2qfx
-    - https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
+  - https://github.com/advisories/GHSA-qvfm-67h2-2qfx
+  - https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
 author: SOC Detection Engineering
 date: 2026/07/11
 tags:
-    - attack.impact
-    - attack.t1485
-    - attack.t1565.001
-    - attack.t1556
+  - attack.impact
+  - attack.t1485
+  - attack.t1565.001
+  - attack.t1556
 logsource:
-    category: webserver
+  category: webserver
 detection:
-    selection:
-        cs-method: &#x27;POST&#x27;
-        cs-uri-stem: &#x27;/api/settings/database&#x27;
-    condition: selection
+  selection:
+    cs-method: &#x27;POST&#x27;
+    cs-uri-stem|contains: &#x27;/api/settings/database&#x27;
+  condition: selection
 falsepositives:
-    - Administrator restoring a database backup through the dashboard import feature
+  - Administrator restoring a database backup through a documented maintenance window
 level: high</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as request_count, values(Web.status) as status, values(Web.http_user_agent) as user_agent, sum(Web.bytes_in) as total_bytes_in from datamodel=Web where Web.url=&quot;/api/settings/database&quot; Web.http_method=&quot;POST&quot; by Web.src, Web.dest, Web.dest_port
+    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as request_count, values(Web.status) as status, values(Web.http_user_agent) as user_agent, sum(Web.bytes_in) as total_bytes_in, values(Web.dest_port) as dest_port from datamodel=Web where Web.uri_path=&quot;/api/settings/database&quot; Web.http_method=POST by Web.src, Web.dest, _time span=1h
 | `drop_dm_object_name(Web)`
-| sort - request_count</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as request_count, values(Web.status) as status, values(Web.http_user_agent) as user_agent, sum(Web.bytes_in) as total_bytes_in from datamodel=Web where Web.url=&quot;/api/settings/database&quot; Web.http_method=&quot;POST&quot; by Web.src, Web.dest, Web.dest_port
+| sort - _time</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as request_count, values(Web.status) as status, values(Web.http_user_agent) as user_agent, sum(Web.bytes_in) as total_bytes_in, values(Web.dest_port) as dest_port from datamodel=Web where Web.uri_path=&quot;/api/settings/database&quot; Web.http_method=POST by Web.src, Web.dest, _time span=1h
 | `drop_dm_object_name(Web)`
-| sort - request_count</code></pre></div></div>
+| sort - _time</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="8ce18d436f" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="be4602ffb6" data-platforms="sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">9router CVE-2026-55500: ALWAYS_PROTECTED bypass — auth failure then success on DB endpoint</span>
+    <span class="uc-title">9routers ALWAYS_PROTECTED middleware bypass — auth-denied then success on /api/settings/database (CVE-2026-55500)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8ce18d436f" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="be4602ffb6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Correlates 401/403 denials and a subsequent 200 to /api/settings/database from the same source, indicating token forging/guessing or middleware bypass to reach the export/import endpoint. Article-specific because the endpoint is guarded only by the ALWAYS_PROTECTED JWT/CLI-token check, so a denied-then-allowed sequence on this exact path is the bypass signature.
+    <div class="uc-desc">Correlates HTTP 401/403 responses followed by a 200 on /api/settings/database from the same source, indicating an attacker probing the ALWAYS_PROTECTED (JWT/CLI-token) check and then succeeding — via a forged/stolen token or a bypass. Article-specific because the advisory pins protection to exactly this middleware on exactly this endpoint.
 
-Rationale: Targets the ALWAYS_PROTECTED middleware weakness called out in the advisory: a source that is first denied (401/403) then succeeds (200) on the same sensitive path suggests token forging/guessing or a bypass — a pattern generic phishing/LSASS rules do not cover. Related CVE-2026-49352 (default fallback JWT secret) and CVE-2026-55501 (X-Forwarded-For brute-force bypass) confirm token/auth bypass is realistic in this product.
+Rationale: The advisory states the endpoint is guarded only by ALWAYS_PROTECTED (JWT or CLI token). A same-source 401/403→200 transition on this specific path is the observable signature of an attacker defeating that single check; the correlation is what removes noise.
 
 Cross-checked against:
-  • https://advisories.gitlab.com/npm/9router/CVE-2026-49352/
-  • https://advisories.gitlab.com/npm/9router/CVE-2026-55501/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin whose JWT expired mid-session (401) then re-authenticated and legitimately exported</li><li>Automation with a stale token that failed then refreshed and retried</li><li>Load-balancer/health-probe hitting the path unauthenticated (401) while a real admin succeeds separately from the same NAT egress IP</li><li>CLI tool retrying with a corrected CLI token</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Inspect the denied-then-success timeline for the CIp — measure the delay and count of 401/403 before the 200; a rapid brute/forge burst is far more suspicious than one expiry-and-refresh. Check whether the successful request presented a valid, non-default JWT. 2) CONTAIN: If the JWT secret is the hardcoded default (CVE-2026-49352) rotate JWT_SECRET, invalidate sessions, upgrade to &gt;= 0.4.80, and restrict the endpoint to the loopback interface. 3) HUNT: Pivot on the same CIp for GET export / POST import on this endpoint and for the X-Forwarded-For brute-force pattern (CVE-2026-55501).</div></details>
+  • https://github.com/advisories/GHSA-qvfm-67h2-2qfx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin whose session/JWT expired (401) then re-authenticated and legitimately accessed the endpoint (200)</li><li>CLI-token rotation causing a transient 401 before the new token is accepted</li><li>SSO token refresh race producing a 401 immediately before a valid 200</li><li>Automation with a stale cached token that self-heals on retry</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ipv4_is_private(SrcIpAddr))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the request sequence for the SrcIpAddr — how tight is the deny→success gap, and does the user-agent change between the 401 and the 200 (a UA switch strongly suggests forged/stolen token vs. benign re-auth)? 2) Contain: if the pattern looks adversarial, revoke active JWT/CLI tokens for 9routers, block the source, and take the instance off any public tunnel. 3) Hunt: pivot on the succeeding 200 to see whether it was a GET (export) or POST (import), enumerate other endpoints the same IP hit after the bypass, and review whether the default &#x27;123456&#x27; password is still set.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>AppServiceHTTPLogs
-| where TimeGenerated &gt; ago(1d)
-| where CsUriStem =~ &quot;/api/settings/database&quot;
-| summarize DeniedCount = countif(ScStatus in (401, 403)),
-            SuccessCount = countif(ScStatus == 200),
-            FirstDenied = minif(TimeGenerated, ScStatus in (401,403)),
-            FirstSuccess = minif(TimeGenerated, ScStatus == 200)
-          by CIp, CsHost
-| where DeniedCount &gt; 0 and SuccessCount &gt; 0
-| order by SuccessCount desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web where Web.url=&quot;/api/settings/database&quot; (Web.status=401 OR Web.status=403 OR Web.status=200) by Web.src, Web.dest, Web.status
+    <div class="tab-content active" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(24h)
+| where Url has &quot;/api/settings/database&quot;
+| summarize StatusCodes=make_set(HttpStatusCode), Methods=make_set(HttpMethod), Requests=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), UserAgents=make_set(HttpRequestHeaderUserAgent) by SrcIpAddr, DstHostname
+| where (set_has_element(StatusCodes, 401) or set_has_element(StatusCodes, 403)) and set_has_element(StatusCodes, 200)  // denied then succeeded = probable token forge/bypass
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as request_count, values(Web.status) as statuses, values(Web.http_method) as methods, values(Web.http_user_agent) as user_agent, earliest(_time) as firstTime, latest(_time) as lastTime from datamodel=Web where Web.uri_path=&quot;/api/settings/database&quot; by Web.src, Web.dest
 | `drop_dm_object_name(Web)`
-| stats sum(eval(if(status IN(401,403),count,0))) as denied_count, sum(eval(if(status=200,count,0))) as success_count by src, dest
-| where denied_count &gt; 0 AND success_count &gt; 0
-| sort - success_count</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.url=&quot;/api/settings/database&quot; (Web.status=401 OR Web.status=403 OR Web.status=200) by Web.src, Web.dest, Web.status
+| eval status_str=mvjoin(statuses,&quot;,&quot;)
+| eval had_deny=if(match(status_str,&quot;401|403&quot;),1,0)
+| eval had_success=if(match(status_str,&quot;200&quot;),1,0)
+| where had_deny=1 AND had_success=1
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as request_count, values(Web.status) as statuses, values(Web.http_method) as methods, values(Web.http_user_agent) as user_agent, earliest(_time) as firstTime, latest(_time) as lastTime from datamodel=Web where Web.uri_path=&quot;/api/settings/database&quot; by Web.src, Web.dest
 | `drop_dm_object_name(Web)`
-| stats sum(eval(if(status IN(401,403),count,0))) as denied_count, sum(eval(if(status=200,count,0))) as success_count by src, dest
-| where denied_count &gt; 0 AND success_count &gt; 0
-| sort - success_count</code></pre></div></div>
+| eval status_str=mvjoin(statuses,&quot;,&quot;)
+| eval had_deny=if(match(status_str,&quot;401|403&quot;),1,0)
+| eval had_success=if(match(status_str,&quot;200&quot;),1,0)
+| where had_deny=1 AND had_success=1
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="c1096be9f6" data-platforms="def,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="3f27c74a99" data-platforms="sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">9router CVE-2026-55500: reconnaissance / enumeration of /api/settings/database (port 20128)</span>
+    <span class="uc-title">9routers endpoint reconnaissance — probing /api/settings/database for CVE-2026-55500 exposure</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c1096be9f6" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="3f27c74a99" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Flags a single source making a high volume of requests to /api/settings/database (mixed methods / repeated 401/403/404 before 200) or repeatedly hitting the exposed default 9router listener on port 20128 — pre-exploitation scanning for vulnerable instances. Article-specific via the exact endpoint and the default 0.0.0.0:20128 exposure confirmed in the advisory.
+    <div class="uc-desc">Detects a single source making repeated requests (&gt;5/hour) to /api/settings/database, the pre-exploitation enumeration of exposed 9routers instances before an export/import attempt. Article-specific because this exact endpoint is the named attack surface and is a rarely-touched admin path in normal operation.
 
-Rationale: Uses the exact vulnerable path plus the article/corroborated default port 20128 (confirmed by the NVD/GLAD entries and the decolua/9router 0.0.0.0 binding issue). Volume-per-source and inbound-connection thresholds catch mass scanning for exposed instances before export/import is attempted.
+Rationale: The endpoint is the sole named attack surface in the advisory and sees near-zero legitimate traffic; a burst of &gt;5 requests/hour from one source (especially across multiple target hosts or with HEAD/OPTIONS/GET mixes) is a clean pre-exploitation enumeration signal.
 
 Cross-checked against:
-  • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
-  • https://github.com/decolua/9router/issues/475</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal vulnerability scanner (Nessus/Qualys) sweeping the estate for CVE-2026-55500</li><li>Uptime/synthetic monitoring repeatedly probing the 9router host</li><li>Corporate NAT/proxy egress aggregating many legitimate admin sessions behind one IP</li><li>Security team validating the patch to 0.4.80 by re-testing the endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>AppServiceHTTPLogs | where CsUriStem =~ &quot;/api/settings/database&quot; | where CIp !in (&quot;add sanctioned vuln-scanner / uptime-monitor source IPs here&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Determine if the high-volume CIp/RemoteIP is a sanctioned internal scanner (allowlist it) or an external/unknown source; review the method + status mix for scan-like patterns (many 401/403/404 then a 200). 2) CONTAIN: If external and unsanctioned, block the source at the WAF/edge and confirm the 9router listener is bound to 127.0.0.1 rather than 0.0.0.0:20128. 3) HUNT: For any source that reached a 200, immediately run the export (UC1) and import (UC2) detections to see whether enumeration progressed to credential theft or overwrite.</div></details>
+  • https://github.com/advisories/GHSA-qvfm-67h2-2qfx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span> <span class="ind tech" title="Active Scanning: Wordlist Scanning">T1595.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised vulnerability scanner (Tenable/Qualys/internal DAST) sweeping the estate for CVE-2026-55500</li><li>Uptime/health-check monitor polling the endpoint on a tight interval</li><li>Legitimate admin repeatedly reloading the settings page during troubleshooting</li><li>CI/CD post-deploy smoke test hitting the endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;&quot;) and not(ipv4_is_private(SrcIpAddr))   // scope to external probing; maintain an allowlist of sanctioned scanner IPs at deployment</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check whether SrcIpAddr belongs to a sanctioned scanner or monitoring service; review the method mix and whether the same source is fanning out across many DstHostnames (broad scan) vs. hammering one (targeted). 2) Contain: if unsanctioned and external, block at the WAF and confirm the instance isn&#x27;t reachable via a public tunnel; verify it&#x27;s patched to 9router 0.4.80. 3) Hunt: watch the same source for a follow-on 200 export (GET) or import (POST) on the endpoint, and add the IP/user-agent to a watchlist for correlation with the other CVE-2026-55500 detections.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1h)
-| where ActionType == &quot;InboundConnectionAccepted&quot;
-| where LocalPort == 20128    // default 9router listener; Docker binds 0.0.0.0:20128 (article curl: http://localhost:20128)
-| where RemoteIPType == &quot;Public&quot;
-| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, RemoteIP, LocalPort
-| where ConnCount &gt; 5    // repeated inbound hits to the exposed 9router port from one public IP = scanning
-| order by ConnCount desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>AppServiceHTTPLogs
+    <div class="tab-content active" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(1h)
-| where CsUriStem =~ &quot;/api/settings/database&quot;
-| summarize RequestCount = count(), TargetHosts = dcount(CsHost),
-            Methods = make_set(CsMethod), Statuses = make_set(ScStatus),
-            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)
-          by CIp, UserAgent
-| where RequestCount &gt; 5    // &gt;5 hits to this sensitive endpoint from one source in 1h = enumeration
+| where Url has &quot;/api/settings/database&quot;
+| summarize RequestCount=count(), Methods=make_set(HttpMethod), StatusCodes=make_set(HttpStatusCode), UserAgents=make_set(HttpRequestHeaderUserAgent), TargetHosts=dcount(DstHostname) by SrcIpAddr, bin(TimeGenerated, 1h)
+| where RequestCount &gt; 5   // &gt;5 hits/hour to a rarely-touched admin endpoint = probing/enumeration
 | order by RequestCount desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as request_count, dc(Web.dest) as target_hosts, values(Web.http_method) as methods, values(Web.status) as statuses from datamodel=Web where Web.url=&quot;/api/settings/database&quot; by Web.src
+    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as request_count, dc(Web.status) as status_variety, values(Web.status) as statuses, values(Web.http_method) as methods, values(Web.http_user_agent) as user_agent, earliest(_time) as firstTime, latest(_time) as lastTime from datamodel=Web where Web.uri_path=&quot;/api/settings/database&quot; by Web.src, Web.dest
 | `drop_dm_object_name(Web)`
 | where request_count &gt; 5
-| sort - request_count</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as request_count, dc(Web.dest) as target_hosts, values(Web.http_method) as methods, values(Web.status) as statuses from datamodel=Web where Web.url=&quot;/api/settings/database&quot; by Web.src
+| convert ctime(firstTime) ctime(lastTime)
+| sort - request_count</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as request_count, dc(Web.status) as status_variety, values(Web.status) as statuses, values(Web.http_method) as methods, values(Web.http_user_agent) as user_agent, earliest(_time) as firstTime, latest(_time) as lastTime from datamodel=Web where Web.uri_path=&quot;/api/settings/database&quot; by Web.src, Web.dest
 | `drop_dm_object_name(Web)`
 | where request_count &gt; 5
+| convert ctime(firstTime) ctime(lastTime)
 | sort - request_count</code></pre></div></div>
   </div>
 </details>
