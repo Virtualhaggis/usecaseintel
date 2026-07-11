@@ -30,7 +30,11 @@ The vulnerability has been described as a case of stored cross-site scripting (X
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
-- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1567** — Exfiltration Over Web Service
+- **T1041** — Exfiltration Over C2 Channel
+- **T1059.007** — JavaScript
+- **T1566.001** — Spearphishing Attachment
+- **T1566** — Phishing
 
 ## Kill chain phases observed
 
@@ -38,25 +42,32 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Zimbra Collaboration Suite Classic Web Client below patched build 10.1.19 (stored XSS exposure)
+### Zimbra Classic Web Client XSS exfil beacon to ffrk.net (CVE-2025-27915 campaign)
 
-`UC_1_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*apache2_config_default*" OR Web.dest="ffrk.net" OR Web.url="*ffrk.net*") by Web.src Web.dest Web.url Web.http_user_agent Web.user | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
 
 **Defender KQL:**
 ```kql
-DeviceTvmSoftwareInventory
-| where SoftwareVendor has "zimbra" or SoftwareName has "zimbra"
-| where SoftwareName has_any ("collaboration","zcs","zimbra")
-| extend VerNum = extract(@"(\d+\.\d+\.\d+)", 1, SoftwareVersion)
-| where isnotempty(VerNum)
-| where parse_version(VerNum) < parse_version("10.1.19")   // 10.1.19 = build that patches the Classic Web Client stored-XSS flaw (released 2026-07-07)
-| join kind=leftouter (
-    DeviceInfo
-    | where Timestamp > ago(1d)
-    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform) by DeviceId
-  ) on DeviceId
-| project DeviceName, SoftwareVendor, SoftwareName, VulnerableVersion = SoftwareVersion, IsInternetFacing, PublicIP, OSPlatform
-| order by IsInternetFacing desc, DeviceName asc
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "ffrk.net"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Inbound Zimbra email from Zimbra-XSS campaign sender 193.29.58.37 with .ICS attachment
+
+`UC_2_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where All_Email.src="193.29.58.37" by All_Email.src All_Email.src_user All_Email.recipient All_Email.subject All_Email.file_name | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 ### Suspicious browser extension installation
@@ -210,4 +221,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

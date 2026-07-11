@@ -18,7 +18,7 @@ A vulnerability was discovered in TSDProxy where it forwards its internal per-pr
 
 ## MITRE ATT&CK Techniques
 
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1550.001** — Application Access Token
 - **T1068** — Exploitation for Privilege Escalation
 - **T1528** — Steal Application Access Token
 
@@ -28,42 +28,53 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TSDProxy stolen auth-token replayed to localhost management API (x-tsdproxy-id spoof)
+### TSDProxy management API auth-bypass: forwarded token replayed to 127.0.0.1:8080/api/v1
 
-`UC_4_0` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*x-tsdproxy-id*" (Processes.process="*/api/v1*" OR Processes.process="*127.0.0.1:8080*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*127.0.0.1:8080*" OR Processes.process="*localhost:8080*") AND NOT Processes.process_name="tsdproxy" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| search (process="*x-tsdproxy-auth-token*" OR process="*x-tsdproxy-id*") process="*/api/v1*"
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime lastTime dest user process_name parent_process_name process
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where ProcessCommandLine has "x-tsdproxy-id"
-| where ProcessCommandLine has_any ("/api/v1","127.0.0.1:8080")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where ProcessCommandLine has_any ("127.0.0.1:8080", "localhost:8080")
+| where ProcessCommandLine has "x-tsdproxy-auth-token" or ProcessCommandLine has "x-tsdproxy-id"
+| where ProcessCommandLine has "/api/v1"
+| where FileName !~ "tsdproxy" and InitiatingProcessFileName !~ "tsdproxy"
+| extend HttpMethod = extract(@'(?i)-X\s+([A-Za-z]+)', 1, ProcessCommandLine)
+| project Timestamp, DeviceName, AccountName, FileName, HttpMethod, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### TSDProxy internal auth-token harvested from backend header-reflection endpoint
+### TSDProxy internal auth token leakage / capture via backend header reflection
 
-`UC_4_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_5_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*x-tsdproxy-auth-token*" (Processes.process="*/debug/headers*" OR Processes.process="*python*" OR Processes.process="*curl*" OR Processes.process="*grep*" OR Processes.process="*awk*") NOT Processes.process_name="tsdproxy*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*x-tsdproxy-auth-token*" AND NOT Processes.process_name="tsdproxy" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| eval capture_endpoint=if(like(process,"%/debug/headers%"),"yes","no")
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime lastTime dest user process_name parent_process_name capture_endpoint process
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where ProcessCommandLine has "x-tsdproxy-auth-token"
-| where ProcessCommandLine has_any ("/debug/headers","python","curl","grep","awk")
-| where not (FileName has "tsdproxy" or InitiatingProcessFileName has "tsdproxy")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where ProcessCommandLine has "x-tsdproxy-auth-token" or ProcessCommandLine has "/debug/headers"
+| where FileName !~ "tsdproxy" and InitiatingProcessFileName !~ "tsdproxy"
+| extend TokenHarvest = iff(ProcessCommandLine has "x-tsdproxy-auth-token", "token_string_present", "header_reflection_probe")
+| project Timestamp, DeviceName, AccountName, FileName, TokenHarvest, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 

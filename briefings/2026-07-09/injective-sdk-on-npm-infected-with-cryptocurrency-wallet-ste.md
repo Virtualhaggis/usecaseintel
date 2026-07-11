@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Wallet-key exfil to spoofed Injective host (@injectivelabs/sdk-ts backdoor)
 
-`UC_41_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_42_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### Malicious payload artifact key-derivation-telemetry.js dropped in @injectivelabs node_modules
 
-`UC_41_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_42_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceFileEvents
 
 ### Install/CI pull of pinned malicious @injectivelabs 1.20.21 SDK version
 
-`UC_41_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_42_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -217,7 +217,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Injective SDK on npm infected with cryptocurrency wallet stealer
 
-`UC_41_5` · phase: **exploit** · confidence: **High**
+`UC_42_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
