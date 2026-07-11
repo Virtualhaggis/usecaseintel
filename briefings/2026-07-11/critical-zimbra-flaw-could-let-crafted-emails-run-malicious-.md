@@ -30,7 +30,7 @@ The vulnerability has been described as a case of stored cross-site scripting (X
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1566.001** — Phishing: Spearphishing Attachment
 
 ## Kill chain phases observed
 
@@ -38,18 +38,25 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unpatched Zimbra Collaboration Suite exposed to Classic Web Client stored-XSS (pre-10.1.19)
+### Zimbra Collaboration Suite Classic Web Client below patched build 10.1.19 (stored XSS exposure)
 
-`UC_1_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareInventory
-| where SoftwareName has "zimbra" or SoftwareVendor has "zimbra"
-| summarize arg_max(Timestamp, *) by DeviceId, SoftwareName
-| where parse_version(SoftwareVersion) < parse_version("10.1.19")   // 10.1.19 = fixed build for the Classic Web Client stored-XSS (Zimbra advisory, 2026-07-07)
-| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
-| order by SoftwareVersion asc
+| where SoftwareVendor has "zimbra" or SoftwareName has "zimbra"
+| where SoftwareName has_any ("collaboration","zcs","zimbra")
+| extend VerNum = extract(@"(\d+\.\d+\.\d+)", 1, SoftwareVersion)
+| where isnotempty(VerNum)
+| where parse_version(VerNum) < parse_version("10.1.19")   // 10.1.19 = build that patches the Classic Web Client stored-XSS flaw (released 2026-07-07)
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform) by DeviceId
+  ) on DeviceId
+| project DeviceName, SoftwareVendor, SoftwareName, VulnerableVersion = SoftwareVersion, IsInternetFacing, PublicIP, OSPlatform
+| order by IsInternetFacing desc, DeviceName asc
 ```
 
 ### Suspicious browser extension installation

@@ -10327,11 +10327,11 @@ DeviceFileEvents
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="def,falcon,sent,spl"
-  data-splunk-cats="application"
-  data-targets="windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-54496: Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness CVE-2026-54496 T1190 [LLM] Vulnerable Zcash Orchard stack (zebrad/zcashd/halo2_gadgets) present in software inventory — CVE-2026-54496 [LLM] Running unpatched Zcash node process (zebrad/zcashd) below NU6.2 fix line Asset exposure — vulnerability matches article CVE(s)">
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-54496: Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness CVE-2026-54496 T1190 [LLM] Zcash node flagged for CVE-2026-54496 (Orchard halo2_gadgets soundness) in Defender TVM [LLM] Running pre-NU6.2 Zcash full-node binary (zebrad/zcashd) discovery [LLM] Rust dependency manifest pinning vulnerable halo2_gadgets / orchard crate Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -10340,7 +10340,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-06</span>
-    <span>3 use cases</span>
+    <span>4 use cases</span>
     <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
@@ -10391,110 +10391,171 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable Zcash Orchard stack (zebrad/zcashd/halo2_gadgets) present in software inventory — CVE-2026-54496 · [LLM] Running unpatched Zcash node process (zebrad/zcashd) below NU6.2 fix line</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Zcash node flagged for CVE-2026-54496 (Orchard halo2_gadgets soundness) in Defender TVM · [LLM] Running pre-NU6.2 Zcash full-node binary (zebrad/zcashd) discovery · [LLM] Rust dependency manifest pinning vulnerable halo2_gadgets / orchard crate</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="aa4fb63339" data-platforms="def,sent" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="489c9a814d" data-platforms="def,sent" data-targets="" open>
   <summary>
-    <span class="uc-title">Vulnerable Zcash Orchard stack (zebrad/zcashd/halo2_gadgets) present in software inventory — CVE-2026-54496</span>
+    <span class="uc-title">Zcash node flagged for CVE-2026-54496 (Orchard halo2_gadgets soundness) in Defender TVM</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="aa4fb63339" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="489c9a814d" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Flags hosts whose software inventory reports a Zcash node or Orchard crate at a version below the NU6.2 remediation line, i.e. the under-constrained-base soundness bug in halo2_gadgets variable-base scalar multiplication. This is the only reliably detectable surface for CVE-2026-54496 because the double-spend/forgery exploit is undetectable on-chain by design.
+    <div class="uc-desc">Surfaces managed hosts where Defender Vulnerability Management has mapped CVE-2026-54496 to installed Zcash software (zebrad/zcashd/orchard). Because the double-spend/forgery attack itself is undetectable on-chain and emits zero host or network telemetry, the only actionable SOC control is identifying and remediating the vulnerable attack surface before NU6.2-equivalent patch levels are enforced.
 
-Rationale: Uses the article&#x27;s exact remediation versions (halo2_gadgets 0.5.0, orchard 0.14.0, zcash_primitives 0.28.0, zcashd 6.20.0, zebrad 5.0.0) and the CVE id; version-below-patch is a deterministic, high-fidelity signal since the exploit leaves no runtime trace.
+Rationale: Uses the exact CVE id (CVE-2026-54496) from the advisory against the TVM vulnerability table — a deterministic, zero-FP mapping of the disclosed Zcash soundness bug to affected assets.
 
 Cross-checked against:
-  • https://zfnd.org/zebra-4-5-3-and-5-0-0-emergency-soft-fork-and-nu6-2-activation/
   • https://blocksec.com/blog/web3-security-zcash-orchard-soundness-bug-analysis
-  • https://rustsec.org/advisories/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  • https://coingape.com/zcash-foundation-releases-upgrade-to-fix-orchard-bug-as-zec-rallies/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Node operators inside a change-freeze/maintenance window who have scheduled but not yet applied the NU6.2 upgrade</li><li>Dev/test nodes intentionally pinned to a pre-NU6.2 version for regression testing</li><li>Inventory staleness: host already upgraded to zebrad 5.0.0 but TVM snapshot is &gt;24h old</li><li>Third-party wallets/explorers bundling zcash_primitives with their own version scheme that TVM misreads</li><li>SoftwareVersion strings with non-numeric suffixes (e.g. &#x27;4.5.3-rc1&#x27;) that split/parse imperfectly</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where EndOfSupportStatus != &quot;Upgrade&quot; or isempty(EndOfSupportStatus) // keep; optionally: | where DeviceName !has &quot;lab&quot; and DeviceName !has &quot;test&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported SoftwareName/SoftwareVersion against the fixed line (zebrad&gt;=5.0.0, zcashd&gt;=6.20.0, halo2_gadgets&gt;=0.5.0) and whether the node processes mainnet Orchard actions. 2) Contain: upgrade the node to the NU6.2-corrected release, or if upgrade is blocked, disable Orchard action processing (interim soft-fork behaviour, zebrad 4.5.3) until patched. 3) Hunt: enumerate every other node/host and any Rust build server whose Cargo.lock pins halo2_gadgets&lt;0.5.0 or orchard&lt;0.14.0; verify none accepted anomalous Orchard state transitions before patch.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped or decommissioned test-net node still inventoried but not on mainnet</li><li>Node already patched to zebrad 5.0.0 / zcashd 6.20.0 but TVM catalog lag not yet refreshed</li><li>Container image scanned in a registry pipeline rather than a live production node</li><li>Developer workstation with a vendored copy of the crate but no running node</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVersion !in~ (&quot;5.0.0&quot;,&quot;6.20.0&quot;,&quot;0.14.0&quot;,&quot;0.28.0&quot;,&quot;0.5.0&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the flagged host actually runs a live Orchard-participating node vs a stale/test binary; read SoftwareVersion and compare against patched floors (zebrad&gt;=5.0.0, zcashd&gt;=6.20.0, orchard&gt;=0.14.0, zcash_primitives&gt;=0.28.0, halo2_gadgets&gt;=0.5.0). Step 2 (contain): For any pre-NU6.2 node still processing Orchard actions, coordinate upgrade to the NU6.2 build (or 4.5.3 interim) and validate it routes proofs to the FixedPostNu6_2 verifying key. Step 3 (hunt): Enumerate all other Zcash node binaries in the estate (see companion node-discovery UC) and any Rust build hosts importing halo2_gadgets to ensure no unpatched copy remains.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
     </div>
-    <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+    <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(7d)
-| where SoftwareName has_any (&quot;zebra&quot;,&quot;zcashd&quot;,&quot;zcash&quot;)
-| extend Ver = split(SoftwareVersion, &quot;.&quot;)
-| extend Major = toint(Ver[0]), Minor = toint(Ver[1])
-| where (SoftwareName has &quot;zebra&quot; and Major &lt; 5)                                   // zebrad patched at 5.0.0 (NU6.2)
-     or (SoftwareName has &quot;zcashd&quot; and (Major &lt; 6 or (Major == 6 and Minor &lt; 20)))  // zcashd patched at 6.20.0
-     or (SoftwareName has &quot;zcash&quot; and Major &lt; 6 and SoftwareName !has &quot;zebra&quot;)       // zcashd naming variants
-| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
-| sort by DeviceName asc</code></pre></div>
+| where CveId =~ &quot;CVE-2026-54496&quot;
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(7d)
 | where CveId =~ &quot;CVE-2026-54496&quot;
-     or (SoftwareName has_any (&quot;zebra&quot;,&quot;zcashd&quot;,&quot;zcash&quot;)
-         and (toint(split(SoftwareVersion,&quot;.&quot;)[0]) &lt; 5))
-| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by DeviceName asc</code></pre></div>
+| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by TimeGenerated desc</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="17a9c0360f" data-platforms="def,falcon,sent" data-targets="windows">
+<details class="uc" data-uc-slug="ea0f9ddfd0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
   <summary>
-    <span class="uc-title">Running unpatched Zcash node process (zebrad/zcashd) below NU6.2 fix line</span>
+    <span class="uc-title">Running pre-NU6.2 Zcash full-node binary (zebrad/zcashd) discovery</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="17a9c0360f" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="ea0f9ddfd0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces live zebrad/zcashd processes and their product version, flagging any executing below the CVE-2026-54496 remediation (zebrad 5.0.0 / zcashd 6.20.0). Cross-references the vulnerable-dependency inventory finding with an actually-running node to confirm live exploitation surface.
+    <div class="uc-desc">Hunts for execution of Zcash full-node daemons so the team can inventory node versions exposed to CVE-2026-54496 before NU6.2 remediation. Surfaces the command line (which often carries --version/build flags) so an analyst can confirm whether the running binary predates the patched zebrad 5.0.0 / zcashd 6.20.0 releases.
 
-Rationale: Pivots on the exact node binary names (zebrad/zcashd) and the article&#x27;s patched-version boundary; grouping by SHA256 in Falcon lets an analyst map a build hash to its release when ELF version metadata is absent. Surfaces unknown-version nodes for review rather than silently dropping them.
+Rationale: Uses the exact node binary names (zebrad, zcashd) named in the advisory&#x27;s affected-versions list; discovery of running nodes is the only host-side pivot that scopes the exposed attack surface for a bug that is otherwise invisible.
 
 Cross-checked against:
-  • https://zfnd.org/zebra-4-5-3-and-5-0-0-emergency-soft-fork-and-nu6-2-activation/
-  • https://github.com/zcash/zcash/releases</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Patched nodes whose ELF/Rust binary carries no ProcessVersionInfoProductVersion, landing in &#x27;unknown-version-review&#x27; despite being on 5.0.0+</li><li>Short-lived CLI invocations (zcash-cli/zebrad subcommands) rather than a long-running validator, which are not the exploitation surface</li><li>Container/sandbox images pinned to an old version for reproducible testing</li><li>Renamed or wrapper-launched node binaries that evade the FileName match</li><li>Version strings with pre-release suffixes (&#x27;5.0.0-beta&#x27;) mis-bucketed by numeric split</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Status == &quot;unknown-version-review&quot; and SampleCmd has_any (&quot;--help&quot;,&quot;--version&quot;,&quot;getinfo&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: correlate the flagged host with the inventory alert (UC: vulnerable Zcash stack present); confirm it is a mainnet-facing validator, not a CLI one-shot, and read the surfaced ProductVersion/SHA256. 2) Contain: schedule/apply the NU6.2 upgrade (zebrad&gt;=5.0.0, zcashd&gt;=6.20.0); if it cannot be upgraded immediately, restrict its Orchard action processing per the interim soft fork. 3) Hunt: sweep all hosts for the same SHA256 build hash to find sibling unpatched nodes, and check whether any flagged node peered/broadcast Orchard transactions before remediation.</div></details>
+  • https://coingape.com/zcash-foundation-releases-upgrade-to-fix-orchard-bug-as-zec-rallies/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Already-patched zebrad 5.0.0 / zcashd 6.20.0 node (benign — desired end state)</li><li>Test-net or regtest node not participating in mainnet Orchard consensus</li><li>Wallet/lightwalletd companion process that is not the vulnerable full node</li><li>One-off `zebrad --version` invocation by an admin during patch verification</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): For each discovered host read SampleCmd and, if version is not present, invoke the binary with --version to determine build; compare against patched floors (zebrad&gt;=5.0.0, zcashd&gt;=6.20.0). Step 2 (contain): Schedule/upgrade any pre-NU6.2 node to the fixed build and confirm Orchard proofs route to the FixedPostNu6_2 verifying key; where immediate patching is impossible, apply the operator mitigation of disabling Orchard actions. Step 3 (hunt): Pivot to DeviceFileEvents/dependency-manifest hunt for halo2_gadgets&lt;0.5.0 on build hosts and cross-check TVM for CVE-2026-54496 coverage.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
 | where FileName in~ (&quot;zebrad&quot;,&quot;zebrad.exe&quot;,&quot;zcashd&quot;,&quot;zcashd.exe&quot;)
-| extend Ver = split(ProcessVersionInfoProductVersion, &quot;.&quot;)
-| extend Major = toint(Ver[0]), Minor = toint(Ver[1])
-| extend Status = case(
-    isempty(ProcessVersionInfoProductVersion), &quot;unknown-version-review&quot;,
-    FileName has &quot;zebrad&quot; and Major &lt; 5, &quot;vulnerable&quot;,
-    FileName has &quot;zcashd&quot; and (Major &lt; 6 or (Major == 6 and Minor &lt; 20)), &quot;vulnerable&quot;,
-    &quot;patched&quot;)
-| where Status != &quot;patched&quot;
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleCmd=any(ProcessCommandLine)
-          by DeviceName, FileName, ProcessVersionInfoProductVersion, Status
-| sort by Status asc, LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleCmd=any(ProcessCommandLine) by DeviceName, FileName, FolderPath, SHA256
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has_any (&quot;zebrad&quot;,&quot;zcashd&quot;)
-| extend Ver = split(ActingProcessFileVersion, &quot;.&quot;)
-| extend Major = toint(Ver[0]), Minor = toint(Ver[1])
-| extend Status = case(
-    isempty(ActingProcessFileVersion), &quot;unknown-version-review&quot;,
-    ActingProcessName has &quot;zebrad&quot; and Major &lt; 5, &quot;vulnerable&quot;,
-    ActingProcessName has &quot;zcashd&quot; and (Major &lt; 6 or (Major == 6 and Minor &lt; 20)), &quot;vulnerable&quot;,
-    &quot;patched&quot;)
-| where Status != &quot;patched&quot;
-| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), SampleCmd=any(ActingProcessCommandLine)
-          by DvcHostname, ActingProcessName, ActingProcessFileVersion, Status
-| sort by Status asc, LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(zebrad|zcashd)(\.exe)?$/i
-| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())</code></pre></div>
+| where EventID == 4688
+| where NewProcessName has_any (&quot;zebrad&quot;,&quot;zcashd&quot;)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), SampleCmd=any(CommandLine) by Computer, NewProcessName
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Zcash Full-Node Daemon Execution (CVE-2026-54496 exposure surface)
+id: 8f3b1c42-6a9e-4d17-b2c8-0e5f7a9c4d21
+description: Detects execution of Zcash zebrad/zcashd full-node binaries to inventory hosts exposed to the Orchard halo2_gadgets soundness flaw prior to NU6.2 remediation.
+references:
+  - https://github.com/advisories/GHSA-ww9q-8r59-xv46
+author: SOC Detection Engineering
+date: 2026/07/11
+tags:
+  - attack.t1190
+logsource:
+  category: process_creation
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;\zebrad.exe&#x27;
+      - &#x27;\zcashd.exe&#x27;
+      - &#x27;/zebrad&#x27;
+      - &#x27;/zcashd&#x27;
+  condition: selection
+level: low</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.name:zebrad OR @process.name:zcashd OR @process.executable.path:(*/zebrad OR */zcashd))</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(zebrad|zcashd)(\.exe)?$/i | groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;zebrad&quot;,&quot;zebrad.exe&quot;,&quot;zcashd&quot;,&quot;zcashd.exe&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;zebrad&quot;,&quot;zebrad.exe&quot;,&quot;zcashd&quot;,&quot;zcashd.exe&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7f3a3baeea" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">Rust dependency manifest pinning vulnerable halo2_gadgets / orchard crate</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="7f3a3baeea" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts developer and CI/build hosts for Cargo.lock or Cargo.toml files that pin halo2_gadgets &lt; 0.5.0 or orchard &lt; 0.14.0 — the exact crate versions carrying the under-constrained variable-base scalar-multiplication gadget. Identifies source-level exposure so builds are rebuilt against the patched crates before shipping a vulnerable node.
+
+Rationale: Targets the exact vulnerable crate versions named in the advisory (halo2_gadgets&lt;0.5.0, orchard&lt;0.14.0) by locating Rust manifests; EDR cannot read file contents so this scopes candidate hosts for a follow-up grep of the pinned versions.
+
+Cross-checked against:
+  • https://blocksec.com/blog/web3-security-zcash-orchard-soundness-bug-analysis</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cargo.lock already updated to halo2_gadgets 0.5.0 / orchard 0.14.0 (benign)</li><li>Manifest belongs to an unrelated Rust project not importing halo2_gadgets</li><li>Vendored crate under ~/.cargo/registry (filtered) rather than a project root</li><li>CI ephemeral build agent regenerating Cargo.lock every run, inflating volume</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FolderPath !has &quot;\\.cargo\\registry\\&quot; and FolderPath !has &quot;/.cargo/registry/&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): On each returned host, grep the identified Cargo.lock/Cargo.toml for `name = &quot;halo2_gadgets&quot;` / `orchard` and read the pinned version; confirm whether it is below the patched floor. Step 2 (contain): For projects pinning halo2_gadgets&lt;0.5.0 or orchard&lt;0.14.0, run `cargo update -p halo2_gadgets` / `-p orchard` to the patched releases and rebuild/re-release any downstream node artifact. Step 3 (hunt): Correlate build hosts to any deployed zebrad/zcashd binaries (node-discovery UC) to ensure no artifact compiled against the vulnerable gadget reached production, and confirm TVM shows CVE-2026-54496 remediated estate-wide.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where FileName in~ (&quot;Cargo.lock&quot;,&quot;Cargo.toml&quot;)
+| where FolderPath !has &quot;\\.cargo\\registry\\&quot;
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, FolderPath, FileName, InitiatingProcessAccountName
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileName in~ (&quot;Cargo.lock&quot;,&quot;Cargo.toml&quot;)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by DvcHostname, TargetFilePath, TargetFileName, ActorUsername
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Rust Cargo Manifest Write (halo2_gadgets CVE-2026-54496 source exposure)
+id: 2c7d4e19-9b3a-4f6c-8a1d-5e2b7c9f0a34
+description: Detects creation/modification of Cargo.lock or Cargo.toml so analysts can grep for vulnerable halo2_gadgets (&lt;0.5.0) / orchard (&lt;0.14.0) pins tied to CVE-2026-54496.
+references:
+  - https://github.com/advisories/GHSA-ww9q-8r59-xv46
+author: SOC Detection Engineering
+date: 2026/07/11
+tags:
+  - attack.t1195.001
+logsource:
+  category: file_event
+detection:
+  selection:
+    TargetFilename|endswith:
+      - &#x27;\Cargo.lock&#x27;
+      - &#x27;\Cargo.toml&#x27;
+      - &#x27;/Cargo.lock&#x27;
+      - &#x27;/Cargo.toml&#x27;
+  condition: selection
+level: low</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*\\Cargo.lock OR *\\Cargo.toml) OR @TargetFilename:(*/Cargo.lock OR */Cargo.toml))</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/[\\\/]Cargo\.(lock|toml)$/i | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (&quot;Cargo.lock&quot;,&quot;Cargo.toml&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (&quot;Cargo.lock&quot;,&quot;Cargo.toml&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -10512,11 +10573,11 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -10525,7 +10586,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -10537,12 +10598,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54496&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54496&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
