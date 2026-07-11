@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious jscrambler@8.14.0 native payload container (dist/intro.js) dropped on install
 
-`UC_0_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### Detached temp-dir dotfile stealer launched by npm/node preinstall hook
 
-`UC_0_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Temp-dir stealer reading Chrome/Firefox credential stores and MetaMask wallet vault
 
-`UC_0_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### jscrambler stealer C2 egress to hardcoded IPs and Tor endpoints
 
-`UC_0_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -299,7 +299,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — jscrambler npm package publishes malicious preinstall binary
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_2_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

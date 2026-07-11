@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Entra ID device-code authentication success (Helix vishing entry vector)
 
-`UC_48_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_50_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ AADSignInEventsBeta
 
 ### New MFA method registered within 2h of a device-code sign-in (Helix persistence)
 
-`UC_48_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_50_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ index=o365 sourcetype="o365:management:activity" Workload=AzureActiveDirectory (
 
 ### Automated SharePoint enumeration via python-requests/2.28.1 from Helix IP
 
-`UC_48_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ CloudAppEvents
 
 ### Bulk SharePoint download spike from Helix python-requests client
 
-`UC_48_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ CloudAppEvents
 
 ### Endpoint contact to Helix device-code phishing domain oskeysync.com
 
-`UC_48_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_50_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

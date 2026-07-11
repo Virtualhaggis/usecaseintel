@@ -84,7 +84,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen ransomware scheduled task creation (name matches gentlemen*)
 
-`UC_4_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### GentleKiller BYOVD — vulnerable/malicious driver load (ThrottleBlood.sys, vgk.sys, eb.sys)
 
-`UC_4_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceImageLoadEvents
 
 ### Windows Event Log clearing via wevtutil (Security/System) — Gentlemen defense evasion
 
-`UC_4_16` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### Advanced IP Scanner internal reconnaissance — Gentlemen discovery
 
-`UC_4_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceProcessEvents
 
 ### Volume Shadow Copy deletion via vssadmin/wmic — Gentlemen pre-encryption
 
-`UC_4_18` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_18` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceProcessEvents
 
 ### The Gentlemen ransom note / wallpaper drop (README-GENTLEMEN.txt, gentlemen.bmp)
 
-`UC_4_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -204,7 +204,7 @@ DeviceFileEvents
 
 ### The Gentlemen encryptor binary execution by known SHA256
 
-`UC_4_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -573,7 +573,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — No Manners Here: The Ruthless Rise of The Gentlemen Ransomware
 
-`UC_4_13` · phase: **exploit** · confidence: **High**
+`UC_6_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

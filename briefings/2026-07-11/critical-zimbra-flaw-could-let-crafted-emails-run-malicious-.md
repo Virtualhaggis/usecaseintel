@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Zimbra Classic Web Client XSS exfil beacon to ffrk.net (CVE-2025-27915 campaign)
 
-`UC_3_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### Inbound Zimbra email from Zimbra-XSS campaign sender 193.29.58.37 with .ICS attachment
 
-`UC_3_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

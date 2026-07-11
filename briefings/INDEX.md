@@ -9,7 +9,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-11
+- [compromised jscrambler 8 14 0 npm release drops rust infoste](./2026-07-11/compromised-jscrambler-8-14-0-npm-release-drops-rust-infoste.md)
 - [critical zimbra flaw could let crafted emails run malicious ](./2026-07-11/critical-zimbra-flaw-could-let-crafted-emails-run-malicious-.md)
+- [hackers weaponize balochistan police portal in multi group e](./2026-07-11/hackers-weaponize-balochistan-police-portal-in-multi-group-e.md)
 - [jscrambler npm package publishes malicious preinstall binary](./2026-07-11/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
 
 ## 2026-07-10
@@ -109,7 +111,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [writer ai flaw could let agent previews leak session tokens ](./2026-07-07/writer-ai-flaw-could-let-agent-previews-leak-session-tokens-.md)
 
 ## 2026-07-06
-- [16 year old linux kvm flaw lets guest vms escape to host on ](./2026-07-06/16-year-old-linux-kvm-flaw-lets-guest-vms-escape-to-host-on-.md)
 - [5 insights from frost sullivan s 2025 frost radar for cloud ](./2026-07-06/5-insights-from-frost-sullivan-s-2025-frost-radar-for-cloud-.md)
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
 - [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)
@@ -121,7 +122,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa vjc7 jrh9 9j86 9router has unauthenticate](./2026-07-06/ghsa-critical-ghsa-vjc7-jrh9-9j86-9router-has-unauthenticate.md)
 - [iran linked hackers use new cavern c2 framework to target is](./2026-07-06/iran-linked-hackers-use-new-cavern-c2-framework-to-target-is.md)
 - [predicting mongodb objectid continuously in rocket chat](./2026-07-06/predicting-mongodb-objectid-continuously-in-rocket-chat.md)
-- [threat actors probe gitea docker flaw cve 2026 20896 13 days](./2026-07-06/threat-actors-probe-gitea-docker-flaw-cve-2026-20896-13-days.md)
 - [when checking the url isn t enough a device code phishing at](./2026-07-06/when-checking-the-url-isn-t-enough-a-device-code-phishing-at.md)
 
 ## 2026-07-03
