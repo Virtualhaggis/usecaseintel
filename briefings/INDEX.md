@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-11
 - [critical zimbra flaw could let crafted emails run malicious ](./2026-07-11/critical-zimbra-flaw-could-let-crafted-emails-run-malicious-.md)
+- [jscrambler npm package publishes malicious preinstall binary](./2026-07-11/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
 
 ## 2026-07-10
 - [attackers exploit ill bloom vulnerability to drain over 5 mi](./2026-07-10/attackers-exploit-ill-bloom-vulnerability-to-drain-over-5-mi.md)
@@ -985,7 +986,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-09-23
 - [cisa kev cve 2025 10585 google chromium v8 type confusion vu](./2025-09-23/cisa-kev-cve-2025-10585-google-chromium-v8-type-confusion-vu.md)
-- [s1ngularity popular nx build system package compromised with](./2025-09-23/s1ngularity-popular-nx-build-system-package-compromised-with.md)
 
 ## 2025-09-15
 - [zero day extensive npm package compromise shai hulud supply ](./2025-09-15/zero-day-extensive-npm-package-compromise-shai-hulud-supply-.md)

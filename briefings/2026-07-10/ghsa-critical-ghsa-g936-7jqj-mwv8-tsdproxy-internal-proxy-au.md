@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### TSDProxy management API auth-bypass: forwarded token replayed to 127.0.0.1:8080/api/v1
 
-`UC_5_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### TSDProxy internal auth token leakage / capture via backend header reflection
 
-`UC_5_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
