@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2576 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2578 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-11
+- [critical zimbra flaw could let crafted emails run malicious ](./2026-07-11/critical-zimbra-flaw-could-let-crafted-emails-run-malicious-.md)
 
 ## 2026-07-10
 - [attackers exploit ill bloom vulnerability to drain over 5 mi](./2026-07-10/attackers-exploit-ill-bloom-vulnerability-to-drain-over-5-mi.md)
@@ -689,6 +692,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 2441 google chromium css use after free vu](./2026-02-17/cisa-kev-cve-2026-2441-google-chromium-css-use-after-free-vu.md)
 - [securing the agent skill ecosystem how snyk and vercel are l](./2026-02-17/securing-the-agent-skill-ecosystem-how-snyk-and-vercel-are-l.md)
 - [weaving security into the flow new snyk studio capabilities ](./2026-02-17/weaving-security-into-the-flow-new-snyk-studio-capabilities-.md)
+
+## 2026-02-16
+- [from detection to prevention how zen stops idor vulnerabilit](./2026-02-16/from-detection-to-prevention-how-zen-stops-idor-vulnerabilit.md)
 
 ## 2026-02-15
 - [10 000 open source projects now secured by harden runner com](./2026-02-15/10-000-open-source-projects-now-secured-by-harden-runner-com.md)

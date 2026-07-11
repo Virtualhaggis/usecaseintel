@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious litellm_init.pth startup hook dropped in site-packages (CVE-2026-42208)
 
-`UC_173_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_172_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceFileEvents
 
 ### litellm supply-chain exfil beacon to models.litellm.cloud (CVE-2026-42208)
 
-`UC_173_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_172_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
