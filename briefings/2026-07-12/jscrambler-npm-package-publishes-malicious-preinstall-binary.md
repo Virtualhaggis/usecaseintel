@@ -1,7 +1,7 @@
 # [CRIT] jscrambler npm package publishes malicious preinstall binary
 
 **Source:** StepSecurity
-**Published:** 2026-07-11
+**Published:** 2026-07-12
 **Article:** https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
 
 ## Threat Profile
@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised jscrambler npm package drops binary container (dist/intro.js)
 
-`UC_2_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_0_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### npm preinstall drops and detaches native binary from OS temp dir (hidden dotfile)
 
-`UC_2_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_0_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Known jscrambler Rust stealer payload hashes executed or written to disk
 
-`UC_2_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_0_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ union
 
 ### Outbound C2 to jscrambler stealer infrastructure (37.27.122.124 / 57.128.246.79 + Tor check)
 
-`UC_2_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_0_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceNetworkEvents
 
 ### Persistence installed by temp-dir binary (Scheduled Task / Run key / LaunchAgent)
 
-`UC_2_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_0_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -323,7 +323,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — jscrambler npm package publishes malicious preinstall binary
 
-`UC_2_8` · phase: **exploit** · confidence: **High**
+`UC_0_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

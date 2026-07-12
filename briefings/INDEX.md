@@ -8,11 +8,13 @@ _2577 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-12
+- [jscrambler npm package publishes malicious preinstall binary](./2026-07-12/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
+
 ## 2026-07-11
 - [compromised jscrambler 8 14 0 npm release drops rust infoste](./2026-07-11/compromised-jscrambler-8-14-0-npm-release-drops-rust-infoste.md)
 - [critical zimbra flaw could let crafted emails run malicious ](./2026-07-11/critical-zimbra-flaw-could-let-crafted-emails-run-malicious-.md)
 - [hackers weaponize balochistan police portal in multi group e](./2026-07-11/hackers-weaponize-balochistan-police-portal-in-multi-group-e.md)
-- [jscrambler npm package publishes malicious preinstall binary](./2026-07-11/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
 
 ## 2026-07-10
 - [attackers exploit ill bloom vulnerability to drain over 5 mi](./2026-07-10/attackers-exploit-ill-bloom-vulnerability-to-drain-over-5-mi.md)
