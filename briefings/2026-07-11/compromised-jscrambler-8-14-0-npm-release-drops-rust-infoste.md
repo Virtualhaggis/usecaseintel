@@ -34,15 +34,20 @@ Socket flagged the release  six minutes after it was published . If…
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
 - **T1543.001** — Persistence (article-specific)
-- **T1204.003** — Malicious Package
-- **T1059.007** — JavaScript
-- **T1036.005** — Match Legitimate Name or Location
-- **T1573.002** — Asymmetric Cryptography
-- **T1090.003** — Multi-hop Proxy
-- **T1564.001** — Hidden Files and Directories
-- **T1555.005** — Password Managers
-- **T1552.001** — Credentials In Files
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1204.003** — User Execution: Malicious Package
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1105** — Ingress Tool Transfer
+- **T1036** — Masquerading
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1090.003** — Proxy: Multi-hop Proxy
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1528** — Steal Application Access Token
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1543.001** — Create or Modify System Process: Launch Agent
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
 
 ## Kill chain phases observed
 
@@ -50,52 +55,70 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious jscrambler npm install artifacts (dist/setup.js + intro.js) by known SHA-256
+### jscrambler compromised npm version (8.14.0/8.16-8.20) install/resolve on build host
 
-`UC_0_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd")) OR (Filesystem.file_path="*node_modules*jscrambler*dist*" AND Filesystem.file_name IN ("setup.js","intro.js")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where SHA256 in ("a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd")
-   or (FolderPath has @"\node_modules\jscrambler\dist\" and FileName in~ ("setup.js","intro.js"))
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### jscrambler preinstall loader: node.exe spawning unsigned binary from system temp
-
-`UC_0_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_0_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name IN ("node.exe","npm.exe","npm-cli.js") AND (Endpoint.Processes.process_path="*\\Temp\\*" OR Endpoint.Processes.process_path="*\\AppData\\Local\\Temp\\*") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.process_path | `drop_dm_object_name(Processes)` | regex process_name="^\.[A-Za-z0-9]+(\.exe)?$" | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("node.exe","npm.exe","pnpm.exe","yarn.exe","npm-cli.js") OR Processes.parent_process_name IN ("node.exe","npm.exe","pnpm.exe","yarn.exe")) AND (Processes.process="*jscrambler@8.14.0*" OR Processes.process="*jscrambler@8.16.0*" OR Processes.process="*jscrambler@8.17.0*" OR Processes.process="*jscrambler@8.18.0*" OR Processes.process="*jscrambler@8.20.0*") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe")
-| where FolderPath has_any (@"\AppData\Local\Temp\", @"\Windows\Temp\", "/tmp/", "/var/folders/")
-| where FileName startswith "." or InitiatingProcessCommandLine has_any ("setup.js","jscrambler")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| where ProcessCommandLine has "jscrambler"
+| where ProcessCommandLine has_any ("jscrambler@8.14.0","jscrambler@8.16.0","jscrambler@8.17.0","jscrambler@8.18.0","jscrambler@8.20.0")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### jscrambler infostealer C2 beacon to 37.27.122.124 / 57.128.246.79
+### Rust infostealer binary executed from jscrambler npm preinstall (setup.js) hook
 
-`UC_0_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_0_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("37.27.122.124","57.128.246.79") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd")) OR (Processes.parent_process_name IN ("node.exe","npm.exe") AND Processes.parent_process="*setup.js*" AND (Processes.process_path="*Temp*" OR Processes.process_path="*/tmp/*" OR Processes.process_path="*/var/folders/*")) by Processes.dest Processes.user Processes.process Processes.process_name Processes.process_path Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA256 in ("b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd")
+    or (InitiatingProcessFileName in~ ("node.exe","npm.exe") and InitiatingProcessCommandLine has "setup.js" and FolderPath has_any ("Temp","/tmp/","/var/folders/"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Trojanized jscrambler package artifacts (setup.js/intro.js) written to node_modules
+
+`UC_0_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86")) OR (Filesystem.file_path="*jscrambler*dist*" AND Filesystem.file_name IN ("setup.js","intro.js")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in ("a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86")
+    or (FolderPath has "jscrambler" and FolderPath has "dist" and FileName in~ ("setup.js","intro.js"))
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Outbound C2 to jscrambler stealer IPs or Tor bootstrap from build host
+
+`UC_0_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("37.27.122.124","57.128.246.79")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -103,50 +126,74 @@ DeviceProcessEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("37.27.122.124","57.128.246.79")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
+    or RemoteUrl in~ ("check.torproject.org","archive.torproject.org")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### Every-minute hidden scheduled task pointing at a temp binary (jscrambler persistence)
-
-`UC_0_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name="schtasks.exe" AND Endpoint.Processes.process="*/create*" AND Endpoint.Processes.process="*/sc minute*" by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.parent_process_path Endpoint.Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create" and ProcessCommandLine has "/sc" and ProcessCommandLine has_any ("minute","/mo 1")
-| where InitiatingProcessFolderPath has_any (@"\AppData\Local\Temp\", @"\Windows\Temp\") or ProcessCommandLine has_any (@"\Temp\", @"\AppData\Local\Temp\")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, ProcessCommandLine
-| order by Timestamp desc
-```
-
-### Temp-launched process reading AI-tool, cloud and wallet secret stores (jscrambler stealer sweep)
+### Temp-directory binary reading across multiple developer secret stores
 
 `UC_0_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(Filesystem.file_path) as store_count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_path="*\\Temp\\*" OR Filesystem.process_path="*/tmp/*") AND (Filesystem.file_path="*\\.aws\\*" OR Filesystem.file_path="*\\.azure\\*" OR Filesystem.file_path="*gcloud*" OR Filesystem.file_path="*Bitwarden*" OR Filesystem.file_path="*MetaMask*" OR Filesystem.file_path="*Exodus*" OR Filesystem.file_path="*\\Claude\\*" OR Filesystem.file_path="*\\Cursor\\*" OR Filesystem.file_path="*Windsurf*" OR Filesystem.file_path="*\\Zed\\*" OR Filesystem.file_path="*\\Code\\User\\*") by Filesystem.dest Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where store_count >= 3 | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.process_path="*Temp*" OR Filesystem.process_path="*/tmp/*" OR Filesystem.process_path="*/var/folders/*") by Filesystem.dest Filesystem.process_path Filesystem.file_path | `drop_dm_object_name(Filesystem)` | eval store=case(match(file_path,"(?i)(Claude|Cursor|Windsurf|Zed|Code.User|\.cursor|\.claude|codeium)"),"ai_tool_config", match(file_path,"(?i)(Chrome|BraveSoftware|Edge|Mozilla)"),"browser_secrets", match(file_path,"(?i)(\.aws|gcloud|\.azure)"),"cloud_creds", match(file_path,"(?i)(Bitwarden|MetaMask|Exodus|Phantom|\.ssh)"),"wallet_or_vault", 1=1,"other") | where store!="other" | stats dc(store) as storeTypes values(store) as stores values(file_path) as files by dest process_path | where storeTypes>=2
 ```
 
 **Defender KQL:**
 ```kql
-let SecretPaths = dynamic([@"\.aws\", @"\.azure\", "gcloud", "Bitwarden", "MetaMask", "Phantom", "Exodus", @"\Claude\", @"\Cursor\", "Windsurf", @"\Zed\", @"\.codeium\", @"\Code\User\"]);
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileAccessed","FileOpened","FileRead","FileModified","FileCreated")
-| where InitiatingProcessFolderPath has_any (@"\AppData\Local\Temp\", @"\Windows\Temp\", "/tmp/", "/var/folders/")
-| where FolderPath has_any (SecretPaths)
-| summarize StoreCount = dcount(tostring(extract(@"(\.aws|\.azure|gcloud|Bitwarden|MetaMask|Phantom|Exodus|Claude|Cursor|Windsurf|Zed|codeium|Code\\User)", 1, FolderPath))), Paths = make_set(FolderPath, 20) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessId
-| where StoreCount >= 3   // one process touching >=3 distinct secret stores = stealer sweep
-| order by StoreCount desc
+| where InitiatingProcessFolderPath has_any ("Temp","/tmp/","/var/folders/")
+| extend SecretStore = case(
+    FolderPath has_any ("Claude","Cursor","Windsurf","Zed",".cursor",".claude","codeium"), "ai_tool_config",
+    FolderPath has_any ("Chrome","BraveSoftware","Edge","Mozilla"), "browser_secrets",
+    FolderPath has_any (".aws","gcloud",".azure"), "cloud_creds",
+    FolderPath has_any ("Bitwarden","MetaMask","Exodus","Phantom",".ssh"), "wallet_or_vault",
+    "other")
+| where SecretStore != "other"
+| summarize StoreTypes = dcount(SecretStore), Stores = make_set(SecretStore), SampleFiles = make_set(FolderPath, 10) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256
+| where StoreTypes >= 2
+| order by StoreTypes desc
+```
+
+### Cloud instance-metadata (IMDS) access by temp-directory binary
+
+`UC_0_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="169.254.169.254" AND (All_Traffic.process="*Temp*" OR All_Traffic.process="*/tmp/*" OR All_Traffic.process="*/var/folders/*") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "169.254.169.254" or RemoteUrl in~ ("metadata.google.internal")
+| where InitiatingProcessFolderPath has_any ("Temp","/tmp/","/var/folders/")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl
+| order by Timestamp desc
+```
+
+### Persistence artifact (scheduled task / LaunchAgent) written by a temp-directory binary
+
+`UC_0_14` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where ((Filesystem.file_path="*System32*Tasks*") OR (Filesystem.file_path="*/Library/LaunchAgents/*")) AND (Filesystem.process_path="*Temp*" OR Filesystem.process_path="*/tmp/*" OR Filesystem.process_path="*/var/folders/*") by Filesystem.dest Filesystem.file_path Filesystem.process_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FolderPath has_all ("System32","Tasks")) or (FolderPath has "LaunchAgents")
+| where InitiatingProcessFolderPath has_any ("Temp","/tmp/","/var/folders/")
+| project Timestamp, DeviceName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -357,4 +404,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

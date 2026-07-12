@@ -30,11 +30,8 @@ The vulnerability has been described as a case of stored cross-site scripting (X
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
-- **T1567** — Exfiltration Over Web Service
-- **T1041** — Exfiltration Over C2 Channel
-- **T1059.007** — JavaScript
-- **T1566.001** — Spearphishing Attachment
-- **T1566** — Phishing
+- **T1189** — Drive-by Compromise
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
@@ -42,32 +39,38 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Zimbra Classic Web Client XSS exfil beacon to ffrk.net (CVE-2025-27915 campaign)
+### XSS payload strings in HTTP requests to Zimbra Classic Web Client endpoints
 
-`UC_5_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*apache2_config_default*" OR Web.dest="ffrk.net" OR Web.url="*ffrk.net*") by Web.src Web.dest Web.url Web.http_user_agent Web.user | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*/h/*","*/service/soap*","*/service/preauth*","*/public/*","*/zimbra/*") OR Web.site="*zimbra*") AND (Web.url IN ("*<script*","*%3Cscript*","*onerror=*","*onload=*","*onmouseover=*","*javascript:*","*document.cookie*") OR Web.uri_query IN ("*<script*","*%3Cscript*","*onerror=*","*javascript:*")) by Web.src, Web.dest, Web.site, Web.url, Web.http_method, Web.http_user_agent | `drop_dm_object_name(Web)` | sort - count
 ```
+
+### Cross-origin external script fetch referred from Zimbra webmail session
+
+`UC_5_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_referrer IN ("*/h/*","*/zimbra/*","*/service/*")) AND Web.url="*.js*" by Web.src, Web.http_referrer, Web.url, Web.dest, Web.site | `drop_dm_object_name(Web)` | eval ref_host=lower(replace(http_referrer,"^https?://([^/]+).*","\1")), dst_host=lower(replace(url,"^https?://([^/]+).*","\1")) | where ref_host!=dst_host | sort - count
+```
+
+### Unpatched Zimbra Collaboration below 10.1.19 exposed to Classic Web Client XSS
+
+`UC_5_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "ffrk.net"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Inbound Zimbra email from Zimbra-XSS campaign sender 193.29.58.37 with .ICS attachment
-
-`UC_5_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where All_Email.src="193.29.58.37" by All_Email.src All_Email.src_user All_Email.recipient All_Email.subject All_Email.file_name | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+DeviceTvmSoftwareInventory
+| where Timestamp > ago(1d)
+| where SoftwareVendor has "zimbra" or SoftwareName has "zimbra"
+| extend Parts = split(SoftwareVersion, ".")
+| extend Major = toint(Parts[0]), Minor = toint(Parts[1]), Patch = toint(extract(@"^(\d+)", 1, tostring(Parts[2])))
+| where isnotnull(Major) and (Major < 10 or (Major == 10 and Minor < 1) or (Major == 10 and Minor == 1 and Patch < 19))
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus, EndOfSupportDate
+| sort by SoftwareVersion asc
 ```
 
 ### Suspicious browser extension installation
@@ -221,4 +224,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
