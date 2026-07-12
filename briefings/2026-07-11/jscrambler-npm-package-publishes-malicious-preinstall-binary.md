@@ -29,14 +29,11 @@ Back to Blog Threat Intel jscrambler npm package publishes malicious preinstall 
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1036.008** — Masquerade File Type
-- **T1059.007** — JavaScript
-- **T1090.003** — Multi-hop Proxy: Tor
+- **T1195.001** — Compromise Software Supply Chain: Software Dependencies and Development Tools
+- **T1036.008** — Masquerading: Masquerade File Type
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1087** — Account Discovery
-- **T1083** — File and Directory Discovery
+- **T1090.003** — Proxy: Multi-hop Proxy
 
 ## Kill chain phases observed
 
@@ -44,53 +41,71 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious jscrambler@8.14.0 supply-chain artifact dropped into node_modules (intro.js binary container)
+### Malicious jscrambler@8.14.0 native-binary container 'intro.js' dropped into node_modules
 
 `UC_2_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="intro.js" OR Filesystem.file_name="setup.js") Filesystem.file_path="*node_modules*jscrambler*dist*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="intro.js" Filesystem.file_path="*jscrambler*dist*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType == "FileCreated"
-| where FolderPath has @"\node_modules\jscrambler\dist\" or FolderPath contains "/node_modules/jscrambler/dist/"
-| where FileName =~ "intro.js" and FileSize > 1000000   // 1MB — legit intro.js is a few KB; malicious container is 7.8MB
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FileName =~ "intro.js"
+| where FolderPath has @"\jscrambler\"
+| where FileSize > 1048576   // 1MB — a real intro.js in a JS CLI is a few KB; the malicious container is 7.8MB
+| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### npm/node preinstall drops and detaches randomly-named binary from OS temp dir
+### npm/node preinstall spawns detached hidden binary from OS temp directory
 
-`UC_2_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","npm.exe","node","npm") (Processes.process_path="*\\Temp\\.*.exe" OR Processes.process_path="*/tmp/.*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="node.exe" Processes.process_path="*\\Temp\\*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | regex process_path="(?i)\\Temp\\\.[a-z0-9]{6,}\.exe$" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","node","npm")
-| where FolderPath has_any (@"\Temp\", "/tmp/", @"\AppData\Local\Temp\")
-| where FileName matches regex @"(?i)^\.[a-z0-9]{6,}(\.exe)?$"   // dotfile with 6+ random alnum chars, .exe on Windows
-| project Timestamp, DeviceName, AccountName, FolderPath, FileName, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe")
+| where FolderPath has @"\Temp\"
+| where FileName matches regex @"^\.[a-z0-9]{6,}\.exe$"   // random dotfile written by the loader
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Post-install stealer C2 beacon to hardcoded IPs and Tor infrastructure
+### Execution or write of known jscrambler Rust stealer payload by SHA256
 
-`UC_2_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("37.27.122.124","57.128.246.79") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let PayloadHashes = dynamic(["fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd"]);
+union
+  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (PayloadHashes) | extend Src="ProcessCreated" | project Timestamp, DeviceName, Src, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (PayloadHashes) | extend Src=ActionType | project Timestamp, DeviceName, Src, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### Outbound C2 to jscrambler stealer IPs / Tor endpoints during or after npm install
+
+`UC_2_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("37.27.122.124","57.128.246.79") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -98,47 +113,9 @@ DeviceProcessEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("37.27.122.124","57.128.246.79")
-   or RemoteUrl in~ ("check.torproject.org","archive.torproject.org")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+    or RemoteUrl in~ ("check.torproject.org","archive.torproject.org")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
-```
-
-### Execution or write of known jscrambler stealer payload (three platform SHA256s)
-
-`UC_2_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let payloadHashes = dynamic(["fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd"]);
-union
-  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in~ (payloadHashes) | project Timestamp, DeviceName, AccountName, Source="Process", FolderPath, FileName, SHA256, ProcessCommandLine),
-  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in~ (payloadHashes) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="FileWrite", FolderPath, FileName, SHA256, ProcessCommandLine=InitiatingProcessCommandLine)
-| order by Timestamp desc
-```
-
-### npm/node install-time spawn of shells or reconnaissance utilities
-
-`UC_2_13` · phase: **exploit** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Processes.process_name) as children dc(Processes.process_name) as childTypes min(_time) as firstTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","npm.exe","node","npm") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","systeminfo.exe","net.exe","net1.exe","curl.exe","wget.exe","bash.exe","sh","reg.exe","schtasks.exe") by Processes.dest Processes.user Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","node","npm")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","systeminfo.exe","net.exe","net1.exe","curl.exe","wget.exe","bash.exe","sh","reg.exe","schtasks.exe")
-| where InitiatingProcessCommandLine has_any ("preinstall","postinstall","node_modules","npm-cli.js","install")
-| summarize ChildCount = count(), ChildBinaries = make_set(FileName), SampleCmd = any(ProcessCommandLine) by DeviceName, AccountName, InitiatingProcessCommandLine, bin(Timestamp, 5m)
-| order by ChildCount desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -375,4 +352,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1976,8 +1976,8 @@ DeviceFileEvents
   data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network"
   data-targets="macos,windows"
-  data-uc-count="14" data-llm-uc-count="5"
-  data-search="jscrambler npm package publishes malicious preinstall binary On July 11, 2026, version 8.14.0 of jscrambler was published to npm carrying a malicious preinstall hook that drops and executes a platform-specific native binary on Linux, Windows, and macOS. jscrambler is the official CLI client for the Jscrambler Code Integrity API, a commercial JavaScript obfuscation and web-app protection service, with a clean version history dating back to 0.1.0. The compromised release was flagged by StepSecurity&#x27;s AI Release Analyzer with a suspicion score of 0 (the maximum suspicion rating) on publish.  T1027 T1176 T1190 T1195.002 T1555.003 [LLM] Malicious jscrambler@8.14.0 supply-chain artifact dropped into node_modules (intro.js binary container) [LLM] npm/node preinstall drops and detaches randomly-named binary from OS temp dir [LLM] Post-install stealer C2 beacon to hardcoded IPs and Tor infrastructure [LLM] Execution or write of known jscrambler stealer payload (three platform SHA256s) [LLM] npm/node install-time spawn of shells or reconnaissance utilities Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Crypto-wallet file/keystore access by non-wallet process PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — jscrambler npm package publishes malicious preinstall binary">
+  data-uc-count="13" data-llm-uc-count="4"
+  data-search="jscrambler npm package publishes malicious preinstall binary On July 11, 2026, version 8.14.0 of jscrambler was published to npm carrying a malicious preinstall hook that drops and executes a platform-specific native binary on Linux, Windows, and macOS. jscrambler is the official CLI client for the Jscrambler Code Integrity API, a commercial JavaScript obfuscation and web-app protection service, with a clean version history dating back to 0.1.0. The compromised release was flagged by StepSecurity&#x27;s AI Release Analyzer with a suspicion score of 0 (the maximum suspicion rating) on publish.  T1027 T1176 T1190 T1195.002 T1555.003 [LLM] Malicious jscrambler@8.14.0 native-binary container &#x27;intro.js&#x27; dropped into node_modules [LLM] npm/node preinstall spawns detached hidden binary from OS temp directory [LLM] Execution or write of known jscrambler Rust stealer payload by SHA256 [LLM] Outbound C2 to jscrambler stealer IPs / Tor endpoints during or after npm install Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Crypto-wallet file/keystore access by non-wallet process PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — jscrambler npm package publishes malicious preinstall binary">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-11-jscrambler-npm-package-publishes-malicious-preinstall-binary" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1986,7 +1986,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
   <div class="pubmeta">
     <span>2026-07-11</span>
-    <span>14 use cases</span>
+    <span>13 use cases</span>
     <span>5 techniques</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -2037,33 +2037,32 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Malicious jscrambler@8.14.0 supply-chain artifact dropped into node_modules (intro.js binary container)</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] npm/node preinstall drops and detaches randomly-named binary from OS temp dir · [LLM] npm/node install-time spawn of shells or reconnaissance utilities · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — jscrambler npm package publishes malicious preinstall binary</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Execution or write of known jscrambler stealer payload (three platform SHA256s) · Suspicious browser extension installation · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Post-install stealer C2 beacon to hardcoded IPs and Tor infrastructure · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Malicious jscrambler@8.14.0 native-binary container &#x27;intro.js&#x27; dropped into node_modules</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — jscrambler npm package publishes malicious preinstall binary</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] npm/node preinstall spawns detached hidden binary from OS temp directory · [LLM] Execution or write of known jscrambler Rust stealer payload by SHA256 · Suspicious browser extension installation · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound C2 to jscrambler stealer IPs / Tor endpoints during or after npm install · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs · Crypto-wallet file/keystore access by non-wallet process</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="72858a4131" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="d41b74db73" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Malicious jscrambler@8.14.0 supply-chain artifact dropped into node_modules (intro.js binary container)</span>
+    <span class="uc-title">Malicious jscrambler@8.14.0 native-binary container &#x27;intro.js&#x27; dropped into node_modules</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="72858a4131" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="d41b74db73" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts installation of the trojanized jscrambler 8.14.0 npm release by detecting creation of node_modules/jscrambler/dist/intro.js as a multi-megabyte file (7.8 MB binary container disguised as JS) plus the new dist/setup.js loader. Article-specific because legitimate jscrambler releases never ship a megabyte-scale intro.js.
+    <div class="uc-desc">Hunts the supply-chain artifact: a 7.8 MB file named intro.js written under the jscrambler package&#x27;s dist directory. In a JS-obfuscation CLI this file has no legitimate purpose and is a Rust native-binary container masquerading behind a .js extension (magic bytes 1B 43 53 49 01). This is the on-disk fingerprint of the compromised release before the payload runs.
 
-Rationale: Anchors on the exact article path node_modules/jscrambler/dist/intro.js plus the 7.8MB size anomaly and the new setup.js loader — a benign JS-obfuscation CLI has no megabyte intro.js. Corroborated by The Hacker News and safedep.
+Rationale: Anchors on the article&#x27;s exact artifact — file named intro.js under the jscrambler package dir at anomalous multi-MB size — a masqueraded native container, not JS. Cross-checked with thehackernews.com and safedep.io.
 
 Cross-checked against:
   • https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html
-  • https://safedep.io/jscrambler-npm-supply-chain-compromise/
-  • https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Masquerade File Type">T1036.008</span></div>
+  • https://safedep.io/jscrambler-npm-supply-chain-compromise/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain: Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Masquerading: Masquerade File Type">T1036.008</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer intentionally caching a large fixture named intro.js under a vendored jscrambler dir (rare)</li><li>Security researcher retaining the malicious 8.14.0 tarball for analysis on a monitored host</li><li>Backup/restore tooling re-hydrating an old node_modules snapshot that contains the artifact</li><li>Internal mirror replaying the compromised version before it was pulled</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the FileSize/SHA256 of intro.js and check package-lock.json/package.json for jscrambler resolved to 8.14.0. 2) Contain: isolate the host/CI runner, block egress to 37.27.122.124 and 57.128.246.79, downgrade to 8.13.0 (or 8.15.0), and purge node_modules + npm cache. 3) Hunt: pivot on the same host for the temp-dir dotfile binary and the three payload SHA256s; rotate every browser-logged credential and audit MetaMask/Bitwarden wallet extensions per StepSecurity guidance.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A different, legitimately large intro.js bundle in an unrelated package that happens to sit under a folder path containing &#x27;jscrambler&#x27; (rare)</li><li>Security researcher intentionally staging the 8.14.0 sample in a sandbox path</li><li>Backup/restore tooling re-writing an already-quarantined copy of the file</li><li>A local monorepo package coincidentally named jscrambler with a large generated intro.js</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has @&quot;\quarantine\&quot; or InitiatingProcessFileName in~ (&quot;MsMpEng.exe&quot;,&quot;MsSense.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the file is the 8.14.0 container — check magic bytes 1B 43 53 49 01 and hash the extracted payload against the three known SHA256s; grep package-lock.json for jscrambler 8.14.0. 2) Contain: isolate the host, kill any detached temp-dir process, and remove node_modules + npm cache; block the two C2 IPs and Tor endpoints. 3) Hunt: pivot on DeviceProcessEvents for a temp-dir dotfile spawned by node.exe and on any outbound to 37.27.122.124 / 57.128.246.79; treat the host as compromised and rotate all browser-stored and CI/CD credentials.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-02-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-02-uc0-sentinel">Sentinel KQL</button>
@@ -2074,21 +2073,21 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-02-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(30d)
-| where ActionType == &quot;FileCreated&quot;
-| where FolderPath has @&quot;\node_modules\jscrambler\dist\&quot; or FolderPath contains &quot;/node_modules/jscrambler/dist/&quot;
-| where FileName =~ &quot;intro.js&quot; and FileSize &gt; 1000000   // 1MB — legit intro.js is a few KB; malicious container is 7.8MB
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FileName =~ &quot;intro.js&quot;
+| where FolderPath has @&quot;\jscrambler\&quot;
+| where FileSize &gt; 1048576   // 1MB — a real intro.js in a JS CLI is a few KB; the malicious container is 7.8MB
+| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-02-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(30d)
-| where EventType == &quot;FileCreated&quot;
-| where TargetFilePath has @&quot;\node_modules\jscrambler\dist\&quot; or TargetFilePath contains &quot;/node_modules/jscrambler/dist/&quot;
-| where TargetFileName =~ &quot;intro.js&quot; and TargetFileSize &gt; 1000000   // 7.8MB binary container disguised as JS
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, TargetFileSize, TargetFileSHA256, ActingProcessName
+| where TargetFileName =~ &quot;intro.js&quot;
+| where TargetFilePath has @&quot;\jscrambler\&quot;
+| where TargetFileSize &gt; 1048576   // 7.8MB container vs KB-sized legit JS
+| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName, TargetFileSize, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious jscrambler npm intro.js Binary Container Written to node_modules
-id: 6f2b1d94-8c3a-4d21-9e77-2a5f1b0c4e88
-description: Detects creation of the oversized intro.js binary container dropped by the trojanized jscrambler 8.14.0 npm release
+    <div class="tab-content" id="art-02-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious jscrambler intro.js native-binary container dropped in node_modules
+id: 6f3b1c2a-9d84-4a71-8e2f-1c0b7a5d9e42
+description: Detects the 7.8MB intro.js binary container written under node_modules/jscrambler/dist by the compromised 8.14.0 release
 references:
   - https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
   - https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html
@@ -2102,35 +2101,36 @@ logsource:
   product: windows
 detection:
   selection:
-    TargetFilename|contains: &#x27;\node_modules\jscrambler\dist\intro.js&#x27;
+    TargetFilename|contains: &#x27;\jscrambler\dist\&#x27;
+    TargetFilename|endswith: &#x27;\intro.js&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\node_modules\jscrambler\dist\intro.js OR */node_modules/jscrambler/dist/intro.js OR *\node_modules\jscrambler\dist\setup.js)</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/[\\\/]node_modules[\\\/]jscrambler[\\\/]dist[\\\/](intro|setup)\.js$/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;intro.js&quot; OR Filesystem.file_name=&quot;setup.js&quot;) Filesystem.file_path=&quot;*node_modules*jscrambler*dist*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-02-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;intro.js&quot; OR Filesystem.file_name=&quot;setup.js&quot;) Filesystem.file_path=&quot;*node_modules*jscrambler*dist*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-02-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\\jscrambler\\dist\\intro.js OR *\\jscrambler\\dist\\Intro.js OR *\\jscrambler\\dist\\INTRO.JS)</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\\jscrambler\\.*\\intro\.js$/i
+| groupBy([aid, ComputerName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;intro.js&quot; Filesystem.file_path=&quot;*jscrambler*dist*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-02-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;intro.js&quot; Filesystem.file_path=&quot;*jscrambler*dist*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="5846e8fbc8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="7b7f4858bc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">npm/node preinstall drops and detaches randomly-named binary from OS temp dir</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">npm/node preinstall spawns detached hidden binary from OS temp directory</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5846e8fbc8" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="7b7f4858bc" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the jscrambler preinstall loader (setup.js run by node) writing the platform payload to a randomly named dotfile in the OS temp directory (with .exe on Windows) and launching it detached. Article-specific: legitimate npm installs do not spawn hidden temp-dir executables orphaned from the install tree.
+    <div class="uc-desc">Hunts the execution stage: the preinstall loader decompresses a platform binary to a randomly-named dotfile in the OS temp dir (with .exe on Windows) and launches it detached from the npm tree. Detects node.exe spawning a child whose path is a leading-dot random-named executable under Temp — the exact behaviour the loader (dist/setup.js) exhibits.
 
-Rationale: Encodes the exact drop behaviour from the article: setup.js (run by node) writes &lt;tmpdir&gt;/.[a-z0-9]{6,}(.exe) and launches it detached. The dotfile-in-temp + node parent pairing is high-fidelity and rarely occurs in benign installs.
+Rationale: Combines the article&#x27;s precise loader behaviour — parent node.exe, OS temp dir, leading-dot random [a-z0-9]{6,} name, .exe suffix on Windows, detached — into one high-fidelity execution predicate that no benign npm lifecycle script matches.
 
 Cross-checked against:
-  • https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
-  • https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="JavaScript">T1059.007</span> <span class="ind tech" title="Masquerade File Type">T1036.008</span></div>
+  • https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html
+  • https://safedep.io/jscrambler-npm-supply-chain-compromise/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Hide Artifacts: Hidden Files and Directories">T1564.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>node-gyp / native module builds that stage compiled artifacts in temp (usually not dotfiles, and named .node/.o)</li><li>electron-builder or pkg bundlers writing temp executables during packaging</li><li>esbuild/swc downloading a platform binary to a cache (typically ~/.cache or AppData, not a random dotfile)</li><li>Playwright/Puppeteer post-install fetching browser binaries to temp</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FileName endswith &quot;.node&quot; or FolderPath has @&quot;\node-gyp\&quot; or FolderPath has @&quot;\electron\&quot; or FolderPath has @&quot;\puppeteer\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the temp binary path + SHA256 and confirm parent chain node.exe-&gt;dotfile; check whether jscrambler@8.14.0 is in the lockfile. 2) Contain: kill the detached PID, isolate the host, quarantine the temp binary, and block the two C2 IPs. 3) Hunt: correlate the same host&#x27;s DeviceNetworkEvents for 37.27.122.124/57.128.246.79 and Tor endpoints; sweep the fleet for the payload SHA256s and for other hosts that installed 8.14.0.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate npm package with a native postinstall that stages a helper binary in temp (rare, usually named not dotfile+random)</li><li>node-based test harness writing throwaway executables to temp during CI</li><li>Electron builders that unpack signed helper exes to temp</li><li>Developer running a local tool that shells out to a temp-compiled binary</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;electron-builder&quot;,&quot;node-gyp&quot;,&quot;prebuild-install&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the dotfile from temp and hash it against the three known payload SHA256s; confirm parent chain traces to an npm install of jscrambler 8.14.0. 2) Contain: kill the detached process, isolate the host, and remove the temp binary + node_modules; block the C2 IPs/Tor endpoints at the egress. 3) Hunt: search DeviceNetworkEvents from that binary to 37.27.122.124 / 57.128.246.79, check Task Scheduler / LaunchAgents for persistence, and rotate every browser-stored and pipeline credential on the host.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-02-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-02-uc1-sentinel">Sentinel KQL</button>
@@ -2141,27 +2141,29 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-02-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;)
-| where FolderPath has_any (@&quot;\Temp\&quot;, &quot;/tmp/&quot;, @&quot;\AppData\Local\Temp\&quot;)
-| where FileName matches regex @&quot;(?i)^\.[a-z0-9]{6,}(\.exe)?$&quot;   // dotfile with 6+ random alnum chars, .exe on Windows
-| project Timestamp, DeviceName, AccountName, FolderPath, FileName, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;npm.exe&quot;)
+| where FolderPath has @&quot;\Temp\&quot;
+| where FileName matches regex @&quot;^\.[a-z0-9]{6,}\.exe$&quot;   // random dotfile written by the loader
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+    <div class="tab-content" id="art-02-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has_any (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;) or ActingProcessName has_any (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;)
-| where TargetProcessName matches regex @&quot;(?i)[\\/](Temp|tmp)[\\/]\.[a-z0-9]{6,}(\.exe)?$&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, TargetProcessName, TargetProcessCommandLine, Hash
+| where EventID == 4688
+| where ParentProcessName has_any (&quot;\\node.exe&quot;,&quot;\\npm.exe&quot;)
+| where NewProcessName has @&quot;\Temp\&quot;
+| where NewProcessName matches regex @&quot;\\\.[a-z0-9]{6,}\.exe$&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: npm preinstall Spawns Hidden Random Executable from Temp Directory
-id: b81c47f0-1a6e-4c8d-9f2b-7d4a3e91c052
-description: Detects a node/npm-spawned randomly-named dotfile binary executing from the OS temp directory, matching the jscrambler 8.14.0 preinstall loader behaviour
+    <div class="tab-content" id="art-02-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: node.exe spawns hidden random-named executable from temp directory (jscrambler loader)
+id: b21e7f44-3c8a-4d19-9a6b-77e2c1f0a934
+description: Detects the jscrambler 8.14.0 preinstall loader launching a detached dotfile binary from the OS temp directory
 references:
   - https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
 author: SOC Detection Engineering
 date: 2026/07/12
 tags:
-  - attack.t1059.007
-  - attack.t1036.008
+  - attack.t1204.002
+  - attack.t1564.001
 logsource:
   category: process_creation
   product: windows
@@ -2170,62 +2172,124 @@ detection:
     ParentImage|endswith:
       - &#x27;\node.exe&#x27;
       - &#x27;\npm.exe&#x27;
-    Image|re: &#x27;(?i)\\Temp\\\.[a-z0-9]{6,}\.exe$&#x27;
+    Image|contains: &#x27;\Temp\&#x27;
+    Image|re: &#x27;\\\.[a-z0-9]{6,}\.exe$&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\node.exe OR *\npm.exe OR *\Node.exe) @Image:(*\Temp\.*.exe OR *\AppData\Local\Temp\.*.exe)</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(node|npm)(\.exe)?$/i
-| ImageFileName=/[\\\/](Temp|tmp)[\\\/]\.[a-z0-9]{6,}(\.exe)?$/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;) (Processes.process_path=&quot;*\\Temp\\.*.exe&quot; OR Processes.process_path=&quot;*/tmp/.*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-02-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;) (Processes.process_path=&quot;*\\Temp\\.*.exe&quot; OR Processes.process_path=&quot;*/tmp/.*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-02-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\node.exe OR *\\Node.exe OR *\\npm.exe) @Image:(*\\Temp\\.*.exe OR *\\Local\\Temp\\.*.exe)</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^node\.exe$/i
+| ImageFileName=/\\Temp\\\.[a-z0-9]{6,}\.exe$/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;node.exe&quot; Processes.process_path=&quot;*\\Temp\\*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | regex process_path=&quot;(?i)\\Temp\\\.[a-z0-9]{6,}\.exe$&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-02-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;node.exe&quot; Processes.process_path=&quot;*\\Temp\\*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | regex process_path=&quot;(?i)\\Temp\\\.[a-z0-9]{6,}\.exe$&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="77682b3a6d" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="7a552173ee" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="macos,windows">
   <summary>
-    <span class="uc-title">Post-install stealer C2 beacon to hardcoded IPs and Tor infrastructure</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-title">Execution or write of known jscrambler Rust stealer payload by SHA256</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="77682b3a6d" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="7a552173ee" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the dropped stealer&#x27;s outbound calls to the campaign&#x27;s two hardcoded C2 IPs (37.27.122.124, 57.128.246.79) and to Tor bootstrap/directory endpoints (check/archive.torproject.org). IP-based matching is high-fidelity; the Tor domains are corroboration/context only.
+    <div class="uc-desc">Deterministic hash-based catch for the three extracted platform payloads (ELF, PE32+, Mach-O arm64) from dist/intro.js. Fires on process creation or file write matching any known-bad hash regardless of drop path or name — the highest-confidence backstop for hosts that ran 8.14.0.
 
-Rationale: Uses the two second-source-confirmed C2 IPs (cirosec IOC bundle) as exact-match indicators, with the Tor domains as supporting context. IP match on these fresh IOCs is essentially zero-FP outside a live infection.
+Rationale: Uses the three verbatim payload SHA256 IOCs from the article&#x27;s IOC table across process and file telemetry — zero ambiguity, deterministic true positives on any host that dropped or ran the stealer.
 
 Cross-checked against:
-  • https://cirosec.de/en/news/iocs_cryto_stealer_supply_chain_incident/
   • https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html
-  • https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Multi-hop Proxy: Tor">T1090.003</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Tor Browser users on the host hitting check/archive.torproject.org (why the IP clauses carry the real fidelity)</li><li>Security scanner or threat-intel enrichment box deliberately probing the C2 IPs</li><li>Shared-hosting IP reuse if the attacker infra is later reassigned to a benign tenant (re-validate IOC freshness)</li><li>Sandbox/detonation VM replaying the sample and generating the same egress</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the InitiatingProcess making the connection — expect the temp-dir dotfile binary; confirm jscrambler@8.14.0 install on the host. 2) Contain: block 37.27.122.124 and 57.128.246.79 at egress/firewall, isolate the host, and kill the offending process. 3) Hunt: pull all hosts contacting these IPs, then rotate every credential logged into a browser on affected machines and audit crypto-wallet extensions (MetaMask/Bitwarden) for unauthorized transactions.</div></details>
+  • https://safedep.io/jscrambler-npm-supply-chain-compromise/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Malware analyst detonating the sample in an EDR-monitored sandbox</li><li>Threat-intel platform re-hashing a stored copy during enrichment</li><li>Backup agent reading the quarantined payload copy (file-read event only)</li><li>Purple-team validation exercise deliberately staging the IOC</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the match is a live host, not a sandbox/analysis VM; identify the drop path and parent process. 2) Contain: isolate the host, terminate the process, quarantine the file, and block the C2 IPs/Tor endpoints. 3) Hunt: enumerate all hosts that installed jscrambler 8.14.0 via software inventory / lockfiles, check for Task Scheduler + LaunchAgent persistence, and force rotation of browser credentials, crypto wallets, npm/GitHub and cloud tokens.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-02-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-02-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-02-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-02-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-02-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-02-uc2-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-02-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-02-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let PayloadHashes = dynamic([&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;,&quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;,&quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;]);
+union
+  (DeviceProcessEvents | where Timestamp &gt; ago(30d) | where SHA256 in (PayloadHashes) | extend Src=&quot;ProcessCreated&quot; | project Timestamp, DeviceName, Src, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+  (DeviceFileEvents | where Timestamp &gt; ago(30d) | where SHA256 in (PayloadHashes) | extend Src=ActionType | project Timestamp, DeviceName, Src, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileSHA256 in~ (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;,&quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;,&quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;)
+| project TimeGenerated, DvcHostname, DvcAction, TargetFileName, TargetFilePath, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Known jscrambler 8.14.0 Rust stealer payload hash executed
+id: d5a90c17-2b6e-49f3-8c41-0e7b3a2f19c8
+description: Detects process creation matching the extracted ELF/PE/Mach-O payload hashes from jscrambler 8.14.0 intro.js
+references:
+  - https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
+author: SOC Detection Engineering
+date: 2026/07/12
+tags:
+  - attack.t1204.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Hashes|contains:
+      - &#x27;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&#x27;
+      - &#x27;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&#x27;
+      - &#x27;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon (@Hashes:*B7CA95D1B23C8E67416A25CEDF741DE0917C2096BBC9D24649EEA7853D054903* OR @Hashes:*b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903*)</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 SHA256HashData=/^(fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd|b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903|c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd)$/i
+| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;,&quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;,&quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-02-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;,&quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;,&quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="3e8cc4a4e9" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Outbound C2 to jscrambler stealer IPs / Tor endpoints during or after npm install</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="3e8cc4a4e9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the command-and-control stage: connections to the two hardcoded stealer IPs (37.27.122.124, 57.128.246.79) and the Tor reachability domains (check/archive.torproject.org) observed via Harden-Runner. Strongest on the raw IPs, which have no benign use in a build pipeline.
+
+Rationale: Uses the article&#x27;s verbatim C2 IOCs confirmed by StepSecurity Harden-Runner and echoed by thehackernews.com. The two raw IPs are the high-fidelity signal; the torproject domains add coverage but can be noisy on developer machines running Tor Browser.
+
+Cross-checked against:
+  • https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html
+  • https://safedep.io/jscrambler-npm-supply-chain-compromise/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Proxy: Multi-hop Proxy">T1090.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer legitimately running Tor Browser reaching check.torproject.org / archive.torproject.org (domain clause only — the two IPs have no benign use)</li><li>Security scanner or threat-intel connectivity test probing the blocklisted IPs</li><li>Researcher detonating the sample in a monitored lab</li><li>Corporate proxy pre-fetching the torproject domains for categorization</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;tor.exe&quot;,&quot;firefox.exe&quot;,&quot;tor-browser.exe&quot;) and RemoteIP !in (&quot;37.27.122.124&quot;,&quot;57.128.246.79&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process — a temp-dir dotfile or node.exe confirms the stealer; a browser hitting only the torproject domains is likely benign. 2) Contain: block 37.27.122.124 and 57.128.246.79 at the firewall/egress, isolate the host, and kill the process. 3) Hunt: correlate back to a jscrambler 8.14.0 install and the temp-dir binary, pull any exfil volume from flow logs, and rotate all credentials the stealer could reach (browsers, wallets, CI/CD, cloud, npm/GitHub tokens).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-02-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-02-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-02-uc3-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-02-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-02-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
 | where RemoteIP in (&quot;37.27.122.124&quot;,&quot;57.128.246.79&quot;)
-   or RemoteUrl in~ (&quot;check.torproject.org&quot;,&quot;archive.torproject.org&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+    or RemoteUrl in~ (&quot;check.torproject.org&quot;,&quot;archive.torproject.org&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(30d)
-| where DstIpAddr in (&quot;37.27.122.124&quot;,&quot;57.128.246.79&quot;)   // hardcoded C2 IPs; higher fidelity than the Tor domains which legit Tor Browser users also hit
-| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, DvcAction
+    <div class="tab-content" id="art-02-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>union
+  (ImNetworkSession | where TimeGenerated &gt; ago(30d) | where DstIpAddr in (&quot;37.27.122.124&quot;,&quot;57.128.246.79&quot;) | project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, Indicator=DstIpAddr),
+  (ImDnsActivity | where TimeGenerated &gt; ago(30d) | where DnsQuery in~ (&quot;check.torproject.org&quot;,&quot;archive.torproject.org&quot;) | project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr=DstIpAddr, DstPortNumber=int(53), NetworkApplicationProtocol=&quot;dns&quot;, Indicator=DnsQuery)
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: jscrambler Stealer C2 Connection to Hardcoded IPs
-id: 3d0e6a55-9b12-4a7f-8c31-6e2d90f4b1aa
-description: Detects outbound connections to the jscrambler 8.14.0 stealer C2 IP addresses
+    <div class="tab-content" id="art-02-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Network connection to jscrambler 8.14.0 stealer C2 IPs
+id: 9c4f0a83-71de-4b62-a5e7-2f18c9b40d55
+description: Detects outbound connections to the two hardcoded C2 IPs used by the jscrambler 8.14.0 Rust stealer
 references:
-  - https://cirosec.de/en/news/iocs_cryto_stealer_supply_chain_incident/
   - https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
 author: SOC Detection Engineering
 date: 2026/07/12
@@ -2242,159 +2306,15 @@ detection:
       - &#x27;57.128.246.79&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(37.27.122.124 OR 57.128.246.79)</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(37\.27\.122\.124|57\.128\.246\.79)$/
+    <div class="tab-content" id="art-02-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationIp:37.27.122.124 OR @DestinationIp:57.128.246.79)</code></pre></div>
+    <div class="tab-content" id="art-02-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 (RemoteAddressIP4=&quot;37.27.122.124&quot; OR RemoteAddressIP4=&quot;57.128.246.79&quot;)
 | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
+    <div class="tab-content" id="art-02-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
+fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
 | filter dstAddr in [&quot;37.27.122.124&quot;, &quot;57.128.246.79&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;37.27.122.124&quot;,&quot;57.128.246.79&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-02-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;37.27.122.124&quot;,&quot;57.128.246.79&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2e812e46af" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="macos,windows">
-  <summary>
-    <span class="uc-title">Execution or write of known jscrambler stealer payload (three platform SHA256s)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2e812e46af" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">High-confidence hash IOC sweep for the extracted ELF/PE32+/Mach-O stealer payloads carved out of dist/intro.js, across process execution and file-write telemetry on all three OS families.
-
-Rationale: Exact SHA256s of the three carved payloads from the article IOC table — deterministic, zero-FP indicators. Union across process+file catches both drop and execution even when the temp dotfile name randomizes.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
-  • https://thehackernews.com/2026/07/compromised-jscrambler-8140-npm-release.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Malware-analysis or DFIR host with the samples staged for reverse engineering</li><li>AV/EDR test harness detonating the known-bad hashes intentionally</li><li>Threat-intel ingestion node caching sample binaries</li><li>Note: cross-platform hash collisions are cryptographically negligible, so a match is effectively a true positive</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: a hash hit is a confirmed detonation — record host, user, and drop path immediately. 2) Contain: isolate the host, quarantine the binary, kill the process, and block the two C2 IPs. 3) Hunt: enumerate all hosts/CI runners that installed jscrambler@8.14.0, sweep for the temp dotfile and C2 egress, and begin credential rotation + wallet-extension audit for every affected endpoint.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-02-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-02-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-02-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let payloadHashes = dynamic([&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;,&quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;,&quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;]);
-union
-  (DeviceProcessEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (payloadHashes) | project Timestamp, DeviceName, AccountName, Source=&quot;Process&quot;, FolderPath, FileName, SHA256, ProcessCommandLine),
-  (DeviceFileEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (payloadHashes) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source=&quot;FileWrite&quot;, FolderPath, FileName, SHA256, ProcessCommandLine=InitiatingProcessCommandLine)
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where SHA256 in (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;,&quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;,&quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, SHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: jscrambler Stealer Payload Hash Execution
-id: e4a71f28-5c90-4b3e-8a16-9f0d2c6b71d3
-description: Detects execution of the extracted jscrambler 8.14.0 stealer payloads by SHA256 (Linux ELF, Windows PE32+, macOS Mach-O)
-references:
-  - https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
-author: SOC Detection Engineering
-date: 2026/07/12
-tags:
-  - attack.t1195.001
-  - attack.t1027
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection:
-    SHA256:
-      - &#x27;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&#x27;
-      - &#x27;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&#x27;
-      - &#x27;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-02-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Hashes:(*fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd* OR *b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903* OR *c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd*)</code></pre></div>
-    <div class="tab-content" id="art-02-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 SHA256HashData=/^(fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd|b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903|c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd)$/i
-| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-02-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;,&quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;,&quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-02-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;,&quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;,&quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0c17808407" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">npm/node install-time spawn of shells or reconnaissance utilities</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="0c17808407" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunting detection for a preinstall/install context (node or npm parent) spawning interactive shells or host-recon LOLBins — the execution-complexity signal a benign package install should never produce. Grounded in the article&#x27;s preinstall auto-execution vector; broader than the specific temp-binary drop.
-
-Rationale: The article stresses that preinstall executes automatically during npm install and that the loader detaches child processes; this hunt surfaces the install-time execution complexity (shells/recon/schtasks persistence) that a legitimate obfuscation CLI install never generates.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
-  • https://safedep.io/jscrambler-npm-supply-chain-compromise/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Account Discovery">T1087</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>node-gyp/native builds invoking cmd.exe or sh for compilation steps</li><li>postinstall scripts of legit packages running curl/wget to fetch platform binaries (esbuild, sharp, Playwright)</li><li>npm lifecycle scripts calling net.exe/reg.exe for Windows service setup in dev tooling</li><li>CI bootstrap scripts that legitimately run systeminfo/whoami for diagnostics</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;node-gyp&quot;,&quot;prebuild&quot;,&quot;electron-builder&quot;,&quot;playwright&quot;,&quot;puppeteer&quot;,&quot;esbuild&quot;,&quot;@img/sharp&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect ParentProcessCommandLine for the package/script name and confirm whether jscrambler@8.14.0 (or another unexpected package) triggered it. 2) Contain: if the spawning package is untrusted, isolate the runner, block the C2 IPs, and freeze the affected pipeline. 3) Hunt: pivot to the same host for the temp dotfile binary, C2 egress, and payload hashes; review lockfile diffs to identify which dependency introduced the install hook.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-02-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-02-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-02-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;systeminfo.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;bash.exe&quot;,&quot;sh&quot;,&quot;reg.exe&quot;,&quot;schtasks.exe&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;preinstall&quot;,&quot;postinstall&quot;,&quot;node_modules&quot;,&quot;npm-cli.js&quot;,&quot;install&quot;)
-| summarize ChildCount = count(), ChildBinaries = make_set(FileName), SampleCmd = any(ProcessCommandLine) by DeviceName, AccountName, InitiatingProcessCommandLine, bin(Timestamp, 5m)
-| order by ChildCount desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has_any (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;)
-| where TargetProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;systeminfo.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;bash&quot;,&quot;reg.exe&quot;,&quot;schtasks.exe&quot;)
-| where ParentProcessCommandLine has_any (&quot;preinstall&quot;,&quot;postinstall&quot;,&quot;node_modules&quot;,&quot;install&quot;)
-| summarize ChildCount = count(), ChildBinaries = make_set(TargetProcessName), SampleCmd = any(TargetProcessCommandLine) by DvcHostname, ActorUsername, ParentProcessCommandLine, bin(TimeGenerated, 5m)
-| order by ChildCount desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: npm Install Context Spawns Shell or Recon Utility
-id: a2f9c31b-6d84-4e57-b019-3c7e8a4f26d1
-description: Detects node/npm spawning interactive shells or host-reconnaissance utilities during package install, a supply-chain execution signal
-references:
-  - https://www.stepsecurity.io/blog/jscrambler-npm-package-publishes-malicious-preinstall-binary
-author: SOC Detection Engineering
-date: 2026/07/12
-tags:
-  - attack.t1059.001
-  - attack.t1087
-  - attack.t1083
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection:
-    ParentImage|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;\npm.exe&#x27;
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\whoami.exe&#x27;
-      - &#x27;\systeminfo.exe&#x27;
-      - &#x27;\net.exe&#x27;
-      - &#x27;\net1.exe&#x27;
-      - &#x27;\reg.exe&#x27;
-      - &#x27;\schtasks.exe&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-02-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\node.exe OR *\npm.exe) @Image:(*\cmd.exe OR *\powershell.exe OR *\pwsh.exe OR *\whoami.exe OR *\systeminfo.exe OR *\net.exe OR *\net1.exe OR *\reg.exe OR *\schtasks.exe OR *\curl.exe OR *\wget.exe)</code></pre></div>
-    <div class="tab-content" id="art-02-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(node|npm)(\.exe)?$/i
-| ImageFileName=/[\\\/](cmd|powershell|pwsh|whoami|systeminfo|net|net1|reg|schtasks|curl|wget|bash|sh)(\.exe)?$/i
-| groupBy([aid, ComputerName, ParentBaseFileName], function=count(ImageFileName, distinct=true))</code></pre></div>
-    <div class="tab-content" id="art-02-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Processes.process_name) as children dc(Processes.process_name) as childTypes min(_time) as firstTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;) Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;systeminfo.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;bash.exe&quot;,&quot;sh&quot;,&quot;reg.exe&quot;,&quot;schtasks.exe&quot;) by Processes.dest Processes.user Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime)</code></pre><pre class="spl-mode-body" id="art-02-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Processes.process_name) as children dc(Processes.process_name) as childTypes min(_time) as firstTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;node&quot;,&quot;npm&quot;) Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;systeminfo.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;bash.exe&quot;,&quot;sh&quot;,&quot;reg.exe&quot;,&quot;schtasks.exe&quot;) by Processes.dest Processes.user Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime)</code></pre></div></div>
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-02-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;37.27.122.124&quot;,&quot;57.128.246.79&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-02-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;37.27.122.124&quot;,&quot;57.128.246.79&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -2412,11 +2332,11 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-02-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -2429,7 +2349,7 @@ level: medium</code></pre></div>
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-02-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -2439,7 +2359,7 @@ level: medium</code></pre></div>
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-02-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -2448,7 +2368,7 @@ level: medium</code></pre></div>
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-02-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-02-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -2475,17 +2395,17 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-02-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;37.27.122.124&quot;, &quot;57.128.246.79&quot;) or RemoteUrl has_any (&quot;&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-02-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;37.27.122.124&quot;, &quot;57.128.246.79&quot;]);
+    <div class="tab-content" id="art-02-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;37.27.122.124&quot;, &quot;57.128.246.79&quot;]);
 let BadDomains = dynamic([&quot;&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -2494,7 +2414,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-02-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -2524,7 +2444,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;37.27.122.124&quot;, &quot;57.128.246.79&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -2538,7 +2458,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-02-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-02-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;37.27.122.124&quot;, &quot;57.128.246.79&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -2570,18 +2490,18 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span> <span class="ind">DeviceRegistryEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
+    <div class="tab-content active" id="art-02-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where RegistryKey has_any (&quot;\Software\Google\Chrome\Extensions\&quot;,&quot;\Software\Microsoft\Edge\Extensions\&quot;,&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName</code></pre></div>
-    <div class="tab-content" id="art-02-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
+    <div class="tab-content" id="art-02-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
 | where RegistryKey has_any (@&quot;\Software\Google\Chrome\Extensions\&quot;,
@@ -2591,7 +2511,7 @@ level: critical
           RegistryValue, RegistryValueData, ActingProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
+    <div class="tab-content" id="art-02-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
 status: experimental
 description: |
@@ -2619,13 +2539,13 @@ falsepositives:
     - Group-policy-managed extension whitelists
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Registry
     where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
     by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-02-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-02-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Registry
     where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
@@ -2649,12 +2569,12 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-02-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
@@ -2662,7 +2582,7 @@ level: medium
 | where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+    <div class="tab-content" id="art-02-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
 ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
@@ -2674,7 +2594,7 @@ ImFileEvent
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
           TargetFilePath, TargetFileName, EventType
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+    <div class="tab-content" id="art-02-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
 status: experimental
 description: |
@@ -2718,7 +2638,7 @@ falsepositives:
     - Browser sync agents from non-stock vendors
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -2727,7 +2647,7 @@ level: high
         OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-02-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-02-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -2754,19 +2674,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-02-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where FolderPath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;, @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;, @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;, @&quot;\Atomic\Local Storage\&quot;)
 | where InitiatingProcessFileName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-02-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
 | where TargetFilePath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;,
@@ -2778,7 +2698,7 @@ level: high
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
           TargetFilePath, TargetFileName, EventType
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
+    <div class="tab-content" id="art-02-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
 status: experimental
 description: |
@@ -2819,7 +2739,7 @@ falsepositives:
     - Backup software
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
         OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
@@ -2830,7 +2750,7 @@ level: high
         OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
       AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-02-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-02-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
         OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
@@ -2859,19 +2779,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-02-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-02-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-02-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -2882,7 +2802,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
+    <div class="tab-content" id="art-02-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
 status: experimental
 description: |
@@ -2928,7 +2848,7 @@ falsepositives:
       cross-shell escaping
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -2937,7 +2857,7 @@ level: high
         OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*Net.WebClient*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -2964,18 +2884,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc11-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc11-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-02-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-02-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-02-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -2995,7 +2915,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-02-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -3037,12 +2957,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
@@ -3065,12 +2985,12 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc12-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc12-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc12-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+    <div class="tab-content active" id="art-02-uc11-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
 // predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
 // (Initiating only) so column-projection has to differ per side.
 union
@@ -3088,7 +3008,7 @@ union
                   Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+    <div class="tab-content" id="art-02-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
 // Defender version so the engine can push hash predicates per-side.
 let BadHashes = dynamic([&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;, &quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;, &quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;]);
 union
@@ -3111,7 +3031,7 @@ union
                   Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc12-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+    <div class="tab-content" id="art-02-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
 status: experimental
 description: |
@@ -3137,7 +3057,7 @@ falsepositives:
     - None on a true-positive hash match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;, &quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;, &quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
@@ -3146,7 +3066,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Endpoint.Processes
         where Processes.process_hash IN (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;, &quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;, &quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-02-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-02-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd&quot;, &quot;b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903&quot;, &quot;c8fd47d36bdf7c825378593ab82ed8c24d1dc52e26b507812393e24e1d5201fd&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
@@ -3173,11 +3093,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc13-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc13-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc13-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc12-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc12-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc12-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc13-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — jscrambler npm package publishes malicious preinstall binary
+    <div class="tab-content active" id="art-02-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — jscrambler npm package publishes malicious preinstall binary
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -3197,7 +3117,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc13-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-02-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — jscrambler npm package publishes malicious preinstall binary
@@ -3220,7 +3140,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc13-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc13-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc13-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc13-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — jscrambler npm package publishes malicious preinstall binary ```
+    <div class="tab-content" id="art-02-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc12-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — jscrambler npm package publishes malicious preinstall binary ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;mutations.js&quot;,&quot;queries.js&quot;,&quot;iphlpapi.dll&quot;,&quot;setup.js&quot;))
@@ -3236,7 +3156,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-02-uc13-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — jscrambler npm package publishes malicious preinstall binary ```
+]</code></pre><pre class="spl-mode-body" id="art-02-uc12-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — jscrambler npm package publishes malicious preinstall binary ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;mutations.js&quot;,&quot;queries.js&quot;,&quot;iphlpapi.dll&quot;,&quot;setup.js&quot;))
