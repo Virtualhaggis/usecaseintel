@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2577 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2576 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -64,7 +64,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [injective sdk on npm infected with cryptocurrency wallet ste](./2026-07-09/injective-sdk-on-npm-infected-with-cryptocurrency-wallet-ste.md)
 - [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
 - [new gigawiper windows backdoor bundles disk wiping fake rans](./2026-07-09/new-gigawiper-windows-backdoor-bundles-disk-wiping-fake-rans.md)
-- [new helix vishing group emerges in sharepoint data theft att](./2026-07-09/new-helix-vishing-group-emerges-in-sharepoint-data-theft-att.md)
 - [npm 12 disables install scripts by default to reduce supply ](./2026-07-09/npm-12-disables-install-scripts-by-default-to-reduce-supply-.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
 - [summer of clearinghouses](./2026-07-09/summer-of-clearinghouses.md)
