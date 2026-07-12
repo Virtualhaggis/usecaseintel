@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### TSDProxy internal auth-token replay to localhost management API
 
-`UC_8_0` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_9_0` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ DeviceProcessEvents
 
 ### Unauthorized localhost call to TSDProxy /api/v1 management endpoint
 
-`UC_8_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_9_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### Non-TSDProxy backend process connecting to loopback management port 8080
 
-`UC_8_2` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_9_2` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
