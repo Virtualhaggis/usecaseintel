@@ -31,8 +31,7 @@ The vulnerability has been described as a case of stored cross-site scripting (X
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
 - **T1203** — Exploitation for Client Execution
-- **T1114.003** — Email Collection: Email Forwarding Rule
-- **T1564.008** — Hide Artifacts: Email Hiding Rules
+- **T1189** — Drive-by Compromise
 
 ## Kill chain phases observed
 
@@ -40,37 +39,20 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Zimbra Collaboration Suite below patched version 10.1.19 (Classic Web Client stored-XSS exposure)
+### Zimbra Collaboration Classic Web Client below patched build 10.1.19 (stored XSS exposure)
 
-`UC_5_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.signature="*Zimbra*" OR Vulnerabilities.signature="*Collaboration Suite*" OR Vulnerabilities.cve="CVE-2025-27915") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - count
-```
+`UC_5_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareInventory
 | where Timestamp > ago(1d)
-| where SoftwareVendor has_any ("zimbra","synacor") or SoftwareName has "zimbra"
-| where SoftwareName has "zimbra" or SoftwareName has "collaboration"
-| extend VerNum = extract(@"(\d+\.\d+\.\d+)", 1, SoftwareVersion)
-| where isnotempty(VerNum) and parse_version(VerNum) < parse_version("10.1.19")
-| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion
+| where SoftwareVendor has "zimbra" or SoftwareName has "zimbra"
+| where SoftwareName has_any ("collaboration","zimbra","zcs","mbox-webclient")
+| extend InstalledVer = parse_version(SoftwareVersion)
+| where InstalledVer < parse_version("10.1.19")   // 10.1.19 = build that fixes the Classic Web Client stored XSS (7 Jul 2026)
+| project DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
 | sort by SoftwareVersion asc
-```
-
-### Zimbra mailbox forwarding / Sieve filter rule created via web session (post-XSS session abuse)
-
-`UC_5_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=zimbra ("zimbraPrefMailForwardingAddress" OR "zimbraMailSieveScript" OR "ModifyFilterRulesRequest" OR "AddFilterRuleRequest") NOT "zmprov"
-| rex field=_raw "zimbraPrefMailForwardingAddress=(?<external_forward>[^\s,;\]]+)"
-| table _time host external_forward _raw
-| sort - _time
 ```
 
 ### Suspicious browser extension installation
@@ -224,4 +206,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
