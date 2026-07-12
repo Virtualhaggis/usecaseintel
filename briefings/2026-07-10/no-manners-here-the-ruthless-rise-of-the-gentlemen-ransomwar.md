@@ -71,9 +71,11 @@ The Gentlemen (aka Storm-2697 ) is a Ransomware-as-a-Service (RaaS) program acti
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1068** — Exploitation for Privilege Escalation
+- **T1211** — Exploitation for Defense Evasion
 - **T1070.001** — Indicator Removal: Clear Windows Event Logs
-- **T1046** — Network Service Discovery
 - **T1490** — Inhibit System Recovery
+- **T1046** — Network Service Discovery
+- **T1018** — Remote System Discovery
 - **T1090** — Proxy
 - **T1571** — Non-Standard Port
 
@@ -83,91 +85,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### The Gentlemen RaaS: scheduled task named 'gentlemen*'
+### The Gentlemen ransomware scheduled task named 'gentlemen*'
 
 `UC_6_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe OR Processes.process_name=at.exe) Processes.process="*gentlemen*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("schtasks.exe","at.exe")
-| where ProcessCommandLine has "gentlemen"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### GentleKiller BYOVD: vulnerable ThrottleStop.sys (CVE-2025-7771) load/drop
-
-`UC_6_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="ThrottleStop.sys" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-union DeviceImageLoadEvents, DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "throttlestop.sys"
-   or SHA256 in ("22b38dad7da097ea03aa28d0614164cd25fafeb1383dbc15047e34c8050f6f67","51b9f246d6da85631131fcd1fabf0a67937d4bdde33625a44f7ee6a3a7baebd2","025fc0976c548fb5a880c83ea3eb21a5f23c5d53c4e51e862bb893c11adf712a","3ab9575225e00a83a4ac2b534da5a710bdcf6eb72884944c437b5fbe5c5c9235")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Forensic destruction: wevtutil clearing Security/System/Application logs
-
-`UC_6_16` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=wevtutil.exe (Processes.process="*cl *" OR Processes.process="*clear-log*") by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "wevtutil.exe"
-| where ProcessCommandLine has_any ("cl ","clear-log","cl System","cl Security","cl Application")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Internal recon via Advanced IP Scanner (The Gentlemen)
-
-`UC_6_17` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="advanced_ip_scanner.exe" OR Processes.process_name="advanced_port_scanner.exe") by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "advanced_ip_scanner.exe" or ProcessVersionInfoProductName has "Advanced IP Scanner"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
-| order by Timestamp desc
-```
-
-### Ransomware impact prep: Volume Shadow Copy deletion (vssadmin/wmic)
-
-`UC_6_18` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name=vssadmin.exe OR Processes.process_name=diskshadow.exe) Processes.process="*delete*shadow*") OR (Processes.process_name=wmic.exe Processes.process="*shadowcopy*delete*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) Processes.process="*gentlemen*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where user!="*$"
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -175,27 +102,119 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where (FileName =~ "vssadmin.exe" and ProcessCommandLine has "delete shadows")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has_all ("shadowcopy","delete"))
-   or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Win32_Shadowcopy","Remove-WmiObject Win32_Shadowcopy"))
+| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "gentlemen")
+    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_all ("ScheduledTask","gentlemen"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### GentleKiller BYOVD: ThrottleStop/ThrottleBlood driver load + All.exe/Allpatch2.exe EDR killer
+
+`UC_6_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("All.exe","Allpatch2.exe") OR Processes.process="*ThrottleBlood.sys*" OR Processes.process="*ThrottleStop.sys*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("throttleblood.sys","throttlestop.sys")
+| where FileName =~ "throttleblood.sys" or InitiatingProcessFileName in~ ("all.exe","allpatch2.exe","rundll32.exe","cmd.exe","powershell.exe")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### The Gentlemen anti-forensics: wevtutil clearing Security/System event logs
+
+`UC_6_16` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=wevtutil.exe AND (Processes.process="*cl *" OR Processes.process="*clear-log*") AND (Processes.process="*Security*" OR Processes.process="*System*")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*Clear-EventLog*") by Processes.dest Processes.user Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where user!="*$"
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where (FileName =~ "wevtutil.exe" and ProcessCommandLine has_any ("cl ","clear-log") and ProcessCommandLine has_any ("Security","System"))
+    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Clear-EventLog")
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### SystemBC C2 beacon to The Gentlemen infrastructure IPs
+### Pre-encryption Volume Shadow Copy deletion via vssadmin/wmic (The Gentlemen)
+
+`UC_6_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name=vssadmin.exe AND Processes.process="*delete*" AND Processes.process="*shadows*") OR (Processes.process_name=wmic.exe AND Processes.process="*shadowcopy*" AND Processes.process="*delete*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where user!="*$"
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where (FileName =~ "vssadmin.exe" and ProcessCommandLine has_all ("delete","shadows"))
+    or (FileName =~ "wmic.exe" and ProcessCommandLine has_all ("shadowcopy","delete"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### The Gentlemen internal reconnaissance via Advanced IP Scanner
+
+`UC_6_18` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("advanced_ip_scanner.exe","advanced_port_scanner.exe") OR Processes.process="*Advanced IP Scanner*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where user!="*$"
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName in~ ("advanced_ip_scanner.exe","advanced_port_scanner.exe")
+    or ProcessVersionInfoProductName has "Advanced IP Scanner"
+    or ProcessVersionInfoCompanyName has "Famatech"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoProductName, ProcessVersionInfoCompanyName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### The Gentlemen C2 / SystemBC egress to named attacker infrastructure
 
 `UC_6_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.86.230.112","193.233.202.17","77.110.122.137") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("193.233.202.17","77.110.122.137","45.86.230.112") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("45.86.230.112","193.233.202.17","77.110.122.137")
+| where RemoteIP in ("193.233.202.17","77.110.122.137","45.86.230.112")
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol
 | order by Timestamp desc
 ```
@@ -616,4 +635,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 20 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 20 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

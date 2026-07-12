@@ -30,8 +30,9 @@ The vulnerability has been described as a case of stored cross-site scripting (X
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
-- **T1189** — Drive-by Compromise
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1203** — Exploitation for Client Execution
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1564.008** — Hide Artifacts: Email Hiding Rules
 
 ## Kill chain phases observed
 
@@ -39,38 +40,37 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### XSS payload strings in HTTP requests to Zimbra Classic Web Client endpoints
+### Zimbra Collaboration Suite below patched version 10.1.19 (Classic Web Client stored-XSS exposure)
 
-`UC_5_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*/h/*","*/service/soap*","*/service/preauth*","*/public/*","*/zimbra/*") OR Web.site="*zimbra*") AND (Web.url IN ("*<script*","*%3Cscript*","*onerror=*","*onload=*","*onmouseover=*","*javascript:*","*document.cookie*") OR Web.uri_query IN ("*<script*","*%3Cscript*","*onerror=*","*javascript:*")) by Web.src, Web.dest, Web.site, Web.url, Web.http_method, Web.http_user_agent | `drop_dm_object_name(Web)` | sort - count
-```
-
-### Cross-origin external script fetch referred from Zimbra webmail session
-
-`UC_5_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_referrer IN ("*/h/*","*/zimbra/*","*/service/*")) AND Web.url="*.js*" by Web.src, Web.http_referrer, Web.url, Web.dest, Web.site | `drop_dm_object_name(Web)` | eval ref_host=lower(replace(http_referrer,"^https?://([^/]+).*","\1")), dst_host=lower(replace(url,"^https?://([^/]+).*","\1")) | where ref_host!=dst_host | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.signature="*Zimbra*" OR Vulnerabilities.signature="*Collaboration Suite*" OR Vulnerabilities.cve="CVE-2025-27915") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
-
-### Unpatched Zimbra Collaboration below 10.1.19 exposed to Classic Web Client XSS
-
-`UC_5_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareInventory
 | where Timestamp > ago(1d)
-| where SoftwareVendor has "zimbra" or SoftwareName has "zimbra"
-| extend Parts = split(SoftwareVersion, ".")
-| extend Major = toint(Parts[0]), Minor = toint(Parts[1]), Patch = toint(extract(@"^(\d+)", 1, tostring(Parts[2])))
-| where isnotnull(Major) and (Major < 10 or (Major == 10 and Minor < 1) or (Major == 10 and Minor == 1 and Patch < 19))
-| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus, EndOfSupportDate
+| where SoftwareVendor has_any ("zimbra","synacor") or SoftwareName has "zimbra"
+| where SoftwareName has "zimbra" or SoftwareName has "collaboration"
+| extend VerNum = extract(@"(\d+\.\d+\.\d+)", 1, SoftwareVersion)
+| where isnotempty(VerNum) and parse_version(VerNum) < parse_version("10.1.19")
+| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion
 | sort by SoftwareVersion asc
+```
+
+### Zimbra mailbox forwarding / Sieve filter rule created via web session (post-XSS session abuse)
+
+`UC_5_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=zimbra ("zimbraPrefMailForwardingAddress" OR "zimbraMailSieveScript" OR "ModifyFilterRulesRequest" OR "AddFilterRuleRequest") NOT "zmprov"
+| rex field=_raw "zimbraPrefMailForwardingAddress=(?<external_forward>[^\s,;\]]+)"
+| table _time host external_forward _raw
+| sort - _time
 ```
 
 ### Suspicious browser extension installation
@@ -224,4 +224,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
