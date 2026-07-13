@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2576 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,9 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-13
+- [eu sanctions russian gru military hackers over cyberattacks](./2026-07-13/eu-sanctions-russian-gru-military-hackers-over-cyberattacks.md)
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
 - [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
+- [us and allies warn of russian critical infrastructure attack](./2026-07-13/us-and-allies-warn-of-russian-critical-infrastructure-attack.md)
 
 ## 2026-07-12
 - [jscrambler npm package publishes malicious preinstall binary](./2026-07-12/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
@@ -26,7 +28,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48939 icagenda unrestricted upload of file](./2026-07-10/cisa-kev-cve-2026-48939-icagenda-unrestricted-upload-of-file.md)
 - [cisa kev cve 2026 56291 balbooa forms unrestricted upload of](./2026-07-10/cisa-kev-cve-2026-56291-balbooa-forms-unrestricted-upload-of.md)
 - [exposed hacker server reveals wp shellstorm backdooring thou](./2026-07-10/exposed-hacker-server-reveals-wp-shellstorm-backdooring-thou.md)
-- [former ransomware negotiator gets 4 years for blackcat attac](./2026-07-10/former-ransomware-negotiator-gets-4-years-for-blackcat-attac.md)
 - [from 17 000 to 1 1 million assets how lumen technologies reb](./2026-07-10/from-17-000-to-1-1-million-assets-how-lumen-technologies-reb.md)
 - [ghsa critical cve 2026 50551 siyuan stored xss to rce via un](./2026-07-10/ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un.md)
 - [ghsa critical cve 2026 54067 siyuan stored xss to rce via cs](./2026-07-10/ghsa-critical-cve-2026-54067-siyuan-stored-xss-to-rce-via-cs.md)

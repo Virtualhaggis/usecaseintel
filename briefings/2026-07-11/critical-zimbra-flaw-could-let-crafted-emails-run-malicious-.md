@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Zimbra Collaboration Classic Web Client below patched build 10.1.19 (stored XSS exposure)
 
-`UC_11_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_13_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
