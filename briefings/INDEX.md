@@ -8,6 +8,9 @@ _2576 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-13
+- [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
+
 ## 2026-07-12
 - [jscrambler npm package publishes malicious preinstall binary](./2026-07-12/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
 
@@ -61,7 +64,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 52778 yeswiki has unsafe eval in its ](./2026-07-09/ghsa-critical-cve-2026-52778-yeswiki-has-unsafe-eval-in-its-.md)
 - [gigawiper anatomy of a destructive backdoor assembled from m](./2026-07-09/gigawiper-anatomy-of-a-destructive-backdoor-assembled-from-m.md)
 - [goddamn ransomware uses poisonx driver to disable endpoint d](./2026-07-09/goddamn-ransomware-uses-poisonx-driver-to-disable-endpoint-d.md)
-- [injective sdk on npm infected with cryptocurrency wallet ste](./2026-07-09/injective-sdk-on-npm-infected-with-cryptocurrency-wallet-ste.md)
 - [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
 - [new gigawiper windows backdoor bundles disk wiping fake rans](./2026-07-09/new-gigawiper-windows-backdoor-bundles-disk-wiping-fake-rans.md)
 - [npm 12 disables install scripts by default to reduce supply ](./2026-07-09/npm-12-disables-install-scripts-by-default-to-reduce-supply-.md)
