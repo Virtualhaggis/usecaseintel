@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2576 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,10 +9,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-13
+- [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
 - [eu sanctions russian gru military hackers over cyberattacks](./2026-07-13/eu-sanctions-russian-gru-military-hackers-over-cyberattacks.md)
+- [forg365 phaas targets microsoft 365 with device code and ait](./2026-07-13/forg365-phaas-targets-microsoft-365-with-device-code-and-ait.md)
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
+- [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
 - [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
+- [thinking fast and slow in the soc the case for combining aut](./2026-07-13/thinking-fast-and-slow-in-the-soc-the-case-for-combining-aut.md)
 - [us and allies warn of russian critical infrastructure attack](./2026-07-13/us-and-allies-warn-of-russian-critical-infrastructure-attack.md)
 
 ## 2026-07-12
@@ -54,7 +58,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the replicant in your directory ai agents and the identity s](./2026-07-10/the-replicant-in-your-directory-ai-agents-and-the-identity-s.md)
 - [unpatched xring flaw in xquic lets remote clients crash http](./2026-07-10/unpatched-xring-flaw-in-xquic-lets-remote-clients-crash-http.md)
 - [urgent progress tells sharefile customers to shut down stora](./2026-07-10/urgent-progress-tells-sharefile-customers-to-shut-down-stora.md)
-- [zimbra urges customers to patch critical web client xss flaw](./2026-07-10/zimbra-urges-customers-to-patch-critical-web-client-xss-flaw.md)
 
 ## 2026-07-09
 - [ai attacks move in minutes join this webinar on building a d](./2026-07-09/ai-attacks-move-in-minutes-join-this-webinar-on-building-a-d.md)
@@ -95,7 +98,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
 
 ## 2026-07-07
-- [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
 - [cisa kev cve 2026 48282 adobe coldfusion path traversal vuln](./2026-07-07/cisa-kev-cve-2026-48282-adobe-coldfusion-path-traversal-vuln.md)
 - [cisa kev cve 2026 48908 joomshaper sp page builder unrestric](./2026-07-07/cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric.md)
 - [cisa kev cve 2026 55255 langflow authorization bypass throug](./2026-07-07/cisa-kev-cve-2026-55255-langflow-authorization-bypass-throug.md)
@@ -108,12 +110,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
 - [redwing maas packages android bank fraud as a telegram renta](./2026-07-07/redwing-maas-packages-android-bank-fraud-as-a-telegram-renta.md)
 - [rogue agent flaw could have let attackers hijack google dial](./2026-07-07/rogue-agent-flaw-could-have-let-attackers-hijack-google-dial.md)
-- [suspected china aligned hackers exploit roundcube flaws agai](./2026-07-07/suspected-china-aligned-hackers-exploit-roundcube-flaws-agai.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
-- [what changes when your software supply chain includes ai wri](./2026-07-07/what-changes-when-your-software-supply-chain-includes-ai-wri.md)
-- [writer ai flaw could let agent previews leak session tokens ](./2026-07-07/writer-ai-flaw-could-let-agent-previews-leak-session-tokens-.md)
 
 ## 2026-07-06
 - [5 insights from frost sullivan s 2025 frost radar for cloud ](./2026-07-06/5-insights-from-frost-sullivan-s-2025-frost-radar-for-cloud-.md)

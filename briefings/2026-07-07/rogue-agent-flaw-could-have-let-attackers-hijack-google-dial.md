@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Dialogflow CX Code Block hijack: UpdatePlaybook DATA_WRITE from anomalous developer identity
 
-`UC_90_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_94_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ sourcetype="google:gcp:pubsub:message" ("data.protoPayload.methodName"="google.c
 
 ### Dialogflow CX runtime exceptions revealing malicious Code Block execution
 
-`UC_90_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_94_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ sourcetype="google:gcp:pubsub:message" "data.protoPayload.serviceName"="dialogfl
 
 ### IAM grant of Dialogflow edit rights (dialogflow.playbooks.update) — Rogue Agent pre-condition
 
-`UC_90_12` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_94_12` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -368,7 +368,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Rogue Agent Flaw Could Have Let Attackers Hijack Google Dialogflow CX Chatbots
 
-`UC_90_9` · phase: **exploit** · confidence: **High**
+`UC_94_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

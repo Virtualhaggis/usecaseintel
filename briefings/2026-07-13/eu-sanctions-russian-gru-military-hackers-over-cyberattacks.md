@@ -11,12 +11,8 @@ By Sergiu Gatlan
 July 13, 2026
 07:19 AM
 0 
-
-
 The European Union and the United Kingdom jointly sanctioned dozens of Russian individuals and entities and accused Russia of coordinating a network of hacking groups responsible for attacks across Europe.
-
-
-Today, the Council of the European Union announced sanctions on nine individuals and four entities, including Russian military intelligence (GRU) officers and cybercriminals, while …
+Today, the Council of the European Union announced sanctions on nine individuals and four entities, including Russian military intelligence (GRU) officers and cybercriminals, while the UK s…
 
 ## Indicators of Compromise (high-fidelity only)
 

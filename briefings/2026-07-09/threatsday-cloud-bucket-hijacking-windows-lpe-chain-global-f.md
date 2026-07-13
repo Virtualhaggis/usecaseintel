@@ -82,7 +82,7 @@ _(none detected from narrative keywords)_
 
 ### EtherRAT delivery: cmd.exe → curl.exe fetching v7.msi from camorreado.click
 
-`UC_57_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_61_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### EtherRAT loader: msiexec runs v7.msi then node.exe executes staged JS runtime
 
-`UC_57_20` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_20` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### Teams-lure RMM install: HopToDesk + AnyDesk launched from Teams/browser
 
-`UC_57_21` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_61_21` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceProcessEvents
 
 ### Payment-SDK typosquat exfil: node/python egress to *.ngrok-free.dev from build host
 
-`UC_57_22` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_61_22` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceNetworkEvents
 
 ### Esri ArcGIS Server CVE-2026-9181 path traversal in REST Uploads resource
 
-`UC_57_23` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_61_23` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -658,7 +658,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Cloud Bucket Hijacking, Windows LPE Chain, Global Fraud Bust + 17 Mo
 
-`UC_57_18` · phase: **exploit** · confidence: **High**
+`UC_61_18` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

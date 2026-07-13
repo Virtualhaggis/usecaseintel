@@ -11,12 +11,8 @@ By Sergiu Gatlan
 July 13, 2026
 05:32 AM
 0 
-
-
 Cybersecurity agencies from the United States and eight other countries have issued a joint warning that Russian state hackers are targeting vulnerable and poorly configured routers to infiltrate critical infrastructure networks.
-
-
-The joint advisory , co-authored by the NSA, FBI, and CISA, along with 15 other agencies from Australia, the United Kingdom , Canada, New Zealand, Estonia,…
+The joint advisory , co-authored by the NSA, FBI, and CISA, along with 15 other agencies from Australia, the United Kingdom , Canada, New Zealand, Estonia, Finland…
 
 ## Indicators of Compromise (high-fidelity only)
 
