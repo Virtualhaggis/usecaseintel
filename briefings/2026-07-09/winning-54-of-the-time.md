@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### UAT-7810 ORB C2 relay connection to LONGLEASH/DOGLEASH infrastructure
 
-`UC_53_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_54_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### UAT-7810 Ruckus router RCE via /forms/doLogin command injection (CVE-2023-25717)
 
-`UC_53_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_54_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### UAT-7810 LONGLEASH / DOGLEASH / JARLEASH backdoor binaries by SHA256
 
-`UC_53_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_54_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -370,7 +370,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Winning 54% of the time
 
-`UC_53_9` · phase: **exploit** · confidence: **High**
+`UC_54_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

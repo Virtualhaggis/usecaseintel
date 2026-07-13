@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-13
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
+- [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
 - [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
 
 ## 2026-07-12
@@ -93,7 +94,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
 
 ## 2026-07-07
-- [beyondtrust patches critical auth bypass flaws in remote sup](./2026-07-07/beyondtrust-patches-critical-auth-bypass-flaws-in-remote-sup.md)
 - [cert cc warns of hidden admin backdoor in tenda router firmw](./2026-07-07/cert-cc-warns-of-hidden-admin-backdoor-in-tenda-router-firmw.md)
 - [cisa kev cve 2026 48282 adobe coldfusion path traversal vuln](./2026-07-07/cisa-kev-cve-2026-48282-adobe-coldfusion-path-traversal-vuln.md)
 - [cisa kev cve 2026 48908 joomshaper sp page builder unrestric](./2026-07-07/cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric.md)
