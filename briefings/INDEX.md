@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2574 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,9 +11,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-13
 - [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
 - [breach at the beach play the ultimate entra id ctf](./2026-07-13/breach-at-the-beach-play-the-ultimate-entra-id-ctf.md)
+- [cisa kev cve 2008 4128 cisco ios cross site request forgery ](./2026-07-13/cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-.md)
 - [cisa warns of actively exploited rce flaws in joomla extensi](./2026-07-13/cisa-warns-of-actively-exploited-rce-flaws-in-joomla-extensi.md)
 - [eu sanctions russian gru military hackers over cyberattacks](./2026-07-13/eu-sanctions-russian-gru-military-hackers-over-cyberattacks.md)
 - [forg365 phaas targets microsoft 365 with device code and ait](./2026-07-13/forg365-phaas-targets-microsoft-365-with-device-code-and-ait.md)
+- [ghsa critical cve 2026 45579 dirac is vulnerable to rce in r](./2026-07-13/ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r.md)
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
 - [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
@@ -35,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48939 icagenda unrestricted upload of file](./2026-07-10/cisa-kev-cve-2026-48939-icagenda-unrestricted-upload-of-file.md)
 - [cisa kev cve 2026 56291 balbooa forms unrestricted upload of](./2026-07-10/cisa-kev-cve-2026-56291-balbooa-forms-unrestricted-upload-of.md)
 - [exposed hacker server reveals wp shellstorm backdooring thou](./2026-07-10/exposed-hacker-server-reveals-wp-shellstorm-backdooring-thou.md)
-- [from 17 000 to 1 1 million assets how lumen technologies reb](./2026-07-10/from-17-000-to-1-1-million-assets-how-lumen-technologies-reb.md)
 - [ghsa critical cve 2026 50551 siyuan stored xss to rce via un](./2026-07-10/ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un.md)
 - [ghsa critical cve 2026 54067 siyuan stored xss to rce via cs](./2026-07-10/ghsa-critical-cve-2026-54067-siyuan-stored-xss-to-rce-via-cs.md)
 - [ghsa critical cve 2026 54069 siyuan unauthenticated admin ap](./2026-07-10/ghsa-critical-cve-2026-54069-siyuan-unauthenticated-admin-ap.md)
@@ -107,6 +108,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
 - [github secret scanning public monitoring for enterprises cov](./2026-07-07/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
+- [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
 - [redwing maas packages android bank fraud as a telegram renta](./2026-07-07/redwing-maas-packages-android-bank-fraud-as-a-telegram-renta.md)
 - [rogue agent flaw could have let attackers hijack google dial](./2026-07-07/rogue-agent-flaw-could-have-let-attackers-hijack-google-dial.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
@@ -258,7 +260,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
-- [ghsa critical cve 2026 58399 acastellon auth authentication ](./2026-06-18/ghsa-critical-cve-2026-58399-acastellon-auth-authentication-.md)
 - [ghsa critical ghsa 2jq4 q6vv 4cp3 crawl4ai arbitrary file wr](./2026-06-18/ghsa-critical-ghsa-2jq4-q6vv-4cp3-crawl4ai-arbitrary-file-wr.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)

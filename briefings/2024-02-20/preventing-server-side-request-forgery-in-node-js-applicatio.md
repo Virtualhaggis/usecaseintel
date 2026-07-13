@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Web-app runtime egress to AWS IMDS endpoint (169.254.169.254) — SSRF credential theft
 
-`UC_1374_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1375_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ DeviceNetworkEvents
 
 ### SSRF probe via 'instance-data' IMDS alias hostname resolution
 
-`UC_1374_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1375_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications
 
-`UC_1374_0` · phase: **exploit** · confidence: **High**
+`UC_1375_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

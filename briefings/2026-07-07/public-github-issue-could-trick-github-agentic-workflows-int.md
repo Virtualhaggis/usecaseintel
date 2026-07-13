@@ -1,14 +1,15 @@
-# [HIGH] From 17,000 to 1.1 Million Assets: How Lumen Technologies Rebuilt Exposure Management at Scale
+# [HIGH] Public GitHub Issue Could Trick GitHub Agentic Workflows Into Leaking Private Repo Data
 
 **Source:** The Hacker News
-**Published:** 2026-07-10
-**Article:** https://thehackernews.com/2026/07/from-17000-to-11-million-assets-how.html
+**Published:** 2026-07-07
+**Article:** https://thehackernews.com/2026/07/public-github-issue-could-trick-github.html
 
 ## Threat Profile
 
-From 17,000 to 1.1 Million Assets: How Lumen Technologies Rebuilt Exposure Management at Scale 
- The Hacker News  Jul 10, 2026 Asset Management / Enterprise Security 
-Most enterprises assume their asset inventory is close enough to accurate. The evidence suggests otherwise. According to a survey of over 600 security leaders in the 2026 Axonius Actionability Report, only 45% of organizations consolidate their asset and exposure data into a single view, and every downstream security program inhe…
+Public GitHub Issue Could Trick GitHub Agentic Workflows Into Leaking Private Repo Data 
+ Swati Khandelwal  Jul 07, 2026 Vulnerability / AI Security 
+A public issue can trick GitHub Agentic Workflows into leaking the contents of an organization's private repositories, researchers at Noma Security have shown.
+The attacker needs only to open a normal-looking issue on a public repository, with no stolen credentials and no access to the organization. If that organization has given the agent read a…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -24,6 +25,7 @@ Most enterprises assume their asset inventory is close enough to accurate. The e
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -169,7 +171,31 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### Trusted vendor binary / installer launching unusual children
+
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Chromium subprocess-launcher switch + --no-zygote co-occurrence (Crawl4AI extra_args RCE)
 
-`UC_248_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_250_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Headless Chromium spawning shell/interpreter child (Crawl4AI injected-command exec)
 
-`UC_248_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_250_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

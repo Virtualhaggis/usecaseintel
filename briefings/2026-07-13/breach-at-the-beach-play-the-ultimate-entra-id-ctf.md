@@ -11,15 +11,9 @@ Sponsored by Varonis
 July 13, 2026
 10:01 AM
 0 
-
-
 Discover how Varonis Threat Labs created Breach at the Beach, a unique Entra ID training experience. Enhance your cybersecurity skills through hands-on learning with this CTF. 
-
-
 Cybersecurity can feel a lot like the ocean. A sense of calm on the surface, but likely something unknown is lurking underwater.
-
-
-Varonis Threat Labs researchers Doron Kapah and Mark Vaitsman know this reality f…
+Varonis Threat Labs researchers Doron Kapah and Mark Vaitsman know this reality firsthand. Mo…
 
 ## Indicators of Compromise (high-fidelity only)
 
