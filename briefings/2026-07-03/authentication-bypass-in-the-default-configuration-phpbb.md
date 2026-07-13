@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### phpBB CVE-2026-48611 auth bypass via login_link auth_provider=apache
 
-`UC_119_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_122_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### phpBB CVE-2026-48611 post-exploit ACP access from exploiting IP
 
-`UC_119_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_122_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### HTTP Basic Authorization header sent to phpBB login_link endpoint
 
-`UC_119_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_122_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

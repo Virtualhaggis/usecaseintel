@@ -197,7 +197,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma npm Supply Chain Attack: Self-Spreading Worm via Phantom Gyp
 
-`UC_309_4` · phase: **exploit** · confidence: **High**
+`UC_310_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

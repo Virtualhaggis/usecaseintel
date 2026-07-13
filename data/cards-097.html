@@ -1,504 +1,3 @@
-<article class="card" id="art-3142" data-art-slug="2021-05-07-suitecrm-phar-deserialization-vulnerability-to-code-executio"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,windows"
-  data-uc-count="6" data-llm-uc-count="3"
-  data-search="SuiteCRM: PHAR deserialization vulnerability to code execution This advisory details a PHAR deserialization vulnerability that exists in SuiteCRM which could be leveraged by an authenticated administrator to execute commands on the underlying operating system. CVE-2020-8801 T1190 [LLM] SuiteCRM PHAR deserialization via case-mixed phar:// wrapper in admin request [LLM] SuiteCRM upload/files .htaccess deleted by web-server process (PHAR gadget) [LLM] Direct HTTP 200 to SuiteCRM /upload or /files (post-.htaccess-deletion code exec) Asset exposure — vulnerability matches article CVE(s) File hash IOCs — endpoint file/process match Article-specific behavioural hunt — SuiteCRM: PHAR deserialization vulnerability to code execution">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2021-05-07-suitecrm-phar-deserialization-vulnerability-to-code-executio" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/suitecrm-phar-deserialization-vulnerability-to-code-execution/" target="_blank" rel="noopener">SuiteCRM: PHAR deserialization vulnerability to code execution</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2021-05-07</span>
-    <span>6 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">This advisory details a PHAR deserialization vulnerability that exists in SuiteCRM which could be leveraged by an authenticated administrator to execute commands on the underlying operating system.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-8801</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-<div class="ind-group"><span class="ind-label">SHA1</span><span class="ind ">571cbfa209da4c82…</span></div>
-<div class="ind-group"><span class="ind-label">MD5</span><span class="ind ">6b8f472cd174d021…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3142-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3142"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3142-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] SuiteCRM PHAR deserialization via case-mixed phar:// wrapper in admin request</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match · Article-specific behavioural hunt — SuiteCRM: PHAR deserialization vulnerability to code execution</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] SuiteCRM upload/files .htaccess deleted by web-server process (PHAR gadget) · [LLM] Direct HTTP 200 to SuiteCRM /upload or /files (post-.htaccess-deletion code exec)</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="ce0f8cf8ca" data-platforms="sent,sigma,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">SuiteCRM PHAR deserialization via case-mixed phar:// wrapper in admin request</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ce0f8cf8ca" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts web requests to a SuiteCRM instance whose query string or URI contains the phar:// stream wrapper (any casing, raw or percent-encoded). The article&#x27;s bypass of CVE-2020-8801 abuses the maintainers&#x27; case-sensitive strpos() check by passing PHAR:// in capitals to trigger metadata deserialization on an attacker-uploaded archive.
-
-Rationale: Anchored on the article&#x27;s exact bypass primitive — the phar:// (capitalised PHAR://) stream wrapper smuggled in an admin-panel parameter. Case-insensitive matching catches the casing trick the vulnerable strpos() missed; encoded variant covers GET query transport.
-
-Cross-checked against:
-  • https://snyk.io/blog/suitecrm-phar-deserialization-vulnerability-to-code-execution/
-  • https://snoopysecurity.github.io/posts/suitecrm-phar-deserialization/
-  • https://packetstormsecurity.com/files/156324/SuiteCRM-7.11.11-Phar-Deserialization.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security scanner / Snyk / Burp running an authorised PHAR-deserialization test against the CRM</li><li>Internal pentest or vuln-validation of the 7.11.x SuiteCRM patch</li><li>Developer reproducing the bug in a staging environment</li><li>A legitimate URL or document title that literally contains the substring &#x27;phar&#x27; (filtered by requiring &#x27;://&#x27; or encoded colon)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUsername !in~ (&quot;scanner-svc&quot;,&quot;pentest-svc&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request (method, body, authenticated admin user, source IP) and confirm SuiteCRM version &lt; 7.11.19; check whether a module .zip was uploaded to upload/upgrades/module just prior. 2) Contain: invalidate the admin session, block the source IP at the WAF, and snapshot the upload/ and files/ directories before anything is deleted. 3) Hunt: search file-deletion telemetry for .htaccess removals under /upload and /files (UC2) and for subsequent direct 200 responses from those paths (UC3); review module-loader audit entries for that admin account.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3142-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3142-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3142-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriQuery has &quot;phar&quot; or csUriStem has &quot;phar&quot;
-| extend q = tolower(strcat(csUriStem, &quot;?&quot;, csUriQuery))
-| where q contains &quot;phar://&quot; or q contains &quot;phar%3a%2f%2f&quot;
-| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, scStatus, csUsername, csUserAgent
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3142-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SuiteCRM phar:// stream wrapper in web request
-id: 7c1f6d2a-3b4e-4a9c-9d2f-1a2b3c4d5e6f
-description: Detects the phar:// wrapper (any casing / percent-encoded) in a web request to SuiteCRM, used to trigger PHAR deserialization by bypassing a case-sensitive strpos check.
-references:
-  - https://snyk.io/blog/suitecrm-phar-deserialization-vulnerability-to-code-execution/
-  - https://snoopysecurity.github.io/posts/suitecrm-phar-deserialization/
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-  - attack.t1505.003
-logsource:
-  category: webserver
-detection:
-  selection_raw:
-    cs-uri-query|contains:
-      - &#x27;phar://&#x27;
-      - &#x27;phar%3a%2f%2f&#x27;
-  condition: selection_raw
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3142-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3142-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3142-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3142-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web.Web where (Web.url=&quot;*phar://*&quot; OR Web.url=&quot;*PHAR://*&quot; OR Web.url=&quot;*phar%3a%2f%2f*&quot; OR Web.url=&quot;*phar%3A%2F%2F*&quot;) by Web.src, Web.dest, Web.http_method, Web.uri_path, Web.url, Web.status, _time
-| `drop_dm_object_name(Web)`
-| sort - _time</code></pre><pre class="spl-mode-body" id="art-3142-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where (Web.url=&quot;*phar://*&quot; OR Web.url=&quot;*PHAR://*&quot; OR Web.url=&quot;*phar%3a%2f%2f*&quot; OR Web.url=&quot;*phar%3A%2F%2F*&quot;) by Web.src, Web.dest, Web.http_method, Web.uri_path, Web.url, Web.status, _time
-| `drop_dm_object_name(Web)`
-| sort - _time</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27d5abd4a8" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">SuiteCRM upload/files .htaccess deleted by web-server process (PHAR gadget)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="27d5abd4a8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts deletion of a .htaccess file under SuiteCRM&#x27;s /upload or /files directories where the deleting process is the PHP/Apache web-server runtime. The article&#x27;s ZendFramework/FD1 @unlink gadget is detonated via PHAR deserialization to remove the directory-protection .htaccess, enabling direct execution of smuggled manifest.php / uploaded code.
-
-Rationale: High-fidelity because the deleting process is the PHP/Apache runtime (@unlink fires during deserialization), and the target is the specific .htaccess the article says protects /upload and /files — a web server has no legitimate reason to delete its own access-control file.
-
-Cross-checked against:
-  • https://snyk.io/blog/suitecrm-phar-deserialization-vulnerability-to-code-execution/
-  • https://snoopysecurity.github.io/posts/suitecrm-phar-deserialization/
-  • https://github.com/ambionics/phpggc/pull/93</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Indicator Removal: File Deletion">T1070.004</span> <span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SuiteCRM upgrade / UpgradeWizard legitimately rewriting .htaccess during a version bump</li><li>Deployment automation (Ansible/Capistrano) redeploying the webroot and replacing .htaccess</li><li>Admin manually fixing a broken rewrite rule via the web UI</li><li>Backup-restore job that clears and repopulates the upload tree</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !contains &quot;UpgradeWizard&quot; and InitiatingProcessCommandLine !contains &quot;module_install&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the .htaccess under /upload or /files is actually gone and identify the parent PHP request/admin session that initiated it; correlate to a preceding phar:// request (UC1) within minutes. 2) Contain: re-create the protective .htaccess (Deny from all), kill the PHP-FPM workers if active exploitation is ongoing, and isolate the host from the web tier. 3) Hunt: enumerate files in upload/upgrades/module for attacker .zip uploads, scan upload/ and files/ for newly-written .php / manifest.php, and check web logs for direct 200 responses to those paths (UC3).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3142-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3142-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3142-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3142-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType == &quot;FileDeleted&quot;
-| where FileName =~ &quot;.htaccess&quot;
-| where FolderPath has_any (&quot;/upload&quot;, &quot;/files&quot;)
-| where InitiatingProcessFileName in~ (&quot;php&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;php-cgi&quot;)
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3142-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType == &quot;FileDeleted&quot;
-| where TargetFileName =~ &quot;.htaccess&quot;
-| where TargetFilePath has_any (&quot;/upload&quot;, &quot;/files&quot;)
-| where ActingProcessName has_any (&quot;php&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;)
-| project TimeGenerated, DvcHostname, TargetFilePath, ActingProcessName, ActingProcessCommandLine, ActorUsername
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3142-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: SuiteCRM .htaccess deletion in upload/files directory
-id: 2e9b4c71-5d6a-4f0b-8c3e-9f1a2b3c4d5e
-description: Detects deletion of a .htaccess file under SuiteCRM /upload or /files, the file-delete primitive of the PHAR deserialization chain used to expose directly-executable uploaded code.
-references:
-  - https://snyk.io/blog/suitecrm-phar-deserialization-vulnerability-to-code-execution/
-  - https://snoopysecurity.github.io/posts/suitecrm-phar-deserialization/
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1070.004
-  - attack.t1562.001
-logsource:
-  category: file_delete
-  product: linux
-detection:
-  selection:
-    TargetFilename|endswith: &#x27;.htaccess&#x27;
-    TargetFilename|contains:
-      - &#x27;/upload/&#x27;
-      - &#x27;/files/&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3142-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileDeleted
-| TargetFileName=/\.htaccess$/i
-| regex(&quot;/(upload|files)/&quot;, field=TargetFileName)
-| ContextImageFileName=/(php|php-fpm|httpd|apache2)/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3142-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3142-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3142-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3142-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.action=deleted Filesystem.file_name=&quot;.htaccess&quot; (Filesystem.file_path=&quot;*/upload/*&quot; OR Filesystem.file_path=&quot;*/files/*&quot;) by Filesystem.dest, Filesystem.file_path, Filesystem.process_name, Filesystem.user, _time
-| `drop_dm_object_name(Filesystem)`
-| where process_name IN (&quot;php&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;php-cgi&quot;)
-| sort - _time</code></pre><pre class="spl-mode-body" id="art-3142-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Filesystem where Filesystem.action=deleted Filesystem.file_name=&quot;.htaccess&quot; (Filesystem.file_path=&quot;*/upload/*&quot; OR Filesystem.file_path=&quot;*/files/*&quot;) by Filesystem.dest, Filesystem.file_path, Filesystem.process_name, Filesystem.user, _time
-| `drop_dm_object_name(Filesystem)`
-| where process_name IN (&quot;php&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;php-cgi&quot;)
-| sort - _time</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ebfaeb2141" data-platforms="sent,sigma,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Direct HTTP 200 to SuiteCRM /upload or /files (post-.htaccess-deletion code exec)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="ebfaeb2141" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts successful (HTTP 200) direct requests to SuiteCRM&#x27;s /upload or /files directories, which are normally .htaccess-blocked (403). After the PHAR gadget deletes that .htaccess, the attacker reaches smuggled manifest.php / uploaded payloads directly — a 200 from these paths signals the protection was stripped and code is being executed.
-
-Rationale: Tied to the article&#x27;s specific stated behaviour: /upload and /files are .htaccess-protected, so a 200 (rather than the expected 403) from those paths is the observable signature of the file-deletion-to-RCE step.
-
-Cross-checked against:
-  • https://snyk.io/blog/suitecrm-phar-deserialization-vulnerability-to-code-execution/
-  • https://snoopysecurity.github.io/posts/suitecrm-phar-deserialization/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Deployment where admins intentionally serve public static assets from /upload (no .htaccess deny)</li><li>Reverse-proxy / CDN cache warmers fetching attachment thumbnails directly</li><li>Misconfigured SuiteCRM that never had the protective .htaccess in place</li><li>Legitimate document download mistakenly routed to the raw path instead of the download.php controller</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUriStem endswith &quot;.php&quot; or csUriStem matches regex @&quot;/[0-9a-fA-F-]{16,}$&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the exact uri_path and whether it resolves to a .php or extensionless UUID file in upload/; pull the response size and user-agent, and check if a .htaccess deletion (UC2) preceded the first 200. 2) Contain: restore the deny-all .htaccess in /upload and /files, quarantine the accessed file, and block the source IP. 3) Hunt: triage the accessed file for PHP/webshell content, review module-loader uploads to upload/upgrades/module, and pivot on the source IP across the phar:// exploit log (UC1).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3142-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3142-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3142-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriStem has_any (&quot;/upload/&quot;, &quot;/files/&quot;)
-| where scStatus == 200
-| where csMethod in (&quot;GET&quot;,&quot;POST&quot;)
-| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, scStatus, csUserAgent
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3142-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Direct successful access to SuiteCRM upload/files directory
-id: 9a3d8f15-6c2b-4e71-b0a4-5d6e7f801a2b
-description: Detects HTTP 200 responses to requests under SuiteCRM /upload or /files, which are normally .htaccess-blocked; a 200 indicates the protection was removed and uploaded code is being executed directly.
-references:
-  - https://snyk.io/blog/suitecrm-phar-deserialization-vulnerability-to-code-execution/
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1505.003
-  - attack.t1190
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-uri-stem|contains:
-      - &#x27;/upload/&#x27;
-      - &#x27;/files/&#x27;
-    sc-status: 200
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-3142-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3142-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3142-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3142-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web.Web where (Web.uri_path=&quot;*/upload/*&quot; OR Web.uri_path=&quot;*/files/*&quot;) Web.status=200 by Web.src, Web.dest, Web.http_method, Web.uri_path, Web.url, Web.status, _time
-| `drop_dm_object_name(Web)`
-| sort - _time</code></pre><pre class="spl-mode-body" id="art-3142-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where (Web.uri_path=&quot;*/upload/*&quot; OR Web.uri_path=&quot;*/files/*&quot;) Web.status=200 by Web.src, Web.dest, Web.http_method, Web.uri_path, Web.url, Web.status, _time
-| `drop_dm_object_name(Web)`
-| sort - _time</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3142-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3142-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-8801&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3142-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-8801&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3142-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3142-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3142-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3142-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-8801&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3142-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-8801&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3142-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3142-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3142-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;) or SHA1 in~ (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;) or MD5 in~ (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;) or SHA1 in~ (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;) or MD5 in~ (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-3142-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-3142-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-3142-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3142-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3142-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3142-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-3142-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;571cbfa209da4c8280a5359f301115de25b4c6e3&quot;, &quot;6b8f472cd174d02167bc0a0c908ec9e0&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="32cf1f09c7" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — SuiteCRM: PHAR deserialization vulnerability to code execution</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="32cf1f09c7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3142-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3142-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3142-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — SuiteCRM: PHAR deserialization vulnerability to code execution
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/test.txt&quot;, &quot;/var/www/html/uploads&quot;, &quot;/var/www/html/upload/eb7cde01-6190-9ca9-b81b-601998504b41&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3142-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — SuiteCRM: PHAR deserialization vulnerability to code execution
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/test.txt&quot;, &quot;/var/www/html/uploads&quot;, &quot;/var/www/html/upload/eb7cde01-6190-9ca9-b81b-601998504b41&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3142-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3142-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3142-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3142-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — SuiteCRM: PHAR deserialization vulnerability to code execution ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/test.txt*&quot; OR Filesystem.file_path=&quot;*/var/www/html/uploads*&quot; OR Filesystem.file_path=&quot;*/var/www/html/upload/eb7cde01-6190-9ca9-b81b-601998504b41*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-3142-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — SuiteCRM: PHAR deserialization vulnerability to code execution ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/test.txt*&quot; OR Filesystem.file_path=&quot;*/var/www/html/uploads*&quot; OR Filesystem.file_path=&quot;*/var/www/html/upload/eb7cde01-6190-9ca9-b81b-601998504b41*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3144" data-art-slug="2021-05-05-snyk-uncovers-malicious-code-activities-in-open-source-suppl"
   data-phases="actions,c2,delivery,exploit,install" data-sev="high"
   data-techs="T1190,T1195.002"
@@ -6841,6 +6340,277 @@ DeviceFileEvents
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_path=&quot;*/tmp/abc*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3229" data-art-slug="2020-11-24-devsecops-tools-for-open-source-projects-in-javascript-and-n"
+  data-phases="actions,c2,exploit,install,recon" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="DevSecOps tools for open source projects in JavaScript and Node.js This post suggests some best practices, and discusses how maintainers and developers can adopt DevSecOps tools for open source projects to better improve their security posture.  T1190 Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — DevSecOps tools for open source projects in JavaScript and Node.js">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2020-11-24-devsecops-tools-for-open-source-projects-in-javascript-and-n" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/devsecops-tools-for-open-source-projects-in-javascript-and-node-js/" target="_blank" rel="noopener">DevSecOps tools for open source projects in JavaScript and Node.js</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2020-11-24</span>
+    <span>2 use cases</span>
+    <span>1 technique</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">This post suggests some best practices, and discusses how maintainers and developers can adopt DevSecOps tools for open source projects to better improve their security posture.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3229-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3229"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3229-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — DevSecOps tools for open source projects in JavaScript and Node.js</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3229-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3229-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3229-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3229-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3229-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-3229-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-3229-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-3229-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3229-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3229-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3229-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-3229-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15612cedf4" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — DevSecOps tools for open source projects in JavaScript and Node.js</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15612cedf4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3229-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3229-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3229-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3229-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — DevSecOps tools for open source projects in JavaScript and Node.js
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3229-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — DevSecOps tools for open source projects in JavaScript and Node.js
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3229-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3229-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3229-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3229-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — DevSecOps tools for open source projects in JavaScript and Node.js ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3229-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — DevSecOps tools for open source projects in JavaScript and Node.js ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`

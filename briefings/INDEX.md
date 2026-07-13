@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2574 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,12 +13,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [breach at the beach play the ultimate entra id ctf](./2026-07-13/breach-at-the-beach-play-the-ultimate-entra-id-ctf.md)
 - [cisa kev cve 2008 4128 cisco ios cross site request forgery ](./2026-07-13/cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-.md)
 - [cisa warns of actively exploited rce flaws in joomla extensi](./2026-07-13/cisa-warns-of-actively-exploited-rce-flaws-in-joomla-extensi.md)
+- [crashstealer macos malware uses notarized dropper to pass ga](./2026-07-13/crashstealer-macos-malware-uses-notarized-dropper-to-pass-ga.md)
 - [eu sanctions russian gru military hackers over cyberattacks](./2026-07-13/eu-sanctions-russian-gru-military-hackers-over-cyberattacks.md)
 - [forg365 phaas targets microsoft 365 with device code and ait](./2026-07-13/forg365-phaas-targets-microsoft-365-with-device-code-and-ait.md)
 - [ghsa critical cve 2026 45579 dirac is vulnerable to rce in r](./2026-07-13/ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r.md)
+- [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)
+- [google and microsoft pull modheader with 1 6 million install](./2026-07-13/google-and-microsoft-pull-modheader-with-1-6-million-install.md)
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
 - [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
+- [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
+- [new crashstealer malware poses as apple crash reporting tool](./2026-07-13/new-crashstealer-malware-poses-as-apple-crash-reporting-tool.md)
 - [new memghost attack plants persistent false memories in ai a](./2026-07-13/new-memghost-attack-plants-persistent-false-memories-in-ai-a.md)
 - [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
 - [thinking fast and slow in the soc the case for combining aut](./2026-07-13/thinking-fast-and-slow-in-the-soc-the-case-for-combining-aut.md)
@@ -51,7 +56,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new modbeacon rat uses grpc streaming for encrypted c2 traff](./2026-07-10/new-modbeacon-rat-uses-grpc-streaming-for-encrypted-c2-traff.md)
 - [no manners here the ruthless rise of the gentlemen ransomwar](./2026-07-10/no-manners-here-the-ruthless-rise-of-the-gentlemen-ransomwar.md)
 - [police suspects dutch hackers were involved in odido breach](./2026-07-10/police-suspects-dutch-hackers-were-involved-in-odido-breach.md)
-- [progress urges sharefile admins to shut down servers over cr](./2026-07-10/progress-urges-sharefile-admins-to-shut-down-servers-over-cr.md)
 - [ransomware negotiator gets 70 months in prison for aiding bl](./2026-07-10/ransomware-negotiator-gets-70-months-in-prison-for-aiding-bl.md)
 - [researcher details whatsapp to host attack chain using three](./2026-07-10/researcher-details-whatsapp-to-host-attack-chain-using-three.md)
 - [ryuk ransomware member pleads guilty in the us faces 15 year](./2026-07-10/ryuk-ransomware-member-pleads-guilty-in-the-us-faces-15-year.md)
@@ -104,11 +108,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48908 joomshaper sp page builder unrestric](./2026-07-07/cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric.md)
 - [cisa kev cve 2026 55255 langflow authorization bypass throug](./2026-07-07/cisa-kev-cve-2026-55255-langflow-authorization-bypass-throug.md)
 - [cisa kev cve 2026 56290 joomlack page builder improper acces](./2026-07-07/cisa-kev-cve-2026-56290-joomlack-page-builder-improper-acces.md)
-- [debull tooling abuses microsoft device code flow to target m](./2026-07-07/debull-tooling-abuses-microsoft-device-code-flow-to-target-m.md)
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
 - [github secret scanning public monitoring for enterprises cov](./2026-07-07/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
-- [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
 - [redwing maas packages android bank fraud as a telegram renta](./2026-07-07/redwing-maas-packages-android-bank-fraud-as-a-telegram-renta.md)
 - [rogue agent flaw could have let attackers hijack google dial](./2026-07-07/rogue-agent-flaw-could-have-let-attackers-hijack-google-dial.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
@@ -174,7 +176,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what s new in microsoft security june 2026](./2026-06-30/what-s-new-in-microsoft-security-june-2026.md)
 
 ## 2026-06-29
-- [chromium extension uses ai related branding to redirect brow](./2026-06-29/chromium-extension-uses-ai-related-branding-to-redirect-brow.md)
 - [cisa kev cve 2026 48558 simplehelp authentication bypass vul](./2026-06-29/cisa-kev-cve-2026-48558-simplehelp-authentication-bypass-vul.md)
 - [inside the inbox why cybercriminals want to break into your ](./2026-06-29/inside-the-inbox-why-cybercriminals-want-to-break-into-your-.md)
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
@@ -260,7 +261,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
-- [ghsa critical ghsa 2jq4 q6vv 4cp3 crawl4ai arbitrary file wr](./2026-06-18/ghsa-critical-ghsa-2jq4-q6vv-4cp3-crawl4ai-arbitrary-file-wr.md)
 - [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
@@ -688,7 +688,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 22769 dell recoverpoint for virtual machin](./2026-02-18/cisa-kev-cve-2026-22769-dell-recoverpoint-for-virtual-machin.md)
 
 ## 2026-02-17
-- [aikido recognized as platform leader in latio tech s 2026 ap](./2026-02-17/aikido-recognized-as-platform-leader-in-latio-tech-s-2026-ap.md)
 - [cisa kev cve 2008 0015 microsoft windows video activex contr](./2026-02-17/cisa-kev-cve-2008-0015-microsoft-windows-video-activex-contr.md)
 - [cisa kev cve 2020 7796 synacor zimbra collaboration suite zc](./2026-02-17/cisa-kev-cve-2020-7796-synacor-zimbra-collaboration-suite-zc.md)
 - [cisa kev cve 2024 7694 teamt5 threatsonar anti ransomware un](./2026-02-17/cisa-kev-cve-2024-7694-teamt5-threatsonar-anti-ransomware-un.md)
