@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-13
+- [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
 - [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
 
 ## 2026-07-12
@@ -123,7 +124,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55500 9routers has exposure of sensit](./2026-07-06/ghsa-critical-cve-2026-55500-9routers-has-exposure-of-sensit.md)
 - [ghsa critical cve 2026 55615 langroid neo4jchatagent execute](./2026-07-06/ghsa-critical-cve-2026-55615-langroid-neo4jchatagent-execute.md)
 - [ghsa critical ghsa vjc7 jrh9 9j86 9router has unauthenticate](./2026-07-06/ghsa-critical-ghsa-vjc7-jrh9-9j86-9router-has-unauthenticate.md)
-- [iran linked hackers use new cavern c2 framework to target is](./2026-07-06/iran-linked-hackers-use-new-cavern-c2-framework-to-target-is.md)
 - [predicting mongodb objectid continuously in rocket chat](./2026-07-06/predicting-mongodb-objectid-continuously-in-rocket-chat.md)
 - [when checking the url isn t enough a device code phishing at](./2026-07-06/when-checking-the-url-isn-t-enough-a-device-code-phishing-at.md)
 
