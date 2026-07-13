@@ -1,181 +1,3 @@
-<article class="card" id="art-3492" data-art-slug="2019-05-27-java-top-10-security-vulnerabilities-disclosed-2019-list"
-  data-phases="actions,c2,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Java Top 10 Security Vulnerabilities Disclosed [2019 - List] In this post, we’ll take a look at the vulnerabilities that have been found in the top ten Java libraries picked by OverOps, and focus on three of them in more depth.  T1190 Infostealer — non-browser process accessing browser cookie/login DBs">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2019-05-27-java-top-10-security-vulnerabilities-disclosed-2019-list" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/162-security-vulnerabilities-disclosed-in-javas-top-10-libraries-including-jackson-spring-and-jetty/" target="_blank" rel="noopener">Java Top 10 Security Vulnerabilities Disclosed [2019 - List]</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2019-05-27</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">In this post, we’ll take a look at the vulnerabilities that have been found in the top ten Java libraries picked by OverOps, and focus on three of them in more depth.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3492-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3492"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3492-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3492-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3492-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3492-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3492-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3492-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-3492-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-3492-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-3492-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3492-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3492-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3492-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-3492-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3495" data-art-slug="2019-05-16-scoring-security-vulnerabilities-101-introducing-cvss-for-cv"
   data-phases="c2,exploit,install" data-sev="high"
   data-techs="T1021.001,T1190"
@@ -5226,6 +5048,278 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3554" data-art-slug="2018-12-20-critical-arbitrary-code-execution-vulnerability-found-in-kub"
+  data-phases="actions,c2,exploit,install,recon" data-sev="high"
+  data-techs=""
+  data-sources="Snyk"
+  data-platforms="cloudwatch,datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,cloud"
+  data-targets="kubernetes,vcs"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="Critical Arbitrary Code Execution Vulnerability Found in Kubernetes An examination of the critical Kubernetes vulnerability identified as CVE-2018-1002105, which allows an attacker to gain remote access to backend services that reside in the Kubernetes cluster and execute arbitrary commands on them. We look at key takeaways and methods for protecting yourself from image vulnerabilities. CVE-2018-1002105  [LLM] Anonymous access to Kubernetes aggregated API (CVE-2018-1002105 exploit surface) [LLM] Anonymous principal reaching kubelet/pod proxy subresources (CVE-2018-1002105 tunnel) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2018-12-20-critical-arbitrary-code-execution-vulnerability-found-in-kub" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/critical-arbitrary-code-execution-vulnerability-found-in-kubernetes/" target="_blank" rel="noopener">Critical Arbitrary Code Execution Vulnerability Found in Kubernetes</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2018-12-20</span>
+    <span>3 use cases</span>
+    <span>0 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">An examination of the critical Kubernetes vulnerability identified as CVE-2018-1002105, which allows an attacker to gain remote access to backend services that reside in the Kubernetes cluster and execute arbitrary commands on them. We look at key takeaways and methods for protecting yourself from image vulnerabilities.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2018-1002105</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3554-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3554"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3554-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Anonymous access to Kubernetes aggregated API (CVE-2018-1002105 exploit surface)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Anonymous principal reaching kubelet/pod proxy subresources (CVE-2018-1002105 tunnel)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="6dff280277" data-platforms="cloudwatch,datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
+  <summary>
+    <span class="uc-title">Anonymous access to Kubernetes aggregated API (CVE-2018-1002105 exploit surface)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="6dff280277" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts system:anonymous / system:unauthenticated principals querying the kube-apiserver aggregated API path (/apis/&lt;apiGroup&gt;/&lt;apiVersion&gt;) — the insecure default the article calls out, which CVE-2018-1002105 abuses to reach backend/aggregated API servers. Surfaces the unauthenticated discovery that precedes the proxy-upgrade tunnel.
+
+Rationale: Anchored on the article&#x27;s exact strings: the system:anonymous insecure default and the /apis/&lt;apiGroup&gt;/&lt;apiVersion&gt; proxy path. Unit42 and the kube #71411 issue confirm anonymous discovery is the precursor to the proxy-upgrade exploit.
+
+Cross-checked against:
+  • https://unit42.paloaltonetworks.com/demystifying-kubernetes-cve-2018-1002105-dead-simple-exploit/
+  • https://github.com/kubernetes/kubernetes/issues/71411
+  • https://nvd.nist.gov/vuln/detail/cve-2018-1002105
+  • https://access.redhat.com/security/cve/cve-2018-1002105</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Cloud Service Discovery">T1526</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cloud load-balancer health-check probes hitting the API anonymously (default-enabled discovery)</li><li>Kubernetes service discovery by unauthenticated clients during cluster bootstrap</li><li>Monitoring/Prometheus scrapers misconfigured to query the aggregated API without credentials</li><li>Ingress controller readiness checks against /apis/ endpoints</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RequestUri in (&quot;/apis&quot;, &quot;/apis/&quot;) and Requests &lt; 5)   // strip single-shot discovery/health-check probes</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the SampleUris and sourceIPs for the anonymous principal — distinguish a handful of /apis/ discovery calls (likely health check) from enumeration across many apiGroups/aggregated services. Confirm cluster patch level against v1.10.11/v1.11.5/v1.12.3/v1.13.0-rc.1. 2) CONTAIN: If unpatched and enumeration is broad, disable anonymous auth on kube-apiserver (--anonymous-auth=false) or apply the issue #71411 mitigations; block the source IP at the LB. 3) HUNT: Pivot the same sourceIPs into the proxy/exec/portforward detection (UC2) and into kubelet/aggregated-API-server logs for piggybacked requests that never appear in the apiserver audit.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3554-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3554-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3554-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3554-uc0-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-3554-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3554-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Username in (&quot;system:anonymous&quot;, &quot;system:unauthenticated&quot;)
+| where RequestUri has &quot;/apis/&quot;
+| extend ResponseCode = toint(ResponseStatus.code)
+| summarize Requests = count(), DistinctUris = dcount(RequestUri), SampleUris = make_set(RequestUri, 50), arg_max(TimeGenerated, *) by Username, Computer
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3554-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Anonymous Access to Kubernetes Aggregated API (CVE-2018-1002105 Exploit Surface)
+id: a7e3c9d1-2b4f-4e8a-9c6d-1f2a3b4c5d6e
+status: experimental
+description: Detects system:anonymous or system:unauthenticated principals querying the kube-apiserver aggregated API (/apis/), the insecure default abused by CVE-2018-1002105.
+references:
+  - https://snyk.io/blog/critical-arbitrary-code-execution-vulnerability-found-in-kubernetes/
+  - https://unit42.paloaltonetworks.com/demystifying-kubernetes-cve-2018-1002105-dead-simple-exploit/
+  - https://github.com/kubernetes/kubernetes/issues/71411
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1526
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection:
+    user.username:
+      - &#x27;system:anonymous&#x27;
+      - &#x27;system:unauthenticated&#x27;
+    requestURI|contains: &#x27;/apis/&#x27;
+  condition: selection
+falsepositives:
+  - Anonymous service discovery and load-balancer health checks enabled by default
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-3554-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @user.username:(&quot;system:anonymous&quot; OR &quot;system:unauthenticated&quot;) @verb:(get OR list OR watch)</code></pre></div>
+    <div class="tab-content" id="art-3554-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: EKS control-plane audit (/aws/eks/CLUSTER_NAME/cluster)
+fields @timestamp, verb, requestURI, user.username, responseStatus.code, sourceIPs.0
+| filter user.username in [&quot;system:anonymous&quot;, &quot;system:unauthenticated&quot;]
+| filter requestURI like /\/apis\//
+| sort @timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3554-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;kube:apiserver:audit&quot; OR sourcetype=&quot;kube:apiserver-audit&quot;) &#x27;user.username&#x27; IN (&quot;system:anonymous&quot;,&quot;system:unauthenticated&quot;) requestURI=&quot;*/apis/*&quot; | stats count AS requests, dc(requestURI) AS distinct_uris, values(requestURI) AS uris, latest(_time) AS last_seen by &#x27;user.username&#x27;, verb, &#x27;sourceIPs{}&#x27; | sort - last_seen</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="031992d471" data-platforms="cloudwatch,datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
+  <summary>
+    <span class="uc-title">Anonymous principal reaching kubelet/pod proxy subresources (CVE-2018-1002105 tunnel)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="031992d471" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Alerts when system:anonymous / system:unauthenticated reach proxy-upgrade subresources (nodes/proxy, pods/exec, pods/attach, pods/portforward, services/proxy) on the kube-apiserver — the audit-visible initial request of the CVE-2018-1002105 connection-upgrade tunnel that yields arbitrary command execution on backend/aggregated servers. Per the article and Unit42, only this first request is logged; piggybacked requests vanish.
+
+Rationale: Combines the article&#x27;s anonymous-access default with the kubelet API service / proxy mechanism (nodes/proxy, pods/exec) that CVE-2018-1002105 abuses; anonymous reaching exec/proxy subresources is near-zero-FP and is the only audit-visible artifact of the tunnel per Unit42 and kube #71411.
+
+Cross-checked against:
+  • https://unit42.paloaltonetworks.com/demystifying-kubernetes-cve-2018-1002105-dead-simple-exploit/
+  • https://github.com/kubernetes/kubernetes/issues/71411
+  • https://blog.aquasec.com/kubernetes-security-cve-2018-1002105
+  • https://nvd.nist.gov/vuln/detail/cve-2018-1002105</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Container Administration Command">T1609</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Monitoring agents (e.g. metrics-server, Prometheus node exporter) configured to hit nodes/proxy without authenticating</li><li>Service-mesh or ingress readiness probes using services/proxy anonymously</li><li>Legacy dashboards proxying pod logs/exec with anonymous RBAC binding intentionally granted</li><li>Cluster e2e/conformance test harness invoking exec under a stripped identity</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Username == &quot;system:unauthenticated&quot; and UserAgent has_any (&quot;kube-probe&quot;, &quot;Prometheus&quot;, &quot;metrics-server&quot;) and RequestUri has &quot;/proxy&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: This is the CVE primitive — confirm the cluster is unpatched (below v1.10.11/v1.11.5/v1.12.3) and identify the sourceIPs and target node/pod from RequestUri. Check kubelet and aggregated-API-server logs on that node for follow-on requests that bear the apiserver&#x27;s identity but have no matching apiserver audit entry. 2) CONTAIN: Cordon/isolate the targeted node, rotate kube-apiserver TLS credentials (the tunnel reuses them), set --anonymous-auth=false, and restrict aggregated APIService access; patch immediately. 3) HUNT: Sweep all nodes for unexpected pod exec/portforward, new privileged pods, and crypto-miner egress (the article cites prior kube-apiserver-to-miner incidents); pivot anonymous source IPs across UC1 discovery.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3554-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3554-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3554-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3554-uc1-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-3554-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3554-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Username in (&quot;system:anonymous&quot;, &quot;system:unauthenticated&quot;)
+| where RequestUri has_any (&quot;/proxy&quot;, &quot;/exec&quot;, &quot;/attach&quot;, &quot;/portforward&quot;)
+| extend ResponseCode = toint(ResponseStatus.code)
+| project TimeGenerated, Computer, Username, Verb, RequestUri, ResponseCode, UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3554-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Anonymous Access to Kubernetes Proxy/Exec Subresources (CVE-2018-1002105)
+id: b8f4d0e2-3c5a-4f9b-ad7e-2a3b4c5d6e7f
+status: experimental
+description: Detects system:anonymous or system:unauthenticated principals invoking proxy-upgrade subresources (nodes/proxy, pods/exec, pods/attach, pods/portforward, services/proxy), the audit-visible initial request of the CVE-2018-1002105 connection-upgrade tunnel.
+references:
+  - https://snyk.io/blog/critical-arbitrary-code-execution-vulnerability-found-in-kubernetes/
+  - https://unit42.paloaltonetworks.com/demystifying-kubernetes-cve-2018-1002105-dead-simple-exploit/
+  - https://github.com/kubernetes/kubernetes/issues/71411
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1068
+  - attack.t1609
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection:
+    user.username:
+      - &#x27;system:anonymous&#x27;
+      - &#x27;system:unauthenticated&#x27;
+    requestURI|contains:
+      - &#x27;/proxy&#x27;
+      - &#x27;/exec&#x27;
+      - &#x27;/attach&#x27;
+      - &#x27;/portforward&#x27;
+  condition: selection
+falsepositives:
+  - Misconfigured monitoring stack proxying node/pod endpoints without credentials
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3554-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @user.username:(&quot;system:anonymous&quot; OR &quot;system:unauthenticated&quot;) @objectRef.resource:(pods OR nodes OR services)</code></pre></div>
+    <div class="tab-content" id="art-3554-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: EKS control-plane audit (/aws/eks/CLUSTER_NAME/cluster)
+fields @timestamp, verb, requestURI, user.username, responseStatus.code, sourceIPs.0
+| filter user.username in [&quot;system:anonymous&quot;, &quot;system:unauthenticated&quot;]
+| filter requestURI like /(proxy|exec|attach|portforward)/
+| sort @timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3554-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;kube:apiserver:audit&quot; OR sourcetype=&quot;kube:apiserver-audit&quot;) &#x27;user.username&#x27; IN (&quot;system:anonymous&quot;,&quot;system:unauthenticated&quot;) (requestURI=&quot;*/proxy*&quot; OR requestURI=&quot;*/exec*&quot; OR requestURI=&quot;*/attach*&quot; OR requestURI=&quot;*/portforward*&quot;) | stats count AS requests, values(requestURI) AS uris, values(&#x27;responseStatus.code&#x27;) AS resp_codes, latest(_time) AS last_seen by &#x27;user.username&#x27;, verb, &#x27;sourceIPs{}&#x27; | sort - last_seen</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3554-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3554-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3554-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3554-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2018-1002105&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3554-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2018-1002105&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3554-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3554-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3554-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3554-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2018-1002105&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3554-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2018-1002105&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

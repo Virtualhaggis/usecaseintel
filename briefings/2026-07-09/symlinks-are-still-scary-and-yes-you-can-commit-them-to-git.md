@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### SSH authorized_keys written by non-SSH tooling (symlink repo payload)
 
-`UC_65_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_66_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceFileEvents
 
 ### Git-spawned hook execution during recursive clone (CVE-2024-32002)
 
-`UC_65_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_66_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Symlinks Are Still Scary (And Yes, You Can Commit Them to Git)
 
-`UC_65_2` · phase: **install** · confidence: **High**
+`UC_66_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

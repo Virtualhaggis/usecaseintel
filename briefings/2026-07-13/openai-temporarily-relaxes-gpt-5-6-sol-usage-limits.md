@@ -11,15 +11,9 @@ By Mayank Parmar
 July 12, 2026
 08:44 PM
 0 
-
-
 OpenAI is temporarily relaxing GPT-5.6 Sol usage limits after demand for the company's most powerful model surged over the past 48 hours.
-
-
 On Sunday, OpenAI confirmed that it is temporarily removing the five-hour usage restriction for Plus, Pro, and Business plans, while also resetting current usage for everyone.
-
-
-"The last 48 hours of Codex and ChatGPT Work have been intense," OpenAI produ…
+"The last 48 hours of Codex and ChatGPT Work have been intense," OpenAI product lead Tibo…
 
 ## Indicators of Compromise (high-fidelity only)
 

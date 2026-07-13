@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Bun runtime executing codfish/semantic-release-action index.js payload on CI runner
 
-`UC_206_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_207_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### Known Miasma index.js payload hash present on CI runner (codfish action)
 
-`UC_206_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_207_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -76,7 +76,7 @@ union DeviceFileEvents, DeviceProcessEvents, DeviceImageLoadEvents
 
 ### Bun process reaching GitHub commit-search API — Miasma dead-drop C2
 
-`UC_206_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_207_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +242,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised GitHub action codfish/semantic-release-action steals CI/CD secrets
 
-`UC_206_6` · phase: **exploit** · confidence: **High**
+`UC_207_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

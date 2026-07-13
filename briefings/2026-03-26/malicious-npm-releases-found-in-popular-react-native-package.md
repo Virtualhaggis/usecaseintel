@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised react-native-international-phone-number / react-native-country-select files written to node_modules
 
-`UC_504_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_505_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceFileEvents
 
 ### Attacker-controlled scoped npm relay packages on disk (@usebioerhold8733 / @agnoliaarisian7180)
 
-`UC_504_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_505_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### npm postinstall hook spawning node init.js or child.js (React Native attack pattern)
 
-`UC_504_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_505_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### node.exe contacting Solana JSON-RPC endpoints (suspected blockchain dead-drop C2)
 
-`UC_504_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_505_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -200,7 +200,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Releases Found in Popular React Native Packages - 130K+ Monthly Do
 
-`UC_504_3` · phase: **exploit** · confidence: **High**
+`UC_505_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

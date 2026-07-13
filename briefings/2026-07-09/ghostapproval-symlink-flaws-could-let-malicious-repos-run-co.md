@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### AI coding agent writes SSH authorized_keys or shell rc via GhostApproval symlink
 
-`UC_63_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_64_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### Amazon Q / AI agent spawns shell child from poisoned .amazonq/mcp.json (CVE-2026-12957)
 
-`UC_63_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_64_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### SSH authorized_keys planted then remote SSH logon (GhostApproval key-injection use)
 
-`UC_63_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_64_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceLogonEvents
 
 ### Symlink created in repo pointing to SSH/AWS/shell files (GhostApproval staging)
 
-`UC_63_10` · phase: **weapon** · confidence: **Low** · AI-generated for this article
+`UC_64_10` · phase: **weapon** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
