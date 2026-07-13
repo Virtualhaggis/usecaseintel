@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised jscrambler npm CLI (8.14.0 + trojanized siblings) install attempt
 
-`UC_14_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_19_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### jscrambler stealer IOC file-hash / payload hash match (setup.js, intro.js, native binaries)
 
-`UC_14_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_19_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ union
 
 ### npm/node preinstall drops & detaches hidden Rust binary from temp directory
 
-`UC_14_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_19_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### jscrambler stealer C2 beacon to hard-coded IPs 37.27.122.124 / 57.128.246.79
 
-`UC_14_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_19_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceNetworkEvents
 
 ### Hidden temp-dropped binary establishes Windows scheduled-task persistence (1-minute relaunch)
 
-`UC_14_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_19_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceEvents
 
 ### Temp-dropped stealer fans out across credential, wallet, browser and AI-tool config stores
 
-`UC_14_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_19_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +176,7 @@ DeviceFileEvents
 
 ### Stolen developer cloud/identity credentials reused from jscrambler C2 IPs
 
-`UC_14_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_19_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -340,7 +340,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised jscrambler 8.14.0 npm Release Drops Rust Infostealer During Install
 
-`UC_14_7` · phase: **exploit** · confidence: **High**
+`UC_19_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

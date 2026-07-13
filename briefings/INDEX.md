@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2574 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,11 +10,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-13
 - [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
+- [breach at the beach play the ultimate entra id ctf](./2026-07-13/breach-at-the-beach-play-the-ultimate-entra-id-ctf.md)
+- [cisa warns of actively exploited rce flaws in joomla extensi](./2026-07-13/cisa-warns-of-actively-exploited-rce-flaws-in-joomla-extensi.md)
 - [eu sanctions russian gru military hackers over cyberattacks](./2026-07-13/eu-sanctions-russian-gru-military-hackers-over-cyberattacks.md)
 - [forg365 phaas targets microsoft 365 with device code and ait](./2026-07-13/forg365-phaas-targets-microsoft-365-with-device-code-and-ait.md)
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
 - [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
+- [new memghost attack plants persistent false memories in ai a](./2026-07-13/new-memghost-attack-plants-persistent-false-memories-in-ai-a.md)
 - [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
 - [thinking fast and slow in the soc the case for combining aut](./2026-07-13/thinking-fast-and-slow-in-the-soc-the-case-for-combining-aut.md)
 - [us and allies warn of russian critical infrastructure attack](./2026-07-13/us-and-allies-warn-of-russian-critical-infrastructure-attack.md)
@@ -41,7 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54089 file browser authentication byp](./2026-07-10/ghsa-critical-cve-2026-54089-file-browser-authentication-byp.md)
 - [ghsa critical ghsa 99j7 fhr2 xfj4 exploration was removed fr](./2026-07-10/ghsa-critical-ghsa-99j7-fhr2-xfj4-exploration-was-removed-fr.md)
 - [ghsa critical ghsa g936 7jqj mwv8 tsdproxy internal proxy au](./2026-07-10/ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au.md)
-- [hackers exploit critical auth bypass in gitea docker image](./2026-07-10/hackers-exploit-critical-auth-bypass-in-gitea-docker-image.md)
 - [hackers use fake microsoft entra passkey enrollment to gain ](./2026-07-10/hackers-use-fake-microsoft-entra-passkey-enrollment-to-gain-.md)
 - [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
 - [laser attack resets tangem wallet passwords on cards that ca](./2026-07-10/laser-attack-resets-tangem-wallet-passwords-on-cards-that-ca.md)
@@ -55,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
 - [six new u boot flaws could let malicious images crash device](./2026-07-10/six-new-u-boot-flaws-could-let-malicious-images-crash-device.md)
 - [study of 281 free android vpn apps finds traffic leaks unenc](./2026-07-10/study-of-281-free-android-vpn-apps-finds-traffic-leaks-unenc.md)
-- [the replicant in your directory ai agents and the identity s](./2026-07-10/the-replicant-in-your-directory-ai-agents-and-the-identity-s.md)
 - [unpatched xring flaw in xquic lets remote clients crash http](./2026-07-10/unpatched-xring-flaw-in-xquic-lets-remote-clients-crash-http.md)
 - [urgent progress tells sharefile customers to shut down stora](./2026-07-10/urgent-progress-tells-sharefile-customers-to-shut-down-stora.md)
 
@@ -102,12 +103,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48908 joomshaper sp page builder unrestric](./2026-07-07/cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric.md)
 - [cisa kev cve 2026 55255 langflow authorization bypass throug](./2026-07-07/cisa-kev-cve-2026-55255-langflow-authorization-bypass-throug.md)
 - [cisa kev cve 2026 56290 joomlack page builder improper acces](./2026-07-07/cisa-kev-cve-2026-56290-joomlack-page-builder-improper-acces.md)
-- [court filing reveals windows device id helped fbi trace alle](./2026-07-07/court-filing-reveals-windows-device-id-helped-fbi-trace-alle.md)
 - [debull tooling abuses microsoft device code flow to target m](./2026-07-07/debull-tooling-abuses-microsoft-device-code-flow-to-target-m.md)
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
 - [github secret scanning public monitoring for enterprises cov](./2026-07-07/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
-- [public github issue could trick github agentic workflows int](./2026-07-07/public-github-issue-could-trick-github-agentic-workflows-int.md)
 - [redwing maas packages android bank fraud as a telegram renta](./2026-07-07/redwing-maas-packages-android-bank-fraud-as-a-telegram-renta.md)
 - [rogue agent flaw could have let attackers hijack google dial](./2026-07-07/rogue-agent-flaw-could-have-let-attackers-hijack-google-dial.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)

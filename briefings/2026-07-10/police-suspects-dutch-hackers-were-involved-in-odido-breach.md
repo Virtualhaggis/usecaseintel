@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Odido lookalike Okta/SSO phishing-portal domain resolution (ShinyHunters vishing)
 
-`UC_31_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_36_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### ShinyHunters Okta AiTM: failure-heavy auth flow then success (~10 min)
 
-`UC_31_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_36_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### Rogue Okta MFA factor enrolled as 'Passkey' from Genymobile-emulated Android
 
-`UC_31_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_36_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ index=okta (eventType="user.mfa.factor.activate" OR eventType="system.mfa.factor
 
 ### Post-compromise SSO burst: single account rapidly accessing many SaaS apps
 
-`UC_31_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_36_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ CloudAppEvents
 
 ### Bulk SaaS data exfil: high-volume automated downloads (Salesforce/SharePoint/Drive/Slack)
 
-`UC_31_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_36_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
