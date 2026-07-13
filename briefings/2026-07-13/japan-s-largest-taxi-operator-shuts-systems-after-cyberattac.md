@@ -11,15 +11,9 @@ By Bill Toulas
 July 13, 2026
 04:18 PM
 0 
-
-
 Japan's largest taxi operator, Nihon Kotsu, announced that its systems were compromised in a cyberattack, forcing the company to shut down part of its infrastructure.
-
-
 The incident occurred over the weekend, early Saturday morning, and impacted operations, including the company's taxi dispatch system, which remains offline as of today.
-
-
-Nihon Kotsu is Japan's largest taxi and chauff…
+Nihon Kotsu is Japan's largest taxi and chauffeur (hire) o…
 
 ## Indicators of Compromise (high-fidelity only)
 

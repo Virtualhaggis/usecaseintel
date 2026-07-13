@@ -302,7 +302,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Micros
 
-`UC_21_8` · phase: **exploit** · confidence: **High**
+`UC_22_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

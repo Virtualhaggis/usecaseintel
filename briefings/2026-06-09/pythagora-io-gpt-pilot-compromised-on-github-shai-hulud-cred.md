@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Bun runtime executed from temp dir running _index.js payload (Hades Campaign)
 
-`UC_296_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_297_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### Scripting interpreter downloads Bun v1.3.14 runtime from oven-sh GitHub releases
 
-`UC_296_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_297_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### Hades import-hook payload artifacts dropped (_index.js, _hooks.py, _runtime.bin, .bun_ran, b.zip)
 
-`UC_296_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_297_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### CI runner secret theft via /proc/<pid>/mem read of Runner.Worker (Miasma memory scraper)
 
-`UC_296_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_297_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -372,7 +372,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 
-`UC_296_7` · phase: **exploit** · confidence: **High**
+`UC_297_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

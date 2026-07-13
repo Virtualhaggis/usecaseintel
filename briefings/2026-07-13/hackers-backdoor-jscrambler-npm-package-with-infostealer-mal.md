@@ -11,15 +11,9 @@ By Bill Toulas
 July 13, 2026
 03:44 PM
 0 
-
-
 The Jscrambler client-side web security company disclosed that a threat actor published a malicious version of its npm package that has been downloaded almost 1,500 times.
-
-
 The malicious Jscrambler package spanned releases 8.14, 8.16, 8.17, and 8.20 and included information-stealing malware that executed during the ‘preinstall’ hook.
-
-
-“Today, we identified the unauthorized public…
+“Today, we identified the unauthorized publication of a m…
 
 ## Indicators of Compromise (high-fidelity only)
 

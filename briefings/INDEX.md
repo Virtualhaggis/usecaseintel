@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2574 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -20,6 +20,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)
 - [google and microsoft pull modheader with 1 6 million install](./2026-07-13/google-and-microsoft-pull-modheader-with-1-6-million-install.md)
 - [hackers backdoor jscrambler npm package with infostealer mal](./2026-07-13/hackers-backdoor-jscrambler-npm-package-with-infostealer-mal.md)
+- [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
 - [japan s largest taxi operator shuts systems after cyberattac](./2026-07-13/japan-s-largest-taxi-operator-shuts-systems-after-cyberattac.md)
 - [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
