@@ -27,12 +27,157 @@ The way in has been the trust the organization had already extended, usually thr
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1566.004** — Phishing: Spearphishing Voice
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1530** — Data from Cloud Storage
+- **T1567** — Exfiltration Over Web Service
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1213** — Data from Information Repositories
+- **T1070** — Indicator Removal
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Salesforce consent to spoofed 'Data Loader' connected app (UNC6040 vishing)
+
+`UC_15_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+sourcetype=sfdc:* (EVENT_TYPE="ConnectedApp*" OR ACTION="consent" OR "OAuth" OR "connected app") 
+| search APP_NAME="*Data Loader*" OR CONNECTED_APP_NAME="*Data Loader*" OR OBJECT_NAME="*Data Loader*" 
+| stats count min(_time) as firstTime max(_time) as lastTime values(SOURCE_IP) as src values(COUNTRY) as country by USER_NAME, APP_NAME, EVENT_TYPE 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application == "Salesforce"
+| where ActionType has_any ("Consent","Connected","OAuth","Authorize","Grant")
+| extend Raw = parse_json(RawEventData)
+| extend ConsentedApp = coalesce(tostring(Raw.ConnectedApplication), tostring(Raw.ConnectedAppName), ObjectName)
+| where ConsentedApp has "Data Loader"
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, ISP, UserAgent, ActionType, ConsentedApp, ObjectId
+| order by Timestamp desc
+```
+
+### Compromised vendor OAuth integration (Drift/Gainsight/Klue) mass Salesforce export
+
+`UC_15_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+sourcetype=sfdc:* (EVENT_TYPE="ApiEvent" OR EVENT_TYPE="BulkApiResultEvent" OR EVENT_TYPE="ReportExportEvent") 
+| search CONNECTED_APP_NAME IN ("*Drift*","*Gainsight*","*Klue*") OR APP_NAME IN ("*Drift*","*Gainsight*","*Klue*") 
+| eval rows=coalesce(ROWS_PROCESSED,NUMBER_OF_RECORDS,ROW_COUNT,0) 
+| stats sum(rows) as totalRows count as queries dc(SOURCE_IP) as srcIPs values(SOURCE_IP) as src min(_time) as firstTime max(_time) as lastTime by CONNECTED_APP_NAME, USER_NAME 
+| where totalRows > 50000 OR queries > 500 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - totalRows
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Salesforce"
+| where ActionType has_any ("Api","Bulk","Report","Export","Query")
+| extend Raw = parse_json(RawEventData)
+| extend AppName = coalesce(tostring(Raw.ConnectedApplication), tostring(Raw.ClientName))
+| where AppName has_any ("Drift","Gainsight","Klue")
+| extend Rows = toint(coalesce(Raw.RowsProcessed, Raw.NumberOfRecords, Raw.RowCount))
+| summarize TotalRows = sum(Rows), Queries = count(), SrcIps = make_set(IPAddress, 15), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AppName, AccountDisplayName
+| where TotalRows > 50000 or Queries > 500   // 50k rows / 500 calls = well above a normal chat/CI integration sync cadence
+| order by TotalRows desc
+```
+
+### Salesforce SOQL secret-hunting across Case/support objects (AWS/Snowflake/VPN)
+
+`UC_15_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+sourcetype=sfdc:* EVENT_TYPE="ApiEvent" 
+| eval soql=coalesce(QUERY,SOQL,QUERY_STRING) 
+| search soql IN ("*AKIA*","*aws_secret*","*aws_access*","*snowflakecomputing*","*snowflake*","*password*","*passwd*","*private_key*","*apikey*","*vpn*") 
+| stats count min(_time) as firstTime max(_time) as lastTime values(SOURCE_IP) as src values(soql) as queries by USER_NAME, CONNECTED_APP_NAME 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application == "Salesforce"
+| where ActionType has_any ("Api","Query","Report","Bulk")
+| extend Raw = parse_json(RawEventData)
+| extend Soql = tostring(coalesce(Raw.Query, Raw.QueryString, Raw.Soql))
+| where Soql has_any ("AKIA","aws_secret","aws_access","snowflakecomputing","snowflake","vpn","password","passwd","private_key","apikey","api_key","secret")
+| project Timestamp, AccountDisplayName, IPAddress, CountryCode, ISP, ActionType, Soql
+| order by Timestamp desc
+```
+
+### Anti-forensic deletion of Salesforce async query/bulk job records
+
+`UC_15_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+sourcetype=sfdc:* (ACTION="delete" OR ACTION="abort" OR EVENT_TYPE="BulkApiJobAbort" OR OPERATION="delete") 
+| search OBJECT_TYPE IN ("AsyncApexJob","BackgroundOperation","BulkApiJob") OR ENTITY_NAME IN ("AsyncApexJob","BackgroundOperation") 
+| stats count min(_time) as firstTime max(_time) as lastTime values(SOURCE_IP) as src values(OBJECT_ID) as jobs by USER_NAME, CONNECTED_APP_NAME, ACTION 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application == "Salesforce"
+| where ActionType has_any ("Delete","Abort","Remove")
+| extend Raw = parse_json(RawEventData)
+| extend TargetObj = coalesce(ObjectType, tostring(Raw.EntityName), tostring(Raw.ObjectType))
+| where TargetObj has_any ("AsyncApexJob","BackgroundOperation","BulkApiJob","BulkApi") or ActionType has "Abort"
+| project Timestamp, AccountDisplayName, IPAddress, CountryCode, ActionType, ObjectType, ObjectName, ObjectId
+| order by Timestamp desc
+```
+
+### Unauthenticated Salesforce Aura/GraphQL guest scraping past 2,000-record limit
+
+`UC_15_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Web.http_user_agent) as user_agents values(Web.uri_path) as paths from datamodel=Web where (Web.url="*/s/sfsites/aura*" OR Web.uri_path="*/s/sfsites/aura*") by Web.src, Web.dest, _time span=1h 
+| `drop_dm_object_name(Web)` 
+| where count > 200 
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Salesforce"
+| extend Raw = parse_json(RawEventData)
+| extend Uri = tostring(coalesce(Raw.Uri, Raw.RequestUrl, Raw.Page))
+| where Uri has "/s/sfsites/aura" or Uri has "aura?r="
+| where AccountType has_any ("Guest","Anonymous","Unauthenticated") or UserAgent has "AuraInspector"
+| summarize Requests = count(), Uris = dcount(Uri), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by IPAddress, UserAgent, CountryCode, ISP
+| where Requests > 200   // cursor-paginated scraping (2000-row pages) far exceeds human browsing of a public site
+| order by Requests desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -236,4 +381,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

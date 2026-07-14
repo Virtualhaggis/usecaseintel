@@ -21,7 +21,6 @@ In a series of campaigns observed between mid-2025 and mid-2026, Microsoft ident
 - **IPv4 (defanged):** `213.111.148.90`
 - **IPv4 (defanged):** `94.154.32.160`
 - **IPv4 (defanged):** `103.75.11.78`
-- **IPv4 (defanged):** `103.75.11.110`
 
 ## MITRE ATT&CK Techniques
 
@@ -44,12 +43,118 @@ In a series of campaigns observed between mid-2025 and mid-2026, Microsoft ident
 - **T1003** — OS Credential Dumping
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1199** — Trusted Relationship
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1567** — Exfiltration Over Web Service
+- **T1213** — Data from Information Repositories
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Salesforce Connected App API activity from ShinyHunters integration-abuse IPs
+
+`UC_19_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=salesforce sourcetype="sfdc:eventloginfile" (EVENT_TYPE="API" OR EVENT_TYPE="RestApi" OR EVENT_TYPE="BulkApi") (SOURCE_IP="138.226.246.94" OR SOURCE_IP="212.86.125.24" OR SOURCE_IP="213.111.148.90" OR SOURCE_IP="94.154.32.160" OR CLIENT_IP="138.226.246.94" OR CLIENT_IP="212.86.125.24" OR CLIENT_IP="213.111.148.90" OR CLIENT_IP="94.154.32.160")
+| stats count AS ApiCalls, values(URI) AS Endpoints, values(CONNECTED_APP_ID) AS ConnectedAppId, min(_time) AS firstSeen, max(_time) AS lastSeen by USER_ID, SOURCE_IP, CLIENT_IP
+| sort - ApiCalls
+```
+
+**Defender KQL:**
+```kql
+let IocIps = dynamic(["138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160"]);
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application == "Salesforce"
+| where IPAddress in (IocIps)
+| extend ConnectedAppId = tostring(coalesce(RawEventData.CONNECTED_APP_ID, RawEventData.ConnectedAppId))
+| summarize Events=count(), Actions=make_set(ActionType,10), ConnectedApps=make_set(ConnectedAppId,10), Users=make_set(AccountDisplayName,10), UAs=make_set(UserAgent,10), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by IPAddress, ISP, CountryCode
+| order by Events desc
+```
+
+### First-seen Salesforce Connected App performing bulk API / report export (fake Data Loader)
+
+`UC_19_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=salesforce sourcetype="sfdc:eventloginfile" earliest=-1d (EVENT_TYPE="API" OR EVENT_TYPE="RestApi" OR EVENT_TYPE="BulkApi" OR EVENT_TYPE="ReportExport") CONNECTED_APP_ID=*
+| stats count AS Events, dc(USER_ID) AS Users, values(SOURCE_IP) AS SourceIps, values(EVENT_TYPE) AS Actions, min(_time) AS firstSeen by CONNECTED_APP_ID
+| search NOT [ search index=salesforce sourcetype="sfdc:eventloginfile" earliest=-30d latest=-1d CONNECTED_APP_ID=* | stats count by CONNECTED_APP_ID | fields CONNECTED_APP_ID ]
+| sort - Events
+```
+
+**Defender KQL:**
+```kql
+let Baseline = CloudAppEvents
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where Application == "Salesforce"
+    | extend ConnectedAppId = tostring(coalesce(RawEventData.CONNECTED_APP_ID, RawEventData.ConnectedAppId))
+    | where isnotempty(ConnectedAppId)
+    | distinct ConnectedAppId;
+CloudAppEvents
+| where Timestamp > ago(1d)
+| where Application == "Salesforce"
+| where ActionType in ("ApiTotalUsage","API Event","ReportExport")
+| extend ConnectedAppId = tostring(coalesce(RawEventData.CONNECTED_APP_ID, RawEventData.ConnectedAppId))
+| where isnotempty(ConnectedAppId)
+| join kind=leftanti Baseline on ConnectedAppId
+| summarize Events=count(), Users=dcount(AccountId), Actions=make_set(ActionType,5), IPs=make_set(IPAddress,10), UAs=make_set(UserAgent,5), FirstSeen=min(Timestamp) by ConnectedAppId
+| order by Events desc
+```
+
+### Anomalous Salesforce ReportExport volume — bulk CRM exfiltration
+
+`UC_19_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=salesforce sourcetype="sfdc:eventloginfile" EVENT_TYPE="ReportExport"
+| bucket _time span=1h
+| stats count AS Exports, values(SOURCE_IP) AS SourceIps, values(CLIENT_IP) AS ClientIps, values(USER_AGENT) AS UserAgents by _time, USER_ID
+| where Exports > 50
+| sort - Exports
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Salesforce"
+| where ActionType == "ReportExport"
+| extend SalesforceUserId = tostring(RawEventData.USER_ID)
+| summarize Exports=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), IPs=make_set(IPAddress,10), UAs=make_set(UserAgent,10) by bin(Timestamp, 1h), AccountObjectId, AccountId, AccountDisplayName, SalesforceUserId
+| where Exports > 50   // 50 exports/hr >> typical per-user report cadence; empirical bulk-exfil threshold
+| order by Exports desc
+```
+
+### Guest-user Aura/GraphQL mass data retrieval from ShinyHunters IOC IP
+
+`UC_19_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=salesforce sourcetype="sfdc:eventloginfile" (SOURCE_IP="103.75.11.78" OR CLIENT_IP="103.75.11.78")
+| stats count AS Requests, values(EVENT_TYPE) AS EventTypes, values(URI) AS Endpoints, values(USER_TYPE) AS UserTypes, min(_time) AS firstSeen, max(_time) AS lastSeen by USER_ID, SOURCE_IP
+| sort - Requests
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(60d)
+| where Application == "Salesforce"
+| where IPAddress == "103.75.11.78"
+| extend UserType = tostring(coalesce(RawEventData.USER_TYPE, RawEventData.UserType))
+| summarize Requests=count(), Actions=make_set(ActionType,15), UserTypes=make_set(UserType,5), Accounts=make_set(AccountDisplayName,10), UAs=make_set(UserAgent,10), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by IPAddress, ISP, CountryCode
+| order by Requests desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -392,9 +497,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `138.226.246.94`, `212.86.125.24`, `213.111.148.90`, `94.154.32.160`, `103.75.11.78`, `103.75.11.110`
+  - IP / domain IOC(s): `138.226.246.94`, `212.86.125.24`, `213.111.148.90`, `94.154.32.160`, `103.75.11.78`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

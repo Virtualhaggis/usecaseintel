@@ -13,9 +13,10 @@ The collector was dormant. An empty allow-list kept it switched off, and no proo
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `3.147.61.167`
+- **Domain (defanged):** `stanfordstudies.com`
 - **Domain (defanged):** `api.stanfordstudies.com`
 - **Domain (defanged):** `extensions-hub.com`
-- **Domain (defanged):** `stanfordstudies.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -26,12 +27,71 @@ The collector was dormant. An empty allow-list kept it switched off, and no proo
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1567** — Exfiltration Over Web Service
+- **T1041** — Exfiltration Over C2 Channel
+- **T1082** — System Information Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### ModHeader collector callback to stanfordstudies.com / extensions-hub.com
+
+`UC_26_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("*stanfordstudies.com","*extensions-hub.com") by DNS.src DNS.query DNS.dest host | `drop_dm_object_name(DNS)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("stanfordstudies.com", "extensions-hub.com")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), SampleUrl=any(RemoteUrl) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP
+| order by LastSeen desc
+```
+
+### Trojanised ModHeader extension ID (idgpnmonknjnojddfkpgkljpfnnfcklj) present on host
+
+`UC_26_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Extensions\\idgpnmonknjnojddfkpgkljpfnnfcklj\\*" by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "idgpnmonknjnojddfkpgkljpfnnfcklj"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Files=count(), SamplePath=any(FolderPath) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
+| order by LastSeen desc
+```
+
+### ModHeader browsing-history exfil POST to api.stanfordstudies.com/app/log
+
+`UC_26_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest="api.stanfordstudies.com" Web.http_method="POST" Web.url="*/app/log*" by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "api.stanfordstudies.com"
+| where InitiatingProcessFileName in~ ("chrome.exe", "msedge.exe")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -151,9 +211,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `api.stanfordstudies.com`, `extensions-hub.com`, `stanfordstudies.com`
+  - IP / domain IOC(s): `3.147.61.167`, `stanfordstudies.com`, `api.stanfordstudies.com`, `extensions-hub.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -18,6 +18,9 @@ The packages did not go after the developers who might install them. The operato
 - **Domain (defanged):** `geeked.wtf`
 - **Domain (defanged):** `woofbeginner.com`
 - **Domain (defanged):** `c.vipersfutbol.com`
+- **Domain (defanged):** `21baseballacademy.com`
+- **Domain (defanged):** `cdn.21baseballacademy.com`
+- **Domain (defanged):** `abdct.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,12 +34,100 @@ The packages did not go after the developers who might install them. The operato
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1608.001** — Stage Capabilities: Upload Malware
+- **T1498.001** — Network Denial of Service: Direct Network Flood
+- **T1583.005** — Acquire Infrastructure: Botnet
+- **T1499.002** — Endpoint Denial of Service: Service Exhaustion Flood
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Browser/Node contact with Lucide student-proxy DDoS campaign infrastructure
+
+`UC_14_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("lunaron.top","woofbeginner.com","c.vipersfutbol.com","geeked.wtf") OR All_Traffic.dest="92.38.177.17") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("lunaron.top", "woofbeginner.com", "c.vipersfutbol.com", "geeked.wtf")
+    or RemoteIP == "92.38.177.17"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Install of named Lucide malicious student-proxy npm packages
+
+`UC_14_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*charlie-kirk*" OR Processes.process="*ilovefemboys*" OR Processes.process="*miguelphonk*") AND (Processes.process="*npm*" OR Processes.process="*yarn*" OR Processes.process="*pnpm*" OR Processes.process="*npx*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("charlie-kirk", "ilovefemboys", "miguelphonk")
+| where FileName has_any ("npm", "node", "yarn", "pnpm", "npx")
+    or InitiatingProcessFileName has_any ("npm", "node", "yarn", "pnpm")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Browser HTTP flood against nursing-school domain cdn.caan.edu
+
+`UC_14_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count as connCount min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="*caan.edu" AND All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe") by All_Traffic.src All_Traffic.app All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | where connCount > 100 | convert ctime(firstTime) ctime(lastTime) | sort - connCount
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "caan.edu"
+| where InitiatingProcessFileName in~ ("chrome.exe", "msedge.exe", "firefox.exe", "brave.exe", "opera.exe")
+| summarize connCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Ports = make_set(RemotePort, 5)
+    by DeviceName, InitiatingProcessFileName, RemoteUrl
+| where connCount > 100    // script POSTs every 500ms -> >100 conns within minutes; humans never sustain this to one edu host
+| order by connCount desc
+```
+
+### Browser Wisp/WebSocket control-plane flood to Lucide endpoint lunaron.top
+
+`UC_14_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count as connCount dc(All_Traffic.src_port) as srcPorts min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="lunaron.top" OR All_Traffic.dest="92.38.177.17") AND All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe") by All_Traffic.src All_Traffic.app All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | where connCount > 30 | convert ctime(firstTime) ctime(lastTime) | sort - connCount
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "lunaron.top" or RemoteIP == "92.38.177.17"
+| where InitiatingProcessFileName in~ ("chrome.exe", "msedge.exe", "firefox.exe", "brave.exe", "opera.exe")
+| summarize connCount = count(), DistinctPorts = dcount(LocalPort), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+    by DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP
+| where connCount > 30    // archived Wisp config aimed each browser at 30 sockets (cap 1024)
+| order by connCount desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -244,9 +335,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `92.38.177.17`, `lunaron.top`, `geeked.wtf`, `woofbeginner.com`, `c.vipersfutbol.com`
+  - IP / domain IOC(s): `92.38.177.17`, `lunaron.top`, `geeked.wtf`, `woofbeginner.com`, `c.vipersfutbol.com`, `21baseballacademy.com`, `cdn.21baseballacademy.com`, `abdct.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

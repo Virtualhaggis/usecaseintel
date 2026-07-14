@@ -14,6 +14,7 @@ Distributed via Telegram and costing $400 a month (or …
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `logfriend.com`
+- **Domain (defanged):** `login.microsoftonline.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,12 +32,95 @@ Distributed via Telegram and costing $400 a month (or …
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1550.004** — Use Alternate Authentication Material: Web Session Cookie
+- **T1557** — Adversary-in-the-Middle
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1564.008** — Hide Artifacts: Email Hiding Rules
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Forg365 device-code phishing: successful sign-in via Microsoft Authentication Broker
+
+`UC_35_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.user_agent) as user_agent from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" Authentication.action=success by Authentication.user Authentication.app _time span=1h
+| `drop_dm_object_name(Authentication)`
+| where mvcount(src) >= 1
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(14d)
+| where ErrorCode == 0
+| where Application == "Microsoft Authentication Broker" or ResourceDisplayName == "Microsoft Authentication Broker"
+| where AccountUpn !endswith "$"
+| summarize SignIns = count(), Countries = make_set(Country, 10), IPs = make_set(IPAddress, 20), Apps = make_set(ClientAppUsed, 5), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountUpn
+| order by LastSeen desc
+```
+
+### Forg365 AitM/ForgCookie token replay: silent non-interactive sign-in from new IP after broker auth
+
+`UC_35_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` values(Authentication.src) as src_list dc(Authentication.src) as distinct_src values(Authentication.action) as actions min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" OR Authentication.action=success by Authentication.user _time span=24h
+| `drop_dm_object_name(Authentication)`
+| where distinct_src >= 2
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let AuthWindow = 24h;
+let brokerAuth = AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where ErrorCode == 0 and IsInteractive == true
+    | where Application == "Microsoft Authentication Broker" or ResourceDisplayName == "Microsoft Authentication Broker"
+    | project AuthTime = Timestamp, AccountUpn, AuthIP = IPAddress, AuthCountry = Country;
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ErrorCode == 0 and IsInteractive == false
+| join kind=inner brokerAuth on AccountUpn
+| where Timestamp between (AuthTime .. AuthTime + AuthWindow)
+| where IPAddress != AuthIP and Country != AuthCountry
+| project AuthTime, ReplayTime = Timestamp, AccountUpn, AuthIP, AuthCountry, ReplayIP = IPAddress, ReplayCountry = Country, Application, ResourceDisplayName, UserAgent
+| order by ReplayTime desc
+```
+
+### Forg365 post-compromise: inbox rule created to monitor keyword hits in hijacked mailbox
+
+`UC_35_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.object) as rule_object from datamodel=Change where All_Changes.action=created OR All_Changes.action=modified All_Changes.command IN ("New-InboxRule","Set-InboxRule","UpdateInboxRules") by All_Changes.user All_Changes.command
+| `drop_dm_object_name(All_Changes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("New-InboxRule", "Set-InboxRule", "UpdateInboxRules")
+| extend Raw = tostring(RawEventData)
+| where Raw has_any ("SubjectContainsWords", "BodyContainsWords", "SubjectOrBodyContainsWords", "FromAddressContainsWords")
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ActionType, Application, Raw
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -302,9 +386,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `logfriend.com`
+  - IP / domain IOC(s): `logfriend.com`, `login.microsoftonline.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

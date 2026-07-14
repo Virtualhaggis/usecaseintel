@@ -1,3 +1,312 @@
+<article class="card" id="art-3306" data-art-slug="2020-07-20-arbitrary-file-write-via-archive-extraction-zip-slip-in-go-r"
+  data-phases="c2,delivery,exploit,install,recon" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Arbitrary File Write via Archive Extraction (Zip Slip) in go-rpmutils Welcome to the Snyk Monthly Vulnerability Profile. In this series, Snyk looks back on the vulnerabilities discovered by or reported to our Security Research Team. This month we’re looking at one of a series of Zip Slip vulnerabilities Snyk’s Security Research Team identified in Golang packages. CVE-2020-7667 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2020-07-20-arbitrary-file-write-via-archive-extraction-zip-slip-in-go-r" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/arbitrary-file-write-via-archive-extraction-in-go-rpmutils/" target="_blank" rel="noopener">Arbitrary File Write via Archive Extraction (Zip Slip) in go-rpmutils</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2020-07-20</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Welcome to the Snyk Monthly Vulnerability Profile. In this series, Snyk looks back on the vulnerabilities discovered by or reported to our Security Research Team. This month we’re looking at one of a series of Zip Slip vulnerabilities Snyk’s Security Research Team identified in Golang packages.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-7667</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3306-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3306"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3306-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3306-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3306-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3306-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3306-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-7667&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3306-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-7667&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3306-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3306-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3306-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3306-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-7667&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3306-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-7667&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3308" data-art-slug="2020-07-13-navigate-3-trends-in-financial-services-with-devsecops"
+  data-phases="actions,c2,exploit,install" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Navigate 3 trends in financial services with DevSecOps   T1190 Service install for persistence — sc.exe / new service registry write">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2020-07-13-navigate-3-trends-in-financial-services-with-devsecops" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/navigate-3-trends-in-financial-services-with-devsecops/" target="_blank" rel="noopener">Navigate 3 trends in financial services with DevSecOps</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2020-07-13</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary"></p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3308-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3308"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3308-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Service install for persistence — sc.exe / new service registry write</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="ea1d39eadf" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Service install for persistence — sc.exe / new service registry write</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ea1d39eadf" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Service install with binPath pointing to user-writeable path or LOLBin. Detects via process telemetry (sc.exe create) and registry (HKLM\SYSTEM\CurrentControlSet\Services\* writes).</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Windows Service">T1543.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Registry</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3308-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3308-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3308-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3308-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3308-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName =~ &quot;sc.exe&quot; and ProcessCommandLine has &quot;create&quot;
+| where ProcessCommandLine matches regex @&quot;(?i)(\Users\|\AppData\|\ProgramData\|\Temp\)&quot;
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName</code></pre></div>
+    <div class="tab-content" id="art-3308-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// EventID 4697 is &quot;Service installed&quot; — direct signal, no cmdline-regex needed.
+union
+    ( SecurityEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where EventID == 4697
+        | where SubjectUserName !endswith &quot;$&quot;
+        | project TimeGenerated, Computer, Account = SubjectUserName,
+                  Detail = strcat(&quot;ServiceName=&quot;, ServiceName, &quot; | Image=&quot;, ServiceFileName) ),
+    ( SecurityEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where EventID == 4688
+        | where Account !endswith &quot;$&quot;
+        | where NewProcessName endswith &quot;\sc.exe&quot; and CommandLine has &quot;create&quot;
+        | where CommandLine matches regex @&quot;(?i)(\Users\|\AppData\|\ProgramData\|\Temp\)&quot;
+        | project TimeGenerated, Computer, Account,
+                  Detail = strcat(&quot;4688 sc.exe create: &quot;, CommandLine) )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-3308-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Service Persistence via sc.exe with User-Writable Path
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0e
+status: experimental
+description: |
+    sc.exe create with the binary path under \Users\, \AppData\,
+    \ProgramData\, or \Temp\ — service-install persistence outside
+    legitimate program directories.
+references:
+    - https://attack.mitre.org/techniques/T1543/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1543.003
+    - attack.persistence
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_sc:
+        Image|endswith: &#x27;\sc.exe&#x27;
+        CommandLine|contains: &#x27;create&#x27;
+    selection_path:
+        CommandLine|contains:
+            - &#x27;\Users\&#x27;
+            - &#x27;\AppData\&#x27;
+            - &#x27;\ProgramData\&#x27;
+            - &#x27;\Temp\&#x27;
+    condition: selection_sc and selection_path
+falsepositives:
+    - Internal install scripts dropping a service from %ProgramData%
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-3308-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3308-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3308-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3308-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name=&quot;sc.exe&quot; AND Processes.process=&quot;*create*&quot;
+      AND (Processes.process=&quot;*\Users\*&quot; OR Processes.process=&quot;*\AppData\*&quot;
+        OR Processes.process=&quot;*\ProgramData\*&quot; OR Processes.process=&quot;*\Temp\*&quot;)
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Registry
+        where Registry.registry_path=&quot;*\\SYSTEM\\CurrentControlSet\\Services\\*&quot;
+          AND Registry.registry_value_name=&quot;ImagePath&quot;
+          AND (Registry.registry_value_data=&quot;*\Users\*&quot;
+            OR Registry.registry_value_data=&quot;*\AppData\*&quot;
+            OR Registry.registry_value_data=&quot;*\Temp\*&quot;)
+        by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.user
+     | `drop_dm_object_name(Registry)`]</code></pre><pre class="spl-mode-body" id="art-3308-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name=&quot;sc.exe&quot; AND Processes.process=&quot;*create*&quot;
+      AND (Processes.process=&quot;*\Users\*&quot; OR Processes.process=&quot;*\AppData\*&quot;
+        OR Processes.process=&quot;*\ProgramData\*&quot; OR Processes.process=&quot;*\Temp\*&quot;)
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Registry
+        where Registry.registry_path=&quot;*\\SYSTEM\\CurrentControlSet\\Services\\*&quot;
+          AND Registry.registry_value_name=&quot;ImagePath&quot;
+          AND (Registry.registry_value_data=&quot;*\Users\*&quot;
+            OR Registry.registry_value_data=&quot;*\AppData\*&quot;
+            OR Registry.registry_value_data=&quot;*\Temp\*&quot;)
+        by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.user
+     | `drop_dm_object_name(Registry)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3311" data-art-slug="2020-06-30-demystifying-http-request-smuggling"
   data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1566"
@@ -5235,694 +5544,6 @@ level: high</code></pre></div>
 | `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3397" data-art-slug="2020-02-06-node-js-release-fixes-a-critical-http-security-vulnerability"
-  data-phases="c2,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="Node.js release fixes a critical HTTP security vulnerability Today, Node.js announced a critical security vulnerability. All actively supported versions 10.x, 12.x, and 13.x of Node.js are vulnerable. We&#x27;ll address how the vulnerability works what fixes are available. CVE-2019-15606 CVE-2019-15605 CVE-2019-15604 T1190 [LLM] Node.js launched with --insecure-http-parser flag (strict HTTP parsing disabled) [LLM] Hosts exposed to Node.js Feb-2020 HTTP/TLS CVEs (CVE-2019-15604/15605/15606) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Node.js release fixes a critical HTTP security vulnerability">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2020-02-06-node-js-release-fixes-a-critical-http-security-vulnerability" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/node-js-release-fixes-a-critical-http-security-vulnerability/" target="_blank" rel="noopener">Node.js release fixes a critical HTTP security vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-02-06</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Today, Node.js announced a critical security vulnerability. All actively supported versions 10.x, 12.x, and 13.x of Node.js are vulnerable. We&#x27;ll address how the vulnerability works what fixes are available.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2019-15606</span> <span class="ind cve">CVE-2019-15605</span> <span class="ind cve">CVE-2019-15604</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3397-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3397"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3397-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Hosts exposed to Node.js Feb-2020 HTTP/TLS CVEs (CVE-2019-15604/15605/15606) · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Node.js launched with --insecure-http-parser flag (strict HTTP parsing disabled) · Article-specific behavioural hunt — Node.js release fixes a critical HTTP security vulnerability</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="c4ccaf21aa" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Node.js launched with --insecure-http-parser flag (strict HTTP parsing disabled)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="c4ccaf21aa" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts Node.js processes started with the --insecure-http-parser command-line flag, which disables the strict llhttp parsing introduced by the Feb-2020 release and re-opens CVE-2019-15605 request-smuggling exposure. The flag is an explicit operator decision that silently downgrades the server&#x27;s HTTP security posture.
-
-Rationale: Anchored on the exact article-named flag --insecure-http-parser (code Block 1) and the binary node/node.exe. The flag is a deliberate downgrade with no benign default use, making this a high-fidelity, near-zero-FP alert. Cross-checked Node.js official Feb-2020 advisory and NVD CVE-2019-15605.
-
-Cross-checked against:
-  • https://nodejs.org/en/blog/vulnerability/february-2020-security-releases
-  • https://nvd.nist.gov/vuln/detail/CVE-2019-15605</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Impair Defenses">T1562</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy integration servers intentionally run with --insecure-http-parser to talk to a non-conformant upstream that emits non-RFC HTTP</li><li>Developer/QA hosts replaying captured traffic with malformed headers for testing</li><li>Vendor appliance bundling Node where the flag is set in a packaged start script</li><li>CI/CD pipeline node processes started with the flag for compatibility test suites</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;jest.exe&quot;, &quot;mocha.exe&quot;) and not (DeviceName has_any (&quot;dev&quot;, &quot;test&quot;, &quot;qa&quot;, &quot;build&quot;, &quot;ci&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host is an internet- or proxy-facing Node service vs. a dev/test box; capture the full ProcessCommandLine and the parent (npm/pm2/systemd/docker) and identify who/what set the flag. 2) Contain: if production and front-ended by a shared proxy/load balancer, treat as request-smuggling-exposed — remove the flag, restart the service on a patched runtime (&gt;=10.19.0/12.15.0/13.8.0), and have the WAF reject ambiguous Transfer-Encoding/Content-Length requests. 3) Hunt: pivot to UC2 on the same host&#x27;s HTTP/WAF logs for malformed Transfer-Encoding requests, and sweep the fleet for other node processes carrying the flag or the insecureHTTPParser:true option in deployed code/config.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3397-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3397-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3397-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3397-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3397-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3397-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3397-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName in~ (&quot;node.exe&quot;, &quot;node&quot;)
-| where ProcessCommandLine has &quot;--insecure-http-parser&quot;
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3397-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where TargetProcessName has &quot;node&quot;
-| where TargetProcessCommandLine has &quot;--insecure-http-parser&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3397-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Node.js Started With Insecure HTTP Parser Flag
-id: 8c3b1e6a-2f4d-4b9a-9c11-7d2e6f0a5b21
-description: Detects a Node.js process launched with --insecure-http-parser, which disables strict HTTP parsing and re-introduces CVE-2019-15605 HTTP request smuggling exposure.
-references:
-  - https://nodejs.org/en/blog/vulnerability/february-2020-security-releases
-  - https://snyk.io/blog/node-js-release-fixes-a-critical-http-security-vulnerability/
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-  - attack.t1562
-logsource:
-  category: process_creation
-detection:
-  selection:
-    Image|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;/node&#x27;
-    CommandLine|contains: &#x27;--insecure-http-parser&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3397-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\node.exe OR *\\Node.exe OR *\\NODE.EXE) @CommandLine:*--insecure-http-parser*</code></pre></div>
-    <div class="tab-content" id="art-3397-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/\\node(\.exe)?$/i
-| CommandLine=/--insecure-http-parser/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3397-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3397-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3397-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3397-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;node.exe&quot; OR Processes.process_name=&quot;node&quot;) Processes.process=&quot;*--insecure-http-parser*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-3397-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;node.exe&quot; OR Processes.process_name=&quot;node&quot;) Processes.process=&quot;*--insecure-http-parser*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="8848708425" data-platforms="def,sent" data-targets="">
-  <summary>
-    <span class="uc-title">Hosts exposed to Node.js Feb-2020 HTTP/TLS CVEs (CVE-2019-15604/15605/15606)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8848708425" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Posture hunt that surfaces every managed host carrying a Node.js version affected by the February 2020 security release, scoped by the three assigned CVE IDs. Lets the SOC prioritize patching to the fixed runtimes (10.19.0 / 12.15.0 / 13.8.0) before the smuggling and TLS-assertion bugs are exploited.
-
-Rationale: Anchored on the three exact CVE identifiers and the article&#x27;s named fixed versions (10.19.0/12.15.0/13.8.0). DeviceTvmSoftwareVulnerabilities is the canonical, low-FP source for affected-version inventory; empty Splunk/Datadog/Falcon/CloudWatch because this is MDE-TVM-specific posture telemetry with no CIM/FDR/CloudTrail equivalent.
-
-Cross-checked against:
-  • https://nodejs.org/en/blog/vulnerability/february-2020-security-releases
-  • https://nvd.nist.gov/vuln/detail/CVE-2019-15605</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Embedded/bundled Node runtime inside a vendor app that is not network-exposed and not exploitable in context</li><li>Container base-image layers reported as vulnerable but already superseded by a patched layer at runtime</li><li>Air-gapped or internal-only dev hosts where the smuggling/TLS vectors are not reachable</li><li>TVM lag where the host has already been upgraded but the inventory snapshot is stale</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: sort results by VulnerabilitySeverityLevel and cross-reference DeviceName against the asset inventory to flag internet-/proxy-facing Node services first. 2) Contain: schedule upgrade to the fixed runtimes (10.19.0/12.15.0/13.8.0 or later) for exposed hosts; as interim mitigation ensure a WAF rejects ambiguous Transfer-Encoding/Content-Length requests and confirm no service runs with --insecure-http-parser (UC1). 3) Hunt: for any still-vulnerable exposed host, pivot to UC2 on its WAF/proxy logs for malformed Transfer-Encoding requests and to UC1 for the insecure-parser flag to catch active exploitation attempts.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3397-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3397-uc1-sentinel">Sentinel KQL</button>
-    </div>
-    <div class="tab-content active" id="art-3397-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in (&quot;CVE-2019-15604&quot;, &quot;CVE-2019-15605&quot;, &quot;CVE-2019-15606&quot;)
-| where SoftwareName has &quot;node&quot;
-| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel desc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-3397-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in (&quot;CVE-2019-15604&quot;, &quot;CVE-2019-15605&quot;, &quot;CVE-2019-15606&quot;)
-| where SoftwareName has &quot;node&quot;
-| project TimeGenerated, DeviceName, OSPlatform, OSVersion, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel desc, DeviceName asc</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3397-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3397-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3397-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3397-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2019-15606&quot;, &quot;CVE-2019-15605&quot;, &quot;CVE-2019-15604&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3397-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2019-15606&quot;, &quot;CVE-2019-15605&quot;, &quot;CVE-2019-15604&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3397-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3397-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3397-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3397-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2019-15606&quot;, &quot;CVE-2019-15605&quot;, &quot;CVE-2019-15604&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3397-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2019-15606&quot;, &quot;CVE-2019-15605&quot;, &quot;CVE-2019-15604&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b05c186385" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Node.js release fixes a critical HTTP security vulnerability</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b05c186385" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3397-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3397-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3397-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3397-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Node.js release fixes a critical HTTP security vulnerability
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3397-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Node.js release fixes a critical HTTP security vulnerability
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3397-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3397-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3397-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3397-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Node.js release fixes a critical HTTP security vulnerability ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3397-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Node.js release fixes a critical HTTP security vulnerability ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3416" data-art-slug="2020-01-07-understanding-filesystem-takeover-vulnerabilities-in-npm-jav"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="Understanding filesystem takeover vulnerabilities in npm JavaScript package manager On the 11th of December, 2019 a security vulnerability which extends to all major JavaScript package managers (npm, yarn and pnpm) was publicly disclosed. This vulnerability, discovered by security researcher Daniel Ruf, allows malicious actors to apply varied tactics of arbitrary file overwrites. CVE-2019-16776 CVE-2019-16777 CVE-2019-10773 T1190 [LLM] Vulnerable npm/yarn/pnpm version exposed to bin-key file overwrite (CVE-2019-16776/16777/10773) [LLM] npm/yarn/pnpm planting or overwriting a binary in a system bin directory Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2020-01-07-understanding-filesystem-takeover-vulnerabilities-in-npm-jav" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/understanding-filesystem-takeover-vulnerabilities-in-npm-javascript-package-manager/" target="_blank" rel="noopener">Understanding filesystem takeover vulnerabilities in npm JavaScript package manager</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-01-07</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">On the 11th of December, 2019 a security vulnerability which extends to all major JavaScript package managers (npm, yarn and pnpm) was publicly disclosed. This vulnerability, discovered by security researcher Daniel Ruf, allows malicious actors to apply varied tactics of arbitrary file overwrites.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2019-16776</span> <span class="ind cve">CVE-2019-16777</span> <span class="ind cve">CVE-2019-10773</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3416-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3416"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3416-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Vulnerable npm/yarn/pnpm version exposed to bin-key file overwrite (CVE-2019-16776/16777/10773)</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] npm/yarn/pnpm planting or overwriting a binary in a system bin directory</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="e30fbe72dc" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Vulnerable npm/yarn/pnpm version exposed to bin-key file overwrite (CVE-2019-16776/16777/10773)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e30fbe72dc" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts still running npm &lt; 6.13.4, yarn &lt; 1.21.1, or pnpm &lt; 4.5.0, which are vulnerable to arbitrary file overwrite via crafted package.json &#x27;bin&#x27; entries (path traversal and absolute-path symlink planting). Hunts the exposure described in the article rather than a generic &#x27;outdated software&#x27; sweep by pinning the three exact CVE IDs.
-
-Rationale: Pins the three exact CVE IDs the article and the Red Hat/Snyk advisories tie to this flaw, so it reports only the bin-key overwrite exposure rather than every outdated package. TVM inventory is the cleanest place to express &#x27;fixed in npm 6.13.4 / yarn 1.21.1 / pnpm 4.5.0&#x27; as posture.
-
-Cross-checked against:
-  • https://security.snyk.io/vuln/SNYK-JS-NPM-537606
-  • https://security.snyk.io/vuln/SNYK-JS-NPM-537603
-  • https://bugzilla.redhat.com/show_bug.cgi?id=1788310
-  • https://blog.daniel-ruf.de/critical-design-flaw-npm-pnpm-yarn/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Hijack Execution Flow">T1574</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer workstation pinned to an old Node.js LTS for project compatibility (true exposure, but accepted risk)</li><li>Air-gapped build box where npm cannot be upgraded without breaking a reproducible pipeline</li><li>Container base image flagged by TVM that is never used to run installs interactively</li><li>Vendor appliance bundling an old npm in firmware that the SOC cannot patch directly</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the flagged npm/yarn/pnpm version is actually used for installs on the host (not a dormant bundled copy) and whether the user performs global installs. Step 2 (contain): Push the fixed version (npm&gt;=6.13.4, yarn&gt;=1.21.1, pnpm&gt;=4.5.0) via patch management; for build agents, gate package installs behind a private registry / lockfile review. Step 3 (hunt): Pivot the same hosts into UC #2 to check whether any package install already planted or overwrote a binary in a system bin directory.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3416-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3416-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3416-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3416-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId in (&quot;CVE-2019-16776&quot;,&quot;CVE-2019-16777&quot;,&quot;CVE-2019-10773&quot;)
-| project DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-3416-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in (&quot;CVE-2019-16776&quot;,&quot;CVE-2019-16777&quot;,&quot;CVE-2019-10773&quot;)
-| summarize arg_max(TimeGenerated, *) by DeviceId, CveId, SoftwareName
-| project TimeGenerated, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-3416-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3416-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3416-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3416-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN (&quot;CVE-2019-16776&quot;,&quot;CVE-2019-16777&quot;,&quot;CVE-2019-10773&quot;)) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-3416-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN (&quot;CVE-2019-16776&quot;,&quot;CVE-2019-16777&quot;,&quot;CVE-2019-10773&quot;)) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="756433df8e" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">npm/yarn/pnpm planting or overwriting a binary in a system bin directory</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="756433df8e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the node/npm/yarn/pnpm process writing a file into /usr/bin, /bin, /sbin or /usr/sbin, or overwriting a well-known system command name (date, curl, ssh, sudo...) in /usr/local/bin — the exact filesystem-takeover behavior from the article&#x27;s malicious &#x27;bin&#x27; entries (e.g. &#x27;/usr/bin/date&#x27;: &#x27;./fake-date&#x27; and the /usr/local/bin overwrite of CVE-2019-16777). Excludes the legitimate node_modules/.bin link target.
-
-Rationale: Anchors on the article&#x27;s literal abuse strings — &#x27;/usr/bin/date&#x27; planting and the CVE-2019-16777 /usr/local/bin overwrite — by flagging a JS package manager writing into core system bin dirs (where it never writes legitimately) or clobbering a coreutils command name. The node_modules/.bin legitimate target is explicitly excluded.
-
-Cross-checked against:
-  • https://blog.daniel-ruf.de/critical-design-flaw-npm-pnpm-yarn/
-  • https://github.com/pnpm/pnpm/security/advisories/GHSA-xpqm-wm3m-f34h
-  • https://security.snyk.io/vuln/SNYK-JS-NPM-537603</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow">T1574</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Event Triggered Execution">T1546</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimately installed global CLI whose package name happens to collide with a coreutils name (rare)</li><li>Node version managers (nvm/n) or corepack symlinking node/npm into /usr/local/bin — filtered by the nvm/corepack exclusion</li><li>CI build agents performing &#x27;npm install -g&#x27; that lands a shim in /usr/local/bin</li><li>Homebrew/apt updating /usr/local/bin (non-npm process — excluded by the InitiatingProcess filter on Defender/Falcon/Sentinel but not in the CIM Filesystem SPL)</li><li>Dev container entrypoint relinking tools on first boot</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has_any (&quot;nvm&quot;,&quot;corepack&quot;,&quot;/n/bin&quot;,&quot;homebrew&quot;,&quot;/opt/homebrew&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Inspect the writing process command line and the dropped file — is it a symlink/shim from a package install, and does the target shadow a system command (date, curl, ssh)? Pull the installing package name from npm/yarn/pnpm logs and check it for typosquatting. Step 2 (contain): Quarantine the host or remove the planted binary, restore the original system binary, and block the offending package version at the registry. Step 3 (hunt): Sweep other hosts that installed the same package (lockfile / npm cache), and review whether any planted binary in PATH was subsequently executed.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3416-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3416-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3416-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3416-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3416-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3416-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName has_any (&quot;node&quot;,&quot;npm&quot;,&quot;yarn&quot;,&quot;pnpm&quot;,&quot;node.exe&quot;,&quot;pnpm.cjs&quot;,&quot;npm-cli.js&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where (FolderPath in~ (&quot;/usr/bin&quot;,&quot;/bin&quot;,&quot;/sbin&quot;,&quot;/usr/sbin&quot;))
-     or (FolderPath =~ &quot;/usr/local/bin&quot; and FileName in~ (&quot;date&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;ssh&quot;,&quot;scp&quot;,&quot;sudo&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;git&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;node&quot;,&quot;ls&quot;,&quot;cp&quot;,&quot;mv&quot;))
-| where not(InitiatingProcessCommandLine has_any (&quot;nvm&quot;,&quot;corepack&quot;))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3416-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has_any (&quot;node&quot;,&quot;npm&quot;,&quot;yarn&quot;,&quot;pnpm&quot;)
-| where TargetFilePath !contains &quot;node_modules&quot;
-| where (TargetFilePath startswith &quot;/usr/bin/&quot; or TargetFilePath startswith &quot;/bin/&quot; or TargetFilePath startswith &quot;/sbin/&quot; or TargetFilePath startswith &quot;/usr/sbin/&quot;)
-     or (TargetFilePath startswith &quot;/usr/local/bin/&quot; and TargetFileName in~ (&quot;date&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;ssh&quot;,&quot;scp&quot;,&quot;sudo&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;git&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;node&quot;,&quot;ls&quot;,&quot;cp&quot;,&quot;mv&quot;))
-| where not(ActingProcessCommandLine has_any (&quot;nvm&quot;,&quot;corepack&quot;))
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, Hash
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3416-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: npm/yarn/pnpm Planting or Overwriting Binary in System Directory
-id: 6f3c1d2a-9b44-4e7c-8a1f-2d5e7c0a9b31
-status: experimental
-description: Detects node/npm/yarn/pnpm writing into a system bin directory or overwriting a well-known command in /usr/local/bin, matching the package.json bin-key file overwrite of CVE-2019-16776/16777/10773.
-references:
-  - https://snyk.io/blog/understanding-filesystem-takeover-vulnerabilities-in-npm-javascript-package-manager/
-  - https://blog.daniel-ruf.de/critical-design-flaw-npm-pnpm-yarn/
-  - https://github.com/pnpm/pnpm/security/advisories/GHSA-xpqm-wm3m-f34h
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.execution
-  - attack.t1574
-  - attack.t1195.002
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;/node&#x27;
-      - &#x27;/npm&#x27;
-      - &#x27;/yarn&#x27;
-      - &#x27;/pnpm&#x27;
-  selection_sysbin:
-    TargetFilename|startswith:
-      - &#x27;/usr/bin/&#x27;
-      - &#x27;/bin/&#x27;
-      - &#x27;/sbin/&#x27;
-      - &#x27;/usr/sbin/&#x27;
-  filter_modules:
-    TargetFilename|contains: &#x27;node_modules&#x27;
-  condition: selection_proc and selection_sysbin and not filter_modules
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3416-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/\/(node|npm|yarn|pnpm)$/i
-| NOT TargetFileName=/node_modules/
-| TargetFileName=/^\/(usr\/bin|bin|sbin|usr\/sbin|usr\/local\/bin)\//i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3416-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3416-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3416-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3416-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;write&quot;)) AND (Filesystem.file_path IN (&quot;/usr/bin/*&quot;,&quot;/bin/*&quot;,&quot;/sbin/*&quot;,&quot;/usr/sbin/*&quot;,&quot;/usr/local/bin/*&quot;)) AND (Filesystem.file_name IN (&quot;date&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;ssh&quot;,&quot;scp&quot;,&quot;sudo&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;git&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;node&quot;,&quot;ls&quot;,&quot;cp&quot;,&quot;mv&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-3416-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;write&quot;)) AND (Filesystem.file_path IN (&quot;/usr/bin/*&quot;,&quot;/bin/*&quot;,&quot;/sbin/*&quot;,&quot;/usr/sbin/*&quot;,&quot;/usr/local/bin/*&quot;)) AND (Filesystem.file_name IN (&quot;date&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;ssh&quot;,&quot;scp&quot;,&quot;sudo&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;git&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;node&quot;,&quot;ls&quot;,&quot;cp&quot;,&quot;mv&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3416-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3416-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3416-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3416-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2019-16776&quot;, &quot;CVE-2019-16777&quot;, &quot;CVE-2019-10773&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3416-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2019-16776&quot;, &quot;CVE-2019-16777&quot;, &quot;CVE-2019-10773&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3416-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3416-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3416-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3416-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2019-16776&quot;, &quot;CVE-2019-16777&quot;, &quot;CVE-2019-10773&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3416-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2019-16776&quot;, &quot;CVE-2019-16777&quot;, &quot;CVE-2019-10773&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1b2d40d0f1" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1b2d40d0f1" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3416-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3416-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3416-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3416-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;, &quot;index.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/usr/bin/env&quot;, &quot;/usr/bin/date&quot;) or FileName in~ (&quot;node.js&quot;, &quot;index.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3416-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;, &quot;index.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/usr/bin/env&quot;, &quot;/usr/bin/date&quot;) or FileName in~ (&quot;node.js&quot;, &quot;index.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3416-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3416-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3416-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3416-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/usr/bin/date*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3416-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/usr/bin/date*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

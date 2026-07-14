@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2577 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2579 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,11 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-14
+- [11 old microsoft signed linux uefi shims could let attackers](./2026-07-14/11-old-microsoft-signed-linux-uefi-shims-could-let-attackers.md)
 - [148 npm packages disguised as student proxies turned browser](./2026-07-14/148-npm-packages-disguised-as-student-proxies-turned-browser.md)
-- [asyncapi npm packages compromised with miasma variant](./2026-07-14/asyncapi-npm-packages-compromised-with-miasma-variant.md)
+- [asyncapi npm packages backdoored via github actions](./2026-07-14/asyncapi-npm-packages-backdoored-via-github-actions.md)
 - [ghsa critical cve 2026 52824 kimai default app secret in doc](./2026-07-14/ghsa-critical-cve-2026-52824-kimai-default-app-secret-in-doc.md)
 - [grok build uploaded entire git repositories to xai storage n](./2026-07-14/grok-build-uploaded-entire-git-repositories-to-xai-storage-n.md)
+- [how pentera turns ai security workflows into validation engi](./2026-07-14/how-pentera-turns-ai-security-workflows-into-validation-engi.md)
+- [microsoft entra id gets passkeys default authentication star](./2026-07-14/microsoft-entra-id-gets-passkeys-default-authentication-star.md)
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
+- [new phishing kits target microsoft 365 accounts evade mfa](./2026-07-14/new-phishing-kits-target-microsoft-365-accounts-evade-mfa.md)
+- [oauth client id spoofing lets attackers validate stolen micr](./2026-07-14/oauth-client-id-spoofing-lets-attackers-validate-stolen-micr.md)
+- [study of 85 crypto wallet extensions finds address leaks and](./2026-07-14/study-of-85-crypto-wallet-extensions-finds-address-leaks-and.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
 - [us sanctions vpn malware providers for enabling ransomware a](./2026-07-14/us-sanctions-vpn-malware-providers-for-enabling-ransomware-a.md)
@@ -35,7 +41,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers backdoor jscrambler npm package with infostealer mal](./2026-07-13/hackers-backdoor-jscrambler-npm-package-with-infostealer-mal.md)
 - [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
-- [japan s largest taxi operator shuts systems after cyberattac](./2026-07-13/japan-s-largest-taxi-operator-shuts-systems-after-cyberattac.md)
 - [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
 - [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
@@ -44,6 +49,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
 - [thinking fast and slow in the soc the case for combining aut](./2026-07-13/thinking-fast-and-slow-in-the-soc-the-case-for-combining-aut.md)
 - [us and allies warn of russian critical infrastructure attack](./2026-07-13/us-and-allies-warn-of-russian-critical-infrastructure-attack.md)
+- [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
 
 ## 2026-07-12
 - [jscrambler npm package publishes malicious preinstall binary](./2026-07-12/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
@@ -102,17 +108,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-08
 - [ai coding agents found triggering endpoint security rules bu](./2026-07-08/ai-coding-agents-found-triggering-endpoint-security-rules-bu.md)
-- [china linked uat 7810 expands orb network with new longleash](./2026-07-08/china-linked-uat-7810-expands-orb-network-with-new-longleash.md)
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
 - [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
 - [ghsa critical cve 2026 53649 joro unauthenticated cross orig](./2026-07-08/ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig.md)
-- [github copilot refuses harmful requests in chat then writes ](./2026-07-08/github-copilot-refuses-harmful-requests-in-chat-then-writes-.md)
-- [github verified commits can be rewritten into new hashes wit](./2026-07-08/github-verified-commits-can-be-rewritten-into-new-hashes-wit.md)
 - [new ghost phishing wave is breaking traditional email securi](./2026-07-08/new-ghost-phishing-wave-is-breaking-traditional-email-securi.md)
 - [new hallusquatting attack could trick ai coding assistants i](./2026-07-08/new-hallusquatting-attack-could-trick-ai-coding-assistants-i.md)
 - [protecting microsoft at ai speed how sfi proactively hardens](./2026-07-08/protecting-microsoft-at-ai-speed-how-sfi-proactively-hardens.md)
 - [scmbanker malware uses clickfix lures to target mexican bank](./2026-07-08/scmbanker-malware-uses-clickfix-lures-to-target-mexican-bank.md)
-- [the verification step is the new ato battleground in 2026](./2026-07-08/the-verification-step-is-the-new-ato-battleground-in-2026.md)
 - [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
 
 ## 2026-07-07

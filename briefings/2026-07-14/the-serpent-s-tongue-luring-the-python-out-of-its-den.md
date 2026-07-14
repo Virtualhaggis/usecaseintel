@@ -31,12 +31,104 @@ Malicious packages and supply-chain attacks are increasingly common, exploiting 
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1546** — Event Triggered Execution
+- **T1112** — Modify Registry
+- **T1574.007** — Hijack Execution Flow: Path Interception by PATH Environment Variable
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### pip install redirected to non-PyPI index / find-links (dependency confusion)
+
+`UC_10_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip.exe","pip3.exe","python.exe","python3.exe") OR Processes.process="*-m pip*") Processes.process="*install*" (Processes.process="*--index-url*" OR Processes.process="*--extra-index-url*" OR Processes.process="*--find-links*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT (process="*pypi.org*" OR process="*files.pythonhosted.org*") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where (FileName in~ ("pip.exe","pip3.exe") or (FileName in~ ("python.exe","python3.exe","python3","python") and ProcessCommandLine has "pip"))
+| where ProcessCommandLine has "install"
+| where ProcessCommandLine has_any ("--index-url","--extra-index-url","--find-links")
+| where not(ProcessCommandLine has_any ("pypi.org","files.pythonhosted.org"))
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Python setup.py install-time code execution spawning shell/LOLBin
+
+`UC_10_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process="*setup.py*" Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","bash","sh","curl","wget") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessCommandLine has "setup.py"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","bash","sh","bash.exe","sh.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Malicious .pth file dropped into site-packages by pip/python
+
+`UC_10_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.pth" (Filesystem.file_path="*site-packages*" OR Filesystem.file_path="*dist-packages*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search process_name IN ("pip.exe","pip3.exe","python.exe","python3.exe","python3") NOT file_name IN ("easy-install.pth","distutils-precedence.pth") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileModified")
+| where FileName endswith ".pth"
+| where FolderPath has_any ("site-packages","dist-packages")
+| where InitiatingProcessFileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","python3")
+| where not(FileName in~ ("easy-install.pth","distutils-precedence.pth"))
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Persistent PIP_ index/config environment variable set in registry
+
+`UC_10_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Environment*" OR Registry.registry_path="*Session Manager\\Environment*") Registry.registry_value_name IN ("PIP_INDEX_URL","PIP_EXTRA_INDEX_URL","PIP_FIND_LINKS","PIP_CONFIG_FILE","PIP_TARGET","PIP_PREFIX") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(14d)
+| where ActionType == "RegistryValueSet"
+| where RegistryKey has_any (@"\Environment", @"Session Manager\Environment")
+| where RegistryValueName in~ ("PIP_INDEX_URL","PIP_EXTRA_INDEX_URL","PIP_FIND_LINKS","PIP_CONFIG_FILE","PIP_TARGET","PIP_PREFIX")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -247,7 +339,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The serpent’s tongue: Luring the Python out of its den
 
-`UC_2_5` · phase: **exploit** · confidence: **High**
+`UC_10_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -297,4 +389,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -14,8 +14,20 @@ From that one lapse, French security firm Lexfo lifted the operator's entire too
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `185.163.204.7`
+- **IPv4 (defanged):** `216.180.245.166`
+- **IPv4 (defanged):** `188.227.196.240`
+- **IPv4 (defanged):** `195.20.115.103`
 - **Domain (defanged):** `picis.net`
 - **Domain (defanged):** `romnor.ca`
+- **Domain (defanged):** `queeenspropertyservices.ca`
+- **SHA1:** `6a4cb1c75e1c59bbd4fbc4667f4c3bb5a74fe965`
+- **SHA1:** `2ea61cdead470f570586f513e22d43d787befec6`
+- **SHA1:** `35f23dfb4135d4cd38a6a29e64d79191d166344d`
+- **SHA1:** `eb8ede7598220dbef28953dc7df2e5418d52fa36`
+- **SHA1:** `f496736e2d2344de7963d4f722381f03227ec452`
+- **SHA1:** `cf3cbf93adf43d50618c88705857d3adb123ed24`
+- **SHA1:** `ea5d2096a2ef3dfe4fb870bd1f0270efaea993a6`
+- **SHA1:** `e9a44b3fe951cca57313533d6bc1d11e789c2018`
 
 ## MITRE ATT&CK Techniques
 
@@ -33,13 +45,98 @@ From that one lapse, French security firm Lexfo lifted the operator's entire too
 - **T1053.005** — Scheduled Task
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1557** — Adversary-in-the-Middle
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Entra OAuth device-code flow sign-in (black-queen / saroula01 AiTM technique)
+
+`UC_41_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as apps values(Authentication.src) as src from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="deviceCode" Authentication.app!="Microsoft Authentication Broker" Authentication.app!="Microsoft Azure CLI" Authentication.app!="Microsoft Azure PowerShell" by Authentication.user Authentication.dest
+| `drop_dm_object_name(Authentication)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+### M365 sign-in sourced from known codemado/mail-argenta AiTM proxy IPs
+
+`UC_41_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as apps values(Authentication.action) as action from datamodel=Authentication where Authentication.src IN ("185.163.204.7","216.180.245.166","188.227.196.240","195.20.115.103") by Authentication.user Authentication.src
+| `drop_dm_object_name(Authentication)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let AiTMIPs = dynamic(["185.163.204.7","216.180.245.166","188.227.196.240","195.20.115.103"]);
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where IPAddress in (AiTMIPs)
+| project Timestamp, AccountUpn, Application, ResourceDisplayName, IPAddress, Country, ClientAppUsed, UserAgent, ErrorCode, ConditionalAccessStatus
+| order by Timestamp desc
+```
+
+### Single M365 account: token auto-refresh fan-out across many IPs (stolen-session keepalive)
+
+`UC_41_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(Authentication.src) as distinct_src values(Authentication.src) as src min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action="success" by Authentication.user _time span=1h
+| `drop_dm_object_name(Authentication)`
+| where distinct_src>=3 AND count>=15
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ErrorCode == 0                                    // successful token issuance
+| where IsInteractive == false                            // token auto-refresh leg
+| summarize Refreshes=count(), DistinctIPs=dcount(IPAddress), IPs=make_set(IPAddress,25), Apps=make_set(Application,10), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by AccountUpn, bin(Timestamp, 1h)
+| where DistinctIPs >= 3 and Refreshes >= 15              // 15 = keepalive floor; article cites up to 25 refreshes per token
+| order by Refreshes desc
+```
+
+### Contact with codemado/saroula01 phishing lure domains (picis.net, romnor.ca)
+
+`UC_41_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Network_Resolution.query) as query from datamodel=Network_Resolution where Network_Resolution.query IN ("picis.net","*.picis.net","romnor.ca","*.romnor.ca","queeenspropertyservices.ca","*.queeenspropertyservices.ca") by Network_Resolution.src
+| `drop_dm_object_name(Network_Resolution)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let PhishDomains = dynamic(["picis.net","romnor.ca","queeenspropertyservices.ca"]);
+union isfuzzy=true
+ (EmailUrlInfo | where Timestamp > ago(30d) | where UrlDomain in~ (PhishDomains) | extend Source="EmailUrlInfo", Pivot=Url, Host="", Account=""),
+ (UrlClickEvents | where Timestamp > ago(30d) | where Url has_any (PhishDomains) | extend Source="UrlClickEvents", Pivot=Url, Host="", Account=AccountUpn),
+ (DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (PhishDomains) | extend Source="DeviceNetworkEvents", Pivot=RemoteUrl, Host=DeviceName, Account=InitiatingProcessAccountUpn)
+| project Timestamp, Source, Pivot, Host, Account
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -302,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Micros
 
-`UC_34_8` · phase: **exploit** · confidence: **High**
+`UC_41_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -354,9 +451,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `185.163.204.7`, `picis.net`, `romnor.ca`
+  - IP / domain IOC(s): `185.163.204.7`, `216.180.245.166`, `188.227.196.240`, `195.20.115.103`, `picis.net`, `romnor.ca`, `queeenspropertyservices.ca`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `6a4cb1c75e1c59bbd4fbc4667f4c3bb5a74fe965`, `2ea61cdead470f570586f513e22d43d787befec6`, `35f23dfb4135d4cd38a6a29e64d79191d166344d`, `eb8ede7598220dbef28953dc7df2e5418d52fa36`, `f496736e2d2344de7963d4f722381f03227ec452`, `cf3cbf93adf43d50618c88705857d3adb123ed24`, `ea5d2096a2ef3dfe4fb870bd1f0270efaea993a6`, `e9a44b3fe951cca57313533d6bc1d11e789c2018`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -86,7 +86,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen ransomware scheduled task named 'gentlemen*'
 
-`UC_46_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_50_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### GentleKiller BYOVD: ThrottleStop.sys (CVE-2025-7771) driver load + All.exe/Allpatch2.exe
 
-`UC_46_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_50_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceImageLoadEvents
 
 ### Windows event log clearing via wevtutil (Security/System) — ransomware anti-forensics
 
-`UC_46_16` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceProcessEvents
 
 ### Volume Shadow Copy deletion via vssadmin/wmic — Gentlemen pre-encryption
 
-`UC_46_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_17` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -178,7 +178,7 @@ DeviceProcessEvents
 
 ### SystemBC (socks.exe) SOCKS5 C2 to The Gentlemen infrastructure
 
-`UC_46_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_50_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -197,7 +197,7 @@ DeviceNetworkEvents
 
 ### Advanced IP Scanner internal reconnaissance (The Gentlemen)
 
-`UC_46_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_50_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -568,7 +568,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — No Manners Here: The Ruthless Rise of The Gentlemen Ransomware
 
-`UC_46_13` · phase: **exploit** · confidence: **High**
+`UC_50_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
