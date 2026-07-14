@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious @asyncapi generator/specs package versions installed (Miasma supply chain)
 
-`UC_0_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Miasma RAT HTTP C2 beacon to 85.137.53.71
 
-`UC_0_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### Miasma dropper writes sync.js into hidden NodeJS profile directory
 
-`UC_0_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents
 
 ### Miasma RAT fallback-channel egress: BitTorrent DHT / Nostr relays from Node
 
-`UC_0_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -378,7 +378,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Coordinated AsyncAPI Supply Chain Attack: Miasma RAT Delivered via Compromised C
 
-`UC_0_9` · phase: **exploit** · confidence: **High**
+`UC_6_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

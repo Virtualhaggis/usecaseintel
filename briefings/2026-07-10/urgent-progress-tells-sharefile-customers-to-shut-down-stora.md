@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### ShareFile Storage Zone Controller pre-auth exploit URIs in IIS logs (CVE-2026-2699/2701)
 
-`UC_64_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_70_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### ShareFile Storage Zone Controller IIS worker (w3wp.exe) spawns shell/recon child
 
-`UC_64_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_70_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### ASPX webshell written under ShareFile Storage Zone Controller storage path
 
-`UC_64_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_70_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

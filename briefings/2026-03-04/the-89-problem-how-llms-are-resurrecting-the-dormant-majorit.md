@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The 89% Problem: How LLMs Are Resurrecting the "Dormant Majority" of Open Source
 
-`UC_569_1` · phase: **exploit** · confidence: **High**
+`UC_573_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### jscrambler 8.14.0 npm Package Installation
 
-`UC_51_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_57_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### Rust Infostealer Binary Execution from npm Post-Install Hook
 
-`UC_51_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_57_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### IronWorm C2 beacon to hardcoded jscrambler stealer IPs
 
-`UC_51_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceNetworkEvents
 
 ### Credential/Browser Data Theft Post-npm Install
 
-`UC_51_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_57_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceFileEvents
 
 ### Persistence written by temp-dropped binary (hidden sched task / macOS LaunchAgent)
 
-`UC_51_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_57_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ union
 
 ### jscrambler Package Tampering Artifact Detection
 
-`UC_51_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_57_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -315,7 +315,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised jscrambler 8.14.0 npm Release Drops Rust Infostealer During Install
 
-`UC_51_7` · phase: **exploit** · confidence: **High**
+`UC_57_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

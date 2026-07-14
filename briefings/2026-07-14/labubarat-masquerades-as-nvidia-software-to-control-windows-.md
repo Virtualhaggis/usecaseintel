@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Fake NVIDIA runtime (nvidia-sysruntime.exe) launched with LabubaRAT C2 config args
 
-`UC_2_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### nvidia-sysruntime.exe masquerade — NVIDIA name without NVIDIA signature/path
 
-`UC_2_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_8_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### LabubaRAT C2 beacon / DNS tunnel to pipicka.xyz
 
-`UC_2_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ union
 
 ### LabubaRAT user-level autostart persistence referencing nvidia-sysruntime.exe
 
-`UC_2_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -250,7 +250,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts
 
-`UC_2_5` · phase: **exploit** · confidence: **High**
+`UC_8_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

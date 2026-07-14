@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### Lurking Lizard proxyware lookalike distribution/proxy-brand domain resolution
 
-`UC_98_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_104_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### IPLogger tracking beacon (iplogger.com/mnWD) from non-browser process
 
-`UC_98_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_104_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### Residential-proxy client check-in to /client_v1/config/http and /client_v1/version/server
 
-`UC_98_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_104_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceNetworkEvents
 
 ### Fake installer (7-Zip/WhatsApp/WireVPN) written to disk from Lurking Lizard domain
 
-`UC_98_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_104_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceFileEvents
 
 ### Trojanized 7-Zip/WireVPN installer spawning command interpreter or LOLBin
 
-`UC_98_11` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_104_11` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

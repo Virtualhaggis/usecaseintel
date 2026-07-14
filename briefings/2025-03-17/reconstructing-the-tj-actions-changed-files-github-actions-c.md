@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Self-hosted GitHub Action runner downloads memdump.py from compromised gist (CVE-2025-30066)
 
-`UC_997_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_1001_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### Runner.Worker process memory dumped via /proc/PID/mem read on Linux runner
 
-`UC_997_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1001_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ MemReads
 
 ### Malicious tj-actions base64 payload prefix observed in process command line
 
-`UC_997_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1001_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Git checkout of compromised tj-actions/changed-files commit on runner host
 
-`UC_997_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_1001_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Reconstructing the TJ Actions Changed Files GitHub Actions Compromise
 
-`UC_997_3` · phase: **exploit** · confidence: **High**
+`UC_1001_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

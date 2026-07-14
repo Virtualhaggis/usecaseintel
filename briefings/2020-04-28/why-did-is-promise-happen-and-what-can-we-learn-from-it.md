@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Why did is-promise happen and what can we learn from it
 
-`UC_3348_1` · phase: **exploit** · confidence: **High**
+`UC_3352_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

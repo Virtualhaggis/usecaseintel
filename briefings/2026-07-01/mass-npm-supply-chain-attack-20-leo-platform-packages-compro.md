@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Bun v1.3.13 runtime pulled from GitHub Releases during npm install (Phantom Gyp staging)
 
-`UC_159_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_165_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### GitHub Actions Runner.Worker memory read via /proc/<pid>/mem (CI secret unmasking)
 
-`UC_159_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_165_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### Passwordless sudo backdoor written for runner account (runner ALL=(ALL) NOPASSWD:ALL)
 
-`UC_159_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_165_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### Bun executes dropped temp payload /tmp/p*.js (Miasma stealer launch)
 
-`UC_159_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_165_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised
 
-`UC_159_2` · phase: **exploit** · confidence: **High**
+`UC_165_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

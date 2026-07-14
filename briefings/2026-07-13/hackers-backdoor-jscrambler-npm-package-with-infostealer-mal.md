@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious jscrambler npm preinstall drops & runs hidden binary from %TEMP%
 
-`UC_28_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### IronWorm C2/exfil to hard-coded jscrambler stealer IPs 37.27.122.124 / 57.128.246.79
 
-`UC_28_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_38_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### Compromised jscrambler package artifacts (dist/setup.js, dist/intro.js) or payload hash on disk
 
-`UC_28_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_38_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### IronWorm Windows persistence: hidden scheduled task created by npm/temp dropper
 
-`UC_28_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_38_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -18,13 +18,15 @@ With that in mind, I endeavored to …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA1:** `7b7d55439abccf4ae83047c1af2707e6eb6664db`
+- **CVE:** `CVE-2026-55488`
+- **CVE:** `CVE-2026-32315`
+- **CVE:** `CVE-2026-46488`
+- **CVE:** `CVE-2026-31978`
 
 ## MITRE ATT&CK Techniques
 
-- **T1027** — Obfuscated Files or Information
-- **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
+- **T1204.002** — User Execution: Malicious File
 - **T1083** — File and Directory Discovery
 - **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
@@ -37,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### motionEye unauthenticated path traversal read of motion.conf / system secrets
 
-`UC_226_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_232_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### motionEye RCE: motion daemon spawns shell via injected command_*_exec hook
 
-`UC_226_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_232_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +73,7 @@ DeviceProcessEvents
 
 ### motionEye traversal read followed by admin config-hook write from same source
 
-`UC_226_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_232_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +88,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-phv5-334h-mxcw: motionEye Partial Authentication Bypass:
 
-`UC_226_1` · phase: **exploit** · confidence: **High**
+`UC_232_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,10 +139,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `7b7d55439abccf4ae83047c1af2707e6eb6664db`
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-55488`, `CVE-2026-32315`, `CVE-2026-46488`, `CVE-2026-31978`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

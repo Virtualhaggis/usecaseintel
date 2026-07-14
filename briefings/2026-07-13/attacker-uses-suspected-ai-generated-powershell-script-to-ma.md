@@ -20,11 +20,16 @@ Cybersecurity researchers have flagged an intrusion in which an unknown threat a
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1087.002** — Account Discovery: Domain Account
-- **T1482** — Domain Trust Discovery
 - **T1018** — Remote System Discovery
+- **T1482** — Domain Trust Discovery
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1135** — Network Share Discovery
+- **T1083** — File and Directory Discovery
 - **T1567.002** — Exfiltration to Cloud Storage
 - **T1560.001** — Archive Collected Data: Archive via Utility
-- **T1135** — Network Share Discovery
+- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1074.001** — Data Staged: Local Data Staging
+- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
@@ -32,70 +37,100 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vibe-coded AD enum: PowerShell mass-exports CSVs + AD_Report.html to C:\ProgramData
+### AI-generated 'FULLY FIXED' PowerShell AD enumeration writing AD_Report.html
 
-`UC_45_1` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_51_1` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime dc(Filesystem.file_name) as file_count from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("powershell.exe","pwsh.exe") AND Filesystem.file_path="*\\ProgramData\\*" AND (Filesystem.file_name="AD_Report.html" OR Filesystem.file_name="*.csv") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | eval html_report=if(like(file_path,"%AD_Report.html%"),1,0) | where html_report=1 OR file_count>=5 | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="AD_Report.html" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id 
+| `drop_dm_object_name(Filesystem)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(7d)
+| where ActionType == "FileCreated"
+| where FileName =~ "AD_Report.html"
 | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
-| where FolderPath has @"C:\ProgramData\"
-| where FileName =~ "AD_Report.html" or FileName endswith ".csv"
-| where InitiatingProcessAccountName !endswith "$"
-| summarize FileCount = dcount(FileName), Files = make_set(FileName, 40),
-            HtmlReport = countif(FileName =~ "AD_Report.html"),
-            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-        by DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FolderPath
-| where HtmlReport > 0 or FileCount >= 5   // 'exports a number of files, finally creates AD_Report.html'
-| order by LastSeen desc
-```
-
-### s5cmd bulk-transfer tool executing on a domain-joined Windows server
-
-`UC_45_2` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="s5cmd.exe" OR Processes.process="*s5cmd*") AND Processes.user!="*$" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_path | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "s5cmd.exe" or ProcessCommandLine has "s5cmd"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
 | order by Timestamp desc
 ```
 
-### SharpShares network-share enumeration utility execution
+### SharpShares network-share enumeration binary staged in C:\ProgramData
 
-`UC_45_3` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_51_2` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="SharpShares.exe" OR Processes.process="*SharpShares*" OR Processes.original_file_name="SharpShares.exe") AND Processes.user!="*$" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="SharpShares.exe" OR Processes.original_file_name="SharpShares.exe" OR (Processes.process_path="C:\\ProgramData\\*" AND Processes.process="*shares*")) by Processes.dest Processes.user Processes.process_name Processes.original_file_name Processes.process Processes.process_path Processes.parent_process_name 
+| `drop_dm_object_name(Processes)` 
+| `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "SharpShares.exe"
-   or ProcessCommandLine has "SharpShares"
-   or ProcessVersionInfoOriginalFileName =~ "SharpShares.exe"
+| where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine,
-          ProcessVersionInfoOriginalFileName, SHA256, InitiatingProcessCommandLine
+| where FileName =~ "SharpShares.exe"
+    or ProcessVersionInfoOriginalFileName =~ "SharpShares.exe"
+    or (FolderPath startswith "C:\\ProgramData\\" and ProcessCommandLine has "shares" and ProcessCommandLine has_any ("--ldap","--filter","--outfile","/ldap","/outfile"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### s5cmd bulk cloud-storage exfiltration tool executed from C:\ProgramData
+
+`UC_51_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="s5cmd.exe" OR Processes.original_file_name="s5cmd.exe") (Processes.process="*cp*" OR Processes.process="*sync*" OR Processes.process="*mv*" OR Processes.process="*s3://*" OR Processes.process="*--endpoint-url*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name 
+| `drop_dm_object_name(Processes)` 
+| `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName =~ "s5cmd.exe" or ProcessVersionInfoOriginalFileName =~ "s5cmd.exe"
+| where ProcessCommandLine has_any ("cp","sync","mv","s3://","--endpoint-url")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Executable in C:\ProgramData root launched within an RDP session (attacker tool staging)
+
+`UC_51_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_path="C:\\ProgramData\\*" Processes.process_name="*.exe" by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name 
+| `drop_dm_object_name(Processes)` 
+| where match(process_path, "(?i)^C:\\\\ProgramData\\\\[^\\\\]+\.exe$") 
+| `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let RdpLogons = DeviceLogonEvents
+| where Timestamp > ago(7d)
+| where LogonType == "RemoteInteractive"
+| where AccountName !endswith "$"
+| project RdpTime = Timestamp, DeviceId, RdpUser = AccountName, RemoteIP;
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FolderPath matches regex @"(?i)^C:\\ProgramData\\[^\\]+\.exe$"
+| join kind=inner RdpLogons on DeviceId
+| where Timestamp between (RdpTime .. RdpTime + 12h)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, RdpTime, RdpUser, RemoteIP
 | order by Timestamp desc
 ```
 
@@ -131,4 +166,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

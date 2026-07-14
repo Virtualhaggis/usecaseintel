@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 10 git aliases for a faster and productive git workflow
 
-`UC_3223_0` · phase: **exploit** · confidence: **High**
+`UC_3227_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

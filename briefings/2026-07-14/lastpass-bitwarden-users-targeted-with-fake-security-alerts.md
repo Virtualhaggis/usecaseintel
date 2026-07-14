@@ -11,15 +11,9 @@ By Bill Toulas
 July 14, 2026
 11:31 AM
 0 
-
-
 LastPass is warning users about an ongoing phishing campaign that is using fake security notices to direct them to fraudulent websites.
-
-
 The phishing emails are crafted to resemble legitimate corporate communications, notifying recipients of updated security policies and directing them to a landing page that impersonates DocuSign and claiming to provide a document for review.
-
-
-LastPa…
+LastPass emphasize…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -51,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound phishing from spoofed LastPass/Bitwarden 'newsletter' or 'compliance' domains
 
-`UC_4_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -75,7 +69,7 @@ EmailEvents
 
 ### Endpoint reaches fake-DocuSign lastpasscompliance/bitwardencompliance landing page
 
-`UC_4_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -97,7 +91,7 @@ union
 
 ### Payload downloaded from fake-DocuSign compliance domain (Win/macOS installer drop)
 
-`UC_4_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Using Node.js event loop for timing attacks
 
-`UC_3667_0` · phase: **exploit** · confidence: **High**
+`UC_3671_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
