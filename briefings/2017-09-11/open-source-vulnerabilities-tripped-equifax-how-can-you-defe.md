@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Apache Struts web app (java/Tomcat) spawning OS shell or recon — post-exploit RCE (CVE-2017-5638 / CVE-2017-9805)
 
-`UC_3614_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3613_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### Apache Struts OGNL / XStream exploit payload in WAF & web logs (CVE-2017-5638 + CVE-2017-9805)
 
-`UC_3614_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3613_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Open source vulnerabilities tripped Equifax, how can you defend yourself?
 
-`UC_3614_0` · phase: **exploit** · confidence: **High**
+`UC_3613_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable lodash (CVE-2019-10744 prototype pollution) present in software inventory
 
-`UC_3484_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_3483_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -48,7 +48,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Prototype pollution payload (__proto__ / constructor.prototype) in inbound web requests
 
-`UC_3484_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3483_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Article-specific behavioural hunt — Snyk research team discovers severe prototype pollution security vulnerabilities
 
-`UC_3484_1` · phase: **exploit** · confidence: **High**
+`UC_3483_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

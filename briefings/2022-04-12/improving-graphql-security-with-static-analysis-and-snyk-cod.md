@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Reverse shell via ncat -e spawned by Node.js app (SonicJS GraphQL path-traversal RCE)
 
-`UC_2296_1` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_2295_1` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Node.js web process overwriting application .js service file (GraphQL path-traversal file write)
 
-`UC_2296_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2295_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Improving GraphQL security with static analysis and Snyk Code
 
-`UC_2296_0` · phase: **exploit** · confidence: **High**
+`UC_2295_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

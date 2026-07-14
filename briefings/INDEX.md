@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2576 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2577 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,11 +10,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-14
 - [148 npm packages disguised as student proxies turned browser](./2026-07-14/148-npm-packages-disguised-as-student-proxies-turned-browser.md)
-- [coordinated asyncapi supply chain attack miasma rat delivere](./2026-07-14/coordinated-asyncapi-supply-chain-attack-miasma-rat-delivere.md)
+- [asyncapi npm packages compromised with miasma variant](./2026-07-14/asyncapi-npm-packages-compromised-with-miasma-variant.md)
 - [ghsa critical cve 2026 52824 kimai default app secret in doc](./2026-07-14/ghsa-critical-cve-2026-52824-kimai-default-app-secret-in-doc.md)
-- [grok build uploads entire git repositories to xai storage no](./2026-07-14/grok-build-uploads-entire-git-repositories-to-xai-storage-no.md)
+- [grok build uploaded entire git repositories to xai storage n](./2026-07-14/grok-build-uploaded-entire-git-repositories-to-xai-storage-n.md)
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
+- [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
+- [us sanctions vpn malware providers for enabling ransomware a](./2026-07-14/us-sanctions-vpn-malware-providers-for-enabling-ransomware-a.md)
+- [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
 
 ## 2026-07-13
 - [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
@@ -329,7 +332,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
 
 ## 2026-06-04
-- [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
 - [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)
 - [reporting from vegas networking ai and good boys](./2026-06-04/reporting-from-vegas-networking-ai-and-good-boys.md)
@@ -685,7 +687,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-02-19
 - [how clinejection turned an ai bot into a supply chain attack](./2026-02-19/how-clinejection-turned-an-ai-bot-into-a-supply-chain-attack.md)
 - [promptspy ushers in the era of android threats using genai](./2026-02-19/promptspy-ushers-in-the-era-of-android-threats-using-genai.md)
-- [sveltespill a cache deception bug in sveltekit vercel](./2026-02-19/sveltespill-a-cache-deception-bug-in-sveltekit-vercel.md)
 
 ## 2026-02-18
 - [cisa kev cve 2021 22175 gitlab server side request forgery s](./2026-02-18/cisa-kev-cve-2021-22175-gitlab-server-side-request-forgery-s.md)

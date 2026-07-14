@@ -1,4 +1,4 @@
-# [MED] Grok Build Uploads Entire Git Repositories to xAI Storage, Not Just Files It Reads
+# [MED] Grok Build Uploaded Entire Git Repositories to xAI Storage, Not Just Files It Read
 
 **Source:** The Hacker News
 **Published:** 2026-07-14

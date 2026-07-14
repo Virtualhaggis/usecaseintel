@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Fastify plugins as building blocks for a backend Node.js API
 
-`UC_1302_0` · phase: **exploit** · confidence: **High**
+`UC_1301_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

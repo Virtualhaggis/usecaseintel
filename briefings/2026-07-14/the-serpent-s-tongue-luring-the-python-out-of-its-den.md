@@ -1,32 +1,36 @@
-# [CRIT] Coordinated AsyncAPI Supply Chain Attack: Miasma RAT Delivered via Compromised CI/CD Pipelines in Two Repositories
+# [HIGH] The serpent’s tongue: Luring the Python out of its den
 
-**Source:** StepSecurity
+**Source:** Cisco Talos
 **Published:** 2026-07-14
-**Article:** https://www.stepsecurity.io/blog/compromised-next-branch-pushes-malicious-asyncapi-generator-generator-helpers-and-generator-components-to-npm
+**Article:** https://blog.talosintelligence.com/the-serpents-tongue-luring-the-python-out-of-its-den/
 
 ## Threat Profile
 
-Back to Blog Threat Intel Coordinated AsyncAPI Supply Chain Attack: Miasma RAT Delivered via Compromised CI/CD Pipelines in Two Repositories On July 14, 2026 at 07:10 UTC, three packages in the AsyncAPI generator monorepo (@asyncapi/generator@3.3.1, @asyncapi/generator-helpers@1.1.1, and @asyncapi/generator-components@0.7.1) were published to npm carrying an obfuscated dropper that fires the moment the library is loaded, not on install. The packages were published through the project's own legit…
+The serpent’s tongue: Luring the Python out of its den 
+By 
+Onur Mustafa Erdogan , 
+Darin Smith 
+Tuesday, July 14, 2026 06:00
+Threat Spotlight
+Python's popularity, readable syntax, and extensive third-party library ecosystem make it an attractive target for threat actors seeking to compromise developer devices and infrastructure.  
+Malicious packages and supply-chain attacks are increasingly common, exploiting the trust built into Python's packaging ecosystem to execute payloads at the moment of…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA1:** `3eab3ec9304aa26081358330491d3cfeb55cc245`
-- **SHA1:** `689f5b96693ab1f82a825b6d7c4ee566b0afc4c6`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
-- **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1027** — Obfuscated Files or Information
-- **T1219** — Remote Access Software
-- **T1195.002** — Compromise Software Supply Chain
+- **T1566.001** — Spearphishing Attachment
 - **T1204.002** — User Execution: Malicious File
+- **T1059.005** — Visual Basic
+- **T1218** — System Binary Proxy Execution
+- **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -67,31 +71,6 @@ DeviceNetworkEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
 | order by conn_count desc
-```
-
-### Remote service execution — PsExec / SMB lateral movement
-
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -179,21 +158,57 @@ DeviceProcessEvents
 | order by ClickTime desc
 ```
 
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
+### Email attachment opened from external sender
 
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+`UC_PHISH_ATTACH` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where All_Email.file_name!="-"
+    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
+| rename All_Email.recipient as user
+| join type=inner user
+    [| tstats `summariesonly` count
+        from datamodel=Endpoint.Processes
+        where Processes.parent_process_name IN ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+          AND Processes.process_name IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
+        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+     | rename Processes.user as user]
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let MalAttachments = EmailAttachmentInfo
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | project NetworkMessageId, RecipientEmailAddress,
+              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe",
+                      "mshta.exe","rundll32.exe","regsvr32.exe")
+| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256
+```
+
+### Office app spawning script/LOLBin child process
+
+`UC_OFFICE_CHILD` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+    where Processes.parent_process_name IN ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+      AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -201,66 +216,9 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### PowerShell encoded / obfuscated command
-
-`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("powershell.exe","pwsh.exe")
-      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
-        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
-        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*Net.WebClient*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -287,16 +245,16 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Coordinated AsyncAPI Supply Chain Attack: Miasma RAT Delivered via Compromised C
+### Article-specific behavioural hunt — The serpent’s tongue: Luring the Python out of its den
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_2_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Coordinated AsyncAPI Supply Chain Attack: Miasma RAT Delivered via Compromised C ```
+``` Article-specific bespoke detection — The serpent’s tongue: Luring the Python out of its den ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("index.js","sync.js","node.js","c2-rest-channel.js","nostr-channel.js","ipfs-channel.js","dht-channel.js","libp2p-channel.js","gossip-transport.js","blockchain-channel.js","channel-orchestrator.js","harvester.js","vault.js","tool-poisoner.js","scan.js") OR Processes.process_path="*%LOCALAPPDATA%\NodeJS\sync.js*")
+    where (Processes.process_name IN ("setup.py","usercustomize.py","sitecustomize.py","__init__.py","__main__.py","pip.exe"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -305,7 +263,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*%LOCALAPPDATA%\NodeJS\sync.js*" OR Filesystem.file_path="*/Library/Application*" OR Filesystem.file_name IN ("index.js","sync.js","node.js","c2-rest-channel.js","nostr-channel.js","ipfs-channel.js","dht-channel.js","libp2p-channel.js","gossip-transport.js","blockchain-channel.js","channel-orchestrator.js","harvester.js","vault.js","tool-poisoner.js","scan.js"))
+      AND (Filesystem.file_name IN ("setup.py","usercustomize.py","sitecustomize.py","__init__.py","__main__.py","pip.exe"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -314,12 +272,12 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Coordinated AsyncAPI Supply Chain Attack: Miasma RAT Delivered via Compromised C
+// Article-specific bespoke detection — The serpent’s tongue: Luring the Python out of its den
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("index.js", "sync.js", "node.js", "c2-rest-channel.js", "nostr-channel.js", "ipfs-channel.js", "dht-channel.js", "libp2p-channel.js", "gossip-transport.js", "blockchain-channel.js", "channel-orchestrator.js", "harvester.js", "vault.js", "tool-poisoner.js", "scan.js") or FolderPath has_any ("%LOCALAPPDATA%\NodeJS\sync.js"))
+| where (FileName in~ ("setup.py", "usercustomize.py", "sitecustomize.py", "__init__.py", "__main__.py", "pip.exe"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -329,21 +287,14 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("%LOCALAPPDATA%\NodeJS\sync.js", "/Library/Application") or FileName in~ ("index.js", "sync.js", "node.js", "c2-rest-channel.js", "nostr-channel.js", "ipfs-channel.js", "dht-channel.js", "libp2p-channel.js", "gossip-transport.js", "blockchain-channel.js", "channel-orchestrator.js", "harvester.js", "vault.js", "tool-poisoner.js", "scan.js"))
+| where (FileName in~ ("setup.py", "usercustomize.py", "sitecustomize.py", "__init__.py", "__main__.py", "pip.exe"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `3eab3ec9304aa26081358330491d3cfeb55cc245`, `689f5b96693ab1f82a825b6d7c4ee566b0afc4c6`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
