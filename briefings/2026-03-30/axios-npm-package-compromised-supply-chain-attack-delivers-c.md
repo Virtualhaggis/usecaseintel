@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound C2 to sfrclak.com / 142.11.206.73:8000 (Axios npm RAT beacon)
 
-`UC_496_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_497_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceNetworkEvents
 
 ### PowerShell masquerading as Windows Terminal at %PROGRAMDATA%\wt.exe (Axios RAT Windows stage)
 
-`UC_496_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_497_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Linux Python RAT orphaned via nohup python3 /tmp/ld.py (Axios npm payload)
 
-`UC_496_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_497_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceProcessEvents
 
 ### macOS Axios RAT daemon spoof + ad-hoc codesign of hidden /private/tmp binary
 
-`UC_496_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_497_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ union isfuzzy=true
 
 ### npm/node postinstall hook spawning interpreter and reaching new C2 host (Axios-style dropper)
 
-`UC_496_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_497_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -489,7 +489,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Axios npm Package Compromised: Supply Chain Attack Delivers Cross-Platform RAT
 
-`UC_496_10` · phase: **exploit** · confidence: **High**
+`UC_497_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

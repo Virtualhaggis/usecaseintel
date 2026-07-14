@@ -1,4 +1,4 @@
-# [CRIT] Microsoft Maps Year-Long ShinyHunters-Linked Salesforce Data Theft Across Three Paths
+# [CRIT] Microsoft Maps Three Salesforce Attack Paths Tied to a Year of ShinyHunters Activity
 
 **Source:** The Hacker News
 **Published:** 2026-07-14

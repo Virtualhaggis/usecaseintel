@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### AWS CloudTrail blinded: StopLogging / DeleteTrail / UpdateTrail / PutEventSelectors
 
-`UC_294_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_295_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### AWS S3 deletion of CloudTrail log-destination bucket/objects
 
-`UC_294_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_295_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### GCP Cloud Logging tampering: sink disabled/deleted or log bucket deleted
 
-`UC_294_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_295_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

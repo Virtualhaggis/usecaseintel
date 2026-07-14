@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Entra ID Device Authorization Grant (device code) authentication flow sign-in
 
-`UC_125_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_126_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ AADSignInEventsBeta
 
 ### Law-firm / order-confirmation lure delivering device-code phish via cacoo.com and allianceinvestigators.com
 
-`UC_125_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_126_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -85,7 +85,7 @@ EmailEvents
 
 ### Post-device-code token abuse: mailbox / OneDrive / Teams access from a new IP after device-code sign-in
 
-`UC_125_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_126_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

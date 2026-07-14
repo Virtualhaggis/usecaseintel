@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2575 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2576 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,8 +9,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-14
+- [148 npm packages disguised as student proxies turned browser](./2026-07-14/148-npm-packages-disguised-as-student-proxies-turned-browser.md)
+- [coordinated asyncapi supply chain attack miasma rat delivere](./2026-07-14/coordinated-asyncapi-supply-chain-attack-miasma-rat-delivere.md)
 - [ghsa critical cve 2026 52824 kimai default app secret in doc](./2026-07-14/ghsa-critical-cve-2026-52824-kimai-default-app-secret-in-doc.md)
-- [microsoft maps year long shinyhunters linked salesforce data](./2026-07-14/microsoft-maps-year-long-shinyhunters-linked-salesforce-data.md)
+- [grok build uploads entire git repositories to xai storage no](./2026-07-14/grok-build-uploads-entire-git-repositories-to-xai-storage-no.md)
+- [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
+- [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
 
 ## 2026-07-13
 - [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
@@ -94,10 +98,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [winning 54 of the time](./2026-07-09/winning-54-of-the-time.md)
 
 ## 2026-07-08
-- [15 year old ghostlock flaw enables root and container escape](./2026-07-08/15-year-old-ghostlock-flaw-enables-root-and-container-escape.md)
 - [ai coding agents found triggering endpoint security rules bu](./2026-07-08/ai-coding-agents-found-triggering-endpoint-security-rules-bu.md)
 - [china linked uat 7810 expands orb network with new longleash](./2026-07-08/china-linked-uat-7810-expands-orb-network-with-new-longleash.md)
-- [cisa adds 4 actively exploited adobe joomla and langflow fla](./2026-07-08/cisa-adds-4-actively-exploited-adobe-joomla-and-langflow-fla.md)
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
 - [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
 - [ghsa critical cve 2026 53649 joro unauthenticated cross orig](./2026-07-08/ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig.md)
@@ -118,7 +120,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
 - [github secret scanning public monitoring for enterprises cov](./2026-07-07/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
-- [redwing maas packages android bank fraud as a telegram renta](./2026-07-07/redwing-maas-packages-android-bank-fraud-as-a-telegram-renta.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)

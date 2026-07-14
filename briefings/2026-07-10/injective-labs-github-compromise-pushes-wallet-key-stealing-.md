@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Wallet-key exfil beacon to Injective SDK C2 host testnet.archival.chain.grpc-web.injective.network
 
-`UC_51_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_55_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ union
 
 ### Trojanized @injectivelabs/sdk-ts 1.20.21 artifact by SHA256 on developer/CI endpoints
 
-`UC_51_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_55_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents
 
 ### Install/pin of malicious @injectivelabs ...@1.20.21 supply-chain version in package manager cmdline
 
-`UC_51_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_55_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

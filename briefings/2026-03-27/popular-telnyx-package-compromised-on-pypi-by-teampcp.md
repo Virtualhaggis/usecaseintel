@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Telnyx PyPI compromise: malicious telnyx 4.87.1 / 4.87.2 hash on disk
 
-`UC_501_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_502_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### TeamPCP C2 egress to 83.142.209.203:8080 (telnyx WAV-stego dropper)
 
-`UC_501_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_502_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### TeamPCP WAV-stego payload drop (hangup.wav / ringtone.wav)
 
-`UC_501_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_502_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ WavDrop
 
 ### TeamPCP msbuild.exe persistence in user Startup folder
 
-`UC_501_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_502_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceFileEvents
 
 ### TeamPCP Linux/Mac stdin-piped Python second stage (sys.executable -)
 
-`UC_501_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_502_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ PyExecDash
 
 ### TeamPCP tpcp.tar.gz exfil POST signature on egress proxy / WAF
 
-`UC_501_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_502_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -327,7 +327,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular telnyx package compromised on PyPI by TeamPCP
 
-`UC_501_8` · phase: **exploit** · confidence: **High**
+`UC_502_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

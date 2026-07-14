@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### GigaWiper 'OneDrive Update' scheduled task firing every minute
 
-`UC_70_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_74_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### GigaWiper self-tracking registry key HKCU\SOFTWARE\OneDrive\Environment
 
-`UC_70_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_74_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceRegistryEvents
 
 ### GigaWiper firewall rule masquerading as Microsoft.Windows.CloudExperienceHost
 
-`UC_70_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_74_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### takeown/icacls seizing ownership of Windows boot files (bootmgr, ntoskrnl.exe)
 
-`UC_70_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_74_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceProcessEvents
 
 ### GigaWiper C2 over RabbitMQ/Redis/MinIO or known command servers from endpoints
 
-`UC_70_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_74_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceNetworkEvents
 
 ### GigaWiper fake ransomware: mass '.candy' file writes and wallpaper swap
 
-`UC_70_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_74_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -338,7 +338,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New GigaWiper Windows Backdoor Bundles Disk Wiping, Fake Ransomware, and Spyware
 
-`UC_70_8` · phase: **exploit** · confidence: **High**
+`UC_74_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
