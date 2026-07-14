@@ -8,15 +8,20 @@ _2575 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-14
+- [ghsa critical cve 2026 52824 kimai default app secret in doc](./2026-07-14/ghsa-critical-cve-2026-52824-kimai-default-app-secret-in-doc.md)
+
 ## 2026-07-13
 - [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
 - [breach at the beach play the ultimate entra id ctf](./2026-07-13/breach-at-the-beach-play-the-ultimate-entra-id-ctf.md)
 - [cisa kev cve 2008 4128 cisco ios cross site request forgery ](./2026-07-13/cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-.md)
 - [cisa warns of actively exploited rce flaws in joomla extensi](./2026-07-13/cisa-warns-of-actively-exploited-rce-flaws-in-joomla-extensi.md)
 - [crashstealer macos malware uses notarized dropper to pass ga](./2026-07-13/crashstealer-macos-malware-uses-notarized-dropper-to-pass-ga.md)
+- [defending saas based applications against shinyhunters oauth](./2026-07-13/defending-saas-based-applications-against-shinyhunters-oauth.md)
 - [eu sanctions russian gru military hackers over cyberattacks](./2026-07-13/eu-sanctions-russian-gru-military-hackers-over-cyberattacks.md)
 - [forg365 phaas targets microsoft 365 with device code and ait](./2026-07-13/forg365-phaas-targets-microsoft-365-with-device-code-and-ait.md)
 - [ghsa critical cve 2026 45579 dirac is vulnerable to rce in r](./2026-07-13/ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r.md)
+- [ghsa critical cve 2026 47677 facturascripts account takeover](./2026-07-13/ghsa-critical-cve-2026-47677-facturascripts-account-takeover.md)
 - [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)
 - [google and microsoft pull modheader with 1 6 million install](./2026-07-13/google-and-microsoft-pull-modheader-with-1-6-million-install.md)
 - [hackers backdoor jscrambler npm package with infostealer mal](./2026-07-13/hackers-backdoor-jscrambler-npm-package-with-infostealer-mal.md)
@@ -172,7 +177,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-30
 - [ghsa critical cve 2026 50566 fission environment runtime con](./2026-06-30/ghsa-critical-cve-2026-50566-fission-environment-runtime-con.md)
-- [securing ai agents when ai tools move from reading to acting](./2026-06-30/securing-ai-agents-when-ai-tools-move-from-reading-to-acting.md)
 - [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
 - [what s new in microsoft security june 2026](./2026-06-30/what-s-new-in-microsoft-security-june-2026.md)
 
@@ -261,8 +265,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
-- [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
-- [ghsa critical ghsa r253 r9jw qg44 crawl4ai unauthenticated r](./2026-06-18/ghsa-critical-ghsa-r253-r9jw-qg44-crawl4ai-unauthenticated-r.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
