@@ -11,12 +11,8 @@ By Bill Toulas
 July 14, 2026
 08:49 AM
 0 
-
-
 Two new phishing kits, Jalisco and OmegaLord, have been discovered in attacks targeting Microsoft 365 accounts, using techniques that defeat multi-factor authentication (MFA).
-
-
-While Jalisco uses the device-code phishing method, OmegaLord masquerades as a PDF reader to collect account login credentials and associated phone numbers, which could help the attacker intercept or hijack MFA req…
+While Jalisco uses the device-code phishing method, OmegaLord masquerades as a PDF reader to collect account login credentials and associated phone numbers, which could help the attacker intercept or hijack MFA requests or…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -46,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Successful Entra ID sign-in via OAuth 2.0 device code flow (Jalisco/EvilTokens device-code phishing)
 
-`UC_2_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_5_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +66,7 @@ AADSignInEventsBeta
 
 ### Multiple rogue Entra device registrations named 'Microsoft'/'Windows' on one account
 
-`UC_2_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +92,7 @@ CloudAppEvents
 
 ### Rapid bulk SharePoint/OneDrive download by a single account (device-code extortion exfil, ~6 min)
 
-`UC_2_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

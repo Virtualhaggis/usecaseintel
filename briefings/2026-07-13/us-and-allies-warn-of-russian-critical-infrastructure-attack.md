@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound Cisco Smart Install (TCP/4786) from external hosts — CVE-2018-0171 exploitation
 
-`UC_40_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_43_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### TFTP config-file exfiltration from network devices to external servers (UDP/69)
 
-`UC_40_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_43_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### External SNMP sweep (UDP/161) probing many internal devices with default/weak community strings
 
-`UC_40_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_43_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### Endpoint or device beaconing to Static Tundra (FSB Center 16) actor IPs
 
-`UC_40_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_43_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

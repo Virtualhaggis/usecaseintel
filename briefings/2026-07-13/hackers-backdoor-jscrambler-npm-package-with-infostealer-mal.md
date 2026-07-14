@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Jscrambler npm preinstall hook (setup.js) drops & executes native binary from temp dir
 
-`UC_21_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### Jscrambler infostealer C2 egress to 37.27.122.124 / 57.128.246.79 / temp.sh
 
-`UC_21_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_24_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### Jscrambler IronWorm infostealer known-bad SHA256 present on endpoint
 
-`UC_21_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_24_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

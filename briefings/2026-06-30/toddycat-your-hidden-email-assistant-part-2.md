@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### Masquerading scheduled task 'KasperskyEndpointSecurityEDRAvp' launching a signed binary
 
-`UC_174_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_175_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union
 
 ### ToddyCat Umbrij DLL side-loading: signed host loading malicious log.dll/GoogleServices.dll from writable path
 
-`UC_174_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_175_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceImageLoadEvents
 
 ### Umbrij command-line switches (-deepsearch / -runas-currentuser / -debugport / -domainAd / -savepdf)
 
-`UC_174_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_175_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### Chromium browser launched headless with --remote-debugging-port by a non-browser parent (STRD)
 
-`UC_174_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_175_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceProcessEvents
 
 ### Sideload-host binary connecting to Google OAuth/Gmail API endpoints (token exchange)
 
-`UC_174_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_175_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -283,7 +283,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ToddyCat: your hidden email assistant. Part 2
 
-`UC_174_5` · phase: **exploit** · confidence: **High**
+`UC_175_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

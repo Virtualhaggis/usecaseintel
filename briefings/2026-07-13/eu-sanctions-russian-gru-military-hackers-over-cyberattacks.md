@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Sandworm DynoWiper wiper binary execution (KillFiles.NMO campaign hashes)
 
-`UC_38_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_41_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### Sandworm Rsocx SOCKS5 tunnel C2 to 31.172.71.5
 
-`UC_38_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_41_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### Sandworm post-exploitation Rubeus Kerberos toolkit (campaign hash)
 
-`UC_38_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_41_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

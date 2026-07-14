@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2579 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2580 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -19,11 +19,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
 - [new phishing kits target microsoft 365 accounts evade mfa](./2026-07-14/new-phishing-kits-target-microsoft-365-accounts-evade-mfa.md)
 - [oauth client id spoofing lets attackers validate stolen micr](./2026-07-14/oauth-client-id-spoofing-lets-attackers-validate-stolen-micr.md)
+- [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
 - [study of 85 crypto wallet extensions finds address leaks and](./2026-07-14/study-of-85-crypto-wallet-extensions-finds-address-leaks-and.md)
+- [the practical checklist for defending against supply chain a](./2026-07-14/the-practical-checklist-for-defending-against-supply-chain-a.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
 - [us sanctions vpn malware providers for enabling ransomware a](./2026-07-14/us-sanctions-vpn-malware-providers-for-enabling-ransomware-a.md)
 - [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
+- [you don t have to run an exploit to know if you re vulnerabl](./2026-07-14/you-don-t-have-to-run-an-exploit-to-know-if-you-re-vulnerabl.md)
 
 ## 2026-07-13
 - [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
@@ -46,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
 - [new crashstealer malware poses as apple crash reporting tool](./2026-07-13/new-crashstealer-malware-poses-as-apple-crash-reporting-tool.md)
 - [new memghost attack plants persistent false memories in ai a](./2026-07-13/new-memghost-attack-plants-persistent-false-memories-in-ai-a.md)
-- [openai temporarily relaxes gpt 5 6 sol usage limits](./2026-07-13/openai-temporarily-relaxes-gpt-5-6-sol-usage-limits.md)
 - [thinking fast and slow in the soc the case for combining aut](./2026-07-13/thinking-fast-and-slow-in-the-soc-the-case-for-combining-aut.md)
 - [us and allies warn of russian critical infrastructure attack](./2026-07-13/us-and-allies-warn-of-russian-critical-infrastructure-attack.md)
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
@@ -114,7 +116,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new ghost phishing wave is breaking traditional email securi](./2026-07-08/new-ghost-phishing-wave-is-breaking-traditional-email-securi.md)
 - [new hallusquatting attack could trick ai coding assistants i](./2026-07-08/new-hallusquatting-attack-could-trick-ai-coding-assistants-i.md)
 - [protecting microsoft at ai speed how sfi proactively hardens](./2026-07-08/protecting-microsoft-at-ai-speed-how-sfi-proactively-hardens.md)
-- [scmbanker malware uses clickfix lures to target mexican bank](./2026-07-08/scmbanker-malware-uses-clickfix-lures-to-target-mexican-bank.md)
 - [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
 
 ## 2026-07-07

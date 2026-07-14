@@ -11,43 +11,13 @@ By Sergiu Gatlan
 July 14, 2026
 08:49 AM
 0 
-
-
 Microsoft has announced that passkeys will become the default authentication method for the Entra ID enterprise identity service starting September 2026.
-
-
 Passkeys will be enabled automatically for Entra ID users now using phone-based SMS and voice authentication, which will be retired in February 2027 across all tenants.
-
-
-However, users who are already signing into t…
+However, users who are already signing into their account…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `24.242.93.122`
-- **IPv4 (defanged):** `23.234.100.107`
-- **IPv4 (defanged):** `23.234.100.235`
-- **IPv4 (defanged):** `73.135.228.98`
-- **IPv4 (defanged):** `157.131.172.74`
-- **IPv4 (defanged):** `149.50.97.144`
-- **IPv4 (defanged):** `67.21.178.234`
-- **IPv4 (defanged):** `142.127.171.133`
-- **IPv4 (defanged):** `76.64.54.159`
-- **IPv4 (defanged):** `76.70.74.63`
-- **IPv4 (defanged):** `206.170.208.23`
-- **IPv4 (defanged):** `68.73.213.196`
-- **IPv4 (defanged):** `37.15.73.132`
-- **IPv4 (defanged):** `104.32.172.247`
-- **IPv4 (defanged):** `85.238.66.242`
-- **IPv4 (defanged):** `199.127.61.200`
-- **IPv4 (defanged):** `209.222.98.200`
-- **IPv4 (defanged):** `38.190.138.239`
-- **IPv4 (defanged):** `198.52.166.197`
-- **IPv4 (defanged):** `138.226.246.94`
-- **IPv4 (defanged):** `212.86.125.24`
-- **IPv4 (defanged):** `213.111.148.90`
-- **IPv4 (defanged):** `94.154.32.160`
-- **IPv4 (defanged):** `103.75.11.78`
-- **IPv4 (defanged):** `103.75.11.110`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -59,7 +29,6 @@ However, users who are already signing into t…
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1027** — Obfuscated Files or Information
-- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -244,14 +213,7 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `24.242.93.122`, `23.234.100.107`, `23.234.100.235`, `73.135.228.98`, `157.131.172.74`, `149.50.97.144`, `67.21.178.234`, `142.127.171.133` _(+17 more)_
-
 
 ## Why this matters
 
-Severity classified as **MED** based on: IOCs present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
