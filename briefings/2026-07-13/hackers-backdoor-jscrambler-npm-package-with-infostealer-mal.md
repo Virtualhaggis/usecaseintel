@@ -36,11 +36,12 @@ The malicious Jscrambler package spanned releases 8.14, 8.16, 8.17, and 8.20 and
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1059.007** — JavaScript
-- **T1036.005** — Match Legitimate Name or Location
+- **T1204.003** — Malicious Package
 - **T1041** — Exfiltration Over C2 Channel
 - **T1071.001** — Web Protocols
-- **T1567** — Exfiltration Over Web Service
-- **T1204.003** — Malicious Image
+- **T1573.001** — Symmetric Cryptography
+- **T1053.005** — Scheduled Task
+- **T1547** — Boot or Logon Autostart Execution
 
 ## Kill chain phases observed
 
@@ -48,61 +49,81 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Jscrambler npm preinstall hook (setup.js) drops & executes native binary from temp dir
+### Malicious jscrambler npm preinstall drops & runs hidden binary from %TEMP%
 
-`UC_24_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_28_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=node.exe (Processes.process_path="*\\Temp\\*" OR Processes.process_path="*/tmp/*" OR Processes.process_path="*/var/folders/*") (Processes.parent_process="*setup.js*" OR Processes.parent_process="*intro.js*" OR Processes.parent_process="*preinstall*" OR Processes.parent_process="*jscrambler*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe") AND Processes.process_path="*\\Temp\\*") OR Processes.process_hash IN ("a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86","bba32ddeab075a5e5015eec50f5d2af364c95b848732c714aea6b6baf78f49f0","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ef8c24d1dc52e26b507812393e24e1d5201fd") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | where match(process_name,"^\.") OR isnotnull(process_hash) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "node.exe"
-| where InitiatingProcessCommandLine has_any ("setup.js","intro.js","preinstall","jscrambler")
-| where FolderPath contains @"\Temp\" or FolderPath contains "/tmp/" or FolderPath contains "/var/folders/"
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where (InitiatingProcessFileName in~ ("node.exe","npm.exe") and FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\") and FileName startswith ".")
+     or SHA256 in~ ("a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86","bba32ddeab075a5e5015eec50f5d2af364c95b848732c714aea6b6baf78f49f0","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ef8c24d1dc52e26b507812393e24e1d5201fd")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Jscrambler infostealer C2 egress to 37.27.122.124 / 57.128.246.79 / temp.sh
+### IronWorm C2/exfil to hard-coded jscrambler stealer IPs 37.27.122.124 / 57.128.246.79
 
-`UC_24_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_28_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="37.27.122.124" OR All_Traffic.dest_ip="57.128.246.79") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("37.27.122.124","57.128.246.79") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("37.27.122.124","57.128.246.79") or RemoteUrl has "temp.sh"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+| where RemoteIP in ("37.27.122.124","57.128.246.79")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Jscrambler IronWorm infostealer known-bad SHA256 present on endpoint
+### Compromised jscrambler package artifacts (dist/setup.js, dist/intro.js) or payload hash on disk
 
-`UC_24_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_28_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash="a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60" OR Processes.process_hash="a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86" OR Processes.process_hash="bba32ddeab075a5e5015eec50f5d2af364c95b848732c714aea6b6baf78f49f0" OR Processes.process_hash="fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd" OR Processes.process_hash="b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903" OR Processes.process_hash="c8fd47d36bdf7c825378593ab82ef8c24d1dc52e26b507812393e24e1d5201fd") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\jscrambler\\dist\\*" AND Filesystem.file_name IN ("setup.js","intro.js")) OR Filesystem.file_hash IN ("a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86","bba32ddeab075a5e5015eec50f5d2af364c95b848732c714aea6b6baf78f49f0","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ef8c24d1dc52e26b507812393e24e1d5201fd") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let hashes = dynamic(["a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86","bba32ddeab075a5e5015eec50f5d2af364c95b848732c714aea6b6baf78f49f0","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ef8c24d1dc52e26b507812393e24e1d5201fd"]);
-union DeviceProcessEvents, DeviceFileEvents, DeviceImageLoadEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where SHA256 in (hashes)
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine
+| where (FolderPath has @"\node_modules\jscrambler\dist\" and FileName in~ ("setup.js","intro.js"))
+     or SHA256 in~ ("a742de963f14a92d24ebcbc7b44ac867e23a20d31d1b0094a13a4f83287f4e60","a41a523ef9517aab37ed6eea0ec881821bdcb7aefcb5c5f603adc7907f868c86","bba32ddeab075a5e5015eec50f5d2af364c95b848732c714aea6b6baf78f49f0","fbbcf4d8f98168f78f5c0c47a9ae56d59ec8ac84a7c9ca6b797fedfb8d62d2bd","b7ca95d1b23c8e67416a25cedf741de0917c2096bbc9d24649eea7853d054903","c8fd47d36bdf7c825378593ab82ef8c24d1dc52e26b507812393e24e1d5201fd")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### IronWorm Windows persistence: hidden scheduled task created by npm/temp dropper
+
+`UC_28_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" AND Processes.process="*/create*" AND (Processes.parent_process_name IN ("node.exe","npm.exe") OR Processes.parent_process_path="*\\Temp\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_path Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName =~ "schtasks.exe" and ProcessCommandLine has "/create"
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe")
+     or InitiatingProcessFolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -178,4 +199,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

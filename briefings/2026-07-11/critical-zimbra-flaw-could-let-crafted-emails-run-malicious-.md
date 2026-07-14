@@ -31,7 +31,11 @@ The vulnerability has been described as a case of stored cross-site scripting (X
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
 - **T1203** — Exploitation for Client Execution
-- **T1189** — Drive-by Compromise
+- **T1566.001** — Spearphishing Attachment
+- **T1114.003** — Email Forwarding Rule
+- **T1564.008** — Email Hiding Rules
+- **T1114.002** — Remote Email Collection
+- **T1119** — Automated Collection
 
 ## Kill chain phases observed
 
@@ -39,20 +43,62 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Zimbra Collaboration Classic Web Client below patched build 10.1.19 (stored XSS exposure)
+### Vulnerable Zimbra Classic Web Client exposure (ZCS < 10.1.19)
 
-`UC_51_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_53_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.signature="*zimbra*" OR Vulnerabilities.category="*zimbra*" OR Vulnerabilities.signature="*Classic Web Client*") by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | sort - severity
+```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareInventory
-| where Timestamp > ago(1d)
 | where SoftwareVendor has "zimbra" or SoftwareName has "zimbra"
-| where SoftwareName has_any ("collaboration","zimbra","zcs","mbox-webclient")
-| extend InstalledVer = parse_version(SoftwareVersion)
-| where InstalledVer < parse_version("10.1.19")   // 10.1.19 = build that fixes the Classic Web Client stored XSS (7 Jul 2026)
-| project DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
+| extend v = split(SoftwareVersion, ".")
+| extend vMajor = toint(v[0]), vMinor = toint(v[1]), vPatch = toint(extract(@"^(\d+)", 1, tostring(v[2])))
+| where isnotempty(vMajor)
+| where vMajor < 10 or (vMajor == 10 and vMinor < 1) or (vMajor == 10 and vMinor == 1 and vPatch < 19)
+| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
 | sort by SoftwareVersion asc
+```
+
+### Zimbra crafted-email XSS payload: HTML event-handler / <details ontoggle> in mail or SOAP traffic
+
+`UC_53_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Web.Web where (Web.dest="*zimbra*" OR Web.url="*/service/soap*" OR Web.url="*/h/*") AND (Web.url="*ontoggle*" OR Web.url="*onerror%3D*" OR Web.url="*onload%3D*" OR Web.url="*%3Cdetails*" OR Web.url="*%3Cscript*" OR Web.url="*javascript%3A*") by Web.src, Web.dest, Web.http_method, Web.url | `drop_dm_object_name(Web)` | sort - count
+```
+
+### Zimbra malicious sieve filter creating external mail-forwarding rule (post-XSS takeover)
+
+`UC_53_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=* (sourcetype="zimbra:mailbox" OR sourcetype="zimbra*" OR source="*mailbox.log*" OR source="*audit.log*") ("ModifyFilterRulesRequest" OR "CreateFilterRulesRequest" OR "actionRedirect" OR "zimbraMailSieveScript") ("Correo" OR "proton.me" OR "protonmail.com" OR "spam_to_junk" OR "actionRedirect") | rex field=_raw "name=(?<zimbra_account>[^;]+);" | rex field=_raw "oip=(?<client_ip>[0-9\.]+)" | table _time host zimbra_account client_ip _raw | sort - _time
+```
+
+### Zimbra webmail session mass mailbox harvest via SOAP (bulk Search/GetMsg)
+
+`UC_53_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=* (sourcetype="zimbra:mailbox" OR source="*mailbox.log*") ("SearchRequest" OR "GetMsgRequest" OR "GetContactsRequest" OR "SearchConvRequest") | rex field=_raw "name=(?<zimbra_account>[^;]+);" | rex field=_raw "oip=(?<client_ip>[0-9\.]+)" | bin _time span=5m | stats count as mailbox_reads dc(_raw) as distinct_ops values(client_ip) as client_ips by zimbra_account _time | where mailbox_reads>150 | sort - mailbox_reads
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe")
+| where RemoteUrl has_any ("proton.me","protonmail.com","mail.proton.me")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| sort by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -206,4 +252,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

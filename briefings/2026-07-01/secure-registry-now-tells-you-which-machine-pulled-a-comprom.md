@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### easy-day-js second-stage C2 beacon to Mastra supply-chain infrastructure
 
-`UC_155_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_156_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### npm/node postinstall script spawning a download or shell process (Mastra dropper pattern)
 
-`UC_155_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_156_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Malicious easy-day-js typosquat package written into node_modules
 
-`UC_155_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_156_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceFileEvents
 
 ### Package-manager dropper self-deletion inside node_modules (evidence erasure)
 
-`UC_155_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_156_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceFileEvents
 
 ### Known-malicious Mastra supply-chain payload file hashes on disk or in execution
 
-`UC_155_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_156_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

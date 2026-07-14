@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2580 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2579 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,16 +12,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [11 old microsoft signed linux uefi shims could let attackers](./2026-07-14/11-old-microsoft-signed-linux-uefi-shims-could-let-attackers.md)
 - [148 npm packages disguised as student proxies turned browser](./2026-07-14/148-npm-packages-disguised-as-student-proxies-turned-browser.md)
 - [asyncapi npm packages backdoored via github actions](./2026-07-14/asyncapi-npm-packages-backdoored-via-github-actions.md)
+- [coordinated asyncapi supply chain attack miasma rat delivere](./2026-07-14/coordinated-asyncapi-supply-chain-attack-miasma-rat-delivere.md)
+- [ghsa critical cve 2026 45262 facturascripts authenticated sq](./2026-07-14/ghsa-critical-cve-2026-45262-facturascripts-authenticated-sq.md)
 - [ghsa critical cve 2026 52824 kimai default app secret in doc](./2026-07-14/ghsa-critical-cve-2026-52824-kimai-default-app-secret-in-doc.md)
 - [grok build uploaded entire git repositories to xai storage n](./2026-07-14/grok-build-uploaded-entire-git-repositories-to-xai-storage-n.md)
 - [how pentera turns ai security workflows into validation engi](./2026-07-14/how-pentera-turns-ai-security-workflows-into-validation-engi.md)
+- [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
+- [lastpass bitwarden users targeted with fake security alerts](./2026-07-14/lastpass-bitwarden-users-targeted-with-fake-security-alerts.md)
 - [microsoft entra id gets passkeys default authentication star](./2026-07-14/microsoft-entra-id-gets-passkeys-default-authentication-star.md)
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
 - [new phishing kits target microsoft 365 accounts evade mfa](./2026-07-14/new-phishing-kits-target-microsoft-365-accounts-evade-mfa.md)
 - [oauth client id spoofing lets attackers validate stolen micr](./2026-07-14/oauth-client-id-spoofing-lets-attackers-validate-stolen-micr.md)
 - [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
 - [study of 85 crypto wallet extensions finds address leaks and](./2026-07-14/study-of-85-crypto-wallet-extensions-finds-address-leaks-and.md)
-- [the practical checklist for defending against supply chain a](./2026-07-14/the-practical-checklist-for-defending-against-supply-chain-a.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
 - [us sanctions vpn malware providers for enabling ransomware a](./2026-07-14/us-sanctions-vpn-malware-providers-for-enabling-ransomware-a.md)
@@ -35,7 +38,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa warns of actively exploited rce flaws in joomla extensi](./2026-07-13/cisa-warns-of-actively-exploited-rce-flaws-in-joomla-extensi.md)
 - [crashstealer macos malware uses notarized dropper to pass ga](./2026-07-13/crashstealer-macos-malware-uses-notarized-dropper-to-pass-ga.md)
 - [defending saas based applications against shinyhunters oauth](./2026-07-13/defending-saas-based-applications-against-shinyhunters-oauth.md)
-- [eu sanctions russian gru military hackers over cyberattacks](./2026-07-13/eu-sanctions-russian-gru-military-hackers-over-cyberattacks.md)
 - [forg365 phaas targets microsoft 365 with device code and ait](./2026-07-13/forg365-phaas-targets-microsoft-365-with-device-code-and-ait.md)
 - [ghsa critical cve 2026 45579 dirac is vulnerable to rce in r](./2026-07-13/ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r.md)
 - [ghsa critical cve 2026 47677 facturascripts account takeover](./2026-07-13/ghsa-critical-cve-2026-47677-facturascripts-account-takeover.md)
@@ -50,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new crashstealer malware poses as apple crash reporting tool](./2026-07-13/new-crashstealer-malware-poses-as-apple-crash-reporting-tool.md)
 - [new memghost attack plants persistent false memories in ai a](./2026-07-13/new-memghost-attack-plants-persistent-false-memories-in-ai-a.md)
 - [thinking fast and slow in the soc the case for combining aut](./2026-07-13/thinking-fast-and-slow-in-the-soc-the-case-for-combining-aut.md)
-- [us and allies warn of russian critical infrastructure attack](./2026-07-13/us-and-allies-warn-of-russian-critical-infrastructure-attack.md)
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
 
 ## 2026-07-12
@@ -113,7 +114,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
 - [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
 - [ghsa critical cve 2026 53649 joro unauthenticated cross orig](./2026-07-08/ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig.md)
-- [new ghost phishing wave is breaking traditional email securi](./2026-07-08/new-ghost-phishing-wave-is-breaking-traditional-email-securi.md)
 - [new hallusquatting attack could trick ai coding assistants i](./2026-07-08/new-hallusquatting-attack-could-trick-ai-coding-assistants-i.md)
 - [protecting microsoft at ai speed how sfi proactively hardens](./2026-07-08/protecting-microsoft-at-ai-speed-how-sfi-proactively-hardens.md)
 - [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
@@ -260,7 +260,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
 ## 2026-06-19
-- [ghsa critical cve 2026 48814 network ai cve 2026 46701 fix i](./2026-06-19/ghsa-critical-cve-2026-48814-network-ai-cve-2026-46701-fix-i.md)
 - [ghsa critical cve 2026 54051 network ai improper neutralizat](./2026-06-19/ghsa-critical-cve-2026-54051-network-ai-improper-neutralizat.md)
 - [ghsa critical cve 2026 55447 langflow basefilecomponent base](./2026-06-19/ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base.md)
 - [ghsa critical cve 2026 55791 craft cms blind ssrf and arbitr](./2026-06-19/ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr.md)

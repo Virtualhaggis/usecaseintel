@@ -47,12 +47,92 @@ From that one lapse, French security firm Lexfo lifted the operator's entire too
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
+- **T1557** — Adversary-in-the-Middle
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### M365 AiTM sign-in from Evilginx phishing infrastructure IPs (codemado / mail-argenta)
+
+`UC_46_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.src_ip IN ("185.163.204.7","216.180.245.166","188.227.196.240","195.20.115.103") by Authentication.user Authentication.src_ip Authentication.app | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where IPAddress in ("185.163.204.7","216.180.245.166","188.227.196.240","195.20.115.103")
+| where ErrorCode == 0
+| project Timestamp, AccountUpn, IPAddress, Application, AppDisplayName, Country, City, ClientAppUsed, ConditionalAccessStatus
+| order by Timestamp desc
+```
+
+### Microsoft 365 device-code-flow phishing sign-in (black-queen / saroula01)
+
+`UC_46_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.signature="deviceCode" by Authentication.user Authentication.src_ip Authentication.app | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| extend ProcDetails = tostring(AuthenticationProcessingDetails)
+| where ProcDetails has "Device Code"
+| where ErrorCode == 0
+| summarize FirstSeen=min(Timestamp), SignIns=count(), IPs=make_set(IPAddress,10), Apps=make_set(Application,10), Countries=make_set(Country,10) by AccountUpn
+| order by FirstSeen desc
+```
+
+### Stolen M365 session token refresh — same account, many IPs, non-interactive (token aging)
+
+`UC_46_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(Authentication.src_ip) as ip_count values(Authentication.src_ip) as src_ips count from datamodel=Authentication where Authentication.action=success by Authentication.user _time span=1d | `drop_dm_object_name(Authentication)` | where ip_count >= 5 | sort - ip_count
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ErrorCode == 0
+| where IsInteractive == false
+| summarize DistinctIPs=dcount(IPAddress), IPs=make_set(IPAddress,20), Countries=make_set(Country,20), Refreshes=count() by AccountUpn, bin(Timestamp, 1d)
+| where DistinctIPs >= 5   // >=5 distinct refresh-token source IPs/day for one account = token-replay fan-out
+| order by DistinctIPs desc
+```
+
+### Endpoint connections to Evilginx phishing landing domains (picis.net / romnor.ca)
+
+`UC_46_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where nodename=DNS DNS.query IN ("picis.net","*.picis.net","romnor.ca","*.romnor.ca","queeenspropertyservices.ca","*.queeenspropertyservices.ca") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("picis.net","romnor.ca","queeenspropertyservices.ca")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -315,7 +395,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Micros
 
-`UC_44_9` · phase: **exploit** · confidence: **High**
+`UC_46_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -375,4 +455,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

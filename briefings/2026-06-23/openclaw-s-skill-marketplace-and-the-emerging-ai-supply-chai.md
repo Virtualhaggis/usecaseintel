@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### cluw macOS stealer shell dropper fetching payload from ClawHavoc/AMOS C2 IP
 
-`UC_223_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_224_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### Network egress to ClawHavoc cluw / AMOS C2 infrastructure
 
-`UC_223_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_224_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### cluw infostealer and malicious ClawHub skill payload hashes on macOS
 
-`UC_223_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_224_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceFileEvents
 
 ### OpenClaw paste-site (rentry.co/glot.io) curl-pipe-bash semantic-hijack dropper
 
-`UC_223_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_224_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

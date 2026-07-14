@@ -16,7 +16,15 @@ While Jalisco uses the device-code phishing method, OmegaLord masquerades as a P
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `authplanned.online`
+- **Domain (defanged):** `grantfundingapplications.com`
+- **Domain (defanged):** `sessionopen0.site`
+- **Domain (defanged):** `levaquin2us.top`
+- **Domain (defanged):** `nuclear-rose-7ci1cmml-dpoaxo1bhyxi.edgeone.app`
+- **Domain (defanged):** `pebr-gl6z-0vzu-434xz.b-cdn.net`
+- **Domain (defanged):** `secure-folder-9f8a2983fbf5479e8d8c267e0df4e73d.3vvcompany.com`
+- **Domain (defanged):** `116ec3a1ad128d7d.darkwebf.workers.dev`
+- **Domain (defanged):** `wingboard.b-cdn.net`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,6 +37,7 @@ While Jalisco uses the device-code phishing method, OmegaLord masquerades as a P
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1071** — Application Layer Protocol
 - **T1566** — Phishing
 - **T1098.005** — Account Manipulation: Device Registration
 - **T1213.002** — Data from Information Repositories: SharePoint
@@ -42,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Successful Entra ID sign-in via OAuth 2.0 device code flow (Jalisco/EvilTokens device-code phishing)
 
-`UC_5_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_8_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +75,7 @@ AADSignInEventsBeta
 
 ### Multiple rogue Entra device registrations named 'Microsoft'/'Windows' on one account
 
-`UC_5_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +101,7 @@ CloudAppEvents
 
 ### Rapid bulk SharePoint/OneDrive download by a single account (device-code extortion exfil, ~6 min)
 
-`UC_5_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -293,7 +302,14 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `authplanned.online`, `grantfundingapplications.com`, `sessionopen0.site`, `levaquin2us.top`, `nuclear-rose-7ci1cmml-dpoaxo1bhyxi.edgeone.app`, `pebr-gl6z-0vzu-434xz.b-cdn.net`, `secure-folder-9f8a2983fbf5479e8d8c267e0df4e73d.3vvcompany.com`, `116ec3a1ad128d7d.darkwebf.workers.dev` _(+1 more)_
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

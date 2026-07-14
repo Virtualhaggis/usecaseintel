@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Developer driven workflows: Dockerfile image scanning, prioritization, and remed
 
-`UC_3166_1` · phase: **exploit** · confidence: **High**
+`UC_3167_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

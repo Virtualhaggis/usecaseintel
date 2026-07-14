@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Open source maintainers want to be secure, but 70% lack skills
 
-`UC_3532_0` · phase: **exploit** · confidence: **High**
+`UC_3536_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
