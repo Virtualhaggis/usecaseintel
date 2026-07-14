@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### O-UNC-066 passkey-themed vishing phishing domain contact (assignpasskey/deploypasskey/etc.)
 
-`UC_59_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_60_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### Rogue Entra passkey/FIDO2 registration from O-UNC-066 operator ASN (DDoS-Guard/IQWeb)
 
-`UC_59_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_60_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ CloudAppEvents
 
 ### O-UNC-066 passkey phishing-kit URL-path fingerprint (/backend.php, /submit-authenticator, /passkey/check)
 
-`UC_59_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_60_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

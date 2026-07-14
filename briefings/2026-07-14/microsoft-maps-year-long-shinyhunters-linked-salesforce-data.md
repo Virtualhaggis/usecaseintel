@@ -1,26 +1,22 @@
-# [CRIT] Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Microsoft 365
+# [CRIT] Microsoft Maps Year-Long ShinyHunters-Linked Salesforce Data Theft Across Three Paths
 
 **Source:** The Hacker News
-**Published:** 2026-07-13
-**Article:** https://thehackernews.com/2026/07/misconfigured-server-reveals-three.html
+**Published:** 2026-07-14
+**Article:** https://thehackernews.com/2026/07/microsoft-maps-year-long-shinyhunters.html
 
 ## Threat Profile
 
-Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Microsoft 365 
- Swati Khandelwal  Jul 13, 2026 Identity Security / Threat Intelligence 
-An attacker running a live Microsoft 365 phishing operation left a Python web server listening on a public port with directory listing switched on. The command that did it: python3 -m http.server 8080 , was still sitting in the readable .bash_history .
-From that one lapse, French security firm Lexfo lifted the operator's entire toolki…
+Microsoft Maps Three Salesforce Attack Paths Tied to a Year of ShinyHunters Activity 
+ Swati Khandelwal  Jul 14, 2026 SaaS Security / Identity Security 
+Attackers whose methods line up with the data-extortion group ShinyHunters have spent the past year walking into corporate Salesforce environments without exploiting a single flaw in the platform.
+The way in has been the trust the organization had already extended, usually through the OAuth connections that tie Salesforce to the apps and third…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `185.163.204.7`
-- **Domain (defanged):** `picis.net`
-- **Domain (defanged):** `romnor.ca`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -30,45 +26,13 @@ From that one lapse, French security firm Lexfo lifted the operator's entire too
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1053.005** — Scheduled Task
-- **T1219** — Remote Access Software
-- **T1071** — Application Layer Protocol
-- **T1053.005** — Persistence (article-specific)
+- **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Infostealer — non-browser process accessing browser cookie/login DBs
-
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -245,20 +209,17 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
-### Scheduled task created with suspicious image / encoded args
+### Trusted vendor binary / installer launching unusual children
 
-`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
-      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
-        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
-        OR Processes.process="*\AppData\*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
 ```
 
@@ -267,96 +228,12 @@ CloudAppEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
-
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
-### Article-specific behavioural hunt — Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Micros
-
-`UC_26_8` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Micros ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("evilginx2.exe","xeox-agent_x64.exe"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("evilginx2.exe","xeox-agent_x64.exe"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Micros
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("evilginx2.exe", "xeox-agent_x64.exe"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("evilginx2.exe", "xeox-agent_x64.exe"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `185.163.204.7`, `picis.net`, `romnor.ca`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

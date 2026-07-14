@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-14
 - [ghsa critical cve 2026 52824 kimai default app secret in doc](./2026-07-14/ghsa-critical-cve-2026-52824-kimai-default-app-secret-in-doc.md)
+- [microsoft maps year long shinyhunters linked salesforce data](./2026-07-14/microsoft-maps-year-long-shinyhunters-linked-salesforce-data.md)
 
 ## 2026-07-13
 - [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
@@ -118,7 +119,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
 - [github secret scanning public monitoring for enterprises cov](./2026-07-07/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
 - [redwing maas packages android bank fraud as a telegram renta](./2026-07-07/redwing-maas-packages-android-bank-fraud-as-a-telegram-renta.md)
-- [rogue agent flaw could have let attackers hijack google dial](./2026-07-07/rogue-agent-flaw-could-have-let-attackers-hijack-google-dial.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
