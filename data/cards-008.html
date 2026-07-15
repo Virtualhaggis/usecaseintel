@@ -1,3 +1,348 @@
+<article class="card" id="art-198" data-art-slug="2026-06-26-ghsa-critical-cve-2026-48769-incus-has-an-arbitrary-file-wri"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="4" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its client due to trusted image hash Incus has an arbitrary file write on its client due to trusted image hash CVE-2026-48769 T1190 [LLM] Incus daemon (incusd) writes file outside image store to cron/OS path (CVE-2026-48769) [LLM] Incus daemon outbound image fetch to public host followed by write outside data dir (CVE-2026-48769) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its clien">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-26-ghsa-critical-cve-2026-48769-incus-has-an-arbitrary-file-wri" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-f6m5-xw2g-xc4x" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its client due to trusted image hash</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-26</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Incus has an arbitrary file write on its client due to trusted image hash</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48769</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-198-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-198"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-198-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Incus daemon outbound image fetch to public host followed by write outside data dir (CVE-2026-48769)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Incus daemon (incusd) writes file outside image store to cron/OS path (CVE-2026-48769) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its clien</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="dbc0242f8b" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">Incus daemon (incusd) writes file outside image store to cron/OS path (CVE-2026-48769)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="dbc0242f8b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the arbitrary-file-write primitive of CVE-2026-48769: the incusd daemon creating or modifying a file under a root-executable location (cron dirs, sudoers.d, systemd units, ld.so.preload, root SSH, profile.d) as a result of a path-traversal Incus-Image-Hash header. incusd has no legitimate reason to write into these OS directories, so a hit is a near-certain exploitation of the direct-URL image import.
+
+Rationale: Uses the exact daemon binary (incusd), the exact image-store root the traversal escapes (/var/lib/incus/images/), and the root-executable sink directories (/etc/cron.d etc.) named in the PoC (../../../../etc/cron.d/incus-direct-image-url-rce). incusd writing outside its own data dir into an OS boot/cron path is effectively impossible in normal operation, giving a very low FP rate.
+
+Cross-checked against:
+  • https://github.com/lxc/incus/security/advisories/GHSA-f6m5-xw2g-xc4x
+  • https://vulnerability.circl.lu/vuln/ghsa-f6m5-xw2g-xc4x
+  • https://advisory.eventussecurity.com/advisory/incus-vulnerabilities-break-host-instance-boundary/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A local admin running incusd with a non-default storage path and image store relocated outside /var/lib/incus (custom Incus config)</li><li>Incus instance provisioning hooks / cloud-init integration that legitimately drop a profile.d or systemd unit during container start</li><li>Configuration-management tooling (Ansible/Puppet) invoked under the incusd process tree writing OS files during host bootstrap</li><li>Package upgrades of Incus itself installing systemd units — attributed to dpkg/rpm, not incusd, but may co-occur</li><li>EDR mis-attributing a child helper process file write to the incusd parent</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath startswith &quot;/var/lib/incus&quot; or FolderPath startswith &quot;/etc/incus&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Pull the offending file (FolderPath/FileName) and read its contents — CVE-2026-48769 writes a cron line like &#x27;* * * * * root /bin/sh -c &lt;cmd&gt;&#x27;. Confirm incusd version (&lt; 6.23.0 = vulnerable) and check recent incus image import with source.type=url. 2) Contain: Delete the planted file, kill any cron/systemd job it spawned, isolate the host, and block/rotate any credentials the payload could reach; snapshot for forensics first. 3) Hunt: Enumerate all incusd file writes outside /var/lib/incus in the last 30d, review incusd outbound HTTP to unknown image servers, and check other hosts running vulnerable Incus for the same planted filenames.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-198-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-198-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-198-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-198-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-198-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-198-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(14d)
+| where InitiatingProcessFileName =~ &quot;incusd&quot;
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FolderPath has_any (&quot;/etc/cron.d&quot;,&quot;/etc/cron.daily&quot;,&quot;/etc/cron.hourly&quot;,&quot;/etc/cron.weekly&quot;,&quot;/etc/cron.monthly&quot;,&quot;/etc/crontab&quot;,&quot;/var/spool/cron&quot;,&quot;/etc/sudoers.d&quot;,&quot;/etc/ld.so.preload&quot;,&quot;/etc/profile.d&quot;,&quot;/root/.ssh&quot;,&quot;/etc/systemd/system&quot;)
+| where FolderPath !startswith &quot;/var/lib/incus/images&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, FolderPath, FileName, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-198-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(14d)
+| where ActingProcessName has &quot;incusd&quot;
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileCreate&quot;,&quot;FileRename&quot;)
+| where TargetFilePath has_any (&quot;/etc/cron.d&quot;,&quot;/etc/cron.daily&quot;,&quot;/etc/cron.hourly&quot;,&quot;/etc/crontab&quot;,&quot;/var/spool/cron&quot;,&quot;/etc/sudoers.d&quot;,&quot;/etc/ld.so.preload&quot;,&quot;/etc/profile.d&quot;,&quot;/root/.ssh&quot;,&quot;/etc/systemd/system&quot;)
+| where TargetFilePath !startswith &quot;/var/lib/incus/images&quot;
+| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, ActorUsername, TargetFilePath, TargetFileName, Hash
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-198-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Incus Daemon File Write Outside Image Store to Sensitive OS Path (CVE-2026-48769)
+id: 6f1c9a4e-8d2b-4d7a-9c3e-2a1b5e0f9d44
+description: Detects the incusd daemon creating or modifying a file under a root-executable OS location, indicative of the CVE-2026-48769 path-traversal Incus-Image-Hash arbitrary file write.
+references:
+  - https://github.com/lxc/incus/security/advisories/GHSA-f6m5-xw2g-xc4x
+  - https://github.com/advisories/GHSA-f6m5-xw2g-xc4x
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1053.003
+  - attack.t1190
+  - attack.persistence
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection_proc:
+    Image|endswith: &#x27;/incusd&#x27;
+  selection_path:
+    TargetFilename|contains:
+      - &#x27;/etc/cron.d/&#x27;
+      - &#x27;/etc/cron.daily/&#x27;
+      - &#x27;/etc/cron.hourly/&#x27;
+      - &#x27;/etc/crontab&#x27;
+      - &#x27;/var/spool/cron/&#x27;
+      - &#x27;/etc/sudoers.d/&#x27;
+      - &#x27;/etc/ld.so.preload&#x27;
+      - &#x27;/etc/profile.d/&#x27;
+      - &#x27;/root/.ssh/&#x27;
+      - &#x27;/etc/systemd/system/&#x27;
+  filter_imgdir:
+    TargetFilename|startswith: &#x27;/var/lib/incus/images/&#x27;
+  condition: selection_proc and selection_path and not filter_imgdir
+level: high</code></pre></div>
+    <div class="tab-content" id="art-198-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/incusd$/i
+| regex(&quot;/(etc/cron|etc/crontab|var/spool/cron|etc/sudoers\\.d|etc/ld\\.so\\.preload|etc/profile\\.d|root/\\.ssh|etc/systemd/system)&quot;, field=TargetFileName)
+| NOT (TargetFileName=/\/var\/lib\/incus\/images\//i)
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-198-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-198-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-198-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-198-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) Filesystem.process_name=&quot;incusd&quot; (Filesystem.file_path=&quot;/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;/etc/cron.daily/*&quot; OR Filesystem.file_path=&quot;/etc/cron.hourly/*&quot; OR Filesystem.file_path=&quot;/etc/crontab&quot; OR Filesystem.file_path=&quot;/var/spool/cron/*&quot; OR Filesystem.file_path=&quot;/etc/sudoers.d/*&quot; OR Filesystem.file_path=&quot;/etc/ld.so.preload&quot; OR Filesystem.file_path=&quot;/etc/profile.d/*&quot; OR Filesystem.file_path=&quot;/root/.ssh/*&quot; OR Filesystem.file_path=&quot;/etc/systemd/system/*&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT match(file_path,&quot;^/var/lib/incus/images/&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-198-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) Filesystem.process_name=&quot;incusd&quot; (Filesystem.file_path=&quot;/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;/etc/cron.daily/*&quot; OR Filesystem.file_path=&quot;/etc/cron.hourly/*&quot; OR Filesystem.file_path=&quot;/etc/crontab&quot; OR Filesystem.file_path=&quot;/var/spool/cron/*&quot; OR Filesystem.file_path=&quot;/etc/sudoers.d/*&quot; OR Filesystem.file_path=&quot;/etc/ld.so.preload&quot; OR Filesystem.file_path=&quot;/etc/profile.d/*&quot; OR Filesystem.file_path=&quot;/root/.ssh/*&quot; OR Filesystem.file_path=&quot;/etc/systemd/system/*&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT match(file_path,&quot;^/var/lib/incus/images/&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f9e8f1ac5c" data-platforms="def,falcon,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Incus daemon outbound image fetch to public host followed by write outside data dir (CVE-2026-48769)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="f9e8f1ac5c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates the delivery and exploit halves of CVE-2026-48769: incusd making an outbound connection to a public IP (the attacker-controlled source.type=url image server) and, on the same host within minutes, writing a file anywhere outside /var/lib/incus. Gating the file-write on a preceding external fetch catches traversal to sinks the sensitive-dir list misses while suppressing normal local activity.
+
+Rationale: Ties the two article-specific behaviours: incusd reaching an external image server (source.type=url HEAD/GET) and then writing outside its own /var/lib/incus tree within a short window — the observable signature of the traversal write. Excluding incus&#x27;s own /var/lib, /var/log and /etc paths keeps only escapes.
+
+Cross-checked against:
+  • https://github.com/lxc/incus/security/advisories/GHSA-f6m5-xw2g-xc4x
+  • https://advisory.eventussecurity.com/advisory/incus-vulnerabilities-break-host-instance-boundary/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate incus image import from a public image server (images.linuxcontainers.org) that coincides with unrelated incusd file activity on the host</li><li>incusd fetching a public URL image while normal container disk/backup writes land in a non-standard storage pool outside /var/lib/incus</li><li>Custom storage pool mounted outside /var/lib/incus causing benign incusd writes to appear as &#x27;escapes&#x27;</li><li>Proxy/NAT egress making an internal mirror appear as a public RemoteIP</li><li>Short-window coincidence of an image pull and a scheduled Incus maintenance write</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteUrl !endswith &quot;images.linuxcontainers.org&quot; and RemoteUrl !endswith &quot;linuxcontainers.org&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Inspect the RemoteIP/RemoteUrl incusd contacted — is it a known image mirror or an unknown/attacker host? Read the written file for a cron/systemd/sudoers payload and confirm incusd &lt; 6.23.0. 2) Contain: Remove the planted file, terminate spawned jobs, isolate the host, and block the remote image-server IP/domain at egress. 3) Hunt: Search all hosts for incusd connections to that RemoteIP and for any incusd writes outside /var/lib/incus; audit who issued the &#x27;incus image import&#x27; with source.type=url and from which client/API token.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-198-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-198-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-198-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-198-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-198-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let Window = 10m;
+let Fetches = DeviceNetworkEvents
+    | where Timestamp &gt; ago(14d)
+    | where InitiatingProcessFileName =~ &quot;incusd&quot;
+    | where RemoteIPType == &quot;Public&quot;
+    | project FetchTime = Timestamp, DeviceName, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessCommandLine;
+DeviceFileEvents
+| where Timestamp &gt; ago(14d)
+| where InitiatingProcessFileName =~ &quot;incusd&quot;
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FolderPath !startswith &quot;/var/lib/incus&quot; and FolderPath !startswith &quot;/var/log/incus&quot; and FolderPath !startswith &quot;/etc/incus&quot;
+| join kind=inner Fetches on DeviceName
+| where Timestamp between (FetchTime .. FetchTime + Window)
+| project FetchTime, WriteTime = Timestamp, DeviceName, RemoteIP, RemoteUrl, RemotePort, FolderPath, FileName, SHA256
+| order by WriteTime desc</code></pre></div>
+    <div class="tab-content" id="art-198-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+let Window = 10m;
+let Fetches = DeviceNetworkEvents
+    | where TimeGenerated &gt; ago(14d)
+    | where InitiatingProcessFileName =~ &quot;incusd&quot;
+    | where RemoteIPType == &quot;Public&quot;
+    | project FetchTime = TimeGenerated, DeviceName, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessCommandLine;
+DeviceFileEvents
+| where TimeGenerated &gt; ago(14d)
+| where InitiatingProcessFileName =~ &quot;incusd&quot;
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FolderPath !startswith &quot;/var/lib/incus&quot; and FolderPath !startswith &quot;/var/log/incus&quot; and FolderPath !startswith &quot;/etc/incus&quot;
+| join kind=inner Fetches on DeviceName
+| where TimeGenerated between (FetchTime .. FetchTime + Window)
+| project FetchTime, WriteTime = TimeGenerated, DeviceName, RemoteIP, RemoteUrl, RemotePort, FolderPath, FileName, SHA256
+| order by WriteTime desc</code></pre></div>
+    <div class="tab-content" id="art-198-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/incusd$/i
+| NOT (TargetFileName=/\/var\/lib\/incus\//i)
+| NOT (TargetFileName=/\/var\/log\/incus\//i)
+| NOT (TargetFileName=/\/etc\/incus\//i)
+| join({#event_simpleName=NetworkConnectIP4 ContextImageFileName=/incusd$/i | NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) | NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4) | NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)}, field=aid, include=[RemoteAddressIP4, RemotePort])
+| groupBy([aid, ComputerName, TargetFileName, RemoteAddressIP4], function=count())</code></pre></div>
+    <div class="tab-content" id="art-198-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-198-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-198-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-198-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) Filesystem.process_name=&quot;incusd&quot; by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where NOT match(file_path,&quot;^/var/lib/incus/&quot;) AND NOT match(file_path,&quot;^/var/log/incus/&quot;) AND NOT match(file_path,&quot;^/etc/incus/&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-198-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) Filesystem.process_name=&quot;incusd&quot; by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where NOT match(file_path,&quot;^/var/lib/incus/&quot;) AND NOT match(file_path,&quot;^/var/log/incus/&quot;) AND NOT match(file_path,&quot;^/etc/incus/&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-198-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-198-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-198-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-198-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48769&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-198-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48769&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-198-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-198-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-198-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-198-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48769&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-198-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48769&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="05004e884f" data-platforms="def,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its clien</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="05004e884f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-198-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-198-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-198-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-198-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its clien
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/cron.d/incus-direct-image-url-rce&quot;, &quot;/usr/bin/env&quot;, &quot;/var/lib/incus/images/&quot;, &quot;/var/lib/incus/unix.socket&quot;, &quot;/tmp/incus-direct-image-url-rce&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-198-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its clien
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/cron.d/incus-direct-image-url-rce&quot;, &quot;/usr/bin/env&quot;, &quot;/var/lib/incus/images/&quot;, &quot;/var/lib/incus/unix.socket&quot;, &quot;/tmp/incus-direct-image-url-rce&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-198-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-198-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-198-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-198-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its clien ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/cron.d/incus-direct-image-url-rce*&quot; OR Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/var/lib/incus/images/*&quot; OR Filesystem.file_path=&quot;*/var/lib/incus/unix.socket*&quot; OR Filesystem.file_path=&quot;*/tmp/incus-direct-image-url-rce*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-198-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48769: Incus has an arbitrary file write on its clien ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/cron.d/incus-direct-image-url-rce*&quot; OR Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/var/lib/incus/images/*&quot; OR Filesystem.file_path=&quot;*/var/lib/incus/unix.socket*&quot; OR Filesystem.file_path=&quot;*/tmp/incus-direct-image-url-rce*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-199" data-art-slug="2026-06-26-threat-brief-mitigating-large-scale-credential-attacks"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1566"
@@ -11855,286 +12200,6 @@ level: medium
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
 | `drop_dm_object_name(Authentication)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-229" data-art-slug="2026-06-24-ghsa-critical-cve-2026-45051-openam-pre-auth-rce-via-java-de"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="linux,vcs,windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-45051: OpenAM: Pre-auth RCE via Java Deserialization in WebAuthn Authenticator Storage OpenAM: Pre-auth RCE via Java Deserialization in WebAuthn Authenticator Storage CVE-2026-45051 T1190 [LLM] Vulnerable OpenAM WebAuthn module exposed to CVE-2026-45051 deserialization RCE [LLM] OpenAM/Tomcat Java process spawning a shell or LOLBIN — CVE-2026-45051 deserialization RCE execution Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-24-ghsa-critical-cve-2026-45051-openam-pre-auth-rce-via-java-de" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-6c99-87fr-6q7r" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45051: OpenAM: Pre-auth RCE via Java Deserialization in WebAuthn Authenticator Storage</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-24</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">OpenAM: Pre-auth RCE via Java Deserialization in WebAuthn Authenticator Storage</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45051</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-229-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-229"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-229-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable OpenAM WebAuthn module exposed to CVE-2026-45051 deserialization RCE · [LLM] OpenAM/Tomcat Java process spawning a shell or LOLBIN — CVE-2026-45051 deserialization RCE execution</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="17e1fed153" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Vulnerable OpenAM WebAuthn module exposed to CVE-2026-45051 deserialization RCE</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="17e1fed153" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts running OpenAM Community Edition &lt;= 16.0.6 (openam-auth-webauthn) carrying CVE-2026-45051, the pre-auth Java deserialization RCE in the WebAuthn authenticator storage. This is an exposure/attack-surface hunt so the SOC knows which internet-facing IdM servers must be patched to 16.1.1 before the behavioral detection below can even fire.
-
-Rationale: Keys directly on the article&#x27;s CVE-2026-45051 and the affected maven package openam-auth-webauthn (&lt;=16.0.6, fixed 16.1.1). TVM/Vulnerabilities-DM lookups on a fixed CVE ID are essentially FP-free; the only tuning is coverage (niche OSS product may not be in every vuln feed — supplement with a file inventory for openam-auth-webauthn-*.jar).
-
-Cross-checked against:
-  • https://advisories.gitlab.com/maven/org.openidentityplatform.openam/openam-auth-webauthn/CVE-2026-45051/
-  • https://www.openidentityplatform.org/blog/2026-03-24-openam-16-0-6-released</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Server already patched to 16.1.1 but vuln scanner cache is stale (re-scan clears it)</li><li>A dev/test OpenAM instance flagged that is not internet-reachable and not running the WebAuthn flow</li><li>Vendor rebranding: ForgeRock AM builds mis-mapped to the OpenIdentityPlatform CPE</li><li>Software inventory reporting the shaded/uber-jar version rather than the openam-auth-webauthn sub-module version</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host is actually running OpenAM (java process serving /openam context) and whether it is internet-facing; check the running SoftwareVersion against 16.1.1. 2) Contain: if pre-16.1.1 and WebAuthn auth is reachable, restrict the WebAuthn authentication chain / put the IdM behind an authenticated WAF rule and schedule an emergency upgrade to 16.1.1; verify the WebAuthn userAttribute/storage attribute is server-managed and NOT user-writable. 3) Hunt: pivot to UC #2 (java app-server spawning shells) over the same host for the last 30 days to check for prior exploitation, and review LDAP/directory write ACLs and any legacy REST self-registration endpoints that could make the storage attribute attacker-writable.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-229-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-45051&quot;
-| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-229-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId == &quot;CVE-2026-45051&quot;
-| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-229-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-45051&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category
-| `drop_dm_object_name(Vulnerabilities)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-229-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-45051&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category
-| `drop_dm_object_name(Vulnerabilities)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ba46f2043f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">OpenAM/Tomcat Java process spawning a shell or LOLBIN — CVE-2026-45051 deserialization RCE execution</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ba46f2043f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the post-exploitation footprint of the WebAuthn deserialization gadget: the OpenAM application-server JVM (java/javaw, running under catalina/tomcat/jetty) spawning a command shell or download LOLBIN. A gadget-chain payload executes code as the app-server user, and IdM app servers virtually never fork cmd/powershell/sh — making parent=java + child=shell a high-fidelity RCE signal for this and the sibling jato.clientSession OpenAM deser RCEs.
-
-Rationale: Grounds the parent JVM in the article&#x27;s product context (openam/catalina/tomcat/jetty/webauthn in the parent command line) and the child in shell/download LOLBINs — the exact &#x27;code execution as the application server user&#x27; outcome the advisory describes. Corroborated against the sibling OpenAM jato.clientSession pre-auth deser RCE and the historical ForgeRock CVE-2021-35464, both of which yield the Tomcat-JVM-spawns-command pattern. Falcon lacks a parent-command-line field so its variant is broader (java parent + shell child).
-
-Cross-checked against:
-  • https://www.hacktron.ai/blog/openam-deserialization-pre-auth-rce
-  • https://github.com/OpenIdentityPlatform/OpenAM/security/advisories/GHSA-2cqq-rpvq-g5qj
-  • https://www.tenable.com/plugins/nessus/152139</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>OpenAM startup/shutdown scripts where catalina.sh forks whoami/hostname for env setup (usually parent is sh, not java — but nested java-&gt;sh can occur)</li><li>Admin/DevOps running diagnostic commands via a Java-based management console on the IdM host</li><li>Backup or monitoring agents embedded in the app that shell out to curl/certutil for health checks</li><li>CI/CD or config-management (Ansible/Chef) driving the Tomcat service to run setup commands</li><li>Java-based log-rotation or cron wrappers invoking bash on Linux OpenAM nodes</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;hostname&quot;,&quot;--version&quot;,&quot;-version&quot;) and ChildCmd !has_any (&quot;http://&quot;,&quot;https://&quot;,&quot;-enc&quot;,&quot;IEX&quot;,&quot;DownloadString&quot;,&quot;/dev/tcp&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full parent (java) and child command lines from the hit; benign hits are usually static startup/health-check commands, malicious hits show recon (whoami/net/id), downloaders (curl/certutil/bitsadmin to an external IP), or an interactive shell. Correlate the JVM&#x27;s timestamp against inbound requests to the OpenAM WebAuthn auth endpoint. 2) Contain: isolate the host, kill the child process tree, and take the OpenAM instance offline / block the WebAuthn auth chain pending patch to 16.1.1; rotate app-server service-account and any secrets readable by the JVM. 3) Hunt: from the same host, review subsequent DeviceNetworkEvents/NetworkConnectIP4 for C2 from the java process, check for dropped webshells/jars under the Tomcat webapps/work dirs, and audit LDAP/directory write events and REST self-registration that could have seeded the malicious serialized attribute.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-229-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-229-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-229-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-229-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;openam&quot;,&quot;catalina&quot;,&quot;tomcat&quot;,&quot;jetty&quot;,&quot;webauthn&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;nslookup.exe&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildFile=FileName, ChildCmd=ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-229-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has_any (&quot;java.exe&quot;,&quot;javaw.exe&quot;) or ActingProcessName endswith &quot;/java&quot;
-| where ActingProcessCommandLine has_any (&quot;openam&quot;,&quot;catalina&quot;,&quot;tomcat&quot;,&quot;jetty&quot;,&quot;webauthn&quot;)
-| where TargetProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell&quot;,&quot;pwsh&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami&quot;,&quot;certutil&quot;,&quot;bitsadmin&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/nc&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-229-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: OpenAM Application Server Java Process Spawning Shell (CVE-2026-45051 Deserialization RCE)
-id: 6f3c1e8a-2b74-4d19-9f0a-8c5b2d41ae77
-description: Detects the OpenAM/Tomcat JVM spawning a command shell or download LOLBIN, the post-exploitation footprint of the CVE-2026-45051 WebAuthn Java deserialization RCE.
-references:
-  - https://github.com/advisories/GHSA-6c99-87fr-6q7r
-  - https://advisories.gitlab.com/maven/org.openidentityplatform.openam/openam-auth-webauthn/CVE-2026-45051/
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1190
-  - attack.t1059
-  - attack.t1059.001
-  - attack.t1059.004
-logsource:
-  category: process_creation
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\java.exe&#x27;
-      - &#x27;\javaw.exe&#x27;
-      - &#x27;/java&#x27;
-    ParentCommandLine|contains:
-      - &#x27;openam&#x27;
-      - &#x27;catalina&#x27;
-      - &#x27;tomcat&#x27;
-      - &#x27;jetty&#x27;
-      - &#x27;webauthn&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\wscript.exe&#x27;
-      - &#x27;\cscript.exe&#x27;
-      - &#x27;\whoami.exe&#x27;
-      - &#x27;\net.exe&#x27;
-      - &#x27;\certutil.exe&#x27;
-      - &#x27;\bitsadmin.exe&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;/bin/sh&#x27;
-      - &#x27;/bin/bash&#x27;
-      - &#x27;/bin/dash&#x27;
-  condition: selection_parent and selection_child
-falsepositives:
-  - Java-based admin tooling or scheduled jobs that legitimately shell out on the IdM host
-level: high</code></pre></div>
-    <div class="tab-content" id="art-229-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@ParentImage:(*\\java.exe OR *\\javaw.exe OR *\\Java.exe)) (@ParentCommandLine:(*openam* OR *OpenAM* OR *catalina* OR *Catalina* OR *tomcat* OR *Tomcat* OR *jetty* OR *webauthn*)) (@Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\whoami.exe OR *\\net.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe))</code></pre></div>
-    <div class="tab-content" id="art-229-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(java|javaw)(\.exe)?$/i
-| ImageFileName=/(\\(cmd|powershell|pwsh|wscript|cscript|whoami|net|certutil|bitsadmin|curl|wget)\.exe|\/(sh|bash|dash|nc))$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-229-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| where match(parent_process, &quot;(?i)(openam|catalina|tomcat|jetty|webauthn)&quot;)
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-229-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| where match(parent_process, &quot;(?i)(openam|catalina|tomcat|jetty|webauthn)&quot;)
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-229-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45051&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-229-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45051&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-229-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45051&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-229-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45051&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

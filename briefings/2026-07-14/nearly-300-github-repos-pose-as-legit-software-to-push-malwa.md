@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Fake GitHub 'secure download' ZIP fetched from github.io redirector / targetroyena.com
 
-`UC_15_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_17_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceNetworkEvents
 
 ### WinGUP updater (gup.exe / renamed) side-loads libcurl.dll from user-writable ZIP-extraction path
 
-`UC_15_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceImageLoadEvents
 
 ### Known BoryptGrab / fake-GitHub sample hashes on process, file, or image-load
 
-`UC_15_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_17_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ union
 
 ### Remote code injection into chrome.exe to defeat App-Bound Encryption (BoryptGrab)
 
-`UC_15_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_17_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceEvents
 
 ### BoryptGrab C2 exfil to 193.143.1.131 / targetroyena.com from non-browser process
 
-`UC_15_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_17_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,7 +212,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Nearly 300 GitHub repos pose as legit software to push malware
 
-`UC_15_4` · phase: **exploit** · confidence: **High**
+`UC_17_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

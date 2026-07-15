@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Tengine/XQUIC HTTP/3 worker crash-loop via glibc fortify abort (XRING DoS)
 
-`UC_88_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_89_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -48,7 +48,7 @@ index=os OR index=linux sourcetype IN ("linux_messages_syslog","syslog") (proces
 
 ### Tengine/nginx HTTP/3 worker respawn storm (XRING crash-loop symptom)
 
-`UC_88_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_89_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

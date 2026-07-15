@@ -1,3 +1,283 @@
+<article class="card" id="art-229" data-art-slug="2026-06-24-ghsa-critical-cve-2026-45051-openam-pre-auth-rce-via-java-de"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-45051: OpenAM: Pre-auth RCE via Java Deserialization in WebAuthn Authenticator Storage OpenAM: Pre-auth RCE via Java Deserialization in WebAuthn Authenticator Storage CVE-2026-45051 T1190 [LLM] Vulnerable OpenAM WebAuthn module exposed to CVE-2026-45051 deserialization RCE [LLM] OpenAM/Tomcat Java process spawning a shell or LOLBIN — CVE-2026-45051 deserialization RCE execution Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-24-ghsa-critical-cve-2026-45051-openam-pre-auth-rce-via-java-de" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-6c99-87fr-6q7r" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45051: OpenAM: Pre-auth RCE via Java Deserialization in WebAuthn Authenticator Storage</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-24</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">OpenAM: Pre-auth RCE via Java Deserialization in WebAuthn Authenticator Storage</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45051</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-229-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-229"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-229-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable OpenAM WebAuthn module exposed to CVE-2026-45051 deserialization RCE · [LLM] OpenAM/Tomcat Java process spawning a shell or LOLBIN — CVE-2026-45051 deserialization RCE execution</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="17e1fed153" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Vulnerable OpenAM WebAuthn module exposed to CVE-2026-45051 deserialization RCE</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="17e1fed153" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces hosts running OpenAM Community Edition &lt;= 16.0.6 (openam-auth-webauthn) carrying CVE-2026-45051, the pre-auth Java deserialization RCE in the WebAuthn authenticator storage. This is an exposure/attack-surface hunt so the SOC knows which internet-facing IdM servers must be patched to 16.1.1 before the behavioral detection below can even fire.
+
+Rationale: Keys directly on the article&#x27;s CVE-2026-45051 and the affected maven package openam-auth-webauthn (&lt;=16.0.6, fixed 16.1.1). TVM/Vulnerabilities-DM lookups on a fixed CVE ID are essentially FP-free; the only tuning is coverage (niche OSS product may not be in every vuln feed — supplement with a file inventory for openam-auth-webauthn-*.jar).
+
+Cross-checked against:
+  • https://advisories.gitlab.com/maven/org.openidentityplatform.openam/openam-auth-webauthn/CVE-2026-45051/
+  • https://www.openidentityplatform.org/blog/2026-03-24-openam-16-0-6-released</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Server already patched to 16.1.1 but vuln scanner cache is stale (re-scan clears it)</li><li>A dev/test OpenAM instance flagged that is not internet-reachable and not running the WebAuthn flow</li><li>Vendor rebranding: ForgeRock AM builds mis-mapped to the OpenIdentityPlatform CPE</li><li>Software inventory reporting the shaded/uber-jar version rather than the openam-auth-webauthn sub-module version</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host is actually running OpenAM (java process serving /openam context) and whether it is internet-facing; check the running SoftwareVersion against 16.1.1. 2) Contain: if pre-16.1.1 and WebAuthn auth is reachable, restrict the WebAuthn authentication chain / put the IdM behind an authenticated WAF rule and schedule an emergency upgrade to 16.1.1; verify the WebAuthn userAttribute/storage attribute is server-managed and NOT user-writable. 3) Hunt: pivot to UC #2 (java app-server spawning shells) over the same host for the last 30 days to check for prior exploitation, and review LDAP/directory write ACLs and any legacy REST self-registration endpoints that could make the storage attribute attacker-writable.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-229-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-229-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-229-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-229-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2026-45051&quot;
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-229-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2026-45051&quot;
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-229-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-45051&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-229-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-45051&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ba46f2043f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">OpenAM/Tomcat Java process spawning a shell or LOLBIN — CVE-2026-45051 deserialization RCE execution</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ba46f2043f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the post-exploitation footprint of the WebAuthn deserialization gadget: the OpenAM application-server JVM (java/javaw, running under catalina/tomcat/jetty) spawning a command shell or download LOLBIN. A gadget-chain payload executes code as the app-server user, and IdM app servers virtually never fork cmd/powershell/sh — making parent=java + child=shell a high-fidelity RCE signal for this and the sibling jato.clientSession OpenAM deser RCEs.
+
+Rationale: Grounds the parent JVM in the article&#x27;s product context (openam/catalina/tomcat/jetty/webauthn in the parent command line) and the child in shell/download LOLBINs — the exact &#x27;code execution as the application server user&#x27; outcome the advisory describes. Corroborated against the sibling OpenAM jato.clientSession pre-auth deser RCE and the historical ForgeRock CVE-2021-35464, both of which yield the Tomcat-JVM-spawns-command pattern. Falcon lacks a parent-command-line field so its variant is broader (java parent + shell child).
+
+Cross-checked against:
+  • https://www.hacktron.ai/blog/openam-deserialization-pre-auth-rce
+  • https://github.com/OpenIdentityPlatform/OpenAM/security/advisories/GHSA-2cqq-rpvq-g5qj
+  • https://www.tenable.com/plugins/nessus/152139</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>OpenAM startup/shutdown scripts where catalina.sh forks whoami/hostname for env setup (usually parent is sh, not java — but nested java-&gt;sh can occur)</li><li>Admin/DevOps running diagnostic commands via a Java-based management console on the IdM host</li><li>Backup or monitoring agents embedded in the app that shell out to curl/certutil for health checks</li><li>CI/CD or config-management (Ansible/Chef) driving the Tomcat service to run setup commands</li><li>Java-based log-rotation or cron wrappers invoking bash on Linux OpenAM nodes</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;hostname&quot;,&quot;--version&quot;,&quot;-version&quot;) and ChildCmd !has_any (&quot;http://&quot;,&quot;https://&quot;,&quot;-enc&quot;,&quot;IEX&quot;,&quot;DownloadString&quot;,&quot;/dev/tcp&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full parent (java) and child command lines from the hit; benign hits are usually static startup/health-check commands, malicious hits show recon (whoami/net/id), downloaders (curl/certutil/bitsadmin to an external IP), or an interactive shell. Correlate the JVM&#x27;s timestamp against inbound requests to the OpenAM WebAuthn auth endpoint. 2) Contain: isolate the host, kill the child process tree, and take the OpenAM instance offline / block the WebAuthn auth chain pending patch to 16.1.1; rotate app-server service-account and any secrets readable by the JVM. 3) Hunt: from the same host, review subsequent DeviceNetworkEvents/NetworkConnectIP4 for C2 from the java process, check for dropped webshells/jars under the Tomcat webapps/work dirs, and audit LDAP/directory write events and REST self-registration that could have seeded the malicious serialized attribute.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-229-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-229-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-229-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-229-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-229-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-229-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-229-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;)
+| where InitiatingProcessCommandLine has_any (&quot;openam&quot;,&quot;catalina&quot;,&quot;tomcat&quot;,&quot;jetty&quot;,&quot;webauthn&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;nslookup.exe&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildFile=FileName, ChildCmd=ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-229-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessName has_any (&quot;java.exe&quot;,&quot;javaw.exe&quot;) or ActingProcessName endswith &quot;/java&quot;
+| where ActingProcessCommandLine has_any (&quot;openam&quot;,&quot;catalina&quot;,&quot;tomcat&quot;,&quot;jetty&quot;,&quot;webauthn&quot;)
+| where TargetProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell&quot;,&quot;pwsh&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami&quot;,&quot;certutil&quot;,&quot;bitsadmin&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/nc&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-229-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: OpenAM Application Server Java Process Spawning Shell (CVE-2026-45051 Deserialization RCE)
+id: 6f3c1e8a-2b74-4d19-9f0a-8c5b2d41ae77
+description: Detects the OpenAM/Tomcat JVM spawning a command shell or download LOLBIN, the post-exploitation footprint of the CVE-2026-45051 WebAuthn Java deserialization RCE.
+references:
+  - https://github.com/advisories/GHSA-6c99-87fr-6q7r
+  - https://advisories.gitlab.com/maven/org.openidentityplatform.openam/openam-auth-webauthn/CVE-2026-45051/
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+  - attack.t1059
+  - attack.t1059.001
+  - attack.t1059.004
+logsource:
+  category: process_creation
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;\java.exe&#x27;
+      - &#x27;\javaw.exe&#x27;
+      - &#x27;/java&#x27;
+    ParentCommandLine|contains:
+      - &#x27;openam&#x27;
+      - &#x27;catalina&#x27;
+      - &#x27;tomcat&#x27;
+      - &#x27;jetty&#x27;
+      - &#x27;webauthn&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\whoami.exe&#x27;
+      - &#x27;\net.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;/bin/sh&#x27;
+      - &#x27;/bin/bash&#x27;
+      - &#x27;/bin/dash&#x27;
+  condition: selection_parent and selection_child
+falsepositives:
+  - Java-based admin tooling or scheduled jobs that legitimately shell out on the IdM host
+level: high</code></pre></div>
+    <div class="tab-content" id="art-229-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@ParentImage:(*\\java.exe OR *\\javaw.exe OR *\\Java.exe)) (@ParentCommandLine:(*openam* OR *OpenAM* OR *catalina* OR *Catalina* OR *tomcat* OR *Tomcat* OR *jetty* OR *webauthn*)) (@Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\whoami.exe OR *\\net.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe))</code></pre></div>
+    <div class="tab-content" id="art-229-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(java|javaw)(\.exe)?$/i
+| ImageFileName=/(\\(cmd|powershell|pwsh|wscript|cscript|whoami|net|certutil|bitsadmin|curl|wget)\.exe|\/(sh|bash|dash|nc))$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-229-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(parent_process, &quot;(?i)(openam|catalina|tomcat|jetty|webauthn)&quot;)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-229-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(parent_process, &quot;(?i)(openam|catalina|tomcat|jetty|webauthn)&quot;)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-229-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-229-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-229-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-229-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45051&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-229-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45051&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-229-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45051&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-229-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45051&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-231" data-art-slug="2026-06-24-eset-takes-part-in-operation-endgame-to-disrupt-amadey-and-s"
   data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
   data-techs="T1005,T1008,T1012,T1016,T1020,T1021.001,T1027,T1027.015,T1033,T1036,T1041,T1055.002,T1057,T1059.003,T1071.001,T1082,T1083,T1106,T1113,T1119,T1129,T1132.001,T1136.001,T1140,T1176,T1190,T1195,T1195.002,T1204.002,T1218.007,T1218.011,T1219.002,T1480,T1518.001,T1528,T1539,T1547.001,T1552.001,T1552.002,T1555,T1555.003,T1573.001,T1583.004,T1587.001,T1588.001,T1608.001,T1614.001"
@@ -10549,226 +10829,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-260" data-art-slug="2026-06-19-ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif"
-  data-phases="actions,c2,install" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,sent,sigma,spl"
-  data-splunk-cats="cloud"
-  data-targets="kubernetes,vcs"
-  data-uc-count="2" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] GHSA-wfqx-gjrf-g28r: Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag   [LLM] Crossplane package installed by mutable tag instead of immutable digest [LLM] Crossplane ImageConfig signature-verification policy deleted or weakened">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-19-ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-wfqx-gjrf-g28r" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-wfqx-gjrf-g28r: Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-19</span>
-    <span>2 use cases</span>
-    <span>0 techniques</span>
-    <span>1 kill-chain phase detected</span>
-  </div>
-  <p class="summary">Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag</p>
-  
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-260-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-260"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-260-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line "><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Crossplane package installed by mutable tag instead of immutable digest · [LLM] Crossplane ImageConfig signature-verification policy deleted or weakened</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4af92502f5" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
-  <summary>
-    <span class="uc-title">Crossplane package installed by mutable tag instead of immutable digest</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4af92502f5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts Kubernetes API audit logs for pkg.crossplane.io Provider/Configuration/Function installs whose spec.package references a version tag rather than an @sha256 digest. This is the exact precondition GHSA-wfqx-gjrf-g28r requires: when a package is pulled by tag, a malicious/compromised OCI registry can serve a correctly-signed image for cosign verification and then swap in unsigned content for the actual pull.
-
-Rationale: Built directly on the advisory&#x27;s stated exploit precondition #2 (&#x27;Install packages using tag references rather than digests&#x27;). The detection keys on the real Crossplane API (pkg.crossplane.io Provider/Configuration/Function, spec.package) and the digest sentinel &#x27;@sha256:&#x27; that the fix mandates; absence of the digest is exactly what makes an install TOCTOU-exposed. Corroborated against the GHSA, the GitLab advisory mirror, and Crossplane&#x27;s ImageConfig/package docs.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  • https://advisories.gitlab.com/golang/github.com/crossplane/crossplane/v2/GHSA-wfqx-gjrf-g28r/
-  • https://docs.crossplane.io/latest/packages/image-configs/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate GitOps/Argo/Flux pipelines that pin Crossplane packages to a semantic-version tag (e.g. provider-aws:v1.20.0) rather than a digest — common and benign in many shops</li><li>Platform-team installs from the org&#x27;s own trusted internal registry where tag mutability is acceptable</li><li>Dev/sandbox clusters where engineers iterate on packages by floating tag</li><li>Initial cluster bootstrap installing first-party Upbound/Crossplane marketplace packages by tag</li><li>Renovate/Dependabot-style bots bumping a package tag during routine upgrades</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (PackageRef startswith &quot;xpkg.upbound.io/upbound/&quot; or PackageRef startswith &quot;xpkg.crossplane.io/&quot;)   // keep third-party / org-uncontrolled registries (advisory precondition #3), drop trusted first-party marketplace</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the offending Provider/Configuration object and its spec.package. Confirm whether the registry host is one the org controls (advisory precondition #3) and whether an ImageConfig with cosign verification matches that image. A tag-pinned package from a third-party registry under cosign verification is the high-risk case. 2) Contain: re-pin the package to the resolved immutable digest (spec.package: repo@sha256:...) and ensure Crossplane is on a fixed build (v2.3.3 / v2.2.3 or later); for vulnerable builds, prefer digest references org-wide until upgraded. 3) Hunt: inventory all pkg.crossplane.io resources still on tags, review the installed package revisions&#x27; Verified condition for skipped/incomplete status, and check whether the registry served differing digests for verify vs pull around the install time.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-260-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-260-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-260-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-260-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-260-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| where Verb in (&quot;create&quot;, &quot;update&quot;, &quot;patch&quot;)
-| extend ObjRef = todynamic(ObjectRef)
-| where tostring(ObjRef.apiGroup) == &quot;pkg.crossplane.io&quot;
-| where tostring(ObjRef.resource) in (&quot;providers&quot;, &quot;configurations&quot;, &quot;functions&quot;)
-| extend ReqObj = todynamic(RequestObject)
-| extend PackageRef = tostring(ReqObj.spec.package)
-| where isnotempty(PackageRef) and PackageRef !contains &quot;@sha256:&quot;   // not digest-pinned =&gt; mutable tag =&gt; TOCTOU-exposed
-| extend Actor = tostring(todynamic(User).username)
-| project TimeGenerated, Actor, Verb, Kind = tostring(ObjRef.resource), ObjectName = tostring(ObjRef.name), PackageRef, UserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-260-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane Package Installed By Mutable Tag Without Digest Pin
-id: 7a3c1e8b-2f4d-4c9a-b6e1-9d2f5a1c3e47
-description: Detects creation/update of a Crossplane Provider, Configuration or Function whose spec.package uses a mutable tag rather than an immutable @sha256 digest, the precondition for the GHSA-wfqx-gjrf-g28r signature-verification TOCTOU.
-references:
-  - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  - https://docs.crossplane.io/latest/packages/image-configs/
-author: SOC Detection Engineering
-date: 2026/06/21
-tags:
-  - attack.t1195.002
-logsource:
-  product: kubernetes
-  service: audit
-detection:
-  selection:
-    verb:
-      - create
-      - update
-      - patch
-    objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
-    objectRef.resource:
-      - &#x27;providers&#x27;
-      - &#x27;configurations&#x27;
-      - &#x27;functions&#x27;
-  filter_digest:
-    requestObject.spec.package|contains: &#x27;@sha256:&#x27;
-  condition: selection and not filter_digest
-level: low</code></pre></div>
-    <div class="tab-content" id="art-260-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:(providers OR configurations OR functions) @verb:(create OR update OR patch) -@requestObject.spec.package:*sha256*</code></pre></div>
-    <div class="tab-content" id="art-260-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;pkg.crossplane.io&quot; (objectRef.resource=&quot;providers&quot; OR objectRef.resource=&quot;configurations&quot; OR objectRef.resource=&quot;functions&quot;) (verb=&quot;create&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
-| rename requestObject.spec.package as package_ref, objectRef.name as object_name, objectRef.resource as kind, user.username as username
-| where isnotnull(package_ref) AND NOT match(package_ref, &quot;@sha256:&quot;)
-| stats min(_time) as firstTime, max(_time) as lastTime, values(username) as username, values(sourceIPs{}) as src_ips by package_ref, kind, object_name
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="200c047e5a" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
-  <summary>
-    <span class="uc-title">Crossplane ImageConfig signature-verification policy deleted or weakened</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="200c047e5a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Alerts on delete/update/patch operations against imageconfigs.pkg.crossplane.io in the Kubernetes audit stream. Crossplane enforces cosign signature verification only for images matched by an ImageConfig (spec.verification.cosign); removing or editing that resource silently disables verification, the defense the GHSA-wfqx-gjrf-g28r TOCTOU already partially undermines. Surfaces whether the post-change object still carries a verification block.
-
-Rationale: Grounded in the advisory&#x27;s statement that &#x27;package signature verification [is] configured via the ImageConfig mechanism&#x27; and Crossplane docs confirming the real resource (imageconfigs.pkg.crossplane.io, spec.verification.cosign). Detects the defense-evasion precursor — tearing down or weakening the cosign policy — using only verifiable API/resource names (no skipSignatureVerification field exists in the schema, so that reviewer suggestion was dropped as ungrounded).
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  • https://docs.crossplane.io/latest/packages/image-configs/
-  • https://docs.upbound.io/providers/signature-verification</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Platform engineers legitimately rotating cosign authorities/keys inside an ImageConfig during key rollover</li><li>GitOps reconciliation re-applying an unchanged ImageConfig (server-side apply &#x27;update&#x27; with no real diff)</li><li>Decommissioning an ImageConfig for a registry the org no longer uses</li><li>Migrating verification config between ImageConfig objects (delete old + create new)</li><li>Cert-manager or admission-controller status writes touching the resource</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Verb in (&quot;delete&quot;, &quot;deletecollection&quot;) or VerificationSpecPresent == false   // alert on removal/teardown of verification; suppress edits that retain a verification block</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: diff the ImageConfig before/after the operation — confirm whether spec.verification.cosign authorities were removed, loosened, or the whole object deleted, and identify the actor (human vs service account) and source IP. A delete or removal of the verification block by a non-platform identity is high-confidence malicious. 2) Contain: restore the ImageConfig from source-of-truth/GitOps, and pause new package installs (or require digest pins) until verification is re-established; rotate credentials of the actor if unauthorized. 3) Hunt: list any package revisions installed while the ImageConfig was absent/weakened and check their Verified condition; cross-reference with the mutable-tag install detection to find packages that may have been pulled without enforced verification.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-260-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-260-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-260-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-260-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-260-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| extend ObjRef = todynamic(ObjectRef)
-| where tostring(ObjRef.apiGroup) == &quot;pkg.crossplane.io&quot;
-| where tostring(ObjRef.resource) == &quot;imageconfigs&quot;
-| where Verb in (&quot;delete&quot;, &quot;deletecollection&quot;, &quot;update&quot;, &quot;patch&quot;)
-| extend ReqObj = todynamic(RequestObject)
-| extend VerificationSpecPresent = isnotempty(tostring(ReqObj.spec.verification))
-| extend Actor = tostring(todynamic(User).username)
-| project TimeGenerated, Actor, Verb, ImageConfigName = tostring(ObjRef.name), UserAgent, VerificationSpecPresent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-260-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane ImageConfig Signature Verification Deleted Or Modified
-id: b8f2d6a4-1c3e-4f7b-9a2d-6e4c8b1f0a52
-description: Detects delete or modify operations against Crossplane ImageConfig resources, which configure cosign package signature verification. Removing or weakening an ImageConfig disables verification for matching package images (GHSA-wfqx-gjrf-g28r).
-references:
-  - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  - https://docs.crossplane.io/latest/packages/image-configs/
-author: SOC Detection Engineering
-date: 2026/06/21
-tags:
-  - attack.t1562.001
-logsource:
-  product: kubernetes
-  service: audit
-detection:
-  selection:
-    objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
-    objectRef.resource: &#x27;imageconfigs&#x27;
-    verb:
-      - delete
-      - deletecollection
-      - update
-      - patch
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-260-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:imageconfigs @verb:(delete OR deletecollection OR update OR patch)</code></pre></div>
-    <div class="tab-content" id="art-260-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;pkg.crossplane.io&quot; objectRef.resource=&quot;imageconfigs&quot; (verb=&quot;delete&quot; OR verb=&quot;deletecollection&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
-| rename objectRef.name as imageconfig_name, user.username as username, verb as action, userAgent as user_agent
-| spath input=_raw path=requestObject.spec.verification output=verification_spec
-| eval verification_present=if(isnull(verification_spec) OR verification_spec=&quot;&quot;, &quot;no&quot;, &quot;yes&quot;)
-| table _time, username, action, imageconfig_name, user_agent, verification_present, sourceIPs{}
-| sort - _time</code></pre></div>
   </div>
 </details></div>
 </article>

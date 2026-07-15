@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma RAT C2 beacon to 85.137.53.71 from Node.js runtime
 
-`UC_11_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_13_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### Node.js resolving Miasma fallback C2 channels (BitTorrent DHT / Nostr relays)
 
-`UC_11_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_13_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### Detached 'node -e' launcher downloading Miasma second stage from IPFS
 
-`UC_11_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_13_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Miasma sync.js payload dropped to hidden 'NodeJS' directory
 
-`UC_11_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_13_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceFileEvents
 
 ### Installation of compromised @asyncapi package versions
 
-`UC_11_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_13_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -398,7 +398,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Coordinated AsyncAPI Supply Chain Attack: Miasma RAT Delivered via Compromised C
 
-`UC_11_9` · phase: **exploit** · confidence: **High**
+`UC_13_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

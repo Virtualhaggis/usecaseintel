@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised jscrambler npm package (8.14.0+) artifacts written to node_modules
 
-`UC_67_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_68_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceFileEvents
 
 ### npm/node preinstall drops and executes hidden native binary from OS temp dir
 
-`UC_67_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_68_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### Execution of extracted jscrambler stealer payload by SHA256
 
-`UC_67_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_68_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Stealer C2 egress to Tor Project infrastructure and hardcoded IPs
 
-`UC_67_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_68_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceNetworkEvents
 
 ### npm/node install spawns reconnaissance or shell utilities
 
-`UC_67_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_68_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceProcessEvents
 
 ### Persistence created by hidden temp-dir binary (scheduled task / Run key)
 
-`UC_67_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_68_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -342,7 +342,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — jscrambler npm package publishes malicious preinstall binary
 
-`UC_67_8` · phase: **exploit** · confidence: **High**
+`UC_68_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -27,54 +27,74 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FacturaScripts traversal file-write: web-server drops PHP/.htaccess into Dinamic/Assets or node_modules
+### FacturaScripts upload endpoint: path-traversal sequence in multipart filename
 
-`UC_10_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_12_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*Dinamic/Assets*" OR Filesystem.file_path="*Dinamic\\Assets*" OR Filesystem.file_path="*node_modules*") AND (Filesystem.file_name=".htaccess" OR Filesystem.file_name="*.php" OR Filesystem.file_name="*.php3" OR Filesystem.file_name="*.php5" OR Filesystem.file_name="*.php7" OR Filesystem.file_name="*.php8" OR Filesystem.file_name="*.phtml" OR Filesystem.file_name="*.pht" OR Filesystem.file_name="*.phps" OR Filesystem.file_name="*.phar" OR Filesystem.file_name="*.txt" OR Filesystem.file_name="*.html") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url="*uploadfiles*" OR Web.url="*attachedfiles*" OR Web.uri_path="*uploadfiles*" OR Web.uri_path="*attachedfiles*") by Web.src Web.dest Web.url Web.uri_path Web.http_method Web.status Web.http_user_agent Web.user
+| `drop_dm_object_name(Web)`
+| where match(url,"(?i)(\.\./|\.\.%2f|\.\.%5c|\.\.\\)") OR match(uri_path,"(?i)(\.\./|\.\.%2f)")
+| sort - lastTime
+```
+
+### FacturaScripts: PHP/.htaccess web-shell written into web-served Dinamic/Assets or node_modules
+
+`UC_12_1` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path="*Dinamic*Assets*" OR Filesystem.file_path="*node_modules*") (Filesystem.file_name="*.php" OR Filesystem.file_name="*.php3" OR Filesystem.file_name="*.php5" OR Filesystem.file_name="*.php7" OR Filesystem.file_name="*.php8" OR Filesystem.file_name="*.pht" OR Filesystem.file_name="*.phtml" OR Filesystem.file_name="*.phps" OR Filesystem.file_name="*.phar" OR Filesystem.file_name="*.htaccess") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("php-cgi.exe","php-fpm","php","httpd","apache2","w3wp.exe","nginx.exe","nginx")
-| where FolderPath contains "Dinamic/Assets" or FolderPath contains @"Dinamic\Assets" or FolderPath contains "node_modules"
-| extend FileExt = tolower(tostring(split(FileName, ".")[-1]))
-| where FileName =~ ".htaccess" or FileExt in ("php","php3","php4","php5","php7","php8","pht","phtml","phps","phar","txt","html","htm","shtml")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, FolderPath, FileName, InitiatingProcessCommandLine, SHA256
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath has "Dinamic" and FolderPath has "Assets") or FolderPath has "node_modules"
+| extend Ext = tolower(tostring(split(FileName, ".")[-1]))
+| where Ext in ("php","php3","php4","php5","php7","php8","pht","phtml","phps","phar","htaccess")
+| where InitiatingProcessFileName in~ ("httpd.exe","apache.exe","apache2","httpd","php.exe","php-cgi.exe","php-fpm","w3wp.exe","nginx.exe","caddy.exe")
+| project Timestamp, DeviceName, FolderPath, FileName, Ext, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
 | order by Timestamp desc
 ```
 
-### FacturaScripts .htaccess PHP-handler remap dropped into Dinamic/Assets (RCE enabler)
+### FacturaScripts RCE chain: .htaccess handler-remap override plus payload drop in same asset dir
 
-`UC_10_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=".htaccess" AND (Filesystem.file_path="*Dinamic/Assets*" OR Filesystem.file_path="*Dinamic\\Assets*" OR Filesystem.file_path="*node_modules*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path="*Dinamic*Assets*" OR Filesystem.file_path="*node_modules*") by _time span=1s Filesystem.dest Filesystem.file_name Filesystem.file_path
+| `drop_dm_object_name(Filesystem)`
+| eval is_htaccess=if(match(file_name,"(?i)\.htaccess$"),1,0)
+| eval is_payload=if(match(file_name,"(?i)\.(php[345678]?|pht|phtml|phps|phar|png|jpe?g|gif|txt)$"),1,0)
+| bin _time span=2m
+| stats sum(is_htaccess) as htaccess_writes sum(is_payload) as payload_writes values(file_name) as files min(_time) as firstTime max(_time) as lastTime by dest _time
+| where htaccess_writes>=1 AND payload_writes>=1
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FileName =~ ".htaccess"
-| where InitiatingProcessFileName in~ ("php-cgi.exe","php-fpm","php","httpd","apache2","w3wp.exe","nginx.exe","nginx")
-| where FolderPath contains "Dinamic/Assets" or FolderPath contains @"Dinamic\Assets" or FolderPath contains "node_modules"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
-| order by Timestamp desc
-```
-
-### FacturaScripts traversal payload retrieval: HTTP GET for non-static file under /Dinamic/Assets/ or /node_modules/
-
-`UC_10_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=GET (Web.url="*/Dinamic/Assets/*" OR Web.url="*/node_modules/*") (Web.url="*.php" OR Web.url="*.php5" OR Web.url="*.php7" OR Web.url="*.phtml" OR Web.url="*.pht" OR Web.url="*.phar" OR Web.url="*.txt" OR Web.url="*.htaccess") by Web.src Web.dest Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+let win = 2m;
+let webdirs = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where (FolderPath has "Dinamic" and FolderPath has "Assets") or FolderPath has "node_modules"
+    | where InitiatingProcessFileName in~ ("httpd.exe","apache.exe","apache2","httpd","php.exe","php-cgi.exe","php-fpm","w3wp.exe","nginx.exe","caddy.exe");
+let htaccess = webdirs
+    | where FileName =~ ".htaccess"
+    | project DeviceName, HtTime = Timestamp, HtFolder = FolderPath, HtProc = InitiatingProcessFileName;
+webdirs
+| where FileName !~ ".htaccess"
+| join kind=inner htaccess on DeviceName
+| where Timestamp between (HtTime - win .. HtTime + win)
+| project DeviceName, HtTime, HtFolder, HtProc, PayloadTime = Timestamp, PayloadFile = FileName, PayloadFolder = FolderPath, InitiatingProcessFileName, InitiatingProcessAccountName
+| order by HtTime desc
 ```
 
 
