@@ -26,12 +26,18 @@ Cybersecurity researchers have flagged a previously undocumented Rust-based remo
 - **T1219** — Remote Access Software
 - **T1204.002** — User Execution: Malicious File
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1059** — Command and Scripting Interpreter
 - **T1140** — Deobfuscate/Decode Files or Information
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1071.004** — Application Layer Protocol: DNS
 - **T1572** — Protocol Tunneling
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1036.001** — Masquerading: Invalid Code Signature
 - **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1036** — Masquerading
+- **T1090** — Proxy
 
 ## Kill chain phases observed
 
@@ -39,77 +45,105 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Fake NVIDIA runtime (nvidia-sysruntime.exe) launched with LabubaRAT C2 config args
+### LabubaRAT nvidia-sysruntime.exe launch with runtime C2 config in command line
 
-`UC_8_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_22_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="nvidia-sysruntime.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where match(process,"(?i)pipicka\.xyz") OR match(process,"[A-Za-z0-9+/]{40,}={0,2}") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="nvidia-sysruntime.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| eval c2_config=if(match(process,"(?i)pipicka\.xyz"),"pipicka.xyz",if(match(process,"[A-Za-z0-9+/]{40,}={0,2}"),"base64_arg","none"))
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "nvidia-sysruntime.exe" or InitiatingProcessFileName =~ "nvidia-sysruntime.exe"
-| where ProcessCommandLine has "pipicka.xyz" or ProcessCommandLine matches regex @"[A-Za-z0-9+/]{40,}={0,2}"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FileName =~ "nvidia-sysruntime.exe" or ProcessCommandLine has "nvidia-sysruntime"
+| extend C2Config = case(ProcessCommandLine has "pipicka.xyz","pipicka.xyz", ProcessCommandLine matches regex @"[A-Za-z0-9+/]{40,}={0,2}","base64_arg","none")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, C2Config, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### nvidia-sysruntime.exe masquerade — NVIDIA name without NVIDIA signature/path
+### LabubaRAT C2 beacon to pipicka.xyz (HTTPS / DNS tunneling) from NVIDIA-impersonating host
 
-`UC_8_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_22_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="nvidia-sysruntime.exe" AND NOT Processes.process_path="*\\NVIDIA*" by Processes.dest Processes.user Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*pipicka.xyz" by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| eval subdomain_len=len(replace(query,"(?i)\.?pipicka\.xyz$",""))
+| eval tunneling_suspected=if(subdomain_len>30,"yes","no")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl endswith "pipicka.xyz" or RemoteUrl contains ".pipicka.xyz"
+| extend Subdomain = tostring(split(RemoteUrl, ".pipicka.xyz")[0])
+| extend TunnelingSuspected = iff(strlen(Subdomain) > 30, "yes", "no")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol, TunnelingSuspected
+| order by Timestamp desc
+```
+
+### NVIDIA-branded process spawns shell / LOLBin (LabubaRAT operator tasking)
+
+`UC_22_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="nvidia*.exe") AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "nvidia-sysruntime.exe"
-| where (ProcessVersionInfoCompanyName != "NVIDIA Corporation" or isempty(ProcessVersionInfoCompanyName)) or not(FolderPath has @"\NVIDIA")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, SHA256, ProcessCommandLine
+| where InitiatingProcessFileName startswith "nvidia" and InitiatingProcessFileName endswith ".exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### LabubaRAT C2 beacon / DNS tunnel to pipicka.xyz
+### NVIDIA-named executable without valid NVIDIA code signature
 
-`UC_8_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_22_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime dc(DNS.query) as distinct_subdomains from datamodel=Network_Resolution.DNS where DNS.query="*pipicka.xyz" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="nvidia*.exe") AND NOT (Processes.process_path="*\\Program Files\\NVIDIA*" OR Processes.process_path="*\\Program Files (x86)\\NVIDIA*" OR Processes.process_path="*\\Windows\\System32\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-(DeviceNetworkEvents
- | where Timestamp > ago(30d)
- | where RemoteUrl has "pipicka.xyz"
- | project Timestamp, DeviceName, Channel="Network", InitiatingProcessFileName, InitiatingProcessCommandLine, Indicator=RemoteUrl, RemoteIP, RemotePort),
-(DeviceEvents
- | where Timestamp > ago(30d)
- | where ActionType == "DnsQueryResponse"
- | where AdditionalFields has "pipicka.xyz"
- | project Timestamp, DeviceName, Channel="DNS", InitiatingProcessFileName, InitiatingProcessCommandLine, Indicator=RemoteUrl, RemoteIP="", RemotePort=int(null))
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName startswith "nvidia" and FileName endswith ".exe"
+| where isempty(ProcessVersionInfoCompanyName) or ProcessVersionInfoCompanyName !has "NVIDIA"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, SHA256, ProcessCommandLine
 | order by Timestamp desc
 ```
 
-### LabubaRAT user-level autostart persistence referencing nvidia-sysruntime.exe
+### LabubaRAT user-level autostart persistence (Run key / scheduled task referencing NVIDIA loader)
 
-`UC_8_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_22_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" AND Registry.registry_value_data="*nvidia-sysruntime.exe*" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run*") AND (Registry.registry_value_data="*nvidia-sysruntime*" OR Registry.registry_value_data="*pipicka.xyz*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name
+| `drop_dm_object_name(Registry)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -117,11 +151,57 @@ union
 DeviceRegistryEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"CurrentVersion\Run"
-| where RegistryValueData has "nvidia-sysruntime.exe"
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where RegistryKey has @"\CurrentVersion\Run"
+| where RegistryValueData has "nvidia-sysruntime" or RegistryValueData has "pipicka.xyz" or (InitiatingProcessFileName startswith "nvidia" and InitiatingProcessFileName endswith ".exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RegistryKey, RegistryValueName, RegistryValueData
 | order by Timestamp desc
+```
+
+### Trojanized NVIDIA installer download from non-NVIDIA source
+
+`UC_22_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="nvidia*.exe") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| search process_name IN ("msedge.exe","chrome.exe","firefox.exe","brave.exe","outlook.exe")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName startswith "nvidia" and FileName endswith ".exe"
+| where isnotempty(FileOriginUrl)
+| where not(FileOriginUrl has "nvidia.com" or FileOriginUrl has "nvidia.cn" or FileOriginUrl has "download.nvidia.com" or FileOriginUrl has "nvidia.co")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, SHA256, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### NVIDIA-branded process outbound to non-NVIDIA public infrastructure (LabubaRAT C2 / SOCKS5 proxy)
+
+`UC_22_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process="*nvidia*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process
+| `drop_dm_object_name(All_Traffic)`
+| iplocation dest
+| where isnotnull(dest) AND NOT cidrmatch("10.0.0.0/8",dest) AND NOT cidrmatch("192.168.0.0/16",dest) AND NOT cidrmatch("172.16.0.0/12",dest)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName startswith "nvidia" and InitiatingProcessFileName endswith ".exe"
+| where RemoteIPType == "Public"
+| where not(RemoteUrl has "nvidia.com" or RemoteUrl has "nvidia.cn" or RemoteUrl endswith "nvidia.co")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP
+| order by FirstSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -250,7 +330,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts
 
-`UC_8_5` · phase: **exploit** · confidence: **High**
+`UC_22_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -307,4 +387,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

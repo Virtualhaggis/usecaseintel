@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma/AsyncAPI first-stage: node spawns detached 'node -e' downloader referencing IPFS/sync.js
 
-`UC_23_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_36_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### Miasma stage-2 dropped: sync.js written to per-user NodeJS data directory
 
-`UC_23_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_36_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### Miasma stage-2 executed: node runs sync.js from NodeJS data directory
 
-`UC_23_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_36_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Miasma M-RED-TEAM HTTP C2 beacon to 85.137.53.71
 
-`UC_23_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -335,7 +335,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AsyncAPI npm packages backdoored via GitHub Actions
 
-`UC_23_7` · phase: **exploit** · confidence: **High**
+`UC_36_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

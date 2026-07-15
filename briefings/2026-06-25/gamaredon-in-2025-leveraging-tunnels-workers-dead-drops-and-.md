@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### Gamaredon WinRAR CVE-2025-8088 ADS path-traversal dropping HTA/VBS into Startup folder
 
-`UC_220_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_223_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents
 
 ### Gamaredon HTA downloader auto-executing from Startup folder at logon (mshta.exe)
 
-`UC_220_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_223_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### Gamaredon stealer exfiltration to S3-compatible cloud storage (Wasabi/Tebi/Intercolo)
 
-`UC_220_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_223_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### Gamaredon dead-drop C&C resolution via Telegra.ph and GoFile from script hosts
 
-`UC_220_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_223_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

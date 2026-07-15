@@ -34,12 +34,13 @@ Back to Blog Threat Intel Coordinated AsyncAPI Supply Chain Attack: Miasma RAT D
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1571** — Non-Standard Port
+- **T1102** — Web Service
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1008** — Fallback Channels
-- **T1095** — Non-Application Layer Protocol
+- **T1105** — Ingress Tool Transfer
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -47,79 +48,98 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious @asyncapi generator/specs package versions installed (Miasma supply chain)
+### Miasma RAT C2 beacon to 85.137.53.71 from Node.js runtime
 
-`UC_6_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*@asyncapi/generator@3.3.1*" OR Processes.process="*@asyncapi/generator-helpers@1.1.1*" OR Processes.process="*@asyncapi/generator-components@0.7.1*" OR Processes.process="*@asyncapi/specs@6.11.2*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="85.137.53.71" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteIP == "85.137.53.71"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### Node.js resolving Miasma fallback C2 channels (BitTorrent DHT / Nostr relays)
+
+`UC_10_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("router.bittorrent.com","dht.transmissionbt.com","relay.damus.io","relay.nostr.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where RemoteUrl has_any ("router.bittorrent.com","dht.transmissionbt.com","relay.damus.io","relay.nostr.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Detached 'node -e' launcher downloading Miasma second stage from IPFS
+
+`UC_10_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","node") AND Processes.process_name IN ("node.exe","node") AND Processes.process="*-e*" AND (Processes.process="*ipfs*" OR Processes.process="*sync.js*" OR Processes.process="*NodeJS*") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where FileName in~ ("node.exe","node")
+| where ProcessCommandLine has "-e"
+| where ProcessCommandLine has_any ("ipfs","sync.js","NodeJS")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Miasma sync.js payload dropped to hidden 'NodeJS' directory
+
+`UC_10_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="sync.js" AND Filesystem.file_path="*NodeJS*") OR Filesystem.file_hash IN ("6e78713b75bd34828d49896176627f7face7aa9036cd874f2e02d9f23a9a9c71","b270bdf8e2274ea1af0a6eed74d8f10e5fe61012d6cc226a43cc7cc7fd9f6292","24b9ee242f21a73b55f7bb3297eafb33c60840907386b542ed79fc6b72365168") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where (FileName =~ "sync.js" and FolderPath has "NodeJS")
+     or SHA256 in ("6e78713b75bd34828d49896176627f7face7aa9036cd874f2e02d9f23a9a9c71","b270bdf8e2274ea1af0a6eed74d8f10e5fe61012d6cc226a43cc7cc7fd9f6292","24b9ee242f21a73b55f7bb3297eafb33c60840907386b542ed79fc6b72365168")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Installation of compromised @asyncapi package versions
+
+`UC_10_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*@asyncapi/[email protected]*" OR Processes.process="*@asyncapi/[email protected]*" OR Processes.process="*@asyncapi/[email protected]*" OR Processes.process="*@asyncapi/[email protected]*" OR Processes.process="*@asyncapi/[email protected]*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("@asyncapi/generator@3.3.1","@asyncapi/generator-helpers@1.1.1","@asyncapi/generator-components@0.7.1","@asyncapi/specs@6.11.2")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Miasma RAT HTTP C2 beacon to 85.137.53.71
-
-`UC_6_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="85.137.53.71" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "85.137.53.71"
-| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Miasma dropper writes sync.js into hidden NodeJS profile directory
-
-`UC_6_12` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="sync.js" AND Filesystem.file_path="*NodeJS*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "sync.js"
-| where FolderPath has "NodeJS"
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### Miasma RAT fallback-channel egress: BitTorrent DHT / Nostr relays from Node
-
-`UC_6_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="router.bittorrent.com" OR DNS.query="dht.transmissionbt.com" OR DNS.query="relay.damus.io" OR DNS.query="relay.nostr.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl in~ ("router.bittorrent.com","dht.transmissionbt.com","relay.damus.io","relay.nostr.com")
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where ProcessCommandLine has_any ("@asyncapi/[email protected]","@asyncapi/[email protected]","@asyncapi/[email protected]","@asyncapi/[email protected]","@asyncapi/[email protected]")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine, FolderPath
 | order by Timestamp desc
 ```
 
@@ -378,7 +398,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Coordinated AsyncAPI Supply Chain Attack: Miasma RAT Delivered via Compromised C
 
-`UC_6_9` · phase: **exploit** · confidence: **High**
+`UC_10_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -438,4 +458,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

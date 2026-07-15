@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound phishing from spoofed LastPass/Bitwarden 'newsletter' or 'compliance' domains
 
-`UC_10_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_24_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -69,7 +69,7 @@ EmailEvents
 
 ### Endpoint reaches fake-DocuSign lastpasscompliance/bitwardencompliance landing page
 
-`UC_10_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_24_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -91,7 +91,7 @@ union
 
 ### Payload downloaded from fake-DocuSign compliance domain (Win/macOS installer drop)
 
-`UC_10_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

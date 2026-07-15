@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Enriching bitHound with Snyk
 
-`UC_3657_0` · phase: **exploit** · confidence: **High**
+`UC_3656_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

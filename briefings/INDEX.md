@@ -1,12 +1,21 @@
 # Briefings — full archive
 
-_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-15
+- [cisa warns admins to patch actively exploited sharepoint fla](./2026-07-15/cisa-warns-admins-to-patch-actively-exploited-sharepoint-fla.md)
+- [compromised asyncapi npm packages deliver multi stage botnet](./2026-07-15/compromised-asyncapi-npm-packages-deliver-multi-stage-botnet.md)
+- [cursor flaw lets malicious cloned repositories trigger windo](./2026-07-15/cursor-flaw-lets-malicious-cloned-repositories-trigger-windo.md)
+- [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
+- [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
+- [two sonicwall sma 1000 zero days exploited one could enable ](./2026-07-15/two-sonicwall-sma-1000-zero-days-exploited-one-could-enable-.md)
+- [us charges alleged operators of russian bulletproof hosting ](./2026-07-15/us-charges-alleged-operators-of-russian-bulletproof-hosting-.md)
 
 ## 2026-07-14
 - [11 old microsoft signed linux uefi shims could let attackers](./2026-07-14/11-old-microsoft-signed-linux-uefi-shims-could-let-attackers.md)
@@ -17,25 +26,30 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 56155 microsoft active directory federatio](./2026-07-14/cisa-kev-cve-2026-56155-microsoft-active-directory-federatio.md)
 - [cisa kev cve 2026 56164 microsoft sharepoint server missing ](./2026-07-14/cisa-kev-cve-2026-56164-microsoft-sharepoint-server-missing-.md)
 - [coordinated asyncapi supply chain attack miasma rat delivere](./2026-07-14/coordinated-asyncapi-supply-chain-attack-miasma-rat-delivere.md)
+- [forgotten uefi shims undermining secure boot](./2026-07-14/forgotten-uefi-shims-undermining-secure-boot.md)
 - [ghsa critical cve 2026 45262 facturascripts authenticated sq](./2026-07-14/ghsa-critical-cve-2026-45262-facturascripts-authenticated-sq.md)
 - [ghsa critical cve 2026 50006 anyquery arbitrary file write a](./2026-07-14/ghsa-critical-cve-2026-50006-anyquery-arbitrary-file-write-a.md)
 - [ghsa critical cve 2026 52824 kimai default app secret in doc](./2026-07-14/ghsa-critical-cve-2026-52824-kimai-default-app-secret-in-doc.md)
 - [ghsa critical cve 2026 54052 n8n mcp cross tenant access to ](./2026-07-14/ghsa-critical-cve-2026-54052-n8n-mcp-cross-tenant-access-to-.md)
+- [ghsa critical ghsa 9hc2 hjx8 q6pv tidgi desktop remote code ](./2026-07-14/ghsa-critical-ghsa-9hc2-hjx8-q6pv-tidgi-desktop-remote-code-.md)
+- [ghsa critical ghsa hgjx r89m m7v4 facturascripts path traver](./2026-07-14/ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver.md)
 - [grok build uploaded entire git repositories to xai storage n](./2026-07-14/grok-build-uploaded-entire-git-repositories-to-xai-storage-n.md)
 - [how pentera turns ai security workflows into validation engi](./2026-07-14/how-pentera-turns-ai-security-workflows-into-validation-engi.md)
 - [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
 - [lastpass bitwarden users targeted with fake security alerts](./2026-07-14/lastpass-bitwarden-users-targeted-with-fake-security-alerts.md)
 - [microsoft entra id gets passkeys default authentication star](./2026-07-14/microsoft-entra-id-gets-passkeys-default-authentication-star.md)
-- [microsoft july 2026 patch tuesday fixes massive 570 flaws 3 ](./2026-07-14/microsoft-july-2026-patch-tuesday-fixes-massive-570-flaws-3-.md)
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
+- [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
 - [nearly 300 github repos pose as legit software to push malwa](./2026-07-14/nearly-300-github-repos-pose-as-legit-software-to-push-malwa.md)
 - [new phishing kits target microsoft 365 accounts evade mfa](./2026-07-14/new-phishing-kits-target-microsoft-365-accounts-evade-mfa.md)
 - [oauth client id spoofing lets attackers validate stolen micr](./2026-07-14/oauth-client-id-spoofing-lets-attackers-validate-stolen-micr.md)
 - [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
+- [researchers say claude for chrome flaw lets rogue extensions](./2026-07-14/researchers-say-claude-for-chrome-flaw-lets-rogue-extensions.md)
+- [sap patches cvss 9 9 netweaver abap flaw that could expose o](./2026-07-14/sap-patches-cvss-9-9-netweaver-abap-flaw-that-could-expose-o.md)
+- [sonicwall warns of sma1000 flaws exploited in zero day attac](./2026-07-14/sonicwall-warns-of-sma1000-flaws-exploited-in-zero-day-attac.md)
 - [study of 85 crypto wallet extensions finds address leaks and](./2026-07-14/study-of-85-crypto-wallet-extensions-finds-address-leaks-and.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
-- [us sanctions vpn malware providers for enabling ransomware a](./2026-07-14/us-sanctions-vpn-malware-providers-for-enabling-ransomware-a.md)
 - [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
 - [you don t have to run an exploit to know if you re vulnerabl](./2026-07-14/you-don-t-have-to-run-an-exploit-to-know-if-you-re-vulnerabl.md)
 
@@ -49,13 +63,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47677 facturascripts account takeover](./2026-07-13/ghsa-critical-cve-2026-47677-facturascripts-account-takeover.md)
 - [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)
 - [google and microsoft pull modheader with 1 6 million install](./2026-07-13/google-and-microsoft-pull-modheader-with-1-6-million-install.md)
-- [hackers backdoor jscrambler npm package with infostealer mal](./2026-07-13/hackers-backdoor-jscrambler-npm-package-with-infostealer-mal.md)
 - [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
 - [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
 - [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
 - [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
-- [new crashstealer malware poses as apple crash reporting tool](./2026-07-13/new-crashstealer-malware-poses-as-apple-crash-reporting-tool.md)
 - [new memghost attack plants persistent false memories in ai a](./2026-07-13/new-memghost-attack-plants-persistent-false-memories-in-ai-a.md)
 - [thinking fast and slow in the soc the case for combining aut](./2026-07-13/thinking-fast-and-slow-in-the-soc-the-case-for-combining-aut.md)
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
@@ -98,8 +110,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ai attacks move in minutes join this webinar on building a d](./2026-07-09/ai-attacks-move-in-minutes-join-this-webinar-on-building-a-d.md)
 - [compromised injectivelabs sdk ts exfiltrates wallet keys thr](./2026-07-09/compromised-injectivelabs-sdk-ts-exfiltrates-wallet-keys-thr.md)
 - [dormant github accounts help attackers blend in while mappin](./2026-07-09/dormant-github-accounts-help-attackers-blend-in-while-mappin.md)
-- [fake 7 zip installers turn devices into residential proxy no](./2026-07-09/fake-7-zip-installers-turn-devices-into-residential-proxy-no.md)
-- [ghostapproval symlink flaws could let malicious repos run co](./2026-07-09/ghostapproval-symlink-flaws-could-let-malicious-repos-run-co.md)
 - [ghsa critical cve 2026 52766 yeswiki vulnerable to unauthent](./2026-07-09/ghsa-critical-cve-2026-52766-yeswiki-vulnerable-to-unauthent.md)
 - [ghsa critical cve 2026 52777 yeswiki vulnerable to authentic](./2026-07-09/ghsa-critical-cve-2026-52777-yeswiki-vulnerable-to-authentic.md)
 - [ghsa critical cve 2026 52778 yeswiki has unsafe eval in its ](./2026-07-09/ghsa-critical-cve-2026-52778-yeswiki-has-unsafe-eval-in-its-.md)
@@ -112,17 +122,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [summer of clearinghouses](./2026-07-09/summer-of-clearinghouses.md)
 - [symlinks are still scary and yes you can commit them to git](./2026-07-09/symlinks-are-still-scary-and-yes-you-can-commit-them-to-git.md)
 - [threatsday cloud bucket hijacking windows lpe chain global f](./2026-07-09/threatsday-cloud-bucket-hijacking-windows-lpe-chain-global-f.md)
-- [top ai agents built to catch malicious code can be tricked i](./2026-07-09/top-ai-agents-built-to-catch-malicious-code-can-be-tricked-i.md)
 - [winning 54 of the time](./2026-07-09/winning-54-of-the-time.md)
 
 ## 2026-07-08
-- [ai coding agents found triggering endpoint security rules bu](./2026-07-08/ai-coding-agents-found-triggering-endpoint-security-rules-bu.md)
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
 - [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
 - [ghsa critical cve 2026 53649 joro unauthenticated cross orig](./2026-07-08/ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig.md)
-- [new hallusquatting attack could trick ai coding assistants i](./2026-07-08/new-hallusquatting-attack-could-trick-ai-coding-assistants-i.md)
 - [protecting microsoft at ai speed how sfi proactively hardens](./2026-07-08/protecting-microsoft-at-ai-speed-how-sfi-proactively-hardens.md)
-- [ubiquiti patches critical unifi flaws across connect talk ac](./2026-07-08/ubiquiti-patches-critical-unifi-flaws-across-connect-talk-ac.md)
 
 ## 2026-07-07
 - [cisa kev cve 2026 48282 adobe coldfusion path traversal vuln](./2026-07-07/cisa-kev-cve-2026-48282-adobe-coldfusion-path-traversal-vuln.md)
@@ -268,7 +274,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55447 langflow basefilecomponent base](./2026-06-19/ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base.md)
 - [ghsa critical cve 2026 55791 craft cms blind ssrf and arbitr](./2026-06-19/ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr.md)
 - [ghsa critical cve 2026 57168 openremote manager removealarms](./2026-06-19/ghsa-critical-cve-2026-57168-openremote-manager-removealarms.md)
-- [ghsa critical ghsa c8qj jx8j fg2w dotvvm missing authorizati](./2026-06-19/ghsa-critical-ghsa-c8qj-jx8j-fg2w-dotvvm-missing-authorizati.md)
 - [ghsa critical ghsa wfqx gjrf g28r crossplane signature verif](./2026-06-19/ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif.md)
 
 ## 2026-06-18
@@ -332,7 +337,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-08
 - [cisa kev cve 2026 42271 berriai litellm command injection vu](./2026-06-08/cisa-kev-cve-2026-42271-berriai-litellm-command-injection-vu.md)
 - [cisa kev cve 2026 50751 check point security gateway imprope](./2026-06-08/cisa-kev-cve-2026-50751-check-point-security-gateway-imprope.md)
-- [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
 
 ## 2026-06-05
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
@@ -340,7 +344,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-04
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
 - [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)
-- [reporting from vegas networking ai and good boys](./2026-06-04/reporting-from-vegas-networking-ai-and-good-boys.md)
 - [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)
 - [type level security the future of secure ai code generation](./2026-06-04/type-level-security-the-future-of-secure-ai-code-generation.md)
 

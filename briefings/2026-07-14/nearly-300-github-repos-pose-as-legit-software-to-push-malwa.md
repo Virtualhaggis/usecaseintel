@@ -11,27 +11,20 @@ By Bill Toulas
 July 14, 2026
 03:15 PM
 0 
-
-
 A threat actor has published hundreds of fake GitHub repositories impersonating legitimate software and security projects to distribute infostealer malware.
-
-
 The campaign drew traffic from search results for security products, cryptocurrency services, financial tools, developer utilities, secure email providers, macOS utilities, and gaming software.
-
-
-The malware collects data from …
+The malware collects data from more than 19…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `193.143.1.131`
 - **Domain (defanged):** `targetroyena.com`
-- **Domain (defanged):** `bentleyvazquezpvey.github.io`
 - **SHA256:** `6db05c4473760c44fa572ffac4c5911b35caf2467a37726c21c5f87e25cb2ea8`
 - **SHA256:** `fd01262bd56510088b9ddfe58ca101abb98575f3c0259b480a31b917aa73bc56`
 - **SHA256:** `8e1ea6d9a8ccb303be9a2aad3524a529d0d99b1b24a136d8422276e942c4c4b8`
-- **SHA256:** `1c854a6aa415f4be964e8a4be49c06e092156bf66d71f9c79995b3e6b156e778`
-- **SHA256:** `07dcc12197490bf3292619273ba8b11a960273a34265bca3b7d6d40e8c47dc82`
 - **SHA256:** `e9a56961980031a45e578472836576da874512bff50ca3d491fc72e52f7cc7c2`
+- **SHA256:** `07dcc12197490bf3292619273ba8b11a960273a34265bca3b7d6d40e8c47dc82`
+- **SHA256:** `1c854a6aa415f4be964e8a4be49c06e092156bf66d71f9c79995b3e6b156e778`
 - **SHA256:** `52825dbf3fc28b9f7c3a24adf78d3425ac714e975769f4d70e8c718ddcbb9856`
 
 ## MITRE ATT&CK Techniques
@@ -60,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Fake GitHub 'secure download' ZIP fetched from github.io redirector / targetroyena.com
 
-`UC_0_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_14_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +71,7 @@ DeviceNetworkEvents
 
 ### WinGUP updater (gup.exe / renamed) side-loads libcurl.dll from user-writable ZIP-extraction path
 
-`UC_0_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +90,7 @@ DeviceImageLoadEvents
 
 ### Known BoryptGrab / fake-GitHub sample hashes on process, file, or image-load
 
-`UC_0_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +109,7 @@ union
 
 ### Remote code injection into chrome.exe to defeat App-Bound Encryption (BoryptGrab)
 
-`UC_0_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +129,7 @@ DeviceEvents
 
 ### BoryptGrab C2 exfil to 193.143.1.131 / targetroyena.com from non-browser process
 
-`UC_0_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_14_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -219,7 +212,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Nearly 300 GitHub repos pose as legit software to push malware
 
-`UC_0_4` · phase: **exploit** · confidence: **High**
+`UC_14_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -271,10 +264,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `193.143.1.131`, `targetroyena.com`, `bentleyvazquezpvey.github.io`
+  - IP / domain IOC(s): `193.143.1.131`, `targetroyena.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6db05c4473760c44fa572ffac4c5911b35caf2467a37726c21c5f87e25cb2ea8`, `fd01262bd56510088b9ddfe58ca101abb98575f3c0259b480a31b917aa73bc56`, `8e1ea6d9a8ccb303be9a2aad3524a529d0d99b1b24a136d8422276e942c4c4b8`, `1c854a6aa415f4be964e8a4be49c06e092156bf66d71f9c79995b3e6b156e778`, `07dcc12197490bf3292619273ba8b11a960273a34265bca3b7d6d40e8c47dc82`, `e9a56961980031a45e578472836576da874512bff50ca3d491fc72e52f7cc7c2`, `52825dbf3fc28b9f7c3a24adf78d3425ac714e975769f4d70e8c718ddcbb9856`
+  - file hash IOC(s): `6db05c4473760c44fa572ffac4c5911b35caf2467a37726c21c5f87e25cb2ea8`, `fd01262bd56510088b9ddfe58ca101abb98575f3c0259b480a31b917aa73bc56`, `8e1ea6d9a8ccb303be9a2aad3524a529d0d99b1b24a136d8422276e942c4c4b8`, `e9a56961980031a45e578472836576da874512bff50ca3d491fc72e52f7cc7c2`, `07dcc12197490bf3292619273ba8b11a960273a34265bca3b7d6d40e8c47dc82`, `1c854a6aa415f4be964e8a4be49c06e092156bf66d71f9c79995b3e6b156e778`, `52825dbf3fc28b9f7c3a24adf78d3425ac714e975769f4d70e8c718ddcbb9856`
 
 
 ## Why this matters
