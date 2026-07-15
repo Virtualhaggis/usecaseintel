@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,10 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-15
-- [cisa warns admins to patch actively exploited sharepoint fla](./2026-07-15/cisa-warns-admins-to-patch-actively-exploited-sharepoint-fla.md)
 - [compromised asyncapi npm packages deliver multi stage botnet](./2026-07-15/compromised-asyncapi-npm-packages-deliver-multi-stage-botnet.md)
 - [cursor flaw lets malicious cloned repositories trigger windo](./2026-07-15/cursor-flaw-lets-malicious-cloned-repositories-trigger-windo.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
+- [researcher drops new windows zero day poc hours after micros](./2026-07-15/researcher-drops-new-windows-zero-day-poc-hours-after-micros.md)
+- [sase has an ai blind spot inspecting packets is no longer en](./2026-07-15/sase-has-an-ai-blind-spot-inspecting-packets-is-no-longer-en.md)
 - [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
 - [two sonicwall sma 1000 zero days exploited one could enable ](./2026-07-15/two-sonicwall-sma-1000-zero-days-exploited-one-could-enable-.md)
 - [us charges alleged operators of russian bulletproof hosting ](./2026-07-15/us-charges-alleged-operators-of-russian-bulletproof-hosting-.md)
@@ -114,8 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 52777 yeswiki vulnerable to authentic](./2026-07-09/ghsa-critical-cve-2026-52777-yeswiki-vulnerable-to-authentic.md)
 - [ghsa critical cve 2026 52778 yeswiki has unsafe eval in its ](./2026-07-09/ghsa-critical-cve-2026-52778-yeswiki-has-unsafe-eval-in-its-.md)
 - [gigawiper anatomy of a destructive backdoor assembled from m](./2026-07-09/gigawiper-anatomy-of-a-destructive-backdoor-assembled-from-m.md)
-- [goddamn ransomware uses poisonx driver to disable endpoint d](./2026-07-09/goddamn-ransomware-uses-poisonx-driver-to-disable-endpoint-d.md)
-- [meta s new ai image tool lets others use your public instagr](./2026-07-09/meta-s-new-ai-image-tool-lets-others-use-your-public-instagr.md)
 - [new gigawiper windows backdoor bundles disk wiping fake rans](./2026-07-09/new-gigawiper-windows-backdoor-bundles-disk-wiping-fake-rans.md)
 - [npm 12 disables install scripts by default to reduce supply ](./2026-07-09/npm-12-disables-install-scripts-by-default-to-reduce-supply-.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)

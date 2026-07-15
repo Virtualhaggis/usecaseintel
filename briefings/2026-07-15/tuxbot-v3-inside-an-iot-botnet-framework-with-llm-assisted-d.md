@@ -348,7 +348,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TuxBot v3: Inside an IoT Botnet Framework With LLM-Assisted Development
 
-`UC_1_10` · phase: **install** · confidence: **High**
+`UC_3_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

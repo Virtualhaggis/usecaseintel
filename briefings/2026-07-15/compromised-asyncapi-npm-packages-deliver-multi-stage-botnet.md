@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js dropper spawns detached 'node -e' child (AsyncAPI Miasma loader)
 
-`UC_4_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### Outbound C2 to Miasma IPFS gateway / 85.137.53.71 from Node.js
 
-`UC_4_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### Miasma 'sync.js' loader written by Node.js or known-bad AsyncAPI payload hash
 
-`UC_4_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_5_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### Node.js writes Windows Run-key autostart pointing at .js/node (Miasma persistence)
 
-`UC_4_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_5_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -273,7 +273,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised AsyncAPI npm Packages Deliver Multi-Stage Botnet Malware
 
-`UC_4_7` · phase: **exploit** · confidence: **High**
+`UC_5_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

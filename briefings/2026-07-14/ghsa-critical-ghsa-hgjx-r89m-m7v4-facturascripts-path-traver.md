@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### FacturaScripts traversal file-write: web-server drops PHP/.htaccess into Dinamic/Assets or node_modules
 
-`UC_9_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ DeviceFileEvents
 
 ### FacturaScripts .htaccess PHP-handler remap dropped into Dinamic/Assets (RCE enabler)
 
-`UC_9_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### FacturaScripts traversal payload retrieval: HTTP GET for non-static file under /Dinamic/Assets/ or /node_modules/
 
-`UC_9_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_10_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

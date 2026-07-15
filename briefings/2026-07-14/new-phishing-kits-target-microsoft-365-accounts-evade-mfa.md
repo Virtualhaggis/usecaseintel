@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Successful Entra ID sign-in via OAuth 2.0 device code flow (Jalisco/EvilTokens device-code phishing)
 
-`UC_28_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_29_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ AADSignInEventsBeta
 
 ### Multiple rogue Entra device registrations named 'Microsoft'/'Windows' on one account
 
-`UC_28_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_29_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ CloudAppEvents
 
 ### Rapid bulk SharePoint/OneDrive download by a single account (device-code extortion exfil, ~6 min)
 
-`UC_28_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_29_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

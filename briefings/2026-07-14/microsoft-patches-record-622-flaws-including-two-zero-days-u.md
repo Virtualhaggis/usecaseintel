@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure hunt: hosts still vulnerable to actively-exploited July 2026 zero-days (AD FS CVE-2026-56155 / SharePoint CVE-2026-56164)
 
-`UC_11_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_12_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### SharePoint IIS worker (w3wp.exe) spawning a command interpreter — post-exploitation of CVE-2026-56164
 
-`UC_11_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_12_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Patches Record 622 Flaws, Including Two Zero-Days Under Active Attack
 
-`UC_11_3` · phase: **exploit** · confidence: **High**
+`UC_12_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Where do security patches come from?
 
-`UC_3603_0` · phase: **exploit** · confidence: **High**
+`UC_3602_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

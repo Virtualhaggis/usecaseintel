@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Cursor IDE spawns masqueraded git.exe/node.exe from repo workspace root
 
-`UC_0_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Helper executable (git.exe/node.exe/where.exe) written to a cloned repo root
 
-`UC_0_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### Workspace-rooted git.exe/where.exe making outbound public connections (payload exfil)
 
-`UC_0_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cursor Flaw Lets Malicious Cloned Repositories Trigger Windows Code Execution
 
-`UC_0_2` · phase: **exploit** · confidence: **High**
+`UC_2_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
