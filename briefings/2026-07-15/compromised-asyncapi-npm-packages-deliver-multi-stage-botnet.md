@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js process fetches Miasma second stage from IPFS gateway (ipfs.io CID)
 
-`UC_7_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### Miasma 'sync.js' loader dropped to %LOCALAPPDATA%\NodeJS and executed by node
 
-`UC_7_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_10_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceFileEvents
 
 ### Miasma REST C2 beacon to 85.137.53.71 on ports 8080/8081/8091
 
-`UC_7_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_10_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### Miasma persistence via Windows Registry Run key pointing at NodeJS/sync.js
 
-`UC_7_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_10_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceRegistryEvents
 
 ### Presence of compromised @asyncapi generator packages in node_modules
 
-`UC_7_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_10_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -289,7 +289,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised AsyncAPI npm Packages Deliver Multi-Stage Botnet Malware
 
-`UC_7_7` · phase: **exploit** · confidence: **High**
+`UC_10_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

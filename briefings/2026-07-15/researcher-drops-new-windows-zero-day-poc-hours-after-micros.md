@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### LegacyHive: cross-user registry hive (UsrClass.dat/NTUSER.dat) load via User Profile Service
 
-`UC_3_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_6_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceFileEvents
 
 ### SharePoint IIS worker (w3wp) spawning command shell — post-RCE execution (CVE-2026-56164/32201/45659)
 
-`UC_3_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### SharePoint webshell (.aspx) written by w3wp into LAYOUTS — persistence / machine-key theft
 
-`UC_3_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

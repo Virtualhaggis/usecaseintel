@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Cursor IDE spawning workspace git.exe via 'rev-parse --show-toplevel' search-order hijack
 
-`UC_4_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### Search-order helper binary (git/node/npx/where.exe) executing from a repo/workspace path
 
-`UC_4_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### Masqueraded git/node/npx binary — image name mismatches embedded original filename (calc-as-git PoC)
 
-`UC_4_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### Planting of git/node/npx/where.exe into a cloned repo or extracted archive
 
-`UC_4_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_7_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceFileEvents
 
 ### Git hook script execution inside a cloned repo (.git\hooks) — CVE-2026-26268 class
 
-`UC_4_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_7_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cursor Flaw Lets Malicious Cloned Repositories Trigger Windows Code Execution
 
-`UC_4_2` · phase: **exploit** · confidence: **High**
+`UC_7_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

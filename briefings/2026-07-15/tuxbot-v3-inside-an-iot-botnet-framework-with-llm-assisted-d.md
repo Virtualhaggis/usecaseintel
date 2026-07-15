@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### TuxBot/Akiru botnet C2 connection to 209.182.237.133 or 185.10.68.127
 
-`UC_5_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### DNS/connection to TuxBot developer C2 domain digikalas.online
 
-`UC_5_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceNetworkEvents
 
 ### TuxBot v3 ELF sample by SHA256 71dfbb17...312fa8d
 
-`UC_5_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ union DeviceFileEvents, DeviceProcessEvents
 
 ### IoT worm behavior: outbound Telnet brute-force fan-out from internal device
 
-`UC_5_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -429,7 +429,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TuxBot v3: Inside an IoT Botnet Framework With LLM-Assisted Development
 
-`UC_5_10` · phase: **install** · confidence: **High**
+`UC_8_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

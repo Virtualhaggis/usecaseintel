@@ -1,220 +1,350 @@
-<article class="card" id="art-260" data-art-slug="2026-06-19-ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif"
-  data-phases="actions,c2,install" data-sev="crit"
-  data-techs=""
+<article class="card" id="art-260" data-art-slug="2026-06-19-ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="datadog,sent,sigma,spl"
-  data-splunk-cats="cloud"
-  data-targets="kubernetes,vcs"
-  data-uc-count="2" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] GHSA-wfqx-gjrf-g28r: Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag   [LLM] Crossplane package installed by mutable tag instead of immutable digest [LLM] Crossplane ImageConfig signature-verification policy deleted or weakened">
+  data-platforms="def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,network,web"
+  data-targets="linux,vcs,web-app,windows"
+  data-uc-count="5" data-llm-uc-count="4"
+  data-search="[GHSA / CRITICAL] CVE-2026-55791: Craft CMS: Blind SSRF and Arbitrary JavaScript Injection via Host Header Poisoning in actionResourceJs Craft CMS: Blind SSRF and Arbitrary JavaScript Injection via Host Header Poisoning in actionResourceJs CVE-2026-55791 T1190 [LLM] Craft CMS resource-js Host/X-Forwarded-Host poisoning (CVE-2026-55791) [LLM] Craft CMS trustedHosts bypass via localhost/127.0.0.1 Host header from external IP [LLM] Blind SSRF: Craft web-server process fetching internal/cloud-metadata hosts [LLM] Craft CMS 1-click RCE: plugin-install POST riding a poisoned resource-js JS load Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-19-ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2026-06-19-ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://github.com/advisories/GHSA-wfqx-gjrf-g28r" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-wfqx-gjrf-g28r: Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag</a></h2>
+  <h2><a href="https://github.com/advisories/GHSA-c55v-343g-5xff" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-55791: Craft CMS: Blind SSRF and Arbitrary JavaScript Injection via Host Header Poisoning in actionResourceJs</a></h2>
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-19</span>
-    <span>2 use cases</span>
-    <span>0 techniques</span>
-    <span>1 kill-chain phase detected</span>
+    <span>5 use cases</span>
+    <span>1 technique</span>
+    <span>5 kill-chain phases detected</span>
   </div>
-  <p class="summary">Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag</p>
-  
+  <p class="summary">Craft CMS: Blind SSRF and Arbitrary JavaScript Injection via Host Header Poisoning in actionResourceJs</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55791</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-260-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-260"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
   <div class="killchain" id="art-260-kc">
-  <div class="kc3d"><div class="kc-cell ">
+  <div class="kc3d"><div class="kc-cell hit">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell ">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
   <div class="marker">—</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
   <div class="marker">Detected</div>
 </div>
 <div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
   <div class="num">Phase 6</div>
   <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 7</div>
   <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line "><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Crossplane package installed by mutable tag instead of immutable digest · [LLM] Crossplane ImageConfig signature-verification policy deleted or weakened</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Craft CMS resource-js Host/X-Forwarded-Host poisoning (CVE-2026-55791) · [LLM] Craft CMS trustedHosts bypass via localhost/127.0.0.1 Host header from external IP</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Blind SSRF: Craft web-server process fetching internal/cloud-metadata hosts</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Craft CMS 1-click RCE: plugin-install POST riding a poisoned resource-js JS load</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="4af92502f5" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="f4884d498e" data-platforms="sent,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">Crossplane package installed by mutable tag instead of immutable digest</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4af92502f5" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Craft CMS resource-js Host/X-Forwarded-Host poisoning (CVE-2026-55791)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="f4884d498e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts Kubernetes API audit logs for pkg.crossplane.io Provider/Configuration/Function installs whose spec.package references a version tag rather than an @sha256 digest. This is the exact precondition GHSA-wfqx-gjrf-g28r requires: when a package is pulled by tag, a malicious/compromised OCI registry can serve a correctly-signed image for cosign verification and then swap in unsigned content for the actual pull.
+    <div class="uc-desc">Hunts unauthenticated requests to Craft&#x27;s /actions/app/resource-js endpoint where a single client cycles multiple distinct Host header values, the fingerprint of trustedHosts:[&#x27;any&#x27;] abuse poisoning $baseUrl. Article-specific: only this endpoint reflects attacker-controlled content as application/javascript.
 
-Rationale: Built directly on the advisory&#x27;s stated exploit precondition #2 (&#x27;Install packages using tag references rather than digests&#x27;). The detection keys on the real Crossplane API (pkg.crossplane.io Provider/Configuration/Function, spec.package) and the digest sentinel &#x27;@sha256:&#x27; that the fix mandates; absence of the digest is exactly what makes an install TOCTOU-exposed. Corroborated against the GHSA, the GitLab advisory mirror, and Crossplane&#x27;s ImageConfig/package docs.
+Rationale: Anchored on the exact vulnerable URI &#x27;app/resource-js&#x27; and the article&#x27;s stated mechanism of poisoning the Host header to manipulate $baseUrl; dcount(Host) per client avoids needing the victim&#x27;s domain (no placeholder) while flagging the header-rewriting pattern.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  • https://advisories.gitlab.com/golang/github.com/crossplane/crossplane/v2/GHSA-wfqx-gjrf-g28r/
-  • https://docs.crossplane.io/latest/packages/image-configs/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate GitOps/Argo/Flux pipelines that pin Crossplane packages to a semantic-version tag (e.g. provider-aws:v1.20.0) rather than a digest — common and benign in many shops</li><li>Platform-team installs from the org&#x27;s own trusted internal registry where tag mutability is acceptable</li><li>Dev/sandbox clusters where engineers iterate on packages by floating tag</li><li>Initial cluster bootstrap installing first-party Upbound/Crossplane marketplace packages by tag</li><li>Renovate/Dependabot-style bots bumping a package tag during routine upgrades</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (PackageRef startswith &quot;xpkg.upbound.io/upbound/&quot; or PackageRef startswith &quot;xpkg.crossplane.io/&quot;)   // keep third-party / org-uncontrolled registries (advisory precondition #3), drop trusted first-party marketplace</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the offending Provider/Configuration object and its spec.package. Confirm whether the registry host is one the org controls (advisory precondition #3) and whether an ImageConfig with cosign verification matches that image. A tag-pinned package from a third-party registry under cosign verification is the high-risk case. 2) Contain: re-pin the package to the resolved immutable digest (spec.package: repo@sha256:...) and ensure Crossplane is on a fixed build (v2.3.3 / v2.2.3 or later); for vulnerable builds, prefer digest references org-wide until upgraded. 3) Hunt: inventory all pkg.crossplane.io resources still on tags, review the installed package revisions&#x27; Verified condition for skipped/incomplete status, and check whether the registry served differing digests for verify vs pull around the install time.</div></details>
+  • https://advisories.gitlab.com/composer/craftcms/cms/CVE-2026-55791/
+  • https://advisories.gitlab.com/composer/craftcms/cms/GHSA-95wr-3f2v-v2wh/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate multi-domain Craft install serving several front-end hostnames from one CDN/proxy egress IP</li><li>Uptime/synthetic monitors probing the site with varied Host headers</li><li>Security scanners (Burp, Nuclei) run by the org&#x27;s own pentest team</li><li>Shared NAT egress where many real users appear as one SrcIpAddr</li><li>CDN revalidation requests carrying origin-shield Host values</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DstHostname !in (&quot;monitoring.internal&quot;)  // append known synthetic-monitor egress hosts after baselining</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull HostSamples for the flagged SrcIpAddr — confirm values are IP literals, internal names, or attacker domains rather than the site&#x27;s real hostnames; check response status/size on those requests. 2) Contain: in config/general.php set trustedHosts to the explicit allowed host(s) and upgrade craftcms/cms to &gt;=4.17.9 / &gt;=5.9.15; block the source IP at the WAF. 3) Hunt: pivot to UC for outbound fetches from the web-server process and to admin plugin-install POSTs from the same window.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-260-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-260-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-260-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-260-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-260-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| where Verb in (&quot;create&quot;, &quot;update&quot;, &quot;patch&quot;)
-| extend ObjRef = todynamic(ObjectRef)
-| where tostring(ObjRef.apiGroup) == &quot;pkg.crossplane.io&quot;
-| where tostring(ObjRef.resource) in (&quot;providers&quot;, &quot;configurations&quot;, &quot;functions&quot;)
-| extend ReqObj = todynamic(RequestObject)
-| extend PackageRef = tostring(ReqObj.spec.package)
-| where isnotempty(PackageRef) and PackageRef !contains &quot;@sha256:&quot;   // not digest-pinned =&gt; mutable tag =&gt; TOCTOU-exposed
-| extend Actor = tostring(todynamic(User).username)
-| project TimeGenerated, Actor, Verb, Kind = tostring(ObjRef.resource), ObjectName = tostring(ObjRef.name), PackageRef, UserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-260-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane Package Installed By Mutable Tag Without Digest Pin
-id: 7a3c1e8b-2f4d-4c9a-b6e1-9d2f5a1c3e47
-description: Detects creation/update of a Crossplane Provider, Configuration or Function whose spec.package uses a mutable tag rather than an immutable @sha256 digest, the precondition for the GHSA-wfqx-gjrf-g28r signature-verification TOCTOU.
-references:
-  - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  - https://docs.crossplane.io/latest/packages/image-configs/
-author: SOC Detection Engineering
-date: 2026/06/21
-tags:
-  - attack.t1195.002
-logsource:
-  product: kubernetes
-  service: audit
-detection:
-  selection:
-    verb:
-      - create
-      - update
-      - patch
-    objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
-    objectRef.resource:
-      - &#x27;providers&#x27;
-      - &#x27;configurations&#x27;
-      - &#x27;functions&#x27;
-  filter_digest:
-    requestObject.spec.package|contains: &#x27;@sha256:&#x27;
-  condition: selection and not filter_digest
-level: low</code></pre></div>
-    <div class="tab-content" id="art-260-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:(providers OR configurations OR functions) @verb:(create OR update OR patch) -@requestObject.spec.package:*sha256*</code></pre></div>
-    <div class="tab-content" id="art-260-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;pkg.crossplane.io&quot; (objectRef.resource=&quot;providers&quot; OR objectRef.resource=&quot;configurations&quot; OR objectRef.resource=&quot;functions&quot;) (verb=&quot;create&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
-| rename requestObject.spec.package as package_ref, objectRef.name as object_name, objectRef.resource as kind, user.username as username
-| where isnotnull(package_ref) AND NOT match(package_ref, &quot;@sha256:&quot;)
-| stats min(_time) as firstTime, max(_time) as lastTime, values(username) as username, values(sourceIPs{}) as src_ips by package_ref, kind, object_name
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div>
+    <div class="tab-content active" id="art-260-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 24h;
+ImWebSession
+| where TimeGenerated &gt; ago(lookback)
+| where Url has &quot;resource-js&quot;
+| extend HostHeader = tostring(HttpHostName)
+| where isnotempty(HostHeader)
+| summarize DistinctHosts = dcount(HostHeader), HostSamples = make_set(HostHeader, 10), Requests = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SrcIpAddr, DstHostname
+| where DistinctHosts &gt; 3   // one client cycling &gt;3 distinct Host values at resource-js = header fuzzing / baseUrl poisoning
+| order by DistinctHosts desc</code></pre></div>
+    <div class="tab-content" id="art-260-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, dc(Web.http_host) as distinct_hosts, values(Web.http_host) as host_values, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*app/resource-js*&quot; OR Web.url=&quot;*action=app/resource-js*&quot;) by Web.src, Web.dest | `drop_dm_object_name(Web)` | where distinct_hosts &gt; 3 | sort - distinct_hosts</code></pre><pre class="spl-mode-body" id="art-260-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, dc(Web.http_host) as distinct_hosts, values(Web.http_host) as host_values, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*app/resource-js*&quot; OR Web.url=&quot;*action=app/resource-js*&quot;) by Web.src, Web.dest | `drop_dm_object_name(Web)` | where distinct_hosts &gt; 3 | sort - distinct_hosts</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="200c047e5a" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
+<details class="uc" data-uc-slug="a26ba6ef39" data-platforms="sent,sigma,spl" data-targets="vcs">
   <summary>
-    <span class="uc-title">Crossplane ImageConfig signature-verification policy deleted or weakened</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Craft CMS trustedHosts bypass via localhost/127.0.0.1 Host header from external IP</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="200c047e5a" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="a26ba6ef39" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on delete/update/patch operations against imageconfigs.pkg.crossplane.io in the Kubernetes audit stream. Crossplane enforces cosign signature verification only for images matched by an ImageConfig (spec.verification.cosign); removing or editing that resource silently disables verification, the defense the GHSA-wfqx-gjrf-g28r TOCTOU already partially undermines. Surfaces whether the post-change object still carries a verification block.
+    <div class="uc-desc">Detects requests to Craft&#x27;s resource-js endpoint where the Host or X-Forwarded-Host header claims to be localhost/127.0.0.1/::1 but the source IP is public — a direct attempt to defeat front-end Host validation against the trustedHosts:[&#x27;any&#x27;] default. Single occurrence is high-fidelity.
 
-Rationale: Grounded in the advisory&#x27;s statement that &#x27;package signature verification [is] configured via the ImageConfig mechanism&#x27; and Crossplane docs confirming the real resource (imageconfigs.pkg.crossplane.io, spec.verification.cosign). Detects the defense-evasion precursor — tearing down or weakening the cosign policy — using only verifiable API/resource names (no skipSignatureVerification field exists in the schema, so that reviewer suggestion was dropped as ungrounded).
+Rationale: Uses the exact vulnerable endpoint plus the concrete loopback literals attackers supply to spoof a trusted origin; pairing a loopback Host with a public source IP is behaviour no legitimate client produces, making it a low-FP alerting candidate.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  • https://docs.crossplane.io/latest/packages/image-configs/
-  • https://docs.upbound.io/providers/signature-verification</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Platform engineers legitimately rotating cosign authorities/keys inside an ImageConfig during key rollover</li><li>GitOps reconciliation re-applying an unchanged ImageConfig (server-side apply &#x27;update&#x27; with no real diff)</li><li>Decommissioning an ImageConfig for a registry the org no longer uses</li><li>Migrating verification config between ImageConfig objects (delete old + create new)</li><li>Cert-manager or admission-controller status writes touching the resource</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Verb in (&quot;delete&quot;, &quot;deletecollection&quot;) or VerificationSpecPresent == false   // alert on removal/teardown of verification; suppress edits that retain a verification block</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: diff the ImageConfig before/after the operation — confirm whether spec.verification.cosign authorities were removed, loosened, or the whole object deleted, and identify the actor (human vs service account) and source IP. A delete or removal of the verification block by a non-platform identity is high-confidence malicious. 2) Contain: restore the ImageConfig from source-of-truth/GitOps, and pause new package installs (or require digest pins) until verification is re-established; rotate credentials of the actor if unauthorized. 3) Hunt: list any package revisions installed while the ImageConfig was absent/weakened and check their Verified condition; cross-reference with the mutable-tag install detection to find packages that may have been pulled without enforced verification.</div></details>
+  • https://advisories.gitlab.com/composer/craftcms/cms/CVE-2026-55791/
+  • https://advisories.gitlab.com/composer/craftcms/cms/GHSA-95wr-3f2v-v2wh/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Trusted Relationship">T1199</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal health-check that wrongly egresses through a public IP while sending Host: localhost</li><li>Misconfigured reverse proxy forwarding a literal localhost Host upstream</li><li>Container-to-container probe traversing a public NAT</li><li>Pentest/scanner deliberately fuzzing Host headers</li><li>Load balancer health probe rewritten to 127.0.0.1</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm SrcIpAddr is genuinely external and not an internal monitor NAT&#x27;d to a public address; review HTTP status/size of the response. 2) Contain: set explicit trustedHosts in config/general.php, upgrade craftcms/cms to &gt;=4.17.9 / &gt;=5.9.15, and block the source IP. 3) Hunt: check for outbound fetches from php-fpm/nginx to internal or metadata IPs and for any /admin/actions/plugins/install-plugin POSTs in the following minutes.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-260-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-260-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-260-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-260-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-260-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| extend ObjRef = todynamic(ObjectRef)
-| where tostring(ObjRef.apiGroup) == &quot;pkg.crossplane.io&quot;
-| where tostring(ObjRef.resource) == &quot;imageconfigs&quot;
-| where Verb in (&quot;delete&quot;, &quot;deletecollection&quot;, &quot;update&quot;, &quot;patch&quot;)
-| extend ReqObj = todynamic(RequestObject)
-| extend VerificationSpecPresent = isnotempty(tostring(ReqObj.spec.verification))
-| extend Actor = tostring(todynamic(User).username)
-| project TimeGenerated, Actor, Verb, ImageConfigName = tostring(ObjRef.name), UserAgent, VerificationSpecPresent
+    <div class="tab-content active" id="art-260-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(24h)
+| where Url has &quot;resource-js&quot;
+| extend HostHeader = tolower(tostring(HttpHostName))
+| where HostHeader has_any (&quot;localhost&quot;,&quot;127.0.0.1&quot;,&quot;[::1]&quot;,&quot;::1&quot;,&quot;0.0.0.0&quot;)
+| where not(ipv4_is_private(SrcIpAddr)) and SrcIpAddr !in (&quot;::1&quot;,&quot;127.0.0.1&quot;)
+| project TimeGenerated, SrcIpAddr, HttpHostName, Url, HttpMethod, HttpStatusCode, UserAgent = HttpRequestHeaderUserAgent, DstHostname
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-260-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane ImageConfig Signature Verification Deleted Or Modified
-id: b8f2d6a4-1c3e-4f7b-9a2d-6e4c8b1f0a52
-description: Detects delete or modify operations against Crossplane ImageConfig resources, which configure cosign package signature verification. Removing or weakening an ImageConfig disables verification for matching package images (GHSA-wfqx-gjrf-g28r).
+    <div class="tab-content" id="art-260-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Craft CMS resource-js Host header set to localhost from external client
+id: 6f2c1a4e-9b3d-4f7a-8c21-1e5a7d0b9c34
+description: Request to Craft CMS /actions/app/resource-js with a loopback Host/X-Forwarded-Host header, indicating a trustedHosts bypass attempt for CVE-2026-55791.
 references:
-  - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-  - https://docs.crossplane.io/latest/packages/image-configs/
+  - https://github.com/advisories/GHSA-c55v-343g-5xff
+  - https://advisories.gitlab.com/composer/craftcms/cms/CVE-2026-55791/
 author: SOC Detection Engineering
-date: 2026/06/21
+date: 2026/06/30
 tags:
-  - attack.t1562.001
+  - attack.t1190
+  - attack.t1199
 logsource:
-  product: kubernetes
-  service: audit
+  category: webserver
 detection:
-  selection:
-    objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
-    objectRef.resource: &#x27;imageconfigs&#x27;
-    verb:
-      - delete
-      - deletecollection
-      - update
-      - patch
-  condition: selection
+  selection_uri:
+    cs-uri-stem|contains: &#x27;resource-js&#x27;
+  selection_host:
+    cs-host|contains:
+      - &#x27;localhost&#x27;
+      - &#x27;127.0.0.1&#x27;
+      - &#x27;::1&#x27;
+      - &#x27;0.0.0.0&#x27;
+  condition: selection_uri and selection_host
+level: high</code></pre></div>
+    <div class="tab-content" id="art-260-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(Web.http_method) as methods, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*resource-js*&quot;) AND (Web.http_host IN (&quot;localhost&quot;,&quot;127.0.0.1&quot;,&quot;::1&quot;,&quot;[::1]&quot;,&quot;0.0.0.0&quot;)) by Web.src, Web.http_host, Web.url | `drop_dm_object_name(Web)` | iplocation src | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16 OR src=127.0.0.0/8) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-260-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Web.http_method) as methods, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*resource-js*&quot;) AND (Web.http_host IN (&quot;localhost&quot;,&quot;127.0.0.1&quot;,&quot;::1&quot;,&quot;[::1]&quot;,&quot;0.0.0.0&quot;)) by Web.src, Web.http_host, Web.url | `drop_dm_object_name(Web)` | iplocation src | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16 OR src=127.0.0.0/8) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="92fe3b6f5f" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,web-app,windows">
+  <summary>
+    <span class="uc-title">Blind SSRF: Craft web-server process fetching internal/cloud-metadata hosts</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="92fe3b6f5f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the SSRF half of CVE-2026-55791 — Craft&#x27;s Guzzle client (running under php-fpm/nginx/httpd) making outbound connections to RFC1918, link-local, or the 169.254.169.254 cloud-metadata endpoint after $baseUrl poisoning. Article-specific: the vuln forces this Guzzle fetch with ALLOW_REDIRECTS=true.
+
+Rationale: Targets the article&#x27;s stated server-side fetch (Craft::createGuzzleClient()-&gt;get($url)) by pivoting on the web-server process making unexpected internal/metadata connections; the 169.254.169.254 focus is corroborated by Craft&#x27;s related metadata-SSRF CVE-2026-27129, and DB ports are excluded to suppress routine backend traffic.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/composer/craftcms/cms/CVE-2026-55791/
+  • https://advisories.gitlab.com/pkg/composer/craftcms/cms/CVE-2026-27129/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Proxy">T1090</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>php-fpm calling an internal microservice/API on an allowed private host (8080/9200)</li><li>nginx reverse-proxying to an internal app server</li><li>Legitimate use of an internal package mirror or Composer proxy</li><li>App-level health checks hitting internal services</li><li>Sidecar/service-mesh proxies on private IPs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteIP startswith &quot;10.&quot; and RemotePort == 9200)  // example: drop known internal Elasticsearch; extend with allowed internal services after baselining</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the RemoteIP/RemoteUrl and the InitiatingProcessId — was 169.254.169.254 or an internal admin port hit, and is there a matching resource-js request in web logs? 2) Contain: rotate any cloud IAM credentials reachable via metadata if 169.254.169.254 was contacted, set explicit trustedHosts, and patch craftcms/cms. 3) Hunt: review web logs for resource-js Host poisoning from the originating window and for outbound connections to attacker-owned public IPs reflecting fetched JS.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-260-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-260-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-260-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(24h)
+| where InitiatingProcessFileName has_any (&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;)
+| where RemoteIP == &quot;169.254.169.254&quot;   // cloud metadata — classic blind-SSRF target (cf. CVE-2026-27129)
+     or (RemoteIPType in (&quot;Private&quot;,&quot;LinkLocal&quot;) and RemotePort in (80,443,8080,8000,8443,9200,2375,6379))
+| where RemotePort !in (3306,5432,1433,11211)   // strip routine DB / memcache backend traffic
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessId, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-260-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ASCDeviceEvents
+| where TimeGenerated &gt; ago(24h)
+| where InitiatingProcessFileName has_any (&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;)
+| where RemoteIP == &quot;169.254.169.254&quot; or (ipv4_is_private(RemoteIP) and RemotePort in (80,443,8080,8000,8443,9200,2375,6379))
+| where RemotePort !in (3306,5432,1433,11211)
+| project TimeGenerated, DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl, AccountName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-260-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Craft CMS web-server process connecting to internal or cloud-metadata host (SSRF)
+id: a1d83b27-5c4e-4d19-9f60-7b2c8e1a44df
+description: php-fpm/nginx/httpd/w3wp initiating a connection to RFC1918, link-local, or 169.254.169.254, consistent with the blind SSRF in CVE-2026-55791.
+references:
+  - https://github.com/advisories/GHSA-c55v-343g-5xff
+  - https://advisories.gitlab.com/pkg/composer/craftcms/cms/CVE-2026-27129/
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1090
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection_proc:
+    Image|endswith:
+      - &#x27;/php-fpm&#x27;
+      - &#x27;/php-cgi&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/apache2&#x27;
+      - &#x27;/nginx&#x27;
+  selection_dst:
+    DestinationIp|cidr:
+      - &#x27;169.254.0.0/16&#x27;
+      - &#x27;10.0.0.0/8&#x27;
+      - &#x27;172.16.0.0/12&#x27;
+      - &#x27;192.168.0.0/16&#x27;
+  filter_db:
+    DestinationPort:
+      - 3306
+      - 5432
+      - 1433
+      - 11211
+  condition: selection_proc and selection_dst and not filter_db
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-260-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:imageconfigs @verb:(delete OR deletecollection OR update OR patch)</code></pre></div>
-    <div class="tab-content" id="art-260-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;pkg.crossplane.io&quot; objectRef.resource=&quot;imageconfigs&quot; (verb=&quot;delete&quot; OR verb=&quot;deletecollection&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
-| rename objectRef.name as imageconfig_name, user.username as username, verb as action, userAgent as user_agent
-| spath input=_raw path=requestObject.spec.verification output=verification_spec
-| eval verification_present=if(isnull(verification_spec) OR verification_spec=&quot;&quot;, &quot;no&quot;, &quot;yes&quot;)
-| table _time, username, action, imageconfig_name, user_agent, verification_present, sourceIPs{}
-| sort - _time</code></pre></div>
+    <div class="tab-content" id="art-260-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/(php-fpm|php-cgi|httpd|apache2|nginx|w3wp\.exe)/i
+| RemoteAddressIP4=&quot;169.254.169.254&quot; OR cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) OR cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4) OR cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| RemotePort!=3306 RemotePort!=5432 RemotePort!=1433 RemotePort!=11211
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-260-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) as dest_ports, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name IN (&quot;php-fpm&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php-cgi&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;)) AND (All_Traffic.dest=&quot;169.254.169.254&quot; OR All_Traffic.dest=10.0.0.0/8 OR All_Traffic.dest=172.16.0.0/12 OR All_Traffic.dest=192.168.0.0/16 OR All_Traffic.dest=169.254.0.0/16) by All_Traffic.src, All_Traffic.dest, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | where NOT dest_ports IN (3306,5432,1433,11211) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-260-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) as dest_ports, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name IN (&quot;php-fpm&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php-cgi&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;)) AND (All_Traffic.dest=&quot;169.254.169.254&quot; OR All_Traffic.dest=10.0.0.0/8 OR All_Traffic.dest=172.16.0.0/12 OR All_Traffic.dest=192.168.0.0/16 OR All_Traffic.dest=169.254.0.0/16) by All_Traffic.src, All_Traffic.dest, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | where NOT dest_ports IN (3306,5432,1433,11211) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="54dc2b7296" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Craft CMS 1-click RCE: plugin-install POST riding a poisoned resource-js JS load</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="54dc2b7296" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates the cache-poisoning payoff of CVE-2026-55791 — an admin browser that loaded the resource-js response as application/javascript then, within minutes from the same client, POSTs to /admin/actions/plugins/install-plugin (session riding using window.Craft.csrfTokenValue). This is the RCE step, not a generic CSRF check.
+
+Rationale: Uses the two concrete article URIs (&#x27;resource-js&#x27; returning application/javascript, and &#x27;actions/plugins/install-plugin&#x27; POST) plus the same-client temporal link the cache-poisoning-to-session-riding chain requires; plugin install is a rare CP action so the correlation is high-fidelity and low-FP.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/composer/craftcms/cms/CVE-2026-55791/
+  • https://advisories.gitlab.com/composer/craftcms/cms/GHSA-95wr-3f2v-v2wh/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Session Hijacking">T1185</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin legitimately installing a plugin shortly after a normal Control-Panel page load</li><li>Automated CI/deploy tooling that installs plugins via the CP from a fixed IP</li><li>Penetration test reproducing the chain</li><li>Admin behind same NAT as the resource-js request during routine work</li><li>Plugin Store updates triggering install-plugin during a CP session</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has &quot;CraftDeployBot&quot;  // exclude known CI deploy automation user-agent after confirming it</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the resource-js response served to that client was attacker-controlled (external Host header, unexpected size/hash) versus the legitimate cached asset; identify the admin account tied to the session. 2) Contain: disable/inspect the installed plugin, force-logout and rotate the admin session + CSRF, set explicit trustedHosts, and patch to &gt;=4.17.9 / &gt;=5.9.15. 3) Hunt: review the file system for newly written plugin/PHP files and the web-server process for child processes or outbound C2 following the install.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 24h;
+let window = 10m;
+let resourcejs = ImWebSession
+    | where TimeGenerated &gt; ago(lookback)
+    | where Url has &quot;resource-js&quot;
+    | where HttpResponseHeaderContentType has &quot;javascript&quot;
+    | project JsTime = TimeGenerated, SrcIpAddr, JsUrl = Url, JsHost = HttpHostName;
+ImWebSession
+| where TimeGenerated &gt; ago(lookback)
+| where HttpMethod == &quot;POST&quot;
+| where Url has &quot;actions/plugins/install-plugin&quot;
+| join kind=inner resourcejs on SrcIpAddr
+| where TimeGenerated between (JsTime .. JsTime + window)   // install POST within 10m of loading poisoned JS
+| project InstallTime = TimeGenerated, SrcIpAddr, JsTime, JsHost, JsUrl, InstallUrl = Url, HttpStatusCode, UserAgent = HttpRequestHeaderUserAgent
+| order by InstallTime desc</code></pre></div>
+    <div class="tab-content" id="art-260-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*resource-js*&quot; Web.http_content_type=&quot;*javascript*&quot; by Web.src, _time span=1s | `drop_dm_object_name(Web)` | rename _time as js_time | join type=inner src [| tstats `summariesonly` count from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*actions/plugins/install-plugin*&quot; by Web.src, _time span=1s | `drop_dm_object_name(Web)` | rename _time as install_time] | where install_time&gt;=js_time AND install_time&lt;=js_time+600 | table js_time, install_time, src, count | sort - install_time</code></pre><pre class="spl-mode-body" id="art-260-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*resource-js*&quot; Web.http_content_type=&quot;*javascript*&quot; by Web.src, _time span=1s | `drop_dm_object_name(Web)` | rename _time as js_time | join type=inner src [| tstats summariesonly=false count from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*actions/plugins/install-plugin*&quot; by Web.src, _time span=1s | `drop_dm_object_name(Web)` | rename _time as install_time] | where install_time&gt;=js_time AND install_time&lt;=js_time+600 | table js_time, install_time, src, count | sort - install_time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-260-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-55791&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-260-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-55791&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-260-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-55791&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-260-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-55791&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

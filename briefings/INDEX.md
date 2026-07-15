@@ -9,9 +9,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-15
+- [asyncapi npm packages infected with credential stealing malw](./2026-07-15/asyncapi-npm-packages-infected-with-credential-stealing-malw.md)
 - [compromised asyncapi npm packages deliver multi stage botnet](./2026-07-15/compromised-asyncapi-npm-packages-deliver-multi-stage-botnet.md)
 - [cursor flaw lets malicious cloned repositories trigger windo](./2026-07-15/cursor-flaw-lets-malicious-cloned-repositories-trigger-windo.md)
 - [firefox chrome adobe and vmware updates fix multiple critica](./2026-07-15/firefox-chrome-adobe-and-vmware-updates-fix-multiple-critica.md)
+- [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
+- [okobot malware framework injects seed phrase phishing into l](./2026-07-15/okobot-malware-framework-injects-seed-phrase-phishing-into-l.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [researcher drops new windows zero day poc hours after micros](./2026-07-15/researcher-drops-new-windows-zero-day-poc-hours-after-micros.md)
 - [sase has an ai blind spot inspecting packets is no longer en](./2026-07-15/sase-has-an-ai-blind-spot-inspecting-packets-is-no-longer-en.md)
@@ -44,7 +47,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
 - [nearly 300 github repos pose as legit software to push malwa](./2026-07-14/nearly-300-github-repos-pose-as-legit-software-to-push-malwa.md)
-- [new phishing kits target microsoft 365 accounts evade mfa](./2026-07-14/new-phishing-kits-target-microsoft-365-accounts-evade-mfa.md)
 - [oauth client id spoofing lets attackers validate stolen micr](./2026-07-14/oauth-client-id-spoofing-lets-attackers-validate-stolen-micr.md)
 - [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
 - [researchers say claude for chrome flaw lets rogue extensions](./2026-07-14/researchers-say-claude-for-chrome-flaw-lets-rogue-extensions.md)
@@ -110,7 +112,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [urgent progress tells sharefile customers to shut down stora](./2026-07-10/urgent-progress-tells-sharefile-customers-to-shut-down-stora.md)
 
 ## 2026-07-09
-- [ai attacks move in minutes join this webinar on building a d](./2026-07-09/ai-attacks-move-in-minutes-join-this-webinar-on-building-a-d.md)
 - [compromised injectivelabs sdk ts exfiltrates wallet keys thr](./2026-07-09/compromised-injectivelabs-sdk-ts-exfiltrates-wallet-keys-thr.md)
 - [dormant github accounts help attackers blend in while mappin](./2026-07-09/dormant-github-accounts-help-attackers-blend-in-while-mappin.md)
 - [ghsa critical cve 2026 52766 yeswiki vulnerable to unauthent](./2026-07-09/ghsa-critical-cve-2026-52766-yeswiki-vulnerable-to-unauthent.md)
@@ -274,7 +275,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55447 langflow basefilecomponent base](./2026-06-19/ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base.md)
 - [ghsa critical cve 2026 55791 craft cms blind ssrf and arbitr](./2026-06-19/ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr.md)
 - [ghsa critical cve 2026 57168 openremote manager removealarms](./2026-06-19/ghsa-critical-cve-2026-57168-openremote-manager-removealarms.md)
-- [ghsa critical ghsa wfqx gjrf g28r crossplane signature verif](./2026-06-19/ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif.md)
 
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
