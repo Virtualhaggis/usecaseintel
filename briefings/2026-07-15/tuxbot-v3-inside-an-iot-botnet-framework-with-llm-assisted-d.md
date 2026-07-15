@@ -56,12 +56,12 @@ XO…
 - **T1204.002** — User Execution: Malicious File
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
-- **T1568** — Dynamic Resolution
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1587.001** — Develop Capabilities: Malware
-- **T1105** — Ingress Tool Transfer
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1110.001** — Brute Force: Password Guessing
 - **T1046** — Network Service Discovery
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1568** — Dynamic Resolution
+- **T1095** — Non-Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -69,77 +69,110 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TuxBot/Akiru botnet C2 connection to 209.182.237.133 or 185.10.68.127
+### TuxBot/Akiru C2 & dropper connection (209.182.237.133, 185.10.68.127)
 
-`UC_8_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("209.182.237.133","185.10.68.127") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("209.182.237.133","185.10.68.127") by All_Traffic.src All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteIP in ("209.182.237.133","185.10.68.127")
-| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### DNS/connection to TuxBot developer C2 domain digikalas.online
-
-`UC_8_12` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*digikalas.online" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has "digikalas.online"
-| project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### TuxBot v3 ELF sample by SHA256 71dfbb17...312fa8d
-
-`UC_8_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash="71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-union DeviceFileEvents, DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where SHA256 == "71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d"
-| project Timestamp, DeviceName, DeviceId, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where RemoteIP in ("209.182.237.133", "185.10.68.127")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
 | order by Timestamp desc
 ```
 
-### IoT worm behavior: outbound Telnet brute-force fan-out from internal device
+### TuxBot v3 Evolution sample execution by SHA256
 
-`UC_8_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_12_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count dc(All_Traffic.dest) as distinct_dests min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=23 by All_Traffic.src _time span=10m | `drop_dm_object_name(All_Traffic)` | where distinct_dests > 50 | convert ctime(firstTime) ctime(lastTime) | sort - distinct_dests
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_hash="71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d" by Endpoint.Processes.dest Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
+| `drop_dm_object_name(Endpoint.Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(90d)
+| where SHA256 == "71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d"
+| project Timestamp, DeviceName, FileName, FolderPath, ProcessCommandLine, AccountName, InitiatingProcessFileName, SHA256
+| order by Timestamp desc
+```
+
+### IoT Telnet/ADB brute-force scanner fan-out (Akiru propagation)
+
+`UC_12_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(All_Traffic.dest) as distinct_targets count values(All_Traffic.dest_port) as dest_ports min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (23,2323,5555) by All_Traffic.src
+| `drop_dm_object_name(All_Traffic)`
+| where distinct_targets > 100
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(1d)
-| where RemotePort == 23
-| summarize DistinctDests = dcount(RemoteIP), Attempts = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, bin(Timestamp, 10m)
-| where DistinctDests > 50   // 50 = one host fanning out to many Telnet hosts in 10m = scanning, not admin
-| order by DistinctDests desc
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","ConnectionFailed")
+| where RemotePort in (23, 2323, 5555)
+| where RemoteIPType == "Public"
+| summarize DistinctTargets = dcount(RemoteIP), Ports = make_set(RemotePort), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, InitiatingProcessFileName
+| where DistinctTargets > 100   // mass Telnet/ADB scanning; bot brute-forces 1,496 cred pairs across many hosts
+| order by DistinctTargets desc
+```
+
+### DNS/HTTP resolution of TuxBot developer domain digikalas.online
+
+`UC_12_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*digikalas.online" by DNS.src DNS.query
+| `drop_dm_object_name(DNS)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "digikalas.online"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### TuxBot bot-protocol beacon on TCP/31337 to public host
+
+`UC_12_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dests from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=31337 by All_Traffic.src All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 31337
+| where RemoteIPType == "Public"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+| summarize Count = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Targets = make_set(RemoteIP, 10) by DeviceId, DeviceName, InitiatingProcessFileName
+| order by Count desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -429,7 +462,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TuxBot v3: Inside an IoT Botnet Framework With LLM-Assisted Development
 
-`UC_8_10` · phase: **install** · confidence: **High**
+`UC_12_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -473,4 +506,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

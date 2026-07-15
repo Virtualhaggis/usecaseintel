@@ -35,8 +35,9 @@ BPH providers lease servers that help hinder disruption efforts targeting their 
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1583.006** — Acquire Infrastructure: Web Services
+- **T1105** — Ingress Tool Transfer
+- **T1078** — Valid Accounts
+- **T1090.003** — Proxy: Multi-hop Proxy
 
 ## Kill chain phases observed
 
@@ -44,24 +45,39 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound network connection to indicted Media Land / ML.Cloud bulletproof-hosting IP 194.26.25.111
+### Network connection to Media Land bulletproof-hosting IP 194.26.25.111
 
-`UC_12_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_16_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="194.26.25.111" OR All_Traffic.src_ip="194.26.25.111") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.action All_Traffic.app All_Traffic.user
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="194.26.25.111" OR All_Traffic.src_ip="194.26.25.111") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP == "194.26.25.111"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| where RemoteIP == "194.26.25.111" or LocalIP == "194.26.25.111"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, LocalPort, Protocol
+| order by Timestamp desc
+```
+
+### Authentication or cloud API activity from sanctioned Media Land BPH IP 194.26.25.111
+
+`UC_16_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.src="194.26.25.111" by Authentication.user Authentication.dest Authentication.app Authentication.action | `drop_dm_object_name(Authentication)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where IPAddress == "194.26.25.111"
+| project Timestamp, AccountUpn, AccountDisplayName, Application, ResourceDisplayName, IPAddress, Country, ErrorCode, ClientAppUsed, UserAgent, ConditionalAccessStatus
 | order by Timestamp desc
 ```
 
@@ -342,4 +358,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

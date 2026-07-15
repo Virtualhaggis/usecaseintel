@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2585 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,14 +10,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-15
 - [asyncapi npm packages infected with credential stealing malw](./2026-07-15/asyncapi-npm-packages-infected-with-credential-stealing-malw.md)
+- [cisa kev cve 2023 4346 knx association knx protocol connecti](./2026-07-15/cisa-kev-cve-2023-4346-knx-association-knx-protocol-connecti.md)
+- [cisa kev cve 2026 46817 oracle e business suite improper pri](./2026-07-15/cisa-kev-cve-2026-46817-oracle-e-business-suite-improper-pri.md)
 - [compromised asyncapi npm packages deliver multi stage botnet](./2026-07-15/compromised-asyncapi-npm-packages-deliver-multi-stage-botnet.md)
 - [cursor flaw lets malicious cloned repositories trigger windo](./2026-07-15/cursor-flaw-lets-malicious-cloned-repositories-trigger-windo.md)
 - [firefox chrome adobe and vmware updates fix multiple critica](./2026-07-15/firefox-chrome-adobe-and-vmware-updates-fix-multiple-critica.md)
 - [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
+- [ghsa critical cve 2026 52881 mantisbt reflected xss in admin](./2026-07-15/ghsa-critical-cve-2026-52881-mantisbt-reflected-xss-in-admin.md)
+- [google gemini cli abused as a hacking agent malware botnet o](./2026-07-15/google-gemini-cli-abused-as-a-hacking-agent-malware-botnet-o.md)
 - [okobot malware framework injects seed phrase phishing into l](./2026-07-15/okobot-malware-framework-injects-seed-phrase-phishing-into-l.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [researcher drops new windows zero day poc hours after micros](./2026-07-15/researcher-drops-new-windows-zero-day-poc-hours-after-micros.md)
 - [sase has an ai blind spot inspecting packets is no longer en](./2026-07-15/sase-has-an-ai-blind-spot-inspecting-packets-is-no-longer-en.md)
+- [turning threat intelligence into decisive action with defend](./2026-07-15/turning-threat-intelligence-into-decisive-action-with-defend.md)
+- [tuxbot v3 evolution shows signs of llm assisted iot botnet d](./2026-07-15/tuxbot-v3-evolution-shows-signs-of-llm-assisted-iot-botnet-d.md)
 - [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
 - [two sonicwall sma 1000 zero days exploited one could enable ](./2026-07-15/two-sonicwall-sma-1000-zero-days-exploited-one-could-enable-.md)
 - [us charges alleged operators of russian bulletproof hosting ](./2026-07-15/us-charges-alleged-operators-of-russian-bulletproof-hosting-.md)
@@ -43,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [how pentera turns ai security workflows into validation engi](./2026-07-14/how-pentera-turns-ai-security-workflows-into-validation-engi.md)
 - [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
 - [lastpass bitwarden users targeted with fake security alerts](./2026-07-14/lastpass-bitwarden-users-targeted-with-fake-security-alerts.md)
-- [microsoft entra id gets passkeys default authentication star](./2026-07-14/microsoft-entra-id-gets-passkeys-default-authentication-star.md)
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
 - [nearly 300 github repos pose as legit software to push malwa](./2026-07-14/nearly-300-github-repos-pose-as-legit-software-to-push-malwa.md)
@@ -122,7 +127,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [npm 12 disables install scripts by default to reduce supply ](./2026-07-09/npm-12-disables-install-scripts-by-default-to-reduce-supply-.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
 - [symlinks are still scary and yes you can commit them to git](./2026-07-09/symlinks-are-still-scary-and-yes-you-can-commit-them-to-git.md)
-- [threatsday cloud bucket hijacking windows lpe chain global f](./2026-07-09/threatsday-cloud-bucket-hijacking-windows-lpe-chain-global-f.md)
 - [winning 54 of the time](./2026-07-09/winning-54-of-the-time.md)
 
 ## 2026-07-08
@@ -198,7 +202,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-30
 - [ghsa critical cve 2026 50566 fission environment runtime con](./2026-06-30/ghsa-critical-cve-2026-50566-fission-environment-runtime-con.md)
 - [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
-- [what s new in microsoft security june 2026](./2026-06-30/what-s-new-in-microsoft-security-june-2026.md)
 
 ## 2026-06-29
 - [cisa kev cve 2026 48558 simplehelp authentication bypass vul](./2026-06-29/cisa-kev-cve-2026-48558-simplehelp-authentication-bypass-vul.md)
@@ -272,8 +275,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
 ## 2026-06-19
-- [ghsa critical cve 2026 55447 langflow basefilecomponent base](./2026-06-19/ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base.md)
-- [ghsa critical cve 2026 55791 craft cms blind ssrf and arbitr](./2026-06-19/ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr.md)
 - [ghsa critical cve 2026 57168 openremote manager removealarms](./2026-06-19/ghsa-critical-cve-2026-57168-openremote-manager-removealarms.md)
 
 ## 2026-06-18

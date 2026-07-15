@@ -38,12 +38,14 @@ The affected packages are listed below -
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1059.007** — JavaScript
 - **T1105** — Ingress Tool Transfer
 - **T1140** — Deobfuscate/Decode Files or Information
-- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
 - **T1547.001** — Registry Run Keys / Startup Folder
-- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1543.003** — Windows Service
+- **T1204.002** — Malicious File
 
 ## Kill chain phases observed
 
@@ -51,100 +53,142 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Node.js process fetches Miasma second stage from IPFS gateway (ipfs.io CID)
+### Install of compromised @asyncapi npm package versions (generator/helpers/components/specs)
 
-`UC_10_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_14_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN ("*ipfs.io/ipfs/QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9*","*QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9*") OR (Web.url="*ipfs.io/ipfs/*" AND Web.app IN ("node","node.exe")) by Web.src, Web.dest, Web.dest_ip, Web.url, Web.app, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","npm-cli.js","node.exe","yarn.exe","pnpm.exe","npm","yarn","pnpm")) AND (Processes.process IN ("*@asyncapi/generator-helpers@1.1.1*","*@asyncapi/generator-components@0.7.1*","*@asyncapi/generator@3.3.1*","*@asyncapi/specs@6.11.2*","*@asyncapi/specs@6.11.2-alpha.1*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe") or InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe")
+| where ProcessCommandLine has_any ("@asyncapi/generator-helpers@1.1.1","@asyncapi/generator-components@0.7.1","@asyncapi/generator@3.3.1","@asyncapi/specs@6.11.2","@asyncapi/specs@6.11.2-alpha.1")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Node.js spawns detached background node fetching Miasma stage-2 from IPFS gatewa
+
+`UC_14_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","node","npm")) AND Processes.process_name IN ("node.exe","node") AND (Processes.process="*ipfs.io/ipfs/*" OR Processes.process="*QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9*" OR Processes.process="*sync.js*") by Processes.dest Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe")
+| where FileName =~ "node.exe"
+| where ProcessCommandLine has_any ("ipfs.io/ipfs/","QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9","sync.js")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### IPFS gateway fetch of Miasma stage-2 CID (ipfs.io/ipfs/QmQobZSp...)
+
+`UC_14_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9*") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where RemoteUrl has "ipfs.io" or RemoteUrl has "QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
+| where Timestamp > ago(30d)
+| where RemoteUrl has "QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9"
+   or (RemoteUrl has "ipfs.io" and InitiatingProcessFileName in~ ("node.exe","npm.exe"))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Miasma 'sync.js' loader dropped to %LOCALAPPDATA%\NodeJS and executed by node
+### Miasma sync.js loader dropped to OS-specific path by node and executed
 
-`UC_10_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name="sync.js" (Endpoint.Filesystem.file_path="*NodeJS*sync.js" OR Endpoint.Filesystem.file_path="*.node*sync.js") by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="sync.js" AND (Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*/.config/*" OR Filesystem.file_path="*/.cache/*" OR Filesystem.file_path="*/tmp/*" OR Filesystem.file_path="*node_modules*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let miasmaHashes = dynamic(["34014776d3d3ff11bc4439b02fd7ac0f02a887eb3a052eeafff236e2f6db8ad1","082d733db0687dcd768104972b065d4b58cb1e6043688c6c20fa3702337f36ab","bfaeb987faa6de2b5a5eb63b1233d055215b09b0349a9394f2175fd7cdf385e4","9b2e65db653ca8575c9b10eefb9a80c6006404812c2ec212bf5675e3c690233b","d425e4583cc6185d41e95c45eda00550045a5d1919b9a012236a4520d009dbd7","6e78713b75bd34828d49896176627f7face7aa9036cd874f2e02d9f23a9a9c71","9e214f38537e69bf51c7fa1ddd35ae495e9cb897231ec010baf9e4f29407ee9a"]);
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName =~ "sync.js" and FolderPath has "NodeJS") or SHA256 in (miasmaHashes)
-| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName =~ "sync.js"
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe")
+| where FolderPath has_any (@"\Temp\", @"\AppData\", @"\node_modules\", @"\ProgramData\")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Miasma REST C2 beacon to 85.137.53.71 on ports 8080/8081/8091
+### Miasma botnet C2 beacon to 85.137.53.71 on ports 8080/8081/8091
 
-`UC_10_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_14_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="85.137.53.71" by All_Traffic.src, All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="85.137.53.71" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where RemoteIP == "85.137.53.71"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), Ports=make_set(RemotePort), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP
-| order by LastSeen desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP
+| order by FirstSeen desc
 ```
 
-### Miasma persistence via Windows Registry Run key pointing at NodeJS/sync.js
+### Miasma persistence via Windows Run key or startup written by node/npm process
 
-`UC_10_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Endpoint.Registry.registry_path="*CurrentVersion*Run*" (Endpoint.Registry.registry_value_data="*sync.js*" OR Endpoint.Registry.registry_value_data="*NodeJS*") by Endpoint.Registry.dest, Endpoint.Registry.registry_path, Endpoint.Registry.registry_value_name, Endpoint.Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run*") AND (Registry.registry_value_data="*node*" OR Registry.registry_value_data="*sync.js*" OR Registry.registry_value_data="*\\Temp\\*" OR Registry.registry_value_data="*\\AppData\\*" OR Registry.registry_value_data="*ProgramData*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.user | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("RegistryValueSet","RegistryValueCreated")
-| where RegistryKey has "CurrentVersion" and RegistryKey has "Run"
-| where RegistryValueData has "sync.js" or RegistryValueData has "NodeJS"
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\CurrentVersion\Run"
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe")
+   or RegistryValueData has_any ("node","sync.js", @"\Temp\", @"\AppData\", "ProgramData")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Presence of compromised @asyncapi generator packages in node_modules
+### Suspicious downloader child (powershell/cmd/curl) spawned by npm/node_modules
 
-`UC_10_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_14_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_path="*node_modules*@asyncapi*generator-helpers*" OR Endpoint.Filesystem.file_path="*node_modules*@asyncapi*generator-components*" OR Endpoint.Filesystem.file_path="*node_modules*@asyncapi*generator*" OR Endpoint.Filesystem.file_path="*node_modules*@asyncapi*specs*") by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe") OR Processes.parent_process="*node_modules*") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bash.exe","bitsadmin.exe","certutil.exe") AND (Processes.process="*http://*" OR Processes.process="*https://*" OR Processes.process="*ipfs.io*" OR Processes.process="*DownloadString*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*FromBase64String*" OR Processes.process="*-enc*") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FolderPath has "node_modules" and FolderPath has "@asyncapi"
-| where FolderPath has_any ("generator-helpers","generator-components","generator","specs")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Files=count(), SamplePath=any(FolderPath) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
-| order by LastSeen desc
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe") or InitiatingProcessFolderPath has @"\node_modules\"
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bash.exe","bitsadmin.exe","certutil.exe")
+| where ProcessCommandLine has_any ("http://","https://","ipfs.io","DownloadString","Invoke-WebRequest","FromBase64String","-enc","QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, ProcessCommandLine
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -289,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised AsyncAPI npm Packages Deliver Multi-Stage Botnet Malware
 
-`UC_10_7` · phase: **exploit** · confidence: **High**
+`UC_14_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -349,4 +393,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Dev endpoint contacts ClawHub / skills.sh agent-skill marketplace
 
-`UC_643_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_644_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### AI coding agent spawns remote fetch-and-execute (curl | bash / curl | source)
 
-`UC_643_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_644_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### AI agent skill exfiltrates GitHub token / env secrets via dynamic-context shell-out
 
-`UC_643_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_644_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu
 
-`UC_643_2` · phase: **exploit** · confidence: **High**
+`UC_644_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

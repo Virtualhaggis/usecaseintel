@@ -22,12 +22,12 @@ It has been described as a Windows User Profile Service arbitrary hive load elev
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1606.002** — Forge Web Credentials: SAML Tokens
 - **T1068** — Exploitation for Privilege Escalation
 - **T1112** — Modify Registry
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1505.003** — Server Software Component: Web Shell
-- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1134** — Access Token Manipulation
 
 ## Kill chain phases observed
 
@@ -35,68 +35,74 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### LegacyHive: cross-user registry hive (UsrClass.dat/NTUSER.dat) load via User Profile Service
+### SharePoint IIS worker (w3wp.exe) spawning command/script interpreter — CVE-2026-56164/45659/32201 RCE
 
-`UC_6_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="UsrClass.dat" OR Filesystem.file_name="NTUSER.dat") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_id Filesystem.user | `drop_dm_object_name(Filesystem)` | rex field=file_path "(?i)\\Users\\(?<profile_user>[^\\]+)\\" | where isnotnull(profile_user) AND NOT (profile_user IN ("Public","Default","Default User","All Users")) AND lower(profile_user)!=lower(user) AND NOT match(user,"\$$") | table firstTime lastTime dest user profile_user file_name file_path process_name
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("UsrClass.dat","NTUSER.dat")
-| where InitiatingProcessAccountName !endswith "$"
-| where InitiatingProcessAccountName !in~ ("system","local service","network service")
-| extend ProfileUser = tostring(extract(@"(?i)\\Users\\([^\\]+)\\", 1, FolderPath))
-| where isnotempty(ProfileUser)
-| where ProfileUser !in~ ("Public","Default","Default User","All Users")
-| where tolower(ProfileUser) != tolower(InitiatingProcessAccountName)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ProfileUser, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessId
-| order by Timestamp desc
-```
-
-### SharePoint IIS worker (w3wp) spawning command shell — post-RCE execution (CVE-2026-56164/32201/45659)
-
-`UC_6_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="w3wp.exe" OR Processes.parent_process_name="owstimer.exe") AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","cscript.exe","wscript.exe","certutil.exe","bitsadmin.exe","net.exe","net1.exe","whoami.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(user,"\$$") | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","certutil.exe","bitsadmin.exe","curl.exe","net.exe","net1.exe","whoami.exe","nltest.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("w3wp.exe","owstimer.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","cscript.exe","wscript.exe","certutil.exe","bitsadmin.exe","net.exe","net1.exe","whoami.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","certutil.exe","bitsadmin.exe","curl.exe","net.exe","net1.exe","whoami.exe","nltest.exe")
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
 ```
 
-### SharePoint webshell (.aspx) written by w3wp into LAYOUTS — persistence / machine-key theft
+### SharePoint web shell / .aspx payload written by w3wp.exe into LAYOUTS directory
 
-`UC_6_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name="w3wp.exe" OR Filesystem.process_name="owstimer.exe") AND (Filesystem.file_name="*.aspx" OR Filesystem.file_name="*.ashx" OR Filesystem.file_name="*.asmx") AND (Filesystem.file_path="*\\TEMPLATE\\LAYOUTS*" OR Filesystem.file_path="*Web Server Extensions*" OR Filesystem.file_path="*\\wwwroot\\wss*") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name="w3wp.exe" (Filesystem.file_name="*.aspx" OR Filesystem.file_name="*.ashx" OR Filesystem.file_name="*.asmx") (Filesystem.file_path="*\\TEMPLATE\\LAYOUTS\\*" OR Filesystem.file_path="*\\Web Server Extensions\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("w3wp.exe","owstimer.exe")
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
 | where FileName endswith ".aspx" or FileName endswith ".ashx" or FileName endswith ".asmx"
-| where FolderPath has_any (@"\TEMPLATE\LAYOUTS", @"\Web Server Extensions\", @"\wwwroot\wss\", @"\inetpub\wwwroot")
+| where FolderPath has_any (@"TEMPLATE\LAYOUTS", "Web Server Extensions")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessAccountName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### LegacyHive EoP — cross-user UsrClass.dat mounted under another user's HKU\<SID>\_Classes
+
+`UC_10_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*_Classes*" AND Registry.user!="SYSTEM" AND Registry.user!="*$" by Registry.dest Registry.user Registry.process_name Registry.registry_path | `drop_dm_object_name(Registry)` | rex field=registry_path "(?<KeySid>S-1-5-21-[0-9\-]+)_Classes" | where isnotnull(KeySid) | eval firstTime=strftime(firstTime,"%F %T") | table firstTime dest user process_name KeySid registry_path count | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has "_Classes"
 | where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, SHA256, InitiatingProcessCommandLine
+| where InitiatingProcessAccountSid !in ("S-1-5-18","S-1-5-19","S-1-5-20")
+| where InitiatingProcessIntegrityLevel in ("Medium","Low")
+| extend KeySid = extract(@"(S-1-5-21-[0-9\-]+)_Classes", 1, RegistryKey)
+| where isnotempty(KeySid)
+| where InitiatingProcessAccountSid != KeySid
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessAccountSid,
+          KeySid, RegistryKey, RegistryValueName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 

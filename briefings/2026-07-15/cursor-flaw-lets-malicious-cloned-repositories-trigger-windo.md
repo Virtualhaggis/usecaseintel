@@ -22,13 +22,11 @@ Whatever that binary does, it does as you, with your source, your SSH keys and y
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1574.008** — Hijack Execution Flow: Path Interception by Search Order Hijacking
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1204.003** — User Execution: Malicious Image
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1105** — Ingress Tool Transfer
-- **T1546** — Event Triggered Execution
+- **T1203** — Exploitation for Client Execution
+- **T1574.007** — Path Interception by PATH Environment Variable
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1059.004** — Unix Shell
+- **T1059.003** — Windows Command Shell
 
 ## Kill chain phases observed
 
@@ -36,35 +34,42 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Cursor IDE spawning workspace git.exe via 'rev-parse --show-toplevel' search-order hijack
+### AI IDE runs workspace-root git.exe via 'rev-parse --show-toplevel' probe (Cursor search-order RCE)
 
-`UC_7_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_11_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="Cursor.exe" Processes.process_name="git.exe" Processes.process="*rev-parse*--show-toplevel*" by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path Processes.process_id | `drop_dm_object_name(Processes)` | where NOT match(process_path, "(?i)\\\\Program Files") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=git.exe Processes.process="*rev-parse*" Processes.process="*--show-toplevel*" (Processes.parent_process_name=Cursor.exe OR Processes.parent_process_name=Code.exe OR Processes.parent_process_name=codex.exe OR Processes.parent_process_name=gemini.exe OR Processes.parent_process_name=kiro.exe) by Processes.dest Processes.user Processes.process_path Processes.process Processes.parent_process_name Processes.process_name
+| `drop_dm_object_name(Processes)`
+| search NOT (process_path="*\\Program Files\\Git\\*" OR process_path="*\\Program Files (x86)\\Git\\*" OR process_path="*\\scoop\\apps\\git\\*")
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "Cursor.exe"
 | where FileName =~ "git.exe"
 | where ProcessCommandLine has "rev-parse" and ProcessCommandLine has "--show-toplevel"
-| where FolderPath !contains "\\Program Files"
+| where InitiatingProcessFileName has_any ("Cursor.exe","Code.exe","codex.exe","gemini.exe","kiro.exe")
+| where not(FolderPath has @"\Program Files\Git\" or FolderPath has @"\Program Files (x86)\Git\" or FolderPath has @"\scoop\apps\git\")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Search-order helper binary (git/node/npx/where.exe) executing from a repo/workspace path
+### AI IDE spawns helper binary (git/node/npx/where.exe) from cloned-repo root
 
-`UC_7_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_11_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="git.exe" OR Processes.process_name="node.exe" OR Processes.process_name="npx.exe" OR Processes.process_name="where.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | where match(process_path, "(?i)\\\\Users\\\\[^\\\\]+\\\\(source\\\\repos|Downloads|Desktop|Documents|Projects|repos)\\\\") AND NOT match(process_path, "(?i)\\\\Program Files") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=git.exe OR Processes.process_name=node.exe OR Processes.process_name=npx.exe OR Processes.process_name=where.exe) (Processes.parent_process_name=Cursor.exe OR Processes.parent_process_name=Code.exe OR Processes.parent_process_name=codex.exe OR Processes.parent_process_name=gemini.exe OR Processes.parent_process_name=kiro.exe) by Processes.dest Processes.user Processes.process_path Processes.process Processes.parent_process_name Processes.process_name
+| `drop_dm_object_name(Processes)`
+| search (process_path="*\\Downloads\\*" OR process_path="*\\source\\repos\\*" OR process_path="*\\Desktop\\*" OR process_path="*\\OneDrive\\*" OR process_path="*\\Documents\\*" OR process_path="*\\repos\\*" OR process_path="*\\Projects\\*")
+| search NOT (process_path="*\\Program Files\\*" OR process_path="*\\Program Files (x86)\\*" OR process_path="*\\System32\\*" OR process_path="*\\nvm\\*" OR process_path="*\\scoop\\apps\\*")
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -72,72 +77,56 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName in~ ("git.exe","node.exe","npx.exe","where.exe")
-| where FolderPath matches regex @"(?i)\\Users\\[^\\]+\\(source\\repos|Downloads|Desktop|Documents|Projects|repos)\\"
-| where FolderPath !contains "\\Program Files"
+| where InitiatingProcessFileName has_any ("Cursor.exe","Code.exe","codex.exe","gemini.exe","kiro.exe")
+| where FolderPath has_any (@"\Downloads\", @"\source\repos\", @"\Desktop\", @"\OneDrive\", @"\Documents\", @"\repos\", @"\Projects\")
+| where not(FolderPath has @"\Program Files\" or FolderPath has @"\Program Files (x86)\" or FolderPath has @"\System32\" or FolderPath has @"\nvm\" or FolderPath has @"\scoop\apps\")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName
 | order by Timestamp desc
 ```
 
-### Masqueraded git/node/npx binary — image name mismatches embedded original filename (calc-as-git PoC)
+### Cloned-repo Git hook executes shell via IDE/git subprocess (Cursor CVE-2026-26268 class)
 
-`UC_7_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_11_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="git.exe" OR Processes.process_name="node.exe" OR Processes.process_name="npx.exe" OR Processes.process_name="where.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.original_file_name Processes.vendor_product | `drop_dm_object_name(Processes)` | where isnotnull(original_file_name) AND NOT match(lower(original_file_name), "(git|node|npx|where)\.exe") | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*\\.git\\hooks\\*" OR Processes.parent_process="*\\.git\\hooks\\*" OR Processes.process_path="*\\.git\\hooks\\*") by Processes.dest Processes.user Processes.process_path Processes.process Processes.parent_process_name Processes.process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("git.exe","node.exe","npx.exe","where.exe")
-| where isnotempty(ProcessVersionInfoOriginalFileName)
-| where not(ProcessVersionInfoOriginalFileName has_any ("git.exe","node.exe","npx.exe","where.exe"))
+| where FolderPath has @"\.git\hooks\" or ProcessCommandLine has @"\.git\hooks\" or InitiatingProcessCommandLine has @"\.git\hooks\"
+| where InitiatingProcessFileName has_any ("git.exe","Cursor.exe","Code.exe","codex.exe","gemini.exe","kiro.exe","bash.exe","sh.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoOriginalFileName, ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Planting of git/node/npx/where.exe into a cloned repo or extracted archive
+### Poisoned .vscode/tasks.json lands in cloned repo via git/archive (AWS Kiro CVE-2026-10591)
 
-`UC_7_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_11_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="git.exe" OR Filesystem.file_name="node.exe" OR Filesystem.file_name="npx.exe" OR Filesystem.file_name="where.exe") Filesystem.action=created by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where match(file_path, "(?i)\\\\Users\\\\[^\\\\]+\\\\(source\\\\repos|Downloads|Desktop|Documents|Projects|repos)\\\\") AND NOT match(file_path, "(?i)\\\\Program Files") | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=tasks.json Filesystem.file_path="*\\.vscode\\*" (Filesystem.process_name=git.exe OR Filesystem.process_name=curl.exe OR Filesystem.process_name=tar.exe OR Filesystem.process_name=node.exe) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FileName in~ ("git.exe","node.exe","npx.exe","where.exe")
-| where FolderPath matches regex @"(?i)\\Users\\[^\\]+\\(source\\repos|Downloads|Desktop|Documents|Projects|repos)\\"
-| where FolderPath !contains "\\Program Files"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, FileOriginUrl
-| order by Timestamp desc
-```
-
-### Git hook script execution inside a cloned repo (.git\hooks) — CVE-2026-26268 class
-
-`UC_7_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="git.exe" OR Processes.parent_process_name="Cursor.exe" OR Processes.parent_process_name="bash.exe" OR Processes.parent_process_name="sh.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where match(process_path, "(?i)\\.git\\\\hooks\\\\") OR match(process, "(?i)\\.git[\\\\/]hooks[\\\\/]") | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FolderPath has "\\.git\\hooks\\" or ProcessCommandLine has ".git/hooks/" or ProcessCommandLine has "\\.git\\hooks\\"
-| where InitiatingProcessFileName in~ ("git.exe","Cursor.exe","bash.exe","sh.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FileName =~ "tasks.json"
+| where FolderPath has @"\.vscode\"
+| where InitiatingProcessFileName in~ ("git.exe","curl.exe","tar.exe","node.exe","7z.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -167,7 +156,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cursor Flaw Lets Malicious Cloned Repositories Trigger Windows Code Execution
 
-`UC_7_2` · phase: **exploit** · confidence: **High**
+`UC_11_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -224,4 +213,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
