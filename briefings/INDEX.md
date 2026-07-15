@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2585 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -61,7 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
 - [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
-- [you don t have to run an exploit to know if you re vulnerabl](./2026-07-14/you-don-t-have-to-run-an-exploit-to-know-if-you-re-vulnerabl.md)
 
 ## 2026-07-13
 - [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)

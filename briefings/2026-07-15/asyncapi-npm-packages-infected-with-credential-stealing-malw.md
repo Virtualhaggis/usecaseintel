@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious @asyncapi package versions installed via npm/node (AsyncAPI supply-chain)
 
-`UC_5_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### Miasma sync.js payload dropped to masqueraded NodeJS app-data folder
 
-`UC_5_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### Node.js executing the hidden Miasma sync.js loader
 
-`UC_5_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### Miasma multi-channel C2 egress (85.137.53.71, Nostr, BitTorrent DHT, Ethereum RPC)
 
-`UC_5_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceNetworkEvents
 
 ### Node.js retrieving Miasma second stage from IPFS (ipfs.io + campaign CIDs)
 
-`UC_5_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
