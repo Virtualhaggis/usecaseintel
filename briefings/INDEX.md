@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2582 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -18,10 +18,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
 - [ghsa critical cve 2026 52881 mantisbt reflected xss in admin](./2026-07-15/ghsa-critical-cve-2026-52881-mantisbt-reflected-xss-in-admin.md)
 - [google gemini cli abused as a hacking agent malware botnet o](./2026-07-15/google-gemini-cli-abused-as-a-hacking-agent-malware-botnet-o.md)
+- [harden runner block mode now available for macos and windows](./2026-07-15/harden-runner-block-mode-now-available-for-macos-and-windows.md)
 - [okobot malware framework injects seed phrase phishing into l](./2026-07-15/okobot-malware-framework-injects-seed-phrase-phishing-into-l.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [researcher drops new windows zero day poc hours after micros](./2026-07-15/researcher-drops-new-windows-zero-day-poc-hours-after-micros.md)
 - [sase has an ai blind spot inspecting packets is no longer en](./2026-07-15/sase-has-an-ai-blind-spot-inspecting-packets-is-no-longer-en.md)
+- [the npm threat landscape attack surface and mitigations upda](./2026-07-15/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [turning threat intelligence into decisive action with defend](./2026-07-15/turning-threat-intelligence-into-decisive-action-with-defend.md)
 - [tuxbot v3 evolution shows signs of llm assisted iot botnet d](./2026-07-15/tuxbot-v3-evolution-shows-signs-of-llm-assisted-iot-botnet-d.md)
 - [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
@@ -48,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [grok build uploaded entire git repositories to xai storage n](./2026-07-14/grok-build-uploaded-entire-git-repositories-to-xai-storage-n.md)
 - [how pentera turns ai security workflows into validation engi](./2026-07-14/how-pentera-turns-ai-security-workflows-into-validation-engi.md)
 - [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
-- [lastpass bitwarden users targeted with fake security alerts](./2026-07-14/lastpass-bitwarden-users-targeted-with-fake-security-alerts.md)
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
 - [nearly 300 github repos pose as legit software to push malwa](./2026-07-14/nearly-300-github-repos-pose-as-legit-software-to-push-malwa.md)
@@ -273,9 +274,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54352 budibase has arbitrary file rea](./2026-06-22/ghsa-critical-cve-2026-54352-budibase-has-arbitrary-file-rea.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
-## 2026-06-19
-- [ghsa critical cve 2026 57168 openremote manager removealarms](./2026-06-19/ghsa-critical-cve-2026-57168-openremote-manager-removealarms.md)
-
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
@@ -331,7 +329,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
-- [threat brief active exploitation of pan os cve 2026 0257](./2026-06-09/threat-brief-active-exploitation-of-pan-os-cve-2026-0257.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
 
 ## 2026-06-08
@@ -881,9 +878,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-11-24
 - [sha1 hulud npm supply chain incident](./2025-11-24/sha1-hulud-npm-supply-chain-incident.md)
-
-## 2025-11-23
-- [shai hulud self replicating worm compromises 500 npm package](./2025-11-23/shai-hulud-self-replicating-worm-compromises-500-npm-package.md)
 
 ## 2025-11-21
 - [cisa kev cve 2025 61757 oracle fusion middleware missing aut](./2025-11-21/cisa-kev-cve-2025-61757-oracle-fusion-middleware-missing-aut.md)

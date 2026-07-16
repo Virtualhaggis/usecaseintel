@@ -1,23 +1,44 @@
-# [CRIT] Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM Packages
+# [CRIT] The npm Threat Landscape: Attack Surface and Mitigations (Updated July 15)
 
-**Source:** StepSecurity
-**Published:** 2025-11-23
-**Article:** https://www.stepsecurity.io/blog/ctrl-tinycolor-and-40-npm-packages-compromised
+**Source:** Unit 42 (Palo Alto)
+**Published:** 2026-07-15
+**Article:** https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/
 
 ## Threat Profile
 
-Back to Blog Threat Intel Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM Packages The Shai-Hulud worm has infected over 500 NPM packages including @ctrl/tinycolor in an unprecedented self-propagating supply chain attack. The malware harvests AWS/GCP/Azure credentials using TruffleHog, establishes persistence through GitHub Actions backdoors, and automatically spreads to other maintainer packages - marking the first successful worm attack in the NPM ecosystem. Ashish Kurmi View LinkedIn S…
+Threat Research Center 
+High Profile Threats 
+Malware 
+Malware 
+The npm Threat Landscape: Attack Surface and Mitigations 
+12 min read 
+Related Products Advanced DNS Security Advanced URL Filtering Cloud-Delivered Security Services Cortex Cortex Cloud Unit 42 Incident Response 
+By: Unit 42 
+Published: April 24, 2026 
+Categories: High Profile Threats 
+Malware 
+Tags: Credential Harvesting 
+GitHub 
+Npm packages 
+Obfuscation 
+Payload 
+Supply chain 
+Worm propagation 
+Executive Summary 
+The security of…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `94.154.172.43`
+- **Domain (defanged):** `audit.checkmarx.cx`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1071** — Application Layer Protocol
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -25,13 +46,12 @@ Back to Blog Threat Intel Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1567** — Exfiltration Over Web Service
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1105** — Ingress Tool Transfer
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1546** — Event Triggered Execution
-- **T1053.003** — Scheduled Task/Job: Cron
+- **T1041** — Exfiltration Over C2 Channel
+- **T1568** — Dynamic Resolution
+- **T1546.016** — Event Triggered Execution: Installer Packages
 
 ## Kill chain phases observed
 
@@ -39,88 +59,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound exfiltration to Shai-Hulud webhook.site/bb8ca5f6 C2 endpoint
+### npm/node lifecycle script fetching Bun runtime from github.com/oven-sh/bun
 
-`UC_748_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user from datamodel=Web.Web where Web.url="*webhook.site/bb8ca5f6-4175-45d2-b042-fc9ebb8170b7*" by Web.src Web.dest Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="webhook.site" by All_Traffic.src All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)`]
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parentcmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","yarn.exe","pnpm.exe") AND Processes.process_name IN ("node.exe","curl.exe","powershell.exe","wget.exe","bun.exe","bash.exe","sh.exe")) (Processes.process="*github.com/oven-sh/bun*" OR Processes.process="*oven-sh/bun/releases*" OR Processes.process="*bun-windows-x64*" OR Processes.process="*bun-linux-x64*" OR Processes.process="*bun-darwin*") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename firstTime as _time | convert ctime(_time) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let ShaiHuludWebhookPath = "bb8ca5f6-4175-45d2-b042-fc9ebb8170b7";
+let bunUrlIndicators = dynamic(["github.com/oven-sh/bun", "oven-sh/bun/releases", "bun-windows-x64", "bun-linux-x64", "bun-darwin"]);
+let npmParents = dynamic(["npm.exe","npm-cli.js","node.exe","yarn.exe","pnpm.exe","npx.exe"]);
+let downloaderChildren = dynamic(["node.exe","curl.exe","powershell.exe","wget.exe","bun.exe","bash.exe","sh.exe","pwsh.exe"]);
+// Process-tree pivot — npm parent spawning a downloader child with Bun URL on the command line
+let ProcHits = DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where InitiatingProcessFileName in~ (npmParents) or InitiatingProcessParentFileName in~ (npmParents)
+    | where FileName in~ (downloaderChildren)
+    | where ProcessCommandLine has_any (bunUrlIndicators) or InitiatingProcessCommandLine has_any (bunUrlIndicators)
+    | where AccountName !endswith "$"
+    | project Timestamp, DeviceName, AccountName,
+              ParentImage = InitiatingProcessParentFileName,
+              InitImage  = InitiatingProcessFileName,
+              InitCmd    = InitiatingProcessCommandLine,
+              ChildImage = FileName,
+              ChildCmd   = ProcessCommandLine, SHA256;
+// Network pivot — same process families connecting to github.com for the Bun release tarball
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where RemoteUrl has "github.com" and (RemoteUrl has "oven-sh/bun" or RemoteUrl has "bun-windows" or RemoteUrl has "bun-linux" or RemoteUrl has "bun-darwin")
+    | where InitiatingProcessFileName in~ (downloaderChildren)
+    | where InitiatingProcessParentFileName in~ (npmParents) or InitiatingProcessCommandLine has_any (npmParents)
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              ParentImage = InitiatingProcessParentFileName,
+              InitImage   = InitiatingProcessFileName,
+              InitCmd     = InitiatingProcessCommandLine,
+              ChildImage  = "<network-egress>", ChildCmd = RemoteUrl, SHA256 = InitiatingProcessSHA256;
+union ProcHits, NetHits
+| order by Timestamp desc
+```
+
+### C2 beacon to audit.checkmarx[.]cx /v1/telemetry (TeamPCP Shai-Hulud Third Coming)
+
+`UC_1_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+(`cim_Network_Traffic_indexes` (dest="audit.checkmarx.cx" OR dest="audit.checkmarx[.]cx" OR dest_ip="94.154.172.43")) OR (`cim_Network_Resolution_indexes` query="*audit.checkmarx.cx*") OR (`cim_Web_indexes` (url="*audit.checkmarx.cx*" OR dest="audit.checkmarx.cx") (url="*/v1/telemetry*" OR uri_path="/v1/telemetry")) | stats min(_time) as firstTime max(_time) as lastTime count by host src dest dest_ip url http_method app | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let c2Hosts = dynamic(["audit.checkmarx.cx", "audit.checkmarx[.]cx"]);
+let c2Ips    = dynamic(["94.154.172.43"]);
+let c2Path   = "/v1/telemetry";
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "webhook.site"
-   or RemoteUrl has ShaiHuludWebhookPath
-| where RemoteUrl has ShaiHuludWebhookPath
-   or AdditionalFields has ShaiHuludWebhookPath
-| project Timestamp, DeviceName, DeviceId,
+| where (RemoteUrl has_any (c2Hosts)) or (RemoteIP in (c2Ips)) or (RemoteUrl has c2Path and RemotePort in (443, 80))
+| where InitiatingProcessFileName !in~ ("MsSense.exe","SenseIR.exe")
+| project Timestamp, DeviceName,
+          AccountName = InitiatingProcessAccountName,
           InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName,
-          RemoteIP, RemoteUrl, RemotePort
+          InitiatingProcessParentFileName,
+          RemoteUrl, RemoteIP, RemotePort, Protocol
 | order by Timestamp desc
 ```
 
-### TruffleHog spawned by node/npm as postinstall — Shai-Hulud credential sweep
+### Malicious @bitwarden/cli payload artifacts on disk (bw_setup.js, bw1.js, Shai-Hulud markers)
 
-`UC_748_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.parent_process) as parentcmd from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog" OR Processes.process="*trufflehog*") AND Processes.process="*filesystem*" AND (Processes.parent_process_name IN ("node","npm","npx","yarn","pnpm","bun") OR Processes.parent_process="*node *" OR Processes.parent_process="*npm *") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("bw_setup.js","bw1.js") OR Filesystem.file_path="*@bitwarden/cli*" OR Filesystem.file_path="*node_modules*@bitwarden*cli*") by host Filesystem.user Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | appendpipe [| tstats summariesonly=t count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","node.exe","yarn.exe","pnpm.exe") Processes.process="*bw_setup.js*" OR Processes.process="*bw1.js*") by host Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where DeviceName !in~ ("") // optional scope
-| where FileName =~ "trufflehog"
-   or InitiatingProcessFileName =~ "trufflehog"
-   or ProcessCommandLine has "trufflehog"
-| where ProcessCommandLine has "filesystem"
-| where ProcessCommandLine has_any ("--json"," / "," /--","filesystem /")
-| where InitiatingProcessFileName in~ ("node","npm","npx","yarn","pnpm","bun","sh","bash","zsh")
-   or InitiatingProcessCommandLine has_any ("npm install","npm ci","yarn install","pnpm install","npx ","postinstall")
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### Shai-Hulud bundle.js dropped on disk (SHA256 + filename hunt)
-
-`UC_748_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09" OR Filesystem.file_name="shai-hulud-workflow.yml" OR Filesystem.file_path="*/.github/workflows/shai-hulud-workflow.yml") by Filesystem.dest Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let ShaiHuludBundleSha256 = "46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09";
-union isfuzzy=true
-  ( DeviceFileEvents
+let stageFiles = dynamic(["bw_setup.js", "bw1.js"]);
+let packageHints = dynamic(["@bitwarden\\cli", "@bitwarden/cli", "node_modules\\@bitwarden\\cli", "node_modules/@bitwarden/cli"]);
+let shaiHuludMarker = "Shai-Hulud: The Third Coming";
+let FileHits = DeviceFileEvents
     | where Timestamp > ago(30d)
-    | where SHA256 == ShaiHuludBundleSha256
-         or FileName =~ "shai-hulud-workflow.yml"
-         or FolderPath has @"/.github/workflows/shai-hulud-workflow.yml"
-    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+    | where (FileName in~ (stageFiles)) or (FolderPath has_any (packageHints) and FileName endswith ".js") or (AdditionalFields has shaiHuludMarker)
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
               InitiatingProcessFileName, InitiatingProcessCommandLine,
-              InitiatingProcessAccountName ),
-  ( DeviceProcessEvents
+              InitiatingProcessParentFileName,
+              FolderPath, FileName, SHA256;
+let ProcHits = DeviceProcessEvents
     | where Timestamp > ago(30d)
-    | where SHA256 == ShaiHuludBundleSha256
-         or InitiatingProcessSHA256 == ShaiHuludBundleSha256
-    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-              SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine )
+    | where InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npm-cli.js","bun.exe")
+    | where ProcessCommandLine has_any (stageFiles)
+    | project Timestamp, DeviceName, AccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName,
+              FolderPath, FileName = FileName, SHA256, ProcCmd = ProcessCommandLine;
+union FileHits, ProcHits
 | order by Timestamp desc
 ```
 
@@ -159,31 +197,33 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
-### OAuth consent / suspicious app grant
+### Infostealer — non-browser process accessing browser cookie/login DBs
 
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
+DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -352,16 +392,16 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM Packages
+### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated July 15)
 
-`UC_748_6` · phase: **exploit** · confidence: **High**
+`UC_1_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM Packages ```
+``` Article-specific bespoke detection — The npm Threat Landscape: Attack Surface and Mitigations (Updated July 15) ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("bundle.js","node.js"))
+    where (Processes.process_name IN ("mcpaddon.js","bw_setup.js","node.js","bw1.js"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -370,7 +410,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("bundle.js","node.js"))
+      AND (Filesystem.file_path="*/usr/bin/env*" OR Filesystem.file_name IN ("mcpaddon.js","bw_setup.js","node.js","bw1.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -379,12 +419,12 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM Packages
+// Article-specific bespoke detection — The npm Threat Landscape: Attack Surface and Mitigations (Updated July 15)
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("bundle.js", "node.js"))
+| where (FileName in~ ("mcpaddon.js", "bw_setup.js", "node.js", "bw1.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -394,14 +434,21 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("bundle.js", "node.js"))
+| where (FolderPath has_any ("/usr/bin/env") or FileName in~ ("mcpaddon.js", "bw_setup.js", "node.js", "bw1.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `94.154.172.43`, `audit.checkmarx.cx`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

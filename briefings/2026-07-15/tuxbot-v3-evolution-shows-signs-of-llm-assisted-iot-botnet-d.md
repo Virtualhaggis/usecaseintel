@@ -101,7 +101,7 @@ _(none detected from narrative keywords)_
 
 ### TuxBot IoT botnet C2 beacon to Keksec-linked IPs/domains and non-standard ports 1999/31337
 
-`UC_1_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### TuxBot Telnet credential brute-force burst (1,496-pair dictionary) from a single host
 
-`UC_1_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_5_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### TuxBot multi-service propagation sweep (Telnet/SSH/ADB) with high HTTP fan-out
 
-`UC_1_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_5_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceNetworkEvents
 
 ### TuxBot Linux persistence via systemd unit + cron drop from a transient-directory process
 
-`UC_1_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_5_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +180,7 @@ DeviceFileEvents
 
 ### TuxBot cross-compiled ELF bot execution by known SHA256 with submodule fan-out
 
-`UC_1_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_5_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -199,7 +199,7 @@ DeviceProcessEvents
 
 ### TuxBot DNS-TXT / DGA fallback C2 channel from endpoints
 
-`UC_1_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

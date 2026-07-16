@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### PurpleFox fileless infection: remote MSI via msiexec + reflective PE injection
 
-`UC_164_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_167_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### PurpleFox persistence via auto-generated AC0[0-9] Windows service
 
-`UC_164_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_167_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceRegistryEvents
 
 ### LionTail backdoor: DLL search-order hijack via phantom System32 DLLs
 
-`UC_164_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_167_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceFileEvents
 
 ### Dormant crypto-miner on servers: sustained stratum egress to mining pools
 
-`UC_164_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_167_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### LoLBin abuse: certutil decode/urlcache, bitsadmin transfer, wmic process-call-create
 
-`UC_164_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_167_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceProcessEvents
 
 ### Web shell execution: web server process spawning command interpreters
 
-`UC_164_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_167_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -357,7 +357,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Missed incidents, persistent threats, and response gaps: Insights from compromis
 
-`UC_164_6` · phase: **exploit** · confidence: **High**
+`UC_167_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
