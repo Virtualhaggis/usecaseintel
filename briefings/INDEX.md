@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,8 +10,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-16
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
+- [openai s gpt red automates prompt injection testing to harde](./2026-07-16/openai-s-gpt-red-automates-prompt-injection-testing-to-harde.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
+- [zoom patches critical windows flaw that could enable account](./2026-07-16/zoom-patches-critical-windows-flaw-that-could-enable-account.md)
 
 ## 2026-07-15
 - [asyncapi npm packages infected with credential stealing malw](./2026-07-15/asyncapi-npm-packages-infected-with-credential-stealing-malw.md)
@@ -128,8 +130,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 52777 yeswiki vulnerable to authentic](./2026-07-09/ghsa-critical-cve-2026-52777-yeswiki-vulnerable-to-authentic.md)
 - [ghsa critical cve 2026 52778 yeswiki has unsafe eval in its ](./2026-07-09/ghsa-critical-cve-2026-52778-yeswiki-has-unsafe-eval-in-its-.md)
 - [gigawiper anatomy of a destructive backdoor assembled from m](./2026-07-09/gigawiper-anatomy-of-a-destructive-backdoor-assembled-from-m.md)
-- [new gigawiper windows backdoor bundles disk wiping fake rans](./2026-07-09/new-gigawiper-windows-backdoor-bundles-disk-wiping-fake-rans.md)
-- [npm 12 disables install scripts by default to reduce supply ](./2026-07-09/npm-12-disables-install-scripts-by-default-to-reduce-supply-.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
 - [symlinks are still scary and yes you can commit them to git](./2026-07-09/symlinks-are-still-scary-and-yes-you-can-commit-them-to-git.md)
 - [winning 54 of the time](./2026-07-09/winning-54-of-the-time.md)
@@ -4233,9 +4233,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2018-11-27
 - [malicious code found in npm package event stream downloaded ](./2018-11-27/malicious-code-found-in-npm-package-event-stream-downloaded-.md)
-
-## 2018-10-17
-- [jvm ecosystem report 2018 about your platform and applicatio](./2018-10-17/jvm-ecosystem-report-2018-about-your-platform-and-applicatio.md)
 
 ## 2018-08-15
 - [behind the disclosure the zip slip vulnerability](./2018-08-15/behind-the-disclosure-the-zip-slip-vulnerability.md)

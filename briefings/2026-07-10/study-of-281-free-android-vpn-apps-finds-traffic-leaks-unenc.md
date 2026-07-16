@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Android VPN app fetches OpenVPN config over cleartext HTTP (tunnel-hijack exposure)
 
-`UC_104_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_107_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### DNS leak: Android endpoint queries public resolvers while VPN tunnel expected
 
-`UC_104_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_107_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### Android VPN/privacy app beaconing to advertising & analytics networks
 
-`UC_104_8` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_107_8` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### Endpoint carrying VPN library vulnerable to SWEET32 weak-cipher CVEs (Blowfish / 3DES)
 
-`UC_104_9` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_107_9` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

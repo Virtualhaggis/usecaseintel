@@ -27,6 +27,8 @@ FoxIO researcher Sébastien Féry  disclosed the flaw on July 8  and nicknamed
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
+- **T1499** — Endpoint Denial of Service
+- **T1595.002** — Active Scanning: Vulnerability Scanning
 
 ## Kill chain phases observed
 
@@ -34,40 +36,57 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Tengine/XQUIC HTTP/3 worker crash-loop via glibc fortify abort (XRING DoS)
+### XQUIC/Tengine HTTP/3 worker abort from QPACK ring-buffer overflow (XRING)
 
-`UC_102_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_105_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=os OR index=linux sourcetype IN ("linux_messages_syslog","syslog") (process=tengine OR process=nginx OR "xquic" OR "libxquic") ("buffer overflow detected" OR "stack smashing detected" OR "segfault" OR "signal 6" OR "SIGABRT" OR "general protection")
-| stats count as CrashCount min(_time) as firstSeen max(_time) as lastSeen values(_raw) as SampleMsg by host
-| where CrashCount>=3
-| sort - CrashCount
+index=* (sourcetype="nginx:plus:error" OR sourcetype=nginx_error OR sourcetype=syslog OR source="/var/log/nginx/error.log" OR source="/var/log/tengine/error.log") (nginx OR tengine OR xquic) ("buffer overflow detected" OR ("worker process" AND ("exited on signal 6" OR "exited on signal 11"))) | rex "worker process (?<worker_pid>\d+) exited on signal (?<signal>\d+)" | table _time host worker_pid signal _raw | sort - _time
 ```
 
-### Tengine/nginx HTTP/3 worker respawn storm (XRING crash-loop symptom)
+### Tengine/nginx HTTP/3 worker crash-loop burst (XRING remote DoS)
 
-`UC_102_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_105_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name IN ("nginx","tengine") AND Processes.process="*worker process*") by Processes.dest, _time span=5m
-| `drop_dm_object_name(Processes)`
-| where count>=10
-| rename count as WorkerSpawns
-| sort - _time
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name IN ("nginx","tengine") AND Processes.parent_process_name IN ("nginx","tengine")) by Processes.dest, _time span=5m | `drop_dm_object_name(Processes)` | where count > 10 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(6h)
+| where Timestamp > ago(1h)
 | where FileName in~ ("nginx","tengine")
-| where ProcessCommandLine has "worker process"
-| summarize WorkerSpawns = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Host = any(DeviceName) by DeviceId, bin(Timestamp, 5m)
-| where WorkerSpawns >= 10   // steady-state nginx/tengine rarely respawns workers; 10+ in 5m = crash-loop
-| order by LastSeen desc
+| where InitiatingProcessFileName in~ ("nginx","tengine")   // master respawning a worker after a crash
+| summarize RespawnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmd = any(ProcessCommandLine)
+          by DeviceName, bin(Timestamp, 5m)
+| where RespawnCount > 10   // >10 worker respawns / 5 min = crash loop; steady-state respawns ~= worker count and reloads are rare
+| order by RespawnCount desc
+```
+
+### Exposure hunt: internet-facing hosts running XQUIC/Tengine (<=v1.9.4) with HTTP/3
+
+`UC_105_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN ("tengine","nginx") by Processes.dest, Processes.process_name, Processes.process_path | `drop_dm_object_name(Processes)` | stats values(process_name) as servers values(process_path) as paths count by dest | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareInventory
+| where SoftwareName has_any ("xquic","tengine")
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, IsInternetFacing, OSPlatform) by DeviceId
+  ) on DeviceId
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, IsInternetFacing, OSPlatform
+| order by IsInternetFacing desc, SoftwareName asc
+// every version through v1.9.4 is affected and there is no fixed release - treat any hit as exposed
 ```
 
 ### Suspicious browser extension installation
@@ -218,4 +237,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

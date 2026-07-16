@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### Nacos CVE-2021-29441 auth bypass via spoofed 'Nacos-Server' User-Agent from external IP
 
-`UC_103_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_106_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### WP-SHELLSTORM webshell drop: PHP file written into wp-content/uploads or cache by web-server process
 
-`UC_103_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_106_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceFileEvents
 
 ### WordPress web-server process (php-fpm/apache/nginx) spawning shell, downloader or recon binary
 
-`UC_103_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_106_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### VShell in-memory backdoor masquerading as [kworker/N:M] kernel thread
 
-`UC_103_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_106_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### Outbound connection to WP-SHELLSTORM operator infrastructure (137.175.93.126 / 43.108.17.80 / xxooonline.eu.cc)
 
-`UC_103_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_106_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ DeviceNetworkEvents
 
 ### WP-SHELLSTORM primary webshell 'down.php' written under wp-content
 
-`UC_103_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_106_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen ransomware persistence via scheduled task named 'gentlemen*'
 
-`UC_85_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_88_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### GentleKiller BYOVD — vulnerable ThrottleStop.sys/ThrottleBlood.sys driver load (CVE-2025-7771)
 
-`UC_85_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_88_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceImageLoadEvents
 
 ### The Gentlemen anti-forensics — wevtutil clearing Security/System event logs
 
-`UC_85_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_88_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceProcessEvents
 
 ### The Gentlemen internal recon via Advanced IP Scanner
 
-`UC_85_17` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_88_17` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceProcessEvents
 
 ### SystemBC C2 beacon to The Gentlemen infrastructure IPs
 
-`UC_85_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_88_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +182,7 @@ DeviceNetworkEvents
 
 ### The Gentlemen inhibit-recovery — Volume Shadow Copy deletion via vssadmin/wmic
 
-`UC_85_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_88_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -202,7 +202,7 @@ DeviceProcessEvents
 
 ### Gentlemen initial-access CVE exposure on internet-facing edge devices
 
-`UC_85_20` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_88_20` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -570,7 +570,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — No Manners Here: The Ruthless Rise of The Gentlemen Ransomware
 
-`UC_85_13` · phase: **exploit** · confidence: **High**
+`UC_88_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
