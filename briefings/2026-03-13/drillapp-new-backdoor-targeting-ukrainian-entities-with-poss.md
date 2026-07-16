@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### DRILLAPP: Edge launched headless with media/security guardrails disabled
 
-`UC_552_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_555_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### DRILLAPP variant 2: Edge launched with --remote-debugging-port=9222 for CDP-based file download
 
-`UC_552_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_555_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### DRILLAPP variant 1 persistence: LNK file written to user Startup folder by non-Explorer process
 
-`UC_552_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_555_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceFileEvents
 
 ### DRILLAPP C2 staging: msedge.exe contacting pastefy.app
 
-`UC_552_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_555_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceNetworkEvents
 
 ### DRILLAPP variant 2 delivery: CPL file executed from user-writable folder spawning Edge
 
-`UC_552_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_555_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ CplLaunch
 
 ### DRILLAPP C2: msedge.exe egress to known DRILLAPP IPs or WebSocket to localhost:8000
 
-`UC_552_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_555_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -233,7 +233,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DRILLAPP: new backdoor targeting Ukrainian entities with possible links to Laund
 
-`UC_552_3` · phase: **install** · confidence: **High**
+`UC_555_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

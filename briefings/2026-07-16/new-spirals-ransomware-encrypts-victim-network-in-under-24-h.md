@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Spirals ransomware payload masquerading as bitsadmin.exe outside System32 / via PsExec
 
-`UC_15_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_17_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### Spirals ransom note RECOVERY_SECTION.log dropped at drive root
 
-`UC_15_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_17_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceFileEvents
 
 ### PowerShell mass-stop of backup/DB/virtualization services + Defender tampering (Spirals pre-encryption)
 
-`UC_15_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_17_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceProcessEvents
 
 ### Spirals redundant remote access via revsocks / Chisel / Cloudflare tunnel
 
-`UC_15_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_17_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### IIS worker process (w3wp.exe) spawning shell — Spirals ASP.NET web shell initial access
 
-`UC_15_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceProcessEvents
 
 ### Remote Desktop enabled via fDenyTSConnections registry flip (Spirals persistence)
 
-`UC_15_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_17_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

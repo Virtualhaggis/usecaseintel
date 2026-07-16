@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### GigaWiper destructive Golang backdoor/wiper by known SHA-256
 
-`UC_123_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_127_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ union DeviceProcessEvents, DeviceFileEvents, DeviceImageLoadEvents
 
 ### GigaWiper persistence: 'OneDrive Update' scheduled task run-every-minute
 
-`UC_123_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_127_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### GigaWiper C2: RabbitMQ/Redis connection to 185.182.193.21:5544/7542
 
-`UC_123_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_127_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### GigaWiper persistence marker: HKCU\SOFTWARE\OneDrive\Environment counter
 
-`UC_123_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_127_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -462,7 +462,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GigaWiper: Anatomy of a destructive backdoor assembled from multiple malware
 
-`UC_123_11` · phase: **exploit** · confidence: **High**
+`UC_127_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

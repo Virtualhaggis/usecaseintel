@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### node-ipc/peacenotwar geolocation beacon to api.ipgeolocation.io from Node runtime
 
-`UC_2437_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_2440_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### Mass file overwrite by Node runtime (node-ipc heart-emoji data destruction)
 
-`UC_2437_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2440_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceFileEvents
 
 ### Vulnerable node-ipc / peacenotwar package present (CVE-2022-23812)
 
-`UC_2437_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_2440_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Alert: peacenotwar module sabotages npm developers in the node-ipc package to pr
 
-`UC_2437_3` · phase: **exploit** · confidence: **High**
+`UC_2440_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

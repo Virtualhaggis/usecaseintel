@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Sha1-Hulud 2.0 npm worm payload files (setup_bun.js / bun_environment.js) written or executed
 
-`UC_95_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_100_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceFileEvents
 
 ### Cloud IMDS credential harvesting by node/npm/bun during package install (Sha1-Hulud/Megalodon)
 
-`UC_95_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_100_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### TruffleHog secret scanner spawned from an npm/bun package-install context (Sha1-Hulud)
 
-`UC_95_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_100_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Malicious 'SHA1HULUD' self-hosted GitHub Actions runner installation / persistence
 
-`UC_95_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_100_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### Sha1-Hulud destructive wiper fallback (cipher /W, recursive del, shred over home dir)
 
-`UC_95_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_100_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ DeviceProcessEvents
 
 ### CI/dev host exfiltrating to api.github.com shortly after cloud IMDS harvest (Sha1-Hulud exfil chain)
 
-`UC_95_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_100_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,8 +1,8 @@
-# [CRIT] New TELEPUZ Malware Spreads via ClickFix to Steal Data and Run Commands
+# [CRIT] Russian hackers trojanize WebEx, Zoom apps to push Starland malware
 
-**Source:** The Hacker News, BleepingComputer, Cisco Talos
+**Source:** BleepingComputer, Cisco Talos
 **Published:** 2026-07-16
-**Article:** https://thehackernews.com/2026/07/new-telepuz-malware-spreads-via.html
+**Article:** https://www.bleepingcomputer.com/news/security/russian-hackers-trojanize-webex-zoom-apps-to-push-starland-malware/
 
 ## Threat Profile
 
@@ -45,16 +45,13 @@ Talos has discovered that the actor in this campaign delivers a Python-based re
 - **T1547.001** — Persistence (article-specific)
 - **T1218.005** — System Binary Proxy Execution: Mshta
 - **T1204.002** — User Execution: Malicious File
-- **T1566** — Phishing
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1102** — Web Service
-- **T1573.001** — Encrypted Channel: Symmetric Cryptography
-- **T1102.001** — Web Service: Dead Drop Resolver
-- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
-- **T1567.001** — Exfiltration Over Web Service: Exfiltration to Code Repository
-- **T1041** — Exfiltration Over C2 Channel
 - **T1059.006** — Command and Scripting Interpreter: Python
+- **T1027.002** — Obfuscated Files or Information: Software Packing
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1132.001** — Data Encoding: Standard Encoding
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
@@ -62,122 +59,81 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UAT-11795 ClickFix mshta.exe fetching remote weaponized HTA downloader
+### UAT-11795 ClickFix mshta.exe HTA stager fetching from Starland staging domains
 
-`UC_4_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_14_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe (Processes.process="*http://*" OR Processes.process="*https://*" OR Processes.process="*.hta*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process, "(?i)(10\.|192\.168\.|intranet|\.local)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe (Processes.process="*http://*" OR Processes.process="*https://*" OR Processes.process="*eorthopaedics.com*" OR Processes.process="*sastoro.com*" OR Processes.process="*zynaris.io*" OR Processes.process="*web-devtools.com*" OR Processes.process="*aipythondevs.com*" OR Processes.process="*windowscreenrepairnearme.com*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where FileName =~ "mshta.exe"
-| where ProcessCommandLine has_any ("http://","https://",".hta")
 | where AccountName !endswith "$"
+| where ProcessCommandLine has_any ("eorthopaedics.com","sastoro.com","zynaris.io","web-devtools.com","aipythondevs.com","windowscreenrepairnearme.com")
+   or ProcessCommandLine has_any ("http://","https://","javascript:","vbscript:")
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### UAT-11795 HKCU Run key 'MyApp' re-invoking mshta.exe against remote HTA
+### Trojanized WebEx/Zoom/MobaXterm/DBeaver/FACEIT installer spawning Python loader
 
-`UC_4_12` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" (Registry.registry_value_data="*mshta*" AND (Registry.registry_value_data="*http*" OR Registry.registry_value_data="*.hta*")) by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"\CurrentVersion\Run"
-| where RegistryValueData has "mshta" and RegistryValueData has_any ("http",".hta")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### UAT-11795 C2/staging beacon to campaign domains (Starland RAT / WLDR)
-
-`UC_4_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_14_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("eorthopaedics.com","sastoro.com","web-devtools.com","zynaris.io","windowscreenrepairnearme.com","aipythondevs.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has_any ("eorthopaedics.com","sastoro.com","web-devtools.com","zynaris.io","windowscreenrepairnearme.com","aipythondevs.com")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### UAT-11795 Polygon JSON-RPC fallback C2 resolution from scripting process
-
-`UC_4_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest IN ("polygon-rpc.com","rpc.ankr.com","polygon-mainnet.infura.io","polygon-bor-rpc.publicnode.com","polygon.llamarpc.com") OR Web.url="*eth_call*" OR Web.url="*0x6ae382ed2154cc84c6672e4e908cd2c69c1b35ba*") Web.app IN ("pythonw.exe","python.exe","powershell.exe","pwsh.exe") by Web.src Web.app Web.dest Web.url | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("pythonw.exe","python.exe","powershell.exe","pwsh.exe")
-| where RemoteUrl has_any ("polygon-rpc.com","rpc.ankr.com","polygon-mainnet.infura.io","polygon-bor-rpc.publicnode.com","polygon.llamarpc.com")
-   or InitiatingProcessCommandLine has_any ("eth_call","0x6ae382ed2154cc84c6672e4e908cd2c69c1b35ba")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### UAT-11795 Telegram bot beacon from non-browser process (pythonw/mshta/NSIS)
-
-`UC_4_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest="api.telegram.org" Web.app IN ("pythonw.exe","python.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe") by Web.src Web.app Web.dest Web.url | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl =~ "api.telegram.org" or RemoteUrl endswith ".telegram.org"
-| where InitiatingProcessFileName in~ ("pythonw.exe","python.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### UAT-11795 trojanized installer spawning pythonw.exe byte-compiled loader
-
-`UC_4_16` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=pythonw.exe (Processes.parent_process_name IN ("MobaXterm_v26.1.exe","WebEx_Client.exe","dbeaver-ce-windows-x86_64.exe","FaceitInstaller_x64.exe") OR Processes.parent_process="*_installer*" OR Processes.parent_process="*nsis*" OR Processes.process="*.pyc*" OR Processes.process IN ("*LICENSE.txt*","*\\Temp\\*.py")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("WebEx_Client.exe","MobaXterm_v26.1.exe","dbeaver-ce-windows-x86_64.exe","FaceitInstaller_x64.exe","Zoom.exe","ZoomInstaller.exe") Processes.process_name IN ("python.exe","pythonw.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("pythonw.exe","python.exe")
-| where InitiatingProcessFileName in~ ("MobaXterm_v26.1.exe","WebEx_Client.exe","dbeaver-ce-windows-x86_64.exe","FaceitInstaller_x64.exe")
-   or InitiatingProcessFileName has_any ("installer","setup","nsis")
-   or ProcessCommandLine has_any (".pyc","LICENSE.txt")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| where Timestamp > ago(30d)
+| where FileName in~ ("python.exe","pythonw.exe")
+| where InitiatingProcessFileName in~ ("WebEx_Client.exe","MobaXterm_v26.1.exe","dbeaver-ce-windows-x86_64.exe","FaceitInstaller_x64.exe","Zoom.exe","ZoomInstaller.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Starland RAT HWID-parameterized C2 / shellcode staging to UAT-11795 domains
+
+`UC_14_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url IN ("*/feed/*","*/alpha/*","*/starlandfox*","*/x32remka*","*/dopfile*") OR Web.dest IN ("eorthopaedics.com","sastoro.com","web-devtools.com","zynaris.io","aipythondevs.com","windowscreenrepairnearme.com")) by Web.src Web.dest Web.url Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | search dest IN ("eorthopaedics.com","sastoro.com","web-devtools.com","zynaris.io","aipythondevs.com","windowscreenrepairnearme.com") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("eorthopaedics.com","sastoro.com","web-devtools.com","zynaris.io","aipythondevs.com","windowscreenrepairnearme.com")
+| extend StagingPath = case(RemoteUrl has_any ("/starlandfox","/x32remka","/dopfile"), "shellcode-staging", RemoteUrl has_any ("/feed/","/alpha/"), "hwid-c2", "other")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, StagingPath
+| order by Timestamp desc
+```
+
+### Starland RAT Polygon smart-contract fallback C2 resolution (eth_call)
+
+`UC_14_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("*polygon-rpc.com","*rpc.ankr.com","*polygon-mainnet.g.alchemy.com","*rpc-mainnet.matic.network","*rpc-mainnet.maticvigil.com","*polygon.llamarpc.com")) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("polygon-rpc.com","rpc.ankr.com","polygon-mainnet.g.alchemy.com","rpc-mainnet.matic.network","rpc-mainnet.maticvigil.com","polygon.llamarpc.com","maticvigil.com")
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
@@ -497,13 +453,13 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — New TELEPUZ Malware Spreads via ClickFix to Steal Data and Run Commands
+### Article-specific behavioural hunt — Russian hackers trojanize WebEx, Zoom apps to push Starland malware
 
-`UC_4_10` · phase: **exploit** · confidence: **High**
+`UC_14_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — New TELEPUZ Malware Spreads via ClickFix to Steal Data and Run Commands ```
+``` Article-specific bespoke detection — Russian hackers trojanize WebEx, Zoom apps to push Starland malware ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("mobaxterm_v26.1.exe","webex_client.exe","dbeaver-ce-windows-x86_64.exe","faceitinstaller_x64.exe","pythonw.exe","kernel32.dll","amsi.dll","ntdll.dll"))
@@ -524,7 +480,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — New TELEPUZ Malware Spreads via ClickFix to Steal Data and Run Commands
+// Article-specific bespoke detection — Russian hackers trojanize WebEx, Zoom apps to push Starland malware
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -556,4 +512,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

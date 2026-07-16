@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2581 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,6 +11,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-16
 - [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
 - [ai can find bugs but human knowledge still proves them](./2026-07-16/ai-can-find-bugs-but-human-knowledge-still-proves-them.md)
+- [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)
+- [cisa kev cve 2026 39808 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-39808-fortinet-fortisandbox-os-command-inj.md)
+- [cisa kev cve 2026 58644 microsoft sharepoint deserialization](./2026-07-16/cisa-kev-cve-2026-58644-microsoft-sharepoint-deserialization.md)
 - [cisa orders feds to patch actively exploited oracle flaw by ](./2026-07-16/cisa-orders-feds-to-patch-actively-exploited-oracle-flaw-by-.md)
 - [daxin resurfaces in taiwan alongside stupig pre login system](./2026-07-16/daxin-resurfaces-in-taiwan-alongside-stupig-pre-login-system.md)
 - [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
@@ -19,10 +22,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [n8n token exchange flaw could let attackers log in as users ](./2026-07-16/n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-.md)
 - [new agent data injection attack can make ai agents misclick ](./2026-07-16/new-agent-data-injection-attack-can-make-ai-agents-misclick-.md)
 - [new spirals ransomware encrypts victim network in under 24 h](./2026-07-16/new-spirals-ransomware-encrypts-victim-network-in-under-24-h.md)
-- [new telepuz malware spreads via clickfix to steal data and r](./2026-07-16/new-telepuz-malware-spreads-via-clickfix-to-steal-data-and-r.md)
 - [openai s gpt red automates prompt injection testing to harde](./2026-07-16/openai-s-gpt-red-automates-prompt-injection-testing-to-harde.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
+- [russian hackers trojanize webex zoom apps to push starland m](./2026-07-16/russian-hackers-trojanize-webex-zoom-apps-to-push-starland-m.md)
 - [scattered spider members behind tfl hack get five years in p](./2026-07-16/scattered-spider-members-behind-tfl-hack-get-five-years-in-p.md)
+- [threatsday game cheat spyware 24 hour ransomware chrome sync](./2026-07-16/threatsday-game-cheat-spyware-24-hour-ransomware-chrome-sync.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
 - [unpatched shark vacuum flaw could let attackers control othe](./2026-07-16/unpatched-shark-vacuum-flaw-could-let-attackers-control-othe.md)
 - [zoom patches critical windows flaw that could enable account](./2026-07-16/zoom-patches-critical-windows-flaw-that-could-enable-account.md)
@@ -121,7 +125,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
 - [laser attack resets tangem wallet passwords on cards that ca](./2026-07-10/laser-attack-resets-tangem-wallet-passwords-on-cards-that-ca.md)
 - [no manners here the ruthless rise of the gentlemen ransomwar](./2026-07-10/no-manners-here-the-ruthless-rise-of-the-gentlemen-ransomwar.md)
-- [researcher details whatsapp to host attack chain using three](./2026-07-10/researcher-details-whatsapp-to-host-attack-chain-using-three.md)
 - [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
 - [six new u boot flaws could let malicious images crash device](./2026-07-10/six-new-u-boot-flaws-could-let-malicious-images-crash-device.md)
 - [urgent progress tells sharefile customers to shut down stora](./2026-07-10/urgent-progress-tells-sharefile-customers-to-shut-down-stora.md)
@@ -197,7 +200,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 53943 ghost cache poisoning xss in gh](./2026-07-01/ghsa-critical-cve-2026-53943-ghost-cache-poisoning-xss-in-gh.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-07-01/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-07-01/maven-support-comes-to-github-checks-and-oss-package-search.md)
-- [microsoft named a leader in the frost radar for cloud and ap](./2026-07-01/microsoft-named-a-leader-in-the-frost-radar-for-cloud-and-ap.md)
 - [multiple immobiliarelabs backstage plugins compromised on np](./2026-07-01/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
 - [openclaw risks for the users and how to mitigate them](./2026-07-01/openclaw-risks-for-the-users-and-how-to-mitigate-them.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
