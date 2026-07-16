@@ -16,6 +16,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 58644 microsoft sharepoint deserialization](./2026-07-16/cisa-kev-cve-2026-58644-microsoft-sharepoint-deserialization.md)
 - [cisa orders feds to patch actively exploited oracle flaw by ](./2026-07-16/cisa-orders-feds-to-patch-actively-exploited-oracle-flaw-by-.md)
 - [daxin resurfaces in taiwan alongside stupig pre login system](./2026-07-16/daxin-resurfaces-in-taiwan-alongside-stupig-pre-login-system.md)
+- [ghsa critical cve 2026 53713 envoy gateway authentication by](./2026-07-16/ghsa-critical-cve-2026-53713-envoy-gateway-authentication-by.md)
 - [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
@@ -27,6 +28,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [russian hackers trojanize webex zoom apps to push starland m](./2026-07-16/russian-hackers-trojanize-webex-zoom-apps-to-push-starland-m.md)
 - [scattered spider members behind tfl hack get five years in p](./2026-07-16/scattered-spider-members-behind-tfl-hack-get-five-years-in-p.md)
 - [threatsday game cheat spyware 24 hour ransomware chrome sync](./2026-07-16/threatsday-game-cheat-spyware-24-hour-ransomware-chrome-sync.md)
+- [two scattered spider hackers get 5 5 years each for 29 milli](./2026-07-16/two-scattered-spider-hackers-get-5-5-years-each-for-29-milli.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
 - [unpatched shark vacuum flaw could let attackers control othe](./2026-07-16/unpatched-shark-vacuum-flaw-could-let-attackers-control-othe.md)
 - [zoom patches critical windows flaw that could enable account](./2026-07-16/zoom-patches-critical-windows-flaw-that-could-enable-account.md)
@@ -50,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [tuxbot v3 evolution shows signs of llm assisted iot botnet d](./2026-07-15/tuxbot-v3-evolution-shows-signs-of-llm-assisted-iot-botnet-d.md)
 - [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
 - [two sonicwall sma 1000 zero days exploited one could enable ](./2026-07-15/two-sonicwall-sma-1000-zero-days-exploited-one-could-enable-.md)
-- [us charges alleged operators of russian bulletproof hosting ](./2026-07-15/us-charges-alleged-operators-of-russian-bulletproof-hosting-.md)
 - [we built a vulnerability vending machine ai tokens in zero d](./2026-07-15/we-built-a-vulnerability-vending-machine-ai-tokens-in-zero-d.md)
 
 ## 2026-07-14
@@ -123,7 +124,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 99j7 fhr2 xfj4 exploration was removed fr](./2026-07-10/ghsa-critical-ghsa-99j7-fhr2-xfj4-exploration-was-removed-fr.md)
 - [ghsa critical ghsa g936 7jqj mwv8 tsdproxy internal proxy au](./2026-07-10/ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au.md)
 - [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
-- [laser attack resets tangem wallet passwords on cards that ca](./2026-07-10/laser-attack-resets-tangem-wallet-passwords-on-cards-that-ca.md)
 - [no manners here the ruthless rise of the gentlemen ransomwar](./2026-07-10/no-manners-here-the-ruthless-rise-of-the-gentlemen-ransomwar.md)
 - [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
 - [six new u boot flaws could let malicious images crash device](./2026-07-10/six-new-u-boot-flaws-could-let-malicious-images-crash-device.md)

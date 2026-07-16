@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — File encryption in Python: An in-depth exploration of symmetric and asymmetric t
 
-`UC_1465_0` · phase: **exploit** · confidence: **High**
+`UC_1463_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

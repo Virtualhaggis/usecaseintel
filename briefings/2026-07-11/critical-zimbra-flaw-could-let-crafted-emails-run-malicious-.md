@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Zimbra Classic Web Client exposure (ZCS < 10.1.19)
 
-`UC_103_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceTvmSoftwareInventory
 
 ### Zimbra crafted-email XSS payload: HTML event-handler / <details ontoggle> in mail or SOAP traffic
 
-`UC_103_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_104_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceTvmSoftwareInventory
 
 ### Zimbra malicious sieve filter creating external mail-forwarding rule (post-XSS takeover)
 
-`UC_103_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_104_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ index=* (sourcetype="zimbra:mailbox" OR sourcetype="zimbra*" OR source="*mailbox
 
 ### Zimbra webmail session mass mailbox harvest via SOAP (bulk Search/GetMsg)
 
-`UC_103_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

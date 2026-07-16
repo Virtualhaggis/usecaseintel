@@ -21,7 +21,7 @@ A valid token from issuer A carrying a sub that belongs to someone under issuer 
 - **T1190** — Exploit Public-Facing Application
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1556** — Modify Authentication Process
+- **T1550.001** — Use Alternate Authentication Material: Application Access Tokens
 
 ## Kill chain phases observed
 
@@ -29,45 +29,24 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable n8n version exposed to CVE-2026-59208 cross-issuer token-exchange auth bypass
+### Vulnerable n8n Enterprise version exposed to CVE-2026-59208 cross-issuer token-exchange bypass
 
-`UC_4_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-59208" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-59208" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+// Robust to Microsoft TVM KB not yet carrying this fresh CVE: match on inventory version directly.
 DeviceTvmSoftwareInventory
-| where Timestamp > ago(1d)
-| where SoftwareName has "n8n"
-| where (parse_version(SoftwareVersion) < parse_version("2.27.4")) or (SoftwareVersion == "2.28.0")
-| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
+| where SoftwareName has "n8n" or SoftwareVendor has "n8n"
+| extend ParsedVersion = parse_version(SoftwareVersion)
+| where ParsedVersion < parse_version("2.27.4") or SoftwareVersion == "2.28.0"   // affected: all <2.27.4 and exactly 2.28.0 (fixed in 2.27.4 / 2.28.1)
+| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
 | order by DeviceName asc
-```
-
-### n8n token-exchange feature enabled — CVE-2026-59208 exploitation precondition (N8N_TOKEN_EXCHANGE_TRUSTED_KEYS)
-
-`UC_4_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*N8N_TOKEN_EXCHANGE_TRUSTED_KEYS*" by Processes.dest Processes.user Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has "N8N_TOKEN_EXCHANGE_TRUSTED_KEYS" or InitiatingProcessCommandLine has "N8N_TOKEN_EXCHANGE_TRUSTED_KEYS"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleCmd=any(ProcessCommandLine) by DeviceName, AccountName, FileName
-| order by LastSeen desc
 ```
 
 ### OAuth consent / suspicious app grant
@@ -107,4 +86,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

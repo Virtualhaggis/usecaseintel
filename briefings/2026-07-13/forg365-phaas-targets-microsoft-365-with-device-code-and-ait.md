@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Forg365 device-code phishing: successful sign-in via Microsoft Authentication Broker
 
-`UC_90_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_91_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ AADSignInEventsBeta
 
 ### Forg365 AitM/ForgCookie token replay: silent non-interactive sign-in from new IP after broker auth
 
-`UC_90_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_91_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ AADSignInEventsBeta
 
 ### Forg365 post-compromise: inbox rule created to monitor keyword hits in hijacked mailbox
 
-`UC_90_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_91_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

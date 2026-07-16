@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### npm/node lifecycle script fetching Bun runtime from github.com/oven-sh/bun
 
-`UC_27_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_30_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ union ProcHits, NetHits
 
 ### C2 beacon to audit.checkmarx[.]cx /v1/telemetry (TeamPCP Shai-Hulud Third Coming)
 
-`UC_27_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_30_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceNetworkEvents
 
 ### Malicious @bitwarden/cli payload artifacts on disk (bw_setup.js, bw1.js, Shai-Hulud markers)
 
-`UC_27_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_30_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -394,7 +394,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated July 15)
 
-`UC_27_7` · phase: **exploit** · confidence: **High**
+`UC_30_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
