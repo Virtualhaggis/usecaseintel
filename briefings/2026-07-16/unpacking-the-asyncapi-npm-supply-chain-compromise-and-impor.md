@@ -47,16 +47,14 @@ On July 14, 2026, Microsoft Threat Intelligence identified a coordinated supply 
 - **T1195.002** — Compromise Software Supply Chain
 - **T1547.001** — Persistence (article-specific)
 - **T1543.003** — Persistence (article-specific)
+- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1105** — Ingress Tool Transfer
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1564.003** — Hide Artifacts: Hidden Window
-- **T1105** — Ingress Tool Transfer
-- **T1564.001** — Hide Artifacts: Hidden Files and Directories
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
-- **T1041** — Exfiltration Over C2 Channel
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102** — Web Service
-- **T1573** — Encrypted Channel
 
 ## Kill chain phases observed
 
@@ -64,34 +62,36 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AsyncAPI Miasma loader: import-time detached hidden Node child spawning sync.js
+### Compromised @asyncapi npm package versions resolved into node_modules / Yarn cache
 
-`UC_0_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_0_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=node.exe Processes.parent_process_name=node.exe (Processes.process="*sync.js*" AND Processes.process="*NodeJS*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND ((Filesystem.file_name="*asyncapi*specs*6.11.2*") OR (Filesystem.file_name="*asyncapi*generator-helpers*1.1.1*") OR (Filesystem.file_name="*asyncapi*generator-components*0.7.1*") OR (Filesystem.file_name="*asyncapi*generator*3.3.1*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "node.exe"
-| where InitiatingProcessFileName =~ "node.exe"
-| where ProcessCommandLine has "sync.js" and ProcessCommandLine has "NodeJS"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, ChildCmd = ProcessCommandLine, ParentCmd = InitiatingProcessCommandLine, FolderPath, SHA256
+| where ActionType in ("FileCreated","FileModified")
+| where FileName has "asyncapi"
+| where (FileName has "specs" and FileName has "6.11.2")
+    or (FileName has "generator-helpers" and FileName has "1.1.1")
+    or (FileName has "generator-components" and FileName has "0.7.1")
+    or (FileName has "generator" and FileName has "3.3.1")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### AsyncAPI Miasma second stage: sync.js written to OS 'NodeJS' masquerade directory
+### Second-stage sync.js dropped under OS 'NodeJS' masquerade directory
 
 `UC_0_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name=sync.js Filesystem.file_path="*NodeJS*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_name="sync.js" AND Filesystem.file_path="*NodeJS*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -101,17 +101,37 @@ DeviceFileEvents
 | where ActionType == "FileCreated"
 | where FileName =~ "sync.js"
 | where FolderPath has "NodeJS"
-| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileOriginUrl, SHA256
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Miasma botnet C2 beacon to 85.137.53.71 on ports 8080/8081/8091
+### Detached hidden node.exe executing sync.js from NodeJS masquerade path
 
-`UC_0_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_0_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="85.137.53.71" All_Traffic.dest_port IN (8080,8081,8091) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*sync.js*" AND Processes.process="*NodeJS*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName has "node"
+| where ProcessCommandLine has "sync.js"
+| where ProcessCommandLine has "NodeJS"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Outbound C2 to Miasma controller 85.137.53.71 on ports 8080/8081/8091
+
+`UC_0_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="85.137.53.71" AND (All_Traffic.dest_port=8080 OR All_Traffic.dest_port=8081 OR All_Traffic.dest_port=8091) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -120,31 +140,26 @@ DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "85.137.53.71"
 | where RemotePort in (8080, 8081, 8091)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### AsyncAPI Miasma IPFS second-stage retrieval of poisoned package CIDs
+### Node.js retrieving Miasma second stage from IPFS gateway (specific CIDs)
 
-`UC_0_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_0_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*Qmet4fhsAaWMBUxNDfREHwgiyDeSWy4YSYs9wiKUW5jGyf*" OR Processes.process="*QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9*") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*Qmet4fhsAaWMBUxNDfREHwgiyDeSWy4YSYs9wiKUW5jGyf*" OR Web.url="*QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9*" OR Web.url="*ipfs.io/ipfs/*") by Web.src Web.dest Web.url Web.http_user_agent Web.dest_ip | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let CIDs = dynamic(["Qmet4fhsAaWMBUxNDfREHwgiyDeSWy4YSYs9wiKUW5jGyf","QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9"]);
-union isfuzzy=true
-( DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteUrl has_any (CIDs) or (RemoteUrl has "ipfs.io" and InitiatingProcessFileName =~ "node.exe")
-  | project Timestamp, DeviceName, Evidence = RemoteUrl, RemoteIP, RemotePort, Initiator = InitiatingProcessFileName, InitiatingProcessCommandLine ),
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where ProcessCommandLine has_any (CIDs)
-  | project Timestamp, DeviceName, Evidence = ProcessCommandLine, RemoteIP = "", RemotePort = 0, Initiator = InitiatingProcessFileName, InitiatingProcessCommandLine )
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has_any ("Qmet4fhsAaWMBUxNDfREHwgiyDeSWy4YSYs9wiKUW5jGyf","QmQobZSp1wRPrpSEQ56qnyq7ecZh5Bg5k1fnjt4SUwwHb9"))
+    or (InitiatingProcessFileName has "node" and RemoteUrl contains "ipfs.io")
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -582,4 +597,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 17 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 18 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
