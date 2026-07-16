@@ -17,6 +17,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa orders feds to patch actively exploited oracle flaw by ](./2026-07-16/cisa-orders-feds-to-patch-actively-exploited-oracle-flaw-by-.md)
 - [daxin resurfaces in taiwan alongside stupig pre login system](./2026-07-16/daxin-resurfaces-in-taiwan-alongside-stupig-pre-login-system.md)
 - [ghsa critical cve 2026 53713 envoy gateway authentication by](./2026-07-16/ghsa-critical-cve-2026-53713-envoy-gateway-authentication-by.md)
+- [ghsa critical cve 2026 55579 pheditor hardcoded default pass](./2026-07-16/ghsa-critical-cve-2026-55579-pheditor-hardcoded-default-pass.md)
 - [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
@@ -273,7 +274,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
 
 ## 2026-06-22
-- [ghsa critical cve 2026 33646 mise vulnerable to arbitrary co](./2026-06-22/ghsa-critical-cve-2026-33646-mise-vulnerable-to-arbitrary-co.md)
 - [ghsa critical cve 2026 44179 xwiki pro macros has remote cod](./2026-06-22/ghsa-critical-cve-2026-44179-xwiki-pro-macros-has-remote-cod.md)
 - [ghsa critical cve 2026 44203 openam has pre auth reflected x](./2026-06-22/ghsa-critical-cve-2026-44203-openam-has-pre-auth-reflected-x.md)
 - [ghsa critical cve 2026 46488 motioneye authentication possib](./2026-06-22/ghsa-critical-cve-2026-46488-motioneye-authentication-possib.md)

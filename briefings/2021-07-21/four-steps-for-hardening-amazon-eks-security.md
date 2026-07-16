@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Four steps for hardening Amazon EKS security
 
-`UC_3098_1` · phase: **install** · confidence: **High**
+`UC_3099_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

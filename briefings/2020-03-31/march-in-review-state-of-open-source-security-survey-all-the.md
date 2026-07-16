@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — March in review: State of Open Source Security survey, All.The.Talks virtual con
 
-`UC_3368_1` · phase: **exploit** · confidence: **High**
+`UC_3369_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### Stupig keyboard-layout DLL (kbdus1.dll/a.dll) loaded into winlogon.exe
 
-`UC_15_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -82,7 +82,7 @@ DeviceImageLoadEvents
 
 ### Malicious keyboard-layout registration pointing to Stupig DLL
 
-`UC_15_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceRegistryEvents
 
 ### winlogon.exe spawning a command shell (Stupig pre-login SYSTEM execution)
 
-`UC_15_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_17_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceProcessEvents
 
 ### Daxin kernel rootkit driver srt64.sys drop / service install
 
-`UC_15_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -329,7 +329,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Daxin Resurfaces in Taiwan Alongside Stupig Pre-Login SYSTEM Backdoor
 
-`UC_15_6` · phase: **exploit** · confidence: **High**
+`UC_17_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

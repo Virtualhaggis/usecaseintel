@@ -21,7 +21,8 @@ A valid token from issuer A carrying a sub that belongs to someone under issuer 
 - **T1190** — Exploit Public-Facing Application
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1550.001** — Use Alternate Authentication Material: Application Access Tokens
+- **T1212** — Exploitation for Credential Access
+- **T1556** — Modify Authentication Process
 
 ## Kill chain phases observed
 
@@ -29,24 +30,46 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable n8n Enterprise version exposed to CVE-2026-59208 cross-issuer token-exchange bypass
+### Exposed n8n Enterprise vulnerable to cross-issuer token-exchange auth bypass (CVE-2026-59208)
 
-`UC_7_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_9_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-59208" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-59208","CVE-2026-54305") by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-// Robust to Microsoft TVM KB not yet carrying this fresh CVE: match on inventory version directly.
-DeviceTvmSoftwareInventory
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in ("CVE-2026-59208", "CVE-2026-54305")
 | where SoftwareName has "n8n" or SoftwareVendor has "n8n"
-| extend ParsedVersion = parse_version(SoftwareVersion)
-| where ParsedVersion < parse_version("2.27.4") or SoftwareVersion == "2.28.0"   // affected: all <2.27.4 and exactly 2.28.0 (fixed in 2.27.4 / 2.28.1)
-| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
-| order by DeviceName asc
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| sort by DeviceName asc
+```
+
+### n8n running below the CVE-2026-59208 patch floor (2.27.4 / 2.28.1) in software inventory
+
+`UC_9_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareInventory
+| where Timestamp > ago(1d)
+| where SoftwareName has "n8n" or SoftwareVendor has "n8n"
+| extend Ver = split(SoftwareVersion, ".")
+| extend Major = toint(Ver[0]), Minor = toint(Ver[1]), Patch = toint(Ver[2])
+| extend Vulnerable = (Major < 2)
+    or (Major == 2 and Minor < 27)
+    or (Major == 2 and Minor == 27 and Patch < 4)   // everything below 2.27.4
+    or (Major == 2 and Minor == 28 and Patch == 0)  // 2.28.0 shipped the bug; fixed in 2.28.1
+| where Vulnerable
+| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform, EndOfSupportStatus
+| sort by DeviceName asc
 ```
 
 ### OAuth consent / suspicious app grant
@@ -86,4 +109,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

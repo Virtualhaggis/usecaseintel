@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### motionEye unauthenticated path traversal read of motion.conf / system secrets
 
-`UC_247_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_249_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### motionEye RCE: motion daemon spawns shell via injected command_*_exec hook
 
-`UC_247_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_249_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### motionEye traversal read followed by admin config-hook write from same source
 
-`UC_247_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_249_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-phv5-334h-mxcw: motionEye Partial Authentication Bypass:
 
-`UC_247_1` · phase: **exploit** · confidence: **High**
+`UC_249_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
