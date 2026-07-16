@@ -1,7 +1,7 @@
 # [HIGH] Runtime Security for Third-Party GitHub Actions Runners: Bitrise, Blacksmith, Depot, Namespace, and Warp
 
 **Source:** StepSecurity
-**Published:** 2026-07-15
+**Published:** 2026-07-16
 **Article:** https://www.stepsecurity.io/blog/runtime-security-for-third-party-github-actions-runners
 
 ## Threat Profile

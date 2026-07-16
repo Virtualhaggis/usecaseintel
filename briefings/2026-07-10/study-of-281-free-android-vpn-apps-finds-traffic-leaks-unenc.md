@@ -30,12 +30,12 @@ The problems are basic, not sophistica…
 - **T1569.002** — Service Execution
 - **T1557** — Adversary-in-the-Middle
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1590.002** — Gather Victim Network Information: DNS
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1567** — Exfiltration Over Web Service
-- **T1041** — Exfiltration Over C2 Channel
-- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
 - **T1020** — Automated Exfiltration
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567** — Exfiltration Over Web Service
+- **T1600.001** — Weaken Encryption: Reduce Key Space
+- **T1040** — Network Sniffing
 
 ## Kill chain phases observed
 
@@ -43,13 +43,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Cleartext HTTP fetch of OpenVPN config file (tunnel-hijack exposure)
+### Android VPN app fetches OpenVPN config over cleartext HTTP (tunnel-hijack exposure)
 
-`UC_103_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_104_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method="GET" Web.url IN ("*.ovpn","*/config*","*vpnconfig*","*profile.ovpn*") Web.dest_port=80 by Web.src, Web.dest, Web.url, Web.http_user_agent, Web.app | `drop_dm_object_name(Web)` | where dest_port=80 | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=80 (All_Traffic.url="*.ovpn" OR All_Traffic.url="*.conf" OR All_Traffic.url="*openvpn*config*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.url All_Traffic.app | rename All_Traffic.* as * | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -57,19 +57,19 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(14d)
 | where RemotePort == 80
-| where RemoteUrl has_any (".ovpn", "config.ovpn", "vpnconfig", "/config", "profile.ovpn")
-| where isnotempty(InitiatingProcessFileName)
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), SampleUrl=any(RemoteUrl) by DeviceName, InitiatingProcessFileName, RemoteIP
-| order by LastSeen desc
+| where RemoteUrl endswith ".ovpn" or RemoteUrl endswith ".conf" or (RemoteUrl has "openvpn" and RemoteUrl has "config")
+| join kind=inner (DeviceInfo | where OSPlatform =~ "Android" | distinct DeviceId, DeviceName, OSPlatform) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
 ```
 
-### DNS leak: mobile/VPN device querying public resolvers outside the tunnel
+### DNS leak: Android endpoint queries public resolvers while VPN tunnel expected
 
-`UC_103_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_104_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 All_Traffic.dest IN ("8.8.8.8","8.8.4.4","1.1.1.1","1.0.0.1","208.67.222.222","208.67.220.220","9.9.9.9") by All_Traffic.src, All_Traffic.dest, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 (All_Traffic.dest="8.8.8.8" OR All_Traffic.dest="8.8.4.4" OR All_Traffic.dest="1.1.1.1" OR All_Traffic.dest="1.0.0.1" OR All_Traffic.dest="9.9.9.9" OR All_Traffic.dest="208.67.222.222" OR All_Traffic.dest="208.67.220.220") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | rename All_Traffic.* as * | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -77,51 +77,42 @@ DeviceNetworkEvents
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
 | where RemotePort == 53
-| where RemoteIP in ("8.8.8.8","8.8.4.4","1.1.1.1","1.0.0.1","208.67.222.222","208.67.220.220","9.9.9.9")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Queries=count() by DeviceName, InitiatingProcessFileName, RemoteIP
-| order by Queries desc
+| where RemoteIP in ("8.8.8.8","8.8.4.4","1.1.1.1","1.0.0.1","9.9.9.9","149.112.112.112","208.67.222.222","208.67.220.220")
+| join kind=inner (DeviceInfo | where OSPlatform =~ "Android" | distinct DeviceId, DeviceName, OSPlatform) on DeviceId
+| summarize QueryCount=count(), Resolvers=make_set(RemoteIP), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessFileName
+| order by QueryCount desc
 ```
 
-### Free VPN app beaconing to advertising / analytics trackers
+### Android VPN/privacy app beaconing to advertising & analytics networks
 
-`UC_103_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_104_8` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("*doubleclick.net","*google-analytics.com","*googlesyndication.com","*graph.facebook.com","*appsflyer.com","*adjust.com","*app-measurement.com","*mixpanel.com","*adcolony.com","*applovin.com") by All_Traffic.src, All_Traffic.app, All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | search app="*vpn*" | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.url="*graph.facebook.com*" OR All_Traffic.url="*google-analytics.com*" OR All_Traffic.url="*app-measurement.com*" OR All_Traffic.url="*api.appsflyer.com*" OR All_Traffic.url="*app.adjust.com*" OR All_Traffic.url="*api.mixpanel.com*" OR All_Traffic.url="*flurry.com*") by All_Traffic.src All_Traffic.dest All_Traffic.url All_Traffic.app | rename All_Traffic.* as * | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let trackers = dynamic(["doubleclick.net","google-analytics.com","googlesyndication.com","graph.facebook.com","appsflyer.com","adjust.com","app-measurement.com","mixpanel.com","adcolony.com","applovin.com"]);
+let TrackerHosts = dynamic(["graph.facebook.com","google-analytics.com","app-measurement.com","api.appsflyer.com","app.adjust.com","api.mixpanel.com","flurry.com","in.appcenter.ms"]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName has "vpn" or InitiatingProcessFileName has "proxy"
-| where isnotempty(RemoteUrl)
-| where RemoteUrl has_any (trackers)
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), Trackers=make_set(RemoteUrl, 15) by DeviceName, InitiatingProcessFileName
+| where RemoteUrl has_any (TrackerHosts)
+| join kind=inner (DeviceInfo | where OSPlatform =~ "Android" | distinct DeviceId, DeviceName, OSPlatform) on DeviceId
+| summarize Trackers=make_set(RemoteUrl), Hits=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessFileName
 | order by Hits desc
 ```
 
-### VPN app sending user traffic in cleartext HTTP outside the tunnel
+### Endpoint carrying VPN library vulnerable to SWEET32 weak-cipher CVEs (Blowfish / 3DES)
 
-`UC_103_9` · phase: **actions** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=80 (All_Traffic.app="*vpn*" OR All_Traffic.app="*proxy*") by All_Traffic.src, All_Traffic.app, All_Traffic.dest, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | search dest!=10.0.0.0/8 dest!=192.168.0.0/16 dest!=172.16.0.0/12 | sort - lastTime
-```
+`UC_104_9` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemotePort == 80
-| where RemoteIPType == "Public"
-| where InitiatingProcessFileName has "vpn" or InitiatingProcessFileName has "proxy"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), Dests=dcount(RemoteIP) by DeviceName, InitiatingProcessFileName
-| where Connections > 0
-| order by Connections desc
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2016-6329","CVE-2016-2183")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), CVEs=make_set(CveId) by DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform
+| order by LastSeen desc
 ```
 
 ### Suspicious browser extension installation

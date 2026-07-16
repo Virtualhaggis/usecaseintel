@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Grok Build CLI uploads full repo/git-bundle to xAI storage channel (grok-code-session-traces)
 
-`UC_51_0` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_0` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceNetworkEvents
 
 ### Grok Build CLI presence & execution (0.2.93/0.2.99) — exposed-endpoint discovery
 
-`UC_51_1` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_50_1` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### Grok Build CLI local staging of session/codebase archive (metadata.json → gs://grok-code-session-traces)
 
-`UC_51_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_50_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

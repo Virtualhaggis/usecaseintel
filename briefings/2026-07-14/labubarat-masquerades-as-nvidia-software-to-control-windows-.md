@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### LabubaRAT nvidia-sysruntime.exe launch with runtime C2 config in command line
 
-`UC_41_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_40_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### LabubaRAT C2 beacon to pipicka.xyz (HTTPS / DNS tunneling) from NVIDIA-impersonating host
 
-`UC_41_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_40_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceNetworkEvents
 
 ### NVIDIA-branded process spawns shell / LOLBin (LabubaRAT operator tasking)
 
-`UC_41_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_40_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### NVIDIA-named executable without valid NVIDIA code signature
 
-`UC_41_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_40_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### LabubaRAT user-level autostart persistence (Run key / scheduled task referencing NVIDIA loader)
 
-`UC_41_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_40_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceRegistryEvents
 
 ### Trojanized NVIDIA installer download from non-NVIDIA source
 
-`UC_41_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_40_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +182,7 @@ DeviceFileEvents
 
 ### NVIDIA-branded process outbound to non-NVIDIA public infrastructure (LabubaRAT C2 / SOCKS5 proxy)
 
-`UC_41_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_40_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -330,7 +330,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts
 
-`UC_41_5` · phase: **exploit** · confidence: **High**
+`UC_40_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

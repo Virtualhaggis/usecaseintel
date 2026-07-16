@@ -1,6 +1,6 @@
 # [HIGH] Unpacking the AsyncAPI npm supply chain compromise and import-time payload delivery
 
-**Source:** Microsoft Security Blog
+**Source:** Microsoft Security Blog, StepSecurity
 **Published:** 2026-07-16
 **Article:** https://www.microsoft.com/en-us/security/blog/2026/07/15/unpacking-asyncapi-npm-supply-chain-compromise-import-time-payload-delivery/
 

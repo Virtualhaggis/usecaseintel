@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### UAT-7810 ORB network C2 beacon to known relay IPs (LONGLEASH/DOGLEASH)
 
-`UC_115_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_116_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### Ruckus/ASUS edge routers exposed to UAT-7810 n-day exploit CVEs
 
-`UC_115_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_116_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### LONGLEASH / JARLEASH / LEASHTEST malware hash sighting on managed hosts
 
-`UC_115_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_116_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -389,7 +389,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Winning 54% of the time
 
-`UC_115_9` · phase: **exploit** · confidence: **High**
+`UC_116_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

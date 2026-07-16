@@ -1,7 +1,7 @@
 # [HIGH] Harden-Runner Block Mode Now Available for macOS and Windows GitHub-Hosted Runners
 
 **Source:** StepSecurity
-**Published:** 2026-07-15
+**Published:** 2026-07-16
 **Article:** https://www.stepsecurity.io/blog/harden-runner-block-mode-now-available-for-macos-and-windows-github-hosted-runners
 
 ## Threat Profile

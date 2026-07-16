@@ -79,15 +79,17 @@ Cybersecurity researchers have disclosed details of a previously unreported Inte
 - **T1190** — Exploit Public-Facing Application
 - **T1027** — Obfuscated Files or Information
 - **T1571** — Non-Standard Port
-- **T1095** — Non-Application Layer Protocol
-- **T1583.005** — Acquire Infrastructure: Botnet
+- **T1008** — Fallback Channels
 - **T1071.004** — Application Layer Protocol: DNS
 - **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
-- **T1105** — Ingress Tool Transfer
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1046** — Network Service Discovery
-- **T1595.001** — Active Scanning: Scanning IP Blocks
 - **T1110.001** — Brute Force: Password Guessing
+- **T1595.001** — Active Scanning: Scanning IP Blocks
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1105** — Ingress Tool Transfer
+- **T1204.002** — User Execution: Malicious File
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1053.003** — Scheduled Task/Job: Cron
 
 ## Kill chain phases observed
 
@@ -95,81 +97,101 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TuxBot IoT botnet C2 callback to hardcoded Keksec IPs / ports 1999,31337,9999
+### TuxBot v3 C2 beacon to Keksec botnet IPs on ports 1999/31337
 
-`UC_7_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_7_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("209.182.237.133","185.10.68.127","194.46.59.169","45.145.185.229","107.174.133.119","37.32.24.195","154.6.197.43") OR (All_Traffic.dest_port IN (1999,31337,9999) AND All_Traffic.dest_category!="internal")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name("All_Traffic")` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("209.182.237.133","185.10.68.127","194.46.59.169","45.145.185.229","107.174.133.119","37.32.24.195","154.6.197.43") OR (All_Traffic.dest_port IN (1999,31337) AND NOT All_Traffic.dest_ip IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16"))) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt","ConnectionFailed")
+| where Timestamp > ago(14d)
 | where RemoteIP in ("209.182.237.133","185.10.68.127","194.46.59.169","45.145.185.229","107.174.133.119","37.32.24.195","154.6.197.43")
-   or (RemoteIPType == "Public" and RemotePort in (1999, 31337, 9999))
-| project Timestamp, DeviceName, DeviceId, LocalIP, RemoteIP, RemotePort, RemoteUrl, Protocol, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
-| order by Timestamp desc
+   or (RemoteIPType == "Public" and RemotePort in (1999, 31337))
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), Ports=make_set(RemotePort) by DeviceName, DeviceId, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by ConnCount desc
 ```
 
-### TuxBot DGA / C2 domain resolution (digikalas.online, jetross.com, kanfetka.site)
+### TuxBot v3 DNS resolution / DNS-TXT C2 to Keksec domains
 
 `UC_7_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("digikalas.online","*.digikalas.online","jetross.com","*.jetross.com","cfcybernews.eu","*.cfcybernews.eu","captcha.kanfetka.site","*.kanfetka.site","c2.tuxbot.local")) by DNS.src DNS.query DNS.answer | `drop_dm_object_name("DNS")` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("digikalas.online","cfcybernews.eu","captcha.kanfetka.site","jetross.com","c2.tuxbot.local") by DNS.src DNS.query DNS.record_type | `drop_dm_object_name(DNS)` | eval txt_c2=if(record_type=="TXT","DNS-TXT-C2-channel","resolution") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
+| where Timestamp > ago(14d)
+| where ActionType == "DnsQueryResponse"
+| where RemoteUrl has_any ("digikalas.online","cfcybernews.eu","captcha.kanfetka.site","jetross.com","tuxbot.local")
+| project Timestamp, DeviceName, DeviceId, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### IoT/host mass-scan fan-out on Telnet/SSH/ADB from single source (TuxBot scanner)
+
+`UC_7_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count dc(All_Traffic.dest_ip) as distinct_dests from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (23,2323,5555,22) by All_Traffic.src_ip All_Traffic.dest_port _time span=10m | `drop_dm_object_name(All_Traffic)` | where distinct_dests > 100 | sort - distinct_dests
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("digikalas.online","jetross.com","cfcybernews.eu","kanfetka.site","tuxbot.local")
-| project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### TuxBot v3 sample execution/drop by SHA256 on Linux/IoT-class endpoints
-
-`UC_7_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_hash IN ("6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737","146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2","bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9","a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1","eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621","a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f","0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988","96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561","c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb","246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1","3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19","2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce","9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61","e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811","f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e","f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815","15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711","71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d","511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda","6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process_path Endpoint.Processes.process_hash | `drop_dm_object_name("Processes")` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let tuxbot_hashes = dynamic(["6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737","146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2","bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9","a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1","eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621","a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f","0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988","96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561","c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb","246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1","3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19","2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce","9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61","e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811","f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e","f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815","15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711","71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d","511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda","6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734"]);
-union
-(DeviceProcessEvents | where Timestamp > ago(90d) | where SHA256 in (tuxbot_hashes) | project Timestamp, DeviceName, AccountName, Kind="ProcessExec", FileName, FolderPath, SHA256, ProcessCommandLine),
-(DeviceFileEvents | where Timestamp > ago(90d) | where SHA256 in (tuxbot_hashes) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Kind="FileWrite", FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine)
-| order by Timestamp desc
-```
-
-### TuxBot Mirai-style Telnet/SSH/ADB scanner fan-out from a single host
-
-`UC_7_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true dc(All_Traffic.dest_ip) as distinct_targets count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (23,2323,5555,22) AND All_Traffic.dest_category!="internal" by All_Traffic.src_ip _time span=1h | where distinct_targets > 100 | sort - distinct_targets
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where ActionType in ("ConnectionAttempt","ConnectionSuccess","ConnectionFailed")
-| where RemoteIPType == "Public"
+| where Timestamp > ago(7d)
 | where RemotePort in (23, 2323, 5555, 22)
-| summarize DistinctTargets = dcount(RemoteIP), Attempts = count(), Ports = make_set(RemotePort, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
-| where DistinctTargets > 100   // 100 = empirical scan fan-out floor; benign admin rarely hits >100 distinct external Telnet/ADB targets/day
-| order by DistinctTargets desc
+| where RemoteIPType == "Public"
+| summarize DistinctDests=dcount(RemoteIP), ConnCount=count(), Ports=make_set(RemotePort), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName, InitiatingProcessFileName, bin(Timestamp, 10m)
+| where DistinctDests > 100   // 100+ distinct hosts on Telnet/SSH/ADB ports in 10m = mass scanning, not admin
+| order by DistinctDests desc
+```
+
+### Execution/drop of known TuxBot v3 ELF sample by SHA256
+
+`UC_7_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737","146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2","bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9","a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1","eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621","a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f","0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988","96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561","c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb","246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1","3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19","2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce","9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61","e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811","f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e","f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815","15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711","71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d","511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda","6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let TuxBotHashes = dynamic(["6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737","146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2","bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9","a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1","eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621","a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f","0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988","96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561","c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb","246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1","3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19","2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce","9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61","e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811","f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e","f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815","15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711","71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d","511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda","6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA256 in (TuxBotHashes)
+| project Timestamp, DeviceName, DeviceId, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, AccountName
+| order by Timestamp desc
+```
+
+### TuxBot v3 Linux persistence via systemd/cron written by /tmp-dropped process
+
+`UC_7_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path="/etc/systemd/system/*" OR Filesystem.file_path="/etc/cron.d/*" OR Filesystem.file_path="/etc/cron.hourly/*" OR Filesystem.file_path="/var/spool/cron/*" OR Filesystem.file_path="/etc/init.d/*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where like(process_name,"%/tmp/%") OR like(process_name,"%/dev/shm/%") OR like(process_name,"%/var/tmp/%") OR process_name IN ("wget","curl","busybox") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType == "FileCreated"
+| where FolderPath has_any ("/etc/systemd/system/", "/etc/cron.d/", "/etc/cron.hourly/", "/var/spool/cron/", "/etc/init.d/")
+| where InitiatingProcessFolderPath has_any ("/tmp/", "/dev/shm/", "/var/tmp/") or InitiatingProcessFileName in~ ("wget","curl","busybox")
+| project Timestamp, DeviceName, DeviceId, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -223,4 +245,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

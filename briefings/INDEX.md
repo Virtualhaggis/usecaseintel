@@ -9,6 +9,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-16
+- [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
+- [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
 
 ## 2026-07-15
@@ -21,11 +23,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
 - [ghsa critical cve 2026 52881 mantisbt reflected xss in admin](./2026-07-15/ghsa-critical-cve-2026-52881-mantisbt-reflected-xss-in-admin.md)
 - [google gemini cli abused as a hacking agent malware botnet o](./2026-07-15/google-gemini-cli-abused-as-a-hacking-agent-malware-botnet-o.md)
-- [harden runner block mode now available for macos and windows](./2026-07-15/harden-runner-block-mode-now-available-for-macos-and-windows.md)
 - [okobot malware framework injects seed phrase phishing into l](./2026-07-15/okobot-malware-framework-injects-seed-phrase-phishing-into-l.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [researcher drops new windows zero day poc hours after micros](./2026-07-15/researcher-drops-new-windows-zero-day-poc-hours-after-micros.md)
-- [runtime security for third party github actions runners bitr](./2026-07-15/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [sase has an ai blind spot inspecting packets is no longer en](./2026-07-15/sase-has-an-ai-blind-spot-inspecting-packets-is-no-longer-en.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-07-15/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [turning threat intelligence into decisive action with defend](./2026-07-15/turning-threat-intelligence-into-decisive-action-with-defend.md)
@@ -43,7 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 15410 sonicwall sma1000 appliances code in](./2026-07-14/cisa-kev-cve-2026-15410-sonicwall-sma1000-appliances-code-in.md)
 - [cisa kev cve 2026 56155 microsoft active directory federatio](./2026-07-14/cisa-kev-cve-2026-56155-microsoft-active-directory-federatio.md)
 - [cisa kev cve 2026 56164 microsoft sharepoint server missing ](./2026-07-14/cisa-kev-cve-2026-56164-microsoft-sharepoint-server-missing-.md)
-- [coordinated asyncapi supply chain attack miasma rat delivere](./2026-07-14/coordinated-asyncapi-supply-chain-attack-miasma-rat-delivere.md)
 - [forgotten uefi shims undermining secure boot](./2026-07-14/forgotten-uefi-shims-undermining-secure-boot.md)
 - [ghsa critical cve 2026 45262 facturascripts authenticated sq](./2026-07-14/ghsa-critical-cve-2026-45262-facturascripts-authenticated-sq.md)
 - [ghsa critical cve 2026 50006 anyquery arbitrary file write a](./2026-07-14/ghsa-critical-cve-2026-50006-anyquery-arbitrary-file-write-a.md)
@@ -87,6 +86,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
 
 ## 2026-07-12
+- [github secret scanning public monitoring for enterprises cov](./2026-07-12/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
+- [injective npm supply chain attack 18 packages backdoored to ](./2026-07-12/injective-npm-supply-chain-attack-18-packages-backdoored-to-.md)
 - [jscrambler npm package publishes malicious preinstall binary](./2026-07-12/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
 
 ## 2026-07-11
@@ -146,7 +147,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 56290 joomlack page builder improper acces](./2026-07-07/cisa-kev-cve-2026-56290-joomlack-page-builder-improper-acces.md)
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
-- [github secret scanning public monitoring for enterprises cov](./2026-07-07/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
 - [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
