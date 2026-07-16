@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### AI-generated 'FULLY FIXED' PowerShell AD enumeration writing AD_Report.html
 
-`UC_86_1` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_88_1` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### SharpShares network-share enumeration binary staged in C:\ProgramData
 
-`UC_86_2` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_88_2` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### s5cmd bulk cloud-storage exfiltration tool executed from C:\ProgramData
 
-`UC_86_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_88_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Executable in C:\ProgramData root launched within an RDP session (attacker tool staging)
 
-`UC_86_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_88_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

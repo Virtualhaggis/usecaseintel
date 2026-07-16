@@ -11,12 +11,8 @@ By Sergiu Gatlan
 July 16, 2026
 08:31 AM
 0 
-
-
 Two leading members of the Scattered Spider cybercrime collective were sentenced to five years and six months in prison each for hacking Transport for London (TfL) in 2024.
-
-
-On September 2, 2024, TfL (which provides transportation services to more than 8.4 million Londoners) disclosed that its network was breached in August 2024, with the attack disrupting internal systems and on…
+On September 2, 2024, TfL (which provides transportation services to more than 8.4 million Londoners) disclosed that its network was breached in August 2024, with the attack disrupting internal systems and online ser…
 
 ## Indicators of Compromise (high-fidelity only)
 

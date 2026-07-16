@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2582 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2581 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,6 +15,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [daxin resurfaces in taiwan alongside stupig pre login system](./2026-07-16/daxin-resurfaces-in-taiwan-alongside-stupig-pre-login-system.md)
 - [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
+- [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
+- [n8n token exchange flaw could let attackers log in as users ](./2026-07-16/n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-.md)
 - [new agent data injection attack can make ai agents misclick ](./2026-07-16/new-agent-data-injection-attack-can-make-ai-agents-misclick-.md)
 - [new spirals ransomware encrypts victim network in under 24 h](./2026-07-16/new-spirals-ransomware-encrypts-victim-network-in-under-24-h.md)
 - [new telepuz malware spreads via clickfix to steal data and r](./2026-07-16/new-telepuz-malware-spreads-via-clickfix-to-steal-data-and-r.md)
@@ -71,7 +73,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
 - [researchers say claude for chrome flaw lets rogue extensions](./2026-07-14/researchers-say-claude-for-chrome-flaw-lets-rogue-extensions.md)
 - [sap patches cvss 9 9 netweaver abap flaw that could expose o](./2026-07-14/sap-patches-cvss-9-9-netweaver-abap-flaw-that-could-expose-o.md)
-- [sonicwall warns of sma1000 flaws exploited in zero day attac](./2026-07-14/sonicwall-warns-of-sma1000-flaws-exploited-in-zero-day-attac.md)
 - [study of 85 crypto wallet extensions finds address leaks and](./2026-07-14/study-of-85-crypto-wallet-extensions-finds-address-leaks-and.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
@@ -119,7 +120,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa g936 7jqj mwv8 tsdproxy internal proxy au](./2026-07-10/ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au.md)
 - [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
 - [laser attack resets tangem wallet passwords on cards that ca](./2026-07-10/laser-attack-resets-tangem-wallet-passwords-on-cards-that-ca.md)
-- [new modbeacon rat uses grpc streaming for encrypted c2 traff](./2026-07-10/new-modbeacon-rat-uses-grpc-streaming-for-encrypted-c2-traff.md)
 - [no manners here the ruthless rise of the gentlemen ransomwar](./2026-07-10/no-manners-here-the-ruthless-rise-of-the-gentlemen-ransomwar.md)
 - [researcher details whatsapp to host attack chain using three](./2026-07-10/researcher-details-whatsapp-to-host-attack-chain-using-three.md)
 - [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
@@ -213,7 +213,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48558 simplehelp authentication bypass vul](./2026-06-29/cisa-kev-cve-2026-48558-simplehelp-authentication-bypass-vul.md)
 - [inside the inbox why cybercriminals want to break into your ](./2026-06-29/inside-the-inbox-why-cybercriminals-want-to-break-into-your-.md)
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
-- [the gentlemen are knocking ustom backdoors and evolving tact](./2026-06-29/the-gentlemen-are-knocking-ustom-backdoors-and-evolving-tact.md)
 
 ## 2026-06-26
 - [ghsa critical cve 2026 48751 incus has a restricted project ](./2026-06-26/ghsa-critical-cve-2026-48751-incus-has-a-restricted-project-.md)

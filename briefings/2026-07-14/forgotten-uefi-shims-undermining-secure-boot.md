@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure to revoked vulnerable UEFI shims (CVE-2026-8863 / CVE-2026-10797)
 
-`UC_63_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_65_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Vulnerable UEFI shim/GRUB bootloader written to the EFI System Partition
 
-`UC_63_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_65_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceFileEvents
 
 ### EFI System Partition mounted via mountvol /S (rogue shim staging)
 
-`UC_63_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_65_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
