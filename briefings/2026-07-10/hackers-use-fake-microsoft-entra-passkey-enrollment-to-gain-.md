@@ -37,11 +37,12 @@ The threat actor, tracked by Okta under the moniker O-UNC-066 , has deployed a p
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
-- **T1566.004** — Phishing: Spearphishing Voice
-- **T1583.001** — Acquire Infrastructure: Domains
 - **T1098.005** — Account Manipulation: Device Registration
 - **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
-- **T1111** — Multi-Factor Authentication Interception
+- **T1566.004** — Phishing: Spearphishing Voice
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1110** — Brute Force
 
 ## Kill chain phases observed
 
@@ -49,61 +50,127 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### O-UNC-066 passkey-themed vishing phishing domain contact (assignpasskey/deploypasskey/etc.)
+### Entra ID passkey / FIDO2 security-key registration (O-UNC-066 rogue enrollment)
 
-`UC_102_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_103_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application in~ ("Microsoft Entra ID","Office 365","Azure Active Directory")
+| where ActionType has_any ("registered security info","Register security information","Add passkey","security info")
+| where tostring(RawEventData) has_any ("Fido2","FIDO2","passkey","Passkey","security key")
+| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, UserAgent, RawEventData
+| sort by Timestamp desc
+```
+
+### Access to O-UNC-066 passkey-themed phishing kit domains
+
+`UC_103_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("*assignpasskey.com","*deploypasskey.com","*passkeydeploy.com","*passkeyadd.com","*setpasskey.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*assignpasskey.com" OR DNS.query="*deploypasskey.com" OR DNS.query="*passkeydeploy.com" OR DNS.query="*passkeyadd.com" OR DNS.query="*setpasskey.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where RemoteUrl has_any ("assignpasskey.com","deploypasskey.com","passkeydeploy.com","passkeyadd.com","setpasskey.com")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| sort by Timestamp desc
 ```
 
-### Rogue Entra passkey/FIDO2 registration from O-UNC-066 operator ASN (DDoS-Guard/IQWeb)
+### Passkey registration immediately followed by passkey sign-in (rogue-enrollment account takeover)
 
-`UC_102_10` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count from datamodel=Change.All_Changes where All_Changes.action="modified" AND All_Changes.command IN ("User registered security info","Admin registered security info","Add device-based key credential (user)") by All_Changes.user All_Changes.src All_Changes.command _time | `drop_dm_object_name(All_Changes)` | iplocation src | search Autonomous_System IN ("DDoS-Guard","IQWeb*") OR asn IN (57724,59692)
-```
+`UC_103_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+let Reg = CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType has_any ("registered security info","Register security information","Add passkey","security info")
+| where tostring(RawEventData) has_any ("Fido2","FIDO2","passkey","security key")
+| project RegTime = Timestamp, AccountObjectId, RegIP = IPAddress;
+AADSignInEventsBeta
+| where Timestamp > ago(14d)
+| where ErrorCode == 0
+| where tostring(AuthenticationDetails) has_any ("FIDO2","Passkey","Windows Hello")
+| join kind=inner Reg on AccountObjectId
+| where Timestamp between (RegTime .. RegTime + 15m)
+| project RegTime, SignInTime = Timestamp, AccountUpn, RegIP, IPAddress, Country, Application, DeltaMin = datetime_diff('minute', Timestamp, RegTime)
+| sort by SignInTime desc
+```
+
+### Entra passkey enrollment from off-hours or never-before-seen IP
+
+`UC_103_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let Known = AADSignInEventsBeta
+| where Timestamp between (ago(30d) .. ago(1d))
+| where ErrorCode == 0
+| summarize by AccountObjectId, IPAddress;
 CloudAppEvents
-| where Timestamp > ago(14d)
-| where Application in ("Microsoft Entra ID","Office 365","Azure Active Directory")
-| where ActionType has_any ("registered security info","register security info","key credential")
-| where tostring(RawEventData) has_any ("passkey","fido2","fido","Fido2")
-| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, ISP, RawEventData
-| order by Timestamp desc
+| where Timestamp > ago(1d)
+| where ActionType has_any ("registered security info","Register security information","Add passkey","security info")
+| where tostring(RawEventData) has_any ("Fido2","FIDO2","passkey","security key")
+| extend HourUTC = hourofday(Timestamp)
+| join kind=leftouter Known on AccountObjectId, IPAddress
+| extend NewIP = isempty(IPAddress1)
+| where NewIP or HourUTC >= 22 or HourUTC < 6
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, NewIP, HourUTC, ActionType
+| sort by Timestamp desc
 ```
 
-### O-UNC-066 passkey phishing-kit URL-path fingerprint (/backend.php, /submit-authenticator, /passkey/check)
+### Failed Entra sign-in burst followed by passkey-based success
 
-`UC_102_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count from datamodel=Web.Web where Web.url="*passkey*" AND Web.uri_path IN ("/backend.php","/submit-otp","/submit-authenticator","/approve-authenticator","/passkey/register","/passkey/check","/processing","/identify","/done") by Web.src Web.dest Web.url Web.user _time | `drop_dm_object_name(Web)`
-```
+`UC_103_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-UrlClickEvents
-| where Timestamp > ago(14d)
-| where Url has "passkey"
-| where Url has_any ("/backend.php","/submit-otp","/submit-authenticator","/approve-authenticator","/passkey/register","/passkey/check","/processing","/identify","/gate","/done")
-| project Timestamp, AccountUpn, Url, ActionType, IPAddress, Workload, IsClickedThrough
-| order by Timestamp desc
+let Failed = AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode != 0
+| summarize FailCount = count(), FailIPs = make_set(IPAddress, 10), FirstFail = min(Timestamp) by AccountObjectId, AccountUpn, bin(Timestamp, 2h)
+| where FailCount >= 3;  // 3+ failed auths in a 2h bucket = probing
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode == 0
+| where tostring(AuthenticationDetails) has_any ("FIDO2","Passkey")
+| join kind=inner Failed on AccountObjectId
+| where Timestamp between (FirstFail .. FirstFail + 24h)
+| project FirstFail, SuccessTime = Timestamp, AccountUpn, FailCount, FailIPs, SuccessIP = IPAddress, Country, Application
+| sort by SuccessTime desc
+```
+
+### M365 sign-in with recently-enrolled passkey from new user-agent and IP
+
+`UC_103_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let RecentReg = CloudAppEvents
+| where Timestamp > ago(2d)
+| where ActionType has_any ("registered security info","Register security information","Add passkey","security info")
+| where tostring(RawEventData) has_any ("Fido2","FIDO2","passkey","security key")
+| summarize RegTime = max(Timestamp) by AccountObjectId;
+let Baseline = AADSignInEventsBeta
+| where Timestamp between (ago(30d) .. ago(1d))
+| where ErrorCode == 0
+| summarize by AccountObjectId, UserAgent, IPAddress;
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode == 0
+| where tostring(AuthenticationDetails) has_any ("FIDO2","Passkey")
+| join kind=inner RecentReg on AccountObjectId
+| where Timestamp between (RegTime .. RegTime + 24h)
+| join kind=leftanti Baseline on AccountObjectId, UserAgent, IPAddress
+| project Timestamp, AccountUpn, IPAddress, UserAgent, Country, Application, RegTime
+| sort by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -402,4 +469,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

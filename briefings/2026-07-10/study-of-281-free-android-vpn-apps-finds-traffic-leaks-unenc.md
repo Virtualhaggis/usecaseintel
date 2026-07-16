@@ -28,12 +28,101 @@ The problems are basic, not sophistica…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1557** — Adversary-in-the-Middle
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1590.002** — Gather Victim Network Information: DNS
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1567** — Exfiltration Over Web Service
+- **T1041** — Exfiltration Over C2 Channel
+- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1020** — Automated Exfiltration
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Cleartext HTTP fetch of OpenVPN config file (tunnel-hijack exposure)
+
+`UC_102_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method="GET" Web.url IN ("*.ovpn","*/config*","*vpnconfig*","*profile.ovpn*") Web.dest_port=80 by Web.src, Web.dest, Web.url, Web.http_user_agent, Web.app | `drop_dm_object_name(Web)` | where dest_port=80 | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemotePort == 80
+| where RemoteUrl has_any (".ovpn", "config.ovpn", "vpnconfig", "/config", "profile.ovpn")
+| where isnotempty(InitiatingProcessFileName)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), SampleUrl=any(RemoteUrl) by DeviceName, InitiatingProcessFileName, RemoteIP
+| order by LastSeen desc
+```
+
+### DNS leak: mobile/VPN device querying public resolvers outside the tunnel
+
+`UC_102_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 All_Traffic.dest IN ("8.8.8.8","8.8.4.4","1.1.1.1","1.0.0.1","208.67.222.222","208.67.220.220","9.9.9.9") by All_Traffic.src, All_Traffic.dest, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 53
+| where RemoteIP in ("8.8.8.8","8.8.4.4","1.1.1.1","1.0.0.1","208.67.222.222","208.67.220.220","9.9.9.9")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Queries=count() by DeviceName, InitiatingProcessFileName, RemoteIP
+| order by Queries desc
+```
+
+### Free VPN app beaconing to advertising / analytics trackers
+
+`UC_102_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("*doubleclick.net","*google-analytics.com","*googlesyndication.com","*graph.facebook.com","*appsflyer.com","*adjust.com","*app-measurement.com","*mixpanel.com","*adcolony.com","*applovin.com") by All_Traffic.src, All_Traffic.app, All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | search app="*vpn*" | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let trackers = dynamic(["doubleclick.net","google-analytics.com","googlesyndication.com","graph.facebook.com","appsflyer.com","adjust.com","app-measurement.com","mixpanel.com","adcolony.com","applovin.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has "vpn" or InitiatingProcessFileName has "proxy"
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has_any (trackers)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), Trackers=make_set(RemoteUrl, 15) by DeviceName, InitiatingProcessFileName
+| order by Hits desc
+```
+
+### VPN app sending user traffic in cleartext HTTP outside the tunnel
+
+`UC_102_9` · phase: **actions** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=80 (All_Traffic.app="*vpn*" OR All_Traffic.app="*proxy*") by All_Traffic.src, All_Traffic.app, All_Traffic.dest, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | search dest!=10.0.0.0/8 dest!=192.168.0.0/16 dest!=172.16.0.0/12 | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 80
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName has "vpn" or InitiatingProcessFileName has "proxy"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), Dests=dcount(RemoteIP) by DeviceName, InitiatingProcessFileName
+| where Connections > 0
+| order by Connections desc
+```
 
 ### Suspicious browser extension installation
 
@@ -183,4 +272,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

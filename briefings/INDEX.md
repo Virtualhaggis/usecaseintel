@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2582 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -22,6 +22,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [okobot malware framework injects seed phrase phishing into l](./2026-07-15/okobot-malware-framework-injects-seed-phrase-phishing-into-l.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [researcher drops new windows zero day poc hours after micros](./2026-07-15/researcher-drops-new-windows-zero-day-poc-hours-after-micros.md)
+- [runtime security for third party github actions runners bitr](./2026-07-15/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [sase has an ai blind spot inspecting packets is no longer en](./2026-07-15/sase-has-an-ai-blind-spot-inspecting-packets-is-no-longer-en.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-07-15/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [turning threat intelligence into decisive action with defend](./2026-07-15/turning-threat-intelligence-into-decisive-action-with-defend.md)

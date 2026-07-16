@@ -79,19 +79,20 @@ Cybersecurity researchers have disclosed details of a previously unreported Inte
 - **T1190** — Exploit Public-Facing Application
 - **T1027** — Obfuscated Files or Information
 - **T1571** — Non-Standard Port
+- **T1095** — Non-Application Layer Protocol
 - **T1573.001** — Encrypted Channel: Symmetric Cryptography
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1110.001** — Brute Force: Password Guessing
-- **T1110.003** — Brute Force: Password Spraying
-- **T1046** — Network Service Discovery
-- **T1595.001** — Active Scanning: Scanning IP Blocks
-- **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1053.003** — Scheduled Task/Job: Cron
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1106** — Native API
 - **T1071.004** — Application Layer Protocol: DNS
 - **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1008** — Fallback Channels
+- **T1046** — Network Service Discovery
+- **T1110.001** — Brute Force: Password Guessing
+- **T1595.001** — Active Scanning: Scanning IP Blocks
+- **T1105** — Ingress Tool Transfer
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
 
 ## Kill chain phases observed
 
@@ -99,111 +100,32 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TuxBot IoT botnet C2 beacon to Keksec-linked IPs/domains and non-standard ports 1999/31337
+### TuxBot v3 encrypted C2 / dropper connections to 209.182.237.133 and 185.10.68.127
 
-`UC_5_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("209.182.237.133","185.10.68.127","194.46.59.169","45.145.185.229","107.174.133.119","37.32.24.195","154.6.197.43") OR All_Traffic.dest_port IN (1999,31337)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest="209.182.237.133" OR All_Traffic.dest="185.10.68.127") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | eval operator_port=if(dest_port IN (1999,31337,2222,9999),"yes","no") | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteIP in ("209.182.237.133","185.10.68.127","194.46.59.169","45.145.185.229","107.174.133.119","37.32.24.195","154.6.197.43")
-   or RemoteUrl in~ ("digikalas.online","jetross.com","cfcybernews.eu","captcha.kanfetka.site","c2.tuxbot.local")
-   or (RemoteIPType == "Public" and RemotePort in (1999, 31337))
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count() by DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort, Protocol
-| order by LastSeen desc
-```
-
-### TuxBot Telnet credential brute-force burst (1,496-pair dictionary) from a single host
-
-`UC_5_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count dc(All_Traffic.dest) as distinct_targets min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (23,2323) by All_Traffic.src _time span=10m | `drop_dm_object_name(All_Traffic)` | where count > 200 | convert ctime(firstTime) ctime(lastTime) | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemotePort in (23, 2323)
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt","ConnectionFailed")
-| summarize Attempts=count(), DistinctTargets=dcount(RemoteIP), Targets=make_set(RemoteIP,8) by DeviceName, DeviceId, InitiatingProcessFileName, bin(Timestamp, 10m)
-| where Attempts > 200   // 200 = well below the 1,496-pair dictionary but far above normal Telnet client use
-| order by Attempts desc
-```
-
-### TuxBot multi-service propagation sweep (Telnet/SSH/ADB) with high HTTP fan-out
-
-`UC_5_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count dc(All_Traffic.dest) as distinct_targets dc(All_Traffic.dest_port) as distinct_ports values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (22,23,2323,5555) by All_Traffic.src _time span=10m | `drop_dm_object_name(All_Traffic)` | where distinct_ports >= 2 AND distinct_targets > 50 | sort - distinct_targets
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemotePort in (22, 23, 2323, 5555)
-| summarize DistinctTargets=dcount(RemoteIP), Ports=make_set(RemotePort,6), DistinctPorts=dcount(RemotePort), Conns=count() by DeviceName, DeviceId, InitiatingProcessFileName, bin(Timestamp, 10m)
-| where DistinctPorts >= 2 and DistinctTargets > 50   // sweeps >=2 scanner services across many hosts
-| order by DistinctTargets desc
-```
-
-### TuxBot Linux persistence via systemd unit + cron drop from a transient-directory process
-
-`UC_5_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/etc/systemd/system/*","/lib/systemd/system/*","/usr/lib/systemd/system/*","/etc/cron.d/*","/etc/crontab","/var/spool/cron/*")) AND (Filesystem.process_path IN ("/tmp/*","/dev/shm/*","/var/tmp/*","/run/*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified")
-| where FolderPath has_any ("/etc/systemd/system/","/lib/systemd/system/","/usr/lib/systemd/system/","/etc/cron.d/","/etc/crontab","/var/spool/cron/")
-| where InitiatingProcessFolderPath has_any ("/tmp/","/dev/shm/","/var/tmp/","/run/")
-| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| where RemoteIP in ("209.182.237.133", "185.10.68.127")
+| extend OperatorPort = iff(RemotePort in (1999,31337,2222,9999), "C2-operator-port", "other")
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, OperatorPort, Protocol, ActionType
 | order by Timestamp desc
 ```
 
-### TuxBot cross-compiled ELF bot execution by known SHA256 with submodule fan-out
+### TuxBot v3 DNS-TXT fallback C2 beacon to c2.tuxbot.local
 
-`UC_5_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737","146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2","bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9","a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1","eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let TuxBotHashes = dynamic(["6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737","146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2","bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9","a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1","eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621"]);
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where SHA256 in (TuxBotHashes)
-| project Timestamp, DeviceName, AccountName, FolderPath, FileName, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### TuxBot DNS-TXT / DGA fallback C2 channel from endpoints
-
-`UC_5_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where (DNS.query IN ("digikalas.online","jetross.com","cfcybernews.eu","captcha.kanfetka.site","c2.tuxbot.local") OR DNS.record_type="TXT") by DNS.src DNS.query DNS.record_type _time span=1h | `drop_dm_object_name(DNS)` | eventstats sum(count) as txt_total by src | where record_type="TXT" OR query IN ("digikalas.online","jetross.com","cfcybernews.eu","captcha.kanfetka.site","c2.tuxbot.local") | sort - count
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query="c2.tuxbot.local" by DNS.src DNS.query DNS.record_type | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 **Defender KQL:**
@@ -211,9 +133,80 @@ DeviceProcessEvents
 DeviceEvents
 | where Timestamp > ago(7d)
 | where ActionType == "DnsQueryResponse"
-| where RemoteUrl has_any ("digikalas.online","jetross.com","cfcybernews.eu","kanfetka.site","tuxbot.local")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl
+| where AdditionalFields has "c2.tuxbot.local"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, AdditionalFields
 | order by Timestamp desc
+```
+
+### TuxBot Telnet/SSH/ADB scanner fan-out from a single internal host
+
+`UC_6_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t dc(All_Traffic.dest) as distinct_targets count from datamodel=Network_Traffic where All_Traffic.dest_port IN (23,2323,5555,22) All_Traffic.direction="outbound" by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | where distinct_targets > 100 | sort - distinct_targets
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where ActionType in ("ConnectionAttempt","ConnectionSuccess","ConnectionFailed")
+| where RemotePort in (23, 2323, 5555, 22)
+| where RemoteIPType == "Public"
+| summarize DistinctTargets = dcount(RemoteIP), PortsHit = make_set(RemotePort), Attempts = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, InitiatingProcessFileName
+| where DistinctTargets > 100  // benign hosts almost never touch >100 distinct public IPs on telnet/adb ports
+| order by DistinctTargets desc
+```
+
+### TuxBot dropper retrieval & /bin/busybox Akiru execution on Linux hosts
+
+`UC_6_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count values(Processes.process) as process values(Processes.parent_process) as parent_process min(_time) as firstTime from datamodel=Endpoint.Processes where ((Processes.process_name="busybox" AND Processes.process="*Akiru*") OR Processes.process IN ("*185.10.68.127*","*/bins/bot*","*188.166.2.226/OwO/Tsunami*","*r00ts3c-owned-you*")) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where (FileName =~ "busybox" and ProcessCommandLine has "Akiru")
+   or (FileName in~ ("wget","curl","tftp","busybox","ftpget") and ProcessCommandLine has_any ("185.10.68.127", "/bins/bot", "188.166.2.226/OwO/Tsunami"))
+   or (ProcessCommandLine has "r00ts3c-owned-you")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### TuxBot Linux persistence: sd-pam.service masquerade, cron watchdog and /tmp lock
+
+`UC_6_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/systemd/system/sd-pam.service" OR Filesystem.file_path="*/tmp/.*.lock" OR Filesystem.file_name IN (".bashrc",".profile",".zshrc")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FolderPath has "/etc/systemd/system/" and FileName =~ "sd-pam.service")
+   or (FolderPath startswith "/tmp/" and FileName matches regex @"^\.[0-9a-f]{8}\.lock$")
+   or (FileName in~ (".bashrc", ".profile", ".zshrc"))
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
+
+### Inbound IoT/UPnP exploitation delivering TuxBot dropper 185.10.68.127
+
+`UC_6_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime from datamodel=Web where (Web.url="*185.10.68.127*" OR Web.url="*/bins/bot*" OR Web.url="*188.166.2.226/OwO/Tsunami*") OR (Web.uri_path IN ("*/picdesc.xml*","*/wanipcn.xml*","*/ctrlt/DeviceUpgrade*","*/GponForm/diag_Form*") AND Web.http_method="POST") by Web.src Web.dest Web.url Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) | sort - count
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -267,4 +260,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
