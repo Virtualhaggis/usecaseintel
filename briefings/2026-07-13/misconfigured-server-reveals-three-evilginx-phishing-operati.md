@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### M365 AiTM sign-in from Evilginx phishing infrastructure IPs (codemado / mail-argenta)
 
-`UC_75_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_76_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ AADSignInEventsBeta
 
 ### Microsoft 365 device-code-flow phishing sign-in (black-queen / saroula01)
 
-`UC_75_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_76_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ AADSignInEventsBeta
 
 ### Stolen M365 session token refresh — same account, many IPs, non-interactive (token aging)
 
-`UC_75_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_76_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ AADSignInEventsBeta
 
 ### Endpoint connections to Evilginx phishing landing domains (picis.net / romnor.ca)
 
-`UC_75_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_76_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -395,7 +395,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Misconfigured Server Reveals Three Evilginx Phishing Operations Targeting Micros
 
-`UC_75_9` · phase: **exploit** · confidence: **High**
+`UC_76_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

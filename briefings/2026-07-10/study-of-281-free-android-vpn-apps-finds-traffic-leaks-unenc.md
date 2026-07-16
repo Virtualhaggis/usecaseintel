@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Cleartext HTTP fetch of OpenVPN config file (tunnel-hijack exposure)
 
-`UC_102_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_103_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### DNS leak: mobile/VPN device querying public resolvers outside the tunnel
 
-`UC_102_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_103_7` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### Free VPN app beaconing to advertising / analytics trackers
 
-`UC_102_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### VPN app sending user traffic in cleartext HTTP outside the tunnel
 
-`UC_102_9` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_103_9` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

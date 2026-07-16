@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated GET /api/auth on RabbitMQ management port leaking OAuth client secret (CVE-2026-57219)
 
-`UC_42_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_43_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Cross-tenant RabbitMQ queue/exchange enumeration via management API (CVE-2026-57221)
 
-`UC_42_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_43_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

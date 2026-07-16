@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-16
+- [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
 
 ## 2026-07-15
 - [asyncapi npm packages infected with credential stealing malw](./2026-07-15/asyncapi-npm-packages-infected-with-credential-stealing-malw.md)

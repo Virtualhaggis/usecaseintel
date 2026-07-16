@@ -51,12 +51,11 @@ Far fewer were actually broken into, but the exposed files showed researchers ho
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1036.004** — Masquerade Task or Service
-- **T1036.005** — Match Legitimate Name or Location
-- **T1620** — Reflective Code Loading
-- **T1505.003** — Web Shell
-- **T1059.004** — Unix Shell
 - **T1078** — Valid Accounts
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1055** — Process Injection
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
 
@@ -66,31 +65,22 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### VShell backdoor masquerading as [kworker/0:2] Linux kernel thread (UNC5174)
+### Nacos auth bypass via spoofed 'Nacos-Server' User-Agent (CVE-2021-29441)
 
-`UC_101_12` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*[kworker/*:*]*" OR Processes.process_path="*memfd:*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessCommandLine matches regex @"\[kworker/\d+:\d+[H]?\]" or FolderPath has "memfd:" or FileName has "memfd:"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### WordPress/Joomla webshell PHP dropped into wp-content by web-server process (WP-SHELLSTORM down.php)
-
-`UC_101_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_102_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/wp-content/plugins/*" OR Filesystem.file_path="*/wp-content/themes/*" OR Filesystem.file_path="*/wp-content/uploads/*" OR Filesystem.file_path="*com_jce*") Filesystem.file_name="*.php" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_user_agent="Nacos-Server*" AND (Web.url="*/nacos/v1/*" OR Web.url="*/nacos/v2/*" OR Web.url="*/nacos/*users*" OR Web.url="*/nacos/*configs*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | sort - lastTime
+```
+
+### WP-SHELLSTORM webshell drop (down.php / obfuscated PHP) under wp-content
+
+`UC_102_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path="*wp-content*" AND Endpoint.Filesystem.file_name="*.php" AND (Endpoint.Filesystem.file_path="*/plugins/*" OR Endpoint.Filesystem.file_path="*/themes/*" OR Endpoint.Filesystem.file_path="*/uploads/*" OR Endpoint.Filesystem.file_name="down.php") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name | `drop_dm_object_name(Endpoint.Filesystem)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -98,49 +88,59 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(14d)
 | where ActionType in ("FileCreated","FileModified")
-| where FolderPath has_any ("/wp-content/plugins/","/wp-content/themes/","/wp-content/uploads/","/components/com_jce/")
+| where FolderPath has "wp-content"
+| where FolderPath has_any ("/plugins/","/themes/","/uploads/") or FileName =~ "down.php"
 | where FileName endswith ".php"
-| where InitiatingProcessFileName has_any ("apache2","httpd","nginx","php","php-fpm","lsphp","litespeed")
-| extend HighSignal = iff(FileName =~ "down.php", "named-IOC", "generic-php-drop")
-| project Timestamp, DeviceName, FileName, FolderPath, HighSignal, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| where InitiatingProcessFileName has_any ("php-fpm","php","httpd","apache2","nginx","w3wp.exe") or FileName =~ "down.php"
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Web-server / PHP runtime spawning interactive shell or reverse-shell utility
+### Web-server process spawning a shell/downloader (PHP webshell RCE)
 
-`UC_101_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_102_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("httpd","apache2","nginx","php","php-fpm","lsphp","litespeed")) (Processes.process_name IN ("bash","sh","dash","zsh","ksh","nc","ncat","netcat","curl","wget","python","python3","perl","socat")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name IN ("php-fpm","php","httpd","apache2","nginx","w3wp.exe")) AND (Endpoint.Processes.process_name IN ("sh","bash","dash","curl","wget","nc","ncat","perl","python","python3")) by Endpoint.Processes.dest Endpoint.Processes.parent_process_name Endpoint.Processes.process_name Endpoint.Processes.process | `drop_dm_object_name(Endpoint.Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where InitiatingProcessFileName has_any ("apache2","httpd","nginx","php","php-fpm","lsphp","litespeed")
-| where FileName in~ ("bash","sh","dash","zsh","ksh","nc","ncat","netcat","curl","wget","python","python3","perl","socat")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, SHA256
+| where InitiatingProcessFileName has_any ("php-fpm","php","httpd","apache2","nginx","w3wp.exe")
+| where FileName in~ ("sh","bash","dash","curl","wget","nc","ncat","perl","python","python3")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Nacos authentication bypass via Nacos-Server User-Agent (CVE-2021-29441)
+### VShell backdoor masquerading as [kworker/0:2] kernel thread
 
-`UC_101_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_102_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/nacos/*") (Web.http_user_agent="Nacos-Server*" OR Web.url="*/nacos/v1/auth/users*" OR Web.url="*/nacos/v1/cs/configs*") by Web.src Web.dest Web.http_method Web.url Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process="*[kworker/*" AND Endpoint.Processes.process_path!="unknown" AND Endpoint.Processes.process_path!="" by Endpoint.Processes.dest Endpoint.Processes.process_name Endpoint.Processes.process_path Endpoint.Processes.process Endpoint.Processes.parent_process_name | `drop_dm_object_name(Endpoint.Processes)` | sort - lastTime
 ```
 
-### Outbound connection or DNS to WP-SHELLSTORM crew infrastructure (137.175.93.126 / xxooonline.eu.cc)
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where ProcessCommandLine has "[kworker/" or FileName startswith "[kworker"
+| where isnotempty(FolderPath) and FolderPath !startswith "["   // real kernel threads have no on-disk image; a filesystem path = userland masquerade
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
-`UC_101_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+### C2 / tooling callback to WP-SHELLSTORM infrastructure (137.175.93.126, xxooonline.eu.cc)
+
+`UC_102_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("137.175.93.126","43.108.17.80")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("137.175.93.126","43.108.17.80") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -148,17 +148,8 @@ DeviceProcessEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("137.175.93.126","43.108.17.80") or RemoteUrl has "xxooonline.eu.cc"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
 | order by Timestamp desc
-```
-
-### HTTP access to WP-SHELLSTORM down.php webshell endpoint
-
-`UC_101_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*/down.php*" by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -524,4 +515,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 18 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
