@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### MODBEACON scheduled-task persistence pointing to user-writable path
 
-`UC_104_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_108_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### MODBEACON gRPC/CDN heartbeat beaconing from non-browser user-path process
 
-`UC_104_10` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_108_10` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

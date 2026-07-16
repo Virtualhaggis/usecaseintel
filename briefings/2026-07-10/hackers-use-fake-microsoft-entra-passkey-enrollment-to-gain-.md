@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Entra ID passkey / FIDO2 security-key registration (O-UNC-066 rogue enrollment)
 
-`UC_108_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_112_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -67,7 +67,7 @@ CloudAppEvents
 
 ### Access to O-UNC-066 passkey-themed phishing kit domains
 
-`UC_108_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_112_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### Passkey registration immediately followed by passkey sign-in (rogue-enrollment account takeover)
 
-`UC_108_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_112_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -106,7 +106,7 @@ AADSignInEventsBeta
 
 ### Entra passkey enrollment from off-hours or never-before-seen IP
 
-`UC_108_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_112_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -128,7 +128,7 @@ CloudAppEvents
 
 ### Failed Entra sign-in burst followed by passkey-based success
 
-`UC_108_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_112_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -149,7 +149,7 @@ AADSignInEventsBeta
 
 ### M365 sign-in with recently-enrolled passkey from new user-agent and IP
 
-`UC_108_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_112_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

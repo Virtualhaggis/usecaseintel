@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### XQUIC/Tengine HTTP/3 worker abort from QPACK ring-buffer overflow (XRING)
 
-`UC_105_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_109_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -47,7 +47,7 @@ index=* (sourcetype="nginx:plus:error" OR sourcetype=nginx_error OR sourcetype=s
 
 ### Tengine/nginx HTTP/3 worker crash-loop burst (XRING remote DoS)
 
-`UC_105_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_109_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Exposure hunt: internet-facing hosts running XQUIC/Tengine (<=v1.9.4) with HTTP/3
 
-`UC_105_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_109_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,3 +1,311 @@
+<article class="card" id="art-3468" data-art-slug="2019-08-20-a-year-old-dormant-malicious-remote-code-execution-vulnerabi"
+  data-phases="actions,c2,exploit,install" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="endpoint,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="A year-old dormant malicious remote code execution vulnerability discovered in Webmin On August 17, 2019, the Webmin team announced the release of Webmin 1.930 and Usermin 1.780. These releases address a newly discovered remote command execution vulnerability found in Webmin versions 1.890 through 1.920. This vulnerability has been present for more than a year and was introduced by a malicious third party.  T1190 [LLM] Webmin password_change.cgi unauthenticated command injection exploit attempt (CVE-2019-15107) [LLM] Webmin RCE: miniserv/password_change.cgi spawning reverse shell (CVE-2019-15107) Article-specific behavioural hunt — A year-old dormant malicious remote code execution vulnerability discovered in W">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2019-08-20-a-year-old-dormant-malicious-remote-code-execution-vulnerabi" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/a-year-old-dormant-malicious-remote-code-execution-vulnerability-discovered-in-webmin/" target="_blank" rel="noopener">A year-old dormant malicious remote code execution vulnerability discovered in Webmin</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2019-08-20</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">On August 17, 2019, the Webmin team announced the release of Webmin 1.930 and Usermin 1.780. These releases address a newly discovered remote command execution vulnerability found in Webmin versions 1.890 through 1.920. This vulnerability has been present for more than a year and was introduced by a malicious third party.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3468-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3468"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3468-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Webmin password_change.cgi unauthenticated command injection exploit attempt (CVE-2019-15107) · [LLM] Webmin RCE: miniserv/password_change.cgi spawning reverse shell (CVE-2019-15107)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — A year-old dormant malicious remote code execution vulnerability discovered in W</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="64a6262083" data-platforms="sent,sigma,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Webmin password_change.cgi unauthenticated command injection exploit attempt (CVE-2019-15107)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="64a6262083" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound HTTP POSTs to Webmin&#x27;s /password_change.cgi endpoint, the exact CGI carrying the SourceForge-build backdoor (CVE-2019-15107) abused via the &#x27;old&#x27;/&#x27;expired&#x27; parameters. Public PoCs/Metasploit send POST with a session_login.cgi Referer and a pipe-delimited Perl reverse-shell payload, so unauthenticated hits on this endpoint against a Webmin host (vuln versions 1.882–1.921) are high-signal.
+
+Rationale: Anchors on the verbatim CVE-2019-15107 vector — POST to /password_change.cgi with a session_login.cgi Referer — confirmed in the g1vi PoC (exploit.sh: user=gotroot, expired=2|&lt;perl Socket payload&gt;) and the Metasploit webmin_backdoor module. Defender/Falcon/Datadog/CloudWatch left empty: Webmin/miniserv access logs aren&#x27;t ingested by those EDR/cloud sources, so the wire-side detection lives in proxy/WAF (CommonSecurityLog) and CIM Web. Article hero image (DSC_0334.jpg) is an author headshot and the other a banner — not fetched.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2019-15107
+  • https://www.rapid7.com/db/modules/exploit/unix/webapp/webmin_backdoor/
+  • https://github.com/g1vi/CVE-2019-15107
+  • https://attackerkb.com/topics/hxx3zmiCkR/webmin-password-change-cgi-command-injection</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate user changing an expired password through the Webmin UI (genuine POST to password_change.cgi)</li><li>Authenticated vulnerability scanners (Nessus/Qualys) probing the endpoint</li><li>Authorized pentest/red-team validating CVE-2019-15107</li><li>Internet-wide scanners (zgrab/masscan/nuclei) opportunistically hitting the path</li><li>Configuration-management tooling automating Webmin password resets</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| search NOT http_user_agent IN (&quot;*Nessus*&quot;,&quot;*Qualys*&quot;,&quot;*nuclei*&quot;,&quot;*zgrab*&quot;,&quot;*masscan*&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the Webmin/miniserv version on the destination host (vulnerable = 1.882–1.921, 1.890 default-vulnerable). Inspect the request body/RequestContext for shell metacharacters (|, ;, backticks) and a session_login.cgi Referer; a request lacking valid auth is a strong TP. 2) CONTAIN: Block the source IP at the WAF/firewall, take the Webmin host off the network if a child shell/reverse shell is observed, and upgrade Webmin to 1.930 (or remove passwd_mode=line from /etc/webmin/miniserv.conf and run /etc/webmin/restart). 3) HUNT: Pivot to host EDR for miniserv.pl/password_change.cgi spawning sh/perl (UC2) and for outbound reverse-shell connections from the same host and timeframe.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3468-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3468-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3468-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3468-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestURL has &quot;password_change.cgi&quot;
+| where RequestMethod == &quot;POST&quot; or RequestContext has &quot;session_login.cgi&quot;
+| project TimeGenerated, SourceIP, DestinationIP, DestinationHostName, RequestMethod, RequestURL, RequestContext, RequestClientApplication, DeviceVendor, DeviceProduct
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3468-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Webmin password_change.cgi Command Injection Exploit Attempt (CVE-2019-15107)
+id: b3f1c2a7-8d4e-4a19-9c5b-2e7f6a1d0c34
+status: experimental
+description: Detects HTTP POST requests to Webmin&#x27;s backdoored password_change.cgi endpoint (CVE-2019-15107), the unauthenticated command-injection vector in Webmin 1.882-1.921.
+references:
+  - https://snyk.io/blog/a-year-old-dormant-malicious-remote-code-execution-vulnerability-discovered-in-webmin/
+  - https://nvd.nist.gov/vuln/detail/CVE-2019-15107
+  - https://www.rapid7.com/db/modules/exploit/unix/webapp/webmin_backdoor/
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1059.004
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: &#x27;POST&#x27;
+    cs-uri-stem|endswith: &#x27;/password_change.cgi&#x27;
+  condition: selection
+falsepositives:
+  - Legitimate expired-password changes by Webmin users
+  - Authenticated vulnerability scanners
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3468-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3468-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3468-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3468-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST AND Web.url=&quot;*password_change.cgi*&quot; by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| search NOT http_user_agent IN (&quot;*Nessus*&quot;,&quot;*Qualys*&quot;,&quot;*nuclei*&quot;,&quot;*zgrab*&quot;,&quot;*masscan*&quot;)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3468-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST AND Web.url=&quot;*password_change.cgi*&quot; by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| search NOT http_user_agent IN (&quot;*Nessus*&quot;,&quot;*Qualys*&quot;,&quot;*nuclei*&quot;,&quot;*zgrab*&quot;,&quot;*masscan*&quot;)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e0d35c12ef" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Webmin RCE: miniserv/password_change.cgi spawning reverse shell (CVE-2019-15107)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e0d35c12ef" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the post-exploitation half of CVE-2019-15107 on the host: the Webmin CGI handler (miniserv.pl / password_change.cgi running under Perl) spawning a shell, Perl, or netcat child whose command line carries reverse-shell indicators (Socket/IO::Socket/fsockopen, /dev/tcp, sh -i). Webmin runs as root, so these children execute with root privileges.
+
+Rationale: Targets the exact post-exploitation chain external sources document: the SourceForge-backdoored password_change.cgi (run under miniserv.pl/Perl) injecting a pipe-delimited Perl Socket reverse shell (g1vi PoC, Metasploit webmin_backdoor). Anchoring parent=miniserv.pl/password_change.cgi/perl AND child shell/perl AND a reverse-shell command-line token makes this near-zero-FP. CloudWatch empty (non-AWS Linux endpoint detection).
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2019-15107
+  • https://github.com/g1vi/CVE-2019-15107
+  • https://www.rapid7.com/db/modules/exploit/unix/webapp/webmin_backdoor/
+  • https://medium.com/@knownsec404team/backdoor-exploration-of-webmin-remote-code-execution-vulnerabilities-cve-2019-15107-55234c0bd486</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Webmin &#x27;Command Shell&#x27; / &#x27;Custom Commands&#x27; modules where an admin intentionally runs perl/sh (rare to include Socket/fsockopen)</li><li>Sysadmin troubleshooting a one-liner Perl socket script that happens to be launched under perl</li><li>Monitoring agents wrapping nc/python network checks spawned via a Webmin cron module</li><li>Backup or automation jobs invoking bash -i in a non-malicious wrapper</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the full process tree and command line — confirm the parent is miniserv.pl/password_change.cgi/perl and the child carries a reverse-shell payload; note the destination IP/port if present. Check the Webmin version (1.882–1.921 = backdoored SourceForge build). 2) CONTAIN: Isolate the host (children run as root), kill the shell/perl process and any listener, block the C2 IP, and rotate any credentials/SSH keys reachable from the box. Upgrade to Webmin 1.930. 3) HUNT: Correlate with UC1 inbound POST to /password_change.cgi from the same source IP, sweep other internet-facing Webmin hosts for the same parent→child pattern, and review /etc/webmin/miniserv.conf for passwd_mode=line plus any new cron/persistence dropped by the root shell.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3468-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3468-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3468-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3468-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3468-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3468-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3468-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessCommandLine has &quot;password_change.cgi&quot; or InitiatingProcessFileName =~ &quot;miniserv.pl&quot; or InitiatingProcessParentFileName =~ &quot;miniserv.pl&quot;
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;perl&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;)
+| where ProcessCommandLine has_any (&quot;IO::Socket&quot;,&quot;Socket&quot;,&quot;fsockopen&quot;,&quot;/dev/tcp&quot;,&quot;sh -i&quot;,&quot;bash -i&quot;,&quot;perl -e&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| sort by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3468-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessCommandLine has &quot;password_change.cgi&quot; or ActingProcessName endswith &quot;miniserv.pl&quot; or ActingProcessName endswith &quot;perl&quot;
+| where TargetProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;perl&quot;,&quot;python&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+| where TargetProcessCommandLine has_any (&quot;IO::Socket&quot;,&quot;Socket&quot;,&quot;fsockopen&quot;,&quot;/dev/tcp&quot;,&quot;sh -i&quot;,&quot;bash -i&quot;,&quot;perl -e&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3468-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Webmin CGI Spawning Reverse Shell (CVE-2019-15107 Post-Exploitation)
+id: 7a2e9d51-3c6b-4f80-a1d2-9e4c5b8f3a21
+status: experimental
+description: Detects Webmin&#x27;s miniserv/Perl CGI handler spawning a shell or Perl child carrying reverse-shell indicators, the post-exploitation result of CVE-2019-15107 command injection.
+references:
+  - https://snyk.io/blog/a-year-old-dormant-malicious-remote-code-execution-vulnerability-discovered-in-webmin/
+  - https://nvd.nist.gov/vuln/detail/CVE-2019-15107
+  - https://github.com/g1vi/CVE-2019-15107
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1059.004
+  - attack.execution
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/perl&#x27;
+      - &#x27;/miniserv.pl&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/perl&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+  selection_payload:
+    CommandLine|contains:
+      - &#x27;IO::Socket&#x27;
+      - &#x27;Socket&#x27;
+      - &#x27;fsockopen&#x27;
+      - &#x27;/dev/tcp&#x27;
+      - &#x27;sh -i&#x27;
+      - &#x27;bash -i&#x27;
+      - &#x27;perl -e&#x27;
+  condition: selection_parent and selection_child and selection_payload
+falsepositives:
+  - Legitimate Webmin modules executing system commands (unlikely with reverse-shell payload)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3468-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.executable.path:(*/perl OR */sh OR */bash OR */dash OR */python* OR */nc OR */ncat)) (@process.command_line:(*IO::Socket* OR *Socket* OR *fsockopen* OR *&quot;/dev/tcp&quot;* OR *&quot;sh -i&quot;* OR *&quot;bash -i&quot;* OR *&quot;perl -e&quot;*))</code></pre></div>
+    <div class="tab-content" id="art-3468-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/(sh|bash|dash|perl|python[0-9]?|nc|ncat)$/i
+| CommandLine=/(IO::Socket|Socket|fsockopen|\/dev\/tcp|sh\s+\-i|bash\s+\-i|perl\s+\-e)/i
+| ParentBaseFileName=/(perl|miniserv\.pl|password_change\.cgi)/i
+| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3468-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3468-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3468-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3468-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*password_change.cgi*&quot; OR Processes.parent_process_name=&quot;miniserv.pl&quot; OR Processes.parent_process_name=&quot;perl&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;perl&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(process, &quot;(?i)(IO::Socket|Socket|fsockopen|/dev/tcp|sh -i|bash -i|perl -e|/bin/sh)&quot;)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3468-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*password_change.cgi*&quot; OR Processes.parent_process_name=&quot;miniserv.pl&quot; OR Processes.parent_process_name=&quot;perl&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;perl&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(process, &quot;(?i)(IO::Socket|Socket|fsockopen|/dev/tcp|sh -i|bash -i|perl -e|/bin/sh)&quot;)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="2de2d30290" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — A year-old dormant malicious remote code execution vulnerability discovered in W</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="2de2d30290" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3468-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3468-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3468-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3468-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — A year-old dormant malicious remote code execution vulnerability discovered in W
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/webmin/miniserv.conf&quot;, &quot;/etc/webmin/restart&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3468-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — A year-old dormant malicious remote code execution vulnerability discovered in W
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/webmin/miniserv.conf&quot;, &quot;/etc/webmin/restart&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3468-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3468-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3468-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3468-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — A year-old dormant malicious remote code execution vulnerability discovered in W ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/webmin/miniserv.conf*&quot; OR Filesystem.file_path=&quot;*/etc/webmin/restart*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-3468-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — A year-old dormant malicious remote code execution vulnerability discovered in W ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/webmin/miniserv.conf*&quot; OR Filesystem.file_path=&quot;*/etc/webmin/restart*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3475" data-art-slug="2019-08-01-a-technical-analysis-of-the-capital-one-cloud-misconfigurati"
   data-phases="actions,c2,exploit,install" data-sev="high"
   data-techs="T1027,T1190"
@@ -5487,176 +5795,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre><pre class="spl-mode-body" id="art-3536-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — ReDoS vulnerabilities in npm spikes by 143% and XSS continues to grow ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3537" data-art-slug="2019-02-26-top-ten-most-popular-docker-images-each-contain-at-least-30-"
-  data-phases="c2,exploit,install,recon" data-sev="med"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Top ten most popular docker images each contain at least 30 vulnerabilities we found that 44% of docker image scans had known vulnerabilities, and for which there were newer and more secure base image available. Most vulnerabilities originate in the base image you selected. For that reason, remediation should focus on base image fixes.  T1190 Article-specific behavioural hunt — Top ten most popular docker images each contain at least 30 vulnerabilities">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2019-02-26-top-ten-most-popular-docker-images-each-contain-at-least-30-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/top-ten-most-popular-docker-images-each-contain-at-least-30-vulnerabilities/" target="_blank" rel="noopener">Top ten most popular docker images each contain at least 30 vulnerabilities</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2019-02-26</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">we found that 44% of docker image scans had known vulnerabilities, and for which there were newer and more secure base image available. Most vulnerabilities originate in the base image you selected. For that reason, remediation should focus on base image fixes.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3537-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3537"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3537-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Top ten most popular docker images each contain at least 30 vulnerabilities</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="2c5e3b3a14" data-platforms="def,sent,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Top ten most popular docker images each contain at least 30 vulnerabilities</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="2c5e3b3a14" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3537-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3537-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3537-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3537-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Top ten most popular docker images each contain at least 30 vulnerabilities
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3537-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Top ten most popular docker images each contain at least 30 vulnerabilities
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3537-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3537-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3537-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3537-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Top ten most popular docker images each contain at least 30 vulnerabilities ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3537-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Top ten most popular docker images each contain at least 30 vulnerabilities ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
