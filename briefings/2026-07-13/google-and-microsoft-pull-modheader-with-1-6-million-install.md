@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### ModHeader collector callback to stanfordstudies.com / extensions-hub.com
 
-`UC_73_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_78_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### Trojanised ModHeader extension ID (idgpnmonknjnojddfkpgkljpfnnfcklj) present on host
 
-`UC_73_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_78_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### ModHeader browsing-history exfil POST to api.stanfordstudies.com/app/log
 
-`UC_73_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_78_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

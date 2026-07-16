@@ -17,10 +17,11 @@ A researcher publishing under the handle tokay0 put the method online on Monday,
 
 ## MITRE ATT&CK Techniques
 
-- **T1526** — Cloud Service Discovery
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1059** — Command and Scripting Interpreter
+- **T1580** — Cloud Infrastructure Discovery
+- **T1078.001** — Valid Accounts: Default Accounts
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1098** — Account Manipulation
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 
 ## Kill chain phases observed
 
@@ -28,45 +29,42 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AWS IoT wildcard subscribe to $aws/things/# (Shark vacuum serial harvesting)
+### AWS IoT client subscribing to reserved wildcard topic $aws/things/# (Shark vacuum serial harvest)
 
-`UC_5_0` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_12_0` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-sourcetype="aws:iot" eventType=Subscribe
-| search topics="*$aws/things/#*" OR topics="*$aws/things/+*" OR topicName="*$aws/things/#*" OR topicName="*$aws/things/+*"
-| stats count min(_time) as firstTime max(_time) as lastTime values(topics) as topics by clientId, principalId, sourceIp
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count
+index=aws sourcetype="aws:iot" eventType=Subscribe (topicName="$aws/things/#" OR topicName="$aws/things/+" OR topicName="$aws/things/*")
+| stats count AS subscribes values(topicName) AS topics min(_time) AS firstSeen by clientId principalId sourceIp
+| sort - subscribes
 ```
 
-### Single AWS IoT principal publishing shadow updates across many devices (Exec_Command fan-out)
+### Single AWS IoT principal writing shadows to multiple distinct device thing names (cross-device Exec_Command RCE)
 
-`UC_5_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_12_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-sourcetype="aws:iot" eventType=Publish topicName="*$aws/things/*/shadow/update"
-| rex field=topicName "\$aws/things/(?<targetThing>[^/]+)/shadow/update"
-| stats dc(targetThing) as distinctThings count as updates values(sourceIp) as sourceIp by principalId, clientId
-| where distinctThings > 5
+index=aws sourcetype="aws:iot" (eventType=UpdateThingShadow OR eventType=Publish) topicName="$aws/things/*/shadow/update"
+| rex field=topicName "\$aws/things/(?<thingName>[^/]+)/shadow/update"
+| stats dc(thingName) AS distinctThings count values(sourceIp) AS srcIps by clientId principalId
+| where distinctThings > 1
 | sort - distinctThings
 ```
 
-### Creation of overly-permissive AWS IoT policy granting $aws/things/* without ThingName scoping
+### AWS IoT policy created/updated granting reserved $aws/things/* topic without ThingName pinning
 
-`UC_5_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_2` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-sourcetype="aws:cloudtrail" eventSource="iot.amazonaws.com" (eventName=CreatePolicy OR eventName=CreatePolicyVersion OR eventName=SetDefaultPolicyVersion)
-| search requestParameters.policyDocument="*$aws/things/*" NOT requestParameters.policyDocument="*iot:Connection.Thing.ThingName*"
-| table _time eventName userIdentity.arn sourceIPAddress requestParameters.policyName requestParameters.policyDocument
+index=aws sourcetype="aws:cloudtrail" eventSource="iot.amazonaws.com" (eventName=CreatePolicy OR eventName=CreatePolicyVersion) requestParameters.policyDocument="*topicfilter/$aws/things/*" NOT requestParameters.policyDocument="*iot:Connection.Thing.ThingName*"
+| table _time eventName userIdentity.arn sourceIPAddress requestParameters.policyName
 | sort - _time
 ```
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

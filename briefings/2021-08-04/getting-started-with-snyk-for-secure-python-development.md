@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Getting started with Snyk for secure Python development
 
-`UC_3092_0` · phase: **exploit** · confidence: **High**
+`UC_3090_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

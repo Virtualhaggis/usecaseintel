@@ -11,19 +11,22 @@ By Bill Toulas
 July 16, 2026
 06:00 AM
 0 
-
-
 A new ransomware actor called Spirals completed a corporate intrusion, from initial access to data theft and encryption, in less than 24 hours.
-
-
 The attack occurred in June and breached an IT services firm in South Asia after compromising an Internet Information Services (IIS) server exposed on the public web.
-
-
-Researchers at Symantec's Threat Hunter Team say that the attacker mo…
+Researchers at Symantec's Threat Hunter Team say that the attacker moved quickly …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `185.141.216.194`
+- **Domain (defanged):** `computer.kplus.com`
+- **Domain (defanged):** `beta.padmin.com`
+- **SHA256:** `0f9574dc38e5c34a31153f0bcc603c6ec29cb3bf65c3d25380dbe86d42573141`
+- **SHA256:** `4cab935d0ec400059a3fcdc95b6623efdd51a61dff401fba8d5da244cc2de649`
+- **SHA256:** `7f0d49b11d0a3697685622ce510c570199bf2dc76515b3f9a6b6735de8c9134b`
+- **SHA256:** `83a7e51f3787ac5a8a9884edd0a58ddbef380969aa6529d282a461a1a614a892`
+- **SHA256:** `84b9a9a1668145df04faa3d0e118e2f0acbebd3d9d260baf3a355b44c815c22d`
+- **SHA256:** `862a3ca7e944ccf0ff3a6d556b34faade4b68343015c35a014a43725ac14a2a1`
+- **SHA256:** `b5d598b00cc3a28cabc5812d9f762819334614bae452db4e7f23eefe7b081556`
 
 ## MITRE ATT&CK Techniques
 
@@ -35,6 +38,7 @@ Researchers at Symantec's Threat Hunter Team say that the attacker mo…
 - **T1027** — Obfuscated Files or Information
 - **T1486** — Data Encrypted for Impact
 - **T1219** — Remote Access Software
+- **T1071** — Application Layer Protocol
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1489** — Service Stop
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
@@ -54,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Spirals ransomware payload masquerading as bitsadmin.exe outside System32 / via PsExec
 
-`UC_4_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +80,7 @@ DeviceProcessEvents
 
 ### Spirals ransom note RECOVERY_SECTION.log dropped at drive root
 
-`UC_4_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +100,7 @@ DeviceFileEvents
 
 ### PowerShell mass-stop of backup/DB/virtualization services + Defender tampering (Spirals pre-encryption)
 
-`UC_4_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +123,7 @@ DeviceProcessEvents
 
 ### Spirals redundant remote access via revsocks / Chisel / Cloudflare tunnel
 
-`UC_4_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_11_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +144,7 @@ DeviceProcessEvents
 
 ### IIS worker process (w3wp.exe) spawning shell — Spirals ASP.NET web shell initial access
 
-`UC_4_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +164,7 @@ DeviceProcessEvents
 
 ### Remote Desktop enabled via fDenyTSConnections registry flip (Spirals persistence)
 
-`UC_4_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_11_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -320,7 +324,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `185.141.216.194`, `computer.kplus.com`, `beta.padmin.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `0f9574dc38e5c34a31153f0bcc603c6ec29cb3bf65c3d25380dbe86d42573141`, `4cab935d0ec400059a3fcdc95b6623efdd51a61dff401fba8d5da244cc2de649`, `7f0d49b11d0a3697685622ce510c570199bf2dc76515b3f9a6b6735de8c9134b`, `83a7e51f3787ac5a8a9884edd0a58ddbef380969aa6529d282a461a1a614a892`, `84b9a9a1668145df04faa3d0e118e2f0acbebd3d9d260baf3a355b44c815c22d`, `862a3ca7e944ccf0ff3a6d556b34faade4b68343015c35a014a43725ac14a2a1`, `b5d598b00cc3a28cabc5812d9f762819334614bae452db4e7f23eefe7b081556`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

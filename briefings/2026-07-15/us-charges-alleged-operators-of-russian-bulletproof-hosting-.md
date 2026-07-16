@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Network connection to Media Land bulletproof-hosting IP 194.26.25.111
 
-`UC_31_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_38_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Authentication or cloud API activity from sanctioned Media Land BPH IP 194.26.25.111
 
-`UC_31_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_38_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

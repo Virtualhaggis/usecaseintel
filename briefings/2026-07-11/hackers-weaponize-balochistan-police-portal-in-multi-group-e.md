@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### cms_plugin.exe Rust stager execution + payload pull from 193.42.25.65
 
-`UC_90_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_95_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### Fake 360Safe.exe (.NET) reflectively loading AsyncRAT
 
-`UC_90_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_95_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### Beaconing to Balochistan Police espionage C2 / stager IP set
 
-`UC_90_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_95_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Hackers Weaponize Balochistan Police Portal in Multi-Group Espionage Campaigns
 
-`UC_90_3` · phase: **exploit** · confidence: **High**
+`UC_95_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

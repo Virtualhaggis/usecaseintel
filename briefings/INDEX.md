@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2582 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,13 +9,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-16
+- [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
 - [ai can find bugs but human knowledge still proves them](./2026-07-16/ai-can-find-bugs-but-human-knowledge-still-proves-them.md)
 - [cisa orders feds to patch actively exploited oracle flaw by ](./2026-07-16/cisa-orders-feds-to-patch-actively-exploited-oracle-flaw-by-.md)
+- [daxin resurfaces in taiwan alongside stupig pre login system](./2026-07-16/daxin-resurfaces-in-taiwan-alongside-stupig-pre-login-system.md)
+- [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
+- [new agent data injection attack can make ai agents misclick ](./2026-07-16/new-agent-data-injection-attack-can-make-ai-agents-misclick-.md)
 - [new spirals ransomware encrypts victim network in under 24 h](./2026-07-16/new-spirals-ransomware-encrypts-victim-network-in-under-24-h.md)
+- [new telepuz malware spreads via clickfix to steal data and r](./2026-07-16/new-telepuz-malware-spreads-via-clickfix-to-steal-data-and-r.md)
 - [openai s gpt red automates prompt injection testing to harde](./2026-07-16/openai-s-gpt-red-automates-prompt-injection-testing-to-harde.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
-- [russian hackers trojanize webex zoom apps to push starland m](./2026-07-16/russian-hackers-trojanize-webex-zoom-apps-to-push-starland-m.md)
+- [scattered spider members behind tfl hack get five years in p](./2026-07-16/scattered-spider-members-behind-tfl-hack-get-five-years-in-p.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
 - [unpatched shark vacuum flaw could let attackers control othe](./2026-07-16/unpatched-shark-vacuum-flaw-could-let-attackers-control-othe.md)
 - [zoom patches critical windows flaw that could enable account](./2026-07-16/zoom-patches-critical-windows-flaw-that-could-enable-account.md)
@@ -62,7 +67,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
 - [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
-- [nearly 300 github repos pose as legit software to push malwa](./2026-07-14/nearly-300-github-repos-pose-as-legit-software-to-push-malwa.md)
 - [oauth client id spoofing lets attackers validate stolen micr](./2026-07-14/oauth-client-id-spoofing-lets-attackers-validate-stolen-micr.md)
 - [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
 - [researchers say claude for chrome flaw lets rogue extensions](./2026-07-14/researchers-say-claude-for-chrome-flaw-lets-rogue-extensions.md)
@@ -103,10 +107,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers weaponize balochistan police portal in multi group e](./2026-07-11/hackers-weaponize-balochistan-police-portal-in-multi-group-e.md)
 
 ## 2026-07-10
-- [attackers exploit ill bloom vulnerability to drain over 5 mi](./2026-07-10/attackers-exploit-ill-bloom-vulnerability-to-drain-over-5-mi.md)
 - [cisa kev cve 2026 48939 icagenda unrestricted upload of file](./2026-07-10/cisa-kev-cve-2026-48939-icagenda-unrestricted-upload-of-file.md)
 - [cisa kev cve 2026 56291 balbooa forms unrestricted upload of](./2026-07-10/cisa-kev-cve-2026-56291-balbooa-forms-unrestricted-upload-of.md)
-- [exposed hacker server reveals wp shellstorm backdooring thou](./2026-07-10/exposed-hacker-server-reveals-wp-shellstorm-backdooring-thou.md)
 - [ghsa critical cve 2026 50551 siyuan stored xss to rce via un](./2026-07-10/ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un.md)
 - [ghsa critical cve 2026 54067 siyuan stored xss to rce via cs](./2026-07-10/ghsa-critical-cve-2026-54067-siyuan-stored-xss-to-rce-via-cs.md)
 - [ghsa critical cve 2026 54069 siyuan unauthenticated admin ap](./2026-07-10/ghsa-critical-cve-2026-54069-siyuan-unauthenticated-admin-ap.md)
@@ -115,7 +117,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54089 file browser authentication byp](./2026-07-10/ghsa-critical-cve-2026-54089-file-browser-authentication-byp.md)
 - [ghsa critical ghsa 99j7 fhr2 xfj4 exploration was removed fr](./2026-07-10/ghsa-critical-ghsa-99j7-fhr2-xfj4-exploration-was-removed-fr.md)
 - [ghsa critical ghsa g936 7jqj mwv8 tsdproxy internal proxy au](./2026-07-10/ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au.md)
-- [hackers use fake microsoft entra passkey enrollment to gain ](./2026-07-10/hackers-use-fake-microsoft-entra-passkey-enrollment-to-gain-.md)
 - [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
 - [laser attack resets tangem wallet passwords on cards that ca](./2026-07-10/laser-attack-resets-tangem-wallet-passwords-on-cards-that-ca.md)
 - [new modbeacon rat uses grpc streaming for encrypted c2 traff](./2026-07-10/new-modbeacon-rat-uses-grpc-streaming-for-encrypted-c2-traff.md)
@@ -123,8 +124,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [researcher details whatsapp to host attack chain using three](./2026-07-10/researcher-details-whatsapp-to-host-attack-chain-using-three.md)
 - [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
 - [six new u boot flaws could let malicious images crash device](./2026-07-10/six-new-u-boot-flaws-could-let-malicious-images-crash-device.md)
-- [study of 281 free android vpn apps finds traffic leaks unenc](./2026-07-10/study-of-281-free-android-vpn-apps-finds-traffic-leaks-unenc.md)
-- [unpatched xring flaw in xquic lets remote clients crash http](./2026-07-10/unpatched-xring-flaw-in-xquic-lets-remote-clients-crash-http.md)
 - [urgent progress tells sharefile customers to shut down stora](./2026-07-10/urgent-progress-tells-sharefile-customers-to-shut-down-stora.md)
 
 ## 2026-07-09
@@ -217,7 +216,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the gentlemen are knocking ustom backdoors and evolving tact](./2026-06-29/the-gentlemen-are-knocking-ustom-backdoors-and-evolving-tact.md)
 
 ## 2026-06-26
-- [beware of the license manager how a schneider electric softw](./2026-06-26/beware-of-the-license-manager-how-a-schneider-electric-softw.md)
 - [ghsa critical cve 2026 48751 incus has a restricted project ](./2026-06-26/ghsa-critical-cve-2026-48751-incus-has-a-restricted-project-.md)
 - [ghsa critical cve 2026 48752 incus has arbitrary file read w](./2026-06-26/ghsa-critical-cve-2026-48752-incus-has-arbitrary-file-read-w.md)
 - [ghsa critical cve 2026 48753 incus has an arbitrary file wri](./2026-06-26/ghsa-critical-cve-2026-48753-incus-has-an-arbitrary-file-wri.md)

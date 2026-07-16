@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Trojanized axios npm package postinstall: node.exe spawned from plain-crypto-js dependency
 
-`UC_347_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_346_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### axios RAT Windows persistence: %PROGRAMDATA%\wt.exe drop + %TEMP%\6202033.vbs/.ps1 staging
 
-`UC_347_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_346_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceFileEvents
 
 ### axios RAT C2 callout to sfrclak.com / 142.11.206.73:8000
 
-`UC_347_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_346_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
