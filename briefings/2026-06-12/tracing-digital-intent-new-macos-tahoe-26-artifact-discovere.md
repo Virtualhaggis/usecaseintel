@@ -272,7 +272,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracing Digital Intent: New MacOS Tahoe 26 Artifact Discovered
 
-`UC_294_6` · phase: **exploit** · confidence: **High**
+`UC_295_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

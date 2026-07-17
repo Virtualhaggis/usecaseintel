@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2581 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-17
+- [acr stealer uses clickfix lures to steal browser tokens and ](./2026-07-17/acr-stealer-uses-clickfix-lures-to-steal-browser-tokens-and-.md)
 - [cisa adds exploited sharepoint rce zero day cve 2026 58644 t](./2026-07-17/cisa-adds-exploited-sharepoint-rce-zero-day-cve-2026-58644-t.md)
+- [new goserpent malware targets southeast asian governments an](./2026-07-17/new-goserpent-malware-targets-southeast-asian-governments-an.md)
+- [new windows legacyhive zero day gives hackers admin privileg](./2026-07-17/new-windows-legacyhive-zero-day-gives-hackers-admin-privileg.md)
+- [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
 
 ## 2026-07-16
 - [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
@@ -126,10 +130,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54089 file browser authentication byp](./2026-07-10/ghsa-critical-cve-2026-54089-file-browser-authentication-byp.md)
 - [ghsa critical ghsa 99j7 fhr2 xfj4 exploration was removed fr](./2026-07-10/ghsa-critical-ghsa-99j7-fhr2-xfj4-exploration-was-removed-fr.md)
 - [ghsa critical ghsa g936 7jqj mwv8 tsdproxy internal proxy au](./2026-07-10/ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au.md)
-- [injective labs github compromise pushes wallet key stealing ](./2026-07-10/injective-labs-github-compromise-pushes-wallet-key-stealing-.md)
 - [no manners here the ruthless rise of the gentlemen ransomwar](./2026-07-10/no-manners-here-the-ruthless-rise-of-the-gentlemen-ransomwar.md)
 - [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
-- [urgent progress tells sharefile customers to shut down stora](./2026-07-10/urgent-progress-tells-sharefile-customers-to-shut-down-stora.md)
 
 ## 2026-07-09
 - [compromised injectivelabs sdk ts exfiltrates wallet keys thr](./2026-07-09/compromised-injectivelabs-sdk-ts-exfiltrates-wallet-keys-thr.md)

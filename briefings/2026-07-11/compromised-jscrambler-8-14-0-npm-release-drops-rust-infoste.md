@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### jscrambler@8.14.0 npm package acquisition (compromised release)
 
-`UC_105_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_108_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### Rust infostealer binary dropped and run detached from npm preinstall hook
 
-`UC_105_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_108_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Cloud instance-metadata (IMDS) harvest by temp-dropped / Node-spawned process
 
-`UC_105_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_108_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### Credential / browser / wallet / AI-tool config theft by temp-dropped process
 
-`UC_105_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_108_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceFileEvents
 
 ### Hidden per-minute scheduled task / LaunchAgent persistence by npm-dropped binary
 
-`UC_105_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_108_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ DeviceProcessEvents
 
 ### C2 to jscrambler infostealer hardcoded IPs and Tor infrastructure
 
-`UC_105_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_108_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ DeviceNetworkEvents
 
 ### Anomalous public egress from npm-spawned temp binary (post-install beacon)
 
-`UC_105_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_108_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ DeviceNetworkEvents
 
 ### jscrambler package tampering: unexpected setup.js/intro.js binaries under node_modules
 
-`UC_105_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_108_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -354,7 +354,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised jscrambler 8.14.0 npm Release Drops Rust Infostealer During Install
 
-`UC_105_7` · phase: **exploit** · confidence: **High**
+`UC_108_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

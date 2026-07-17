@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### AI IDE runs workspace-root git.exe via 'rev-parse --show-toplevel' probe (Cursor search-order RCE)
 
-`UC_48_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_51_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### AI IDE spawns helper binary (git/node/npx/where.exe) from cloned-repo root
 
-`UC_48_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_51_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Cloned-repo Git hook executes shell via IDE/git subprocess (Cursor CVE-2026-26268 class)
 
-`UC_48_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_51_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### Poisoned .vscode/tasks.json lands in cloned repo via git/archive (AWS Kiro CVE-2026-10591)
 
-`UC_48_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_51_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cursor Flaw Lets Malicious Cloned Repositories Trigger Windows Code Execution
 
-`UC_48_2` · phase: **exploit** · confidence: **High**
+`UC_51_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

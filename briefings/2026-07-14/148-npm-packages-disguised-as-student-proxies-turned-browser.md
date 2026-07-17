@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Browser/Node contact with Lucide student-proxy DDoS campaign infrastructure
 
-`UC_76_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_79_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### Install of named Lucide malicious student-proxy npm packages
 
-`UC_76_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_79_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Browser HTTP flood against nursing-school domain cdn.caan.edu
 
-`UC_76_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_79_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### Browser Wisp/WebSocket control-plane flood to Lucide endpoint lunaron.top
 
-`UC_76_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_79_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
