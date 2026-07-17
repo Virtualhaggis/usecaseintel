@@ -31,14 +31,13 @@ A Shodan harvester keeps the scan queue stocked with ComfyUI, Ollama , n8n , Ope
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1053.003** — Scheduled Task/Job: Cron
-- **T1564.001** — Hide Artifacts: Hidden Files and Directories
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1105** — Ingress Tool Transfer
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.007** — Unsecured Credentials: Container API
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1609** — Container Administration Command
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1098.004** — Account Manipulation: SSH Authorized Keys
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
@@ -46,80 +45,83 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### NadMesh persistence artifacts: hidden payload drops and cron.d files on Linux
+### NadMesh: exposed AI/dev service spawns shell to fetch dropper (ComfyUI/Ollama/n8n/Jenkins/Marimo/rclone)
 
-`UC_0_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/dev/shm/.a","/var/tmp/.a","/tmp/.a","/etc/cron.d/.sys_monitor","/etc/cron.d/.s")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","ollama","node","java","dockerd","redis-server","rclone","uvicorn","gunicorn","marimo","n8n")) (Processes.process_name IN ("sh","bash","dash","curl","wget")) (Processes.process IN ("*209.99.186.235*","*cdnorigin.net*","*/tmp/.a*","*/var/tmp/.a*","*/dev/shm/.a*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("python","python3","ollama","node","java","dockerd","redis-server","rclone","uvicorn","gunicorn","marimo","n8n")
+| where FileName in~ ("sh","bash","dash","curl","wget")
+| where ProcessCommandLine has_any ("209.99.186.235","cdnorigin.net","/tmp/.a","/var/tmp/.a","/dev/shm/.a")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### NadMesh cloud credential + Kubernetes token harvest (~/.aws/config, .env, ~/.docker/config.json, SA token)
+
+`UC_2_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Processes.process) as processes min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*.aws/config*","*.aws/credentials*","*.docker/config.json*","*serviceaccount/token*","*/.env*")) (Processes.parent_process_path IN ("/tmp/*","/var/tmp/*","/dev/shm/*") OR Processes.process_name IN ("cat","grep","head","tar","base64","env","printenv")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any (".aws/config",".aws/credentials",".docker/config.json","serviceaccount/token","/.env")
+| where FileName in~ ("cat","grep","head","tail","cp","tar","base64","env","printenv","sh","bash")
+| where AccountName !endswith "$"
+| where InitiatingProcessFolderPath has_any ("/tmp/","/var/tmp/","/dev/shm/") or InitiatingProcessFileName startswith "."
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### NadMesh triple-persistence: hidden agent drops, cron.d beacons and SSH authorized_keys tamper
+
+`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/dev/shm/.a","/var/tmp/.a","/tmp/.a","/etc/cron.d/.sys_monitor","/etc/cron.d/.s") OR Filesystem.file_path="*/.ssh/authorized_keys") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(7d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FolderPath in~ ("/dev/shm/.a","/var/tmp/.a","/tmp/.a","/etc/cron.d/.sys_monitor","/etc/cron.d/.s")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where FolderPath in~ ("/dev/shm/.a","/var/tmp/.a","/tmp/.a","/etc/cron.d/.sys_monitor","/etc/cron.d/.s") or FolderPath endswith "/.ssh/authorized_keys"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### NadMesh C2 beacon to 209.99.186.235 / cdnorigin.net
+### NadMesh C2 contact (209.99.186.235 / cdnorigin.net) and stolen-key use from that IP in CloudTrail
 
-`UC_0_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="209.99.186.235" OR All_Traffic.dest="cdnorigin.net") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="209.99.186.235") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP == "209.99.186.235" or RemoteUrl has "cdnorigin.net"
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### NadMesh cloud-credential harvest: access to ~/.aws, .env, Docker config and k8s SA tokens
-
-`UC_0_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*/.aws/config*","*/.aws/credentials*","*/.docker/config.json*","*serviceaccount/token*","* .env*","*/.env*")) AND Processes.process_name IN ("cat","tac","head","tar","cp","curl","wget","grep","sh","bash","dash") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessCommandLine has_any ("/.aws/config","/.aws/credentials","/.docker/config.json","serviceaccount/token","/.env")
-| where FileName in~ ("cat","tac","head","tar","cp","curl","wget","grep","sh","bash","dash","awk")
-| where InitiatingProcessFileName !in~ ("aws","kubectl","docker","terraform","helm","ansible")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Exposed AI service / Jenkins / Docker process spawning shell downloader (NadMesh exploitation)
-
-`UC_0_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","node","java","uvicorn","gunicorn","marimo","ollama","redis-server","dockerd","containerd-shim","jenkins","n8n")) AND (Processes.process_name IN ("sh","bash","dash","curl","wget")) AND (Processes.process="*curl*" OR Processes.process="*wget*" OR Processes.process="*/tmp/*" OR Processes.process="*/dev/shm/*" OR Processes.process="*/var/tmp/*" OR Processes.process="*chmod*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("python","python3","node","java","uvicorn","gunicorn","marimo","ollama","redis-server","dockerd","containerd-shim","jenkins","n8n")
-| where FileName in~ ("sh","bash","dash","curl","wget")
-| where ProcessCommandLine has_any ("curl","wget","/tmp/","/dev/shm/","/var/tmp/","chmod +x","chmod 777")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| where RemoteIP == "209.99.186.235" or RemoteUrl has "cdnorigin.net" or InitiatingProcessSHA1 == "31c69b3e12936abca770d430066f379ec1d997ec"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessSHA1
 | order by Timestamp desc
 ```
 
@@ -187,7 +189,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Token
 
-`UC_0_5` · phase: **install** · confidence: **High**
+`UC_2_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -234,4 +236,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

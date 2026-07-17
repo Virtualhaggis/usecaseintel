@@ -1,353 +1,3 @@
-<article class="card" id="art-2633" data-art-slug="2022-01-29-analyzing-the-pwnkit-local-privilege-escalation-exploit"
-  data-phases="actions,c2,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="linux,windows"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="Analyzing the PwnKit local privilege escalation exploit The Pwnkit vulnerability (CVE-2021-4034) disclosed in Jan 2022 has existed since 2009, but can now be exploited in the wild. Secure your projects with Snyk. CVE-2021-4034 T1190 [LLM] PwnKit pkexec executed with empty argv (CVE-2021-4034 exploit primitive) [LLM] PwnKit GCONV_PATH artifact directory/file creation [LLM] Root shell spawned by pkexec with empty parent command line (PwnKit post-exploitation) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2022-01-29-analyzing-the-pwnkit-local-privilege-escalation-exploit" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/pwnkit-linux-exploit-cve-2021-4034/" target="_blank" rel="noopener">Analyzing the PwnKit local privilege escalation exploit</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2022-01-29</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">The Pwnkit vulnerability (CVE-2021-4034) disclosed in Jan 2022 has existed since 2009, but can now be exploited in the wild. Secure your projects with Snyk.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-4034</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-2633-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-2633"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-2633-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] PwnKit pkexec executed with empty argv (CVE-2021-4034 exploit primitive) · [LLM] PwnKit GCONV_PATH artifact directory/file creation</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Root shell spawned by pkexec with empty parent command line (PwnKit post-exploitation)</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="0fe9452bb8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">PwnKit pkexec executed with empty argv (CVE-2021-4034 exploit primitive)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0fe9452bb8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the core PwnKit trigger: pkexec invoked with an empty argument vector, so the running pkexec process carries no command line referencing its own name (argv[0] is missing). Legitimate pkexec always passes argv[0]; an empty/non-self-referencing command line on a pkexec process is the out-of-bounds-write primitive of CVE-2021-4034.
-
-Rationale: Anchored on the exact exploit mechanic from the article (&#x27;it is possible to specify an empty list without the executable name by calling execve&#x27; / &#x27;when there are no arguments to the pkexec command, the list of arguments will be empty&#x27;) — a pkexec process whose own command line omits argv[0] is the CVE-2021-4034 primitive, confirmed by Qualys and Elastic detection guidance.
-
-Cross-checked against:
-  • https://blog.qualys.com/vulnerabilities-threat-research/2022/01/25/pwnkit-local-privilege-escalation-vulnerability-discovered-in-polkits-pkexec-cve-2021-4034
-  • https://www.elastic.co/guide/en/security/8.19/potential-privilege-escalation-via-pkexec.html
-  • https://www.sysdig.com/blog/detecting-mitigating-cve-2021-4034-sysdig</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Abuse Elevation Control Mechanism: Setuid and Setgid">T1548.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A user accidentally running bare &#x27;pkexec&#x27; with no arguments (prints usage) — still produces argv[0], so rarely matches, but a truncating sensor could</li><li>EDR/auditd sensor that drops or truncates the command-line field, making a legitimate pkexec call appear argv-less</li><li>Security/pentest tooling (LinPEAS, linux-exploit-suggester) intentionally invoking the PoC during an authorized assessment</li><li>Automated config-management wrappers that call pkexec via execve with a hand-built argv array</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessAccountName !endswith &quot;$&quot; and InitiatingProcessAccountName !in~ (&quot;root&quot;,&quot;system&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full DeviceProcessEvents/auditd record for the pkexec PID — confirm the command line is genuinely empty and capture the initiating (unprivileged) user, parent process, and host. 2) Contain: isolate the host; the user likely now has a root shell — kill child processes parented by this pkexec and rotate any credentials/keys reachable from root on that box. 3) Hunt: on the same host search DeviceFileEvents for GCONV_PATH directory/file drops in /tmp,/dev/shm and any new SUID binaries or shells spawned as root in the minutes after; check the pkexec/polkit package version against the patched build and confirm patch status fleet-wide.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2633-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2633-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2633-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2633-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2633-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2633-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2633-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where FileName =~ &quot;pkexec&quot; or FolderPath =~ &quot;/usr/bin/pkexec&quot;
-| where isempty(ProcessCommandLine) or ProcessCommandLine !has &quot;pkexec&quot;
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          PkexecCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2633-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where TargetProcessName endswith &quot;/pkexec&quot; or TargetProcessName =~ &quot;pkexec&quot;
-| where isempty(TargetProcessCommandLine) or TargetProcessCommandLine !has &quot;pkexec&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetUsername,
-          ParentProcessName, ParentProcessCommandLine,
-          TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2633-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: PwnKit pkexec Executed With Empty Argv (CVE-2021-4034)
-id: 6f3d0c2a-1b4e-4d9a-9b3e-2c7a1f0e8d44
-description: Detects pkexec running with an empty/non-self-referencing command line, the empty-argv trigger of the PwnKit CVE-2021-4034 local privilege escalation exploit.
-references:
-  - https://snyk.io/blog/pwnkit-linux-exploit-cve-2021-4034/
-  - https://blog.qualys.com/vulnerabilities-threat-research/2022/01/25/pwnkit-local-privilege-escalation-vulnerability-discovered-in-polkits-pkexec-cve-2021-4034
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1068
-  - attack.t1548.001
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_img:
-    Image|endswith: &#x27;/pkexec&#x27;
-  filter_normal:
-    CommandLine|contains: &#x27;pkexec&#x27;
-  condition: selection_img and not filter_normal
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2633-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.executable.path:(*/pkexec OR */PKEXEC)</code></pre></div>
-    <div class="tab-content" id="art-2633-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/pkexec$/i
-| NOT CommandLine=/pkexec/i
-| table([aid, ComputerName, UserName, ParentBaseFileName, CommandLine, ImageFileName])</code></pre></div>
-    <div class="tab-content" id="art-2633-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2633-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2633-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2633-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=pkexec by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT match(process,&quot;(?i)pkexec&quot;) | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user parent_process_name parent_process process_name process</code></pre><pre class="spl-mode-body" id="art-2633-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=pkexec by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT match(process,&quot;(?i)pkexec&quot;) | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user parent_process_name parent_process process_name process</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1ae5b98e59" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">PwnKit GCONV_PATH artifact directory/file creation</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1ae5b98e59" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the file-system side effect of the public PwnKit exploits: creation of a directory or file whose path contains &#x27;GCONV_PATH&#x27;, used to coerce pkexec into loading an attacker-controlled iconv/gconv shared library as root. This catches exploitation even when the process command line is not captured.
-
-Rationale: GCONV_PATH is the named, exploit-specific artifact every public PwnKit PoC drops (Qualys/Sysdig/Elastic all cite the GCONV_PATH directory and the loaded gconv .so as the primary file-system IOC); a path containing that literal string has effectively no benign occurrence on a Linux host.
-
-Cross-checked against:
-  • https://www.sysdig.com/blog/detecting-mitigating-cve-2021-4034-sysdig
-  • https://www.elastic.co/guide/en/security/8.19/potential-privilege-escalation-via-pkexec.html
-  • https://blog.qualys.com/vulnerabilities-threat-research/2022/01/25/pwnkit-local-privilege-escalation-vulnerability-discovered-in-polkits-pkexec-cve-2021-4034</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow: Dynamic Linker Hijacking">T1574.006</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized red-team / pentest exercise running a PwnKit PoC (linux-exploit-suggester, berdav/CVE-2021-4034)</li><li>CTF or malware-analysis sandbox detonating the exploit deliberately</li><li>A vulnerability scanner with active exploitation checks staging GCONV_PATH on a test host</li><li>Security researcher reproducing the bug on a lab VM</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessAccountName !endswith &quot;$&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the process (InitiatingProcessFileName/ContextImageFileName) that wrote the GCONV_PATH artifact and the owning unprivileged user; confirm it is not a sanctioned pentest host. 2) Contain: isolate the host and terminate the writing process and any root processes it spawned; preserve the dropped .so for forensics. 3) Hunt: correlate with UC-1 (empty-argv pkexec) and UC-3 (pkexec→root shell) on the same host/timeframe, and verify polkit is patched (RHSB-2022-001 / USN-5252-1); sweep the fleet for the same artifact.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2633-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2633-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2633-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2633-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2633-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2633-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where FolderPath contains &quot;GCONV_PATH&quot; or FileName contains &quot;GCONV_PATH&quot;
-| project Timestamp, DeviceName,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessCommandLine,
-          FolderPath, FileName, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2633-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where TargetFilePath contains &quot;GCONV_PATH&quot; or TargetFileName contains &quot;GCONV_PATH&quot;
-| project TimeGenerated, DvcHostname, ActorUsername,
-          ActingProcessName, ActingProcessCommandLine,
-          TargetFilePath, TargetFileName, EventType
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2633-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: PwnKit GCONV_PATH Artifact Creation (CVE-2021-4034)
-id: a1c9e7b2-4f30-4c11-8d6a-9e2b3c5d7f10
-description: Detects creation of files or directories whose path contains GCONV_PATH, the malicious gconv library staging used by PwnKit (CVE-2021-4034) exploits against polkit pkexec.
-references:
-  - https://snyk.io/blog/pwnkit-linux-exploit-cve-2021-4034/
-  - https://www.sysdig.com/blog/detecting-mitigating-cve-2021-4034-sysdig
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1068
-  - attack.t1574.006
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection:
-    TargetFilename|contains: &#x27;GCONV_PATH&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2633-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/GCONV_PATH/i
-| table([aid, ComputerName, ContextImageFileName, ContextProcessId, TargetFileName])</code></pre></div>
-    <div class="tab-content" id="art-2633-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2633-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2633-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2633-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*GCONV_PATH*&quot; OR Filesystem.file_name=&quot;*GCONV_PATH*&quot;) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user process_name file_path file_name</code></pre><pre class="spl-mode-body" id="art-2633-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*GCONV_PATH*&quot; OR Filesystem.file_name=&quot;*GCONV_PATH*&quot;) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user process_name file_path file_name</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2e472f0dbd" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Root shell spawned by pkexec with empty parent command line (PwnKit post-exploitation)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2e472f0dbd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the successful-escalation outcome of PwnKit: a shell or interpreter spawned as root whose parent is pkexec, where that pkexec parent has no self-referencing command line (empty argv). This distinguishes the exploit from a legitimate &#x27;pkexec /bin/bash&#x27; which always carries a populated command line.
-
-Rationale: Combines the article&#x27;s empty-argv mechanic with the exploit&#x27;s stated end state (&#x27;allowing attackers to gain full root privileges on the target host&#x27;): a root shell parented by an argv-less pkexec is the realized escalation, while the !has &#x27;pkexec&#x27; filter removes legitimate &#x27;pkexec /bin/bash&#x27; admin usage that always populates the parent command line.
-
-Cross-checked against:
-  • https://www.elastic.co/guide/en/security/8.19/potential-privilege-escalation-via-pkexec.html
-  • https://socprime.com/blog/detect-cve-2021-4034-a-notorious-pwnkit-vulnerability-affecting-all-major-linux-distros/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Abuse Elevation Control Mechanism: Setuid and Setgid">T1548.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Administrator legitimately running &#x27;pkexec bash&#x27; / &#x27;pkexec su&#x27; interactively (excluded — parent command line contains &#x27;pkexec&#x27;)</li><li>Ansible/SaltStack/config-management invoking pkexec to run a privileged shell (carries populated argv)</li><li>Desktop polkit agents launching a root helper shell during package management</li><li>Sensor that fails to populate ParentCommandLine on otherwise-legitimate pkexec usage (rare residual FP)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where isnotempty(InitiatingProcessCommandLine) and InitiatingProcessCommandLine !has &quot;pkexec&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the pkexec parent&#x27;s command line is truly empty and identify the unprivileged initiating user and host; a populated &#x27;pkexec bash&#x27; is benign admin activity. 2) Contain: isolate the host and suspend the root shell and its descendants; assume root compromise and begin credential/secret rotation for the box. 3) Hunt: pivot to UC-1 (empty-argv pkexec) and UC-2 (GCONV_PATH drop) within the same session, review subsequent root-level actions (new users, SSH keys, cron, SUID binaries), and verify polkit patch level across the estate.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2633-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2633-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2633-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2633-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2633-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2633-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;pkexec&quot;
-| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;)
-| where AccountName =~ &quot;root&quot;
-| where isempty(InitiatingProcessCommandLine) or InitiatingProcessCommandLine !has &quot;pkexec&quot;
-| project Timestamp, DeviceName, AccountName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath, ChildCmd = ProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2633-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName endswith &quot;/pkexec&quot; or ParentProcessName =~ &quot;pkexec&quot;
-| where TargetProcessName has_any (&quot;/bash&quot;,&quot;/sh&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;/ksh&quot;)
-| where TargetUsername =~ &quot;root&quot;
-| where isempty(ParentProcessCommandLine) or ParentProcessCommandLine !has &quot;pkexec&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetUsername,
-          ParentProcessName, ParentProcessCommandLine,
-          TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2633-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Root Shell Spawned by pkexec With Empty Parent Cmdline (PwnKit CVE-2021-4034)
-id: c3e1f4a8-7b22-4e90-bb1d-5f8a2d6c9e31
-description: Detects a shell executed as root whose parent process is pkexec but where pkexec carries no self-referencing command line, indicating successful PwnKit (CVE-2021-4034) privilege escalation rather than a normal pkexec command invocation.
-references:
-  - https://snyk.io/blog/pwnkit-linux-exploit-cve-2021-4034/
-  - https://www.elastic.co/guide/en/security/8.19/potential-privilege-escalation-via-pkexec.html
-author: SOC Detection Engineering
-date: 2026/06/29
-tags:
-  - attack.t1548.001
-  - attack.t1059.004
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    ParentImage|endswith: &#x27;/pkexec&#x27;
-    Image|endswith:
-      - &#x27;/bash&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/ksh&#x27;
-    User: &#x27;root&#x27;
-  filter_normal:
-    ParentCommandLine|contains: &#x27;pkexec&#x27;
-  condition: selection and not filter_normal
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2633-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/pkexec/i UserName=root ImageFileName=/\/(bash|sh|dash|zsh|ksh)$/i
-| table([aid, ComputerName, UserName, ParentBaseFileName, ParentCommandLine, ImageFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-2633-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2633-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2633-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2633-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=pkexec Processes.process_name IN (bash,sh,dash,zsh,ksh) Processes.user=root by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | where NOT match(parent_process,&quot;(?i)pkexec&quot;) | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user parent_process_name parent_process process_name process</code></pre><pre class="spl-mode-body" id="art-2633-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=pkexec Processes.process_name IN (bash,sh,dash,zsh,ksh) Processes.user=root by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | where NOT match(parent_process,&quot;(?i)pkexec&quot;) | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user parent_process_name parent_process process_name process</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2633-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2633-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2633-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2633-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-4034&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2633-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-4034&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2633-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2633-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2633-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2633-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-4034&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-2633-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-4034&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-2634" data-art-slug="2022-01-28-cisa-kev-cve-2022-22587-apple-memory-corruption-vulnerabilit"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -5336,6 +4986,132 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2663-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2020-13671&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-2664" data-art-slug="2022-01-18-cisa-kev-cve-2020-11978-apache-airflow-command-injection"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2020-11978 — Apache Airflow Command Injection A remote code/command injection vulnerability was discovered in one of the example DAGs shipped with Airflow. Vendor: Apache, Product: Airflow. Federal patch due: 2022-07-18. CVE-2020-11978  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2022-01-18-cisa-kev-cve-2020-11978-apache-airflow-command-injection" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-11978 — Apache Airflow Command Injection</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2022-01-18</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">A remote code/command injection vulnerability was discovered in one of the example DAGs shipped with Airflow. Vendor: Apache, Product: Airflow. Federal patch due: 2022-07-18.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-11978</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-2664-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-2664"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-2664-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2664-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2664-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2664-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2664-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-11978&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2664-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-11978&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2664-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2664-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2664-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2664-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-11978&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-2664-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-11978&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

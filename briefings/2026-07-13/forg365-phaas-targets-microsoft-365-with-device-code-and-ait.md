@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### First-seen Entra device-code auth via Microsoft Authentication Broker (Forg365)
 
-`UC_106_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_107_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ let Broker = "29d9ed98-a469-4536-ade2-f981bc1d605e"; let Lookback = 14d; let Bas
 
 ### Broker device-code sign-in from Node.js automation UA (Forg365 operator backend)
 
-`UC_106_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_107_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ AADSignInEventsBeta | where Timestamp > ago(14d) | where ApplicationId == "29d9e
 
 ### Forg365 phishing email: Amazon SES sender with SendGrid/logfriend redirect link
 
-`UC_106_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_107_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ let SesMail = EmailEvents | where Timestamp > ago(14d) | where EmailDirection ==
 
 ### M365 broker token replay from anomalous country after interactive login (AitM/ForgCookie)
 
-`UC_106_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_107_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ let Broker = "29d9ed98-a469-4536-ade2-f981bc1d605e"; let Window = 12h; let Inter
 
 ### OAuth consent grant to app with mailbox permissions post-device-code (Forg365 persistence)
 
-`UC_106_12` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_107_12` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

@@ -52,18 +52,19 @@ It gets in because someone pasted a command into a Run box and pressed Enter. Mi
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
-- **T1218.011** — System Binary Proxy Execution: Rundll32
-- **T1105** — Ingress Tool Transfer
-- **T1564.003** — Hide Artifacts: Hidden Window
-- **T1218.005** — System Binary Proxy Execution: Mshta
-- **T1204.002** — User Execution: Malicious File
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1070.003** — Indicator Removal: Clear Command History
+- **T1204.002** — Malicious File
+- **T1112** — Modify Registry
+- **T1218.005** — Mshta
+- **T1027.011** — Fileless Storage
+- **T1218.011** — Rundll32
+- **T1570** — Lateral Tool Transfer
+- **T1564.003** — Hidden Window
+- **T1059.006** — Python
+- **T1036.005** — Match Legitimate Name or Location
 - **T1102** — Web Service
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1552.001** — Credentials In Files
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
@@ -71,208 +72,191 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### rundll32.exe with no command-line parameters making an outbound network connection
+### ClickFix Run-dialog paste writes mshta/rundll32/pushd command to Explorer RunMRU
 
-`UC_13_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `security_content_summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name=rundll32.exe by _time Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | eval has_args=if(match(process,"(?i)rundll32\.exe\S*\s+\S"),"yes","no") | where has_args="no" | join type=inner dest [ | tstats `security_content_summariesonly` count as conn_count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=443 OR All_Traffic.dest_port=80) by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | rename src as dest ] | table _time dest user process parent_process_name conn_count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName =~ "rundll32.exe"
-| where RemoteIPType == "Public"
-| where not(InitiatingProcessCommandLine matches regex @"(?i)rundll32\.exe\S*\s+\S")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc
-```
-
-### rundll32.exe loading a DLL from a WebDAV UNC share with GUID directory and export ordinal
-
-`UC_13_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_15_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=rundll32.exe by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process,"\\\\[^\\]+\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\") AND match(process,",\s*#\d") | `security_content_ctime(firstTime)` | table firstTime lastTime dest user process parent_process_name count
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "rundll32.exe"
-| where ProcessCommandLine has "\\\\" and ProcessCommandLine matches regex @",\s*#\d"
-| where ProcessCommandLine matches regex @"\\\\[^\\]+\\[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\"
-   or ProcessCommandLine has_any ("dialectosphere.in.net", ".google,#", "05fe317c-0981-4de2-bc8a-930d369db441")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### conhost --headless wrapping a pushd WebDAV mount and rundll32 execution
-
-`UC_13_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `security_content_summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name=conhost.exe OR Processes.process_name=cmd.exe) by _time Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where (process_name="conhost.exe" AND match(process,"(?i)--headless")) OR (process_name="cmd.exe" AND match(process,"(?i)pushd") AND match(process,"\\\\") AND match(process,"(?i)rundll32")) | table _time dest user process_name process parent_process_name count
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where (FileName =~ "conhost.exe" and ProcessCommandLine has "--headless")
-   or (FileName =~ "cmd.exe" and ProcessCommandLine has "pushd" and ProcessCommandLine has "\\\\" and ProcessCommandLine has "rundll32")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### mshta.exe fetching remote HTA content from the Run dialog (ACR fileless chain)
-
-`UC_13_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `security_content_summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process,"(?i)https?://") OR match(process,"(?i)(javascript|vbscript):") | `security_content_ctime(firstTime)` | table firstTime dest user process parent_process_name count
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "mshta.exe"
-| where ProcessCommandLine has_any ("http://", "https://", "javascript:", "vbscript:")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### ClickFix Run-dialog paste launching mshta/rundll32/powershell (RunMRU artifact)
-
-`UC_13_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `security_content_summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Explorer\\RunMRU*" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | where match(registry_value_data,"(?i)(mshta|powershell|rundll32|curl|certutil|\\\\|http)") | `security_content_ctime(firstTime)` | table firstTime dest user registry_value_name registry_value_data count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Explorer\\RunMRU*" (Registry.registry_value_data="*mshta*" OR Registry.registry_value_data="*rundll32*" OR Registry.registry_value_data="*powershell*" OR Registry.registry_value_data="*pushd*" OR Registry.registry_value_data="*conhost*" OR Registry.registry_value_data="*http*" OR Registry.registry_value_data="*\\\\*") by Registry.dest Registry.user Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceRegistryEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
+| where ActionType == "RegistryValueSet"
 | where RegistryKey has @"\Explorer\RunMRU"
-| where RegistryValueData has_any ("mshta", "powershell", "rundll32", "cmd", "curl", "certutil", "\\\\", "http")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData
-| order by Timestamp desc
-```
-
-### Non-browser process accessing Chrome/Edge Login Data and Web Data stores
-
-`UC_13_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `security_content_summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="Login Data" OR Filesystem.file_name="Web Data") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT match(process_name,"(?i)(chrome|msedge|browser_broker|elevation_service|msedgewebview2)\.exe") | `security_content_ctime(firstTime)` | table firstTime dest user process_name file_name file_path count
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("Login Data", "Web Data")
-| where FolderPath has_any (@"\Google\Chrome\User Data", @"\Microsoft\Edge\User Data")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","browser_broker.exe","elevation_service.exe","msedgewebview2.exe","chrome_proxy.exe")
+| where RegistryValueData has_any ("mshta","rundll32","powershell","pwsh","pushd","conhost","curl","http","\\\\")
 | where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryValueName, RegistryValueData, InitiatingProcessFileName
 | order by Timestamp desc
 ```
 
-### pythonw.exe launching a script from %LocalAppData%\Temp with LOLBin parent
+### mshta.exe fileless chain: remote HTA fetch then in-memory PowerShell with TLS-validation bypass
 
-`UC_13_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_15_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `security_content_summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Processes where Processes.process_name=pythonw.exe by Processes.dest Processes.user Processes.process Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process_path,"(?i)\\AppData\\Local\\Temp") OR match(process,"(?i)\\AppData\\Local\\Temp") OR match(process,"(?i)LogiOptionsPlus") | where match(parent_process_name,"(?i)(powershell|cmd|rundll32|mshta)\.exe") | `security_content_ctime(firstTime)` | table firstTime dest user process parent_process_name count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe (Processes.process="*http*" OR Processes.process="*.hta*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
+| where FileName =~ "mshta.exe"
+| where ProcessCommandLine has_any ("http://","https://",".hta")
+| where AccountName !endswith "$"
+| extend CertBypass = ProcessCommandLine has_any ("ServerCertificateValidationCallback","CheckCertificateRevocation","ServicePointManager")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, CertBypass
+| order by Timestamp desc
+```
+
+### rundll32.exe loading a DLL from a WebDAV/UNC share by ordinal export
+
+`UC_15_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=rundll32.exe Processes.process="*\\\\*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i),\s*#?\d+" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "rundll32.exe"
+| where ProcessCommandLine has "\\\\"
+| where ProcessCommandLine matches regex @"(?i),\s*#?\d+"
+| where AccountName !endswith "$"
+| extend NamedHost = ProcessCommandLine has_any ("sphere-api.dialectosphere.in.net",".google,",".ct,")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, NamedHost
+| order by Timestamp desc
+```
+
+### conhost.exe --headless wrapping pushd/rundll32 (ClickFix console-hiding variant)
+
+`UC_15_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=conhost.exe Processes.process="*--headless*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | search process="*pushd*" OR process="*rundll32*" OR process="*\\\\*" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "conhost.exe" and ProcessCommandLine has "--headless"
+| where ProcessCommandLine has_any ("pushd","rundll32","cmd","\\\\") or InitiatingProcessCommandLine has_any ("pushd","rundll32","--headless")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### pythonw.exe silently running a script from %LocalAppData%\Temp (LogiOptionsPlus lure)
+
+`UC_15_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=pythonw.exe (Processes.process="*.py*" OR Processes.process="*LogiOptionsPlus*") (Processes.process="*AppData\\Local\\Temp*" OR Processes.parent_process_name=powershell.exe OR Processes.parent_process_name=pwsh.exe) by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
 | where FileName =~ "pythonw.exe"
-| where FolderPath has @"\AppData\Local\Temp" or ProcessCommandLine has @"\AppData\Local\Temp" or ProcessCommandLine has "LogiOptionsPlus"
-| where InitiatingProcessFileName in~ ("powershell.exe","cmd.exe","rundll32.exe","mshta.exe")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where ProcessCommandLine has_any (".py","LogiOptionsPlus")
+| where FolderPath has @"\AppData\Local\" or ProcessCommandLine has @"AppData\Local\Temp" or InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Hidden scheduled task posing as a software update with PowerShell history clearing
+### Hidden scheduled task masquerading as a software update, created by a script host
 
-`UC_13_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_15_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `security_content_summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe OR Processes.process_name=powershell.exe) by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where (process_name="schtasks.exe" AND match(process,"(?i)/create") AND match(process,"(?i)(update|logioptions|logitech)")) OR match(process,"(?i)(ConsoleHost_history\.txt|Clear-History|Remove-Item.*PSReadLine)") | `security_content_ctime(firstTime)` | table firstTime dest user process_name process parent_process_name count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=schtasks.exe Processes.process="*/create*" (Processes.process="*update*" OR Processes.process="*Update*" OR Processes.process="*LogiOptions*") (Processes.parent_process_name=powershell.exe OR Processes.parent_process_name=pwsh.exe OR Processes.parent_process_name=cmd.exe OR Processes.parent_process_name=pythonw.exe OR Processes.parent_process_name=python.exe) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let taskcreate = DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "schtasks.exe" and ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any ("update","Update","LogiOptions","Logitech")
-| where InitiatingProcessFileName in~ ("powershell.exe","pythonw.exe","cmd.exe","rundll32.exe")
-| project Timestamp, DeviceName, AccountName, Kind="HiddenUpdateTask", ProcessCommandLine, InitiatingProcessFileName;
-let histwipe = DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "ConsoleHost_history.txt"
-| where ActionType in ("FileDeleted","FileModified")
-| where InitiatingProcessFileName !in~ ("powershell.exe","pwsh.exe","explorer.exe")
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Kind="PSHistoryWipe", ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName;
-union taskcreate, histwipe
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has_any ("update","Update","LogiOptions","OneDrive")
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","pythonw.exe","python.exe","mshta.exe","rundll32.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Temp-resident Python loader contacting public blockchain RPC / Web3 endpoints (EtherHiding)
+### Python loader making EtherHiding calls to blockchain RPC / Web3 node infrastructure
 
-`UC_13_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_15_16` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `security_content_summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name=pythonw.exe OR Processes.process_name=python.exe) by Processes.dest Processes.user Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where match(process_path,"(?i)\\AppData\\Local") | join type=inner dest [ | tstats `security_content_summariesonly` count as conns from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*infura.io*" OR All_Traffic.dest="*bsc-dataseed*" OR All_Traffic.dest="*binance.org*" OR All_Traffic.dest="*publicnode.com*" OR All_Traffic.dest="*ankr.com*" OR All_Traffic.dest="*cloudflare-eth.com*" OR All_Traffic.dest="*llamarpc.com*" OR All_Traffic.dest="*drpc.org*") by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | rename src as dest ] | table firstTime dest user process conns
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name=pythonw.exe OR All_Traffic.process_name=python.exe) (All_Traffic.dest_host="*rpc*" OR All_Traffic.dest_host="*web3*" OR All_Traffic.dest_host="*infura*" OR All_Traffic.dest_host="*alchemy*" OR All_Traffic.dest_host="*ankr*" OR All_Traffic.dest_host="*bsc-dataseed*" OR All_Traffic.dest_host="*mainnet*" OR All_Traffic.dest_host="*binance*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("pythonw.exe","python.exe")
-| where InitiatingProcessFolderPath has @"\AppData\Local"
-| where RemoteUrl has_any ("infura.io","bsc-dataseed","binance.org","publicnode.com","ankr.com","cloudflare-eth.com","llamarpc.com","drpc.org","blockpi.network","nodereal.io","blastapi.io","1rpc.io")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Endpoint connections to ACR Stealer / ClickFix campaign payload and C2 domains
-
-`UC_13_19` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*creativecommunityinfo.art*" OR All_Traffic.dest="*enhanceblabber.cc*" OR All_Traffic.dest="*deep-harborio.com*" OR All_Traffic.dest="*auramatrixa.com*" OR All_Traffic.dest="*zealpraxis.com*" OR All_Traffic.dest="*prism-vertex.com*" OR All_Traffic.dest="*prism-matrixs.com*" OR All_Traffic.dest="*proton-network.com*" OR All_Traffic.dest="*cpppemwjewjoiwejow.sale*" OR All_Traffic.dest="*apigrokcloud.icu*" OR All_Traffic.dest="*fairpoint29.com*" OR All_Traffic.dest="*primemetricsa.com*" OR All_Traffic.dest="*dialectosphere.in.net*" OR All_Traffic.dest="*claude-desktop.gitlab.io*") by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | table firstTime lastTime src dest app count
-```
-
-**Defender KQL:**
-```kql
-let iocDomains = dynamic(["creativecommunityinfo.art","enhanceblabber.cc","deep-harborio.com","auramatrixa.com","zealpraxis.com","prism-vertex.com","prism-matrixs.com","proton-network.com","looksta.icu","quirksturdy.icu","strainedeasily.icu","cpppemwjewjoiwejow.sale","wifihot.icu","filloco.icu","raidher.icu","apigrokcloud.icu","fairpoint29.com","primemetricsa.com","sphere-api.dialectosphere.in.net","claude-desktop.gitlab.io"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any (iocDomains)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where InitiatingProcessFileName in~ ("pythonw.exe","python.exe")
+| where RemoteIPType == "Public"
+| where RemoteUrl has_any ("rpc","web3","infura","alchemy","ankr","bsc-dataseed","mainnet","binance","polygon-rpc","eth")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Non-browser process touching Chrome/Edge 'Login Data' and 'Web Data' credential stores
+
+`UC_15_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="Login Data" OR Filesystem.file_name="Web Data" OR Filesystem.file_name="Cookies") (Filesystem.file_path="*\\Google\\Chrome\\User Data*" OR Filesystem.file_path="*\\Microsoft\\Edge\\User Data*" OR Filesystem.file_path="*\\BraveSoftware\\*") Filesystem.process_name!=chrome.exe Filesystem.process_name!=msedge.exe Filesystem.process_name!=brave.exe by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("Login Data","Web Data","Cookies")
+| where FolderPath has_any (@"\Google\Chrome\User Data", @"\Microsoft\Edge\User Data", @"\BraveSoftware\")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe","explorer.exe","searchindexer.exe","onedrive.exe","msmpeng.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Endpoint beaconing to ACR Stealer ClickFix campaign payload-host / C2 domains
+
+`UC_15_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host IN ("creativecommunityinfo.art","enhanceblabber.cc","sphere-api.dialectosphere.in.net","claude-desktop.gitlab.io","deep-harborio.com","auramatrixa.com","zealpraxis.com","prism-vertex.com","prism-matrixs.com","proton-network.com","fairpoint29.com","primemetricsa.com","looksta.icu","quirksturdy.icu","strainedeasily.icu","wifihot.icu","filloco.icu","raidher.icu","apigrokcloud.icu","cpppemwjewjoiwejow.sale")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let iocs = dynamic(["creativecommunityinfo.art","enhanceblabber.cc","sphere-api.dialectosphere.in.net","claude-desktop.gitlab.io","deep-harborio.com","auramatrixa.com","zealpraxis.com","prism-vertex.com","prism-matrixs.com","proton-network.com","fairpoint29.com","primemetricsa.com","looksta.icu","quirksturdy.icu","strainedeasily.icu","wifihot.icu","filloco.icu","raidher.icu","apigrokcloud.icu","cpppemwjewjoiwejow.sale"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (iocs)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -539,7 +523,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ACR Stealer Uses ClickFix Lures to Steal Browser Tokens and Microsoft 365 Files
 
-`UC_13_9` · phase: **exploit** · confidence: **High**
+`UC_15_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -599,4 +583,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 20 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 19 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
