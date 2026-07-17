@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious NuGet game-cheat downloader fetches pepesoft.exe from pepegit666 GitHub/Hugging Face
 
-`UC_4_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_6_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceFileEvents
 
 ### pepesoft.exe screenshot exfiltration via Telegram Bot API / Google Sheets C2
 
-`UC_4_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_6_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceNetworkEvents
 
 ### UAT-11795 curl.exe spawning PowerShell stager (Starland RAT → WLDR agent)
 
-`UC_4_19` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_19` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### UAT-11795 trojanized installer (MobaXterm/WebEx/Zoom/DBeaver/FaceIT) spawning downloader utilities
 
-`UC_4_20` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_20` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Spirals ransomware: IIS worker (w3wp.exe) spawning shell via ASP.NET web shell
 
-`UC_4_21` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_21` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -172,7 +172,7 @@ DeviceProcessEvents
 
 ### Spirals ransomware: SAM registry hive dump for credential access
 
-`UC_4_22` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_22` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -196,7 +196,7 @@ DeviceProcessEvents
 
 ### Spirals ransomware: bitsadmin.exe masquerade encryptor running outside System32
 
-`UC_4_23` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_23` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -704,7 +704,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Game Cheat Spyware, 24-Hour Ransomware, Chrome Sync Stalking + 12 Mo
 
-`UC_4_16` · phase: **exploit** · confidence: **High**
+`UC_6_16` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

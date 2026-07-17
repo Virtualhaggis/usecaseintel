@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-16
 - [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
+- [ai automation and attacks unpacking the unit 42 2026 global ](./2026-07-16/ai-automation-and-attacks-unpacking-the-unit-42-2026-global-.md)
 - [ai can find bugs but human knowledge still proves them](./2026-07-16/ai-can-find-bugs-but-human-knowledge-still-proves-them.md)
 - [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 39808 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-39808-fortinet-fortisandbox-os-command-inj.md)
@@ -23,6 +24,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
 - [n8n token exchange flaw could let attackers log in as users ](./2026-07-16/n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-.md)
 - [new agent data injection attack can make ai agents misclick ](./2026-07-16/new-agent-data-injection-attack-can-make-ai-agents-misclick-.md)
+- [new clicklock macos malware traps users into revealing login](./2026-07-16/new-clicklock-macos-malware-traps-users-into-revealing-login.md)
 - [new spirals ransomware encrypts victim network in under 24 h](./2026-07-16/new-spirals-ransomware-encrypts-victim-network-in-under-24-h.md)
 - [openai s gpt red automates prompt injection testing to harde](./2026-07-16/openai-s-gpt-red-automates-prompt-injection-testing-to-harde.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
@@ -53,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [tuxbot v3 evolution shows signs of llm assisted iot botnet d](./2026-07-15/tuxbot-v3-evolution-shows-signs-of-llm-assisted-iot-botnet-d.md)
 - [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
 - [two sonicwall sma 1000 zero days exploited one could enable ](./2026-07-15/two-sonicwall-sma-1000-zero-days-exploited-one-could-enable-.md)
-- [we built a vulnerability vending machine ai tokens in zero d](./2026-07-15/we-built-a-vulnerability-vending-machine-ai-tokens-in-zero-d.md)
 
 ## 2026-07-14
 - [11 old microsoft signed linux uefi shims could let attackers](./2026-07-14/11-old-microsoft-signed-linux-uefi-shims-could-let-attackers.md)
@@ -327,7 +328,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [compromised rust crate onering performs code exfiltration](./2026-06-10/compromised-rust-crate-onering-performs-code-exfiltration.md)
 
 ## 2026-06-09
-- [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
 - [cisa kev cve 2026 11645 google chromium v8 out of bounds rea](./2026-06-09/cisa-kev-cve-2026-11645-google-chromium-v8-out-of-bounds-rea.md)
 - [cisa kev cve 2026 20245 cisco catalyst sd wan manager improp](./2026-06-09/cisa-kev-cve-2026-20245-cisco-catalyst-sd-wan-manager-improp.md)
 - [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)

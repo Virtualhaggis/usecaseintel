@@ -44,81 +44,12 @@ I guess it captures the asymmetry of this industry, but I’ve never been entire
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1090.001** — Proxy: Internal Proxy
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1571** — Non-Standard Port
-- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### UAT-7810 ORB network C2 beacon to known relay IPs (LONGLEASH/DOGLEASH)
-
-`UC_127_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") OR All_Traffic.src_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport
-| `drop_dm_object_name(All_Traffic)`
-| eval known_ports=if(dest_port IN (99,2222,8088),"uat7810_c2_port","other")
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let c2 = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (c2)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
-```
-
-### Ruckus/ASUS edge routers exposed to UAT-7810 n-day exploit CVEs
-
-`UC_127_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature Vulnerabilities.vendor_product
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(lastTime)
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-let uat_cves = dynamic(["CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492"]);
-DeviceTvmSoftwareVulnerabilities
-| where CveId in (uat_cves)
-| summarize LastSeen = max(Timestamp) by DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by CveId asc
-```
-
-### LONGLEASH / JARLEASH / LEASHTEST malware hash sighting on managed hosts
-
-`UC_127_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let leash = dynamic(["755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f","1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823","324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257"]);
-union
-  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (leash) | project Timestamp, DeviceName, Kind=ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName),
-  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (leash) | project Timestamp, DeviceName, Kind="ProcessExec", FileName, FolderPath, SHA256, InitiatingProcessFileName=InitiatingProcessFileName, InitiatingProcessAccountName=AccountName)
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -389,7 +320,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Winning 54% of the time
 
-`UC_127_9` · phase: **exploit** · confidence: **High**
+`UC_128_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -449,4 +380,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
