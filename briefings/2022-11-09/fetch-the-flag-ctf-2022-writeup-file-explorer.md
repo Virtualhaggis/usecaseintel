@@ -23,6 +23,7 @@ Let’s start with the reconnaissance phase In th…
 - **T1190** — Exploit Public-Facing Application
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
+- **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
 
@@ -30,9 +31,18 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### URL-encoded directory traversal (%2e%2e) against node 'st' static-file route (CVE-2014-3744)
+
+`UC_1906_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*%2e%2e*" OR Web.uri_path="*%2e%2e*" OR Web.url="*%252e%252e*" OR Web.url="*%2e%2e%2f*" OR Web.url="*%2e%2e%5c*") Web.status=200 by Web.src, Web.dest, Web.site, Web.http_method, Web.url, Web.uri_path, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+```
+
 ### Article-specific behavioural hunt — Fetch the Flag CTF 2022 writeup: File Explorer
 
-`UC_1905_2` · phase: **exploit** · confidence: **High**
+`UC_1906_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,4 +102,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

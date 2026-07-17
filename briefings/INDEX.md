@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2582 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,6 +13,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [armenia detains russian tourist on u s warrant for revil hac](./2026-07-17/armenia-detains-russian-tourist-on-u-s-warrant-for-revil-hac.md)
 - [cisa adds exploited sharepoint rce zero day cve 2026 58644 t](./2026-07-17/cisa-adds-exploited-sharepoint-rce-zero-day-cve-2026-58644-t.md)
 - [e u orders google to open android mic camera and screen to r](./2026-07-17/e-u-orders-google-to-open-android-mic-camera-and-screen-to-r.md)
+- [ernst young discloses data breach after support system hack](./2026-07-17/ernst-young-discloses-data-breach-after-support-system-hack.md)
+- [fake coding tests deliver ottercookie aligned malware hidden](./2026-07-17/fake-coding-tests-deliver-ottercookie-aligned-malware-hidden.md)
+- [inside the search for clean residential proxies for carding](./2026-07-17/inside-the-search-for-clean-residential-proxies-for-carding.md)
 - [new goserpent malware targets southeast asian governments an](./2026-07-17/new-goserpent-malware-targets-southeast-asian-governments-an.md)
 - [the race to field military autonomy is on can trusted inform](./2026-07-17/the-race-to-field-military-autonomy-is-on-can-trusted-inform.md)
 - [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
@@ -34,13 +37,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [n8n token exchange flaw could let attackers log in as users ](./2026-07-16/n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-.md)
 - [new agent data injection attack can make ai agents misclick ](./2026-07-16/new-agent-data-injection-attack-can-make-ai-agents-misclick-.md)
 - [new clicklock macos malware traps users into revealing login](./2026-07-16/new-clicklock-macos-malware-traps-users-into-revealing-login.md)
-- [new spirals ransomware encrypts victim network in under 24 h](./2026-07-16/new-spirals-ransomware-encrypts-victim-network-in-under-24-h.md)
 - [openai s gpt red automates prompt injection testing to harde](./2026-07-16/openai-s-gpt-red-automates-prompt-injection-testing-to-harde.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
-- [russian hackers trojanize webex zoom apps to push starland m](./2026-07-16/russian-hackers-trojanize-webex-zoom-apps-to-push-starland-m.md)
 - [scattered spider members behind tfl hack get five years in p](./2026-07-16/scattered-spider-members-behind-tfl-hack-get-five-years-in-p.md)
 - [threatsday game cheat spyware 24 hour ransomware chrome sync](./2026-07-16/threatsday-game-cheat-spyware-24-hour-ransomware-chrome-sync.md)
 - [two scattered spider hackers get 5 5 years each for 29 milli](./2026-07-16/two-scattered-spider-hackers-get-5-5-years-each-for-29-milli.md)
+- [uat 11795 deploys novel starland rat and bespoke wldr c2 imp](./2026-07-16/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-imp.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
 - [unpatched shark vacuum flaw could let attackers control othe](./2026-07-16/unpatched-shark-vacuum-flaw-could-let-attackers-control-othe.md)
 - [zoom patches critical windows flaw that could enable account](./2026-07-16/zoom-patches-critical-windows-flaw-that-could-enable-account.md)
@@ -103,7 +105,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)
 - [google and microsoft pull modheader with 1 6 million install](./2026-07-13/google-and-microsoft-pull-modheader-with-1-6-million-install.md)
 - [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
-- [icagenda and balbooa forms joomla flaws reportedly exploited](./2026-07-13/icagenda-and-balbooa-forms-joomla-flaws-reportedly-exploited.md)
 - [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
 - [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
 - [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)

@@ -32,11 +32,12 @@ Distributed via Telegram and costing $400 a month (or …
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
+- **T1621** — Multi-Factor Authentication Request Generation
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1550.004** — Use Alternate Authentication Material: Web Session Cookie
-- **T1557** — Adversary-in-the-Middle
-- **T1114.003** — Email Collection: Email Forwarding Rule
-- **T1564.008** — Hide Artifacts: Email Hiding Rules
+- **T1598.003** — Phishing for Information: Spearphishing Link
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1098.003** — Account Manipulation: Additional Cloud Roles
 
 ## Kill chain phases observed
 
@@ -44,82 +45,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Forg365 device-code phishing: successful sign-in via Microsoft Authentication Broker
+### First-seen Entra device-code auth via Microsoft Authentication Broker (Forg365)
 
-`UC_100_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_102_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.user_agent) as user_agent from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" Authentication.action=success by Authentication.user Authentication.app _time span=1h
-| `drop_dm_object_name(Authentication)`
-| where mvcount(src) >= 1
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.signature) as signature from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)` | eval firstTime_h=strftime(firstTime,"%F %T") | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
-AADSignInEventsBeta
-| where Timestamp > ago(14d)
-| where ErrorCode == 0
-| where Application == "Microsoft Authentication Broker" or ResourceDisplayName == "Microsoft Authentication Broker"
-| where AccountUpn !endswith "$"
-| summarize SignIns = count(), Countries = make_set(Country, 10), IPs = make_set(IPAddress, 20), Apps = make_set(ClientAppUsed, 5), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountUpn
-| order by LastSeen desc
+let Broker = "29d9ed98-a469-4536-ade2-f981bc1d605e"; let Lookback = 14d; let Baseline = AADSignInEventsBeta | where Timestamp between (ago(45d) .. ago(Lookback)) | where ApplicationId == Broker and ErrorCode == 0 | distinct AccountUpn; AADSignInEventsBeta | where Timestamp > ago(Lookback) | where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"  // Microsoft Authentication Broker | where ErrorCode == 0 | where ResourceDisplayName !in ("Device Registration Service","Microsoft Device Registration Client") | where AccountUpn !in (Baseline)   // first broker device-code success for this user in 45d | summarize FirstSeen=min(Timestamp), Sessions=count(), Resources=make_set(ResourceDisplayName), IPs=make_set(IPAddress), Countries=make_set(Country), UserAgents=make_set(UserAgent) by AccountUpn | order by FirstSeen desc
 ```
 
-### Forg365 AitM/ForgCookie token replay: silent non-interactive sign-in from new IP after broker auth
+### Broker device-code sign-in from Node.js automation UA (Forg365 operator backend)
 
-`UC_100_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` values(Authentication.src) as src_list dc(Authentication.src) as distinct_src values(Authentication.action) as actions min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" OR Authentication.action=success by Authentication.user _time span=24h
-| `drop_dm_object_name(Authentication)`
-| where distinct_src >= 2
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" Authentication.action=success (Authentication.user_agent="*node*" OR Authentication.user_agent="*undici*" OR Authentication.user_agent="*axios*" OR Authentication.user_agent="*python-requests*") by Authentication.user Authentication.user_agent | `drop_dm_object_name(Authentication)` | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
-let AuthWindow = 24h;
-let brokerAuth = AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | where ErrorCode == 0 and IsInteractive == true
-    | where Application == "Microsoft Authentication Broker" or ResourceDisplayName == "Microsoft Authentication Broker"
-    | project AuthTime = Timestamp, AccountUpn, AuthIP = IPAddress, AuthCountry = Country;
-AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ErrorCode == 0 and IsInteractive == false
-| join kind=inner brokerAuth on AccountUpn
-| where Timestamp between (AuthTime .. AuthTime + AuthWindow)
-| where IPAddress != AuthIP and Country != AuthCountry
-| project AuthTime, ReplayTime = Timestamp, AccountUpn, AuthIP, AuthCountry, ReplayIP = IPAddress, ReplayCountry = Country, Application, ResourceDisplayName, UserAgent
-| order by ReplayTime desc
+AADSignInEventsBeta | where Timestamp > ago(14d) | where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"  // Microsoft Authentication Broker | where ErrorCode == 0 | where UserAgent has_any ("node","undici","axios","python-requests","Go-http-client","okhttp") | project Timestamp, AccountUpn, IPAddress, Country, UserAgent, ResourceDisplayName, IsInteractive | order by Timestamp desc
 ```
 
-### Forg365 post-compromise: inbox rule created to monitor keyword hits in hijacked mailbox
+### Forg365 phishing email: Amazon SES sender with SendGrid/logfriend redirect link
 
-`UC_100_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.object) as rule_object from datamodel=Change where All_Changes.action=created OR All_Changes.action=modified All_Changes.command IN ("New-InboxRule","Set-InboxRule","UpdateInboxRules") by All_Changes.user All_Changes.command
-| `drop_dm_object_name(All_Changes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Email.subject) as subject values(Email.recipient) as recipient from datamodel=Email where Email.direction=inbound (Email.src_user="*amazonses.com" OR Email.src="*amazonses.com*") by Email.src_user Email.message_id | `drop_dm_object_name(Email)` | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("New-InboxRule", "Set-InboxRule", "UpdateInboxRules")
-| extend Raw = tostring(RawEventData)
-| where Raw has_any ("SubjectContainsWords", "BodyContainsWords", "SubjectOrBodyContainsWords", "FromAddressContainsWords")
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ActionType, Application, Raw
-| order by Timestamp desc
+let SesMail = EmailEvents | where Timestamp > ago(14d) | where EmailDirection == "Inbound" and DeliveryAction in ("Delivered","DeliveredAsSpam") | where SenderMailFromDomain endswith "amazonses.com" or SenderFromDomain endswith "amazonses.com"; SesMail | join kind=inner (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId | where UrlDomain has_any ("sendgrid.net","logfriend.com") or Url has_any ("logfriend.com","sendgrid") | project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, NetworkMessageId | order by Timestamp desc
+```
+
+### M365 broker token replay from anomalous country after interactive login (AitM/ForgCookie)
+
+`UC_102_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" Authentication.action=success by Authentication.user Authentication.src _time span=1h | `drop_dm_object_name(Authentication)` | iplocation src | stats dc(Country) as countries values(Country) as countries_list values(src) as srcs by user | where countries>1
+```
+
+**Defender KQL:**
+```kql
+let Broker = "29d9ed98-a469-4536-ade2-f981bc1d605e"; let Window = 12h; let Interactive = AADSignInEventsBeta | where Timestamp > ago(7d) | where ErrorCode == 0 and IsInteractive == true and isnotempty(Country) | project IntTime=Timestamp, AccountUpn, IntCountry=Country, IntIP=IPAddress; AADSignInEventsBeta | where Timestamp > ago(7d) | where ApplicationId == Broker and ErrorCode == 0 and IsInteractive == false and isnotempty(Country) | project TokTime=Timestamp, AccountUpn, TokCountry=Country, TokIP=IPAddress, UserAgent, ResourceDisplayName | join kind=inner Interactive on AccountUpn | where TokTime between (IntTime .. IntTime + Window) | where TokCountry != IntCountry | project AccountUpn, IntTime, IntCountry, IntIP, TokTime, TokCountry, TokIP, UserAgent, ResourceDisplayName | order by TokTime desc
+```
+
+### OAuth consent grant to app with mailbox permissions post-device-code (Forg365 persistence)
+
+`UC_102_12` · phase: **install** · confidence: **Low** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+CloudAppEvents | where Timestamp > ago(14d) | where ActionType in ("Consent to application","Add OAuth2PermissionGrant","Add delegated permission grant") | where RawEventData has_any ("Mail.Read","Mail.ReadWrite","Mail.Send","MailboxSettings.ReadWrite","offline_access","User.Read.All") | project Timestamp, AccountDisplayName, AccountId, IPAddress, ActionType, ObjectName, ApplicationId, RawEventData | order by Timestamp desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -391,4 +379,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -38,6 +38,12 @@ CVE-2…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
+- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1005** — Data from Local System
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1548** — Abuse Elevation Control Mechanism
+- **T1053.003** — Scheduled Task/Job: Cron
 
 ## Kill chain phases observed
 
@@ -45,22 +51,40 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Exposure: unpatched Siemens RUGGEDCOM ROX II vulnerable to CVE-2025-4094x chain
+### Siemens ROX II xz-as-cat arbitrary disclosure of shadow/private keys (CVE-2025-40948)
 
-`UC_4_4` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_7_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2025-40947","CVE-2025-40948","CVE-2025-40949")
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| union (
-    DeviceTvmSoftwareInventory
-    | where SoftwareVendor has "siemens" and SoftwareName has_any ("ruggedcom","rox")
-    | where SoftwareVersion !startswith "2.17.1" and SoftwareVersion !startswith "V2.17.1"
-    | project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion
-  )
-| order by DeviceName asc
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=xz OR Processes.process="*xz*") (Processes.process="*shadow*" OR Processes.process="*id_rsa*" OR Processes.process="*id_dsa*" OR Processes.process="*.key*" OR Processes.process="*ssl/private*" OR Processes.process="*.pem*") (Processes.process="*--decompress*" OR Processes.process="*-dc*" OR Processes.process="* -d *" OR Processes.process="*--stdout*" OR Processes.process="*-c *") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+### Siemens ROX II feature-key gpgv command injection to root (CVE-2025-40947)
+
+`UC_7_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*feature*key*" OR Web.uri_path="*featurekey*" OR Web.uri_path="*feature-key*") (Web.uri_query="*;*" OR Web.uri_query="*$(*" OR Web.uri_query="*|*" OR Web.uri_query="*&&*" OR Web.uri_query="*%3B*" OR Web.uri_query="*%24%28*" OR Web.uri_query="*%60*" OR Web.url="*%3B*" OR Web.url="*%24%28*") by Web.src Web.dest Web.url Web.uri_query Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+### Siemens ROX II root cron persistence via web task scheduler (CVE-2025-40949)
+
+`UC_7_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=cron OR Processes.parent_process_name=crond OR Processes.parent_process_name=CRON) (Processes.process="*wget*" OR Processes.process="*curl*" OR Processes.process="*/tmp/*" OR Processes.process="*bash -i*" OR Processes.process="*nc *" OR Processes.process="*/dev/tcp/*" OR Processes.process="*base64 -d*") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+### Siemens ROX II three-stage zero-day chain temporal correlation (CVE-2025-40948/40947/40949)
+
+`UC_7_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process="*xz*" OR Processes.process="*feature*key*" OR Processes.parent_process_name=cron OR Processes.parent_process_name=crond) by Processes.dest Processes.user Processes.process Processes.parent_process_name _time span=10m | `drop_dm_object_name(Processes)` | eval stage=case(match(process,"(?i)xz.*(shadow|id_rsa|id_dsa|private|\.key|\.pem)"),"1-disclosure", match(process,"(?i)feature.?key") AND match(process,"[;|&`$]"),"2-cmdinjection", (parent_process_name="cron" OR parent_process_name="crond") AND match(process,"(?i)(wget|curl|/tmp/|bash -i|/dev/tcp/|base64 -d)"),"3-persistence", true(),null()) | where isnotnull(stage) | stats dc(stage) as stage_count values(stage) as stages values(process) as processes min(_time) as firstTime max(_time) as lastTime by dest user | where stage_count>=2 | convert ctime(firstTime) ctime(lastTime)
 ```
 
 ### Scheduled task created with suspicious image / encoded args
@@ -122,7 +146,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy
 
-`UC_4_3` · phase: **install** · confidence: **High**
+`UC_7_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,4 +187,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
