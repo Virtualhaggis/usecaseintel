@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### NadMesh: exposed AI/dev service spawns shell to fetch dropper (ComfyUI/Ollama/n8n/Jenkins/Marimo/rclone)
 
-`UC_2_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### NadMesh cloud credential + Kubernetes token harvest (~/.aws/config, .env, ~/.docker/config.json, SA token)
 
-`UC_2_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### NadMesh triple-persistence: hidden agent drops, cron.d beacons and SSH authorized_keys tamper
 
-`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceFileEvents
 
 ### NadMesh C2 contact (209.99.186.235 / cdnorigin.net) and stolen-key use from that IP in CloudTrail
 
-`UC_2_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Token
 
-`UC_2_5` · phase: **install** · confidence: **High**
+`UC_5_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

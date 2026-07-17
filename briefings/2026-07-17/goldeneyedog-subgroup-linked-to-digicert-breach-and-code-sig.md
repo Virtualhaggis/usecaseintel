@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### GoldenEyeDog .scr screensaver payload extracted from archive/chat lure
 
-`UC_3_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_6_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Golden Gh0st DLL side-load loading encrypted update.log payload
 
-`UC_3_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceImageLoadEvents
 
 ### Golden Gh0st RAT C2 to CylindricalCanine infrastructure
 
-`UC_3_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceNetworkEvents
 
 ### Zhong Stealer / Golden Gh0st RAT known-bad file hashes (cert-signed artifacts)
 
-`UC_3_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_6_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

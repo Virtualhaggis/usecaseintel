@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### ViteVenom malicious @vitejs-typosquat npm packages installed into node_modules
 
-`UC_0_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceFileEvents
 
 ### Node/Vite build host resolving blockchain dead-drop C2 (Tron/Aptos/BSC RPC)
 
-`UC_0_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### Shell startup file (.bashrc/.zshrc/.profile) modified by Node/Vite toolchain
 
-`UC_0_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

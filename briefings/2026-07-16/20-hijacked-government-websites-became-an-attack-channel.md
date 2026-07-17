@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### PhantomEnigma police-themed phishing via compromised .gov.br mailboxes and lookalike domains
 
-`UC_35_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_37_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ EmailEvents
 
 ### PhantomEnigma delivery-host callout to compromised/lookalike .gov.br installers
 
-`UC_35_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_37_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### PhantomEnigma patched Electron/Boostnote index.js backdoor Run-key persistence
 
-`UC_35_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_37_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceRegistryEvents
 
 ### PhantomEnigma backdoor ~180-second C2 beacon from Electron/Node process
 
-`UC_35_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_37_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -381,7 +381,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 20+ Hijacked Government Websites Became an Attack Channel
 
-`UC_35_7` · phase: **exploit** · confidence: **High**
+`UC_37_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2580 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2581 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -19,9 +19,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [inside the search for clean residential proxies for carding](./2026-07-17/inside-the-search-for-clean-residential-proxies-for-carding.md)
 - [new goserpent malware targets southeast asian governments an](./2026-07-17/new-goserpent-malware-targets-southeast-asian-governments-an.md)
 - [new nadmesh botnet hunts exposed ai services for cloud keys ](./2026-07-17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-.md)
+- [openssl hollowbyte flaw could freeze server memory with 11 b](./2026-07-17/openssl-hollowbyte-flaw-could-freeze-server-memory-with-11-b.md)
 - [seven malicious vite npm packages use blockchain c2 to deliv](./2026-07-17/seven-malicious-vite-npm-packages-use-blockchain-c2-to-deliv.md)
 - [the race to field military autonomy is on can trusted inform](./2026-07-17/the-race-to-field-military-autonomy-is-on-can-trusted-inform.md)
 - [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
+- [unauthenticated rce in wordpress core wp2shell](./2026-07-17/unauthenticated-rce-in-wordpress-core-wp2shell.md)
 
 ## 2026-07-16
 - [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
@@ -106,7 +108,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)
 - [google and microsoft pull modheader with 1 6 million install](./2026-07-13/google-and-microsoft-pull-modheader-with-1-6-million-install.md)
 - [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
-- [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
 - [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
 - [new memghost attack plants persistent false memories in ai a](./2026-07-13/new-memghost-attack-plants-persistent-false-memories-in-ai-a.md)
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
