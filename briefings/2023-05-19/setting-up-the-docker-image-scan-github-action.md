@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Setting up the Docker image scan GitHub Action
 
-`UC_1696_0` · phase: **exploit** · confidence: **High**
+`UC_1695_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

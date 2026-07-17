@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Access to exposed Elector '/get-admin-users' credential-leaking API endpoint
 
-`UC_3397_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3396_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

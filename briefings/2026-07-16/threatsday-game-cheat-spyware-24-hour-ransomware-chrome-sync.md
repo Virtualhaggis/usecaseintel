@@ -45,13 +45,12 @@ Old bugs are back, weak defaults are earning their keep, and some attack paths a
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1105** — Ingress Tool Transfer
+- **T1102.002** — Web Service: Bidirectional Communication
 - **T1113** — Screen Capture
-- **T1102** — Web Service
-- **T1567** — Exfiltration Over Web Service
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1505.003** — Server Software Component: Web Shell
 - **T1003.002** — OS Credential Dumping: Security Account Manager
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
@@ -59,105 +58,71 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious NuGet game-cheat downloader fetches pepesoft.exe from pepegit666 GitHub/Hugging Face
+### NuGet game-cheat surveillance payload 'pepesoft.exe' execution (pepegit666)
 
-`UC_6_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="pepesoft.exe" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id 
-| `drop_dm_object_name(Filesystem)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="pepesoft.exe" OR Processes.process="*pepesoft*" OR Processes.parent_process="*pepesoft*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "pepesoft.exe" or FileOriginUrl has "pepegit666"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, FileOriginUrl, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where AccountName !endswith "$"
+| where FileName =~ "pepesoft.exe" or InitiatingProcessFileName =~ "pepesoft.exe" or ProcessCommandLine has "pepesoft"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### pepesoft.exe screenshot exfiltration via Telegram Bot API / Google Sheets C2
+### pepesoft spyware Telegram C2 screenshot exfiltration (api.telegram.org)
 
-`UC_6_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_7_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="pepesoft.exe" (All_Traffic.dest="*api.telegram.org*" OR All_Traffic.dest="*sheets.googleapis.com*" OR All_Traffic.dest="*huggingface.co*") by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_port 
-| `drop_dm_object_name(All_Traffic)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="pepesoft.exe" AND All_Traffic.dest="*telegram.org*" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "pepesoft.exe"
-| where RemoteUrl has "api.telegram.org" or RemoteUrl has "sheets.googleapis.com" or RemoteUrl has "huggingface.co"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where InitiatingProcessFileName =~ "pepesoft.exe" or InitiatingProcessCommandLine has "pepesoft"
+| where RemoteUrl has "telegram.org"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
 ### UAT-11795 curl.exe spawning PowerShell stager (Starland RAT → WLDR agent)
 
-`UC_6_19` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_19` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="curl.exe" (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_id 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="curl.exe" AND (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName =~ "curl.exe"
 | where FileName in~ ("powershell.exe","pwsh.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
 ```
 
-### UAT-11795 trojanized installer (MobaXterm/WebEx/Zoom/DBeaver/FaceIT) spawning downloader utilities
+### Spirals ransomware IIS ASP.NET web shell (w3wp.exe spawning command shell)
 
-`UC_6_20` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="*mobaxterm*" OR Processes.parent_process_name="*webex*" OR Processes.parent_process_name="*zoom*" OR Processes.parent_process_name="*dbeaver*" OR Processes.parent_process_name="*faceit*") (Processes.process_name="curl.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="mshta.exe" OR Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe") by Processes.dest Processes.user Processes.parent_process Processes.process 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName has_any ("mobaxterm","webex","zoom","dbeaver","faceit")
-| where FileName in~ ("curl.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Spirals ransomware: IIS worker (w3wp.exe) spawning shell via ASP.NET web shell
-
-`UC_6_21` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_20` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" (Processes.process_name="cmd.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="net.exe" OR Processes.process_name="net1.exe" OR Processes.process_name="whoami.exe" OR Processes.process_name="bitsadmin.exe" OR Processes.process_name="certutil.exe" OR Processes.process_name="reg.exe") by Processes.dest Processes.user Processes.parent_process Processes.process 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","whoami.exe","reg.exe","certutil.exe","bitsadmin.exe","nltest.exe","systeminfo.exe","ipconfig.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -165,21 +130,18 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where InitiatingProcessFileName =~ "w3wp.exe"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","whoami.exe","bitsadmin.exe","certutil.exe","reg.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","whoami.exe","reg.exe","certutil.exe","bitsadmin.exe","nltest.exe","systeminfo.exe","ipconfig.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Spirals ransomware: SAM registry hive dump for credential access
+### Spirals ransomware SAM hive dump via reg save / esentutl
 
-`UC_6_22` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_7_21` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="reg.exe" AND Processes.process="*save*" AND (Processes.process="*hklm\\sam*" OR Processes.process="*hklm\\system*" OR Processes.process="*hklm\\security*")) OR (Processes.process_name="esentutl.exe" AND Processes.process="*\\config\\SAM*")) by Processes.dest Processes.user Processes.process_name Processes.process 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="reg.exe" AND Processes.process="*save*" AND Processes.process="*sam*") OR (Processes.process_name="esentutl.exe" AND Processes.process="*sam*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -187,23 +149,19 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where (FileName =~ "reg.exe" and ProcessCommandLine has "save" and ProcessCommandLine has_any ("hklm\\sam","hklm\\system","hklm\\security"))
-    or (FileName =~ "esentutl.exe" and ProcessCommandLine has_any ("\\config\\SAM","/vss"))
-    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("reg save","reg.exe save","\\config\\SAM"))
+| where (FileName =~ "reg.exe" and ProcessCommandLine has "save" and ProcessCommandLine has_any (@"hklm\sam", @"hklm\security", @"hklm\system"))
+   or (FileName =~ "esentutl.exe" and ProcessCommandLine has "sam")
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Spirals ransomware: bitsadmin.exe masquerade encryptor running outside System32
+### Spirals ransomware payload masquerading as bitsadmin.exe outside System32 (impact)
 
-`UC_6_23` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_7_22` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="bitsadmin.exe" NOT (Processes.process_path="*\\System32\\*" OR Processes.process_path="*\\SysWOW64\\*") by Processes.dest Processes.user Processes.process_path Processes.process Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="bitsadmin.exe" AND NOT (Processes.process_path="*System32*" OR Processes.process_path="*SysWOW64*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -211,8 +169,8 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "bitsadmin.exe"
-| where FolderPath !contains "\\windows\\system32\\" and FolderPath !contains "\\windows\\syswow64\\"
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessIntegrityLevel
+| where FolderPath !has @"\Windows\System32\" and FolderPath !has @"\Windows\SysWOW64\"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -704,7 +662,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Game Cheat Spyware, 24-Hour Ransomware, Chrome Sync Stalking + 12 Mo
 
-`UC_6_16` · phase: **exploit** · confidence: **High**
+`UC_7_16` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -761,4 +719,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 24 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 23 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

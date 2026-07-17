@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Webmin password_change.cgi unauthenticated command injection exploit attempt (CVE-2019-15107)
 
-`UC_3467_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3466_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Webmin RCE: miniserv/password_change.cgi spawning reverse shell (CVE-2019-15107)
 
-`UC_3467_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3466_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A year-old dormant malicious remote code execution vulnerability discovered in W
 
-`UC_3467_0` · phase: **install** · confidence: **High**
+`UC_3466_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
