@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### NuGet game-cheat surveillance payload 'pepesoft.exe' execution (pepegit666)
 
-`UC_7_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_9_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### pepesoft spyware Telegram C2 screenshot exfiltration (api.telegram.org)
 
-`UC_7_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_9_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### UAT-11795 curl.exe spawning PowerShell stager (Starland RAT → WLDR agent)
 
-`UC_7_19` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_9_19` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### Spirals ransomware IIS ASP.NET web shell (w3wp.exe spawning command shell)
 
-`UC_7_20` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_20` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### Spirals ransomware SAM hive dump via reg save / esentutl
 
-`UC_7_21` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_9_21` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceProcessEvents
 
 ### Spirals ransomware payload masquerading as bitsadmin.exe outside System32 (impact)
 
-`UC_7_22` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_9_22` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -662,7 +662,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Game Cheat Spyware, 24-Hour Ransomware, Chrome Sync Stalking + 12 Mo
 
-`UC_7_16` · phase: **exploit** · confidence: **High**
+`UC_9_16` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

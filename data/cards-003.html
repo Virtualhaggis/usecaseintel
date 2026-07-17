@@ -1,356 +1,3 @@
-<article class="card" id="art-61" data-art-slug="2026-07-14-researchers-say-claude-for-chrome-flaw-lets-rogue-extensions"
-  data-phases="actions,c2,exploit,install,recon" data-sev="high"
-  data-techs="T1176,T1190"
-  data-sources="The Hacker News"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
-  data-targets="windows"
-  data-uc-count="3" data-llm-uc-count="0"
-  data-search="Researchers Say Claude for Chrome Flaw Lets Rogue Extensions Trigger Gmail Reads Any other browser extension that can run a script on claude.ai can still trigger Claude for Chrome tasks aimed at your Gmail, your latest Google Doc and its comments, and your Calendar. Both this and ClaudeBleed need a rogue extension that can already run a script on claude.ai; the difference is scope. Anthropic restricted the arbitrary-prompt path in May as part of its response to the&amp;nbsp;  T1176 T1190 Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Network connections to article IPs / domains">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-07-14-researchers-say-claude-for-chrome-flaw-lets-rogue-extensions" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://thehackernews.com/2026/07/claude-for-chrome-flaw-lets-other.html" target="_blank" rel="noopener">Researchers Say Claude for Chrome Flaw Lets Rogue Extensions Trigger Gmail Reads</a></h2>
-  <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
-  <div class="pubmeta">
-    <span>2026-07-14</span>
-    <span>3 use cases</span>
-    <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Any other browser extension that can run a script on claude.ai can still trigger Claude for Chrome tasks aimed at your Gmail, your latest Google Doc and its comments, and your Calendar. Both this and ClaudeBleed need a rogue extension that can already run a script on claude.ai; the difference is scope. Anthropic restricted the arbitrary-prompt path in May as part of its response to the&amp;nbsp;</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">connect.facebook.net</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-61-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-61"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-61-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Suspicious browser extension installation</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="bf48d37680" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Suspicious browser extension installation</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="bf48d37680" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span> <span class="ind">DeviceRegistryEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-61-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-61-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-61-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-61-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-61-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where RegistryKey has_any (&quot;\Software\Google\Chrome\Extensions\&quot;,&quot;\Software\Microsoft\Edge\Extensions\&quot;,&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
-          InitiatingProcessFileName, InitiatingProcessAccountName</code></pre></div>
-    <div class="tab-content" id="art-61-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where RegistryKey has_any (@&quot;\Software\Google\Chrome\Extensions\&quot;,
-                              @&quot;\Software\Microsoft\Edge\Extensions\&quot;,
-                              @&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, RegistryKey,
-          RegistryValue, RegistryValueData, ActingProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
-status: experimental
-description: |
-    Registry writes under the browser extension policy keys —
-    administrative install of an extension. Often used by adware /
-    info-stealers to bypass user-level extension controls.
-references:
-    - https://attack.mitre.org/techniques/T1176/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1176
-    - attack.persistence
-logsource:
-    category: registry_event
-    product: windows
-detection:
-    selection:
-        TargetObject|contains:
-            - &#x27;\Software\Google\Chrome\Extensions\&#x27;
-            - &#x27;\Software\Microsoft\Edge\Extensions\&#x27;
-            - &#x27;\Software\Mozilla\Firefox\Extensions\&#x27;
-    condition: selection
-falsepositives:
-    - Group-policy-managed extension whitelists
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-61-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-61-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-61-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Registry
-    where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
-        OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
-        OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
-    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-61-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Registry
-    where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
-        OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
-        OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
-    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-61-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-61-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-61-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-61-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-61-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-61-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-61-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-61-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-61-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-61-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-61-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-61-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-61-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-61-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;connect.facebook.net&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-61-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
-let BadDomains = dynamic([&quot;connect.facebook.net&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-61-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-61-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-61-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;connect.facebook.net&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;connect.facebook.net&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-61-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;connect.facebook.net&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;connect.facebook.net&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-62" data-art-slug="2026-07-14-ghsa-critical-cve-2026-45262-facturascripts-authenticated-sq"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -12409,6 +12056,805 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-87" data-art-slug="2026-07-13-crashstealer-macos-malware-uses-notarized-dropper-to-pass-ga"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
+  data-techs="T1021.001,T1190,T1555.003"
+  data-sources="The Hacker News"
+  data-platforms="def,falcon,sent,sigma,spl"
+  data-splunk-cats="endpoint,network"
+  data-targets="macos,windows"
+  data-uc-count="9" data-llm-uc-count="6"
+  data-search="CrashStealer macOS Malware Uses Notarized Dropper to Pass Gatekeeper Checks Cybersecurity researchers have flagged a new macOS information stealer called CrashStealer that&#x27;s capable of harvesting sensitive data from compromised systems. Unlike other information stealers that are built on AppleScript droppers or Objective-C-based wrappers, CrashStealer is implemented in native C++, according to Jamf Threat Labs. &quot;It validates the victim&#x27;s login password locally before  T1021.001 T1190 T1555.003 [LLM] CrashStealer &#x27;veltod&#x27; dropper execution from mounted Werkbit.app DMG [LLM] CrashStealer C2 pull: veltod fetching sys.cache from GitHub + endpoint-api-v1.com [LLM] CrashStealer second-stage payload CrashReporter.dmg staged in /tmp [LLM] CrashStealer LaunchAgent persistence written by temp/DMG-resident process [LLM] CrashStealer credential harvest: temp/DMG process reading keychain + browser/wallet stores [LLM] CrashStealer AES-GCM ZIP exfiltration to 179.43.166.242 over libcurl Crypto-wallet file/keystore access by non-wallet process Infostealer — non-browser process accessing browser cookie/login DBs Network connections to article IPs / domains">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-13-crashstealer-macos-malware-uses-notarized-dropper-to-pass-ga" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://thehackernews.com/2026/07/crashstealer-macos-malware-uses.html" target="_blank" rel="noopener">CrashStealer macOS Malware Uses Notarized Dropper to Pass Gatekeeper Checks</a></h2>
+  <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
+  <div class="pubmeta">
+    <span>2026-07-13</span>
+    <span>9 use cases</span>
+    <span>3 techniques</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Cybersecurity researchers have flagged a new macOS information stealer called CrashStealer that&#x27;s capable of harvesting sensitive data from compromised systems. Unlike other information stealers that are built on AppleScript droppers or Objective-C-based wrappers, CrashStealer is implemented in native C++, according to Jamf Threat Labs. &quot;It validates the victim&#x27;s login password locally before</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Desktop Protocol">T1021.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">werkbit.io</span> <span class="ind ">endpoint-api-v1.com</span> <span class="ind ">cohezo.io</span> <span class="ind ">cohezo.com</span> <span class="ind ">cordinex.io</span> <span class="ind ">icky-lyrical.com</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">179.43.166.242</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-87-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-87"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-87-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] CrashStealer &#x27;veltod&#x27; dropper execution from mounted Werkbit.app DMG</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] CrashStealer second-stage payload CrashReporter.dmg staged in /tmp · [LLM] CrashStealer LaunchAgent persistence written by temp/DMG-resident process</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] CrashStealer C2 pull: veltod fetching sys.cache from GitHub + endpoint-api-v1.com · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] CrashStealer credential harvest: temp/DMG process reading keychain + browser/wallet stores · [LLM] CrashStealer AES-GCM ZIP exfiltration to 179.43.166.242 over libcurl · Crypto-wallet file/keystore access by non-wallet process · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="d88ef6c4e3" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">CrashStealer &#x27;veltod&#x27; dropper execution from mounted Werkbit.app DMG</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d88ef6c4e3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts execution of the notarized CrashStealer first-stage binary &#x27;veltod&#x27; (bundle dev.golove.velto) launched from a mounted Werkbit.app disk image. Article-specific because it anchors on the exact malicious executable name and the /Volumes-mounted Werkbit.app container that clears Gatekeeper via the revoked Emil Grigorov (WWB7JA7AQV) Developer ID.
+
+Rationale: Anchors on the exact first-stage executable name &#x27;veltod&#x27; and the /Volumes-mounted Werkbit.app container named in the article and confirmed by Jamf (bundle dev.golove.velto). Renaming &#x27;veltod&#x27; is caught by the Werkbit.app path clause.
+
+Cross-checked against:
+  • https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+  • https://www.bleepingcomputer.com/news/security/new-crashstealer-malware-poses-as-apple-crash-reporting-tool/
+  • https://securityaffairs.com/195278/malware/crashstealer-new-macos-infostealer-uses-signed-apps-to-evade-gatekeeper.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Subvert Trust Controls: Gatekeeper Bypass">T1553.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate internal tool coincidentally binary-named &#x27;veltod&#x27; (extremely unlikely, non-dictionary name)</li><li>QA/malware-analysis workstation intentionally detonating the sample from a mounted DMG</li><li>Security researcher re-mounting a captured Werkbit.app for analysis</li><li>EDR sensor replaying archived process events during backfill</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;mdworker&quot;,&quot;XProtect&quot;,&quot;VirusTotal&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the process image path is under /Volumes/Werkbit* or */Werkbit.app/* and pull the code-signing identity — Apple revoked the Emil Grigorov (WWB7JA7AQV) cert, so a valid-but-revoked signature confirms the sample. Note the mount source DMG and downloading user. Step 2 (contain): Isolate the host, kill the veltod PID, unmount and quarantine the DMG, and force-expire the user&#x27;s browser/keychain sessions. Step 3 (hunt): Pivot on the host for a /tmp/CrashReporter.dmg drop, a new ~/Library/LaunchAgents plist, and outbound traffic to 179.43.166.242 or endpoint-api-v1.com to scope full-chain compromise.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;veltod&quot;
+   or (FolderPath has &quot;Werkbit.app&quot; and FolderPath has &quot;/Volumes/&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where FileName =~ &quot;veltod&quot;
+   or (FolderPath has &quot;Werkbit.app&quot; and FolderPath has &quot;/Volumes/&quot;)
+| project TimeGenerated, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: CrashStealer veltod Dropper Execution from Mounted Werkbit DMG
+id: 6b2f0d9e-2a3c-4f61-9c1d-1f0a7e5c8b41
+description: Detects execution of the CrashStealer first-stage binary veltod launched from a mounted Werkbit.app disk image (Developer ID Emil Grigorov WWB7JA7AQV, bundle dev.golove.velto).
+references:
+  - https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+  - https://thehackernews.com/2026/07/crashstealer-macos-malware-uses.html
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1204.002
+  - attack.t1553.001
+logsource:
+  category: process_creation
+  product: macos
+detection:
+  selection_name:
+    Image|endswith: &#x27;/veltod&#x27;
+  selection_volume:
+    Image|contains: &#x27;Werkbit.app/&#x27;
+  condition: selection_name or selection_volume
+level: high</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| (ImageFileName=/\/veltod$/i OR ImageFileName=/Werkbit\.app\//i OR ImageFileName=/^\/Volumes\/Werkbit/i)
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, SHA256HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=veltod OR Processes.process_path=&quot;*/Werkbit.app/*&quot; OR Processes.process_path=&quot;/Volumes/Werkbit*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-87-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=veltod OR Processes.process_path=&quot;*/Werkbit.app/*&quot; OR Processes.process_path=&quot;/Volumes/Werkbit*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="20dcf9db42" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">CrashStealer C2 pull: veltod fetching sys.cache from GitHub + endpoint-api-v1.com</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="20dcf9db42" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the CrashStealer second-stage retrieval where &#x27;veltod&#x27; pulls &#x27;sys.cache&#x27; from github/raw.githubusercontent.com (mgothiclove/pkeys) and the shell downloader reaches the delivery endpoint endpoint-api-v1[.]com/d/f1b24e, plus sibling campaign domains. Article-specific via the exact attacker-controlled domains and the anomalous veltod-&gt;GitHub egress.
+
+Rationale: endpoint-api-v1.com, cohezo.io/.com, cordinex.io and werkbit.io are attacker-registered domains confirmed by Jamf; the veltod-&gt;raw.githubusercontent.com clause catches the mgothiclove/pkeys dead-drop pull that legitimate software never performs. High fidelity because these domains have no benign use.
+
+Cross-checked against:
+  • https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+  • https://appleinsider.com/articles/26/07/13/crashstealer-malware-poses-as-an-apple-tool-to-steal-passwords-mac-data</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Web Service: Dead Drop Resolver">T1102.001</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel enrichment or sandbox tooling actively resolving the IOC domains during analysis</li><li>Passive-DNS or scanner appliance sweeping the campaign domains</li><li>A benign process on the host querying github; note the detection requires veltod as the initiator for github, so this is filtered</li><li>DNS sinkhole/RPZ logging the blocked resolution (still worth reviewing)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the resolving host and the initiating process; confirm whether the query is for a hardcoded campaign domain (endpoint-api-v1.com etc.) versus the veltod-&gt;github dead-drop. Check if resolution succeeded and any follow-on connection to 179.43.166.242. Step 2 (contain): Sinkhole/block the campaign domains and 179.43.166.242 at egress, isolate the host if veltod or CrashReporter is present. Step 3 (hunt): Sweep all endpoints for the same domain resolutions and for /tmp/CrashReporter.dmg and LaunchAgent persistence to find other PIN-gated victims.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteUrl has_any (&quot;endpoint-api-v1.com&quot;,&quot;cohezo.io&quot;,&quot;cohezo.com&quot;,&quot;cordinex.io&quot;,&quot;werkbit.io&quot;)
+   or (InitiatingProcessFileName =~ &quot;veltod&quot; and RemoteUrl has_any (&quot;raw.githubusercontent.com&quot;,&quot;github.com&quot;))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
+| where TimeGenerated &gt; ago(30d)
+| where DnsQuery has_any (&quot;endpoint-api-v1.com&quot;,&quot;cohezo.io&quot;,&quot;cohezo.com&quot;,&quot;cordinex.io&quot;,&quot;werkbit.io&quot;)
+| project TimeGenerated, SrcIpAddr, SrcHostname, DnsQuery, DnsResponseName, DstIpAddr, EventProduct
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: CrashStealer C2 Domain Resolution (endpoint-api-v1.com and campaign infrastructure)
+id: 8d41c7a2-6e19-4b0a-bf33-2c9d5e71a904
+description: Detects DNS resolution of CrashStealer delivery/C2 domains used by the Werkbit campaign.
+references:
+  - https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+  - https://securityaffairs.com/195278/malware/crashstealer-new-macos-infostealer-uses-signed-apps-to-evade-gatekeeper.html
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1105
+  - attack.t1071.001
+logsource:
+  category: dns
+detection:
+  selection:
+    query:
+      - &#x27;endpoint-api-v1.com&#x27;
+      - &#x27;cohezo.io&#x27;
+      - &#x27;cohezo.com&#x27;
+      - &#x27;cordinex.io&#x27;
+      - &#x27;werkbit.io&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| (DomainName=/(^|\.)(endpoint-api-v1\.com|cohezo\.(io|com)|cordinex\.io|werkbit\.io)$/i OR (ContextImageFileName=/\/veltod$/i AND DomainName=/githubusercontent\.com$/i))
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;endpoint-api-v1.com&quot;,&quot;*.endpoint-api-v1.com&quot;,&quot;cohezo.io&quot;,&quot;cohezo.com&quot;,&quot;cordinex.io&quot;,&quot;werkbit.io&quot;) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-87-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;endpoint-api-v1.com&quot;,&quot;*.endpoint-api-v1.com&quot;,&quot;cohezo.io&quot;,&quot;cohezo.com&quot;,&quot;cordinex.io&quot;,&quot;werkbit.io&quot;) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e6378d8685" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">CrashStealer second-stage payload CrashReporter.dmg staged in /tmp</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e6378d8685" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts creation of the CrashStealer next-stage disk image &#x27;CrashReporter.dmg&#x27; in /tmp (macOS /private/tmp) by the shell downloader script. Article-specific via the exact staged payload filename and temp-directory drop path that the veltod-invoked curl chain uses.
+
+Rationale: CrashReporter.dmg written to /tmp is the exact staged payload filename and path named in the article; a disk image landing in a world-writable temp dir from a downloader script is a high-signal, near-zero-benign event on macOS endpoints.
+
+Cross-checked against:
+  • https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+  • https://thehackernews.com/2026/07/crashstealer-macos-malware-uses.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer/CI job coincidentally building a disk image literally named CrashReporter.dmg into /tmp (rare; verify signer)</li><li>Crash-diagnostics tooling exporting an archive to tmp (would not typically be a .dmg named CrashReporter)</li><li>Malware-analysis lab detonating the sample</li><li>Backup/temp cleanup tools moving a previously dropped payload</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the writing process — a curl/sh/bash chain parented by veltod strongly confirms CrashStealer; capture the file hash and the source URL (endpoint-api-v1.com/d/f1b24e). Step 2 (contain): Isolate the host, quarantine /tmp/CrashReporter.dmg before it is mounted/executed, and terminate any veltod or downloader shell. Step 3 (hunt): Look for a mounted CrashReporter volume, a new LaunchAgent plist, keychain/browser credential access, and egress to 179.43.166.242.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FileName =~ &quot;CrashReporter.dmg&quot;
+| where FolderPath has_any (&quot;/tmp/&quot;,&quot;/private/tmp/&quot;)
+| project Timestamp, DeviceName, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FileName =~ &quot;CrashReporter.dmg&quot;
+| where FolderPath has_any (&quot;/tmp/&quot;,&quot;/private/tmp/&quot;)
+| project TimeGenerated, DeviceName, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: CrashStealer CrashReporter.dmg Staged in Temp Directory
+id: 3a9c15be-70de-4c22-8a9b-6d0f2e4c1177
+description: Detects the CrashStealer next-stage payload CrashReporter.dmg being written to /tmp or /private/tmp by the downloader chain.
+references:
+  - https://thehackernews.com/2026/07/crashstealer-macos-malware-uses.html
+  - https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1105
+  - attack.t1036.005
+logsource:
+  category: file_event
+  product: macos
+detection:
+  selection:
+    TargetFilename|endswith: &#x27;/CrashReporter.dmg&#x27;
+    TargetFilename|contains:
+      - &#x27;/tmp/&#x27;
+      - &#x27;/private/tmp/&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/\/CrashReporter\.dmg$/i
+| TargetFileName=/\/(private\/)?tmp\//i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;CrashReporter.dmg&quot; AND (Filesystem.file_path=&quot;/tmp/*&quot; OR Filesystem.file_path=&quot;/private/tmp/*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-87-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;CrashReporter.dmg&quot; AND (Filesystem.file_path=&quot;/tmp/*&quot; OR Filesystem.file_path=&quot;/private/tmp/*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="5f8c72e198" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows">
+  <summary>
+    <span class="uc-title">CrashStealer LaunchAgent persistence written by temp/DMG-resident process</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="5f8c72e198" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts CrashStealer establishing persistence by writing a LaunchAgent plist into ~/Library/LaunchAgents from a process running out of /tmp, /private/tmp or a mounted /Volumes DMG (the CrashReporter/veltod stager that copies and re-signs itself). Article-specific via the temp/DMG-resident initiator writing the autostart plist.
+
+Rationale: Anchors LaunchAgent persistence (T1543.001) to the CrashStealer-specific initiator context — a stager running from /tmp, /private/tmp or a mounted DMG, or literally named veltod/CrashReporter — which separates it from the thousands of legitimate installers that also write LaunchAgents.
+
+Cross-checked against:
+  • https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+  • https://www.infosecurity-magazine.com/news/macos-malware-apple-crash-reporter/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create or Modify System Process: Launch Agent">T1543.001</span> <span class="ind tech" title="Subvert Trust Controls: Gatekeeper Bypass">T1553.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A software installer temporarily extracting a helper into /private/tmp before registering a legitimate LaunchAgent</li><li>App run directly from a mounted DMG that installs its own auto-launch helper (e.g. some updater tools)</li><li>Homebrew/pkg post-install scripts writing agents from a temp working dir</li><li>MDM/config-management pushing a LaunchAgent via a staged temp payload</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;installer&quot;,&quot;package_script_service&quot;,&quot;munki&quot;,&quot;jamf&quot;) )</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Open the new plist and read the Program/ProgramArguments — a path pointing at a copied+re-signed CrashStealer binary (often in ~/Library or /tmp) confirms it; check the code signature (valid but revoked = CrashStealer). Step 2 (contain): Unload and delete the LaunchAgent (launchctl bootout), remove the referenced binary, isolate host. Step 3 (hunt): Correlate with a preceding /tmp/CrashReporter.dmg drop, codesign invocations with -f/--force by the stager, and egress to 179.43.166.242 to confirm the full chain.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FolderPath has &quot;/Library/LaunchAgents/&quot;
+| where FileName endswith &quot;.plist&quot;
+| where InitiatingProcessFolderPath has_any (&quot;/tmp/&quot;,&quot;/private/tmp/&quot;,&quot;/Volumes/&quot;)
+   or InitiatingProcessFileName in~ (&quot;veltod&quot;,&quot;CrashReporter&quot;)
+| project Timestamp, DeviceName, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FolderPath has &quot;/Library/LaunchAgents/&quot;
+| where FileName endswith &quot;.plist&quot;
+| where InitiatingProcessFolderPath has_any (&quot;/tmp/&quot;,&quot;/private/tmp/&quot;,&quot;/Volumes/&quot;)
+   or InitiatingProcessFileName in~ (&quot;veltod&quot;,&quot;CrashReporter&quot;)
+| project TimeGenerated, DeviceName, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: CrashStealer LaunchAgent Persistence from Temp or Mounted DMG Process
+id: c1e8f4a7-9b52-4d38-a0c6-7f3b2e9d5410
+description: Detects a LaunchAgent plist created in ~/Library/LaunchAgents by a process executing from /tmp, /private/tmp or a mounted /Volumes DMG, matching CrashStealer self-copy-and-re-sign persistence.
+references:
+  - https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1543.001
+logsource:
+  category: file_event
+  product: macos
+detection:
+  selection:
+    TargetFilename|contains: &#x27;/Library/LaunchAgents/&#x27;
+    TargetFilename|endswith: &#x27;.plist&#x27;
+  process_context:
+    Image|contains:
+      - &#x27;/tmp/&#x27;
+      - &#x27;/private/tmp/&#x27;
+      - &#x27;/Volumes/&#x27;
+  condition: selection and process_context
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-87-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/\/Library\/LaunchAgents\/.*\.plist$/i
+| (ContextImageFileName=/\/(private\/)?tmp\//i OR ContextImageFileName=/^\/Volumes\//i OR ContextImageFileName=/\/(veltod|CrashReporter)$/i)
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*/Library/LaunchAgents/*&quot; AND Filesystem.file_name=&quot;*.plist&quot; AND (Filesystem.process_path=&quot;/tmp/*&quot; OR Filesystem.process_path=&quot;/private/tmp/*&quot; OR Filesystem.process_path=&quot;/Volumes/*&quot; OR Filesystem.process_name IN (&quot;veltod&quot;,&quot;CrashReporter&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-87-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*/Library/LaunchAgents/*&quot; AND Filesystem.file_name=&quot;*.plist&quot; AND (Filesystem.process_path=&quot;/tmp/*&quot; OR Filesystem.process_path=&quot;/private/tmp/*&quot; OR Filesystem.process_path=&quot;/Volumes/*&quot; OR Filesystem.process_name IN (&quot;veltod&quot;,&quot;CrashReporter&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="270c2f3d16" data-platforms="def,falcon,sent,spl" data-targets="macos,windows">
+  <summary>
+    <span class="uc-title">CrashStealer credential harvest: temp/DMG process reading keychain + browser/wallet stores</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="270c2f3d16" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the CrashStealer collection stage where a process running from /tmp, /private/tmp or a mounted DMG accesses the login keychain and Chromium/Firefox credential databases (Login Data, Cookies, key4.db, logins.json) plus wallet Local Extension Settings. Article-specific via the temp/DMG-resident non-browser initiator touching multiple credential stores.
+
+Rationale: CrashStealer harvests browsers, wallets, password managers and the login keychain; anchoring on a non-browser process from /tmp/DMG touching &gt;=2 distinct credential stores (keychain + Chromium Login Data/Cookies/Firefox key4.db + wallet extension storage) yields a fan-out signal that legitimate single-app access does not produce.
+
+Cross-checked against:
+  • https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+  • https://cybersecuritynews.com/macos-stealer-mimics-apples-crash-report/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Credentials from Password Stores: Keychain">T1555.001</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span> <span class="ind tech" title="Data from Local System">T1005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate password manager or browser-import utility bulk-reading credential stores (filtered by excluding browser initiators and requiring a temp/DMG initiator)</li><li>Backup software (e.g. Time Machine helper) enumerating ~/Library</li><li>Forensic/DFIR collection tooling run from a mounted volume</li><li>Security product scanning keychain and browser profiles</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;1Password&quot;,&quot;Bitwarden&quot;,&quot;KeePassXC&quot;,&quot;backupd&quot;,&quot;mds&quot;,&quot;mdworker_shared&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the initiating process and its path — a binary in /tmp or a mounted DMG (or named veltod/CrashReporter) reading login.keychain-db plus multiple browser stores confirms active harvesting. Note which browsers/wallets were touched. Step 2 (contain): Isolate host, kill the process, and force credential rotation for the affected user: keychain/login password, browser-saved passwords, and any crypto wallet seed phrases immediately (assume wallet drain risk). Step 3 (hunt): Look for a subsequent ZIP archive written to a temp dir and outbound transfer to 179.43.166.242; scope other hosts for the same fan-out pattern.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFolderPath has_any (&quot;/tmp/&quot;,&quot;/private/tmp/&quot;,&quot;/Volumes/&quot;)
+   or InitiatingProcessFileName in~ (&quot;veltod&quot;,&quot;CrashReporter&quot;)
+| where FileName in~ (&quot;login.keychain-db&quot;,&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;key4.db&quot;,&quot;logins.json&quot;)
+   or FolderPath has_any (&quot;/Local Extension Settings/&quot;,&quot;/Application Support/Exodus/&quot;,&quot;/Application Support/Ledger Live/&quot;)
+| where InitiatingProcessFileName !in~ (&quot;Google Chrome&quot;,&quot;firefox&quot;,&quot;Brave Browser&quot;,&quot;Microsoft Edge&quot;,&quot;com.apple.WebKit&quot;)
+| summarize DistinctStores = dcount(FileName), Stores = make_set(FileName, 20),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+    by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
+| where DistinctStores &gt;= 2   // &gt;=2 distinct credential stores by one temp/DMG process = harvest fan-out
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where InitiatingProcessFolderPath has_any (&quot;/tmp/&quot;,&quot;/private/tmp/&quot;,&quot;/Volumes/&quot;)
+   or InitiatingProcessFileName in~ (&quot;veltod&quot;,&quot;CrashReporter&quot;)
+| where FileName in~ (&quot;login.keychain-db&quot;,&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;key4.db&quot;,&quot;logins.json&quot;)
+   or FolderPath has_any (&quot;/Local Extension Settings/&quot;,&quot;/Application Support/Exodus/&quot;,&quot;/Application Support/Ledger Live/&quot;)
+| where InitiatingProcessFileName !in~ (&quot;Google Chrome&quot;,&quot;firefox&quot;,&quot;Brave Browser&quot;,&quot;Microsoft Edge&quot;,&quot;com.apple.WebKit&quot;)
+| summarize DistinctStores = dcount(FileName), Stores = make_set(FileName, 20),
+            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)
+    by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
+| where DistinctStores &gt;= 2   // &gt;=2 distinct credential stores by one temp/DMG process = harvest fan-out
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo
+| (TargetFileName=/(login\.keychain-db|Login Data|Cookies|key4\.db|logins\.json)$/i OR TargetFileName=/\/Local Extension Settings\//i)
+| (ContextImageFileName=/\/(private\/)?tmp\//i OR ContextImageFileName=/^\/Volumes\//i OR ContextImageFileName=/\/(veltod|CrashReporter)$/i)
+| groupBy([aid, ComputerName, ContextImageFileName], function=count(field=TargetFileName, distinct=true), as=distinctStores)
+| distinctStores &gt;= 2</code></pre></div>
+    <div class="tab-content" id="art-87-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Filesystem.file_name) as files dc(Filesystem.file_name) as distinct_files min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (&quot;login.keychain-db&quot;,&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;key4.db&quot;,&quot;logins.json&quot;) OR Filesystem.file_path=&quot;*/Local Extension Settings/*&quot;) AND (Filesystem.process_path=&quot;/tmp/*&quot; OR Filesystem.process_path=&quot;/private/tmp/*&quot; OR Filesystem.process_path=&quot;/Volumes/*&quot; OR Filesystem.process_name IN (&quot;veltod&quot;,&quot;CrashReporter&quot;)) by Filesystem.dest Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where distinct_files &gt;= 2 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-87-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Filesystem.file_name) as files dc(Filesystem.file_name) as distinct_files min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (&quot;login.keychain-db&quot;,&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;key4.db&quot;,&quot;logins.json&quot;) OR Filesystem.file_path=&quot;*/Local Extension Settings/*&quot;) AND (Filesystem.process_path=&quot;/tmp/*&quot; OR Filesystem.process_path=&quot;/private/tmp/*&quot; OR Filesystem.process_path=&quot;/Volumes/*&quot; OR Filesystem.process_name IN (&quot;veltod&quot;,&quot;CrashReporter&quot;)) by Filesystem.dest Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where distinct_files &gt;= 2 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bbe50476d8" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">CrashStealer AES-GCM ZIP exfiltration to 179.43.166.242 over libcurl</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bbe50476d8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the CrashStealer exfiltration stage: outbound connection to the hardcoded attacker C2 179.43.166[.]242, which received the AES-GCM-encrypted ZIP of harvested browser/wallet/keychain data over libcurl. Article-specific via the exact C2 IP confirmed by Jamf (previously leaked in the app&#x27;s ATS plist exception).
+
+Rationale: 179.43.166.242 is the hardcoded exfiltration C2 confirmed by Jamf (leaked via an ATS exception in an earlier build&#x27;s plist) and reported by The Hacker News; any endpoint connecting to this IP is a direct data-theft indicator with essentially no benign use.
+
+Cross-checked against:
+  • https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+  • https://securityaffairs.com/195278/malware/crashstealer-new-macos-infostealer-uses-signed-apps-to-evade-gatekeeper.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Archive Collected Data: Archive via Utility">T1560.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel or scanning infrastructure probing the C2 IP</li><li>A researcher/sandbox intentionally connecting to the IP for analysis</li><li>Shared-hosting reuse where the IP later serves benign content (verify timing vs. campaign window)</li><li>Proxy/NAT egress that aggregates many hosts behind one source — confirm the true internal originator</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the internal host and initiating process connecting to 179.43.166.242 and measure bytes_out — a spike indicates the ZIP was exfiltrated. Correlate with prior credential-store access on the same host. Step 2 (contain): Block 179.43.166.242 at the perimeter, isolate the host, and treat all local credentials (keychain, browser passwords, crypto wallet seeds, password-manager vaults) as compromised — rotate immediately. Step 3 (hunt): Sweep all endpoints for connections to this IP and the campaign domains (endpoint-api-v1.com, cohezo.io/.com, cordinex.io, werkbit.io), and for the CrashReporter.dmg/LaunchAgent artifacts to enumerate the full victim set.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc5-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteIP == &quot;179.43.166.242&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(30d)
+| where DestinationIP == &quot;179.43.166.242&quot;
+| project TimeGenerated, DeviceVendor, SourceIP, SourceHostName, DestinationIP, DestinationPort,
+          RequestURL, SentBytes, ReceivedBytes, ApplicationProtocol
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: CrashStealer Exfiltration to C2 179.43.166.242
+id: f7d2b60c-4a18-49e5-8b71-0a5c3e912d68
+description: Detects outbound network connection to the CrashStealer C2 179.43.166.242 receiving the AES-GCM-encrypted ZIP of harvested data over libcurl.
+references:
+  - https://thehackernews.com/2026/07/crashstealer-macos-malware-uses.html
+  - https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1041
+logsource:
+  category: network_connection
+  product: macos
+detection:
+  selection:
+    DestinationIp: &#x27;179.43.166.242&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-87-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| RemoteAddressIP4=&quot;179.43.166.242&quot;
+| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count sum(All_Traffic.bytes_out) as bytes_out min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;179.43.166.242&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-87-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count sum(All_Traffic.bytes_out) as bytes_out min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;179.43.166.242&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="673ab6c4b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Crypto-wallet file/keystore access by non-wallet process</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="673ab6c4b4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;, @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;, @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;, @&quot;\Atomic\Local Storage\&quot;)
+| where InitiatingProcessFileName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where TargetFilePath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;,
+                                  @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;,
+                                  @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;,
+                                  @&quot;\Atomic\Local Storage\&quot;)
+| where ActingProcessName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,
+                                  &quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
+          TargetFilePath, TargetFileName, EventType
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
+status: experimental
+description: |
+    Stealers / wallet drainers read keystore files from MetaMask,
+    Exodus, Atomic, Phantom, Bitcoin, Electrum, Ethereum-cli wallets.
+    Filtering out the legitimate wallet binaries leaves only attacker
+    activity.
+references:
+    - https://attack.mitre.org/techniques/T1005/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1005
+    - attack.collection
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Ethereum\keystore\&#x27;
+            - &#x27;\Bitcoin\&#x27;
+            - &#x27;\Exodus\&#x27;
+            - &#x27;\Electrum\wallets\&#x27;
+            - &#x27;\MetaMask\&#x27;
+            - &#x27;\Phantom\&#x27;
+            - &#x27;\Atomic\Local Storage\&#x27;
+    filter_legit:
+        Image|endswith:
+            - &#x27;\MetaMask.exe&#x27;
+            - &#x27;\Exodus.exe&#x27;
+            - &#x27;\Atomic.exe&#x27;
+            - &#x27;\electrum.exe&#x27;
+            - &#x27;\Bitcoin.exe&#x27;
+            - &#x27;\Phantom.exe&#x27;
+    condition: selection_path and not filter_legit
+falsepositives:
+    - Backup software
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
+        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
+        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
+        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
+        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
+        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
+        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-87-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
+        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
+        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
+        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
+        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
+        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
+        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc7-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
+                                  @&quot;\Microsoft\Edge\User Data\&quot;,
+                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
+          TargetFilePath, TargetFileName, EventType
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
+status: experimental
+description: |
+    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
+    SQLite databases from Chrome/Edge/Firefox profile directories. Any
+    non-browser process touching these files is a high-fidelity signal.
+references:
+    - https://attack.mitre.org/techniques/T1539/
+    - https://attack.mitre.org/techniques/T1555/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1539
+    - attack.t1555.003
+    - attack.credential-access
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Google\Chrome\User Data\&#x27;
+            - &#x27;\Microsoft\Edge\User Data\&#x27;
+            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
+    selection_file:
+        TargetFilename|endswith:
+            - &#x27;\Login Data&#x27;
+            - &#x27;\Cookies&#x27;
+            - &#x27;\logins.json&#x27;
+            - &#x27;\cookies.sqlite&#x27;
+    filter_browser:
+        Image|endswith:
+            - &#x27;\chrome.exe&#x27;
+            - &#x27;\msedge.exe&#x27;
+            - &#x27;\firefox.exe&#x27;
+            - &#x27;\brave.exe&#x27;
+            - &#x27;\opera.exe&#x27;
+    condition: selection_path and selection_file and not filter_browser
+falsepositives:
+    - Backup utilities reading user profile files
+    - Browser sync agents from non-stock vendors
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-87-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc8-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;179.43.166.242&quot;) or RemoteUrl has_any (&quot;werkbit.io&quot;, &quot;endpoint-api-v1.com&quot;, &quot;cohezo.io&quot;, &quot;cohezo.com&quot;, &quot;cordinex.io&quot;, &quot;icky-lyrical.com&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-87-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;179.43.166.242&quot;]);
+let BadDomains = dynamic([&quot;werkbit.io&quot;, &quot;endpoint-api-v1.com&quot;, &quot;cohezo.io&quot;, &quot;cohezo.com&quot;, &quot;cordinex.io&quot;, &quot;icky-lyrical.com&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc8-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;179.43.166.242&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;werkbit.io&quot;, &quot;endpoint-api-v1.com&quot;, &quot;cohezo.io&quot;, &quot;cohezo.com&quot;, &quot;cordinex.io&quot;, &quot;icky-lyrical.com&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;werkbit.io&quot;, &quot;endpoint-api-v1.com&quot;, &quot;cohezo.io&quot;, &quot;cohezo.com&quot;, &quot;cordinex.io&quot;, &quot;icky-lyrical.com&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-87-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;179.43.166.242&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;werkbit.io&quot;, &quot;endpoint-api-v1.com&quot;, &quot;cohezo.io&quot;, &quot;cohezo.com&quot;, &quot;cordinex.io&quot;, &quot;icky-lyrical.com&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;werkbit.io&quot;, &quot;endpoint-api-v1.com&quot;, &quot;cohezo.io&quot;, &quot;cohezo.com&quot;, &quot;cordinex.io&quot;, &quot;icky-lyrical.com&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>

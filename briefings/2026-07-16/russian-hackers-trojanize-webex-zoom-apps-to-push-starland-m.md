@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### UAT-11795 ClickFix mshta.exe HTA stager fetching from Starland staging domains
 
-`UC_22_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_24_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Trojanized WebEx/Zoom/MobaXterm/DBeaver/FACEIT installer spawning Python loader
 
-`UC_22_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### Starland RAT HWID-parameterized C2 / shellcode staging to UAT-11795 domains
 
-`UC_22_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_24_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceNetworkEvents
 
 ### Starland RAT Polygon smart-contract fallback C2 resolution (eth_call)
 
-`UC_22_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_24_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -455,7 +455,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Russian hackers trojanize WebEx, Zoom apps to push Starland malware
 
-`UC_22_10` · phase: **exploit** · confidence: **High**
+`UC_24_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

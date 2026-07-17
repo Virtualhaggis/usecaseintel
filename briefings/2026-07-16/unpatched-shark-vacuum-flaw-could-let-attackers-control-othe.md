@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### AWS IoT client subscribing to reserved wildcard topic $aws/things/# (Shark vacuum serial harvest)
 
-`UC_26_0` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_28_0` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ index=aws sourcetype="aws:iot" eventType=Subscribe (topicName="$aws/things/#" OR
 
 ### Single AWS IoT principal writing shadows to multiple distinct device thing names (cross-device Exec_Command RCE)
 
-`UC_26_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_28_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ index=aws sourcetype="aws:iot" (eventType=UpdateThingShadow OR eventType=Publish
 
 ### AWS IoT policy created/updated granting reserved $aws/things/* topic without ThingName pinning
 
-`UC_26_2` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_28_2` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

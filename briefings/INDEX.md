@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2582 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2581 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -47,7 +47,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [firefox chrome adobe and vmware updates fix multiple critica](./2026-07-15/firefox-chrome-adobe-and-vmware-updates-fix-multiple-critica.md)
 - [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
 - [ghsa critical cve 2026 52881 mantisbt reflected xss in admin](./2026-07-15/ghsa-critical-cve-2026-52881-mantisbt-reflected-xss-in-admin.md)
-- [google gemini cli abused as a hacking agent malware botnet o](./2026-07-15/google-gemini-cli-abused-as-a-hacking-agent-malware-botnet-o.md)
 - [okobot malware framework injects seed phrase phishing into l](./2026-07-15/okobot-malware-framework-injects-seed-phrase-phishing-into-l.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [researcher drops new windows zero day poc hours after micros](./2026-07-15/researcher-drops-new-windows-zero-day-poc-hours-after-micros.md)

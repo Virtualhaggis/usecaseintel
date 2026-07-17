@@ -45,7 +45,7 @@ I guess it captures the asymmetry of this industry, but I’ve never been entire
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1090.003** — Proxy: Multi-hop Proxy
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1572** — Protocol Tunneling
 
 ## Kill chain phases observed
 
@@ -53,32 +53,31 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UAT-7810 ORB C2 network communication to confirmed relay IPs
+### UAT-7810 ORB network C2 beacon to named Talos IP set
 
-`UC_127_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_127_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") OR All_Traffic.src_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let c2 = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (c2)
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort, 20) by DeviceName, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by LastSeen desc
+| where RemoteIP in ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, LocalIP, ActionType
+| order by Timestamp desc
 ```
 
-### UAT-7810 exploitable edge-device exposure (Ruckus / ASUS AiCloud n-day CVEs)
+### Ruckus / ASUS AiCloud router exposed to UAT-7810 n-day CVEs
 
-`UC_127_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_127_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - severity
+| tstats `summariesonly` count max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | convert ctime(lastTime) | sort - severity
 ```
 
 **Defender KQL:**
@@ -87,6 +86,30 @@ DeviceTvmSoftwareVulnerabilities
 | where CveId in ("CVE-2020-22653","CVE-2020-22658","CVE-2023-25717","CVE-2025-2492")
 | project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel desc
+```
+
+### Edge/internet-facing host relaying to UAT-7810 ORB C2 (perimeter view)
+
+`UC_127_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count sum(All_Traffic.bytes) as bytes values(All_Traffic.direction) as direction min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231") OR All_Traffic.src_ip IN ("194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - bytes
+```
+
+**Defender KQL:**
+```kql
+let orb = dynamic(["194.233.92.26","217.15.160.247","217.15.164.147","95.182.100.231"]);
+let edge = DeviceInfo
+    | where Timestamp > ago(7d)
+    | where IsInternetFacing == true
+    | distinct DeviceId, DeviceName;
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (orb)
+| join kind=inner edge on DeviceId
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -418,4 +441,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
