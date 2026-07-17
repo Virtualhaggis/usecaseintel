@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure: unpatched Siemens RUGGEDCOM ROX II vulnerable to CVE-2025-4094x chain
 
-`UC_1_4` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_4_4` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy
 
-`UC_1_3` · phase: **install** · confidence: **High**
+`UC_4_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### ClickFix mshta.exe launched from Run box pulling remote HTA content
 
-`UC_3_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_6_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### rundll32 loading DLL from WebDAV UNC share with GUID directory and ordinal export
 
-`UC_3_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### rundll32.exe with no command-line parameters making an outbound network connection
 
-`UC_3_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_6_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceNetworkEvents
 
 ### Non-browser process reading Chrome/Edge Login Data or Web Data credential stores
 
-`UC_3_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceFileEvents
 
 ### pushd remote-share mount and conhost --headless obfuscated rundll32 execution
 
-`UC_3_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +176,7 @@ DeviceProcessEvents
 
 ### pythonw.exe silently executing a script from %LocalAppData%\Temp after ZIP drop
 
-`UC_3_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_6_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -197,7 +197,7 @@ DeviceProcessEvents
 
 ### Outbound connections to ACR Stealer ClickFix campaign C2 / payload domains
 
-`UC_3_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_6_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -477,7 +477,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ACR Stealer Uses ClickFix Lures to Steal Browser Tokens and Microsoft 365 Files
 
-`UC_3_9` · phase: **exploit** · confidence: **High**
+`UC_6_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

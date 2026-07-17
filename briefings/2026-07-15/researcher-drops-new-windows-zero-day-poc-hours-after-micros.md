@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### SharePoint IIS worker (w3wp.exe) spawning command/script interpreter — CVE-2026-56164/45659/32201 RCE
 
-`UC_50_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_53_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### SharePoint web shell / .aspx payload written by w3wp.exe into LAYOUTS directory
 
-`UC_50_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_53_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceFileEvents
 
 ### LegacyHive EoP — cross-user UsrClass.dat mounted under another user's HKU\<SID>\_Classes
 
-`UC_50_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_53_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

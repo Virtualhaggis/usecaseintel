@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised @asyncapi npm package versions resolved into node_modules / Yarn cache
 
-`UC_35_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_38_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceFileEvents
 
 ### Second-stage sync.js dropped under OS 'NodeJS' masquerade directory
 
-`UC_35_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceFileEvents
 
 ### Detached hidden node.exe executing sync.js from NodeJS masquerade path
 
-`UC_35_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### Outbound C2 to Miasma controller 85.137.53.71 on ports 8080/8081/8091
 
-`UC_35_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_38_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceNetworkEvents
 
 ### Node.js retrieving Miasma second stage from IPFS gateway (specific CIDs)
 
-`UC_35_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_38_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -540,7 +540,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Unpacking the AsyncAPI npm supply chain compromise and import-time payload deliv
 
-`UC_35_12` · phase: **exploit** · confidence: **High**
+`UC_38_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

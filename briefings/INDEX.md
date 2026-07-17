@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2582 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,9 +10,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-17
 - [acr stealer uses clickfix lures to steal browser tokens and ](./2026-07-17/acr-stealer-uses-clickfix-lures-to-steal-browser-tokens-and-.md)
+- [armenia detains russian tourist on u s warrant for revil hac](./2026-07-17/armenia-detains-russian-tourist-on-u-s-warrant-for-revil-hac.md)
 - [cisa adds exploited sharepoint rce zero day cve 2026 58644 t](./2026-07-17/cisa-adds-exploited-sharepoint-rce-zero-day-cve-2026-58644-t.md)
+- [e u orders google to open android mic camera and screen to r](./2026-07-17/e-u-orders-google-to-open-android-mic-camera-and-screen-to-r.md)
 - [new goserpent malware targets southeast asian governments an](./2026-07-17/new-goserpent-malware-targets-southeast-asian-governments-an.md)
-- [new windows legacyhive zero day gives hackers admin privileg](./2026-07-17/new-windows-legacyhive-zero-day-gives-hackers-admin-privileg.md)
+- [the race to field military autonomy is on can trusted inform](./2026-07-17/the-race-to-field-military-autonomy-is-on-can-trusted-inform.md)
 - [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
 
 ## 2026-07-16
@@ -113,11 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [github secret scanning public monitoring for enterprises cov](./2026-07-12/github-secret-scanning-public-monitoring-for-enterprises-cov.md)
 - [injective npm supply chain attack 18 packages backdoored to ](./2026-07-12/injective-npm-supply-chain-attack-18-packages-backdoored-to-.md)
 - [jscrambler npm package publishes malicious preinstall binary](./2026-07-12/jscrambler-npm-package-publishes-malicious-preinstall-binary.md)
-
-## 2026-07-11
-- [compromised jscrambler 8 14 0 npm release drops rust infoste](./2026-07-11/compromised-jscrambler-8-14-0-npm-release-drops-rust-infoste.md)
-- [critical zimbra flaw could let crafted emails run malicious ](./2026-07-11/critical-zimbra-flaw-could-let-crafted-emails-run-malicious-.md)
-- [hackers weaponize balochistan police portal in multi group e](./2026-07-11/hackers-weaponize-balochistan-police-portal-in-multi-group-e.md)
 
 ## 2026-07-10
 - [cisa kev cve 2026 48939 icagenda unrestricted upload of file](./2026-07-10/cisa-kev-cve-2026-48939-icagenda-unrestricted-upload-of-file.md)
