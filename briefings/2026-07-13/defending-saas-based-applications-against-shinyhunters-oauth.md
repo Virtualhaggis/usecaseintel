@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Salesforce Connected App API activity from ShinyHunters integration-abuse IPs
 
-`UC_93_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_97_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ CloudAppEvents
 
 ### First-seen Salesforce Connected App performing bulk API / report export (fake Data Loader)
 
-`UC_93_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_97_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ CloudAppEvents
 
 ### Anomalous Salesforce ReportExport volume — bulk CRM exfiltration
 
-`UC_93_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_97_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ CloudAppEvents
 
 ### Guest-user Aura/GraphQL mass data retrieval from ShinyHunters IOC IP
 
-`UC_93_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_97_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

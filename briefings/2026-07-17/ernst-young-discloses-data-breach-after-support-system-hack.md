@@ -11,15 +11,9 @@ By Bill Toulas
 July 17, 2026
 10:55 AM
 0 
-
-
 Ernst & Young is notifying customers of a data breach caused by the compromise of a third-party support ticket system used by its IT personnel.
-
-
 According to the company, support tickets submitted through the platform may have included documents containing client tax information.
-
-
-Ernst & Young (EY) is among the world’s four largest auditing and professional services providers, offe…
+Ernst & Young (EY) is among the world’s four largest auditing and professional services providers, offering auditin…
 
 ## Indicators of Compromise (high-fidelity only)
 

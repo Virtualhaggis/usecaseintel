@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### TuxBot/Akiru C2 & dropper connection (209.182.237.133, 185.10.68.127)
 
-`UC_57_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_61_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### TuxBot v3 Evolution sample execution by SHA256
 
-`UC_57_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### IoT Telnet/ADB brute-force scanner fan-out (Akiru propagation)
 
-`UC_57_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_61_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceNetworkEvents
 
 ### DNS/HTTP resolution of TuxBot developer domain digikalas.online
 
-`UC_57_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_61_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### TuxBot bot-protocol beacon on TCP/31337 to public host
 
-`UC_57_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_61_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -462,7 +462,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TuxBot v3: Inside an IoT Botnet Framework With LLM-Assisted Development
 
-`UC_57_10` · phase: **install** · confidence: **High**
+`UC_61_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

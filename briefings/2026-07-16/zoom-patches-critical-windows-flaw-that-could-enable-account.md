@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Unpatched Zoom Workplace/VDI/Meeting SDK for Windows (CVE-2026-53412 account-takeover + privesc set)
 
-`UC_39_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_43_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

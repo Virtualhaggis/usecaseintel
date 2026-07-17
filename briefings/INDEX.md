@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2581 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,8 +15,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [e u orders google to open android mic camera and screen to r](./2026-07-17/e-u-orders-google-to-open-android-mic-camera-and-screen-to-r.md)
 - [ernst young discloses data breach after support system hack](./2026-07-17/ernst-young-discloses-data-breach-after-support-system-hack.md)
 - [fake coding tests deliver ottercookie aligned malware hidden](./2026-07-17/fake-coding-tests-deliver-ottercookie-aligned-malware-hidden.md)
+- [goldeneyedog subgroup linked to digicert breach and code sig](./2026-07-17/goldeneyedog-subgroup-linked-to-digicert-breach-and-code-sig.md)
 - [inside the search for clean residential proxies for carding](./2026-07-17/inside-the-search-for-clean-residential-proxies-for-carding.md)
 - [new goserpent malware targets southeast asian governments an](./2026-07-17/new-goserpent-malware-targets-southeast-asian-governments-an.md)
+- [new nadmesh botnet hunts exposed ai services for cloud keys ](./2026-07-17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-.md)
 - [the race to field military autonomy is on can trusted inform](./2026-07-17/the-race-to-field-military-autonomy-is-on-can-trusted-inform.md)
 - [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
 
@@ -95,7 +97,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
 
 ## 2026-07-13
-- [attacker uses suspected ai generated powershell script to ma](./2026-07-13/attacker-uses-suspected-ai-generated-powershell-script-to-ma.md)
 - [cisa kev cve 2008 4128 cisco ios cross site request forgery ](./2026-07-13/cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-.md)
 - [crashstealer macos malware uses notarized dropper to pass ga](./2026-07-13/crashstealer-macos-malware-uses-notarized-dropper-to-pass-ga.md)
 - [defending saas based applications against shinyhunters oauth](./2026-07-13/defending-saas-based-applications-against-shinyhunters-oauth.md)
@@ -107,7 +108,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
 - [meta files patent for ai that can listen all day and track h](./2026-07-13/meta-files-patent-for-ai-that-can-listen-all-day-and-track-h.md)
 - [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
-- [misconfigured server reveals three evilginx phishing operati](./2026-07-13/misconfigured-server-reveals-three-evilginx-phishing-operati.md)
 - [new memghost attack plants persistent false memories in ai a](./2026-07-13/new-memghost-attack-plants-persistent-false-memories-in-ai-a.md)
 - [thinking fast and slow in the soc the case for combining aut](./2026-07-13/thinking-fast-and-slow-in-the-soc-the-case-for-combining-aut.md)
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
@@ -159,7 +159,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 
 ## 2026-07-06
-- [5 insights from frost sullivan s 2025 frost radar for cloud ](./2026-07-06/5-insights-from-frost-sullivan-s-2025-frost-radar-for-cloud-.md)
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
 - [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)
 - [ghsa critical cve 2026 53486 decompress archive extraction c](./2026-07-06/ghsa-critical-cve-2026-53486-decompress-archive-extraction-c.md)
@@ -687,7 +686,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the rise of the ai security engineer a new discipline for an](./2026-02-24/the-rise-of-the-ai-security-engineer-a-new-discipline-for-an.md)
 
 ## 2026-02-23
-- [astro full read ssrf via host header injection](./2026-02-23/astro-full-read-ssrf-via-host-header-injection.md)
 - [claude code security a welcome evolution in the remediation ](./2026-02-23/claude-code-security-a-welcome-evolution-in-the-remediation-.md)
 
 ## 2026-02-20

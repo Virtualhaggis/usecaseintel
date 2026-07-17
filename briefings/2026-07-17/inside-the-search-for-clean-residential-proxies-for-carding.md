@@ -11,12 +11,8 @@ Sponsored by Flare
 July 17, 2026
 10:00 AM
 0 
-
-
 Residential proxies are no longer treated as a simple anonymity tool in carding circles. They are increasingly discussed as one component of a broader identity-simulation stack, alongside device fingerprints, browser profiles, billing information, time zones, cookies, and transaction behavior.
-
-
-To better understand how criminal actors currently use and evaluate this infrastructure,…
+To better understand how criminal actors currently use and evaluate this infrastructure, Flare r…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -40,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Corporate endpoint browsing the ascarding.net carding forum
 
-`UC_1_1` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_1` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +55,7 @@ DeviceNetworkEvents
 
 ### Internal host connecting to NetNut / Alarum residential-proxy infrastructure
 
-`UC_1_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
