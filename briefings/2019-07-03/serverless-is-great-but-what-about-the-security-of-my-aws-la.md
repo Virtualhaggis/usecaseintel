@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Serverless is great, but what about the security of my AWS Lambda functions and
 
-`UC_3488_0` · phase: **exploit** · confidence: **High**
+`UC_3487_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Dependency injection in Python
 
-`UC_1497_0` · phase: **exploit** · confidence: **High**
+`UC_1496_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
