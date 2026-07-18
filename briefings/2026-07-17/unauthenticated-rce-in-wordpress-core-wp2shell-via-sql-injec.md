@@ -1,4 +1,4 @@
-# [CRIT] Unauthenticated RCE in WordPress core (wp2shell)
+# [CRIT] Unauthenticated RCE in WordPress core (wp2shell), via SQL injection
 
 **Source:** Aikido
 **Published:** 2026-07-17

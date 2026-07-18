@@ -57,13 +57,14 @@ Expel, which shared technical details of the event, described the threat actor a
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
-- **T1036.008** — Masquerade File Type
+- **T1036.008** — Masquerading: Masquerade File Type
+- **T1055** — Process Injection
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1027** — Obfuscated/Encrypted Files or Information
+- **T1218.010** — System Binary Proxy Execution: Regsvr32
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1090** — Proxy
-- **T1553.006** — Subvert Trust Controls: Code Signing Policy Modification
-- **T1070.001** — Indicator Removal: Clear Windows Event Logs
+- **T1553.002** — Subvert Trust Controls: Code Signing
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -71,110 +72,113 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Malicious .scr 'screenshot' executed from download/temp via chat or archive (CylindricalCanine delivery)
+### Gh0stRAT .scr screensaver executable delivered as fake support screenshot
 
 `UC_7_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="*.scr" (Processes.process_path="*\\Downloads\\*" OR Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\Users\\Public\\*") (Processes.parent_process_name IN ("winrar.exe","7zfm.exe","7z.exe","explorer.exe","chrome.exe","msedge.exe","firefox.exe","outlook.exe","teams.exe","ms-teams.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="*.scr" AND (Processes.parent_process_name IN ("explorer.exe","winrar.exe","7zFM.exe","7zG.exe","chrome.exe","msedge.exe","firefox.exe","outlook.exe") OR Processes.process_path IN ("*\\Temp\\*","*\\Downloads\\*","*\\AppData\\Local\\Temp\\*"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_path
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName endswith ".scr"
-| where FolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\Local\Temp\", @"\AppData\Local\Packages\", @"\Users\Public\")
-| where InitiatingProcessFileName in~ ("winrar.exe","7zfm.exe","7z.exe","explorer.exe","chrome.exe","msedge.exe","firefox.exe","outlook.exe","teams.exe","ms-teams.exe","olk.exe")
 | where AccountName !endswith "$"
+| where FileName endswith ".scr"
+| where InitiatingProcessFileName in~ ("explorer.exe","winrar.exe","7zfm.exe","7zg.exe","chrome.exe","msedge.exe","firefox.exe","outlook.exe","olk.exe")
+   or FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\", @"\Downloads\", @"\Windows\Temp\")
 | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### DLL side-load co-located with encrypted 'update.log' payload (Golden Gh0st Loader chain)
+### Golden Gh0st Loader: regsvr32/TrustedInstaller/elevation_service beaconing to public IP
 
-`UC_7_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="update.log" (Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\Downloads\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let PayloadFiles = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "update.log"
-    | where FolderPath has_any (@"\AppData\", @"\ProgramData\", @"\Users\Public\", @"\Temp\", @"\Downloads\")
-    | extend PayloadDir = tolower(substring(FolderPath, 0, strlen(FolderPath) - strlen(FileName)))
-    | project DeviceId, PayloadDir, PayloadTime = Timestamp, PayloadCreator = InitiatingProcessFileName;
-DeviceImageLoadEvents
-| where Timestamp > ago(30d)
-| where FileName endswith ".dll"
-| where FolderPath has_any (@"\AppData\", @"\ProgramData\", @"\Users\Public\", @"\Temp\", @"\Downloads\")
-| extend DllDir = tolower(substring(FolderPath, 0, strlen(FolderPath) - strlen(FileName)))
-| join kind=inner PayloadFiles on DeviceId, $left.DllDir == $right.PayloadDir
-| where abs(datetime_diff('minute', Timestamp, PayloadTime)) <= 60
-| project Timestamp, DeviceName, LoaderProcess = InitiatingProcessFileName, LoaderSHA256 = InitiatingProcessSHA256, LoadedDll = FileName, DllDir, PayloadCreator, PayloadTime
-| order by Timestamp desc
-```
-
-### C2 egress to CylindricalCanine Golden Gh0st RAT infrastructure (IPs + qaqkongtiao.com)
-
-`UC_7_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_7_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="82.23.186.8" OR All_Traffic.dest_ip="154.12.185.32" OR All_Traffic.dest_ip="45.144.227.12" OR All_Traffic.dest_ip="203.160.68.2" OR All_Traffic.dest_ip="154.12.185.30" OR All_Traffic.dest_ip="62.197.153.45" OR All_Traffic.dest_ip="45.144.227.29") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name IN ("regsvr32.exe","TrustedInstaller.exe","elevation_service.exe") AND NOT (All_Traffic.dest IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","127.0.0.0/8","169.254.0.0/16"))) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("82.23.186.8","154.12.185.32","45.144.227.12","203.160.68.2","154.12.185.30","62.197.153.45","45.144.227.29")
-   or RemoteUrl has "qaqkongtiao.com"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessSHA256
+| where InitiatingProcessFileName in~ ("regsvr32.exe","trustedinstaller.exe","elevation_service.exe")
+| where RemoteIPType == "Public"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP
+| order by FirstSeen desc
+```
+
+### CylindricalCanine C2 connection to GoldenEyeDog infrastructure (IP/domain IOCs)
+
+`UC_7_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("82.23.186.8","154.12.185.32","45.144.227.12","203.160.68.2","154.12.185.30","62.197.153.45","45.144.227.29")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let c2ips = dynamic(["82.23.186.8","154.12.185.32","45.144.227.12","203.160.68.2","154.12.185.30","62.197.153.45","45.144.227.29"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (c2ips) or RemoteUrl has "qaqkongtiao.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Golden Gh0st RAT / Zhong Stealer known-bad file hashes executed or written
+### Golden Gh0st RAT / Zhong Stealer artifact execution by SHA256 (DigiCert-signed)
 
 `UC_7_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash="da2c58308e860e57df4c46465fd1cfc68d41e8699b4871e9a9be3c434283d50b" OR Processes.process_hash="82794015e2b40cc6e02d3c1d50241465c0cf2c2e4f0a7a2a8f880edaee203724" OR Processes.process_hash="c65170be2bf4f0bd71b9044592c063eaa82f3d43fcbd8a81e30a959bcaad8ae5" OR Processes.process_hash="2515b546125d20013237aeadec5873e6438ada611347035358059a77a32c54f5" OR Processes.process_hash="1613a913d0384cbb958e9a8d6b00fffaf77c27d348ebc7886d6c563a6f22f2b7" OR Processes.process_hash="395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d" OR Processes.process_hash="1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2" OR Processes.process_hash="4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6" OR Processes.process_hash="96f401b80d3319f8285fa2bb7f0d66ca9055d349c044b78c27e339bcfb07cdf0" OR Processes.process_hash="33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c" OR Processes.process_hash="fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc" OR Processes.process_hash="fd4dd9904549c6655465331921a28330ad2b9ff1c99eb993edf2252001f1d107" OR Processes.process_hash="3dd470e85fe77cd847ca59d1d08ec8ccebe9bd73fd2cf074c29d87ca2fd24e33") by Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("da2c58308e860e57df4c46465fd1cfc68d41e8699b4871e9a9be3c434283d50b","82794015e2b40cc6e02d3c1d50241465c0cf2c2e4f0a7a2a8f880edaee203724","c65170be2bf4f0bd71b9044592c063eaa82f3d43fcbd8a81e30a959bcaad8ae5","2515b546125d20013237aeadec5873e6438ada611347035358059a77a32c54f5","1613a913d0384cbb958e9a8d6b00fffaf77c27d348ebc7886d6c563a6f22f2b7","395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d","1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2","4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6","96f401b80d3319f8285fa2bb7f0d66ca9055d349c044b78c27e339bcfb07cdf0","33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c","fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc","fd4dd9904549c6655465331921a28330ad2b9ff1c99eb993edf2252001f1d107","3dd470e85fe77cd847ca59d1d08ec8ccebe9bd73fd2cf074c29d87ca2fd24e33")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let iocs = dynamic(["da2c58308e860e57df4c46465fd1cfc68d41e8699b4871e9a9be3c434283d50b","82794015e2b40cc6e02d3c1d50241465c0cf2c2e4f0a7a2a8f880edaee203724","c65170be2bf4f0bd71b9044592c063eaa82f3d43fcbd8a81e30a959bcaad8ae5","2515b546125d20013237aeadec5873e6438ada611347035358059a77a32c54f5","1613a913d0384cbb958e9a8d6b00fffaf77c27d348ebc7886d6c563a6f22f2b7","395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d","1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2","4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6","96f401b80d3319f8285fa2bb7f0d66ca9055d349c044b78c27e339bcfb07cdf0","33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c","fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc","fd4dd9904549c6655465331921a28330ad2b9ff1c99eb993edf2252001f1d107","3dd470e85fe77cd847ca59d1d08ec8ccebe9bd73fd2cf074c29d87ca2fd24e33"]);
+let badhashes = dynamic(["da2c58308e860e57df4c46465fd1cfc68d41e8699b4871e9a9be3c434283d50b","82794015e2b40cc6e02d3c1d50241465c0cf2c2e4f0a7a2a8f880edaee203724","c65170be2bf4f0bd71b9044592c063eaa82f3d43fcbd8a81e30a959bcaad8ae5","2515b546125d20013237aeadec5873e6438ada611347035358059a77a32c54f5","1613a913d0384cbb958e9a8d6b00fffaf77c27d348ebc7886d6c563a6f22f2b7","395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d","1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2","4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6","96f401b80d3319f8285fa2bb7f0d66ca9055d349c044b78c27e339bcfb07cdf0","33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c","fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc","fd4dd9904549c6655465331921a28330ad2b9ff1c99eb993edf2252001f1d107","3dd470e85fe77cd847ca59d1d08ec8ccebe9bd73fd2cf074c29d87ca2fd24e33"]);
 union
-  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 has_any (iocs) | project Timestamp, DeviceName, AccountName, Src="Process", FileName, FolderPath, SHA256, Cmd=ProcessCommandLine),
-  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 has_any (iocs) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Src="File", FileName, FolderPath, SHA256, Cmd=InitiatingProcessCommandLine),
-  (DeviceImageLoadEvents | where Timestamp > ago(30d) | where SHA256 has_any (iocs) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Src="ImageLoad", FileName, FolderPath, SHA256, Cmd=InitiatingProcessCommandLine)
+(DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (badhashes) | project Timestamp, DeviceName, User=AccountName, Action="ProcessCreate", FileName, FolderPath, SHA256, Cmd=ProcessCommandLine),
+(DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (badhashes) | project Timestamp, DeviceName, User=InitiatingProcessAccountName, Action=ActionType, FileName, FolderPath, SHA256, Cmd=InitiatingProcessCommandLine),
+(DeviceImageLoadEvents | where Timestamp > ago(30d) | where SHA256 in (badhashes) | project Timestamp, DeviceName, User=InitiatingProcessAccountName, Action="ImageLoad", FileName, FolderPath, SHA256, Cmd=InitiatingProcessCommandLine)
 | order by Timestamp desc
 ```
 
-### Windows Event Log clearing (Golden Gh0st RAT anti-forensics)
+### Golden Gh0st RAT credential collection from 360 / QQ / Skype browser stores
 
-`UC_7_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="wevtutil.exe" (Processes.process="*cl *" OR Processes.process="*clear-log*")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") (Processes.process="*Clear-EventLog*" OR Processes.process="*Limit-EventLog*"))) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*\\360se6\\*","*\\360Chrome\\*","*\\360ChromeX\\*","*\\Tencent\\QQBrowser\\*","*\\Skype\\*","*\\Mozilla\\Firefox\\Profiles\\*","*\\Google\\Chrome\\User Data\\*") AND Filesystem.file_name IN ("Login Data","Cookies","Web Data","logins.json","key4.db","cookies.sqlite","History")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| search NOT process_name IN ("chrome.exe","firefox.exe","360se.exe","360chrome.exe","QQBrowser.exe","msedge.exe","Skype.exe")
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where (FileName =~ "wevtutil.exe" and ProcessCommandLine has_any ("cl ","clear-log"))
-   or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Clear-EventLog","Limit-EventLog","ClearEventLog"))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FolderPath has_any (@"\360se6\", @"\360Chrome\", @"\360ChromeX\", @"\Tencent\QQBrowser\", @"\Skype\", @"\Mozilla\Firefox\Profiles\", @"\Google\Chrome\User Data\")
+| where FileName in~ ("Login Data","Cookies","Web Data","logins.json","key4.db","cookies.sqlite","History")
+| where InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName !in~ ("chrome.exe","firefox.exe","360se.exe","360chrome.exe","qqbrowser.exe","msedge.exe","skype.exe","explorer.exe","searchprotocolhost.exe","msmpeng.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath
 | order by Timestamp desc
 ```
 
@@ -533,4 +537,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

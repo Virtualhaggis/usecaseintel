@@ -24,7 +24,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [seven malicious vite npm packages use blockchain c2 to deliv](./2026-07-17/seven-malicious-vite-npm-packages-use-blockchain-c2-to-deliv.md)
 - [the race to field military autonomy is on can trusted inform](./2026-07-17/the-race-to-field-military-autonomy-is-on-can-trusted-inform.md)
 - [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
-- [unauthenticated rce in wordpress core wp2shell](./2026-07-17/unauthenticated-rce-in-wordpress-core-wp2shell.md)
+- [unauthenticated rce in wordpress core wp2shell via sql injec](./2026-07-17/unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec.md)
 
 ## 2026-07-16
 - [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
