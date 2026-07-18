@@ -1,3 +1,424 @@
+<article class="card" id="art-90" data-art-slug="2026-07-14-forgotten-uefi-shims-undermining-secure-boot"
+  data-phases="actions,c2,exploit,install,recon" data-sev="med"
+  data-techs=""
+  data-sources="ESET WeLiveSecurity"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="windows"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="Forgotten UEFI shims undermining Secure Boot ESET researchers discovered 11 vulnerable UEFI shim bootloaders signed by Microsoft that allow attackers to bypass UEFI Secure Boot by exploiting decade-old vulnerabilities CVE-2026-8863 CVE-2026-10797  [LLM] Exposure to revoked vulnerable UEFI shims (CVE-2026-8863 / CVE-2026-10797) [LLM] Vulnerable UEFI shim/GRUB bootloader written to the EFI System Partition [LLM] EFI System Partition mounted via mountvol /S (rogue shim staging) Asset exposure — vulnerability matches article CVE(s) File hash IOCs — endpoint file/process match">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2026-07-14-forgotten-uefi-shims-undermining-secure-boot" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.welivesecurity.com/en/eset-research/forgotten-uefi-shims-undermining-secure-boot/" target="_blank" rel="noopener">Forgotten UEFI shims undermining Secure Boot</a></h2>
+  <div class="source-badges"><span class="source-badge eset">ESET WeLiveSecurity</span></div>
+  <div class="pubmeta">
+    <span>2026-07-14</span>
+    <span>5 use cases</span>
+    <span>0 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">ESET researchers discovered 11 vulnerable UEFI shim bootloaders signed by Microsoft that allow attackers to bypass UEFI Secure Boot by exploiting decade-old vulnerabilities</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-8863</span> <span class="ind cve">CVE-2026-10797</span></div>
+<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">AE75F0D82BA3DF82…</span> <span class="ind ">7B2A3F5C96F95BD8…</span> <span class="ind ">EB86FA1386FE6E45…</span> <span class="ind ">FD23D6E57DE6F4E1…</span> <span class="ind ">A0DE9333442C1BF9…</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-90-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-90"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-90-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Exposure to revoked vulnerable UEFI shims (CVE-2026-8863 / CVE-2026-10797)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Vulnerable UEFI shim/GRUB bootloader written to the EFI System Partition · [LLM] EFI System Partition mounted via mountvol /S (rogue shim staging) · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="bcdccac23f" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Exposure to revoked vulnerable UEFI shims (CVE-2026-8863 / CVE-2026-10797)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bcdccac23f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces managed endpoints that Defender TVM flags as carrying the ESET-reported vulnerable UEFI shim bootloaders (versions &lt;=0.9) covered by CVE-2026-8863 and CVE-2026-10797. These devices remain exploitable for Secure Boot bypass until Microsoft&#x27;s June 9 2026 dbx revocation (KB5101650) is applied, so this is a posture hunt to prioritise dbx rollout.
+
+Rationale: Pivots on the two CVE IDs assigned by CERT/CC (VU#616257) and ESET to the reported shims; TVM CVE mapping is high-fidelity for prioritising which hosts still need the June 2026 dbx update. No FP concept — it is a vulnerability-inventory lookup.
+
+Cross-checked against:
+  • https://kb.cert.org/vuls/id/616257
+  • https://thehackernews.com/2026/07/11-old-microsoft-signed-linux-uefi.html
+  • https://www.helpnetsecurity.com/2026/07/14/eset-uefi-secure-boot-bypass/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Pre-OS Boot">T1542</span> <span class="ind tech" title="Bootkit">T1542.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>TVM CVE-to-firmware mapping lag means recently-patched (dbx applied) hosts may still show as vulnerable for one scan cycle</li><li>Linux/dual-boot hosts legitimately shipping shim as part of the distro but already on shim &gt;=15.7</li><li>Devices where the third-party UEFI CA is disabled in firmware are not actually exploitable but may still list the shim software</li><li>Air-gapped or offline devices whose TVM data is stale</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where isnotempty(RecommendedSecurityUpdate)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the device trusts the Microsoft Corporation UEFI CA 2011 third-party cert and whether the June 9 2026 dbx update (KB5101650) is installed. 2) Contain: schedule/push the dbx revocation update; where BitLocker is present, validate recovery keys are escrowed before the dbx change to avoid boot lockout. 3) Hunt: on any exposed host, pivot to UC-2/UC-3 to check whether a rogue shim was actually written to the ESP or the partition was mounted, and review boot integrity / measured-boot logs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-90-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-90-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-90-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-90-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in (&quot;CVE-2026-8863&quot;,&quot;CVE-2026-10797&quot;)
+| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-90-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in (&quot;CVE-2026-8863&quot;,&quot;CVE-2026-10797&quot;)
+| project TimeGenerated, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-90-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-90-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-90-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-90-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN (&quot;CVE-2026-8863&quot;,&quot;CVE-2026-10797&quot;)) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-90-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN (&quot;CVE-2026-8863&quot;,&quot;CVE-2026-10797&quot;)) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1fbad27af0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Vulnerable UEFI shim/GRUB bootloader written to the EFI System Partition</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1fbad27af0" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects a shim or GRUB2 EFI bootloader binary (shimx64.efi, grubx64.efi, mmx64.efi, bootx64.efi and 32-bit variants) being created or modified under an \EFI\ path — the &#x27;bring your own vulnerable shim&#x27; technique ESET describes, where an attacker drops a Microsoft-signed but pre-revocation shim onto any UEFI system to bypass Secure Boot. Highest signal on Windows-only endpoints that should never have Linux shim/GRUB binaries on the ESP.
+
+Rationale: Uses the exact shim/GRUB EFI filenames from the shim ecosystem the article names (shim + second-stage GRUB2) constrained to the \EFI\ system-partition path. On a Windows-managed fleet, a Linux shim/GRUB binary appearing on the ESP is a strong &#x27;attacker staged a pre-revocation shim&#x27; signal rather than any Microsoft boot component (bootmgfw.efi).
+
+Cross-checked against:
+  • https://www.welivesecurity.com/en/eset-research/forgotten-uefi-shims-undermining-secure-boot/
+  • https://kb.cert.org/vuls/id/616257</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Bootkit">T1542.003</span> <span class="ind tech" title="Pre-OS Boot">T1542</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Linux install or dual-boot setup writing shim/GRUB to the ESP</li><li>OEM/firmware recovery or imaging tooling refreshing fallback \EFI\Boot\bootx64.efi</li><li>Endpoint backup/restore software that snapshots and rewrites the ESP</li><li>Legitimate shim upgrade (&gt;=15.7) pushed by a Linux distro package manager on genuinely dual-boot hosts</li><li>Enterprise Linux deployment/MDT task sequences staging boot files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;grub-install&quot;,&quot;bootmgr.exe&quot;,&quot;setup.exe&quot;,&quot;dism.exe&quot;) and InitiatingProcessFolderPath !has @&quot;\Windows\SoftwareDistribution\&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify InitiatingProcess writing the file — legitimate installers (setup.exe, grub-install, firmware updaters) vs. an interactive shell/LOLBin; compute and compare the file&#x27;s Authenticode hash against the 11 dbx-revoked hashes from the ESET advisory. 2) Contain: if the writer is untrusted or the hash matches a revoked shim, isolate the host, preserve the ESP contents, and force the dbx (KB5101650) update to neutralise the shim. 3) Hunt: check UC-3 for a preceding mountvol /S on the same host, review boot configuration (bcdedit) changes, and look for known bootkit artefacts (Bootkitty, HybridPetya, BlackLotus).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-90-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-90-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-90-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-90-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-90-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-90-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-90-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FileName in~ (&quot;shimx64.efi&quot;,&quot;shimia32.efi&quot;,&quot;grubx64.efi&quot;,&quot;grubia32.efi&quot;,&quot;mmx64.efi&quot;,&quot;mmia32.efi&quot;,&quot;bootx64.efi&quot;,&quot;bootia32.efi&quot;)
+| where FolderPath has @&quot;\EFI\&quot;
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-90-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where TargetFileName in~ (&quot;shimx64.efi&quot;,&quot;shimia32.efi&quot;,&quot;grubx64.efi&quot;,&quot;grubia32.efi&quot;,&quot;mmx64.efi&quot;,&quot;mmia32.efi&quot;,&quot;bootx64.efi&quot;,&quot;bootia32.efi&quot;)
+| where TargetFilePath has @&quot;\EFI\&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFileName, TargetFilePath, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-90-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Vulnerable UEFI Shim or GRUB Bootloader Written to EFI System Partition
+id: 8b1f2d4a-3c6e-4f21-9a7d-1c9e0b6a4f52
+description: Detects creation or modification of a shim/GRUB2 EFI bootloader under an \EFI\ path, consistent with ESET&#x27;s &#x27;bring your own vulnerable shim&#x27; Secure Boot bypass (CVE-2026-8863 / CVE-2026-10797).
+references:
+  - https://www.welivesecurity.com/en/eset-research/forgotten-uefi-shims-undermining-secure-boot/
+  - https://kb.cert.org/vuls/id/616257
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1542
+  - attack.t1542.003
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_name:
+    TargetFilename|endswith:
+      - &#x27;\shimx64.efi&#x27;
+      - &#x27;\shimia32.efi&#x27;
+      - &#x27;\grubx64.efi&#x27;
+      - &#x27;\grubia32.efi&#x27;
+      - &#x27;\mmx64.efi&#x27;
+      - &#x27;\mmia32.efi&#x27;
+      - &#x27;\bootx64.efi&#x27;
+      - &#x27;\bootia32.efi&#x27;
+  selection_path:
+    TargetFilename|contains: &#x27;\EFI\&#x27;
+  condition: selection_name and selection_path
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-90-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:*\\EFI\\* (@TargetFilename:*shimx64.efi OR @TargetFilename:*grubx64.efi OR @TargetFilename:*shimia32.efi OR @TargetFilename:*grubia32.efi OR @TargetFilename:*mmx64.efi OR @TargetFilename:*bootx64.efi OR @TargetFilename:*SHIMX64.EFI OR @TargetFilename:*GRUBX64.EFI OR @TargetFilename:*BOOTX64.EFI OR @TargetFilename:*MMX64.EFI)</code></pre></div>
+    <div class="tab-content" id="art-90-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\\EFI\\.*(shimx64|grubx64|shimia32|grubia32|mmx64|mmia32|bootx64|bootia32)\.efi$/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-90-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-90-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-90-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-90-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (&quot;shimx64.efi&quot;,&quot;shimia32.efi&quot;,&quot;grubx64.efi&quot;,&quot;grubia32.efi&quot;,&quot;mmx64.efi&quot;,&quot;mmia32.efi&quot;,&quot;bootx64.efi&quot;,&quot;bootia32.efi&quot;)) AND Filesystem.file_path=&quot;*\\EFI\\*&quot; by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-90-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (&quot;shimx64.efi&quot;,&quot;shimia32.efi&quot;,&quot;grubx64.efi&quot;,&quot;grubia32.efi&quot;,&quot;mmx64.efi&quot;,&quot;mmia32.efi&quot;,&quot;bootx64.efi&quot;,&quot;bootia32.efi&quot;)) AND Filesystem.file_path=&quot;*\\EFI\\*&quot; by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="9c89c63507" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">EFI System Partition mounted via mountvol /S (rogue shim staging)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="9c89c63507" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects execution of mountvol.exe with the /S switch, which mounts the normally-hidden EFI System Partition to a drive letter — the prerequisite step an attacker uses on Windows to drop a pre-revocation shim onto the ESP before deploying a bootkit. This LOLBin flag is extremely rare in normal operations, making it a high-signal hunting pivot.
+
+Rationale: mountvol /S is the documented, rarely-used command to expose the EFI System Partition on UEFI systems; pairing it with the shim-write in UC-2 reconstructs the on-host staging chain for ESET&#x27;s bring-your-own-shim bypass. Command flag is concrete and article-adjacent (ESP manipulation), not a generic template.
+
+Cross-checked against:
+  • https://www.welivesecurity.com/en/eset-research/forgotten-uefi-shims-undermining-secure-boot/
+  • https://kb.cert.org/vuls/id/616257</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Pre-OS Boot">T1542</span> <span class="ind tech" title="Bootkit">T1542.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sysadmin troubleshooting boot/BCD issues or manually inspecting the ESP</li><li>OEM firmware/BIOS update utilities that mount the ESP to stage capsule updates</li><li>Backup/imaging software mounting the ESP for full-disk capture</li><li>Windows servicing or driver-signing workflows that touch the ESP</li><li>IT scripts that mount the ESP to repair bootmgfw.efi after a failed update</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !has @&quot;\Windows\System32\&quot; or InitiatingProcessFileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the parent process and user launching mountvol /S — a scripted/interactive shell (cmd, powershell, unknown binary) is far more suspicious than a signed OEM updater; note any drive letter assigned. 2) Contain: if launched outside an approved change window or by an untrusted parent, isolate the host and inspect the newly-mounted ESP for shim/GRUB binaries (feed into UC-2) before dismounting. 3) Hunt: correlate on the same host and 10-minute window for .efi writes to \EFI\, bcdedit boot-order changes, and any of the 11 revoked shim hashes; verify dbx (KB5101650) status.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-90-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-90-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-90-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-90-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-90-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-90-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-90-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;mountvol.exe&quot;
+| where ProcessCommandLine has &quot;/s&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-90-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where NewProcessName endswith &quot;\\mountvol.exe&quot;
+| where CommandLine has &quot;/s&quot;
+| where SubjectUserName !endswith &quot;$&quot;
+| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-90-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: EFI System Partition Mounted via mountvol /S
+id: 4d7c9a11-6e02-4b3f-8f5a-2b0c7d1e9a34
+description: Detects mountvol.exe using the /S switch to mount the EFI System Partition, a staging step for writing a pre-revocation UEFI shim to the ESP (ESET Secure Boot bypass, CVE-2026-8863 / CVE-2026-10797).
+references:
+  - https://www.welivesecurity.com/en/eset-research/forgotten-uefi-shims-undermining-secure-boot/
+  - https://kb.cert.org/vuls/id/616257
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1542
+  - attack.t1542.003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: &#x27;\mountvol.exe&#x27;
+    CommandLine|contains: &#x27;/S&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-90-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4688 (@Image:*\\mountvol.exe OR @Image:*\\MountVol.exe OR @Image:*\\MOUNTVOL.EXE) (@CommandLine:*/S* OR @CommandLine:*/s*)</code></pre></div>
+    <div class="tab-content" id="art-90-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\mountvol\.exe$/i CommandLine=/\s\/s\b/i
+| table([aid, ComputerName, UserName, CommandLine, ParentBaseFileName])</code></pre></div>
+    <div class="tab-content" id="art-90-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-90-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-90-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-90-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;mountvol.exe&quot; AND Processes.process=&quot;*/S*&quot; by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-90-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;mountvol.exe&quot; AND Processes.process=&quot;*/S*&quot; by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-90-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-90-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-90-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-90-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-8863&quot;, &quot;CVE-2026-10797&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-90-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-8863&quot;, &quot;CVE-2026-10797&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-90-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-90-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-90-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-90-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-8863&quot;, &quot;CVE-2026-10797&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-90-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-8863&quot;, &quot;CVE-2026-10797&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-90-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-90-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-90-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-90-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-90-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+// (Initiating only) so column-projection has to differ per side.
+union
+    ( DeviceFileEvents
+        | where Timestamp &gt; ago(7d)
+        | where InitiatingProcessAccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;) or SHA1 in~ (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;) or MD5 in~ (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
+    ( DeviceProcessEvents
+        | where Timestamp &gt; ago(7d)
+        | where AccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;) or SHA1 in~ (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;) or MD5 in~ (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-90-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+// Defender version so the engine can push hash predicates per-side.
+let BadHashes = dynamic([&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;]);
+union
+    ( ImFileEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where TargetFileSHA256 in~ (BadHashes)
+           or TargetFileSHA1 in~ (BadHashes)
+           or TargetFileMD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType,
+                  TargetFileName, TargetFilePath, TargetFileSHA256,
+                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
+    ( ImProcessCreate
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
+                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
+                  TargetFileSHA256 = SHA256,
+                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-90-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-90-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-90-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-90-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-90-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-90-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;AE75F0D82BA3DF824FBFC69340CC3B4D66C598373B1AB54CDB6C8BFD83A6B961&quot;, &quot;7B2A3F5C96F95BD8086CE54B0825E300F9C8F11FE3401BB631B3215C8DE9EB10&quot;, &quot;EB86FA1386FE6E4533B8B938DCC1250616D2F1C14C15E2FCF80834A161018A0A&quot;, &quot;FD23D6E57DE6F4E1F9D7118DA1C5F31A8AF6BE5E5D9E8170F9493447268D50C5&quot;, &quot;A0DE9333442C1BF9349A460141AE5E80F911955C6506040FA3D021BF6C1AE3E4&quot;, &quot;95B6D71FC0C0F8C5E1533A37AEF92CF6B0C961E2CC612A97117FA6759CE5FC06&quot;, &quot;236A9CB0D71951C36398A32EB660CE2CD4A52CCFA7CF751CC6A35D9DE549E19B&quot;, &quot;5E594C448760A3135B1A3A83E07A4F2E6FBE49414EF2C7CAB1CBA77F284FA63B&quot;, &quot;8A964D5F8373948D20A1D4296FB92E545DAD4617A0C810F3B934B53D98AE8963&quot;, &quot;410260B1B6F5AF5FBEEB9EA3220658435E876CB3247126EE907A437F312DB373&quot;, &quot;96275DFD6282A522B011177EE049296952AC794832091F937FBBF92869028629&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-91" data-art-slug="2026-07-14-u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1486,T1555.003"
@@ -14742,267 +15163,6 @@ Cross-checked against:
 | stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(src) as sources by host, sourcetype
 | convert ctime(firstTime) ctime(lastTime)
 | sort - count</code></pre></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-117" data-art-slug="2026-07-10-ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network"
-  data-targets="vcs,web-app,windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-50551: SiYuan: Stored XSS to RCE via Unsanitized Attribute View Asset Cell Content SiYuan: Stored XSS to RCE via attribute-view cell rendering in genAVValueHTML() CVE-2026-54158 CVE-2026-50551 T1190 [LLM] SiYuan Electron client spawns command interpreter (XSS-to-RCE via child_process) [LLM] Outbound network connection from a child process of SiYuan.exe (post-RCE C2/exfil) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-10-ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-56mp-4f3v-fgj2" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-50551: SiYuan: Stored XSS to RCE via Unsanitized Attribute View Asset Cell Content</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-10</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">SiYuan: Stored XSS to RCE via attribute-view cell rendering in genAVValueHTML()</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54158</span> <span class="ind cve">CVE-2026-50551</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-117-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-117"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-117-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] SiYuan Electron client spawns command interpreter (XSS-to-RCE via child_process)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound network connection from a child process of SiYuan.exe (post-RCE C2/exfil)</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="255a23e7f7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,web-app,windows" open>
-  <summary>
-    <span class="uc-title">SiYuan Electron client spawns command interpreter (XSS-to-RCE via child_process)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="255a23e7f7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the RCE payoff of CVE-2026-50551/CVE-2026-44588: a stored XSS in an attribute-view cell executes in the SiYuan renderer (nodeIntegration:true) and calls require(&#x27;child_process&#x27;) to run native commands. A note-taking app spawning cmd/powershell/wscript is the concrete, article-specific outcome.
-
-Rationale: Uses the article&#x27;s concrete RCE mechanism — Electron nodeIntegration renderer calling require(&#x27;child_process&#x27;) — pinned to the named parent binary SiYuan.exe. A knowledge/notes app spawning shells is near-zero baseline. Cross-checked against the SiYuan advisory, CVE-2026-39846 (same require(&#x27;child_process&#x27;).exec RCE pattern) and neighbor CVE-2026-44588.
-
-Cross-checked against:
-  • https://github.com/siyuan-note/siyuan/security/advisories/GHSA-56mp-4f3v-fgj2
-  • https://github.com/advisories/GHSA-phhp-9rm9-6gr2
-  • https://www.sentinelone.com/vulnerability-database/cve-2026-39846/
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-50551</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Client Execution">T1203</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SiYuan plugins that legitimately shell out (e.g. git-sync plugins invoking git via cmd.exe)</li><li>SiYuan updater/installer spawning a helper via cmd during version upgrade</li><li>A user-configured export/pandoc pipeline that SiYuan launches through a shell</li><li>Admin manually launching SiYuan from a script that reparents a console child</li><li>Security tooling that reparents processes and mislabels SiYuan.exe as the parent</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;\\git.exe&quot;,&quot;pandoc&quot;,&quot;--update&quot;,&quot;siyuan-updater&quot;) and InitiatingProcessCommandLine has &quot;SiYuan&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the child ProcessCommandLine and grandparent chain — benign hits are git/pandoc/updater with recognizable args; malicious hits show base64/IEX/download-cradle or `calc`/reconnaissance commands and correlate to a recently opened note with an attribute-view. 2) Contain: isolate the host, kill the SiYuan.exe process tree, and block outbound from any spawned child; preserve the offending data/storage/av/&lt;avID&gt;.json for analysis. 3) Hunt: enumerate the user&#x27;s synced workspace peers (same account/sync target) for the same av JSON, and check DeviceNetworkEvents for the spawned child reaching external hosts. Push SiYuan &gt;= 3.7.0.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-117-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-117-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-117-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-117-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-117-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-117-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-117-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;SiYuan.exe&quot;
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;calc.exe&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-117-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where ParentProcessName endswith &quot;\\SiYuan.exe&quot;
-| where NewProcessName has_any (&quot;\\cmd.exe&quot;,&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;,&quot;\\wscript.exe&quot;,&quot;\\cscript.exe&quot;,&quot;\\mshta.exe&quot;,&quot;\\rundll32.exe&quot;,&quot;\\regsvr32.exe&quot;,&quot;\\curl.exe&quot;,&quot;\\bitsadmin.exe&quot;,&quot;\\certutil.exe&quot;,&quot;\\calc.exe&quot;)
-| where SubjectUserName !endswith &quot;$&quot;
-| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-117-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SiYuan Electron Client Spawning Command Interpreter (XSS-to-RCE)
-id: 8f2b6d14-3c7a-4e51-9b0a-2d6f7c1a9e33
-description: Detects the SiYuan desktop (Electron nodeIntegration) renderer spawning a shell/LOLBIN, the RCE payoff of CVE-2026-50551 stored XSS in attribute-view cells.
-references:
-  - https://github.com/advisories/GHSA-56mp-4f3v-fgj2
-  - https://github.com/advisories/GHSA-phhp-9rm9-6gr2
-author: SOC Detection Engineering
-date: 2026/07/18
-tags:
-  - attack.t1203
-  - attack.t1059
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection:
-    ParentImage|endswith: &#x27;\SiYuan.exe&#x27;
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\wscript.exe&#x27;
-      - &#x27;\cscript.exe&#x27;
-      - &#x27;\mshta.exe&#x27;
-      - &#x27;\rundll32.exe&#x27;
-      - &#x27;\regsvr32.exe&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;\bitsadmin.exe&#x27;
-      - &#x27;\certutil.exe&#x27;
-      - &#x27;\calc.exe&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-117-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\SiYuan.exe OR *\\siyuan.exe OR *\\SIYUAN.EXE) @Image:(*\\cmd.exe OR *\\Cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\mshta.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\curl.exe OR *\\certutil.exe OR *\\calc.exe)</code></pre></div>
-    <div class="tab-content" id="art-117-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/siyuan\.exe$/i
-| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32|curl|bitsadmin|certutil|calc)\.exe$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-117-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-117-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-117-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-117-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;SiYuan.exe&quot; AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;calc.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-117-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;SiYuan.exe&quot; AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;calc.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="fc3bd53fe9" data-platforms="def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Outbound network connection from a child process of SiYuan.exe (post-RCE C2/exfil)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="fc3bd53fe9" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts C2/exfil following CVE-2026-50551 exploitation: after the SiYuan renderer&#x27;s XSS runs require(&#x27;child_process&#x27;), the spawned interpreter/LOLBIN beacons out to attacker infrastructure. A shell whose parent is SiYuan.exe making a public egress is a high-signal post-exploitation pivot.
-
-Rationale: Pivots on the article&#x27;s RCE mechanism into the network phase: a child of the named SiYuan.exe binary reaching a public host. Scoping to InitiatingProcessParentFileName == SiYuan.exe keeps FP near zero because SiYuan&#x27;s own sync traffic originates from SiYuan.exe itself, not from a spawned shell. Sentinel/Datadog left blank — the listed Sentinel tables have no per-process egress with parent context, and Sysmon EID3 carries no ParentImage, so the parent scoping can&#x27;t be expressed there.
-
-Cross-checked against:
-  • https://github.com/siyuan-note/siyuan/security/advisories/GHSA-56mp-4f3v-fgj2
-  • https://www.sentinelone.com/vulnerability-database/cve-2026-39846/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A SiYuan git-sync plugin spawning git.exe that fetches over HTTPS</li><li>SiYuan update process invoking curl/bitsadmin to pull a release artifact</li><li>A user macro/export that shells out to a network-enabled CLI</li><li>certutil/curl launched by SiYuan for a legitimate asset download</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl has_any (&quot;github.com&quot;,&quot;githubusercontent.com&quot;,&quot;b3log.org&quot;,&quot;liuyun.io&quot;) or InitiatingProcessCommandLine has_any (&quot;\\git.exe&quot;,&quot;--update&quot;,&quot;siyuan-updater&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve RemoteIP/RemoteUrl reputation and inspect InitiatingProcessCommandLine — download cradles, base64, or raw IP beacons are malicious; a known package/update domain is likely benign. 2) Contain: isolate the host, kill the SiYuan.exe child tree, and block the destination at egress. 3) Hunt: correlate to UC1 process spawns on the same host/timeframe, sweep synced workspace peers for the same data/storage/av JSON payload, and confirm SiYuan is upgraded to &gt;= 3.7.0.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-117-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-117-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-117-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-117-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-117-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessParentFileName =~ &quot;SiYuan.exe&quot;
-| where InitiatingProcessFileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| project Timestamp, DeviceName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-117-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-DeviceNetworkEvents
-| where TimeGenerated &gt; ago(7d)
-| where InitiatingProcessParentFileName =~ &quot;SiYuan.exe&quot;
-| where InitiatingProcessFileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| project TimeGenerated, DeviceName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-117-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=*
-| join(query={#event_simpleName=ProcessRollup2 ParentBaseFileName=/siyuan\.exe$/i}, field=ContextProcessId, key=TargetProcessId, include=[ImageFileName, ParentBaseFileName])
-| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32|curl|bitsadmin|certutil)\.exe$/i
-| groupBy([aid, ComputerName, ImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-117-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-117-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-117-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-117-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.parent_process_name=&quot;SiYuan.exe&quot; AND All_Traffic.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.parent_process_name All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-117-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.parent_process_name=&quot;SiYuan.exe&quot; AND All_Traffic.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.parent_process_name All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-117-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-117-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-117-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-117-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-54158&quot;, &quot;CVE-2026-50551&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-117-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-54158&quot;, &quot;CVE-2026-50551&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-117-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-117-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-117-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-117-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-54158&quot;, &quot;CVE-2026-50551&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-117-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-54158&quot;, &quot;CVE-2026-50551&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

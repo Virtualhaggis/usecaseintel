@@ -11,15 +11,14 @@ By Bill Toulas
 July 18, 2026
 10:17 AM
 0 
-
-
 Microsoft has observed a surge in attacks using the ACR Stealer malware to steal browser-stored passwords, authentication tokens, and sensitive documents from its enterprise customers.
-
-
-Between late April and mid-June, the threat actor used the ClickFix social-engineering method, WebDAV servers, and the MSHTA (Microsoft HTML Application Host) utility to deliver the info-stealing payload…
+Between late April and mid-June, the threat actor used the ClickFix social-engineering method, WebDAV servers, and the MSHTA (Microsoft HTML Application Host) utility to deliver the info-stealing payload.
+ACR St…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `145.249.109.147`
+- **IPv4 (defanged):** `8.217.190.58`
 - **Domain (defanged):** `looksta.icu`
 - **Domain (defanged):** `contrite.quirksturdy.icu`
 - **Domain (defanged):** `ux.strainedeasily.icu`
@@ -36,8 +35,24 @@ Between late April and mid-June, the threat actor used the ClickFix social-engin
 - **Domain (defanged):** `prism-matrixs.com`
 - **Domain (defanged):** `proton-network.com`
 - **Domain (defanged):** `creativecommunityinfo.art`
-- **Domain (defanged):** `claude-desktop.gitlab.io`
 - **Domain (defanged):** `sphere-api.dialectosphere.in.net`
+- **Domain (defanged):** `claude-desktop.gitlab.io`
+- **Domain (defanged):** `ravishingtattle.com`
+- **Domain (defanged):** `clavdiydetka.com`
+- **Domain (defanged):** `cludymians.com`
+- **Domain (defanged):** `atlasgpt-browser.com`
+- **Domain (defanged):** `strangerwrought.com`
+- **Domain (defanged):** `dn8xpil.in.net`
+- **Domain (defanged):** `ctr.accrabbleshowm.cfd`
+- **Domain (defanged):** `ggx-tn-connectir.unwittingdork.digital`
+- **Domain (defanged):** `claude-code.official-verazion.com`
+- **Domain (defanged):** `hyuzoa1-guboitzyasi.com`
+- **Domain (defanged):** `clabkjxkundgs.pages.dev`
+- **Domain (defanged):** `clavycod.pages.dev`
+- **SHA256:** `2546a45f0e751dc02630ee48ae624f2cf536cbe1978122785e9d395c789c46c5`
+- **SHA256:** `d04208c041891beac90d0ef818310c7bd98b66d7bdb3d2ba523fb1939915ac90`
+- **SHA256:** `39ff5c82fce4e2d4a2b001fbfb2a4dd39ba4e11e88ef6844af4e2119b426b116`
+- **SHA256:** `cda84f0339e834c1d23572acc52cc02747776cc52d6b63f6ace9ea72d80a835e`
 
 ## MITRE ATT&CK Techniques
 
@@ -73,7 +88,7 @@ _(none detected from narrative keywords)_
 
 ### Rundll32 loading remote WebDAV DLL via ClickFix (ACR Stealer chain 1)
 
-`UC_0_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +108,7 @@ DeviceProcessEvents
 
 ### MSHTA fetching remote content then spawning PowerShell (ACR Stealer chain 2)
 
-`UC_0_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +128,7 @@ DeviceProcessEvents
 
 ### Outbound connection/DNS to ACR Stealer C2 dead-drop domains
 
-`UC_0_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +147,7 @@ DeviceNetworkEvents
 
 ### Scheduled task masquerading as a software update launching a LOLBin
 
-`UC_0_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_1_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +169,7 @@ DeviceProcessEvents
 
 ### Deletion of PowerShell PSReadline command history (anti-forensics)
 
-`UC_0_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_1_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +189,7 @@ DeviceFileEvents
 
 ### Non-browser process accessing Chromium credential databases (DPAPI browser theft)
 
-`UC_0_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -459,9 +474,12 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `looksta.icu`, `contrite.quirksturdy.icu`, `ux.strainedeasily.icu`, `cpppemwjewjoiwejow.sale`, `breaksd.wifihot.icu`, `walter.filloco.icu`, `fast.raidher.icu`, `apigrokcloud.icu` _(+10 more)_
+  - IP / domain IOC(s): `145.249.109.147`, `8.217.190.58`, `looksta.icu`, `contrite.quirksturdy.icu`, `ux.strainedeasily.icu`, `cpppemwjewjoiwejow.sale`, `breaksd.wifihot.icu`, `walter.filloco.icu` _(+24 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `2546a45f0e751dc02630ee48ae624f2cf536cbe1978122785e9d395c789c46c5`, `d04208c041891beac90d0ef818310c7bd98b66d7bdb3d2ba523fb1939915ac90`, `39ff5c82fce4e2d4a2b001fbfb2a4dd39ba4e11e88ef6844af4e2119b426b116`, `cda84f0339e834c1d23572acc52cc02747776cc52d6b63f6ace9ea72d80a835e`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

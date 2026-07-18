@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Unpatched OpenSSL exposed to HollowByte DoS (pre-2026-06-09 build, no CVE to scan)
 
-`UC_5_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_6_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceTvmSoftwareInventory
 
 ### OpenSSL TLS server OOM-kill / memory pressure (HollowByte glibc heap fragmentation)
 
-`UC_5_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
