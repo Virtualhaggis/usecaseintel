@@ -493,9 +493,9 @@ DeviceTvmSoftwareVulnerabilities
   data-sources="Aikido"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,web"
-  data-targets="linux,windows"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="Unauthenticated RCE in WordPress core (wp2shell), via SQL injection WordPress core has an unauthenticated RCE (wp2shell), confirmed as SQL injection. Update to 7.0.2 or 6.9.5 now, with mitigations if you can&#x27;t patch yet. Block the attack class at runtime with Aikido Zen. Category: Vulnerabilities &amp; Threats CVE-2026-60137 CVE-2026-63030 T1021.001 T1027 T1190 T1555.003 [LLM] WordPress wp2shell pre-auth RCE: requests to /wp-json/batch/v1 batch endpoint (CVE-2026-63030) [LLM] WordPress SQL injection via author__not_in parameter (CVE-2026-60137) [LLM] Web daemon (php-fpm/apache/nginx) spawning a shell or network tool — WordPress RCE post-exploit Asset exposure — vulnerability matches article CVE(s) PowerShell encoded / obfuscated command">
+  data-targets="linux,vcs,web-app,windows"
+  data-uc-count="6" data-llm-uc-count="4"
+  data-search="Unauthenticated RCE in WordPress core (wp2shell), via SQL injection WordPress core has an unauthenticated RCE (wp2shell), confirmed as SQL injection. Update to 7.0.2 or 6.9.5 now, with mitigations if you can&#x27;t patch yet. Block the attack class at runtime with Aikido Zen. Category: Vulnerabilities &amp; Threats CVE-2026-60137 CVE-2026-63030 T1021.001 T1027 T1190 T1555.003 [LLM] WordPress wp2shell SQLi via author__not_in REST parameter (CVE-2026-60137) [LLM] WordPress REST batch-route access — wp2shell RCE entry point (CVE-2026-63030) [LLM] Web daemon (php-fpm/apache/nginx) spawning shell — wp2shell post-exploit code execution [LLM] PHP web shell written to WordPress web root by server process (wp2shell persistence) Asset exposure — vulnerability matches article CVE(s) PowerShell encoded / obfuscated command">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-17-unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -504,7 +504,7 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">Aikido</span></div>
   <div class="pubmeta">
     <span>2026-07-17</span>
-    <span>5 use cases</span>
+    <span>6 use cases</span>
     <span>4 techniques</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -555,154 +555,166 @@ DeviceTvmSoftwareVulnerabilities
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] WordPress wp2shell pre-auth RCE: requests to /wp-json/batch/v1 batch endpoint (CVE-2026-63030) · [LLM] WordPress SQL injection via author__not_in parameter (CVE-2026-60137) · [LLM] Web daemon (php-fpm/apache/nginx) spawning a shell or network tool — WordPress RCE post-exploit · PowerShell encoded / obfuscated command</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] WordPress wp2shell SQLi via author__not_in REST parameter (CVE-2026-60137) · [LLM] WordPress REST batch-route access — wp2shell RCE entry point (CVE-2026-63030) · [LLM] Web daemon (php-fpm/apache/nginx) spawning shell — wp2shell post-exploit code execution · PowerShell encoded / obfuscated command</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] PHP web shell written to WordPress web root by server process (wp2shell persistence)</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="01c946334c" data-platforms="sent,sigma,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="a8984d985c" data-platforms="sent,sigma,spl" data-targets="vcs,web-app" open>
   <summary>
-    <span class="uc-title">WordPress wp2shell pre-auth RCE: requests to /wp-json/batch/v1 batch endpoint (CVE-2026-63030)</span>
+    <span class="uc-title">WordPress wp2shell SQLi via author__not_in REST parameter (CVE-2026-60137)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="01c946334c" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a8984d985c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests to the WordPress REST batch route that the wp2shell pre-auth RCE abuses as its entry point. Targets both the path form (/wp-json/batch/v1) and the querystring form (rest_route=/batch/v1) that a path-only WAF rule would miss.
+    <div class="uc-desc">Hunts inbound HTTP requests carrying the WP_Query author__not_in parameter loaded with SQL metacharacters/keywords, the injection primitive behind the wp2shell pre-auth RCE chain. author__not_in should only ever hold integer author IDs, so any UNION/comment/quote/information_schema content is a direct exploitation attempt.
 
-Rationale: Anchors on the exact entry-point strings named in the article and confirmed by Searchlight/Assetnote and Cloudflare — /wp-json/batch/v1 and rest_route=/batch/v1 — including the querystring route a path-only block misses. POST-only cuts benign editor GET traffic. Defender AH carries no inbound web-request URI telemetry, so defender_kql is intentionally empty.
+Rationale: Anchored on the exact injectable parameter author__not_in identified across Rapid7/WordPress GHSA-ff9f-jf42-662q as the SQLi sink in WP_Query (CVE-2026-60137). This param is integer-only by design, so SQL keyword content is unambiguous. Defender AH has no inbound web-request table so defender_kql is empty; Datadog standard sources ship no web-access log, hence empty.
 
 Cross-checked against:
-  • https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
-  • https://blog.cloudflare.com/wordpress-vulnerabilities/
+  • https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-ff9f-jf42-662q
   • https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
-  • https://thehackernews.com/2026/07/new-wp2shell-wordpress-core-flaw-lets.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  • https://blog.cloudflare.com/wordpress-vulnerabilities/
+  • https://github.com/Senanfurkan/wordpress-cve-2026-63030</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Defense Evasion">T1211</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authenticated Gutenberg block editor performing legitimate batch saves against /wp-json/batch/v1</li><li>First-party plugins/integrations that legitimately use the REST batch API</li><li>Security scanners (WPScan, Nuclei) and the official wp2shell.com checker probing the endpoint</li><li>Uptime/synthetic monitors configured to hit REST routes</li><li>Headless-WordPress front ends issuing batch calls with valid nonces</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (dynamic([&quot;127.0.0.1&quot;,&quot;::1&quot;])) and DstHostname !has &quot;staging&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the source IPs and user-agents from the hits; check whether requests carry a valid wordpress_logged_in cookie / X-WP-Nonce (legit editor) versus anonymous POSTs at volume from cloud/hosting ASNs. Confirm the target site&#x27;s WordPress version is in the vulnerable range (6.9.0-6.9.4 / 7.0.0-7.0.1). 2) Contain: if the site is unpatched, force-update to 6.9.5/7.0.2, and add the WAF block for BOTH /wp-json/batch/v1 and rest_route=/batch/v1; block confirmed attacker IPs. 3) Hunt: pivot to UC3 (web-daemon spawning a shell) on the same host and time window, and review wp-content for new/modified PHP files since the first request.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security scanners / pentest tools (Nuclei, wpscan, Burp) firing the same wp2shell PoC in an authorized assessment</li><li>WAF vendor virtual-patch validation traffic replaying the exploit signature</li><li>Vulnerability-management appliances (Qualys/Tenable) probing the batch route</li><li>Legitimate plugins that (rarely) pass numeric author__not_in lists — these will NOT contain SQL keywords so the payload regex filters them out</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(csUserAgent has_any (&quot;Nuclei&quot;,&quot;wpscan&quot;,&quot;Qualys&quot;,&quot;Nessus&quot;,&quot;Tenable&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the target site&#x27;s WordPress version (dashboard or /wp-includes/version.php) — if 6.8.0-6.8.5, 6.9.0-6.9.4 or 7.0.0-7.0.1 it is exploitable; capture scStatus (200 = payload likely reached DB) and the source IP. 2) Contain: block the source IP at the WAF and apply the interim rule blocking /wp-json/batch/v1 and rest_route=/batch/v1, then force-update to 6.8.6/6.9.5/7.0.2. 3) Hunt: pivot on the same src IP for follow-on batch-endpoint hits, new .php files under wp-content, and web-daemon child shells (see companion UCs).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-01-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-01-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+    <div class="tab-content active" id="art-01-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
 | where TimeGenerated &gt; ago(24h)
-| where HttpMethod == &quot;POST&quot;
-| where Url has &quot;/wp-json/batch/v1&quot; or Url has &quot;rest_route=/batch/v1&quot;
-| summarize Requests = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), UserAgents = make_set(HttpRequestHeaderUserAgent, 5), StatusCodes = make_set(HttpStatusCode, 10) by SrcIpAddr, DstHostname
-| order by Requests desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress wp2shell REST Batch Endpoint Access (CVE-2026-63030)
-id: 6f2b9c14-3d7a-4e8b-9c21-8a1f0e5d2b77
-description: Detects HTTP POST requests to the WordPress REST batch route abused by the wp2shell pre-auth RCE, covering both path and rest_route querystring forms.
+| where csUriStem has &quot;/wp-json/&quot; or csUriQuery has &quot;rest_route&quot; or csUriQuery has &quot;author__not_in&quot;
+| where csUriQuery has &quot;author__not_in&quot;
+| where csUriQuery matches regex @&quot;(?i)author__not_in[^0-9,%]*(union|select|sleep\(|benchmark\(|updatexml|extractvalue|information_schema|group_concat|0x[0-9a-f]{4}|--|%27|&#x27;)&quot;
+| project TimeGenerated, cIP, csMethod, csUriStem, csUriQuery, scStatus, csUserAgent, Computer
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-01-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress wp2shell SQLi in author__not_in REST parameter
+id: 6b1e2f34-9c1a-4d77-9b0e-2f6c8a3d1e11
+description: Detects SQL injection payloads in the WordPress WP_Query author__not_in parameter, the injection primitive of the wp2shell pre-auth RCE chain (CVE-2026-60137).
 references:
   - https://www.aikido.dev/blog/unauthenticated-rce-in-wordpress-wp2shell
-  - https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
-  - https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
+  - https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-ff9f-jf42-662q
 author: SOC Detection Engineering
 date: 2026/07/18
 tags:
   - attack.t1190
-  - attack.initial_access
+  - attack.t1211
 logsource:
   category: webserver
 detection:
-  selection:
-    cs-method: &#x27;POST&#x27;
-    c-uri|contains:
-      - &#x27;/wp-json/batch/v1&#x27;
-      - &#x27;rest_route=/batch/v1&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/wp-json/batch/v1*&quot; OR Web.url=&quot;*rest_route=/batch/v1*&quot;) Web.http_method=POST by Web.src, Web.dest, Web.url, Web.http_method, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | sort - count</code></pre><pre class="spl-mode-body" id="art-01-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/wp-json/batch/v1*&quot; OR Web.url=&quot;*rest_route=/batch/v1*&quot;) Web.http_method=POST by Web.src, Web.dest, Web.url, Web.http_method, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | sort - count</code></pre></div></div>
+  selection_param:
+    cs-uri-query|contains: &#x27;author__not_in&#x27;
+  selection_payload:
+    cs-uri-query|contains:
+      - &#x27;union&#x27;
+      - &#x27;select&#x27;
+      - &#x27;sleep(&#x27;
+      - &#x27;updatexml&#x27;
+      - &#x27;extractvalue&#x27;
+      - &#x27;information_schema&#x27;
+      - &#x27;group_concat&#x27;
+      - &#x27;%27&#x27;
+      - &#x27;--&#x27;
+  condition: selection_param and selection_payload
+level: high</code></pre></div>
+    <div class="tab-content" id="art-01-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*author__not_in*&quot; OR Web.uri_query=&quot;*author__not_in*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query, Web.status, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| eval hay=url.&quot; &quot;.uri_query
+| where match(hay, &quot;(?i)author__not_in[^0-9,\s].*?(union|select|sleep\(|benchmark\(|updatexml|extractvalue|information_schema|group_concat|0x[0-9a-f]{4}|--|%27|&#x27;)&quot;)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-01-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*author__not_in*&quot; OR Web.uri_query=&quot;*author__not_in*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query, Web.status, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| eval hay=url.&quot; &quot;.uri_query
+| where match(hay, &quot;(?i)author__not_in[^0-9,\s].*?(union|select|sleep\(|benchmark\(|updatexml|extractvalue|information_schema|group_concat|0x[0-9a-f]{4}|--|%27|&#x27;)&quot;)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="c2fa331a50" data-platforms="sent,sigma,spl" data-targets="">
+<details class="uc" data-uc-slug="2ceb5ae634" data-platforms="sent,sigma,spl" data-targets="">
   <summary>
-    <span class="uc-title">WordPress SQL injection via author__not_in parameter (CVE-2026-60137)</span>
+    <span class="uc-title">WordPress REST batch-route access — wp2shell RCE entry point (CVE-2026-63030)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c2fa331a50" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="2ceb5ae634" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP requests carrying the author__not_in WP_Query parameter combined with SQL injection metacharacters, the specific sink patched alongside wp2shell. Targets the CVE-2026-60137 SQLi that affects WordPress 6.8+.
+    <div class="uc-desc">Surfaces requests to the unauthenticated REST batch endpoint /wp-json/batch/v1 (or rest_route=/batch/v1), the sub-request confusion vector that lets an anonymous attacker chain SQLi into remote code execution. Baselines who is calling the batch route and flags anonymous/high-volume callers.
 
-Rationale: Uses the exact vulnerable parameter name — author__not_in — that external sources (THREATINT CVE record, Cloudflare) attribute to CVE-2026-60137, paired with SQLi metacharacters to separate exploitation from benign author-filter usage. Web-request URI telemetry has no Defender AH equivalent, so defender_kql is empty.
+Rationale: Uses the two exact mitigation strings the advisory tells operators to block at the WAF — /wp-json/batch/v1 and rest_route=/batch/v1 — as the pivot. Kept at hunting/medium because the batch API has legitimate uses; aggregation by source IP separates a single POST from exploit spray. Defender/Datadog/Falcon/CloudWatch have no inbound web-request telemetry so those fields are empty.
 
 Cross-checked against:
-  • https://cve.threatint.com/CVE/CVE-2026-60137
+  • https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
   • https://blog.cloudflare.com/wordpress-vulnerabilities/
-  • https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/</div>
+  • https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-ff9f-jf42-662q</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate author-archive queries that legitimately pass author__not_in as an integer array with no SQL tokens</li><li>Automated DAST/vulnerability scanners (Burp, Acunetix, WPScan) firing SQLi payloads in QA</li><li>Security researchers validating the patch against staging</li><li>URL-encoded content in unrelated parameters that coincidentally contains the substring &#x27;select&#x27;</li><li>WAF appliances replaying blocked payloads into a secondary logging tier</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Url matches regex @&#x27;(?i)author__not_in(=|%5B).*(union|select|sleep\(|benchmark\(|information_schema)&#x27;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the full decoded query string — confirm author__not_in carries actual SQL syntax (quotes, UNION, time-based sleep/benchmark) rather than a plain integer list; check the source IP reputation and whether it maps to a known scanner. 2) Contain: patch to 6.8.6 / 6.9.5 / 7.0.2 as appropriate; block the offending IP at the WAF and enable the Aikido Zen / WAF SQLi ruleset noted in the article. 3) Hunt: check DB error logs and slow-query logs for time-based blind SQLi timing, and pivot to UC3 for any resulting command execution on the host.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate first-party plugins/themes or mobile apps that batch REST calls via /wp-json/batch/v1</li><li>Site health / uptime monitors and headless-WP front ends using the batch API</li><li>Authorized pentest or the wp2shell.com exposure checker probing the route</li><li>WAF/CDN health checks replaying the path</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: aggregate by cIP — a single authenticated app IP is likely benign; anonymous IPs with many POSTs and mixed status codes are suspect. Check whether a persistent object cache is enabled (its absence is the RCE precondition per advisory). 2) Contain: apply the WAF block on the path and rest_route param and confirm the site is on 6.9.5/7.0.2. 3) Hunt: for suspect IPs, look back for author__not_in SQLi payloads (companion UC) and forward for new web-root .php files and web-daemon shell children.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-01-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-01-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+    <div class="tab-content active" id="art-01-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
 | where TimeGenerated &gt; ago(24h)
-| where Url has &quot;author__not_in&quot;
-| where Url has_any (&quot;union&quot;,&quot;select&quot;,&quot;sleep(&quot;,&quot;benchmark(&quot;,&quot;information_schema&quot;,&quot;%27&quot;,&quot;0x&quot;,&quot;--&quot;)
-| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, UA = HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress author__not_in SQL Injection Attempt (CVE-2026-60137)
-id: b1a7d3e2-9f04-4c6a-8e15-2d7c9a4b6f10
-description: Detects HTTP requests to WordPress carrying the author__not_in WP_Query parameter alongside SQL injection tokens, the sink patched in the wp2shell release.
+| where csUriStem has &quot;/wp-json/batch/v1&quot; or csUriQuery has &quot;rest_route=/batch/v1&quot;
+| summarize Requests=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Methods=make_set(csMethod), Statuses=make_set(scStatus), UAs=make_set(csUserAgent, 10) by cIP, Computer
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-01-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress REST batch endpoint access (wp2shell RCE vector)
+id: 2a7d4c19-5f83-4a6e-b1cd-9e0f13c7a802
+description: Detects access to the WordPress unauthenticated REST batch route abused by the wp2shell RCE chain (CVE-2026-63030).
 references:
   - https://www.aikido.dev/blog/unauthenticated-rce-in-wordpress-wp2shell
-  - https://cve.threatint.com/CVE/CVE-2026-60137
-  - https://blog.cloudflare.com/wordpress-vulnerabilities/
+  - https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
 author: SOC Detection Engineering
 date: 2026/07/18
 tags:
   - attack.t1190
-  - attack.initial_access
 logsource:
   category: webserver
 detection:
-  selection_param:
-    c-uri|contains: &#x27;author__not_in&#x27;
-  selection_sqli:
-    c-uri|contains:
-      - &#x27;union&#x27;
-      - &#x27;select&#x27;
-      - &#x27;sleep(&#x27;
-      - &#x27;benchmark(&#x27;
-      - &#x27;information_schema&#x27;
-      - &#x27;%27&#x27;
-      - &#x27;0x&#x27;
-      - &#x27;--&#x27;
-  condition: selection_param and selection_sqli
-level: high</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.url=&quot;*author__not_in*&quot; (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*sleep(*&quot; OR Web.url=&quot;*benchmark(*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*0x*&quot; OR Web.url=&quot;*%27*&quot; OR Web.url=&quot;*--*&quot;) by Web.src, Web.dest, Web.url, Web.http_method, Web.status | `drop_dm_object_name(Web)` | sort - count</code></pre><pre class="spl-mode-body" id="art-01-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.url=&quot;*author__not_in*&quot; (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*sleep(*&quot; OR Web.url=&quot;*benchmark(*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*0x*&quot; OR Web.url=&quot;*%27*&quot; OR Web.url=&quot;*--*&quot;) by Web.src, Web.dest, Web.url, Web.http_method, Web.status | `drop_dm_object_name(Web)` | sort - count</code></pre></div></div>
+  selection_path:
+    cs-uri-stem|contains: &#x27;/wp-json/batch/v1&#x27;
+  selection_route:
+    cs-uri-query|contains: &#x27;rest_route=/batch/v1&#x27;
+  condition: selection_path or selection_route
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-01-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/wp-json/batch/v1*&quot; OR Web.url=&quot;*rest_route=/batch/v1*&quot; OR Web.uri_query=&quot;*rest_route=/batch/v1*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.status, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - count</code></pre><pre class="spl-mode-body" id="art-01-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/wp-json/batch/v1*&quot; OR Web.url=&quot;*rest_route=/batch/v1*&quot; OR Web.uri_query=&quot;*rest_route=/batch/v1*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.status, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="7b269341eb" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="e8078de4cf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Web daemon (php-fpm/apache/nginx) spawning a shell or network tool — WordPress RCE post-exploit</span>
+    <span class="uc-title">Web daemon (php-fpm/apache/nginx) spawning shell — wp2shell post-exploit code execution</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="7b269341eb" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="e8078de4cf" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the code-execution outcome of the wp2shell RCE: a WordPress web-server process spawning an interactive shell, netcat, or a download tool. Because the flaw yields RCE on the underlying server, an unexpected child of the web daemon is the highest-fidelity host-side signal.
+    <div class="uc-desc">Detects a WordPress web-server process (php-fpm, apache2, httpd, nginx, php) spawning an interpreter or network tool with reverse-shell/download markers — the expected next stage after the wp2shell chain achieves PHP-context RCE. Web daemons should almost never fork bash/nc/curl with these arguments.
 
-Rationale: Article&#x27;s core claim is unauthenticated RCE on the underlying server, and corroborating vendors confirm arbitrary code execution as the web user; a web daemon (php-fpm/apache/nginx) parenting a shell or netcat is the canonical post-exploit signal for a PHP-app RCE and is uncommon in normal operation.
+Rationale: The article/advisory confirm the chain yields unauthenticated code execution in PHP context on the web host; the highest-signal generic post-exploit shape is a WordPress web daemon forking a shell/net tool with reverse-shell arguments. Parent list (php-fpm/apache2/nginx/php) is specific to a WordPress LAMP/LEMP host, and the cmdline markers cut baseline noise.
 
 Cross-checked against:
-  • https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
   • https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
-  • https://thehackernews.com/2026/07/new-wp2shell-wordpress-core-flaw-lets.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+  • https://securityonline.info/wordpress-pre-auth-rce-cve-2026-63030/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Backup/migration plugins invoking mysqldump, tar, or rsync via PHP shell_exec</li><li>Image-processing plugins spawning ImageMagick/ffmpeg through PHP</li><li>WP-Cron or deploy scripts running curl/wget for scheduled fetches under the web user</li><li>Server-monitoring or APM agents shelling out from php-fpm</li><li>Composer/WP-CLI operations executed in the web root during maintenance windows</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;mysqldump&quot; and ProcessCommandLine !has &quot;imagemagick&quot; and ProcessCommandLine !has &quot;wp-cron.php&quot; and not (FileName in~ (&quot;curl&quot;,&quot;wget&quot;) and ProcessCommandLine has_any (&quot;api.wordpress.org&quot;,&quot;downloads.wordpress.org&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the parent and child command lines — legitimate plugin work (mysqldump, imagemagick, tar) is recognizable, whereas /bin/sh -c with piped curl|bash, reverse-shell one-liners, or connections to raw IPs are malicious. Cross-reference the host/time with UC1/UC2 batch or SQLi hits. 2) Contain: isolate the host, kill the offending process tree, rotate the DB and wp-config secrets, and force-patch WordPress to 6.9.5/7.0.2. 3) Hunt: enumerate recently written/modified PHP files under wp-content, review outbound connections from the web user for C2, and check for new admin users or cron entries.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>WordPress plugins that legitimately shell out (e.g. image optimizers calling exec on convert/optipng, backup plugins invoking mysqldump/tar)</li><li>WP-Cron jobs or admin actions triggering curl/wget for remote fetches</li><li>Deployment/CI tooling (Composer, wp-cli) running under the www-data account</li><li>Health-check scripts using curl to loopback</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;wp-cli&quot;,&quot;wp-cron&quot;,&quot;composer&quot;,&quot;mysqldump&quot;,&quot;/usr/bin/convert&quot;,&quot;optipng&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree and command line — confirm the parent is the web worker (not wp-cli/composer) and inspect the child&#x27;s args for /dev/tcp, listener, or attacker IP. 2) Contain: isolate the host, kill the shell process, and rotate any DB/wp-config secrets reachable from the web root. 3) Hunt: enumerate files written by the web daemon in the same window (companion webshell UC), check outbound connections from php-fpm, and correlate back to the batch-endpoint / author__not_in HTTP hits by timestamp.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-01-uc2-sentinel">Sentinel KQL</button>
@@ -713,60 +725,155 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-01-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(24h)
-| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php8.2&quot;,&quot;php8.3&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;caddy&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php&quot;)
+| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)
+| where ProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;-i&quot;,&quot;-e&quot;,&quot;bash -i&quot;,&quot;sh -i&quot;,&quot;reverse&quot;,&quot;http://&quot;,&quot;https://&quot;,&quot;-c &quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-01-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(24h)
-| where ParentProcessName has_any (&quot;php-fpm&quot;,&quot;/php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;caddy&quot;)
-| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/netcat&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/python&quot;,&quot;/perl&quot;,&quot;/ruby&quot;)
+| where ParentProcessName has_any (&quot;php-fpm&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php&quot;)
+| where ActingProcessName has_any (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)
+| where ActingProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;-i&quot;,&quot;-e&quot;,&quot;bash -i&quot;,&quot;sh -i&quot;,&quot;reverse&quot;,&quot;http://&quot;,&quot;https://&quot;,&quot;-c &quot;)
 | project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress Web Daemon Spawning Shell or Network Tool (wp2shell Post-Exploit)
-id: c4e8f1a6-72b3-4d90-a5c7-0b9e3d1f8a24
-description: Detects a WordPress web-server process (php-fpm, apache, nginx) spawning a shell, netcat, or download utility, indicating code execution following the wp2shell RCE.
+    <div class="tab-content" id="art-01-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress web daemon spawns shell or network tool (wp2shell post-exploit)
+id: c4f9a2d7-8b61-4e30-a0f2-5d7c9e1b3a44
+description: Detects php-fpm/apache/nginx spawning an interpreter or netcat/curl with reverse-shell markers, the post-exploitation stage of the wp2shell RCE chain.
 references:
   - https://www.aikido.dev/blog/unauthenticated-rce-in-wordpress-wp2shell
-  - https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
 author: SOC Detection Engineering
 date: 2026/07/18
 tags:
-  - attack.t1190
   - attack.t1059.004
-  - attack.execution
+  - attack.t1190
 logsource:
   category: process_creation
   product: linux
 detection:
-  selection:
+  selection_parent:
     ParentImage|endswith:
       - &#x27;/php-fpm&#x27;
-      - &#x27;/php&#x27;
       - &#x27;/apache2&#x27;
       - &#x27;/httpd&#x27;
       - &#x27;/nginx&#x27;
-      - &#x27;/caddy&#x27;
+      - &#x27;/php&#x27;
+  selection_child:
     Image|endswith:
-      - &#x27;/sh&#x27;
       - &#x27;/bash&#x27;
+      - &#x27;/sh&#x27;
       - &#x27;/dash&#x27;
       - &#x27;/nc&#x27;
       - &#x27;/ncat&#x27;
-      - &#x27;/netcat&#x27;
       - &#x27;/curl&#x27;
       - &#x27;/wget&#x27;
       - &#x27;/python&#x27;
       - &#x27;/python3&#x27;
       - &#x27;/perl&#x27;
-      - &#x27;/ruby&#x27;
+  condition: selection_parent and selection_child
+level: high</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.executable.path:(*/bash OR */sh OR */dash OR */nc OR */ncat OR */curl OR */wget OR */python OR */python3 OR */perl) @process.command_line:(*/dev/tcp/* OR *&quot;bash -i&quot;* OR *&quot;sh -i&quot;* OR *reverse* OR *&quot; -e &quot;* OR *http\://* OR *https\://*)</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|apache2|httpd|nginx|php)$/i
+| ImageFileName=/(bash|sh|dash|nc|ncat|netcat|curl|wget|python[0-9]?|perl|ruby)$/i
+| regex(&quot;(/dev/tcp/|bash -i|sh -i|reverse| -e | -c |https?://)&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php&quot;) AND Endpoint.Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process
+| `drop_dm_object_name(Endpoint.Processes)`
+| where match(process, &quot;(?i)(/dev/tcp/|-i\b|-e\b|bash -i|sh -i|reverse|https?://|-c\s)&quot;)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-01-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php&quot;) AND Endpoint.Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process
+| `drop_dm_object_name(Endpoint.Processes)`
+| where match(process, &quot;(?i)(/dev/tcp/|-i\b|-e\b|bash -i|sh -i|reverse|https?://|-c\s)&quot;)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="357a3a9098" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">PHP web shell written to WordPress web root by server process (wp2shell persistence)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="357a3a9098" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Flags creation of .php/.phtml/.php5 files under wp-content, wp-includes or wp-admin by a web-server process — the classic web-shell implant an attacker drops after the wp2shell RCE for durable, re-enterable access. Core WordPress rarely writes new PHP into these paths at runtime outside of updates.
+
+Rationale: Post-RCE persistence is not detailed in the article, so this is kept at hunting/medium — but it is grounded in the confirmed outcome (unauthenticated code exec on a WordPress host) and scoped tightly to web-daemon-authored PHP under the three WordPress web-accessible directories, which is a strong web-shell signal. Datadog auditd lacks a clean target-file field in the standard schema, so datadog_query is empty.
+
+Cross-checked against:
+  • https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
+  • https://blog.cloudflare.com/wordpress-vulnerabilities/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>WordPress core auto-update / plugin/theme install writing PHP into wp-content or wp-admin (the forced auto-update to 6.9.5/7.0.2 will itself write core PHP)</li><li>Caching plugins (W3 Total Cache, WP Super Cache) generating advanced-cache.php / object-cache.php drop-ins</li><li>wp-cli or Composer package installs run as www-data</li><li>Backup/restore or staging-sync plugins writing PHP into wp-content</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;wp-cli&quot;,&quot;composer&quot;,&quot;upgrade&quot;,&quot;wordpress-core&quot;)) and not(FileName in~ (&quot;object-cache.php&quot;,&quot;advanced-cache.php&quot;,&quot;wp-cache-config.php&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the new file — a short obfuscated payload with eval/assert/base64_decode/system/$_REQUEST is a web shell; correlate its create time against the site&#x27;s known update window and any batch-endpoint hits. 2) Contain: quarantine the file, isolate the host, and hash it for org-wide sweep; verify integrity of core files against WordPress checksums. 3) Hunt: search all web hosts for the same filename/hash, review access logs for subsequent GET/POST to the dropped path, and check for web-daemon child shells and outbound C2.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-01-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-01-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-01-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-01-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-01-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-01-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(24h)
+| where ActionType == &quot;FileCreated&quot;
+| where FolderPath has_any (&quot;/wp-content/&quot;,&quot;/wp-includes/&quot;,&quot;/wp-admin/&quot;,&quot;\\wp-content\\&quot;,&quot;\\wp-includes\\&quot;,&quot;\\wp-admin\\&quot;)
+| where FileName endswith &quot;.php&quot; or FileName endswith &quot;.phtml&quot; or FileName endswith &quot;.php5&quot; or FileName endswith &quot;.php7&quot;
+| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php&quot;,&quot;w3wp.exe&quot;)
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-01-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(24h)
+| where EventType == &quot;FileCreated&quot;
+| where TargetFilePath has_any (&quot;/wp-content/&quot;,&quot;/wp-includes/&quot;,&quot;/wp-admin/&quot;)
+| where TargetFileExtension in~ (&quot;php&quot;,&quot;phtml&quot;,&quot;php5&quot;,&quot;php7&quot;)
+| where ActingProcessName has_any (&quot;php-fpm&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php&quot;,&quot;w3wp.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-01-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: PHP web shell written to WordPress web root by server process
+id: e1b8c73a-2d64-4f19-9a05-7c3e2f9d6b10
+description: Detects creation of PHP files under wp-content/wp-includes/wp-admin by a web-server process, indicative of web-shell implantation following the wp2shell RCE.
+references:
+  - https://www.aikido.dev/blog/unauthenticated-rce-in-wordpress-wp2shell
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1505.003
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;/php-fpm&#x27;
+      - &#x27;/apache2&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/nginx&#x27;
+      - &#x27;/php&#x27;
+    TargetFilename|contains:
+      - &#x27;/wp-content/&#x27;
+      - &#x27;/wp-includes/&#x27;
+      - &#x27;/wp-admin/&#x27;
+    TargetFilename|endswith:
+      - &#x27;.php&#x27;
+      - &#x27;.phtml&#x27;
+      - &#x27;.php5&#x27;
+      - &#x27;.php7&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @user.name:(www-data OR apache OR nginx OR httpd OR &quot;php-fpm&quot; OR daemon) @process.name:(sh OR bash OR dash OR nc OR ncat OR netcat OR curl OR wget OR python OR python3 OR perl OR ruby)</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|php[0-9.]*|apache2|httpd|nginx|caddy)$/i
-| ImageFileName=/\/(sh|bash|dash|nc|ncat|netcat|curl|wget|python[0-9]?|perl|ruby)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;caddy&quot;)) (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - count</code></pre><pre class="spl-mode-body" id="art-01-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;caddy&quot;)) (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - count</code></pre></div></div>
+    <div class="tab-content" id="art-01-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| regex(&quot;(/wp-content/|/wp-includes/|/wp-admin/)&quot;, field=TargetFileName)
+| TargetFileName=/\.(php|phtml|php5|php7)$/i
+| ContextImageFileName=/(php-fpm|apache2|httpd|nginx|php)/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-01-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.action=created AND Endpoint.Filesystem.file_path IN (&quot;*/wp-content/*&quot;,&quot;*/wp-includes/*&quot;,&quot;*/wp-admin/*&quot;) AND Endpoint.Filesystem.file_name IN (&quot;*.php&quot;,&quot;*.phtml&quot;,&quot;*.php5&quot;,&quot;*.php7&quot;)) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_name, Endpoint.Filesystem.user
+| `drop_dm_object_name(Endpoint.Filesystem)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-01-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.action=created AND Endpoint.Filesystem.file_path IN (&quot;*/wp-content/*&quot;,&quot;*/wp-includes/*&quot;,&quot;*/wp-admin/*&quot;) AND Endpoint.Filesystem.file_name IN (&quot;*.php&quot;,&quot;*.phtml&quot;,&quot;*.php5&quot;,&quot;*.php7&quot;)) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_name, Endpoint.Filesystem.user
+| `drop_dm_object_name(Endpoint.Filesystem)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -784,11 +891,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-01-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-01-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-01-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-01-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-01-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-01-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-01-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -797,7 +904,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-01-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-01-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -809,12 +916,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-01-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-01-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-01-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-01-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -837,19 +944,19 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-01-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-01-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-01-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-01-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-01-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-01-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-01-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-01-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-01-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-01-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-01-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -860,7 +967,7 @@ DeviceTvmSoftwareVulnerabilities
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-01-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
+    <div class="tab-content" id="art-01-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
 status: experimental
 description: |
@@ -906,7 +1013,7 @@ falsepositives:
       cross-shell escaping
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-01-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-01-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -915,7 +1022,7 @@ level: high
         OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*Net.WebClient*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-01-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-01-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -1885,10 +1992,10 @@ level: medium
   data-techs="T1027,T1190,T1528"
   data-sources="The Hacker News"
   data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
-  data-targets="azure,linux,windows"
+  data-splunk-cats="application,cloud,endpoint,network"
+  data-targets="azure,kubernetes,linux,windows"
   data-uc-count="12" data-llm-uc-count="6"
-  data-search="New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Tokens A Go botnet called NadMesh turned up in early July hunting exposed AI services, and the operator&#x27;s own dashboard claims 3,811 unique AWS keys. A Shodan harvester keeps the scan queue stocked with ComfyUI, Ollama, n8n, Open WebUI, Langflow, and Gradio: the image generators, local model runners, and workflow builders that teams stand up fast and firewall late. The intel feed behind that counter CVE-2026-39987 CVE-2026-41176 CVE-2022-22947 CVE-2017-12611 T1027 T1190 T1528 [LLM] NadMesh C2 beacon to 209.99.186.235 / cdnorigin.net [LLM] NadMesh Linux persistence: hidden cron.d + /dev/shm dropfiles [LLM] Cloud/K8s credential file &amp; env harvest by read utilities [LLM] Exposed AI service spawns shell + downloader (MCP execute_command outcome) [LLM] Sweep of exposed AI-service ports (8188/11434/7860/5678/2375) [LLM] Exploitation of Marimo /terminal/ws &amp; rclone /options/set (NadMesh patch-queue CVEs) Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant File hash IOCs — endpoint file/process match Article-specific behavioural hunt — New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Token">
+  data-search="New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Tokens A Go botnet called NadMesh turned up in early July hunting exposed AI services, and the operator&#x27;s own dashboard claims 3,811 unique AWS keys. A Shodan harvester keeps the scan queue stocked with ComfyUI, Ollama, n8n, Open WebUI, Langflow, and Gradio: the image generators, local model runners, and workflow builders that teams stand up fast and firewall late. The intel feed behind that counter CVE-2026-39987 CVE-2026-41176 CVE-2022-22947 CVE-2017-12611 T1027 T1190 T1528 [LLM] NadMesh cloud-credential &amp; Kubernetes SA-token file harvesting on Linux [LLM] Cloud/K8s credential enumeration CLI run by NadMesh-controlled host [LLM] Exposed AI/MCP service spawning shell or downloader (RCE landing → payload pull) [LLM] NadMesh hidden dropper payload written to /tmp, /dev/shm or /var/tmp [LLM] NadMesh persistence: hidden cron.d jobs and authorized_keys tampering [LLM] NadMesh C2 egress to 209.99.186.235 / cdnorigin.net (with agent SHA1 overlay) Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant File hash IOCs — endpoint file/process match Article-specific behavioural hunt — New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Token">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-17-new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1948,184 +2055,193 @@ level: medium
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Sweep of exposed AI-service ports (8188/11434/7860/5678/2375) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Exposed AI service spawns shell + downloader (MCP execute_command outcome) · [LLM] Exploitation of Marimo /terminal/ws &amp; rclone /options/set (NadMesh patch-queue CVEs)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] NadMesh Linux persistence: hidden cron.d + /dev/shm dropfiles · File hash IOCs — endpoint file/process match · Article-specific behavioural hunt — New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Token</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] NadMesh C2 beacon to 209.99.186.235 / cdnorigin.net · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Cloud/K8s credential file &amp; env harvest by read utilities · OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Exposed AI/MCP service spawning shell or downloader (RCE landing → payload pull)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] NadMesh hidden dropper payload written to /tmp, /dev/shm or /var/tmp · [LLM] NadMesh persistence: hidden cron.d jobs and authorized_keys tampering · File hash IOCs — endpoint file/process match · Article-specific behavioural hunt — New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Token</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] NadMesh C2 egress to 209.99.186.235 / cdnorigin.net (with agent SHA1 overlay) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] NadMesh cloud-credential &amp; Kubernetes SA-token file harvesting on Linux · [LLM] Cloud/K8s credential enumeration CLI run by NadMesh-controlled host · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="c757c8dbbe" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="20c71422ce" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">NadMesh C2 beacon to 209.99.186.235 / cdnorigin.net</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c757c8dbbe" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">NadMesh cloud-credential &amp; Kubernetes SA-token file harvesting on Linux</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="20c71422ce" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts host-to-C2 traffic to the XLab-published NadMesh command-and-control IP and domain. Any egress from a Linux/AI-service host to these indicators is a high-confidence compromise signal for the NadMesh Go botnet.
+    <div class="uc-desc">Hunts a NadMesh bot reading the exact loot files XLab documents — ~/.aws/config, .env, ~/.docker/config.json, ~/.kube/config and the in-cluster service-account token — via shell utilities. This is the core credential-theft objective of the campaign, not a generic file-read.
 
-Rationale: Uses the exact XLab-published IOCs (C2 209.99.186[.]235, domain cdnorigin[.]net) cross-confirmed by gbhackers and cyberpress. Direct IOC match = high fidelity; the domain covers CNAME/HTTPS beaconing the raw IP would miss.
+Rationale: Uses the verbatim loot paths XLab lists as NadMesh&#x27;s harvest targets (~/.aws/config, .env, ~/.docker/config.json, k8s SA token). A shell utility touching the in-cluster SA-token path is near-zero-FP outside CI. Corroborated by XLab/QiAnXin write-up.
 
 Cross-checked against:
   • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
-  • https://gbhackers.com/new-nadmesh-botnet/
-  • https://cyberpress.org/nadmesh-targets-ai-servers/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher / sandbox detonating the NadMesh sample from a corporate range</li><li>Threat-intel enrichment scanner validating the C2 is live</li><li>Passive DNS resolver logging the domain without an actual host connection</li><li>Shared-hosting IP reuse if 209.99.186.235 is later repurposed to a benign service</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFolderPath has_any (&quot;/opt/sandbox&quot;, &quot;/threatintel&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm which internal host initiated the flow and identify the initiating process (InitiatingProcessFileName/ContextImageFileName) — a python/node/ollama parent strongly confirms NadMesh. 2) Contain: isolate the host, block 209.99.186.235 and cdnorigin.net at egress/DNS, and immediately revoke every credential the host could reach (AWS keys, k8s tokens, .env, registry logins) BEFORE issuing replacements. 3) Hunt: pivot to the persistence and credential-harvest UCs on the same host, and search all hosts for the same C2 to size the outbreak.</div></details>
+  • https://gbhackers.com/new-nadmesh-botnet/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Credentials In Files">T1552.001</span> <span class="ind tech" title="Container API / Kubernetes Service Account Token">T1552.007</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate CI/CD runner reading ~/.aws/config to build cloud deploys</li><li>Backup jobs tar-ing home directories that include .kube/config</li><li>A developer running `cat ~/.kube/config` for troubleshooting</li><li>Config-management (Ansible/Salt) templating credential files</li><li>kubectl wrapper scripts that grep the SA token for health checks</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;ansible&quot;,&quot;salt-minion&quot;,&quot;puppet&quot;,&quot;terraform&quot;,&quot;packer&quot;,&quot;velero&quot;,&quot;restic&quot;) and InitiatingProcessCommandLine !has &quot;jenkins&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the initiating process tree and parent — confirm whether the reader is a known CI/backup binary or an unrecognised/hidden binary (see NadMesh drop-path UC). Check whether multiple credential paths were touched by one process. 2) Contain: isolate the host and, per XLab guidance, REVOKE (not rotate) every credential the host could see — AWS keys, cluster tokens, .env secrets, registry logins — only after pulling persistence. 3) Hunt: pivot on the same host for /tmp/.a, /dev/shm/.a, hidden /etc/cron.d entries and outbound traffic to 209.99.186.235 / cdnorigin.net.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-06-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-06-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-06-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-06-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-06-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-06-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-06-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-06-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(14d)
-| where RemoteIP == &quot;209.99.186.235&quot; or RemoteUrl has &quot;cdnorigin.net&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(ImNetworkSession
- | where TimeGenerated &gt; ago(14d)
- | where DstIpAddr == &quot;209.99.186.235&quot;
- | project TimeGenerated, Host=DvcHostname, Src=SrcIpAddr, Indicator=DstIpAddr, DstPort=DstPortNumber),
-(ImDnsActivity
- | where TimeGenerated &gt; ago(14d)
- | where DnsQuery has &quot;cdnorigin.net&quot;
- | project TimeGenerated, Host=SrcHostname, Src=SrcIpAddr, Indicator=DnsQuery, DstPort=int(null))
+    <div class="tab-content active" id="art-06-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where FileName in~ (&quot;cat&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;cp&quot;,&quot;tar&quot;,&quot;grep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;dd&quot;,&quot;xxd&quot;,&quot;base64&quot;,&quot;cut&quot;)
+| where ProcessCommandLine has_any (&quot;/.aws/config&quot;,&quot;/.aws/credentials&quot;,&quot;/.docker/config.json&quot;,&quot;/.kube/config&quot;,&quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), PathsTouched=make_set(ProcessCommandLine,10), Count=count() by DeviceName, AccountName, InitiatingProcessFileName, FileName
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where TargetProcessName has_any (&quot;cat&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;cp&quot;,&quot;tar&quot;,&quot;grep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;dd&quot;,&quot;xxd&quot;,&quot;base64&quot;,&quot;cut&quot;)
+| where TargetProcessCommandLine has_any (&quot;/.aws/config&quot;,&quot;/.aws/credentials&quot;,&quot;/.docker/config.json&quot;,&quot;/.kube/config&quot;,&quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetProcessName, TargetProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: NadMesh Botnet C2 Indicator Connection
-id: 8f3a1c22-4d6b-4e91-9a7f-2b5c9e1d0a11
-status: experimental
-description: Detects network connection or DNS resolution to NadMesh C2 infrastructure published by QiAnXin XLab.
-references:
-  - https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
-  - https://gbhackers.com/new-nadmesh-botnet/
-author: SOC Detection Engineering
-date: 2026/07/18
-tags:
-  - attack.command_and_control
-  - attack.t1071.001
-logsource:
-  category: network_connection
-detection:
-  selection_ip:
-    DestinationIp: &#x27;209.99.186.235&#x27;
-  selection_dns:
-    DestinationHostname|contains: &#x27;cdnorigin.net&#x27;
-  condition: selection_ip or selection_dns
-falsepositives:
-  - Threat-intel sandbox detonation of the sample
-level: high</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @DestinationIp:209.99.186.235) OR (source:linux.auditd @network.destination.ip:209.99.186.235) OR (@DomainName:cdnorigin.net OR @dns.question.name:cdnorigin.net)</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;209.99.186.235&quot;
-| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
-| filter dstAddr = &quot;209.99.186.235&quot;
-| stats count(*) as flows, sum(bytes) as totalBytes by srcAddr, dstPort, action
-| sort flows desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;209.99.186.235&quot; OR All_Traffic.dest=&quot;cdnorigin.net&quot;) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(&quot;All_Traffic&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-06-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;209.99.186.235&quot; OR All_Traffic.dest=&quot;cdnorigin.net&quot;) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(&quot;All_Traffic&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="99cf97e929" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">NadMesh Linux persistence: hidden cron.d + /dev/shm dropfiles</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="99cf97e929" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects creation of the exact hidden persistence artifacts NadMesh drops: dotfiles named .a in /dev/shm, /var/tmp, /tmp and hidden cron jobs /etc/cron.d/.sys_monitor and /etc/cron.d/.s. The agent persists three ways at once so these files are the removal-resistant anchors.
-
-Rationale: These are literal, article-named artifact paths (/dev/shm/.a, /var/tmp/.a, /tmp/.a, /etc/cron.d/.sys_monitor, /etc/cron.d/.s) — dotfile names no legitimate package uses, so an exact match is near-zero FP. Datadog left empty: no standard file-path attribute on the listed Linux sources.
-
-Cross-checked against:
-  • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
-  • https://news.backbox.org/2026/07/17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-and-kubernetes-tokens/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Hide Artifacts: Hidden Files and Directories">T1564.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>An admin ad-hoc script that happens to write /tmp/.a during troubleshooting</li><li>A benign monitoring agent installing a cron job (would not use the hidden .sys_monitor/.s names)</li><li>Backup/restore tooling recreating /var/tmp scratch files</li><li>CTF/lab replay of the sample on an authorized test host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;dpkg&quot;,&quot;rpm&quot;,&quot;apt&quot;,&quot;yum&quot;,&quot;cloud-init&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: dump the contents of the matched file and the InitiatingProcess that wrote it; a cron entry invoking a /dev/shm or /tmp dotfile confirms NadMesh. 2) Contain: isolate the host and remove ALL three persistence mechanisms (cron.d entries + memory/tmp dropfiles + any ~/.ssh/authorized_keys additions) simultaneously — pulling one alone lets the others re-seed. 3) Hunt: only after persistence is fully removed, revoke and rotate every credential the host could see, then check for C2 to 209.99.186.235.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-06-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-06-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-06-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-06-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-06-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-06-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(14d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where (FolderPath in~ (&quot;/dev/shm&quot;,&quot;/var/tmp&quot;,&quot;/tmp&quot;) and FileName == &quot;.a&quot;)
-    or (FolderPath == &quot;/etc/cron.d&quot; and FileName in (&quot;.sys_monitor&quot;,&quot;.s&quot;))
-| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(14d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where TargetFilePath in~ (&quot;/dev/shm/.a&quot;,&quot;/var/tmp/.a&quot;,&quot;/tmp/.a&quot;,&quot;/etc/cron.d/.sys_monitor&quot;,&quot;/etc/cron.d/.s&quot;)
-| project TimeGenerated, DvcHostname, TargetFilePath, ActingProcessName, ActingProcessCommandLine, ActorUsername
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: NadMesh Botnet Hidden Persistence Dropfile Creation
-id: 2c7e5a9b-1f34-4c8d-b6a2-9d0e4f7a1b30
-status: experimental
-description: Detects creation of NadMesh hidden persistence files (.a dropfiles and hidden cron.d jobs) on Linux hosts.
+    <div class="tab-content" id="art-06-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: NadMesh Cloud and Kubernetes Credential File Read via Shell Utility
+id: 8f2a1c4e-6b9d-4a17-9c1e-2d3f4a5b6c71
+description: Shell utility reading AWS/Docker/Kubernetes credential material as harvested by the NadMesh botnet
 references:
   - https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
 author: SOC Detection Engineering
 date: 2026/07/18
 tags:
-  - attack.persistence
-  - attack.t1053.003
-  - attack.t1564.001
+  - attack.t1552.001
+  - attack.t1552.007
+  - attack.t1528
 logsource:
-  category: file_event
+  category: process_creation
   product: linux
 detection:
-  selection:
-    TargetFilename:
-      - &#x27;/dev/shm/.a&#x27;
-      - &#x27;/var/tmp/.a&#x27;
-      - &#x27;/tmp/.a&#x27;
-      - &#x27;/etc/cron.d/.sys_monitor&#x27;
-      - &#x27;/etc/cron.d/.s&#x27;
-  condition: selection
+  selection_bin:
+    Image|endswith:
+      - &#x27;/cat&#x27;
+      - &#x27;/head&#x27;
+      - &#x27;/tail&#x27;
+      - &#x27;/cp&#x27;
+      - &#x27;/tar&#x27;
+      - &#x27;/grep&#x27;
+      - &#x27;/base64&#x27;
+      - &#x27;/xxd&#x27;
+  selection_path:
+    CommandLine|contains:
+      - &#x27;/.aws/config&#x27;
+      - &#x27;/.aws/credentials&#x27;
+      - &#x27;/.docker/config.json&#x27;
+      - &#x27;/.kube/config&#x27;
+      - &#x27;/var/run/secrets/kubernetes.io/serviceaccount/token&#x27;
+  condition: selection_bin and selection_path
 level: high</code></pre></div>
-    <div class="tab-content" id="art-06-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;(/dev/shm/.a|/var/tmp/.a|/tmp/.a|/etc/cron.d/.sys_monitor|/etc/cron.d/.s)$&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-06-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (&quot;/dev/shm/.a&quot;,&quot;/var/tmp/.a&quot;,&quot;/tmp/.a&quot;,&quot;/etc/cron.d/.sys_monitor&quot;,&quot;/etc/cron.d/.s&quot;)) by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.process_id, Filesystem.action | `drop_dm_object_name(&quot;Filesystem&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-06-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (&quot;/dev/shm/.a&quot;,&quot;/var/tmp/.a&quot;,&quot;/tmp/.a&quot;,&quot;/etc/cron.d/.sys_monitor&quot;,&quot;/etc/cron.d/.s&quot;)) by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.process_id, Filesystem.action | `drop_dm_object_name(&quot;Filesystem&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-06-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(cat OR head OR tail OR cp OR tar OR grep OR base64 OR xxd OR dd) @process.command_line:(*/.aws/config* OR */.aws/credentials* OR */.docker/config.json* OR */.kube/config* OR */var/run/secrets/kubernetes.io/serviceaccount/token*)</code></pre></div>
+    <div class="tab-content" id="art-06-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/(cat|head|tail|cp|tar|grep|base64|xxd|dd)$/i
+| regex(&quot;(/.aws/config|/.aws/credentials|/.docker/config.json|/.kube/config|/var/run/secrets/kubernetes.io/serviceaccount/token)&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, UserName, ImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-06-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;cat&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;cp&quot;,&quot;tar&quot;,&quot;grep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;dd&quot;,&quot;xxd&quot;,&quot;base64&quot;,&quot;cut&quot;) AND (Processes.process=&quot;*/.aws/config*&quot; OR Processes.process=&quot;*/.aws/credentials*&quot; OR Processes.process=&quot;*/.docker/config.json*&quot; OR Processes.process=&quot;*/.kube/config*&quot; OR Processes.process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-06-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;cat&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;cp&quot;,&quot;tar&quot;,&quot;grep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;dd&quot;,&quot;xxd&quot;,&quot;base64&quot;,&quot;cut&quot;) AND (Processes.process=&quot;*/.aws/config*&quot; OR Processes.process=&quot;*/.aws/credentials*&quot; OR Processes.process=&quot;*/.docker/config.json*&quot; OR Processes.process=&quot;*/.kube/config*&quot; OR Processes.process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="c82badef49" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="8a3d5abfd4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="kubernetes,linux,windows">
   <summary>
-    <span class="uc-title">Cloud/K8s credential file &amp; env harvest by read utilities</span>
+    <span class="uc-title">Cloud/K8s credential enumeration CLI run by NadMesh-controlled host</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c82badef49" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="8a3d5abfd4" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts NadMesh&#x27;s core loot action: processes reading ~/.aws/config, .env, ~/.docker/config.json, the Kubernetes service-account token, or dumping cloud-key environment variables via cat/grep/tar/env. Article states the bot ships home cloud keys from env vars plus these exact config files.
+    <div class="uc-desc">Hunts post-compromise credential discovery — aws/gcloud/az/kubectl invocations that list keys, identities, and secrets — matching NadMesh&#x27;s stated goal of cataloguing what the box can log into (model access, cloud keys, cluster privileges).
 
-Rationale: Anchored on the article&#x27;s explicit loot list (~/.aws/config, .env, ~/.docker/config.json, k8s service-account token, cloud keys from env vars). Pairing read-utility process names with those exact paths keeps it behavioural and article-specific rather than a generic file-read.
+Rationale: Article states the operator catalogues &#x27;Model access and callable MCP tools ... cloud keys ... Kubernetes cluster privileges&#x27; — this surfaces the enumeration commands that build that catalogue. Hunting tier because admins legitimately run these; correlate with the file-harvest and drop-path UCs to promote.
 
 Cross-checked against:
   • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
   • https://gbhackers.com/new-nadmesh-botnet/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Unsecured Credentials: Container API">T1552.007</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Cloud Service Discovery">T1526</span> <span class="ind tech" title="Account Discovery: Cloud Account">T1087.004</span> <span class="ind tech" title="Container API / K8s SA Token">T1552.007</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CI/CD pipeline steps that cat ~/.aws/config or export AWS_ACCESS_KEY_ID during a deploy</li><li>kubectl/helm wrappers reading /var/run/secrets/kubernetes.io/serviceaccount inside a legit pod</li><li>Developer running `env | grep AWS` while debugging</li><li>Backup jobs tar-ing home directories that include .aws and .kube</li><li>Container entrypoint scripts sourcing .env at startup</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;kubectl&quot;,&quot;helm&quot;,&quot;aws&quot;,&quot;gitlab-runner&quot;,&quot;buildkitd&quot;,&quot;Runner.Worker&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: examine the full command line and parent process — a short-lived shell/python parent chaining multiple cred paths in one burst is malicious; a known CI runner is likely benign. 2) Contain: if unexplained, isolate the host and revoke the specific AWS keys / cluster tokens / registry logins that file referenced (revoke, don&#x27;t just rotate). 3) Hunt: check for outbound exfil to 209.99.186.235, review CloudTrail/K8s audit for use of those credentials while live, and run the K8s secret-enumeration UC.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SRE running `aws sts get-caller-identity` to debug IAM</li><li>CI pipeline calling `kubectl get secret` for deploys</li><li>`gcloud auth list` in a developer shell</li><li>Cost-tooling running `aws ec2 describe-instances` on a schedule</li><li>Backup verifier calling `az account show`</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where AccountName !in~ (&quot;jenkins&quot;,&quot;gitlab-runner&quot;,&quot;buildkite&quot;,&quot;tekton&quot;) and InitiatingProcessFileName !in~ (&quot;terraform&quot;,&quot;ansible&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check the parent process and interactive-ness — a burst of aws+gcloud+kubectl enumeration from a service/web account (not a human shell) on a public-facing AI host is the signal. 2) Contain: if the parent is an exposed AI service (ollama/comfyui/n8n/marimo) or an unknown binary, isolate and revoke reachable credentials. 3) Hunt: look for the results being read/exfiltrated — outbound to cdnorigin.net / 209.99.186.235 and reads of the SA-token path.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-06-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-06-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-06-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-06-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-06-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-06-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-06-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where FileName in~ (&quot;aws&quot;,&quot;gcloud&quot;,&quot;az&quot;,&quot;kubectl&quot;)
+| where ProcessCommandLine has_any (&quot;sts get-caller-identity&quot;,&quot;ec2 describe&quot;,&quot;s3 ls&quot;,&quot;iam list&quot;,&quot;auth list&quot;,&quot;account show&quot;,&quot;get secret&quot;,&quot;auth can-i&quot;,&quot;get serviceaccount&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where TargetProcessName has_any (&quot;aws&quot;,&quot;gcloud&quot;,&quot;az&quot;,&quot;kubectl&quot;)
+| where TargetProcessCommandLine has_any (&quot;sts get-caller-identity&quot;,&quot;ec2 describe&quot;,&quot;s3 ls&quot;,&quot;iam list&quot;,&quot;auth list&quot;,&quot;account show&quot;,&quot;get secret&quot;,&quot;auth can-i&quot;,&quot;get serviceaccount&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cloud and Kubernetes Credential Enumeration CLI (NadMesh)
+id: 3d71b8a2-5c4e-49f1-8a2b-7e6d9c0f1a34
+description: aws/gcloud/az/kubectl enumeration of identities, keys and secrets consistent with NadMesh post-exploitation cataloguing
+references:
+  - https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1526
+  - attack.t1087.004
+  - attack.t1552.007
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;/aws&#x27;
+      - &#x27;/gcloud&#x27;
+      - &#x27;/az&#x27;
+      - &#x27;/kubectl&#x27;
+    CommandLine|contains:
+      - &#x27;sts get-caller-identity&#x27;
+      - &#x27;ec2 describe&#x27;
+      - &#x27;s3 ls&#x27;
+      - &#x27;auth list&#x27;
+      - &#x27;account show&#x27;
+      - &#x27;get secret&#x27;
+      - &#x27;auth can-i&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(aws OR gcloud OR az OR kubectl) @process.command_line:(*&quot;get-caller-identity&quot;* OR *&quot;ec2 describe&quot;* OR *&quot;s3 ls&quot;* OR *&quot;auth list&quot;* OR *&quot;account show&quot;* OR *&quot;get secret&quot;* OR *&quot;can-i&quot;*)</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/(aws|gcloud|az|kubectl)$/i
+| regex(&quot;(get-caller-identity|ec2 describe|s3 ls|auth list|account show|get secret|can-i|get serviceaccount)&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, UserName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process=&quot;aws sts get-caller-identity*&quot; OR Processes.process=&quot;aws ec2 describe*&quot; OR Processes.process=&quot;aws s3 ls*&quot; OR Processes.process=&quot;gcloud auth list*&quot; OR Processes.process=&quot;az account show*&quot; OR Processes.process=&quot;kubectl get secret*&quot; OR Processes.process=&quot;kubectl auth can-i*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-06-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process=&quot;aws sts get-caller-identity*&quot; OR Processes.process=&quot;aws ec2 describe*&quot; OR Processes.process=&quot;aws s3 ls*&quot; OR Processes.process=&quot;gcloud auth list*&quot; OR Processes.process=&quot;az account show*&quot; OR Processes.process=&quot;kubectl get secret*&quot; OR Processes.process=&quot;kubectl auth can-i*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7bfb6a9e6d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Exposed AI/MCP service spawning shell or downloader (RCE landing → payload pull)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7bfb6a9e6d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the NadMesh exploitation moment: an internet-facing AI service process (ComfyUI/Ollama/Gradio/n8n/Langflow/Marimo/rclone or an MCP server) spawning /bin/sh, curl or wget — e.g. Marimo CVE-2026-39987 terminal WebSocket or the JSON-RPC tools/call execute_command vector — to fetch the bot.
+
+Rationale: Article names ComfyUI/Ollama/n8n/Open WebUI/Langflow/Gradio as targets and lists MCP JSON-RPC tools/call execute_command plus CVE-2026-39987 (Marimo terminal WS shell) as vectors. A model-server process spawning a shell/downloader is the concrete RCE landing and is very rare in normal operation. Corroborated by Resecurity Marimo advisory.
+
+Cross-checked against:
+  • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
+  • https://www.resecurity.com/blog/article/marimo-pre-auth-rce-via-unauthenticated-websocket-terminal-cve-2026-39987</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>ComfyUI custom-node installer legitimately calling git/pip/curl on startup</li><li>n8n Execute-Command node invoked by a legitimate workflow</li><li>Marimo notebook cell a data scientist runs that shells out</li><li>Ollama model pull triggering a helper subprocess</li><li>Python app calling curl in an entrypoint/healthcheck script</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;pip install&quot;,&quot;git clone&quot;,&quot;registry.ollama.ai&quot;,&quot;pypi.org&quot;,&quot;github.com&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child command line for the fetch URL and destination path; benign cases pull from vendor/registry domains, NadMesh pulls a UPX-packed dropper to /tmp/.a, /dev/shm/.a or /var/tmp/.a. 2) Contain: if the fetch lands in a hidden tmp path or hits 209.99.186.235/cdnorigin.net, isolate the host and kill the AI service process; revoke reachable cloud/K8s creds after pulling persistence. 3) Hunt: enumerate other hosts running the same exposed service/version and check for the hidden cron.d and authorized_keys artifacts.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-06-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-06-uc2-sentinel">Sentinel KQL</button>
@@ -2135,132 +2251,46 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-06-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-06-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where FileName in~ (&quot;cat&quot;,&quot;grep&quot;,&quot;head&quot;,&quot;cp&quot;,&quot;tar&quot;,&quot;env&quot;,&quot;printenv&quot;,&quot;base64&quot;,&quot;dd&quot;,&quot;curl&quot;,&quot;wget&quot;)
-| where ProcessCommandLine has_any (&quot;/.aws/config&quot;,&quot;/.aws/credentials&quot;,&quot;/.docker/config.json&quot;,&quot;/var/run/secrets/kubernetes.io/serviceaccount&quot;,&quot;/.kube/config&quot;,&quot;AWS_SECRET_ACCESS_KEY&quot;,&quot;AWS_ACCESS_KEY_ID&quot;,&quot;KUBECONFIG&quot;,&quot;GOOGLE_APPLICATION_CREDENTIALS&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Timestamp &gt; ago(7d)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;busybox&quot;)
+| where InitiatingProcessFileName in~ (&quot;ollama&quot;,&quot;rclone&quot;,&quot;node&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;marimo&quot;)
+   or InitiatingProcessCommandLine has_any (&quot;comfyui&quot;,&quot;langflow&quot;,&quot;open-webui&quot;,&quot;gradio&quot;,&quot;n8n&quot;,&quot;marimo&quot;,&quot;mcp&quot;)
+| where ProcessCommandLine has_any (&quot;http://&quot;,&quot;https://&quot;,&quot;-O &quot;,&quot;| sh&quot;,&quot;| bash&quot;,&quot;curl&quot;,&quot;wget&quot;) or FileName in~ (&quot;curl&quot;,&quot;wget&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-06-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessName has_any (&quot;cat&quot;,&quot;grep&quot;,&quot;head&quot;,&quot;cp&quot;,&quot;tar&quot;,&quot;env&quot;,&quot;printenv&quot;,&quot;base64&quot;,&quot;dd&quot;,&quot;curl&quot;,&quot;wget&quot;)
-| where ActingProcessCommandLine has_any (&quot;/.aws/config&quot;,&quot;/.aws/credentials&quot;,&quot;/.docker/config.json&quot;,&quot;/var/run/secrets/kubernetes.io/serviceaccount&quot;,&quot;/.kube/config&quot;,&quot;AWS_SECRET_ACCESS_KEY&quot;,&quot;AWS_ACCESS_KEY_ID&quot;,&quot;KUBECONFIG&quot;,&quot;GOOGLE_APPLICATION_CREDENTIALS&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName
+| where TimeGenerated &gt; ago(7d)
+| where TargetProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;busybox&quot;)
+| where ActingProcessName has_any (&quot;ollama&quot;,&quot;rclone&quot;,&quot;node&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;marimo&quot;)
+   or ActingProcessCommandLine has_any (&quot;comfyui&quot;,&quot;langflow&quot;,&quot;open-webui&quot;,&quot;gradio&quot;,&quot;n8n&quot;,&quot;marimo&quot;,&quot;mcp&quot;)
+| where TargetProcessCommandLine has_any (&quot;http://&quot;,&quot;https://&quot;,&quot;| sh&quot;,&quot;| bash&quot;) or TargetProcessName in~ (&quot;curl&quot;,&quot;wget&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cloud and Kubernetes Credential File Access via Read Utilities (NadMesh)
-id: 4a1d8e63-9b52-4f07-8c1a-6e2b0d3f9c47
-status: experimental
-description: Detects read utilities accessing cloud credential files, Kubernetes service-account tokens, or dumping cloud-key environment variables, as performed by NadMesh.
+    <div class="tab-content" id="art-06-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Exposed AI/MCP Service Spawning Shell or Downloader (NadMesh RCE)
+id: b6c9d0e1-7f2a-4b3c-9d4e-5a6b7c8d9e02
+description: Internet-facing AI/model/MCP service process spawning a shell or curl/wget to retrieve a payload, matching NadMesh exploitation vectors incl. Marimo CVE-2026-39987 and MCP execute_command
 references:
   - https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
+  - https://www.resecurity.com/blog/article/marimo-pre-auth-rce-via-unauthenticated-websocket-terminal-cve-2026-39987
 author: SOC Detection Engineering
 date: 2026/07/18
 tags:
-  - attack.credential_access
-  - attack.t1552.001
-  - attack.t1552.007
-  - attack.t1528
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_tool:
-    Image|endswith:
-      - &#x27;/cat&#x27;
-      - &#x27;/grep&#x27;
-      - &#x27;/head&#x27;
-      - &#x27;/cp&#x27;
-      - &#x27;/tar&#x27;
-      - &#x27;/env&#x27;
-      - &#x27;/printenv&#x27;
-      - &#x27;/base64&#x27;
-      - &#x27;/dd&#x27;
-  selection_target:
-    CommandLine|contains:
-      - &#x27;.aws/config&#x27;
-      - &#x27;.aws/credentials&#x27;
-      - &#x27;.docker/config.json&#x27;
-      - &#x27;serviceaccount/token&#x27;
-      - &#x27;.kube/config&#x27;
-      - &#x27;AWS_SECRET_ACCESS_KEY&#x27;
-      - &#x27;KUBECONFIG&#x27;
-      - &#x27;GOOGLE_APPLICATION_CREDENTIALS&#x27;
-  condition: selection_tool and selection_target
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-06-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*.aws/config* OR *.aws/credentials* OR *.docker/config.json* OR *serviceaccount/token* OR *.kube/config* OR *AWS_SECRET_ACCESS_KEY* OR *AWS_ACCESS_KEY_ID* OR *KUBECONFIG* OR *GOOGLE_APPLICATION_CREDENTIALS*)</code></pre></div>
-    <div class="tab-content" id="art-06-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/(cat|grep|head|cp|tar|env|printenv|base64|dd|curl|wget)$/i
-| regex(&quot;(.aws/config|.aws/credentials|.docker/config.json|serviceaccount/token|.kube/config|AWS_SECRET_ACCESS_KEY|AWS_ACCESS_KEY_ID|KUBECONFIG|GOOGLE_APPLICATION_CREDENTIALS)&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-06-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name IN (&quot;cat&quot;,&quot;grep&quot;,&quot;head&quot;,&quot;cp&quot;,&quot;tar&quot;,&quot;env&quot;,&quot;printenv&quot;,&quot;base64&quot;,&quot;dd&quot;) AND (Endpoint.Processes.process IN (&quot;*.aws/config*&quot;,&quot;*.aws/credentials*&quot;,&quot;*.docker/config.json*&quot;,&quot;*serviceaccount/token*&quot;,&quot;*.kube/config*&quot;,&quot;*AWS_SECRET_ACCESS_KEY*&quot;,&quot;*AWS_ACCESS_KEY_ID*&quot;,&quot;*KUBECONFIG*&quot;,&quot;*GOOGLE_APPLICATION_CREDENTIALS*&quot;)) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.process_name, Endpoint.Processes.parent_process_name, Endpoint.Processes.process | `drop_dm_object_name(&quot;Processes&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-06-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name IN (&quot;cat&quot;,&quot;grep&quot;,&quot;head&quot;,&quot;cp&quot;,&quot;tar&quot;,&quot;env&quot;,&quot;printenv&quot;,&quot;base64&quot;,&quot;dd&quot;) AND (Endpoint.Processes.process IN (&quot;*.aws/config*&quot;,&quot;*.aws/credentials*&quot;,&quot;*.docker/config.json*&quot;,&quot;*serviceaccount/token*&quot;,&quot;*.kube/config*&quot;,&quot;*AWS_SECRET_ACCESS_KEY*&quot;,&quot;*AWS_ACCESS_KEY_ID*&quot;,&quot;*KUBECONFIG*&quot;,&quot;*GOOGLE_APPLICATION_CREDENTIALS*&quot;)) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.process_name, Endpoint.Processes.parent_process_name, Endpoint.Processes.process | `drop_dm_object_name(&quot;Processes&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad2a85b5dd" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Exposed AI service spawns shell + downloader (MCP execute_command outcome)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="ad2a85b5dd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects an exposed AI/model-serving process (python/node/uvicorn/ollama/comfyui/gradio/n8n) spawning a shell or curl/wget downloader — the on-host outcome of NadMesh&#x27;s MCP JSON-RPC tools/call execute_command and Docker/Jenkins RCE vectors. Grounded in the article&#x27;s named services and ports.
-
-Rationale: MCP execute_command and docker_containers_api_rce/jenkins_scripttext_rce all terminate in a shell child of the exposed service. Anchoring the parent to the article&#x27;s named AI services (ComfyUI/Ollama/n8n stacks run as python/node) plus downloader cmdline keeps it specific to this campaign&#x27;s intake. Datadog empty: listed auditd schema lacks a parent-process attribute for this parent-child pivot.
-
-Cross-checked against:
-  • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
-  • https://cyberpress.org/nadmesh-targets-ai-servers/
-  • https://gbhackers.com/new-nadmesh-botnet/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate n8n/ComfyUI workflow node that shells out to curl an artifact by design</li><li>Python app running subprocess to fetch a model weight with wget</li><li>Container init script doing chmod +x on a helper binary</li><li>Data-science notebook (streamlit) launching a shell for a build step</li><li>Ollama pulling a model via a helper process</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has_any (&quot;registry-1.docker.io&quot;, &quot;ollama.com&quot;, &quot;huggingface.co&quot;, &quot;/app/cache/&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the child command line — a fetch of a UPX/garbled binary into /dev/shm or /tmp and chmod +x is malicious; an artifact pull to an app cache dir is likely benign. 2) Contain: isolate the host, kill the process tree, and block the download URL/C2; the AI service is the entry point, so pull it off the public internet or behind auth (ports 8188/11434/7860/5678). 3) Hunt: check for the dropped persistence files, credential-harvest activity, and C2 to 209.99.186.235 on this and peer hosts.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-06-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-06-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-06-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-06-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-06-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-06-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessFileName in~ (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;streamlit&quot;,&quot;ollama&quot;,&quot;comfyui&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;)
-| where ProcessCommandLine has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;chmod +x&quot;,&quot;/dev/shm&quot;,&quot;/tmp/.&quot;,&quot;base64 -d&quot;,&quot;nohup&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ParentProcessName has_any (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;streamlit&quot;,&quot;ollama&quot;,&quot;comfyui&quot;)
-| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;)
-| where ActingProcessCommandLine has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;chmod +x&quot;,&quot;/dev/shm&quot;,&quot;/tmp/.&quot;,&quot;base64 -d&quot;,&quot;nohup&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: AI Model-Serving Process Spawns Shell Downloader (NadMesh)
-id: 6b9f0c14-3a27-4d55-9e83-1c4a7f2e5d90
-status: experimental
-description: Detects an exposed AI/model-serving process spawning a shell or curl/wget downloader, consistent with NadMesh MCP execute_command / Docker / Jenkins RCE post-exploitation.
-references:
-  - https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
-  - https://cyberpress.org/nadmesh-targets-ai-servers/
-author: SOC Detection Engineering
-date: 2026/07/18
-tags:
-  - attack.execution
-  - attack.t1059.004
   - attack.t1190
+  - attack.t1059.004
+  - attack.t1105
 logsource:
   category: process_creation
   product: linux
 detection:
   selection_parent:
     ParentImage|endswith:
-      - &#x27;/python3&#x27;
-      - &#x27;/python&#x27;
+      - &#x27;/ollama&#x27;
+      - &#x27;/rclone&#x27;
       - &#x27;/node&#x27;
+      - &#x27;/python3&#x27;
       - &#x27;/uvicorn&#x27;
       - &#x27;/gunicorn&#x27;
-      - &#x27;/streamlit&#x27;
-      - &#x27;/ollama&#x27;
+      - &#x27;/marimo&#x27;
   selection_child:
     Image|endswith:
       - &#x27;/sh&#x27;
@@ -2268,111 +2298,227 @@ detection:
       - &#x27;/dash&#x27;
       - &#x27;/curl&#x27;
       - &#x27;/wget&#x27;
-  selection_cmd:
-    CommandLine|contains:
-      - &#x27;curl&#x27;
-      - &#x27;wget&#x27;
-      - &#x27;chmod +x&#x27;
-      - &#x27;/dev/shm&#x27;
-      - &#x27;base64 -d&#x27;
-      - &#x27;nohup&#x27;
-  condition: selection_parent and selection_child and selection_cmd
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-06-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| regex(&quot;(python3?|node|uvicorn|gunicorn|streamlit|ollama|comfyui)&quot;, field=ParentBaseFileName)
-| regex(&quot;(sh|bash|dash|curl|wget)$&quot;, field=ImageFileName)
-| regex(&quot;(curl|wget|chmod |/dev/shm|/tmp/.|base64 -d|nohup)&quot;, field=CommandLine)
+      - &#x27;/busybox&#x27;
+  condition: selection_parent and selection_child
+level: high</code></pre></div>
+    <div class="tab-content" id="art-06-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(sh OR bash OR dash OR curl OR wget OR busybox) @process.command_line:(*http://* OR *https://* OR *&quot;| sh&quot;* OR *&quot;| bash&quot;*)</code></pre></div>
+    <div class="tab-content" id="art-06-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(ollama|rclone|node|python3?|uvicorn|gunicorn|marimo)$/i
+| ImageFileName=/\/(sh|bash|dash|curl|wget|busybox)$/i
 | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-06-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name IN (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;streamlit&quot;,&quot;ollama&quot;,&quot;comfyui&quot;) AND Endpoint.Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;) AND Endpoint.Processes.process IN (&quot;*curl*&quot;,&quot;*wget*&quot;,&quot;*chmod +x*&quot;,&quot;*/dev/shm*&quot;,&quot;*/tmp/.*&quot;,&quot;*base64 -d*&quot;,&quot;*nohup*&quot;) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process | `drop_dm_object_name(&quot;Processes&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-06-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name IN (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;streamlit&quot;,&quot;ollama&quot;,&quot;comfyui&quot;) AND Endpoint.Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;) AND Endpoint.Processes.process IN (&quot;*curl*&quot;,&quot;*wget*&quot;,&quot;*chmod +x*&quot;,&quot;*/dev/shm*&quot;,&quot;*/tmp/.*&quot;,&quot;*base64 -d*&quot;,&quot;*nohup*&quot;) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process | `drop_dm_object_name(&quot;Processes&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-06-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;ollama&quot;,&quot;rclone&quot;,&quot;node&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;comfyui&quot;,&quot;marimo&quot;) OR Processes.parent_process=&quot;*comfyui*&quot; OR Processes.parent_process=&quot;*langflow*&quot; OR Processes.parent_process=&quot;*open-webui*&quot; OR Processes.parent_process=&quot;*gradio*&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;busybox&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-06-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;ollama&quot;,&quot;rclone&quot;,&quot;node&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;,&quot;comfyui&quot;,&quot;marimo&quot;) OR Processes.parent_process=&quot;*comfyui*&quot; OR Processes.parent_process=&quot;*langflow*&quot; OR Processes.parent_process=&quot;*open-webui*&quot; OR Processes.parent_process=&quot;*gradio*&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;busybox&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="eeeea0d672" data-platforms="cloudwatch,def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="ff7e64a851" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Sweep of exposed AI-service ports (8188/11434/7860/5678/2375)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="eeeea0d672" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">NadMesh hidden dropper payload written to /tmp, /dev/shm or /var/tmp</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ff7e64a851" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects a single external source hitting many hosts or many of NadMesh&#x27;s priority AI-service ports — ComfyUI 8188, Ollama 11434, Gradio 7860, n8n 5678, plus Docker API 2375 — the exact ports the botnet&#x27;s rescan job puts first. Surfaces the reconnaissance that precedes exploitation.
+    <div class="uc-desc">Hunts creation of NadMesh&#x27;s staged agent at the exact hidden paths XLab lists (/dev/shm/.a, /var/tmp/.a, /tmp/.a). Because every build is Garble-obfuscated + UPX-packed with random padding, hashes rotate — so the drop PATH, not the hash, is the durable signal.
 
-Rationale: Uses the four ports the article explicitly names as first in NadMesh&#x27;s rescan job (8188 ComfyUI, 11434 Ollama, 7860 Gradio, 5678 n8n) plus Docker 2375. Fan-out thresholds (many hosts OR many of these specific ports from one source) distinguish a botnet sweep from ordinary single-service access. Sigma/Datadog omitted: this is a threshold/fan-out correlation, not single-event shape.
+Rationale: Exact drop paths from the article&#x27;s &#x27;check the drop paths&#x27; section (/dev/shm/.a, /var/tmp/.a, /tmp/.a). Path-based rather than hash-based because the article states Garble+UPX+random padding gives every agent a unique hash, defeating the single published SHA1.
+
+Cross-checked against:
+  • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hidden Files and Directories">T1564.001</span> <span class="ind tech" title="Masquerading">T1036.005</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>An application legitimately using /dev/shm for a lock/temp file literally named &#x27;.a&#x27; (rare)</li><li>A developer test artifact named &#x27;.a&#x27; in /tmp</li><li>Static-analysis or fuzzing harness writing to /var/tmp</li><li>Package build systems using /tmp scratch files</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the file (SHA256), the InitiatingProcess and its parent; confirm the file is an ELF (likely UPX-packed) rather than a genuine text/lock file. 2) Contain: isolate the host; per XLab, pull ALL three persistence mechanisms before revoking credentials (revoking != rotating — new keys leak the same way if persistence remains). 3) Hunt: check /etc/cron.d/.sys_monitor, /etc/cron.d/.s, ~/.ssh/authorized_keys and outbound C2 to 209.99.186.235 / cdnorigin.net across the fleet.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-06-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-06-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-06-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-06-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-06-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-06-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-06-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FolderPath in~ (&quot;/dev/shm/.a&quot;,&quot;/var/tmp/.a&quot;,&quot;/tmp/.a&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA1
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRename&quot;)
+| where TargetFilePath in~ (&quot;/dev/shm/.a&quot;,&quot;/var/tmp/.a&quot;,&quot;/tmp/.a&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileSHA1
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: NadMesh Hidden Dropper Path in tmp/shm
+id: c1d2e3f4-8a9b-4c0d-9e1f-2a3b4c5d6e13
+description: Creation of the NadMesh staged agent at hidden /dev/shm, /var/tmp or /tmp paths
+references:
+  - https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1564.001
+  - attack.t1036.005
+  - attack.t1105
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection:
+    TargetFilename:
+      - &#x27;/dev/shm/.a&#x27;
+      - &#x27;/var/tmp/.a&#x27;
+      - &#x27;/tmp/.a&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:PATH @file.path:(/dev/shm/.a OR /var/tmp/.a OR /tmp/.a)</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/^\/(dev\/shm|var\/tmp|tmp)\/\.a$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/dev/shm/.a&quot; OR Filesystem.file_path=&quot;/var/tmp/.a&quot; OR Filesystem.file_path=&quot;/tmp/.a&quot;) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-06-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/dev/shm/.a&quot; OR Filesystem.file_path=&quot;/var/tmp/.a&quot; OR Filesystem.file_path=&quot;/tmp/.a&quot;) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="96bb23a37c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">NadMesh persistence: hidden cron.d jobs and authorized_keys tampering</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="96bb23a37c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the two persistence artifacts XLab lists — hidden cron files /etc/cron.d/.sys_monitor and /etc/cron.d/.s, and unexpected additions to ~/.ssh/authorized_keys (&#x27;keys nobody remembers adding&#x27;). Covers the triple-persistence design where removing one lets the others restore it.
+
+Rationale: Uses the exact persistence paths from the article (/etc/cron.d/.sys_monitor, /etc/cron.d/.s) plus authorized_keys (&#x27;keys nobody remembers adding&#x27;). Hidden dotfiles in /etc/cron.d are illegitimate by convention, giving very low FP. sshd/cloud-init excluded to keep legit key provisioning out.
+
+Cross-checked against:
+  • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span> <span class="ind tech" title="Hidden Files and Directories">T1564.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Ansible/cloud-init writing authorized_keys during host provisioning</li><li>A config-management tool dropping a legitimately-named cron.d file (won&#x27;t be dotfile-hidden)</li><li>ssh-copy-id run by an admin adding their own key</li><li>Container image build adding an SSH key layer</li><li>Backup/monitoring agents installing a cron job (non-hidden name)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;ansible&quot;,&quot;cloud-init&quot;,&quot;terraform&quot;) and FolderPath endswith &quot;/.ssh/authorized_keys&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the cron.d file contents and the new authorized_keys entry; NadMesh cron invokes the hidden /tmp or /dev/shm agent, and the key is attacker-controlled. 2) Contain: isolate the host and remove ALL persistence at once (cron.d dotfiles, authorized_keys entry, dropper) before revoking credentials — the triple design restores itself otherwise. 3) Hunt: sweep the fleet for the same cron.d dotfile names and for the dropper paths; review where credentials visible from this host were used while live.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-06-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-06-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-06-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-06-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-06-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-06-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-06-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FolderPath in~ (&quot;/etc/cron.d/.sys_monitor&quot;,&quot;/etc/cron.d/.s&quot;) or FolderPath endswith &quot;/.ssh/authorized_keys&quot;
+| where InitiatingProcessFileName !in~ (&quot;sshd&quot;,&quot;ssh-copy-id&quot;,&quot;cloud-init&quot;,&quot;dpkg&quot;,&quot;rpm&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRename&quot;)
+| where TargetFilePath in~ (&quot;/etc/cron.d/.sys_monitor&quot;,&quot;/etc/cron.d/.s&quot;) or TargetFilePath endswith &quot;/.ssh/authorized_keys&quot;
+| where ActingProcessName !in~ (&quot;sshd&quot;,&quot;ssh-copy-id&quot;,&quot;cloud-init&quot;,&quot;dpkg&quot;,&quot;rpm&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, EventType, TargetFilePath
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: NadMesh Cron and SSH authorized_keys Persistence
+id: d4e5f6a7-9b0c-4d1e-8f2a-3b4c5d6e7f24
+description: Hidden cron.d jobs (.sys_monitor/.s) or authorized_keys modification consistent with NadMesh triple-persistence
+references:
+  - https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1053.003
+  - attack.t1098.004
+  - attack.t1564.001
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection_cron:
+    TargetFilename:
+      - &#x27;/etc/cron.d/.sys_monitor&#x27;
+      - &#x27;/etc/cron.d/.s&#x27;
+  selection_keys:
+    TargetFilename|endswith: &#x27;/.ssh/authorized_keys&#x27;
+  condition: selection_cron or selection_keys
+level: high</code></pre></div>
+    <div class="tab-content" id="art-06-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:PATH @file.path:(/etc/cron.d/.sys_monitor OR /etc/cron.d/.s OR */.ssh/authorized_keys)</code></pre></div>
+    <div class="tab-content" id="art-06-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/(\/etc\/cron\.d\/\.(sys_monitor|s)$|\/\.ssh\/authorized_keys$)/i
+| NOT ContextImageFileName=/\/(sshd|cloud-init|dpkg|rpm)$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-06-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/cron.d/.sys_monitor&quot; OR Filesystem.file_path=&quot;/etc/cron.d/.s&quot; OR Filesystem.file_path=&quot;*/.ssh/authorized_keys&quot;) AND Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-06-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/cron.d/.sys_monitor&quot; OR Filesystem.file_path=&quot;/etc/cron.d/.s&quot; OR Filesystem.file_path=&quot;*/.ssh/authorized_keys&quot;) AND Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ed44f48517" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">NadMesh C2 egress to 209.99.186.235 / cdnorigin.net (with agent SHA1 overlay)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="ed44f48517" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts outbound contact to the XLab-published NadMesh C2 (209.99.186.235, cdnorigin[.]net) and, where present, the one known agent SHA1. IOC-driven and high-confidence, but paired with the drop-path/persistence UCs because hashes rotate per build.
+
+Rationale: Directly uses XLab&#x27;s published indicators: C2 209.99.186[.]235, domain cdnorigin[.]net, agent SHA1 31c69b3e12936abca770d430066f379ec1d997ec. The SHA1 overlay flags the one build the sample hash matches, per the article&#x27;s own caveat that other builds hash differently.
 
 Cross-checked against:
   • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
   • https://gbhackers.com/new-nadmesh-botnet/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Network Service Discovery">T1046</span> <span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web">T1071.001</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal vulnerability scanner (Nessus/Qualys) sweeping the estate for exposed AI ports</li><li>Shodan/Censys research scanner from a known ASN</li><li>Load balancer or uptime monitor health-checking many app hosts</li><li>A DevOps jump host legitimately reaching multiple internal model servers</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP !in (&quot;10.&quot;,&quot;172.16.&quot;,&quot;192.168.&quot;) and RemoteIP !startswith &quot;10.&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: geolocate/ASN-enrich the source IP and confirm it is not an authorized internal scanner or monitor; a foreign VPS hitting 3+ of these ports across many hosts is hostile. 2) Contain: block the source at the perimeter and confirm the targeted AI services are auth-gated or firewalled off the public internet. 3) Hunt: for any host that ACCEPTed the connection, pivot to the AI-service-spawns-shell and credential-harvest UCs to see if the scan converted to exploitation.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate service sharing the 209.99.186.235 IP after reallocation (verify current WHOIS/passive DNS)</li><li>cdnorigin.net used as a benign CDN look-alike host by an unrelated app</li><li>Threat-intel scanner or sandbox in your estate deliberately touching the IOC</li><li>Security tooling proxying traffic to the IOC for detonation</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the InitiatingProcess making the connection and whether its SHA1 matches the known sample; confirm the IOC is still live via passive DNS before acting on shared infrastructure. 2) Contain: block 209.99.186.235 and cdnorigin.net at egress, isolate the beaconing host, and revoke all reachable cloud/K8s credentials after removing persistence. 3) Hunt: retro-search 30–90 days of DNS/flow for the domain and IP across all hosts to find the full compromised set, then review credential usage from those hosts while live.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-06-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-06-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-06-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-06-uc4-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-06-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-06-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionAttempt&quot;,&quot;ConnectionRequest&quot;)
-| where LocalPort in (8188, 11434, 7860, 5678, 2375)
-| where RemoteIPType == &quot;Public&quot;
-| summarize TargetHosts=dcount(DeviceName), TargetPorts=dcount(LocalPort), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), PortList=make_set(LocalPort) by RemoteIP
-| where TargetHosts &gt;= 5 or TargetPorts &gt;= 3   // 5+ hosts OR 3+ distinct AI ports from one source = sweep
-| order by TargetHosts desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(1d)
-| where DstPortNumber in (8188, 11434, 7860, 5678, 2375)
-| where NetworkDirection == &quot;Inbound&quot; or isempty(NetworkDirection)
-| summarize TargetHosts=dcount(DstIpAddr), TargetPorts=dcount(DstPortNumber), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), PortList=make_set(DstPortNumber) by SrcIpAddr
-| where TargetHosts &gt;= 5 or TargetPorts &gt;= 3   // sweep threshold
-| order by TargetHosts desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| in(LocalPort, values=[8188, 11434, 7860, 5678, 2375])
-| groupBy([RemoteAddressIP4], function=count(field=aid, distinct=true), limit=max)
-| _count &gt;= 5</code></pre></div>
-    <div class="tab-content" id="art-06-uc4-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, action
-| filter dstPort in [8188, 11434, 7860, 5678, 2375] and action = &quot;ACCEPT&quot;
-| stats count_distinct(dstAddr) as targetHosts, count_distinct(dstPort) as targetPorts by srcAddr
-| filter targetHosts &gt;= 5 or targetPorts &gt;= 3
-| sort targetHosts desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t dc(All_Traffic.dest) as target_hosts dc(All_Traffic.dest_port) as target_ports min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (8188,11434,7860,5678,2375) AND All_Traffic.direction=&quot;inbound&quot; by All_Traffic.src | `drop_dm_object_name(&quot;All_Traffic&quot;)` | where target_hosts&gt;=5 OR target_ports&gt;=3 | convert ctime(firstTime) ctime(lastTime) | sort - target_hosts</code></pre><pre class="spl-mode-body" id="art-06-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(All_Traffic.dest) as target_hosts dc(All_Traffic.dest_port) as target_ports min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (8188,11434,7860,5678,2375) AND All_Traffic.direction=&quot;inbound&quot; by All_Traffic.src | `drop_dm_object_name(&quot;All_Traffic&quot;)` | where target_hosts&gt;=5 OR target_ports&gt;=3 | convert ctime(firstTime) ctime(lastTime) | sort - target_hosts</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1ced9666ad" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Exploitation of Marimo /terminal/ws &amp; rclone /options/set (NadMesh patch-queue CVEs)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1ced9666ad" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP(S) to the specific endpoints NadMesh exploits from its patch queue: Marimo&#x27;s unauthenticated WebSocket terminal /terminal/ws (CVE-2026-39987) and rclone&#x27;s RC auth-bypass /options/set / /core (CVE-2026-41176). rclone configs are cloud credentials, so success = credential theft.
-
-Rationale: The article names CVE-2026-39987 (Marimo pre-auth RCE) and CVE-2026-41176 (rclone RC NoAuth bypass) in NadMesh&#x27;s exploit chain; the exact endpoints (/terminal/ws, /options/set, /core) come from Endor Labs / NVD advisories cross-checked during research. These paths are unusual in normal traffic, giving low FP. Defender/Datadog/Falcon empty: this is web-server/WAF telemetry not shipped to endpoint EDR.
-
-Cross-checked against:
-  • https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
-  • https://www.endorlabs.com/vulnerability/cve-2026-41176
-  • https://www.endorlabs.com/learn/root-in-one-request-marimos-critical-pre-auth-rce-cve-2026-39987
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-41176</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate admin using the Marimo terminal or rclone RC console from a trusted management IP</li><li>Internal health-check hitting /core or /config endpoints</li><li>Security scanner probing for these CVEs during authorized testing</li><li>A developer&#x27;s rclone GUI making RC calls over localhost proxied through the logger</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the target host runs Marimo &lt;0.23.0 or rclone 1.45.0–1.73.5 started without HTTP auth, and whether the request came from an external IP; a 101/200 on /terminal/ws from the internet is likely successful RCE. 2) Contain: patch Marimo to 0.23.0 / rclone to 1.73.5 (or enable RC auth), isolate the host, and revoke every cloud credential in the rclone config and host environment. 3) Hunt: pivot to the AI-service-spawns-shell UC on the same host, check for dropped persistence files and C2 to 209.99.186.235.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-06-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-06-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-06-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-06-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-06-uc5-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-06-uc5-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-06-uc5-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-06-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-06-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(14d)
-| where Url has &quot;/terminal/ws&quot; or Url has &quot;/options/set&quot; or Url has &quot;/core/command&quot; or Url has &quot;/config/create&quot;
-| project TimeGenerated, SrcIpAddr, DstIpAddr, HttpHostName, Url, HttpMethod, HttpStatusCode, HttpRequestHeaderUserAgent
+    <div class="tab-content active" id="art-06-uc5-kql"><pre><button class="copy-btn">COPY</button><code>let c2ip = &quot;209.99.186.235&quot;;
+let c2dom = &quot;cdnorigin.net&quot;;
+let agentSha1 = &quot;31c69b3e12936abca770d430066f379ec1d997ec&quot;;
+DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteIP == c2ip or RemoteUrl has c2dom
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessSHA1, RemoteIP, RemoteUrl, RemotePort
+| extend KnownAgentSample = (InitiatingProcessSHA1 =~ agentSha1)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let c2ip = &quot;209.99.186.235&quot;;
+let c2dom = &quot;cdnorigin.net&quot;;
+union isfuzzy=true
+(ImNetworkSession | where TimeGenerated &gt; ago(30d) | where DstIpAddr == c2ip or DstHostname has c2dom | project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstHostname=coalesce(DstHostname,&quot;&quot;), DstPortNumber, Url),
+(ImDnsActivity | where TimeGenerated &gt; ago(30d) | where DnsQuery has c2dom | project TimeGenerated, DvcHostname=SrcHostname, SrcIpAddr, DstIpAddr=DstIpAddr, DstHostname=DnsQuery, DstPortNumber=int(53), Url=&quot;&quot;)
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc5-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*/terminal/ws*&quot;,&quot;*/options/set*&quot;,&quot;*/core/command*&quot;,&quot;*/config/*&quot;)) by Web.src, Web.dest, Web.http_user_agent, Web.url, Web.http_method, Web.status | `drop_dm_object_name(&quot;Web&quot;)` | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre><pre class="spl-mode-body" id="art-06-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*/terminal/ws*&quot;,&quot;*/options/set*&quot;,&quot;*/core/command*&quot;,&quot;*/config/*&quot;)) by Web.src, Web.dest, Web.http_user_agent, Web.url, Web.http_method, Web.status | `drop_dm_object_name(&quot;Web&quot;)` | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre></div></div>
+    <div class="tab-content" id="art-06-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: NadMesh C2 Connection to 209.99.186.235 / cdnorigin.net
+id: e7f8a9b0-0c1d-4e2f-9a3b-4c5d6e7f8a35
+description: Outbound connection to published NadMesh C2 infrastructure
+references:
+  - https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1071.001
+  - attack.t1105
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection:
+    DestinationIp: &#x27;209.99.186.235&#x27;
+  selection_dns:
+    DestinationHostname|contains: &#x27;cdnorigin.net&#x27;
+  condition: selection or selection_dns
+level: high</code></pre></div>
+    <div class="tab-content" id="art-06-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>(@network.destination.ip:209.99.186.235 OR @DestinationIp:209.99.186.235 OR @dns.question.name:cdnorigin.net OR @DestinationHostname:cdnorigin.net OR @DomainName:cdnorigin.net)</code></pre></div>
+    <div class="tab-content" id="art-06-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^(NetworkConnectIP4|DnsRequest)$/ (RemoteAddressIP4=&quot;209.99.186.235&quot; OR DomainName=/cdnorigin\.net$/i)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, DomainName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-06-uc5-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
+fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
+| filter dstAddr = &quot;209.99.186.235&quot;
+| stats count(*) as flows, sum(bytes) as totalBytes by srcAddr, dstAddr, dstPort
+| sort totalBytes desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;209.99.186.235&quot; OR All_Traffic.dest_host=&quot;cdnorigin.net&quot; OR All_Traffic.url=&quot;*cdnorigin.net*&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-06-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;209.99.186.235&quot; OR All_Traffic.dest_host=&quot;cdnorigin.net&quot; OR All_Traffic.url=&quot;*cdnorigin.net*&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
