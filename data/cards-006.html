@@ -1417,14 +1417,14 @@ level: critical
 </details></div>
 </article>
 <article class="card" id="art-154" data-art-slug="2026-07-06-ghsa-critical-cve-2026-55500-9routers-has-exposure-of-sensit"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1528"
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,vcs,windows"
-  data-uc-count="8" data-llm-uc-count="5"
-  data-search="[GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover 9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover CVE-2026-55500 T1528 [LLM] 9router credential DB export via GET /api/settings/database (CVE-2026-55500) [LLM] 9router database overwrite via POST /api/settings/database (CVE-2026-55500) [LLM] 9router export-then-import sequence (backup poisoning / full takeover) [LLM] 9router /api/settings/database access after auth failure (default-cred / token bypass) [LLM] Exposed 9router dashboard reachable on TCP 20128 from non-loopback source Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information">
+  data-uc-count="7" data-llm-uc-count="4"
+  data-search="[GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover 9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover CVE-2026-55500 T1528 [LLM] 9router credential-database export via GET /api/settings/database (CVE-2026-55500) [LLM] 9router full DB dump exfil — oversized JSON response from /api/settings/database [LLM] 9router database takeover — POST import (wipe-and-replace) to /api/settings/database [LLM] 9router default port 20128 remote exposure and /api/settings enumeration Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-55500-9routers-has-exposure-of-sensit" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1433,9 +1433,9 @@ level: critical
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-06</span>
-    <span>8 use cases</span>
+    <span>7 use cases</span>
     <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
+    <span>3 kill-chain phases detected</span>
   </div>
   <p class="summary">9routers has Exposure of Sensitive Information and Unprotected Database Import/Export, Allowing Complete Credential Theft and Database Takeover</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55500</span></div>
@@ -1456,10 +1456,10 @@ level: critical
   <div class="name">Weaponization</div>
   <div class="marker">—</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 4</div>
@@ -1481,113 +1481,180 @@ level: critical
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] 9router default port 20128 remote exposure and /api/settings enumeration · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Exposed 9router dashboard reachable on TCP 20128 from non-loopback source</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] 9router /api/settings/database access after auth failure (default-cred / token bypass) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] 9router credential DB export via GET /api/settings/database (CVE-2026-55500) · [LLM] 9router database overwrite via POST /api/settings/database (CVE-2026-55500) · [LLM] 9router export-then-import sequence (backup poisoning / full takeover) · OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] 9router credential-database export via GET /api/settings/database (CVE-2026-55500) · [LLM] 9router full DB dump exfil — oversized JSON response from /api/settings/database · [LLM] 9router database takeover — POST import (wipe-and-replace) to /api/settings/database · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="5aa461d93d" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="9812fbc270" data-platforms="sent,sigma,spl" data-targets="vcs" open>
   <summary>
-    <span class="uc-title">9router credential DB export via GET /api/settings/database (CVE-2026-55500)</span>
+    <span class="uc-title">9router credential-database export via GET /api/settings/database (CVE-2026-55500)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5aa461d93d" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="9812fbc270" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts GET requests to 9router&#x27;s /api/settings/database endpoint, which returns the full database including plaintext API keys, OAuth tokens and OIDC client secrets. A large response body on this exact path is a near-certain credential-theft event, not a routine settings read.
+    <div class="uc-desc">Hunts HTTP GET requests to the 9router /api/settings/database endpoint returning 200, which dumps the full database (plaintext API keys, OAuth tokens, OIDC client secrets). This is the primary credential-theft action of CVE-2026-55500 and is article-specific to the endpoint path and behaviour.
 
-Rationale: Uses the exact article path /api/settings/database with GET method; the export returns plaintext apiKeys.key, providerConnections OAuth tokens and OIDC secrets, so a large response (&gt;50KB proxy for full DB dump) on this path is high-fidelity. Response-body key matching (password/api_key/oauth_token) requires app-level logging not generally in proxy telemetry, so response size is used as the proxy signal.
+Rationale: Pivots on the exact vulnerable path &#x27;/api/settings/database&#x27; + GET + 200 named in the advisory evidence (route.js GET-&gt;exportDb). Any successful GET returns the entire secrets store, so status 200 on this path is inherently high-fidelity.
 
 Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-55500
   • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
-  • https://www.thehackerwire.com/9router-unauthenticated-database-export-import/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Credentials from Password Stores">T1555</span></div>
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-55500
+  • https://github.com/decolua/9router/security</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Administrator performing a sanctioned configuration backup of 9router</li><li>Automated backup job scheduled to hit the export endpoint</li><li>Vulnerability scanner (e.g. Nessus/Burp) probing the endpoint during an authorised assessment</li><li>Monitoring/health-check tooling polling settings endpoints (would typically be small responses, below the byte threshold)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;10.0.0.5&quot;)   // add sanctioned backup-host IPs after baselining</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify SourceIP and whether it is an internal admin host or external/tunnel address; check the response size and whether the request carried a valid auth_token cookie. 2) Contain: upgrade 9router to &gt;=0.4.80, rotate ALL secrets returned in the export (provider API keys, OAuth tokens, OIDC client secrets) and force a password reset. 3) Hunt: search for a subsequent POST to the same endpoint (database overwrite) and for use of the leaked API keys/tokens against downstream provider APIs.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate administrator taking a manual database backup via the dashboard export button</li><li>Automated 9router config-backup job scripted against the export endpoint</li><li>Vulnerability scanner (Nessus/Nuclei) validating the endpoint returns 200</li><li>DevOps migration tooling exporting settings before a version upgrade to 0.4.80</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SrcIpAddr in (&quot;127.0.0.1&quot;, &quot;::1&quot;))   // exclude local dashboard/admin loopback; keep remote/tunnel-exposed access in scope</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the SrcIpAddr and whether it is an approved admin/backup host; confirm the response size (a real export is large). Check the same source for a subsequent POST to the same path (import/takeover). 2) Contain: if the source is not an approved admin, block it at the reverse proxy/WAF, rotate ALL exposed provider API keys, OAuth tokens and OIDC client secrets, and force a 9router upgrade to &gt;=0.4.80. 3) Hunt: pivot on every provider credential seen in the DB for anomalous use, and search other hosts running 9router on port 20128 for the same GET pattern.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-154-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-154-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-154-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-154-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+    <div class="tab-content active" id="art-154-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(7d)
-| where RequestURL has &quot;/api/settings/database&quot;
-| where RequestMethod == &quot;GET&quot;
-| summarize RequestCount = count(), MaxBytesOut = max(SentBytes), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), UserAgents = make_set(RequestClientApplication, 10) by SourceIP, DestinationIP, DestinationServiceName
-| where MaxBytesOut &gt; 50000   // full credential DB dump is orders of magnitude larger than a normal settings GET
-| order by MaxBytesOut desc</code></pre></div>
+| where Url has &quot;/api/settings/database&quot;
+| where HttpMethod == &quot;GET&quot;
+| where HttpStatusCode == 200
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Requests=count() by SrcIpAddr, DstIpAddr, DstPortNumber, Url, HttpRequestHeaderUserAgent
+| order by Requests desc</code></pre></div>
     <div class="tab-content" id="art-154-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: 9router Database Export Endpoint Access (CVE-2026-55500)
-id: 8a1f2c34-9b7e-4d6a-b1c2-3e4f5a6b7c8d
-description: GET request to 9router /api/settings/database which exports all stored credentials, API keys and OAuth tokens in plaintext
+id: 6f1c8a20-3d4e-4f2b-9a7c-2b1e55500001
+description: GET request to 9router /api/settings/database returning 200, which exports the full credential database.
 references:
   - https://github.com/advisories/GHSA-qvfm-67h2-2qfx
   - https://nvd.nist.gov/vuln/detail/CVE-2026-55500
 author: SOC Detection Engineering
-date: 2026/07/14
+date: 2026/07/18
 tags:
   - attack.t1552.001
-  - attack.t1528
-  - attack.credential_access
+  - attack.t1213
+  - attack.t1190
 logsource:
   category: webserver
 detection:
   selection:
     cs-method: &#x27;GET&#x27;
     cs-uri-stem|contains: &#x27;/api/settings/database&#x27;
+    sc-status: 200
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-154-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime max(Web.bytes_out) as maxBytesOut values(Web.http_user_agent) as user_agent from datamodel=Web.Web where Web.http_method=GET Web.url=&quot;*/api/settings/database*&quot; by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | where maxBytesOut&gt;50000 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-154-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime max(Web.bytes_out) as maxBytesOut values(Web.http_user_agent) as user_agent from datamodel=Web.Web where Web.http_method=GET Web.url=&quot;*/api/settings/database*&quot; by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | where maxBytesOut&gt;50000 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-154-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent values(Web.dest_port) as dest_port from datamodel=Web where Web.url=&quot;*/api/settings/database*&quot; Web.http_method=GET Web.status=200 by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre><pre class="spl-mode-body" id="art-154-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent values(Web.dest_port) as dest_port from datamodel=Web where Web.url=&quot;*/api/settings/database*&quot; Web.http_method=GET Web.status=200 by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="0b36bf74bd" data-platforms="sent,sigma,spl" data-targets="vcs">
+<details class="uc" data-uc-slug="87eb32811f" data-platforms="sent,sigma,spl" data-targets="vcs">
   <summary>
-    <span class="uc-title">9router database overwrite via POST /api/settings/database (CVE-2026-55500)</span>
+    <span class="uc-title">9router full DB dump exfil — oversized JSON response from /api/settings/database</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0b36bf74bd" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="87eb32811f" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts POST requests to 9router&#x27;s /api/settings/database endpoint, which performs an unauthenticated wipe-and-replace of every table including the admin password hash. Any POST to this path is inherently destructive and lets an attacker set their own credentials.
+    <div class="uc-desc">Content/size-aware variant that flags GET requests to /api/settings/database returning a 200 with an abnormally large JSON body. The complete credential export (all apiKeys, providerConnections OAuth tokens, settings) is far larger than any normal 9router API response, so response size separates a real credential dump from benign endpoint probing.
 
-Rationale: POST to the exact article path /api/settings/database triggers importDb() which DELETEs settings/apiKeys/providerConnections and inserts attacker-controlled data (including a new password hash), so any POST to this path is destructive by design and essentially never legitimate outside a sanctioned restore.
+Rationale: Combines the article&#x27;s export path with a response-size floor; the advisory stresses the export contains all apiKeys/OAuth tokens/OIDC secrets, which produces a body far larger than 9router&#x27;s normal small JSON responses, keeping FP rate low.
 
 Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-55500
-  • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Manipulation: Stored Data Manipulation">T1565.001</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
+  • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
+  • https://www.thehackerwire.com/9router-unauthenticated-database-export-import/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Automated Exfiltration">T1020</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Administrator restoring a legitimate 9router database backup</li><li>Migration/upgrade tooling re-importing configuration after moving hosts</li><li>Authorised penetration test exercising the import path</li><li>Disaster-recovery runbook replaying a known-good database export</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;10.0.0.5&quot;)   // add sanctioned restore-host IPs after baselining</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: determine whether the POST originated from a known admin/restore host and correlate with any change-ticket; inspect ReceivedBytes and user agent. 2) Contain: take the instance offline, upgrade to &gt;=0.4.80, and restore the database from a trusted pre-incident backup since the current DB (password hash, all secrets) must be assumed attacker-controlled. 3) Hunt: check for a preceding GET export from the same source (export-then-import), successful logins with the newly-set password, and use of any provider tokens now present in the DB.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate scheduled full-database backup export by an admin</li><li>Large export because the instance genuinely holds many provider connections</li><li>Migration tooling pulling the full settings blob before upgrade</li><li>QA/staging instance being backed up by CI</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SrcIpAddr in (&quot;127.0.0.1&quot;, &quot;::1&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the source is not an approved backup host and correlate with the credential set — was any exported key subsequently used from a new IP? 2) Contain: block the source, rotate all provider/OAuth/OIDC secrets stored in 9router, and upgrade to &gt;=0.4.80. 3) Hunt: search egress logs for the same SrcIpAddr uploading/forwarding the dumped JSON, and look for a follow-on POST import to the same endpoint.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-154-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-154-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-154-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-154-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+    <div class="tab-content active" id="art-154-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(7d)
-| where RequestURL has &quot;/api/settings/database&quot;
-| where RequestMethod == &quot;POST&quot;
-| project TimeGenerated, SourceIP, DestinationIP, DestinationServiceName, RequestMethod, RequestURL, ReceivedBytes, RequestClientApplication, DeviceVendor, DeviceProduct
+| where Url has &quot;/api/settings/database&quot; and HttpMethod == &quot;GET&quot; and HttpStatusCode == 200
+| where HttpResponseBodyBytes &gt; 100000   // full credential DB dump dwarfs normal API responses (&lt;10KB); 100KB floor separates dump from probe
+| project TimeGenerated, SrcIpAddr, DstIpAddr, Url, HttpResponseBodyBytes, HttpRequestHeaderUserAgent
+| order by HttpResponseBodyBytes desc</code></pre></div>
+    <div class="tab-content" id="art-154-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: 9router Oversized Credential Export Response (CVE-2026-55500)
+id: 6f1c8a20-3d4e-4f2b-9a7c-2b1e55500002
+description: GET /api/settings/database returning a 200 with a large body, consistent with a full credential-database export.
+references:
+  - https://github.com/advisories/GHSA-qvfm-67h2-2qfx
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1020
+  - attack.t1552.001
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: &#x27;GET&#x27;
+    cs-uri-stem|contains: &#x27;/api/settings/database&#x27;
+    sc-status: 200
+  size:
+    sc-bytes|gte: 100000
+  condition: selection and size
+level: high</code></pre></div>
+    <div class="tab-content" id="art-154-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count max(Web.bytes_out) as max_bytes_out values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.url=&quot;*/api/settings/database*&quot; Web.http_method=GET Web.status=200 Web.bytes_out&gt;100000 by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| sort - max_bytes_out</code></pre><pre class="spl-mode-body" id="art-154-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count max(Web.bytes_out) as max_bytes_out values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.url=&quot;*/api/settings/database*&quot; Web.http_method=GET Web.status=200 Web.bytes_out&gt;100000 by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| sort - max_bytes_out</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="703a00d383" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">9router database takeover — POST import (wipe-and-replace) to /api/settings/database</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="703a00d383" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts HTTP POST to /api/settings/database, which triggers importDb() — a transactional wipe of settings/providerConnections/apiKeys/combos and replacement with attacker-controlled data, including the admin password hash. This is the integrity/impact half of CVE-2026-55500 (full config takeover or destructive wipe).
+
+Rationale: POST to /api/settings/database maps 1:1 to importDb()&#x27;s DELETE-then-INSERT transaction described in the advisory (src/lib/db/index.js lines 102-163). A POST to this path is not a normal read operation and directly indicates config takeover or destructive wipe.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/
+  • https://github.com/decolua/9router/security</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Manipulation: Stored Data Manipulation">T1565.001</span> <span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin restoring a previously exported database via the import UI</li><li>Disaster-recovery/migration tooling importing settings during an upgrade</li><li>Automated config-management pushing a known-good settings blob</li><li>QA restoring a baseline database on a staging instance</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SrcIpAddr in (&quot;127.0.0.1&quot;, &quot;::1&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the SrcIpAddr, confirm it is not an approved admin/restore host, and check whether the admin can still log in (password-hash replacement locks out the legitimate owner). 2) Contain: block the source, take the instance offline, restore the database from a trusted backup, force upgrade to &gt;=0.4.80, and rotate all provider secrets. 3) Hunt: correlate with a preceding GET export from the same source (exfil-then-overwrite chain) and check all other 9router hosts for POSTs to this path.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-154-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-154-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-154-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-154-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where Url has &quot;/api/settings/database&quot;
+| where HttpMethod == &quot;POST&quot;
+| where HttpStatusCode between (200 .. 299)
+| project TimeGenerated, SrcIpAddr, DstIpAddr, Url, HttpMethod, HttpStatusCode, HttpRequestBodyBytes, HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-154-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: 9router Database Import/Overwrite Endpoint POST (CVE-2026-55500)
-id: c4d5e6f7-1a2b-4c3d-9e8f-7a6b5c4d3e2f
-description: POST request to 9router /api/settings/database which wipes and replaces the entire database including the admin password hash
+    <div class="tab-content" id="art-154-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: 9router Database Import/Overwrite (CVE-2026-55500)
+id: 6f1c8a20-3d4e-4f2b-9a7c-2b1e55500003
+description: POST to 9router /api/settings/database, which wipes and replaces the entire database including the admin password hash.
 references:
   - https://github.com/advisories/GHSA-qvfm-67h2-2qfx
   - https://nvd.nist.gov/vuln/detail/CVE-2026-55500
 author: SOC Detection Engineering
-date: 2026/07/14
+date: 2026/07/18
 tags:
   - attack.t1565.001
-  - attack.t1556
-  - attack.impact
+  - attack.t1485
+  - attack.t1190
 logsource:
   category: webserver
 detection:
@@ -1596,144 +1663,66 @@ detection:
     cs-uri-stem|contains: &#x27;/api/settings/database&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-154-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent max(Web.bytes_in) as maxBytesIn from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/settings/database*&quot; by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-154-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent max(Web.bytes_in) as maxBytesIn from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/settings/database*&quot; by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-154-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent values(Web.bytes_in) as bytes_in from datamodel=Web where Web.url=&quot;*/api/settings/database*&quot; Web.http_method=POST by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre><pre class="spl-mode-body" id="art-154-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent values(Web.bytes_in) as bytes_in from datamodel=Web where Web.url=&quot;*/api/settings/database*&quot; Web.http_method=POST by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="0a66ad5e71" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="3e81c4c175" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
   <summary>
-    <span class="uc-title">9router export-then-import sequence (backup poisoning / full takeover)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0a66ad5e71" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Correlates a GET export followed by a POST import to /api/settings/database from the same source within a short window — the export-modify-reimport workflow an attacker uses to steal credentials and then inject an attacker-controlled password/config in one takeover chain.
-
-Rationale: Chains the article&#x27;s two documented operations (GET export then POST import of /api/settings/database) from the same SourceIP/DestinationIP within 5 minutes — the full takeover workflow described in the advisory; the sequence is far higher-fidelity than either request alone and eliminates isolated backup reads.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-55500
-  • https://www.thehackerwire.com/9router-unauthenticated-database-export-import/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Manipulation: Stored Data Manipulation">T1565.001</span> <span class="ind tech" title="Automated Exfiltration">T1020</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin exporting a backup then immediately re-importing to test restore functionality</li><li>Blue-team/pentest validation of the export+import flow during an authorised engagement</li><li>Automated config-migration script that reads then writes the DB in one pass</li><li>Health-check tooling that round-trips settings</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;10.0.0.5&quot;)   // sanctioned backup/restore host allowlist</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the SourceIP is not a sanctioned admin/backup host and measure DelaySec (very short delays suggest scripted takeover). 2) Contain: isolate the instance, upgrade to &gt;=0.4.80, restore from trusted backup, rotate every provider secret and reset admin credentials. 3) Hunt: pivot on the SourceIP across all other 9router endpoints, and monitor the exposed provider APIs/OAuth tokens for anomalous use consistent with the just-exported credentials.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-154-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-154-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-154-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let WindowSeconds = 300;   // export -&gt; modify -&gt; reimport typically completes within 5 minutes
-let Exports = CommonSecurityLog
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where RequestURL has &quot;/api/settings/database&quot; and RequestMethod == &quot;GET&quot;
-    | project ExportTime = TimeGenerated, SourceIP, DestinationIP;
-CommonSecurityLog
-| where TimeGenerated &gt; ago(LookbackDays)
-| where RequestURL has &quot;/api/settings/database&quot; and RequestMethod == &quot;POST&quot;
-| project ImportTime = TimeGenerated, SourceIP, DestinationIP, RequestClientApplication, ReceivedBytes
-| join kind=inner Exports on SourceIP, DestinationIP
-| where ImportTime between (ExportTime .. ExportTime + WindowSeconds * 1s)
-| project SourceIP, DestinationIP, ExportTime, ImportTime, DelaySec = datetime_diff(&#x27;second&#x27;, ImportTime, ExportTime), RequestClientApplication, ReceivedBytes
-| order by ImportTime desc</code></pre></div>
-    <div class="tab-content" id="art-154-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Web.http_method) as methods min(_time) as firstTime max(_time) as lastTime dc(Web.http_method) as methodCount from datamodel=Web.Web where Web.url=&quot;*/api/settings/database*&quot; Web.http_method IN (&quot;GET&quot;,&quot;POST&quot;) by Web.src Web.dest _time span=5m | `drop_dm_object_name(Web)` | where methodCount&gt;=2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-154-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.http_method) as methods min(_time) as firstTime max(_time) as lastTime dc(Web.http_method) as methodCount from datamodel=Web.Web where Web.url=&quot;*/api/settings/database*&quot; Web.http_method IN (&quot;GET&quot;,&quot;POST&quot;) by Web.src Web.dest _time span=5m | `drop_dm_object_name(Web)` | where methodCount&gt;=2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="44f0890b56" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">9router /api/settings/database access after auth failure (default-cred / token bypass)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">9router default port 20128 remote exposure and /api/settings enumeration</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="44f0890b56" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="3e81c4c175" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Correlates 401/403 failures on /api/settings/database followed by a 200 success from the same source, catching an attacker who probes the endpoint, then authenticates (e.g. via the default password &#x27;123456&#x27; JWT) and pulls the database. Targets the ALWAYS_PROTECTED JWT/CLI-token weakness.
+    <div class="uc-desc">9router normally listens on localhost:20128 for AI-coding-tool traffic; the advisory notes tunnel exposure as a precondition. This hunts inbound/outbound connections to TCP 20128 from public/non-internal addresses (indicating the dashboard is internet-exposed) and enumeration of /api/settings* paths — the reconnaissance step before credential export.
 
-Rationale: Uses the article&#x27;s ALWAYS_PROTECTED weakness (endpoint only checks JWT/CLI token) and the documented default password &#x27;123456&#x27;: a 401/403 then 200 on /api/settings/database from one IP is the observable signature of probe-then-authenticate. Requires an HTTP log carrying status codes (W3CIISLog/AppServiceHTTPLogs); swap csUriStem-&gt;CsUriStem / scStatus-&gt;ScStatus for AppServiceHTTPLogs.
+Rationale: Port 20128 is explicitly the 9router default listener (confirmed by npm README and vendor docs); external connections to it indicate the dashboard is tunnel-exposed — the precondition the advisory calls out. FP rate is high because 20128 is also the normal local service port, so the query scopes to public/external addresses only.
 
 Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-55500
+  • https://www.npmjs.com/package/9router
+  • https://deepwiki.com/decolua/9router/2-getting-started
   • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin whose session token expired (401) then re-logged in (200) legitimately</li><li>Browser retrying after a token refresh</li><li>Monitoring probe that first fails auth then succeeds with a service token</li><li>Load-balancer health checks that intermittently 401 before a valid poll</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserAgent !has &quot;HealthCheck&quot; and cIP !in (&quot;10.0.0.5&quot;)   // exclude monitoring probes / admin hosts after baselining</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the cIP, user agent and DelaySec; check whether the 200 request also returned a large body (actual export). 2) Contain: change the 9router admin password off the default, upgrade to &gt;=0.4.80, and rotate secrets if a successful export followed. 3) Hunt: look for the same cIP hitting other 9router endpoints (e.g. login brute-force per CVE-2026-55501), and for POST imports after the successful GET.</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate remote developer intentionally accessing their own tunnel-exposed 9router dashboard</li><li>Internal vulnerability scanner sweeping port 20128 across the estate</li><li>Reverse-proxy/load-balancer health checks hitting 20128</li><li>Local AI coding tools (Claude Code/Cursor) connecting to localhost:20128 that get logged with a public NAT address</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;node.exe&quot;, &quot;claude.exe&quot;, &quot;cursor.exe&quot;)   // Defender: drop expected local AI-tool clients; keep unexpected remote initiators</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: determine whether the 9router host is meant to be internet-facing at all; identify the external source ASN/geo and whether it precedes /api/settings/database access. 2) Contain: if unintended exposure, remove the tunnel / bind 9router to localhost, place it behind authenticated reverse proxy, and upgrade to &gt;=0.4.80. 3) Hunt: pivot each external source into the web logs for GET/POST on /api/settings/database and other /api/settings* enumeration.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-154-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-154-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-154-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-154-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-154-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-154-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-154-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-154-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let WindowMinutes = 30m;   // probe-then-succeed after obtaining a valid (e.g. default-password) token
-let Failed = W3CIISLog
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where csUriStem has &quot;/api/settings/database&quot;
-    | where scStatus in (401, 403)
-    | project FailTime = TimeGenerated, cIP, sSiteName;
-W3CIISLog
-| where TimeGenerated &gt; ago(LookbackDays)
-| where csUriStem has &quot;/api/settings/database&quot;
-| where scStatus == 200
-| project SuccessTime = TimeGenerated, cIP, sSiteName, csMethod, csUserName, csUserAgent
-| join kind=inner Failed on cIP
-| where SuccessTime between (FailTime .. FailTime + WindowMinutes)
-| project cIP, sSiteName, FailTime, SuccessTime, DelaySec = datetime_diff(&#x27;second&#x27;, SuccessTime, FailTime), csMethod, csUserName, csUserAgent
-| order by SuccessTime desc</code></pre></div>
-    <div class="tab-content" id="art-154-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web.Web where Web.url=&quot;*/api/settings/database*&quot; Web.status IN (200,401,403) by Web.src Web.dest Web.status _time span=30m | `drop_dm_object_name(Web)` | eval failed=if(status IN (401,403),1,0), success=if(status=200,1,0) | stats sum(failed) as failures sum(success) as successes values(status) as statuses by src dest | where failures&gt;=1 AND successes&gt;=1</code></pre><pre class="spl-mode-body" id="art-154-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where Web.url=&quot;*/api/settings/database*&quot; Web.status IN (200,401,403) by Web.src Web.dest Web.status _time span=30m | `drop_dm_object_name(Web)` | eval failed=if(status IN (401,403),1,0), success=if(status=200,1,0) | stats sum(failed) as failures sum(success) as successes values(status) as statuses by src dest | where failures&gt;=1 AND successes&gt;=1</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="dfb51cb9a3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">Exposed 9router dashboard reachable on TCP 20128 from non-loopback source</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="dfb51cb9a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces network connections to 9router&#x27;s default dashboard/API port 20128 from a non-loopback source, catching the &#x27;tunnel exposure&#x27; pre-condition the advisory calls out that turns the local-only export/import endpoint into a remotely exploitable one.
-
-Rationale: Port 20128 is 9router&#x27;s default listener (article&#x27;s reproduction targets localhost:20128); a non-loopback connection to it is the &#x27;tunnel exposure&#x27; pre-condition the advisory flags as combining with this CVE for remote takeover. Low confidence because the port alone does not confirm exploitation, so this is a hunting/exposure pivot rather than an alert.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-55500
-  • https://advisories.gitlab.com/npm/9router/CVE-2026-55500/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate remote admin accessing the 9router dashboard over the LAN/VPN</li><li>Internal vulnerability scanner sweeping the host</li><li>Another application coincidentally using port 20128</li><li>Reverse-proxy/load-balancer health checks connecting to the backend port</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP !in (&quot;10.0.0.5&quot;)   // exclude sanctioned admin/scanner hosts after baselining</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the destination host runs 9router and whether the source is an expected internal admin/VPN address or an external/tunnel endpoint. 2) Contain: if exposure is unintended, firewall port 20128 to loopback/trusted CIDR only, disable any tunnel, and upgrade to &gt;=0.4.80. 3) Hunt: pivot to the web/proxy logs for that host and check for GET/POST to /api/settings/database from the same source (UC1-UC4).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-154-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-154-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-154-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-154-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-154-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-154-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-154-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-154-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
-| where RemotePort == 20128
-| where RemoteIP !in (&quot;127.0.0.1&quot;, &quot;::1&quot;) and LocalIP !in (&quot;127.0.0.1&quot;, &quot;::1&quot;)
-| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Clients = make_set(DeviceName, 20), Procs = make_set(InitiatingProcessFileName, 10) by RemoteIP, RemoteIPType
-| order by ConnCount desc</code></pre></div>
-    <div class="tab-content" id="art-154-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where RemotePort == 20128 or LocalPort == 20128
+| where RemoteIPType == &quot;Public&quot;
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count() by DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName
+| order by Conns desc</code></pre></div>
+    <div class="tab-content" id="art-154-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
 | where DstPortNumber == 20128
-| where DstIpAddr !in (&quot;127.0.0.1&quot;, &quot;::1&quot;) and SrcIpAddr !in (&quot;127.0.0.1&quot;, &quot;::1&quot;)
-| summarize ConnCount = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SrcIpAddr, DstIpAddr, DstHostname
-| order by ConnCount desc</code></pre></div>
-    <div class="tab-content" id="art-154-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Connection to 9router Dashboard Port 20128 from Non-Loopback Source
-id: e2f3a4b5-6c7d-4e8f-9a0b-1c2d3e4f5a6b
-description: Network connection to 9router default dashboard/API port 20128 from a non-loopback address, indicating remote exposure of the vulnerable export/import endpoint (CVE-2026-55500)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Conns=count(), Sources=dcount(SrcIpAddr) by DstIpAddr, DstPortNumber, SrcIpAddr
+| order by Conns desc</code></pre></div>
+    <div class="tab-content" id="art-154-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Connection to 9router Default Port 20128 (CVE-2026-55500 exposure)
+id: 6f1c8a20-3d4e-4f2b-9a7c-2b1e55500005
+description: Network connection to TCP 20128, the default 9router dashboard/API listener, indicating potential remote exposure or probing.
 references:
   - https://github.com/advisories/GHSA-qvfm-67h2-2qfx
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-55500
+  - https://github.com/decolua/9router
 author: SOC Detection Engineering
-date: 2026/07/14
+date: 2026/07/18
 tags:
+  - attack.t1595.002
   - attack.t1190
-  - attack.initial_access
 logsource:
   category: network_connection
   product: windows
@@ -1741,17 +1730,18 @@ detection:
   selection:
     DestinationPort: 20128
     Initiated: &#x27;true&#x27;
-  filter_loopback:
-    DestinationIp:
-      - &#x27;127.0.0.1&#x27;
-      - &#x27;::1&#x27;
-  condition: selection and not filter_loopback
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-154-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:20128 -@DestinationIp:127.0.0.1 -@DestinationIp:&quot;::1&quot;</code></pre></div>
-    <div class="tab-content" id="art-154-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=20128
-| NOT RemoteAddressIP4=/^127\./
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4], function=count())</code></pre></div>
-    <div class="tab-content" id="art-154-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=20128 All_Traffic.src_ip!=&quot;127.0.0.1&quot; All_Traffic.src_ip!=&quot;::1&quot; by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-154-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=20128 All_Traffic.src_ip!=&quot;127.0.0.1&quot; All_Traffic.src_ip!=&quot;::1&quot; by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  condition: selection
+level: low</code></pre></div>
+    <div class="tab-content" id="art-154-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:20128</code></pre></div>
+    <div class="tab-content" id="art-154-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=20128
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-154-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime dc(All_Traffic.src) as src_count from datamodel=Network_Traffic where All_Traffic.dest_port=20128 (All_Traffic.src_category=&quot;external&quot; OR All_Traffic.dest_category=&quot;external&quot;) by All_Traffic.dest All_Traffic.src All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre><pre class="spl-mode-body" id="art-154-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime dc(All_Traffic.src) as src_count from datamodel=Network_Traffic where All_Traffic.dest_port=20128 (All_Traffic.src_category=&quot;external&quot; OR All_Traffic.dest_category=&quot;external&quot;) by All_Traffic.dest All_Traffic.src All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -1769,11 +1759,11 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-154-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-154-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-154-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-154-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-154-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-154-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-154-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-154-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -1782,7 +1772,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-154-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-154-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -1794,12 +1784,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-154-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-154-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-55500&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-154-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-154-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-55500&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -1822,17 +1812,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-154-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-154-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-154-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-154-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-154-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-154-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-154-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-154-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-154-uc6-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-154-uc5-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-154-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-154-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -1843,7 +1833,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-154-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-154-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -1869,7 +1859,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-154-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-154-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -1878,7 +1868,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-154-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-154-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -1905,11 +1895,11 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-154-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-154-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-154-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-154-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-154-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-154-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-154-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information
+    <div class="tab-content active" id="art-154-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -1929,7 +1919,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-154-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-154-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information
@@ -1952,7 +1942,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-154-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information ```
+    <div class="tab-content" id="art-154-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-154-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-154-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-154-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;dashboardguard.js&quot;))
@@ -1968,7 +1958,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-154-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information ```
+]</code></pre><pre class="spl-mode-body" id="art-154-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55500: 9routers has Exposure of Sensitive Information ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;dashboardguard.js&quot;))
@@ -1989,14 +1979,14 @@ DeviceFileEvents
 </details></div>
 </article>
 <article class="card" id="art-155" data-art-slug="2026-07-06-ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-phases="c2,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-platforms="def,falcon,sent,spl"
   data-splunk-cats="application,endpoint"
-  data-targets="vcs,windows"
+  data-targets=""
   data-uc-count="2" data-llm-uc-count="1"
-  data-search="[GHSA / CRITICAL] CVE-2026-54496: Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness CVE-2026-54496 T1190 [LLM] Vulnerable Zcash node (zebrad/zcashd pre-NU6.2) running on monitored host — CVE-2026-54496 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="[GHSA / CRITICAL] CVE-2026-54496: Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness CVE-2026-54496 T1190 [LLM] Vulnerable Zcash node/wallet running pre-NU6.2 Orchard circuit (CVE-2026-54496) Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2007,7 +1997,7 @@ DeviceFileEvents
     <span>2026-07-06</span>
     <span>2 use cases</span>
     <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
+    <span>3 kill-chain phases detected</span>
   </div>
   <p class="summary">Zebra: Missing copy constraint in halo2_gadgets variable-base scalar multiplication allows under-constrained base, breaking Orchard Action circuit soundness</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54496</span></div>
@@ -2023,10 +2013,10 @@ DeviceFileEvents
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell ">
   <div class="num">Phase 3</div>
@@ -2053,80 +2043,61 @@ DeviceFileEvents
   <div class="name">Actions on Objectives</div>
   <div class="marker">—</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Vulnerable Zcash node (zebrad/zcashd pre-NU6.2) running on monitored host — CVE-2026-54496 · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable Zcash node/wallet running pre-NU6.2 Orchard circuit (CVE-2026-54496)</em></div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="617475d397" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="88ff931a37" data-platforms="def,falcon,sent,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">Vulnerable Zcash node (zebrad/zcashd pre-NU6.2) running on monitored host — CVE-2026-54496</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-title">Vulnerable Zcash node/wallet running pre-NU6.2 Orchard circuit (CVE-2026-54496)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="617475d397" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="88ff931a37" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces monitored endpoints running the Zcash full-node daemons zebrad or zcashd, projecting the reported product version so an analyst can flag any instance below the fixed builds (zebrad 5.0.0 / NU6.2, zcashd 6.20.0). This is an asset-exposure hunt for the CVE-2026-54496 Orchard soundness bug — the on-chain exploitation itself is cryptographically undetectable, so the only defensible detection surface is finding and patching vulnerable node software before it is abused.
+    <div class="uc-desc">Surfaces hosts running versions of zcashd/zebrad (and the underlying halo2_gadgets/orchard/zcash_primitives crates) affected by the CVE-2026-54496 Orchard scalar-mul soundness flaw, so they can be upgraded to the fixed NU6.2 builds. This is an exposure/hardening detection: the advisory states active exploitation is cryptographically undetectable, so identifying and patching vulnerable nodes is the only defensible control.
 
-Rationale: Uses the article&#x27;s concrete affected binaries (zebrad, zcashd) and fixed-version thresholds (zebrad 5.0.0 / NU6.2, zcashd 6.20.0) — the only detection-grade strings the advisory provides, since the Orchard double-spend/forgery is cryptographically undetectable on-chain (ZK property, indistinguishable nullifiers). Corroborated against the Zcash Foundation NU6.2 release notes and the CVE-2026-54496 disclosure timeline.
+Rationale: Uses the exact affected-version boundaries named in the advisory (zcashd &lt; 6.20.0, zebrad &lt; 5.0.0, halo2_gadgets &lt; 0.5.0, orchard &lt; 0.14.0) and CVE-2026-54496 — all high-fidelity, article-specific strings. The advisory states exploitation is undetectable on-chain and leaves no host/network signature, so exposure identification is the only sound detection; corroborated by the Zcash Foundation NU6.2/soft-fork release notes.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-ww9q-8r59-xv46
   • https://zfnd.org/zebra-4-5-3-and-5-0-0-emergency-soft-fork-and-nu6-2-activation/
-  • https://blocksec.com/blog/web3-security-zcash-orchard-soundness-bug-analysis</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Node operator already upgraded to zebrad 5.0.0 / zcashd 6.20.0 — the process still fires but is not vulnerable; check the projected version before actioning.</li><li>Developer or CI host running zebrad/zcashd in a regtest/testnet sandbox that never touches mainnet Orchard value.</li><li>Security-research or blockchain-analytics VM intentionally running an archived pre-NU6.2 build for study.</li><li>Renamed unrelated binary happening to be named zebrad/zcashd (rare; validate signer/path).</li><li>Container image scan surfacing a dormant node binary that is never actually executed against mainnet.</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Versions has_any (&quot;5.0.0&quot;,&quot;6.20.0&quot;) and FileName in~ (&quot;zebrad.exe&quot;,&quot;zebrad&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): For each hit, read the projected ProcessVersionInfoProductVersion / command line and determine whether the node is below zebrad 5.0.0 (NU6.2) or zcashd 6.20.0, and whether it is on mainnet vs testnet/regtest. Confirm the host&#x27;s business owner. Step 2 (contain): For any vulnerable mainnet node, coordinate an immediate upgrade to zebrad 5.0.0 / zcashd 6.20.0 (or later); until patched, stop accepting/relaying Orchard transactions per the vendor soft-fork guidance and isolate the node&#x27;s wallet keys. Step 3 (hunt): Enumerate all other hosts running zebrad/zcashd across the estate via the same query, cross-check dependency manifests (Cargo.lock) for halo2_gadgets &lt; 0.5.0 / orchard &lt; 0.14.0 in any in-house Zcash-derived tooling, and confirm no pre-patch Orchard spends left unspendable notes for wallets you custody.</div></details>
+  • https://github.com/zcash/zcash/releases</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obtain Capabilities: Vulnerabilities">T1588.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped or testnet/regtest Zcash nodes deliberately pinned to an old version for research — vulnerable but not consensus-facing.</li><li>A node already upgraded but whose Defender TVM inventory has not yet refreshed the SoftwareVersion (stale inventory).</li><li>Third-party wallet software that bundles an old orchard/halo2 crate name string but is not actually a proving/validating node.</li><li>Developer machines with an old checked-out zebrad build in a package cache that is never executed.</li><li>Version strings with non-standard formatting (e.g. pre-release &#x27;5.0.0-rc1&#x27;) that the integer split mis-parses.</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where EndOfSupportStatus != &quot;EOS&quot;  // optional: focus on supported, actively-managed nodes; drop clause to include all</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the flagged host actually runs a mainnet-facing Zcash validating/proving node (zebrad/zcashd) versus a stale package or testnet build; capture the exact SoftwareVersion. Step 2 (contain): Coordinate upgrade to fixed builds — zebrad 5.0.0 (NU6.2) or interim 4.5.3 soft-fork, zcashd 6.20.0, and rebuild any in-house prover linking halo2_gadgets &gt;=0.5.0 / orchard &gt;=0.14.0; until upgraded, treat the node as unable to safely validate Orchard actions. Step 3 (hunt): Enumerate all other hosts in inventory running these packages, and review any internally-operated wallet/custody service that generates Orchard proofs to ensure it was rebuilt against the patched, per-circuit verifying key (FixedPostNu6_2).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-155-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-155-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-155-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-155-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-155-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-155-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-155-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName in~ (&quot;zebrad.exe&quot;,&quot;zcashd.exe&quot;,&quot;zebrad&quot;,&quot;zcashd&quot;)
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleCmd=any(ProcessCommandLine), Versions=make_set(ProcessVersionInfoProductVersion) by DeviceName, FileName, AccountName
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-155-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where NewProcessName endswith &quot;\\zebrad.exe&quot; or NewProcessName endswith &quot;\\zcashd.exe&quot; or NewProcessName endswith &quot;/zebrad&quot; or NewProcessName endswith &quot;/zcashd&quot;
-| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), SampleCmd=any(CommandLine) by Computer, NewProcessName, SubjectUserName
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-155-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Vulnerable Zcash Node Binary Execution (CVE-2026-54496 Orchard soundness)
-id: 8f3b1c42-6a29-4d17-9e5b-2c7a0f4d9b6e
-description: Detects execution of Zcash full-node daemons zebrad or zcashd on a monitored host. Instances below Zebra 5.0.0 (NU6.2) / zcashd 6.20.0 are affected by CVE-2026-54496 and must be patched.
-references:
-  - https://github.com/advisories/GHSA-ww9q-8r59-xv46
-  - https://zfnd.org/zebra-4-5-3-and-5-0-0-emergency-soft-fork-and-nu6-2-activation/
-author: SOC Detection Engineering
-date: 2026/07/14
-tags:
-  - attack.t1195.001
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection:
-    Image|endswith:
-      - &#x27;\zebrad.exe&#x27;
-      - &#x27;\zcashd.exe&#x27;
-      - &#x27;/zebrad&#x27;
-      - &#x27;/zcashd&#x27;
-  condition: selection
-level: low</code></pre></div>
-    <div class="tab-content" id="art-155-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\zebrad.exe OR *\\Zebrad.exe OR *\\zcashd.exe OR *\\Zcashd.exe)</code></pre></div>
-    <div class="tab-content" id="art-155-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/[\\\/](zebrad|zcashd)(\.exe)?$/i
+    <div class="tab-content active" id="art-155-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+| where Timestamp &gt; ago(1d)
+| where SoftwareName has_any (&quot;zcash&quot;,&quot;zcashd&quot;,&quot;zebra&quot;,&quot;zebrad&quot;,&quot;halo2&quot;,&quot;orchard&quot;)
+| extend v = split(SoftwareVersion, &quot;.&quot;)
+| extend Major = toint(v[0]), Minor = toint(v[1])
+| where (SoftwareName has &quot;zebra&quot; and Major &lt; 5)
+     or (SoftwareName has &quot;zcash&quot; and (Major &lt; 6 or (Major == 6 and Minor &lt; 20)))
+     or (SoftwareName has &quot;halo2&quot; and (Major == 0 and Minor &lt; 5))
+     or (SoftwareName has &quot;orchard&quot; and (Major == 0 and Minor &lt; 14))
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-155-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2026-54496&quot;
+     or (SoftwareName has_any (&quot;zcash&quot;,&quot;zebra&quot;) and SoftwareVersion startswith &quot;4.&quot;)
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-155-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\(zebrad|zcashd)(\.exe)?$/i
 | groupBy([aid, ComputerName, ImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-155-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-155-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-155-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-155-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;zebrad.exe&quot;,&quot;zcashd.exe&quot;,&quot;zebrad&quot;,&quot;zcashd&quot;)) by Processes.dest Processes.process_name Processes.user | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-155-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;zebrad.exe&quot;,&quot;zcashd.exe&quot;,&quot;zebrad&quot;,&quot;zcashd&quot;)) by Processes.dest Processes.process_name Processes.user | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-155-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-155-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-155-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-155-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-54496&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-155-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-54496&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">

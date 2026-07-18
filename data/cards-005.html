@@ -1566,10 +1566,10 @@ level: medium
   data-techs="T1528"
   data-sources="GitHub Security Advisories"
   data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,cloud,web"
+  data-splunk-cats="application"
   data-targets="azure,vcs"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-54072: Authorizer: Unvalidated redirect_uri in /authorize leaks OAuth2 tokens to attacker-controlled URL Authorizer: Unvalidated redirect_uri in /authorize leaks OAuth2 tokens to attacker-controlled URL CVE-2026-54072 T1528 [LLM] Authorizer /authorize implicit-flow request with off-app redirect_uri (CVE-2026-54072) [LLM] OAuth tokens (access_token/id_token/refresh_token) in outbound URL to external host (CVE-2026-54072 exfiltration) [LLM] Authorizer client_id recon via /graphql followed by implicit-flow /authorize (CVE-2026-54072) Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
+  data-uc-count="6" data-llm-uc-count="4"
+  data-search="[GHSA / CRITICAL] CVE-2026-54072: Authorizer: Unvalidated redirect_uri in /authorize leaks OAuth2 tokens to attacker-controlled URL Authorizer: Unvalidated redirect_uri in /authorize leaks OAuth2 tokens to attacker-controlled URL CVE-2026-54072 T1528 [LLM] Authorizer /authorize implicit-flow token leak to off-origin redirect_uri (CVE-2026-54072) [LLM] Authorizer unauthenticated /graphql client_id reconnaissance (CVE-2026-54072 pre-exploit) [LLM] Authorizer /authorize redirect_uri iteration — multiple distinct targets from one source [LLM] Spike in Authorizer /authorize 302 redirects to off-origin hosts (bulk token exfiltration) Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-10-ghsa-critical-cve-2026-54072-authorizer-unvalidated-redirect" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1578,7 +1578,7 @@ level: medium
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-10</span>
-    <span>5 use cases</span>
+    <span>6 use cases</span>
     <span>1 technique</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -1626,34 +1626,35 @@ level: medium
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Authorizer client_id recon via /graphql followed by implicit-flow /authorize (CVE-2026-54072) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Authorizer unauthenticated /graphql client_id reconnaissance (CVE-2026-54072 pre-exploit) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Authorizer /authorize implicit-flow request with off-app redirect_uri (CVE-2026-54072)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Authorizer /authorize implicit-flow token leak to off-origin redirect_uri (CVE-2026-54072) · [LLM] Authorizer /authorize redirect_uri iteration — multiple distinct targets from one source</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] OAuth tokens (access_token/id_token/refresh_token) in outbound URL to external host (CVE-2026-54072 exfiltration) · OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Spike in Authorizer /authorize 302 redirects to off-origin hosts (bulk token exfiltration) · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="7bb09774a5" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="1b0dd2a151" data-platforms="sent,sigma,spl" data-targets="vcs" open>
   <summary>
-    <span class="uc-title">Authorizer /authorize implicit-flow request with off-app redirect_uri (CVE-2026-54072)</span>
+    <span class="uc-title">Authorizer /authorize implicit-flow token leak to off-origin redirect_uri (CVE-2026-54072)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7bb09774a5" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="1b0dd2a151" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the exploit request for CVE-2026-54072: a GET to Authorizer&#x27;s /authorize endpoint using response_type=token or response_type=id_token (implicit/hybrid flow) that carries a redirect_uri to an absolute external URL. Authorizer never validates redirect_uri against AllowedOrigins on this handler, so the server 302-redirects the victim&#x27;s access_token/id_token/refresh_token to the attacker host. Article-specific because it keys on the exact endpoint, response_type values, and redirect_uri shape from the PoC.
+    <div class="uc-desc">Hunts exploitation of CVE-2026-54072: /authorize requests using response_type=token or id_token whose redirect_uri points at a host different from the Authorizer server, causing access_token/id_token/refresh_token to be appended to a 302 redirect toward an attacker-controlled URL.
 
-Rationale: Keys on the article&#x27;s exact PoC strings: endpoint /authorize, response_type=token / id_token, and an absolute redirect_uri — legitimate Authorizer clients use the authorization-code flow (response_type=code), so implicit-flow requests carrying an off-app redirect_uri are inherently rare and high-fidelity. Cross-checked GHSA-h29v-hj44-q8cv and the GitLab/GHSA-x3f4-v83f-7wp2 sibling advisory (CWE-601).
+Rationale: Keys on the exact vulnerable route (/authorize), the exact implicit-flow trigger values (response_type=token / id_token), and the redirect_uri host != server host mismatch that is the CWE-601 root cause. Cross-checked GHSA-h29v-hj44-q8cv, the GitLab advisory, and sibling GHSA-x3f4-v83f-7wp2.
 
 Cross-checked against:
+  • https://github.com/advisories/GHSA-h29v-hj44-q8cv
   • https://advisories.gitlab.com/golang/github.com/authorizerdev/authorizer/CVE-2026-54072/
   • https://github.com/advisories/GHSA-x3f4-v83f-7wp2</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate SPA still using the OAuth2 implicit flow (response_type=token) against a registered AllowedOrigin</li><li>Security scanners / penetration testers replaying the CVE PoC during authorized assessment</li><li>Internal QA or staging redirect_uri pointing at localhost/127.0.0.1 during development</li><li>Mobile/native app using a custom-scheme or loopback redirect that is legitimately registered</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Url !has_any (&quot;redirect_uri=http://localhost&quot;, &quot;redirect_uri=http%3A%2F%2Flocalhost&quot;, &quot;redirect_uri=http://127.0.0.1&quot;, &quot;redirect_uri=http%3A%2F%2F127.0.0.1&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the redirect_uri host from the flagged Url and compare it to the tenant&#x27;s configured AllowedOrigins; if it is an unrecognized external domain, treat as active exploitation. Note SrcIpAddr and the HttpStatusCode (302 = tokens were issued). 2) Contain: block the attacker redirect host at proxy/WAF, and upgrade Authorizer to &gt;= 0.0.0-20260409051328-bd3f5baf6d3d which adds IsValidOrigin() to authorize.go; force token/session revocation for any user whose session hit the endpoint. 3) Hunt: pivot on SrcIpAddr for prior POST /graphql (client_id recon) and for any outbound request carrying access_token= in its URL (exfiltration UC).</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate SPA OAuth client registered with an implicit-flow callback on a partner/CDN domain distinct from the Authorizer host</li><li>Internal test/staging automation exercising the implicit flow across environment hostnames</li><li>Mobile app custom-scheme callbacks that regex-parse as a different host</li><li>A reverse proxy rewriting Host header so ServerHost != registered origin</li><li>DAST scanners probing the OAuth endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where tolower(RedirectHost) != tolower(HttpHostName) and RedirectHost !in~ (&quot;partner-callback.example.com&quot;, &quot;login.mycdn.example.com&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: url-decode redirect_uri per hit; confirm the host is external/attacker-controlled and response_type is token/id_token with a 302 response. 2) Contain: confirm Authorizer &gt;= 0.0.0-20260409051328-bd3f5baf6d3d; else add AllowedOrigins/WAF enforcement on /authorize and revoke refresh tokens for victims. 3) Hunt: review /userinfo and downstream API calls under stolen bearer tokens; pivot the off-origin host across oauth_login, verify_email, magic_link_login, forgot_password.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-123-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-123-uc0-sigma">Sigma</button>
@@ -1662,66 +1663,78 @@ Cross-checked against:
     <div class="tab-content active" id="art-123-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(7d)
 | where Url has &quot;/authorize&quot;
-| where Url has_any (&quot;response_type=token&quot;, &quot;response_type=id_token&quot;)   // implicit/hybrid flow returns tokens in the redirect
-| where Url has &quot;redirect_uri=&quot;
-| where Url matches regex @&quot;(?i)redirect_uri=https?(:|%3A)&quot;          // absolute off-app redirect target
-| project TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, HttpMethod, HttpRequestHeaderUserAgent
+| where Url matches regex @&quot;(?i)response_type(=|%3D)(id_)?token&quot;
+| extend RedirectRaw = extract(@&quot;(?i)redirect_uri(?:=|%3D)([^&amp;]+)&quot;, 1, Url)
+| where isnotempty(RedirectRaw)
+| extend RedirectDecoded = url_decode(RedirectRaw)
+| extend RedirectHost = extract(@&quot;(?i)https?://([^/:?]+)&quot;, 1, RedirectDecoded)
+| where isnotempty(RedirectHost) and tolower(RedirectHost) != tolower(HttpHostName)
+| project TimeGenerated, SrcIpAddr, ServerHost = HttpHostName, RedirectHost, HttpMethod, HttpStatusCode, Url
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-123-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Authorizer OAuth Implicit-Flow Request With External redirect_uri (CVE-2026-54072)
-id: 6f3d9c1a-2b84-4e77-9d1e-0c9a7f2e5b41
-description: Detects a request to Authorizer&#x27;s /authorize endpoint using implicit/hybrid response_type with a redirect_uri, the exploit shape for CVE-2026-54072 token leakage.
+    <div class="tab-content" id="art-123-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Authorizer OAuth2 implicit-flow token leak via off-origin redirect_uri (CVE-2026-54072)
+id: 6f2a1c94-5b7d-4e3a-9f21-2c8e7a4d1b06
+description: Detects /authorize requests using implicit-flow response_type=token or id_token combined with an off-origin redirect_uri, the exploitation shape of CVE-2026-54072 in authorizerdev/authorizer.
 references:
   - https://github.com/advisories/GHSA-h29v-hj44-q8cv
   - https://advisories.gitlab.com/golang/github.com/authorizerdev/authorizer/CVE-2026-54072/
 author: SOC Detection Engineering
-date: 2026/07/11
+date: 2026/07/18
 tags:
   - attack.t1190
   - attack.t1528
 logsource:
   category: webserver
 detection:
-  selection_path:
-    cs-uri-stem|contains: &#x27;/authorize&#x27;
-  selection_flow:
-    cs-uri-query|contains:
-      - &#x27;response_type=token&#x27;
-      - &#x27;response_type=id_token&#x27;
-  selection_redir:
-    cs-uri-query|contains: &#x27;redirect_uri=&#x27;
-  condition: selection_path and selection_flow and selection_redir
+  selection_endpoint:
+    cs-uri-stem|endswith: &#x27;/authorize&#x27;
+  selection_implicit:
+    cs-uri-query|re: &#x27;(?i)response_type(=|%3D)(id_)?token&#x27;
+  selection_redirect:
+    cs-uri-query|re: &#x27;(?i)redirect_uri(=|%3D)https?(://|%3A%2F%2F)&#x27;
+  condition: selection_endpoint and selection_implicit and selection_redirect
+falsepositives:
+  - Legitimate SPA/native OAuth clients registered with a cross-domain implicit-flow callback
 level: high</code></pre></div>
-    <div class="tab-content" id="art-123-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_path=&quot;/authorize&quot; (Web.uri_query=&quot;*response_type=token*&quot; OR Web.uri_query=&quot;*response_type=id_token*&quot;) Web.uri_query=&quot;*redirect_uri=*&quot; by Web.src Web.dest Web.uri_path Web.uri_query Web.status Web.http_user_agent
+    <div class="tab-content" id="art-123-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_path=&quot;/authorize&quot; by Web.src, Web.dest, Web.uri_query, Web.status, Web.http_method
 | `drop_dm_object_name(Web)`
-| where match(uri_query,&quot;(?i)redirect_uri=https?(:|%3a)&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-123-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_path=&quot;/authorize&quot; (Web.uri_query=&quot;*response_type=token*&quot; OR Web.uri_query=&quot;*response_type=id_token*&quot;) Web.uri_query=&quot;*redirect_uri=*&quot; by Web.src Web.dest Web.uri_path Web.uri_query Web.status Web.http_user_agent
+| where match(uri_query,&quot;(?i)response_type(=|%3D)(id_)?token&quot;)
+| rex field=uri_query &quot;(?i)redirect_uri(=|%3D)(?&lt;redirect_raw&gt;[^&amp;]+)&quot;
+| eval redirect_decoded=urldecode(redirect_raw)
+| rex field=redirect_decoded &quot;(?i)https?://(?&lt;redirect_host&gt;[^/:?]+)&quot;
+| where isnotnull(redirect_host) AND redirect_host!=dest
+| eval firstTime=strftime(firstTime,&quot;%Y-%m-%d %H:%M:%S&quot;), lastTime=strftime(lastTime,&quot;%Y-%m-%d %H:%M:%S&quot;)
+| table firstTime lastTime src dest redirect_host status uri_query count
+| sort - count</code></pre><pre class="spl-mode-body" id="art-123-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_path=&quot;/authorize&quot; by Web.src, Web.dest, Web.uri_query, Web.status, Web.http_method
 | `drop_dm_object_name(Web)`
-| where match(uri_query,&quot;(?i)redirect_uri=https?(:|%3a)&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| where match(uri_query,&quot;(?i)response_type(=|%3D)(id_)?token&quot;)
+| rex field=uri_query &quot;(?i)redirect_uri(=|%3D)(?&lt;redirect_raw&gt;[^&amp;]+)&quot;
+| eval redirect_decoded=urldecode(redirect_raw)
+| rex field=redirect_decoded &quot;(?i)https?://(?&lt;redirect_host&gt;[^/:?]+)&quot;
+| where isnotnull(redirect_host) AND redirect_host!=dest
+| eval firstTime=strftime(firstTime,&quot;%Y-%m-%d %H:%M:%S&quot;), lastTime=strftime(lastTime,&quot;%Y-%m-%d %H:%M:%S&quot;)
+| table firstTime lastTime src dest redirect_host status uri_query count
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="9dcc2f6c3b" data-platforms="sent,sigma,spl" data-targets="vcs">
+<details class="uc" data-uc-slug="22484e154f" data-platforms="sent,sigma,spl" data-targets="vcs">
   <summary>
-    <span class="uc-title">OAuth tokens (access_token/id_token/refresh_token) in outbound URL to external host (CVE-2026-54072 exfiltration)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9dcc2f6c3b" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Authorizer unauthenticated /graphql client_id reconnaissance (CVE-2026-54072 pre-exploit)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="22484e154f" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the exfiltration step of CVE-2026-54072: after Authorizer 302-redirects to the attacker URL, the victim browser (or proxy) issues a request whose query string carries access_token together with id_token/refresh_token/token_type=bearer. OAuth tokens should never appear in a URL query string on the wire, so this is the smoking-gun signal the reviewer flagged. Article-specific because it matches the exact parameter names the server appends to redirect_uri.
+    <div class="uc-desc">Hunts the recon step of CVE-2026-54072 where an unauthenticated attacker queries public /graphql with {meta{client_id}} to harvest the client_id needed for the malicious /authorize link. Surfaces meta/client_id introspection and single-source /graphql bursts.
 
-Rationale: Uses the exact token parameter names (access_token, id_token, refresh_token, token_type=bearer) the article says the server appends to redirect_uri; tokens in a URL query string are a near-zero-baseline artifact, making this alerting-grade regardless of the attacker&#x27;s specific domain. Not shippable to Defender/Falcon (host EDR does not carry full URL query strings over TLS).
+Rationale: Uses the article&#x27;s Step-1 recon primitive ({meta{client_id}} against /graphql). POST bodies aren&#x27;t in access logs, so it catches the GET-introspection variant directly and flags single-source burst volume as a proxy for the POST sweep.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-h29v-hj44-q8cv
-  • https://advisories.gitlab.com/golang/github.com/authorizerdev/authorizer/CVE-2026-54072/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over Web Service">T1567</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+  • https://github.com/advisories/GHSA-h29v-hj44-q8cv</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Gather Victim Host Information: Client Configurations">T1592.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A poorly designed legacy SSO/callback endpoint that legitimately passes access_token in the query string rather than the URL fragment</li><li>Debug/verbose logging that echoes a token-bearing URL into an access log for an internal test client</li><li>Automated OAuth conformance tests exercising the implicit flow in a lab tenant</li><li>A security scanner replaying the CVE PoC during an authorized test</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read DstHostname — if it is not a first-party SSO/callback host, the token bundle has left the org; capture the token values&#x27; subject by decoding the id_token JWT to identify the victim account. 2) Contain: revoke the leaked access_token/refresh_token and terminate the victim&#x27;s Authorizer sessions; block DstHostname at proxy/DNS. 3) Hunt: search authentication and API logs for use of the leaked token (impersonation) after the leak time, and correlate SrcIpAddr/victim with the /authorize exploit UC to confirm the full chain.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorizer&#x27;s own front-end calling /graphql for meta/client_id on page load from CDN egress IPs</li><li>GraphQL IDE / schema-introspection developer tools</li><li>Uptime/health monitors polling /graphql</li><li>API gateway aggregating many users behind one IP inflating the burst</li><li>POST-based real recon is invisible (body not logged) and will be missed</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm introspection hits carried no Authorization header/cookie and returned 200; for bursts, distinguish known front-end/CDN egress from unfamiliar IP/ASN. 2) Contain: block unauthorized source IP/ASN at WAF, treat client_id as public, prioritise patching /authorize. 3) Hunt: correlate recon source/time with subsequent /authorize implicit-flow (UC1) and the sibling handlers oauth_login/verify_email/magic_link_login/forgot_password.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-123-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-123-uc1-sigma">Sigma</button>
@@ -1729,97 +1742,157 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-123-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(7d)
-| where Url has &quot;access_token=&quot;
-| where Url has_any (&quot;id_token=&quot;, &quot;refresh_token=&quot;, &quot;token_type=bearer&quot;)   // full OAuth bundle in the URL = leaked, not normal
-| project TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, HttpRequestHeaderReferer, HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-123-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: OAuth Token Bundle Leaked in URL Query String (CVE-2026-54072)
-id: b18a7e42-5c39-4f0a-9a2d-7e6f1c4b8a03
-description: Detects a web request whose query string carries an access_token alongside id_token/refresh_token/token_type=bearer, the exfiltration signature of the Authorizer redirect_uri token leak.
+| where Url has &quot;/graphql&quot;
+| extend GetIntrospection = iff(Url has &quot;meta&quot; and Url has &quot;client_id&quot;, 1, 0)
+| summarize Requests=count(), IntrospectionHits=sum(GetIntrospection), Statuses=make_set(HttpStatusCode,5), Methods=make_set(HttpMethod,3), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by SrcIpAddr, ServerHost = HttpHostName
+| where IntrospectionHits &gt; 0 or Requests &gt;= 20
+| order by IntrospectionHits desc, Requests desc</code></pre></div>
+    <div class="tab-content" id="art-123-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Authorizer /graphql meta client_id introspection (CVE-2026-54072 recon)
+id: b1d7f3a2-9c46-4a8e-8d15-7e2b6c4f9a30
+description: Detects GET-style GraphQL introspection of meta/client_id on the Authorizer /graphql endpoint, the unauthenticated recon step that harvests the client_id for CVE-2026-54072.
 references:
   - https://github.com/advisories/GHSA-h29v-hj44-q8cv
-  - https://advisories.gitlab.com/golang/github.com/authorizerdev/authorizer/CVE-2026-54072/
 author: SOC Detection Engineering
-date: 2026/07/11
+date: 2026/07/18
 tags:
-  - attack.t1567
-  - attack.t1528
+  - attack.t1592.004
+  - attack.t1190
 logsource:
   category: webserver
 detection:
-  sel_access:
-    cs-uri-query|contains: &#x27;access_token=&#x27;
-  sel_bundle:
-    cs-uri-query|contains:
-      - &#x27;id_token=&#x27;
-      - &#x27;refresh_token=&#x27;
-      - &#x27;token_type=bearer&#x27;
-  condition: sel_access and sel_bundle
-level: high</code></pre></div>
-    <div class="tab-content" id="art-123-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_query=&quot;*access_token=*&quot; (Web.uri_query=&quot;*id_token=*&quot; OR Web.uri_query=&quot;*refresh_token=*&quot; OR Web.uri_query=&quot;*token_type=bearer*&quot;) by Web.src Web.dest Web.uri_path Web.uri_query Web.status Web.http_user_agent
+  selection:
+    cs-uri-stem|endswith: &#x27;/graphql&#x27;
+    cs-uri-query|contains|all:
+      - &#x27;meta&#x27;
+      - &#x27;client_id&#x27;
+  condition: selection
+falsepositives:
+  - Legitimate front-end bootstrap reading meta/client_id from the public GraphQL schema
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-123-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count values(Web.uri_query) as uri_query values(Web.http_method) as methods min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_path=&quot;/graphql&quot; by Web.src, Web.dest, Web.status
 | `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-123-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_query=&quot;*access_token=*&quot; (Web.uri_query=&quot;*id_token=*&quot; OR Web.uri_query=&quot;*refresh_token=*&quot; OR Web.uri_query=&quot;*token_type=bearer*&quot;) by Web.src Web.dest Web.uri_path Web.uri_query Web.status Web.http_user_agent
+| eval getIntrospection=if(match(uri_query,&quot;(?i)meta&quot;) AND match(uri_query,&quot;(?i)client_id&quot;),1,0)
+| where getIntrospection=1 OR count&gt;=20
+| eval firstTime=strftime(firstTime,&quot;%Y-%m-%d %H:%M:%S&quot;), lastTime=strftime(lastTime,&quot;%Y-%m-%d %H:%M:%S&quot;)
+| table firstTime lastTime src dest status methods count getIntrospection uri_query
+| sort - count</code></pre><pre class="spl-mode-body" id="art-123-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.uri_query) as uri_query values(Web.http_method) as methods min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.uri_path=&quot;/graphql&quot; by Web.src, Web.dest, Web.status
 | `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| eval getIntrospection=if(match(uri_query,&quot;(?i)meta&quot;) AND match(uri_query,&quot;(?i)client_id&quot;),1,0)
+| where getIntrospection=1 OR count&gt;=20
+| eval firstTime=strftime(firstTime,&quot;%Y-%m-%d %H:%M:%S&quot;), lastTime=strftime(lastTime,&quot;%Y-%m-%d %H:%M:%S&quot;)
+| table firstTime lastTime src dest status methods count getIntrospection uri_query
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="0b58c4447d" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="1258e0a6ff" data-platforms="sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Authorizer client_id recon via /graphql followed by implicit-flow /authorize (CVE-2026-54072)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-title">Authorizer /authorize redirect_uri iteration — multiple distinct targets from one source</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0b58c4447d" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="1258e0a6ff" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the reconnaissance-to-exploit pivot for CVE-2026-54072: the same source issues a POST to Authorizer&#x27;s public /graphql endpoint (used to read {meta{client_id}} without authentication) and then, within 10 minutes, a /authorize request using response_type=token/id_token. Correlating the two endpoints from one source captures the attacker learning the required client_id and immediately weaponizing it, which neither event alone reveals.
+    <div class="uc-desc">Detects an attacker iterating CVE-2026-54072 by issuing /authorize requests with 3+ distinct redirect_uri hosts from one source IP within 5 minutes — probing which attacker-controlled domain succeeds. Legit clients use a fixed callback host.
 
-Rationale: Chains the two article-named endpoints (/graphql for unauthenticated client_id disclosure, /authorize for the implicit-flow exploit) from a single SrcIpAddr inside a tight window; GraphQL bodies are POST payloads not present in access logs, so the endpoint sequence is the strongest available recon signal. Skipped Sigma because this is a cross-event temporal correlation, not a single-event shape.
+Rationale: Article notes the attacker may try multiple attacker-controlled domains/subdomains. Distinct redirect_uri hosts per source per 5-minute bucket vs the fixed-callback baseline cleanly isolates iteration/probing.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-h29v-hj44-q8cv</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Active Scanning">T1595</span> <span class="ind tech" title="Gather Victim Host Information: Client Configurations">T1592.004</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate SPA that reads {meta{client_id}} on load and then starts an implicit-flow login for a real user, from the same NAT/egress IP</li><li>Corporate proxy that collapses many users behind one SrcIpAddr, making /graphql and /authorize appear co-sourced</li><li>Uptime/synthetic monitoring that probes both endpoints in sequence</li><li>Authorized vulnerability scan walking the OAuth endpoints</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;127.0.0.1&quot;, &quot;::1&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the /authorize leg uses response_type=token with an off-app redirect_uri (benign SPAs use response_type=code); if so the recon-&gt;exploit chain is real. Check whether SrcIpAddr is a shared corporate egress before escalating. 2) Contain: block the source and the attacker redirect host at the WAF; patch Authorizer to the fixed pseudo-version. 3) Hunt: from the same SrcIpAddr pivot to any outbound URL carrying access_token= (exfiltration UC), and review /graphql volume from that source for broader introspection sweeps.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Multi-tenant/white-label deployment where one gateway drives OAuth for several apps each with its own callback host</li><li>QA/DAST fuzzing redirect_uri across environments</li><li>CDN/NAT egress IP aggregating many users</li><li>Load-testing tooling parameterising callback URLs</li><li>Browser prefetch/redirect chains generating host variants</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect RedirectHosts for the source — probing shows unrelated/new domains, legit multi-tenant shows known app domains; confirm response_type=token present. 2) Contain: WAF-block the source IP; if any host is malicious, revoke tokens for affected accounts and deny-list it. 3) Hunt: pivot each RedirectHost to victims 302&#x27;d with tokens (UC1); check DNS/TI on domains; see if the source did /graphql recon (UC2) first.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-123-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-123-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-123-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 10m;
-let recon = ImWebSession
-    | where TimeGenerated &gt; ago(7d)
-    | where Url has &quot;/graphql&quot;
-    | where HttpMethod == &quot;POST&quot;                       // unauthenticated {meta{client_id}} probe is a POST
-    | project ReconTime = TimeGenerated, SrcIpAddr, ReconUrl = Url;
-ImWebSession
+    <div class="tab-content active" id="art-123-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(7d)
 | where Url has &quot;/authorize&quot;
-| where Url has_any (&quot;response_type=token&quot;, &quot;response_type=id_token&quot;)
-| project AuthTime = TimeGenerated, SrcIpAddr, AuthUrl = Url, DstHostname
-| join kind=inner recon on SrcIpAddr
-| where AuthTime between (ReconTime .. ReconTime + win)
-| project SrcIpAddr, DstHostname, ReconTime, AuthTime, DelaySec = datetime_diff(&#x27;second&#x27;, AuthTime, ReconTime), ReconUrl, AuthUrl
-| order by AuthTime desc</code></pre></div>
-    <div class="tab-content" id="art-123-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web.Web where (Web.uri_path=&quot;/graphql&quot; OR Web.uri_path=&quot;/authorize&quot;) by _time span=1s Web.src Web.uri_path Web.uri_query Web.http_method
+| extend RedirectRaw = extract(@&quot;(?i)redirect_uri(?:=|%3D)([^&amp;]+)&quot;, 1, Url)
+| where isnotempty(RedirectRaw)
+| extend RedirectHost = extract(@&quot;(?i)https?://([^/:?]+)&quot;, 1, url_decode(RedirectRaw))
+| where isnotempty(RedirectHost)
+| summarize DistinctRedirectHosts=dcount(RedirectHost), RedirectHosts=make_set(RedirectHost,15), AuthorizeRequests=count() by SrcIpAddr, bin(TimeGenerated, 5m)
+| where DistinctRedirectHosts &gt;= 3
+| order by DistinctRedirectHosts desc</code></pre></div>
+    <div class="tab-content" id="art-123-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web.Web where Web.uri_path=&quot;/authorize&quot; by Web.src, Web.uri_query, _time
 | `drop_dm_object_name(Web)`
-| eval phase=case(uri_path==&quot;/graphql&quot; AND http_method==&quot;POST&quot;,&quot;recon&quot;, uri_path==&quot;/authorize&quot; AND (like(uri_query,&quot;%response_type=token%&quot;) OR like(uri_query,&quot;%response_type=id_token%&quot;)),&quot;exploit&quot;, true(),null())
-| where isnotnull(phase)
-| sort 0 src _time
-| streamstats current=f last(_time) as prevTime last(phase) as prevPhase by src
-| where phase==&quot;exploit&quot; AND prevPhase==&quot;recon&quot; AND (_time - prevTime) &lt;= 600
-| eval DelaySec=(_time - prevTime)
-| table _time src DelaySec uri_path uri_query</code></pre><pre class="spl-mode-body" id="art-123-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where (Web.uri_path=&quot;/graphql&quot; OR Web.uri_path=&quot;/authorize&quot;) by _time span=1s Web.src Web.uri_path Web.uri_query Web.http_method
+| rex field=uri_query &quot;(?i)redirect_uri(=|%3D)(?&lt;redirect_raw&gt;[^&amp;]+)&quot;
+| eval redirect_decoded=urldecode(redirect_raw)
+| rex field=redirect_decoded &quot;(?i)https?://(?&lt;redirect_host&gt;[^/:?]+)&quot;
+| where isnotnull(redirect_host)
+| bin _time span=5m
+| stats dc(redirect_host) as distinct_redirect_hosts values(redirect_host) as redirect_hosts count as authorize_requests by src, _time
+| where distinct_redirect_hosts &gt;= 3
+| sort - distinct_redirect_hosts</code></pre><pre class="spl-mode-body" id="art-123-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where Web.uri_path=&quot;/authorize&quot; by Web.src, Web.uri_query, _time
 | `drop_dm_object_name(Web)`
-| eval phase=case(uri_path==&quot;/graphql&quot; AND http_method==&quot;POST&quot;,&quot;recon&quot;, uri_path==&quot;/authorize&quot; AND (like(uri_query,&quot;%response_type=token%&quot;) OR like(uri_query,&quot;%response_type=id_token%&quot;)),&quot;exploit&quot;, true(),null())
-| where isnotnull(phase)
-| sort 0 src _time
-| streamstats current=f last(_time) as prevTime last(phase) as prevPhase by src
-| where phase==&quot;exploit&quot; AND prevPhase==&quot;recon&quot; AND (_time - prevTime) &lt;= 600
-| eval DelaySec=(_time - prevTime)
-| table _time src DelaySec uri_path uri_query</code></pre></div></div>
+| rex field=uri_query &quot;(?i)redirect_uri(=|%3D)(?&lt;redirect_raw&gt;[^&amp;]+)&quot;
+| eval redirect_decoded=urldecode(redirect_raw)
+| rex field=redirect_decoded &quot;(?i)https?://(?&lt;redirect_host&gt;[^/:?]+)&quot;
+| where isnotnull(redirect_host)
+| bin _time span=5m
+| stats dc(redirect_host) as distinct_redirect_hosts values(redirect_host) as redirect_hosts count as authorize_requests by src, _time
+| where distinct_redirect_hosts &gt;= 3
+| sort - distinct_redirect_hosts</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6f235f61b7" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Spike in Authorizer /authorize 302 redirects to off-origin hosts (bulk token exfiltration)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="6f235f61b7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Volume-anomaly detection for mass exploitation of CVE-2026-54072: a statistically significant spike in /authorize 302 responses redirecting to a redirect_uri host different from the Authorizer server, catching bulk token exfiltration.
+
+Rationale: Reviewer-requested volume complement: baselines /authorize 302s to off-origin redirect_uri hosts hourly and alerts on &gt;3-sigma AND &gt;5x spikes, catching scaled exploitation. Uses the article&#x27;s exact 302 status and redirect-host-mismatch root cause.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-h29v-hj44-q8cv</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>New legitimate OAuth client onboarded with a cross-domain callback causing a step-change in off-origin 302 volume</li><li>Marketing/SSO campaign driving a login burst through a partner callback host</li><li>Proxy Host-header rewriting making same-origin callbacks appear off-origin</li><li>Sparse baseline (low-traffic tenant) tripping the multiplier on any small burst</li><li>At-scale load tests or synthetic OAuth monitors</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: break down the anomalous hour by RedirectHost and SrcIp — one dominant host = exploitation; spread across known partner domains = benign onboarding. 2) Contain: WAF-block the destination hosts and source IPs, confirm patch &gt;= 0.0.0-20260409051328-bd3f5baf6d3d, mass-revoke refresh tokens for accounts in the window. 3) Hunt: enumerate accounts 302&#x27;d to the malicious host and review /userinfo + downstream API usage; check recon (UC2) and iteration (UC3) from the same infrastructure.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-123-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-123-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-123-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(14d)
+| where Url has &quot;/authorize&quot; and tostring(HttpStatusCode) == &quot;302&quot;
+| extend RedirectRaw = extract(@&quot;(?i)redirect_uri(?:=|%3D)([^&amp;]+)&quot;, 1, Url)
+| where isnotempty(RedirectRaw)
+| extend RedirectHost = extract(@&quot;(?i)https?://([^/:?]+)&quot;, 1, url_decode(RedirectRaw))
+| where isnotempty(RedirectHost) and tolower(RedirectHost) != tolower(HttpHostName)
+| make-series OffOrigin302 = count() default=0 on TimeGenerated from ago(14d) to now() step 1h by ServerHost = HttpHostName
+| extend (anomalies, score, baseline) = series_decompose_anomalies(OffOrigin302, 3.0)
+| mv-expand TimeGenerated to typeof(datetime), OffOrigin302 to typeof(long), anomalies to typeof(long), baseline to typeof(double)
+| where anomalies == 1 and OffOrigin302 &gt; 5 * baseline
+| project TimeGenerated, ServerHost, OffOrigin302, baseline, score
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-123-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web.Web where Web.uri_path=&quot;/authorize&quot; Web.status=302 by Web.dest, Web.uri_query, _time span=1h
+| `drop_dm_object_name(Web)`
+| rex field=uri_query &quot;(?i)redirect_uri(=|%3D)(?&lt;redirect_raw&gt;[^&amp;]+)&quot;
+| eval redirect_decoded=urldecode(redirect_raw)
+| rex field=redirect_decoded &quot;(?i)https?://(?&lt;redirect_host&gt;[^/:?]+)&quot;
+| where isnotnull(redirect_host) AND redirect_host!=dest
+| timechart span=1h sum(count) as offorigin_302
+| eventstats avg(offorigin_302) as avg_off, stdev(offorigin_302) as sd_off
+| where offorigin_302 &gt; (avg_off + (3*sd_off)) AND offorigin_302 &gt; (5*avg_off)
+| sort - offorigin_302</code></pre><pre class="spl-mode-body" id="art-123-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where Web.uri_path=&quot;/authorize&quot; Web.status=302 by Web.dest, Web.uri_query, _time span=1h
+| `drop_dm_object_name(Web)`
+| rex field=uri_query &quot;(?i)redirect_uri(=|%3D)(?&lt;redirect_raw&gt;[^&amp;]+)&quot;
+| eval redirect_decoded=urldecode(redirect_raw)
+| rex field=redirect_decoded &quot;(?i)https?://(?&lt;redirect_host&gt;[^/:?]+)&quot;
+| where isnotnull(redirect_host) AND redirect_host!=dest
+| timechart span=1h sum(count) as offorigin_302
+| eventstats avg(offorigin_302) as avg_off, stdev(offorigin_302) as sd_off
+| where offorigin_302 &gt; (avg_off + (3*sd_off)) AND offorigin_302 &gt; (5*avg_off)
+| sort - offorigin_302</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -1837,11 +1910,11 @@ ImWebSession
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-123-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-123-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-123-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-123-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-123-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-123-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-123-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-123-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -1850,7 +1923,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-123-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-123-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -1862,12 +1935,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-123-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-123-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54072&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-123-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-123-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54072&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -1890,17 +1963,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-123-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-123-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-123-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-123-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-123-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-123-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-123-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-123-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-123-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-123-uc5-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-123-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-123-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -1911,7 +1984,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-123-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-123-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -1937,7 +2010,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-123-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-123-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-123-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-123-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-123-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -1946,7 +2019,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-123-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-123-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
