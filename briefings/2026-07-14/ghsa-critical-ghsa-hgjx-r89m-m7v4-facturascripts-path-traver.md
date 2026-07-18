@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### FacturaScripts upload endpoint: path-traversal sequence in multipart filename
 
-`UC_70_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_71_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### FacturaScripts: PHP/.htaccess web-shell written into web-served Dinamic/Assets or node_modules
 
-`UC_70_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_71_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### FacturaScripts RCE chain: .htaccess handler-remap override plus payload drop in same asset dir
 
-`UC_70_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_71_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

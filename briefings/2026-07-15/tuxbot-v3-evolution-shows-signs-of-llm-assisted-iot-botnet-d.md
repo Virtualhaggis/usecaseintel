@@ -99,7 +99,7 @@ _(none detected from narrative keywords)_
 
 ### TuxBot v3 C2 egress to known IPs / operator ports 1999,31337,9999
 
-`UC_55_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_56_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### TuxBot v3 DNS C2 lookups to known DGA / fallback domains
 
-`UC_55_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_56_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceNetworkEvents
 
 ### TuxBot v3 Telnet/SSH/ADB scanner fan-out from single host
 
-`UC_55_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_56_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceNetworkEvents
 
 ### TuxBot v3 Linux persistence via systemd/cron/rc.local watchdog
 
-`UC_55_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_56_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -178,7 +178,7 @@ DeviceProcessEvents
 
 ### TuxBot v3 bot-agent execution by known SHA256 hash
 
-`UC_55_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_56_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
