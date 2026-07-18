@@ -1,4 +1,320 @@
-<article class="card" id="art-3665" data-art-slug="2016-04-20-free-vulnerability-testing-and-monitoring-for-public-github-"
+<article class="card" id="art-3665" data-art-slug="2016-05-06-mitigating-imagemagick-vulnerabilities-in-node-js"
+  data-phases="actions,c2,exploit,install" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,falcon,sent,sigma,spl"
+  data-splunk-cats="endpoint,network"
+  data-targets="linux,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="Mitigating ImageMagick vulnerabilities in Node.js   T1190 [LLM] ImageMagick binary spawning shell/recon process (ImageTragick CVE-2016-3714 delegate RCE) [LLM] ImageMagick binary making outbound network connection (ImageTragick URL/HTTPS coder SSRF) Article-specific behavioural hunt — Mitigating ImageMagick vulnerabilities in Node.js">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2016-05-06-mitigating-imagemagick-vulnerabilities-in-node-js" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/safe-imagemagick-for-node/" target="_blank" rel="noopener">Mitigating ImageMagick vulnerabilities in Node.js</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2016-05-06</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary"></p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3665-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3665"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3665-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] ImageMagick binary spawning shell/recon process (ImageTragick CVE-2016-3714 delegate RCE) · Article-specific behavioural hunt — Mitigating ImageMagick vulnerabilities in Node.js</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] ImageMagick binary making outbound network connection (ImageTragick URL/HTTPS coder SSRF)</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="52a33b368a" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <summary>
+    <span class="uc-title">ImageMagick binary spawning shell/recon process (ImageTragick CVE-2016-3714 delegate RCE)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="52a33b368a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the ImageTragick RCE landing: an ImageMagick command-line tool (convert/mogrify/identify/gm, etc.) becoming the parent of a shell or reconnaissance/download binary because a malicious MVG/MSL/SVG image injected shell metacharacters into ImageMagick&#x27;s delegate system() call. Article-specific because it targets the exact `convert &lt;image&gt;` → `/bin/sh -c &quot;&lt;cmd&gt;&quot;` chain shown in the exploit (`|ls &quot;-la&quot;`).
+
+Rationale: Anchored on the exploit&#x27;s exact chain (`convert exploit.mvg` running `ls -la` via the delegate system() call) and the full ImageMagick binary set; restricting children to shells + recon/download tools (whoami/id/curl/wget/nc) keeps it on the malicious side of legitimate delegate use.
+
+Cross-checked against:
+  • https://imagetragick.com/
+  • https://access.redhat.com/security/vulnerabilities/ImageTragick
+  • https://www.armis.com/threat-alert/imagemagick-code-execution-vulnerability/
+  • https://www.exploit-db.com/exploits/39791</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate ImageMagick delegates that shell out via /bin/sh -c — Ghostscript (gs) for PDF/EPS rasterization, ffmpeg/ffprobe for video thumbnails, LibreOffice/soffice</li><li>Image pipelines that intentionally use curl/wget delegates to fetch remote resources</li><li>Admin or developer running convert/identify interactively on a CLI that spawns a subshell</li><li>CI/build image-optimization jobs invoking helper binaries (pngquant, optipng) through a shell wrapper</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) and ProcessCommandLine has_any (&quot;gs &quot;,&quot;ghostscript&quot;,&quot;ffmpeg&quot;,&quot;ffprobe&quot;,&quot;soffice&quot;,&quot;libreoffice&quot;,&quot;pngquant&quot;,&quot;optipng&quot;,&quot;dwebp&quot;,&quot;\&quot;dot\&quot;&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the child process command line — a recon/download string (`whoami`, `id`, `curl http://...`, `nc -e`) under a convert/mogrify parent is near-certain RCE; a known delegate (`gs`, `ffmpeg`) is likely benign. Identify the source image and the web upload that triggered it. 2) Contain: isolate the host, kill the ImageMagick process tree, and pull/quarantine the offending uploaded image; block any C2 IP/domain seen in the child cmdline. 3) Hunt: sweep all hosts for other ImageMagick → shell chains, outbound connections from convert (UC2), webshell/file drops in the upload/temp directories, and confirm policy.xml or imagemagick-safe disables EPHEMERAL/URL/HTTPS/MVG/MSL/TEXT/SHOW/WIN/PLT coders.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3665-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3665-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3665-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3665-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3665-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3665-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;convert&quot;,&quot;mogrify&quot;,&quot;identify&quot;,&quot;composite&quot;,&quot;montage&quot;,&quot;conjure&quot;,&quot;stream&quot;,&quot;import&quot;,&quot;display&quot;,&quot;animate&quot;,&quot;magick&quot;,&quot;gm&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3665-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;/convert&quot;,&quot;/mogrify&quot;,&quot;/identify&quot;,&quot;/composite&quot;,&quot;/montage&quot;,&quot;/conjure&quot;,&quot;/stream&quot;,&quot;/import&quot;,&quot;/magick&quot;,&quot;/gm&quot;)
+| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/python&quot;,&quot;/perl&quot;,&quot;/ruby&quot;,&quot;/whoami&quot;,&quot;/id&quot;,&quot;/uname&quot;,&quot;/hostname&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3665-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: ImageMagick Delegate Command Injection - ImageTragick (CVE-2016-3714)
+id: 6f2a1c84-3b9e-4d21-9a07-1c5e8a7f4e10
+description: Detects an ImageMagick command-line binary spawning a shell or recon/download tool, indicating ImageTragick delegate command injection via a malicious MVG/MSL/SVG/URL image.
+references:
+  - https://imagetragick.com/
+  - https://snyk.io/blog/safe-imagemagick-for-node/
+  - https://access.redhat.com/security/vulnerabilities/ImageTragick
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    ParentImage|endswith:
+      - &#x27;/convert&#x27;
+      - &#x27;/mogrify&#x27;
+      - &#x27;/identify&#x27;
+      - &#x27;/composite&#x27;
+      - &#x27;/montage&#x27;
+      - &#x27;/conjure&#x27;
+      - &#x27;/stream&#x27;
+      - &#x27;/import&#x27;
+      - &#x27;/display&#x27;
+      - &#x27;/animate&#x27;
+      - &#x27;/magick&#x27;
+      - &#x27;/gm&#x27;
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/perl&#x27;
+      - &#x27;/ruby&#x27;
+      - &#x27;/whoami&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/uname&#x27;
+      - &#x27;/hostname&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3665-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(convert|mogrify|identify|composite|montage|conjure|stream|import|display|animate|magick|gm)$/i
+| ImageFileName=/\/(sh|bash|dash|curl|wget|nc|ncat|python3?|perl|ruby|whoami|id|uname|hostname)$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3665-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3665-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3665-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3665-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;convert&quot;,&quot;mogrify&quot;,&quot;identify&quot;,&quot;composite&quot;,&quot;montage&quot;,&quot;conjure&quot;,&quot;stream&quot;,&quot;import&quot;,&quot;display&quot;,&quot;animate&quot;,&quot;magick&quot;,&quot;gm&quot;)) AND (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3665-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;convert&quot;,&quot;mogrify&quot;,&quot;identify&quot;,&quot;composite&quot;,&quot;montage&quot;,&quot;conjure&quot;,&quot;stream&quot;,&quot;import&quot;,&quot;display&quot;,&quot;animate&quot;,&quot;magick&quot;,&quot;gm&quot;)) AND (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7a80c003bf" data-platforms="def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">ImageMagick binary making outbound network connection (ImageTragick URL/HTTPS coder SSRF)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="7a80c003bf" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the ImageTragick SSRF/exfil vector: an ImageMagick binary initiating an outbound connection to a public address because a crafted image abused the URL/HTTPS/MVG coders (e.g. `&lt;image xlink:href=&quot;https://example.com/image.jpg&quot;&gt;`) to make the server fetch attacker-controlled or internal URLs. ImageMagick processing user-uploaded avatars/photos should not be egressing to arbitrary public hosts.
+
+Rationale: Built from the exploit&#x27;s `xlink:href=&quot;https://...&quot;` SVG fetch and the URL/HTTPS/MVG coders the article disables in policy.xml; an avatar/photo-processing ImageMagick binary opening outbound sockets to public IPs is the SSRF signature, distinct from UC1&#x27;s process-tree pivot.
+
+Cross-checked against:
+  • https://imagetragick.com/
+  • https://access.redhat.com/security/vulnerabilities/ImageTragick
+  • https://www.armis.com/threat-alert/imagemagick-code-execution-vulnerability/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate use of ImageMagick&#x27;s URL/HTTPS coder to fetch remote images in a sanctioned workflow</li><li>Telemetry mis-attributing a delegate child&#x27;s (curl/wget/gs) socket to the parent ImageMagick process</li><li>DNS/proxy resolution traffic from the host bundled under the convert process</li><li>Internal image-CDN fetches if dest categorization is incomplete (tune the internal-range exclusions)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP !startswith &quot;169.254&quot; or true // keep internal-SSRF hits; exclude sanctioned image-CDN ranges here once enumerated</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: review RemoteIP/RemoteUrl and whether the destination is internal (SSRF probing of metadata endpoints like 169.254.169.254 or RFC1918) or external (exfil/C2); correlate with the uploaded image and any UC1 shell spawn on the same host/time. 2) Contain: block the destination, isolate the host if a shell chain accompanies it, and quarantine the source image. 3) Hunt: check for convert reaching cloud-metadata/internal services, repeated outbound from the image worker, and verify the URL/HTTPS/MVG/MSL coders are disabled via policy.xml or imagemagick-safe.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3665-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3665-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3665-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3665-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3665-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;convert&quot;,&quot;mogrify&quot;,&quot;identify&quot;,&quot;composite&quot;,&quot;montage&quot;,&quot;conjure&quot;,&quot;stream&quot;,&quot;import&quot;,&quot;magick&quot;,&quot;gm&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| summarize FirstSeen=min(Timestamp), Conns=count(), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-3665-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;convert&quot;,&quot;mogrify&quot;,&quot;identify&quot;,&quot;composite&quot;,&quot;montage&quot;,&quot;conjure&quot;,&quot;stream&quot;,&quot;import&quot;,&quot;magick&quot;,&quot;gm&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| summarize FirstSeen=min(TimeGenerated), Conns=count(), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-3665-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\/(convert|mogrify|identify|composite|montage|conjure|stream|import|magick|gm)$/i
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3665-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3665-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3665-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3665-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN (&quot;convert&quot;,&quot;mogrify&quot;,&quot;identify&quot;,&quot;composite&quot;,&quot;montage&quot;,&quot;conjure&quot;,&quot;stream&quot;,&quot;import&quot;,&quot;magick&quot;,&quot;gm&quot;)) AND All_Traffic.dest_category!=&quot;internal&quot; by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3665-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN (&quot;convert&quot;,&quot;mogrify&quot;,&quot;identify&quot;,&quot;composite&quot;,&quot;montage&quot;,&quot;conjure&quot;,&quot;stream&quot;,&quot;import&quot;,&quot;magick&quot;,&quot;gm&quot;)) AND All_Traffic.dest_category!=&quot;internal&quot; by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="49a9f1b1f1" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Mitigating ImageMagick vulnerabilities in Node.js</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="49a9f1b1f1" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3665-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3665-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3665-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3665-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Mitigating ImageMagick vulnerabilities in Node.js
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3665-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Mitigating ImageMagick vulnerabilities in Node.js
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3665-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3665-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3665-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3665-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Mitigating ImageMagick vulnerabilities in Node.js ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3665-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Mitigating ImageMagick vulnerabilities in Node.js ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3666" data-art-slug="2016-04-20-free-vulnerability-testing-and-monitoring-for-public-github-"
   data-phases="c2,exploit,install" data-sev="high"
   data-techs="T1190"
   data-sources="Snyk"
@@ -22,11 +338,11 @@
   <p class="summary">Snyk now provides a free service that lets anyone test for vulnerabilities in – and then monitor – any public Node.js GitHub repository.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3665-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3665"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-3666-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3666"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-3665-kc">
+  <div class="killchain" id="art-3666-kc">
   <div class="kc3d"><div class="kc-cell ">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -85,11 +401,11 @@
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-3665-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3665-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3665-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-3666-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3666-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3666-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-3665-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Free vulnerability testing and monitoring for public GitHub projects
+    <div class="tab-content active" id="art-3666-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Free vulnerability testing and monitoring for public GitHub projects
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -109,7 +425,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3665-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-3666-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Free vulnerability testing and monitoring for public GitHub projects
@@ -132,7 +448,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3665-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3665-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3665-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3665-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Free vulnerability testing and monitoring for public GitHub projects ```
+    <div class="tab-content" id="art-3666-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3666-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3666-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3666-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Free vulnerability testing and monitoring for public GitHub projects ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -148,7 +464,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3665-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Free vulnerability testing and monitoring for public GitHub projects ```
+]</code></pre><pre class="spl-mode-body" id="art-3666-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Free vulnerability testing and monitoring for public GitHub projects ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -168,7 +484,7 @@ DeviceFileEvents
   </div>
 </details></div>
 </article>
-<article class="card" id="art-3666" data-art-slug="2016-04-05-exploiting-buffer"
+<article class="card" id="art-3667" data-art-slug="2016-04-05-exploiting-buffer"
   data-phases="c2,exploit,install" data-sev="high"
   data-techs="T1190"
   data-sources="Snyk"
@@ -192,11 +508,11 @@ DeviceFileEvents
   <p class="summary">In this post, we explain how the &quot;Buffer&quot; class works, and why it behaves the way it does. We’ll run an exploit against a vulnerable application, to better demonstrate the ramifications.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3666-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3666"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-3667-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3667"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-3666-kc">
+  <div class="killchain" id="art-3667-kc">
   <div class="kc3d"><div class="kc-cell ">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -255,11 +571,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-3666-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3666-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3666-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-3667-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3667-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3667-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-3666-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Exploiting Buffer
+    <div class="tab-content active" id="art-3667-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Exploiting Buffer
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -279,7 +595,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3666-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-3667-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Exploiting Buffer
@@ -302,7 +618,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3666-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3666-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3666-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3666-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Exploiting Buffer ```
+    <div class="tab-content" id="art-3667-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3667-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3667-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3667-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Exploiting Buffer ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -318,7 +634,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3666-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Exploiting Buffer ```
+]</code></pre><pre class="spl-mode-body" id="art-3667-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Exploiting Buffer ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -338,7 +654,7 @@ DeviceFileEvents
   </div>
 </details></div>
 </article>
-<article class="card" id="art-3669" data-art-slug="2016-02-16-using-node-js-event-loop-for-timing-attacks"
+<article class="card" id="art-3670" data-art-slug="2016-02-16-using-node-js-event-loop-for-timing-attacks"
   data-phases="actions,c2,delivery,exploit,install" data-sev="high"
   data-techs="T1190"
   data-sources="Snyk"
@@ -362,11 +678,11 @@ DeviceFileEvents
   <p class="summary">A little over 3 years ago, a few friends and I started a group called pasten to participate in the Chaos Computer Club’s Capture The Flag (CTF) competition. It is a jeopardy style CTF, where the participating teams need to solve security related challenges in various categories such as exploitation, reverse engineering, web, forensic &amp; crypto.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3669-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3669"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-3670-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3670"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-3669-kc">
+  <div class="killchain" id="art-3670-kc">
   <div class="kc3d"><div class="kc-cell ">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -425,11 +741,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-3669-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3669-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3669-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-3670-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3670-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3670-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-3669-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Using Node.js event loop for timing attacks
+    <div class="tab-content active" id="art-3670-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Using Node.js event loop for timing attacks
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -449,7 +765,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3669-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-3670-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Using Node.js event loop for timing attacks
@@ -472,7 +788,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3669-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3669-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3669-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3669-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Using Node.js event loop for timing attacks ```
+    <div class="tab-content" id="art-3670-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3670-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3670-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3670-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Using Node.js event loop for timing attacks ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -488,7 +804,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3669-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Using Node.js event loop for timing attacks ```
+]</code></pre><pre class="spl-mode-body" id="art-3670-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Using Node.js event loop for timing attacks ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -508,7 +824,7 @@ DeviceFileEvents
   </div>
 </details></div>
 </article>
-<article class="card" id="art-3670" data-art-slug="2015-12-14-keeping-your-open-source-credentials-closed"
+<article class="card" id="art-3671" data-art-slug="2015-12-14-keeping-your-open-source-credentials-closed"
   data-phases="actions,c2,exploit,install" data-sev="high"
   data-techs="T1027,T1190"
   data-sources="Snyk"
@@ -532,11 +848,11 @@ DeviceFileEvents
   <p class="summary">Leaking credentials means exposing secrets that provide access to different accounts. The most common types of leaked credentials are passwords, API keys and SSH private keys. In this post, we discuss best practices you can establish as part of your flow to introduce multiple layers of defense that help prevent mistakes.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3670-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3670"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-3671-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3671"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-3670-kc">
+  <div class="killchain" id="art-3671-kc">
   <div class="kc3d"><div class="kc-cell ">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -595,11 +911,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-3670-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3670-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3670-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-3671-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3671-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3671-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-3670-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Keeping your open source credentials closed
+    <div class="tab-content active" id="art-3671-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Keeping your open source credentials closed
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -619,7 +935,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3670-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-3671-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Keeping your open source credentials closed
@@ -642,7 +958,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3670-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3670-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3670-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3670-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Keeping your open source credentials closed ```
+    <div class="tab-content" id="art-3671-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3671-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3671-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3671-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Keeping your open source credentials closed ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -658,7 +974,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3670-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Keeping your open source credentials closed ```
+]</code></pre><pre class="spl-mode-body" id="art-3671-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Keeping your open source credentials closed ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -678,7 +994,7 @@ DeviceFileEvents
   </div>
 </details></div>
 </article>
-<article class="card" id="art-3671" data-art-slug="2015-12-03-launching-snyk"
+<article class="card" id="art-3672" data-art-slug="2015-12-03-launching-snyk"
   data-phases="c2,delivery,exploit,install" data-sev="med"
   data-techs="T1190"
   data-sources="Snyk"
@@ -702,11 +1018,11 @@ DeviceFileEvents
   <p class="summary">I’m excited to announce Snyk is now live! Snyk helps you find and fix known vulnerabilities in your Node.js dependencies. These are publicly documented security holes, making them easy for attackers to track and exploit.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3671-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3671"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-3672-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3672"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-3671-kc">
+  <div class="killchain" id="art-3672-kc">
   <div class="kc3d"><div class="kc-cell ">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -765,11 +1081,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-3671-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3671-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3671-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-3672-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3672-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3672-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-3671-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Launching Snyk
+    <div class="tab-content active" id="art-3672-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Launching Snyk
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -789,7 +1105,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3671-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-3672-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Launching Snyk
@@ -812,7 +1128,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3671-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3671-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3671-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3671-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Launching Snyk ```
+    <div class="tab-content" id="art-3672-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3672-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3672-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3672-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Launching Snyk ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -828,7 +1144,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3671-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Launching Snyk ```
+]</code></pre><pre class="spl-mode-body" id="art-3672-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Launching Snyk ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))
@@ -848,7 +1164,7 @@ DeviceFileEvents
   </div>
 </details></div>
 </article>
-<article class="card" id="art-3672" data-art-slug="2015-11-11-a-ceo-s-guide-to-emacs"
+<article class="card" id="art-3673" data-art-slug="2015-11-11-a-ceo-s-guide-to-emacs"
   data-phases="actions,c2,delivery,exploit,install" data-sev="high"
   data-techs="T1190"
   data-sources="Snyk"
@@ -872,11 +1188,11 @@ DeviceFileEvents
   <p class="summary">For those who haven&#x27;t used Emacs, it&#x27;s something you&#x27;ll likely hate, but may love. It&#x27;s sort of a Rube Goldberg machine the size of a house that, at first glance, performs all the functions of a toaster.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3672-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3672"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-3673-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3673"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-3672-kc">
+  <div class="killchain" id="art-3673-kc">
   <div class="kc3d"><div class="kc-cell ">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -935,18 +1251,18 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-3672-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3672-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3672-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3672-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-3673-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3673-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3673-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3673-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-3672-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-3673-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-3672-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-3673-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -969,7 +1285,7 @@ DeviceFileEvents
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-3672-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-3673-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -1013,13 +1329,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-3672-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3672-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3672-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3672-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-3673-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3673-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3673-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3673-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3672-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3673-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -1029,7 +1345,7 @@ level: high
   </div>
 </details></div>
 </article>
-<article class="card" id="art-3674" data-art-slug="2015-04-17-immutable-infrastructure-networks"
+<article class="card" id="art-3675" data-art-slug="2015-04-17-immutable-infrastructure-networks"
   data-phases="actions,c2,exploit,install" data-sev="high"
   data-techs="T1190"
   data-sources="Snyk"
@@ -1053,11 +1369,11 @@ level: high
   <p class="summary">If you work with network infrastructure, you know that it has a tendency to grow warts, that is, it drifts from its original configuration. One of our goals is to prevent this drift from occurring by maintaining your infrastructure&#x27;s known good status.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3674-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3674"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-3675-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3675"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-3674-kc">
+  <div class="killchain" id="art-3675-kc">
   <div class="kc3d"><div class="kc-cell ">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -1116,11 +1432,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-3674-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3674-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3674-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-3675-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3675-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3675-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-3674-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-3675-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -1133,7 +1449,7 @@ level: high
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-3674-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-3675-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -1143,7 +1459,7 @@ level: high
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-3674-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3674-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3674-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3674-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-3675-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3675-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3675-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3675-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -1152,7 +1468,7 @@ level: high
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-3674-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-3675-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -1179,18 +1495,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Registry</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-3674-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3674-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3674-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3674-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-3675-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3675-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3675-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3675-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-3674-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-3675-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName =~ &quot;sc.exe&quot; and ProcessCommandLine has &quot;create&quot;
 | where ProcessCommandLine matches regex @&quot;(?i)(\Users\|\AppData\|\ProgramData\|\Temp\)&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName</code></pre></div>
-    <div class="tab-content" id="art-3674-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// EventID 4697 is &quot;Service installed&quot; — direct signal, no cmdline-regex needed.
+    <div class="tab-content" id="art-3675-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// EventID 4697 is &quot;Service installed&quot; — direct signal, no cmdline-regex needed.
 union
     ( SecurityEvent
         | where TimeGenerated &gt; ago(7d)
@@ -1208,7 +1524,7 @@ union
                   Detail = strcat(&quot;4688 sc.exe create: &quot;, CommandLine) )
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-3674-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Service Persistence via sc.exe with User-Writable Path
+    <div class="tab-content" id="art-3675-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Service Persistence via sc.exe with User-Writable Path
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0e
 status: experimental
 description: |
@@ -1240,7 +1556,7 @@ falsepositives:
     - Internal install scripts dropping a service from %ProgramData%
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-3674-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3674-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3674-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3674-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-3675-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3675-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3675-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3675-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name=&quot;sc.exe&quot; AND Processes.process=&quot;*create*&quot;
       AND (Processes.process=&quot;*\Users\*&quot; OR Processes.process=&quot;*\AppData\*&quot;
@@ -1255,7 +1571,7 @@ level: high
             OR Registry.registry_value_data=&quot;*\AppData\*&quot;
             OR Registry.registry_value_data=&quot;*\Temp\*&quot;)
         by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.user
-     | `drop_dm_object_name(Registry)`]</code></pre><pre class="spl-mode-body" id="art-3674-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(Registry)`]</code></pre><pre class="spl-mode-body" id="art-3675-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name=&quot;sc.exe&quot; AND Processes.process=&quot;*create*&quot;
       AND (Processes.process=&quot;*\Users\*&quot; OR Processes.process=&quot;*\AppData\*&quot;

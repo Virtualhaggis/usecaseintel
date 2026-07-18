@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Exposed n8n Enterprise vulnerable to cross-issuer token-exchange auth bypass (CVE-2026-59208)
 
-`UC_35_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_36_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### n8n running below the CVE-2026-59208 patch floor (2.27.4 / 2.28.1) in software inventory
 
-`UC_35_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_36_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

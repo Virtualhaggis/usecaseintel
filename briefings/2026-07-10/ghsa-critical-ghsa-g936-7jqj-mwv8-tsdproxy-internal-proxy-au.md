@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### TSDProxy x-tsdproxy-auth-token leaked to backend in upstream HTTP requests
 
-`UC_116_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_117_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ index=* (sourcetype=*proxy* OR sourcetype=*access* OR sourcetype=*nginx* OR sour
 
 ### TSDProxy management-port replay: loopback connection to 127.0.0.1:8080 by non-proxy process
 
-`UC_116_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_117_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### TSDProxy management API abuse: /api/v1 request with forged x-tsdproxy-id and auth token
 
-`UC_116_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_117_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

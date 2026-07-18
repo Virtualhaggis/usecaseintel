@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### UAT-7810 ORB relay C2 — outbound to LONGLEASH/DOGLEASH relay IPs
 
-`UC_132_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_133_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### Unpatched Ruckus/ASUS edge devices exposed to UAT-7810 exploit CVEs
 
-`UC_132_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_133_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Talos prevalent-malware SHA256 execution (UAT-7810 telemetry batch)
 
-`UC_132_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_133_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ union DeviceProcessEvents, DeviceFileEvents
 
 ### Edge device recruited as ORB relay — inbound sessions from UAT-7810 IPs
 
-`UC_132_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_133_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -396,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Winning 54% of the time
 
-`UC_132_9` · phase: **exploit** · confidence: **High**
+`UC_133_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2582 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2583 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-18
 - [microsoft warns of surge in acr stealer attacks on customers](./2026-07-18/microsoft-warns-of-surge-in-acr-stealer-attacks-on-customers.md)
+- [update now 7 zip fixes rce flaw exploitable with malicious a](./2026-07-18/update-now-7-zip-fixes-rce-flaw-exploitable-with-malicious-a.md)
 - [wordpress core wp2shell rce flaws get public exploits patch ](./2026-07-18/wordpress-core-wp2shell-rce-flaws-get-public-exploits-patch-.md)
 
 ## 2026-07-17

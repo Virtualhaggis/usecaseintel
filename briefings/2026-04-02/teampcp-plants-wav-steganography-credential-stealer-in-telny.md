@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### TeamPCP telnyx FetchAudio() — python subprocess running inline base64 exec
 
-`UC_499_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_500_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Outbound connection to TeamPCP C2 83.142.209.203 / ringtone.wav stego payload fetch
 
-`UC_499_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_500_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### msbuild.exe dropped to Startup folder (TeamPCP telnyx Windows persistence)
 
-`UC_499_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_500_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceFileEvents
 
 ### TeamPCP exfiltration archive tpcp.tar.gz created on disk
 
-`UC_499_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_500_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceFileEvents
 
 ### pip install of malicious telnyx versions 4.87.1 / 4.87.2
 
-`UC_499_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_500_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -362,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Plants WAV Steganography Credential Stealer in telnyx PyPI Package
 
-`UC_499_6` · phase: **exploit** · confidence: **High**
+`UC_500_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

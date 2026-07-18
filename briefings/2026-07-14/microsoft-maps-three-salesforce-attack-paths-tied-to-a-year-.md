@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Salesforce consent to spoofed 'Data Loader' connected app (UNC6040 vishing)
 
-`UC_93_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_94_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ CloudAppEvents
 
 ### Compromised vendor OAuth integration (Drift/Gainsight/Klue) mass Salesforce export
 
-`UC_93_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_94_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ CloudAppEvents
 
 ### Salesforce SOQL secret-hunting across Case/support objects (AWS/Snowflake/VPN)
 
-`UC_93_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_94_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ CloudAppEvents
 
 ### Anti-forensic deletion of Salesforce async query/bulk job records
 
-`UC_93_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_94_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ CloudAppEvents
 
 ### Unauthenticated Salesforce Aura/GraphQL guest scraping past 2,000-record limit
 
-`UC_93_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_94_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
