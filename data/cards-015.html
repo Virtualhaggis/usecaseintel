@@ -1,3 +1,429 @@
+<article class="card" id="art-434" data-art-slug="2026-04-29-don-t-panic-the-thymeleaf-template-injection-that-only-hurts"
+  data-phases="actions,c2,exploit,install,recon" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,web"
+  data-targets="linux,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="Don&#x27;t Panic: The Thymeleaf Template Injection That Only Hurts If You Let It (CVE-2026-40478) CVE-2026-40478: The Thymeleaf template injection (CVSS 9.1) is conditional. Patch to 3.1.4+ immediately, and audit your code for dynamic view or template expression misuse, which is the key precondition for exploitability. CVE-2026-40478 T1190 [LLM] Thymeleaf SpEL tab-character sandbox bypass payload in HTTP request (CVE-2026-40478) [LLM] Java/Tomcat process writes .jsp webshell file to disk (CVE-2026-40478 post-exploit drop) [LLM] Java/Tomcat process spawns OS command interpreter (post-Thymeleaf SSTI RCE) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2026-04-29-don-t-panic-the-thymeleaf-template-injection-that-only-hurts" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/thymeleaf-injection/" target="_blank" rel="noopener">Don&#x27;t Panic: The Thymeleaf Template Injection That Only Hurts If You Let It (CVE-2026-40478)</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2026-04-29</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">CVE-2026-40478: The Thymeleaf template injection (CVSS 9.1) is conditional. Patch to 3.1.4+ immediately, and audit your code for dynamic view or template expression misuse, which is the key precondition for exploitability.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-40478</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-434-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-434"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-434-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Thymeleaf SpEL tab-character sandbox bypass payload in HTTP request (CVE-2026-40478)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Java/Tomcat process writes .jsp webshell file to disk (CVE-2026-40478 post-exploit drop)</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Java/Tomcat process spawns OS command interpreter (post-Thymeleaf SSTI RCE)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="517011221c" data-platforms="datadog,sent,sigma,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Thymeleaf SpEL tab-character sandbox bypass payload in HTTP request (CVE-2026-40478)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="517011221c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects HTTP requests carrying the CVE-2026-40478 Thymeleaf SSTI payload — `new` followed by a tab/`%09` and a Spring Framework class reference (typically `org.springframework.core.io.FileSystemResource` chained to `getOutputStream`). The tab whitespace defeats Thymeleaf&#x27;s pre-check while SpEL still parses the expression, allowing RCE on apps that pipe user input into the expression engine.
+
+Rationale: Anchors on the exact bypass signature called out in the article — the literal `new` keyword + tab (`%09`) + Spring class name, plus the `FileSystemResource(...).getOutputStream()` chain quoted in the PoC. This combination is not produced by benign traffic and pivots on the URL-encoded form most likely to appear in IIS/Nginx access logs. Defender Advanced Hunting has no HTTP request-body table so `defender_kql` is intentionally empty; Falcon FDR does not ship raw HTTP request payloads either.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized penetration tests running CVE-2026-40478 PoCs against the app</li><li>Internal vulnerability scanners (Nuclei templates, Tenable, Qualys) emitting the payload during scheduled scans</li><li>Bug-bounty researchers probing the public Spring Boot endpoint</li><li>Security training labs / CTF infrastructure deliberately hosting the vulnerable code</li><li>Java security log shippers that echo back the request URI in error pages, looping the payload into another log line</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Add to Sentinel query to suppress authorized scanners:
+// | where csUserAgent !has_any (&quot;Nuclei&quot;, &quot;ZAP&quot;, &quot;Burp&quot;, &quot;qualys&quot;, &quot;tenable&quot;, &quot;nessus&quot;)
+// | where cIP !in (&quot;&lt;authorized-scanner-cidrs&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: pull the full request (method, URI, body, source IP, user-agent, response code) and check whether the targeted Spring Boot app is on a Thymeleaf version &lt;3.1.4 (or Spring Boot starter &lt;3.5.14 / &lt;4.0.6). A 2xx response is strong evidence of successful injection. Contain: block the source IP at the WAF/edge, pull the host into network quarantine if it accepted the request, and snapshot the Tomcat/Spring Boot process and webapps directory. Hunt: pivot on the same host for any new `.jsp` files written by `java.exe`/`javaw.exe` (UC2) and for Java processes spawning `cmd.exe`/`powershell.exe`/`bash` (UC3) — those confirm RCE rather than just an attempted exploit. Audit the app code for `StringTemplateResolver` + user-controlled input to `templateEngine.process()` as a root-cause fix.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-434-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-434-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-434-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-434-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-434-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+W3CIISLog
+| where TimeGenerated &gt; ago(LookbackDays)
+| extend RawRequest = strcat(tostring(csUriStem), &quot;?&quot;, tostring(csUriQuery))
+| extend DecodedRequest = url_decode(RawRequest)
+| where DecodedRequest matches regex @&quot;(?i)new[\t\s]+(?:org\.springframework|java\.lang|java\.io|jakarta\.|javax\.)&quot;
+    or RawRequest has_any (&quot;new%09org.springframework&quot;, &quot;new%09java.lang&quot;, &quot;new%09java.io&quot;)
+    or (DecodedRequest has &quot;FileSystemResource&quot; and DecodedRequest has &quot;getOutputStream&quot;)
+| project TimeGenerated, Computer, sSiteName, cIP, csMethod, csUriStem, csUriQuery, DecodedRequest, scStatus, csUserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-434-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Thymeleaf SpEL Tab-Character Sandbox Bypass Payload (CVE-2026-40478)
+id: 7a3f8d2e-1b4c-4a9e-8f7d-3c2b1a4e5d6f
+status: experimental
+description: Detects HTTP requests containing the CVE-2026-40478 SSTI payload that abuses a tab character to bypass Thymeleaf&#x27;s `new` keyword pre-check, then instantiates a Spring FileSystemResource to write a webshell.
+references:
+  - https://snyk.io/blog/thymeleaf-injection/
+author: SOC Detection Engineering
+date: 2026/05/21
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - attack.execution
+  - attack.t1059
+logsource:
+  category: webserver
+detection:
+  payload_encoded:
+    cs-uri-query|contains:
+      - &#x27;new%09org.springframework&#x27;
+      - &#x27;new%09java.lang&#x27;
+      - &#x27;new%09java.io&#x27;
+      - &#x27;new%09jakarta.&#x27;
+      - &#x27;new%09javax.&#x27;
+  payload_class_chain:
+    cs-uri-query|contains|all:
+      - &#x27;FileSystemResource&#x27;
+      - &#x27;getOutputStream&#x27;
+  condition: payload_encoded or payload_class_chain
+falsepositives:
+  - Authorized red-team or bug-bounty scans against the Spring Boot application
+  - Vulnerability scanners (Nuclei, Burp, ZAP) emitting templated PoC payloads
+level: high</code></pre></div>
+    <div class="tab-content" id="art-434-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(nginx OR apache OR tomcat OR iis OR java OR spring) (@http.url:*new%09org.springframework* OR @http.url:*new%09java.lang* OR @http.url:*new%09java.io* OR (@http.url:*FileSystemResource* AND @http.url:*getOutputStream*) OR @http.url_details.queryString:*new%09org.springframework* OR @http.url_details.queryString:*FileSystemResource*getOutputStream*)</code></pre></div>
+    <div class="tab-content" id="art-434-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-434-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-434-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-434-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_query=&quot;*new%09org.springframework*&quot; OR Web.uri_query=&quot;*new%09java.lang*&quot; OR Web.uri_query=&quot;*FileSystemResource*getOutputStream*&quot; OR Web.uri_query=&quot;*new\torg.springframework*&quot; OR Web.url=&quot;*new%09org.springframework*&quot; OR Web.http_user_agent=&quot;*FileSystemResource*&quot;) by Web.dest, Web.src, Web.url, Web.uri_query, Web.http_method, Web.status, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| eval cve=&quot;CVE-2026-40478&quot;
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-434-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_query=&quot;*new%09org.springframework*&quot; OR Web.uri_query=&quot;*new%09java.lang*&quot; OR Web.uri_query=&quot;*FileSystemResource*getOutputStream*&quot; OR Web.uri_query=&quot;*new\torg.springframework*&quot; OR Web.url=&quot;*new%09org.springframework*&quot; OR Web.http_user_agent=&quot;*FileSystemResource*&quot;) by Web.dest, Web.src, Web.url, Web.uri_query, Web.http_method, Web.status, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| eval cve=&quot;CVE-2026-40478&quot;
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="9f3d855b72" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Java/Tomcat process writes .jsp webshell file to disk (CVE-2026-40478 post-exploit drop)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="9f3d855b72" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects a Spring Boot / Tomcat / generic Java process creating a `.jsp` or `.jspx` file on disk outside Tomcat&#x27;s JSP precompilation cache. CVE-2026-40478&#x27;s PoC uses `new FileSystemResource(&#x27;shell.jsp&#x27;).getOutputStream()` to drop a JSP webshell — the file-write event by `java.exe` is a high-fidelity indicator that the SpEL sandbox bypass succeeded.
+
+Rationale: The article&#x27;s PoC explicitly drops `shell.jsp` via `new[TAB]org.springframework.core.io.FileSystemResource(&#x27;shell.jsp&#x27;).getOutputStream()`. A JSP write originated by `java.exe`/Tomcat outside the precompilation cache is a textbook web-shell indicator and a direct match for this CVE&#x27;s impact. Excluding `work\Catalina` and `temp\jsp` removes the dominant FP source (Tomcat&#x27;s own JSP compiler).</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Custom Tomcat configurations that compile JSPs to a non-standard work directory</li><li>WAR-file hot-deploy in non-production environments (Maven/Gradle plugins, Spring Boot DevTools)</li><li>IDE-driven remote deployment from IntelliJ IDEA, Eclipse, NetBeans</li><li>Application installers / patches that unpack JSPs into `webapps/&lt;app&gt;/` at upgrade time</li><li>JSP-based templating frameworks (rare) that legitimately generate JSPs at runtime</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Add to Defender query to suppress build/deploy systems:
+// | where InitiatingProcessParentFileName !in~ (&quot;mvn.cmd&quot;, &quot;gradle.bat&quot;, &quot;jenkins-agent.exe&quot;, &quot;TeamCity*.exe&quot;)
+// | where InitiatingProcessCommandLine !has_any (&quot;DevTools&quot;, &quot;-Dspring.devtools&quot;, &quot;hot-deploy&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: hash the dropped JSP (SHA256 in the alert), pull its content from the host, and check whether it contains shell-like primitives — `Runtime.getRuntime().exec`, `ProcessBuilder`, `request.getParameter` paired with output streams. Cross-reference the file path with the Tomcat `webapps` deployment directory of the affected Spring Boot app. Contain: stop the Tomcat/Spring Boot service, isolate the host, quarantine the JSP file, and block the source IP from UC1 at the perimeter. Hunt: search the host for child-process events where Java is the parent (UC3), audit the source code for `StringTemplateResolver` misuse, and review the last 30 days of W3CIISLog/ImWebSession for the SpEL payload (UC1) to scope the campaign window. Patch Thymeleaf to 3.1.4+ and the Spring Boot starter to 3.5.14 / 4.0.6.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-434-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-434-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-434-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-434-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-434-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-434-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-434-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+DeviceFileEvents
+| where Timestamp &gt; ago(LookbackDays)
+| where ActionType in (&quot;FileCreated&quot;, &quot;FileRenamed&quot;, &quot;FileModified&quot;)
+| where FileName endswith &quot;.jsp&quot; or FileName endswith &quot;.jspx&quot;
+| where InitiatingProcessFileName in~ (&quot;java.exe&quot;, &quot;javaw.exe&quot;, &quot;tomcat.exe&quot;, &quot;tomcat9.exe&quot;, &quot;tomcat10.exe&quot;, &quot;catalina.exe&quot;)
+   or InitiatingProcessFolderPath has_any (&quot;tomcat&quot;, &quot;jboss&quot;, &quot;wildfly&quot;, &quot;spring-boot&quot;, &quot;catalina&quot;)
+| where not(FolderPath has_any (@&quot;\work\Catalina\&quot;, @&quot;\temp\jsp\&quot;, &quot;/work/Catalina/&quot;, &quot;/temp/jsp/&quot;))
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-434-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+ImFileEvent
+| where TimeGenerated &gt; ago(LookbackDays)
+| where EventType == &quot;FileCreated&quot;
+| where TargetFileExtension in~ (&quot;jsp&quot;, &quot;jspx&quot;)
+| where ActingProcessName has_any (&quot;java.exe&quot;, &quot;javaw.exe&quot;, &quot;tomcat&quot;, &quot;catalina&quot;)
+   or ActingProcessCommandLine has_any (&quot;spring-boot&quot;, &quot;catalina&quot;, &quot;-jar&quot;)
+| where not(TargetFilePath has_any (@&quot;\work\Catalina\&quot;, &quot;/work/Catalina/&quot;, @&quot;\temp\jsp\&quot;, &quot;/temp/jsp/&quot;))
+| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName, TargetFileSHA256,
+          ActingProcessName, ActingProcessCommandLine, ActorUsername
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-434-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Java/Tomcat Process Writes JSP File Outside Compilation Cache (CVE-2026-40478)
+id: 9e2d7c1f-3a8b-4c5d-9e6f-1a2b3c4d5e6a
+status: experimental
+description: Detects `.jsp` / `.jspx` files written to disk by a Java application-server process outside Tomcat&#x27;s `work\Catalina` precompilation directory — a likely webshell drop following CVE-2026-40478 Thymeleaf SpEL sandbox bypass abusing FileSystemResource.getOutputStream().
+references:
+  - https://snyk.io/blog/thymeleaf-injection/
+author: SOC Detection Engineering
+date: 2026/05/21
+tags:
+  - attack.persistence
+  - attack.t1505.003
+  - attack.initial_access
+  - attack.t1190
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_process:
+    Image|endswith:
+      - &#x27;\java.exe&#x27;
+      - &#x27;\javaw.exe&#x27;
+      - &#x27;\tomcat.exe&#x27;
+      - &#x27;\catalina.exe&#x27;
+  selection_file:
+    TargetFilename|endswith:
+      - &#x27;.jsp&#x27;
+      - &#x27;.jspx&#x27;
+  filter_jsp_cache:
+    TargetFilename|contains:
+      - &#x27;\work\Catalina\&#x27;
+      - &#x27;\temp\jsp\&#x27;
+  condition: selection_process and selection_file and not filter_jsp_cache
+falsepositives:
+  - Tomcat JSP precompilation outside the standard work directory
+  - WAR file deployment / hot-redeploy in dev or staging
+  - IDE remote-deploy from IntelliJ / Eclipse during development
+level: high</code></pre></div>
+    <div class="tab-content" id="art-434-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:*.jsp OR @TargetFilename:*.JSP OR @TargetFilename:*.jspx OR @TargetFilename:*.JSPX) (@Image:(*\\java.exe OR *\\Java.exe OR *\\JAVA.EXE OR *\\javaw.exe OR *\\Javaw.exe OR *\\tomcat.exe OR *\\Tomcat.exe OR *\\catalina.exe)) -@TargetFilename:(*\\work\\Catalina\\* OR *\\Work\\Catalina\\* OR *\\temp\\jsp\\*)</code></pre></div>
+    <div class="tab-content" id="art-434-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/\.jspx?$/i
+| ContextImageFileName=/(java|javaw|tomcat|catalina)\.exe$/i
+| NOT regex(&quot;\\\\work\\\\Catalina\\\\&quot;, field=TargetFileName)
+| NOT regex(&quot;\\\\temp\\\\jsp\\\\&quot;, field=TargetFileName)
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-434-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-434-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-434-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-434-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;*.jsp&quot; OR Filesystem.file_name=&quot;*.jspx&quot;) AND (Filesystem.process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat10.exe&quot;) OR Filesystem.process_path=&quot;*tomcat*&quot; OR Filesystem.process_path=&quot;*spring-boot*&quot; OR Filesystem.process_path=&quot;*catalina*&quot;) AND NOT (Filesystem.file_path=&quot;*\\work\\Catalina\\*&quot; OR Filesystem.file_path=&quot;*/work/Catalina/*&quot; OR Filesystem.file_path=&quot;*\\temp\\jsp\\*&quot;) by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name, Filesystem.process_path, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| eval cve=&quot;CVE-2026-40478&quot;
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-434-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;*.jsp&quot; OR Filesystem.file_name=&quot;*.jspx&quot;) AND (Filesystem.process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat10.exe&quot;) OR Filesystem.process_path=&quot;*tomcat*&quot; OR Filesystem.process_path=&quot;*spring-boot*&quot; OR Filesystem.process_path=&quot;*catalina*&quot;) AND NOT (Filesystem.file_path=&quot;*\\work\\Catalina\\*&quot; OR Filesystem.file_path=&quot;*/work/Catalina/*&quot; OR Filesystem.file_path=&quot;*\\temp\\jsp\\*&quot;) by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name, Filesystem.process_path, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| eval cve=&quot;CVE-2026-40478&quot;
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="eade5e82ad" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Java/Tomcat process spawns OS command interpreter (post-Thymeleaf SSTI RCE)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="eade5e82ad" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects a Java application-server process (java.exe, javaw.exe, Tomcat) spawning a Windows or Unix command shell — the RCE stage of CVE-2026-40478, where the dropped JSP webshell calls ProcessBuilder to execute arbitrary OS commands. Filters out service-account installations of Java itself to keep signal high.
+
+Rationale: The article states the exploit drops a JSP that calls `ProcessBuilder` to execute the RCE — i.e. java.exe (the Tomcat/Spring Boot process) becomes the parent of an OS shell or reconnaissance binary. This parent-child pair is rare in production Java workloads outside CI/CD agents and monitoring tools. The query mirrors the BluRaven `pattern-process-tree` house style — parent narrows scope, child narrows behaviour.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Jenkins / TeamCity / GitLab Runner Java-based build agents that legitimately spawn `cmd`/`powershell` build steps</li><li>Spring Boot Actuator endpoints or custom health-checks shelling out for `ipconfig` / `systeminfo` / `hostname` results</li><li>APM agents (Dynatrace, AppDynamics, New Relic Java) invoking native diagnostics</li><li>JNI-based integrations that wrap OS utilities (e.g. legacy Java apps invoking `net.exe` for user lookups)</li><li>Tomcat startup scripts that briefly invoke `whoami.exe` / `hostname.exe` during initialization</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Add to Defender query to suppress known CI/CD agents and monitoring:
+// | where InitiatingProcessParentFileName !in~ (&quot;jenkins-agent.exe&quot;, &quot;TeamCity*.exe&quot;, &quot;runner.exe&quot;, &quot;gitlab-runner.exe&quot;)
+// | where InitiatingProcessCommandLine !has_any (&quot;jenkins&quot;, &quot;-Dteamcity&quot;, &quot;gitlab-runner&quot;, &quot;dynatrace&quot;, &quot;appdynamics&quot;, &quot;newrelic&quot;)
+// | where not (FileName =~ &quot;hostname.exe&quot; and InitiatingProcessCommandLine has &quot;catalina.sh start&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: capture the full process tree (grandparent → java.exe → child) and the child&#x27;s command line. A child invoking `whoami` / `net user` / `ipconfig` / `systeminfo` within seconds of one another is reconnaissance and far more suspicious than a single isolated `cmd.exe`. Cross-reference the host with UC2 — if a fresh JSP was dropped in the same hour, treat as confirmed exploitation. Contain: stop the Tomcat/Spring Boot service, isolate the host at the network layer, preserve memory for triage, and rotate any service-account credentials the JVM had access to (keystores, application.yml secrets, cloud IAM tokens on the host). Hunt: query the last 30 days for the same parent-child pattern on every Java application-server host; look for outbound network connections initiated by `java.exe` to non-corporate destinations (potential C2). Patch Thymeleaf to 3.1.4+ and fix the underlying `StringTemplateResolver` misuse identified in the code review.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-434-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-434-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-434-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-434-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-434-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-434-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-434-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+DeviceProcessEvents
+| where Timestamp &gt; ago(LookbackDays)
+| where InitiatingProcessFileName in~ (&quot;java.exe&quot;, &quot;javaw.exe&quot;, &quot;tomcat.exe&quot;, &quot;tomcat9.exe&quot;, &quot;tomcat10.exe&quot;, &quot;catalina.exe&quot;)
+   or InitiatingProcessFolderPath has_any (&quot;tomcat&quot;, &quot;catalina&quot;, &quot;spring-boot&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;, &quot;powershell.exe&quot;, &quot;pwsh.exe&quot;, &quot;wscript.exe&quot;, &quot;cscript.exe&quot;, &quot;bash.exe&quot;, &quot;sh.exe&quot;, &quot;whoami.exe&quot;, &quot;net.exe&quot;, &quot;net1.exe&quot;, &quot;ipconfig.exe&quot;, &quot;systeminfo.exe&quot;, &quot;wmic.exe&quot;, &quot;certutil.exe&quot;, &quot;bitsadmin.exe&quot;, &quot;curl.exe&quot;, &quot;wget.exe&quot;, &quot;tasklist.exe&quot;, &quot;hostname.exe&quot;)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessParentFileName !in~ (&quot;services.exe&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-434-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+ImProcessCreate
+| where TimeGenerated &gt; ago(LookbackDays)
+| where ActingProcessName has_any (&quot;java.exe&quot;, &quot;javaw.exe&quot;, &quot;tomcat&quot;, &quot;catalina&quot;)
+   or ActingProcessCommandLine has_any (&quot;spring-boot&quot;, &quot;catalina&quot;, &quot;-Dcatalina&quot;)
+| where TargetProcessName has_any (&quot;cmd.exe&quot;, &quot;powershell.exe&quot;, &quot;pwsh.exe&quot;, &quot;wscript.exe&quot;, &quot;cscript.exe&quot;, &quot;bash&quot;, &quot;/bin/sh&quot;, &quot;whoami&quot;, &quot;net.exe&quot;, &quot;ipconfig&quot;, &quot;systeminfo&quot;, &quot;wmic.exe&quot;, &quot;certutil.exe&quot;, &quot;bitsadmin.exe&quot;, &quot;curl&quot;, &quot;wget&quot;, &quot;tasklist&quot;, &quot;hostname&quot;)
+| where ActorUsername !endswith &quot;$&quot;
+| project TimeGenerated, DvcHostname, ActorUsername,
+          ParentName = ActingProcessName, ParentCmd = ActingProcessCommandLine,
+          ChildName  = TargetProcessName, ChildCmd  = TargetProcessCommandLine,
+          Hash
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-434-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Java/Tomcat Application Server Spawns OS Command Shell (CVE-2026-40478 RCE)
+id: 2c4e6d8a-5f7b-4d3c-8e1a-9f6b3c5d7e2a
+status: experimental
+description: Detects a Java application-server process (java.exe / javaw.exe / Tomcat / Spring Boot embedded server) spawning a command interpreter or reconnaissance binary. Models the post-exploit ProcessBuilder RCE described for CVE-2026-40478 once the attacker has dropped a JSP webshell via FileSystemResource.
+references:
+  - https://snyk.io/blog/thymeleaf-injection/
+author: SOC Detection Engineering
+date: 2026/05/21
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - attack.t1059.001
+  - attack.t1059.004
+  - attack.t1190
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;\java.exe&#x27;
+      - &#x27;\javaw.exe&#x27;
+      - &#x27;\tomcat.exe&#x27;
+      - &#x27;\catalina.exe&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\whoami.exe&#x27;
+      - &#x27;\net.exe&#x27;
+      - &#x27;\net1.exe&#x27;
+      - &#x27;\ipconfig.exe&#x27;
+      - &#x27;\systeminfo.exe&#x27;
+      - &#x27;\wmic.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;\wget.exe&#x27;
+      - &#x27;\tasklist.exe&#x27;
+  filter_machine_acct:
+    User|endswith: &#x27;$&#x27;
+  condition: selection_parent and selection_child and not filter_machine_acct
+falsepositives:
+  - Jenkins / TeamCity / GitLab Runner Java-based build agents spawning shell steps
+  - Spring Boot Actuator health checks invoking external scripts
+  - Application monitoring agents (Dynatrace, AppDynamics) shelling out for system info
+  - JNI bridges into native OS utilities for legitimate workloads
+level: high</code></pre></div>
+    <div class="tab-content" id="art-434-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\java.exe OR *\\Java.exe OR *\\JAVA.EXE OR *\\javaw.exe OR *\\Javaw.exe OR *\\tomcat.exe OR *\\Tomcat.exe OR *\\catalina.exe) @Image:(*\\cmd.exe OR *\\Cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\wscript.exe OR *\\WScript.exe OR *\\cscript.exe OR *\\CScript.exe OR *\\whoami.exe OR *\\Whoami.exe OR *\\net.exe OR *\\Net.exe OR *\\ipconfig.exe OR *\\Ipconfig.exe OR *\\systeminfo.exe OR *\\wmic.exe OR *\\WMIC.exe OR *\\certutil.exe OR *\\Certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe OR *\\Curl.exe OR *\\wget.exe OR *\\Wget.exe OR *\\tasklist.exe) -@User:*$</code></pre></div>
+    <div class="tab-content" id="art-434-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/(java|javaw|tomcat|catalina)\.exe$/i
+| ImageFileName=/(cmd|powershell|pwsh|wscript|cscript|whoami|net|net1|ipconfig|systeminfo|wmic|certutil|bitsadmin|curl|wget|tasklist|hostname)\.exe$/i
+| NOT regex(&quot;\\$$&quot;, field=UserName)
+| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-434-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-434-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-434-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-434-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat10.exe&quot;,&quot;catalina.exe&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;wmic.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;tasklist.exe&quot;,&quot;hostname.exe&quot;) AND Processes.user!=&quot;*$&quot; by Processes.dest, Processes.user, Processes.parent_process, Processes.parent_process_name, Processes.process, Processes.process_name, Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| eval cve=&quot;CVE-2026-40478&quot;
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-434-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat10.exe&quot;,&quot;catalina.exe&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;wmic.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;tasklist.exe&quot;,&quot;hostname.exe&quot;) AND Processes.user!=&quot;*$&quot; by Processes.dest, Processes.user, Processes.parent_process, Processes.parent_process_name, Processes.process, Processes.process_name, Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| eval cve=&quot;CVE-2026-40478&quot;
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-434-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-434-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-434-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-434-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-40478&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-434-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-40478&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-434-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-434-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-434-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-434-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-40478&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-434-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-40478&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-435" data-art-slug="2026-04-28-cisa-kev-cve-2024-1708-connectwise-screenconnect-path-traver"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1219,T1486"
@@ -11809,132 +12235,6 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-461-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2025-48700&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-462" data-art-slug="2026-04-20-cisa-kev-cve-2026-20128-cisco-catalyst-sd-wan-manager-storin"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2026-20128 — Cisco Catalyst SD-WAN Manager Storing Passwords in a Recoverable Format Vulnerability Cisco Catalyst SD-WAN Manager contains a storing passwords in a recoverable format vulnerability that allows an authenticated, local attacker to gain DCA user privileges by accessing a credential file for the DCA user on the filesystem as a low-privileged user. Vendor: Cisco, Product: Catalyst SD-WAN Manager. Federal patch due: 2026-04-23. CVE-2026-20128  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-04-20-cisa-kev-cve-2026-20128-cisco-catalyst-sd-wan-manager-storin" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-20128 — Cisco Catalyst SD-WAN Manager Storing Passwords in a Recoverable Format Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2026-04-20</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Cisco Catalyst SD-WAN Manager contains a storing passwords in a recoverable format vulnerability that allows an authenticated, local attacker to gain DCA user privileges by accessing a credential file for the DCA user on the filesystem as a low-privileged user. Vendor: Cisco, Product: Catalyst SD-WAN Manager. Federal patch due: 2026-04-23.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-20128</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-462-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-462"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-462-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-462-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-462-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-462-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-462-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-20128&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-462-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-20128&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-462-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-462-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-462-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-462-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-20128&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-462-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-20128&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

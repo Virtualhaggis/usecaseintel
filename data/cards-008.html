@@ -1,3 +1,173 @@
+<article class="card" id="art-207" data-art-slug="2026-06-29-snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice"
+  data-phases="actions,c2,exploit,install,recon" data-sev="med"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice? Snyk VulnBench JS 1.0: 300 repeated scans show LLM security findings vary by run, while SAST and models catch different vulnerability gaps.  T1190 Article-specific behavioural hunt — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2026-06-29-snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/snyk-vulnbench-js-1-0-llm-security-review-repeatability/" target="_blank" rel="noopener">Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2026-06-29</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Snyk VulnBench JS 1.0: 300 repeated scans show LLM security findings vary by run, while SAST and models catch different vulnerability gaps.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-207-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-207"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-207-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="d999f20711" data-platforms="def,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d999f20711" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-207-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-207-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-207-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-207-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;server.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/var/app/public/&quot;) or FileName in~ (&quot;server.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-207-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice?
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;server.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/var/app/public/&quot;) or FileName in~ (&quot;server.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-207-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-207-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-207-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-207-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice? ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;server.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/var/app/public/*&quot; OR Filesystem.file_name IN (&quot;server.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-207-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk VulnBench JS 1.0: Can LLMs Find the Same Bugs Twice? ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;server.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/var/app/public/*&quot; OR Filesystem.file_name IN (&quot;server.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-208" data-art-slug="2026-06-29-cisa-kev-cve-2026-48558-simplehelp-authentication-bypass-vul"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -10062,221 +10232,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-237" data-art-slug="2026-06-25-ghsa-critical-cve-2026-48713-i18next-fs-backend-vulnerable-t"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,web"
-  data-targets="vcs"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-48713: i18next-fs-backend vulnerable to prototype pollution via crafted missing-key string i18next-fs-backend vulnerable to prototype pollution via crafted missing-key string CVE-2026-48713 CVE-2026-48714 T1190 [LLM] Prototype-pollution payload (__proto__/constructor.prototype) in HTTP request to i18next missing-key route [LLM] Hosts running vulnerable i18next-fs-backend ≤2.6.5 (CVE-2026-48713) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-25-ghsa-critical-cve-2026-48713-i18next-fs-backend-vulnerable-t" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-2933-q333-qg83" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-48713: i18next-fs-backend vulnerable to prototype pollution via crafted missing-key string</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-25</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">i18next-fs-backend vulnerable to prototype pollution via crafted missing-key string</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48713</span> <span class="ind cve">CVE-2026-48714</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-237-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-237"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-237-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Hosts running vulnerable i18next-fs-backend ≤2.6.5 (CVE-2026-48713) · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Prototype-pollution payload (__proto__/constructor.prototype) in HTTP request to i18next missing-key route</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="b42483ff16" data-platforms="sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">Prototype-pollution payload (__proto__/constructor.prototype) in HTTP request to i18next missing-key route</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b42483ff16" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts inbound web requests carrying prototype-pollution key tokens (&quot;__proto__&quot;, &quot;constructor.prototype&quot;) that abuse i18next-fs-backend ≤2.6.5&#x27;s missing-key persistence (CVE-2026-48713) to walk into Object.prototype. Article-specific because it keys on the exact dotted-segment strings the setPath/getLastOfPath walker fails to guard, delivered via untrusted request bodies to a saveMissing route.
-
-Rationale: Uses the exact unsafe segments the article names as unguarded in getLastOfPath (&quot;__proto__&quot;, &quot;constructor&quot;, &quot;prototype&quot;) split on the default &quot;.&quot; keySeparator; &quot;__proto__&quot; and &quot;constructor.prototype&quot; in a request URI are extremely rare in benign traffic, so this is high-fidelity for the delivery of the pollution payload.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-2933-q333-qg83
-  • https://github.com/i18next/i18next-http-middleware/security/advisories/GHSA-f49m-vf83-692w</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Automated DAST / prototype-pollution scanners (Burp, Nuclei, ZAP) probing the app</li><li>Authorized penetration test or bug-bounty researcher testing the missingKeyHandler route</li><li>Security-training or CTF traffic replaying prototype-pollution payloads</li><li>Legitimate app that genuinely uses a translation key literally named &#x27;constructor&#x27; (rare, benign)</li><li>Log-replay / traffic-mirroring tooling re-sending historical malicious requests</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UA !has_any (&quot;Nuclei&quot;,&quot;nikto&quot;,&quot;ZAP&quot;,&quot;sqlmap&quot;,&quot;Burp&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request (method, path, body if WAF captures it) and confirm it targets an i18next missing-key / saveMissing route; check the source IP&#x27;s request history for scanner user-agents vs. a single targeted hit. 2) Contain: if the app runs i18next-fs-backend ≤2.6.5 with missingKeyHandler exposed to untrusted input, block the source IP at the WAF and apply a workaround (mount the route behind auth, set saveMissing:false, or keySeparator:false) pending upgrade to 2.6.6. 3) Hunt: search other web logs for the same source IP and for additional pollution tokens; inspect written locale/translation JSON files for injected __proto__/constructor keys and review the Node process for crashes or corrupted config after the request.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-237-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-237-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-237-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-237-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
- (AppServiceHTTPLogs | where TimeGenerated &gt; ago(7d) | project TimeGenerated, Host=CsHost, ClientIP=CIp, Method=CsMethod, UriStem=CsUriStem, UriQuery=CsUriQuery, UA=UserAgent, Status=ScStatus),
- (W3CIISLog | where TimeGenerated &gt; ago(7d) | project TimeGenerated, Host=sSiteName, ClientIP=cIP, Method=csMethod, UriStem=csUriStem, UriQuery=csUriQuery, UA=csUserAgent, Status=scStatus)
-| where UriQuery has_any (&quot;__proto__&quot;,&quot;constructor.prototype&quot;,&quot;%5f%5fproto%5f%5f&quot;,&quot;constructor%2eprototype&quot;) or UriStem has_any (&quot;__proto__&quot;,&quot;constructor.prototype&quot;)
-| project TimeGenerated, Host, ClientIP, Method, UriStem, UriQuery, UA, Status
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-237-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Prototype Pollution Payload in HTTP Request (i18next-fs-backend CVE-2026-48713)
-id: 6b2d9f14-3a7e-4c1b-9f0a-2e8c7d51ab90
-description: Detects inbound web requests containing prototype-pollution key tokens that abuse i18next-fs-backend saveMissing key persistence (CVE-2026-48713).
-references:
-  - https://github.com/advisories/GHSA-2933-q333-qg83
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1190
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-uri-query|contains:
-      - &#x27;__proto__&#x27;
-      - &#x27;constructor.prototype&#x27;
-      - &#x27;%5f%5fproto%5f%5f&#x27;
-      - &#x27;constructor%2eprototype&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-237-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-237-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-237-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-237-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*__proto__*&quot; OR Web.url=&quot;*constructor.prototype*&quot; OR Web.url=&quot;*%5f%5fproto%5f%5f*&quot; OR Web.url=&quot;*constructor%2eprototype*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-237-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*__proto__*&quot; OR Web.url=&quot;*constructor.prototype*&quot; OR Web.url=&quot;*%5f%5fproto%5f%5f*&quot; OR Web.url=&quot;*constructor%2eprototype*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="58c82b6a81" data-platforms="def,sent" data-targets="">
-  <summary>
-    <span class="uc-title">Hosts running vulnerable i18next-fs-backend ≤2.6.5 (CVE-2026-48713)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="58c82b6a81" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Attack-surface hunt surfacing endpoints where Defender/Sentinel TVM has inventoried i18next-fs-backend below the fixed 2.6.6 release. Article-specific: keys on the exact package name and CVE so SOC/vuln-mgmt can prioritise upgrade or workaround on internet-reachable Node apps.
-
-Rationale: Uses the concrete CVE-2026-48713 and package name i18next-fs-backend named in the advisory; the fix is 2.6.6 so any inventoried version below that on a reachable host is a direct exposure to the prototype-pollution path.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-2933-q333-qg83</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Package present but keySeparator:false is set (not exploitable) — inventory can&#x27;t see the config</li><li>Package present only as a transitive dev dependency not loaded at runtime</li><li>missingKeyHandler not exposed to untrusted input (internal-only), so not directly affected</li><li>TVM lag: host already upgraded to 2.6.6 but inventory not yet refreshed</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each hit confirm the running version and whether the app exposes i18next-http-middleware&#x27;s missingKeyHandler / a saveMissing route to untrusted users, and whether the host is internet-facing. 2) Contain: on affected reachable apps apply a workaround now — mount the route behind auth, disable saveMissing, or set keySeparator:false — and schedule upgrade to i18next-fs-backend 2.6.6 (and i18next-http-middleware 3.9.7). 3) Hunt: correlate these hosts against UC1 web-log hits for __proto__/constructor.prototype payloads to see whether any were already probed.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-237-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-237-uc1-sentinel">Sentinel KQL</button>
-    </div>
-    <div class="tab-content active" id="art-237-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-48713&quot; or (SoftwareName has &quot;i18next-fs-backend&quot;)
-| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-237-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId == &quot;CVE-2026-48713&quot; or (SoftwareName has &quot;i18next-fs-backend&quot;)
-| project TimeGenerated, DeviceName, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by TimeGenerated desc</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-237-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-237-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-237-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-237-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-48713&quot;, &quot;CVE-2026-48714&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-237-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-48713&quot;, &quot;CVE-2026-48714&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-237-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-237-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-237-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-237-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-48713&quot;, &quot;CVE-2026-48714&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-237-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-48713&quot;, &quot;CVE-2026-48714&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

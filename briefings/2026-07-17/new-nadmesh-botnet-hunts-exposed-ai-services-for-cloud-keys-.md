@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### NadMesh C2 beacon to 209.99.186[.]235 / cdnorigin[.]net
 
-`UC_7_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceNetworkEvents
 
 ### NadMesh triple-persistence drops: hidden /tmp payloads + cron.d beacons
 
-`UC_7_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### Cloud credential file harvest by /tmp-resident process (AWS/Docker/.env)
 
-`UC_7_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_8_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceFileEvents
 
 ### Kubernetes ServiceAccount token / kubeconfig read by non-cluster process
 
-`UC_7_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_8_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceFileEvents
 
 ### Exposed AI/admin service spawning shell + download-execute (MCP/Docker/Jenkins/Redis RCE)
 
-`UC_7_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_8_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### rclone RC unauthenticated auth-bypass via options/set (CVE-2026-41176)
 
-`UC_7_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_8_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### Internal host fan-out scanning AI/admin service ports (ComfyUI/Ollama/Gradio/n8n/Docker)
 
-`UC_7_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_8_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceNetworkEvents
 
 ### Kubernetes cluster takeover via stolen SA token (RBAC / privileged pod / secrets)
 
-`UC_7_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ index=kubernetes sourcetype="kube:apiserver:audit" ((verb IN ("create","update",
 
 ### Exposed vulnerable AI/proxy software in NadMesh patch queue (Marimo/rclone/Spring/Struts)
 
-`UC_7_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_8_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -278,7 +278,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Token
 
-`UC_7_5` · phase: **install** · confidence: **High**
+`UC_8_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

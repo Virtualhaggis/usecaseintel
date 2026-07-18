@@ -18,9 +18,9 @@ A vulnerability was discovered in TSDProxy where it forwards its internal per-pr
 
 ## MITRE ATT&CK Techniques
 
+- **T1528** — Steal Application Access Token
 - **T1550.001** — Use Alternate Authentication Material: Application Access Token
 - **T1068** — Exploitation for Privilege Escalation
-- **T1528** — Steal Application Access Token
 
 ## Kill chain phases observed
 
@@ -28,53 +28,52 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TSDProxy management-API token replay via CLI to loopback (x-tsdproxy-auth-token + x-tsdproxy-id)
+### TSDProxy x-tsdproxy-auth-token leaked to backend in upstream HTTP requests
 
-`UC_116_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_116_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*x-tsdproxy-auth-token*" AND (Processes.process="*127.0.0.1:8080*" OR Processes.process="*x-tsdproxy-id*" OR Processes.process="*/api/v1/*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+index=* (sourcetype=*proxy* OR sourcetype=*access* OR sourcetype=*nginx* OR sourcetype=*tsdproxy* OR sourcetype=*syslog*) ("x-tsdproxy-auth-token" OR "X-Tsdproxy-Auth-Token")
+| stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(dest) as backends values(src) as sources by host, sourcetype
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+### TSDProxy management-port replay: loopback connection to 127.0.0.1:8080 by non-proxy process
+
+`UC_116_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="127.0.0.1" All_Traffic.dest_port=8080 by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process_name, host
+| `drop_dm_object_name(All_Traffic)`
+| search NOT process_name IN ("tsdproxy","tsdproxyd")
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessCommandLine has "x-tsdproxy-auth-token"
-| where ProcessCommandLine has_any ("127.0.0.1:8080","x-tsdproxy-id","/api/v1/")
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP in ("127.0.0.1", "::1") and RemotePort == 8080
+| where isnotempty(InitiatingProcessFileName) and InitiatingProcessFileName !contains "tsdproxy"
 | where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, LocalIP, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### TSDProxy management API access on loopback (/api/v1) with forged x-tsdproxy-id in proxy logs
+### TSDProxy management API abuse: /api/v1 request with forged x-tsdproxy-id and auth token
 
-`UC_116_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/api/v1/*" AND (Web.dest_port=8080 OR Web.dest="127.0.0.1")) by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-### TSDProxy forwarded auth-token harvest via backend header-reflection endpoint (/debug/headers)
-
-`UC_116_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_116_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("curl","wget","python","python3") AND (Processes.process="*/debug/headers*" OR Processes.process="*x-tsdproxy-auth-token*")) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("curl","wget","python","python3","curl.exe","wget.exe")
-| where ProcessCommandLine has_any ("/debug/headers","x-tsdproxy-auth-token")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
+index=* (sourcetype=*proxy* OR sourcetype=*access* OR sourcetype=*nginx* OR sourcetype=*tsdproxy* OR sourcetype=*syslog*) "x-tsdproxy-id" ("/api/v1/" OR "/api/v2/")
+| stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(src) as sources by host, sourcetype
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 
