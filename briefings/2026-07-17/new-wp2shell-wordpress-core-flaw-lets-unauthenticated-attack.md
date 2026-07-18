@@ -23,6 +23,7 @@ Adam Kues at Assetnote, Searchlight Cyber's attack surface managemen…
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1505.003** — Server Software Component: Web Shell
 - **T1005** — Data from Local System
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -30,40 +31,40 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Anonymous request to WordPress REST batch endpoint (/wp-json/batch/v1 + rest_route=/batch/v1)
+### Anonymous request to WordPress REST batch endpoint (/batch/v1 path + query-string variant)
 
 `UC_0_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url="*/wp-json/batch/v1*" OR Web.url="*rest_route=/batch/v1*" OR Web.uri_path="*/batch/v1*" OR Web.uri_query="*rest_route=/batch/v1*") by Web.src Web.dest Web.http_method Web.url Web.uri_path Web.uri_query Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*/wp-json/batch/v1*" OR Web.uri_path="*/batch/v1*" OR Web.uri_query="*rest_route=/batch/v1*" OR Web.uri_query="*rest_route=%2Fbatch%2Fv1*" OR Web.uri_query="*author__not_in*") by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | sort - count
 ```
 
-### WordPress batch endpoint request carrying SQL-injection / route-confusion markers (wp2shell)
+### Successful (2xx) response to WordPress /batch/v1 from a first-seen source IP
 
 `UC_0_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*/batch/v1*" OR Web.url="*rest_route=/batch/v1*") (Web.url="*union*select*" OR Web.url="*information_schema*" OR Web.url="*sleep(*" OR Web.url="*benchmark(*" OR Web.url="*extractvalue(*" OR Web.url="*updatexml(*" OR Web.url="*orderby*" OR Web.url="*/*!*" OR Web.url="*0x*") by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*/batch/v1*" OR Web.uri_query="*rest_route=/batch/v1*" OR Web.uri_query="*rest_route=%2Fbatch%2Fv1*") (Web.status=200 OR Web.status=207) by Web.src, Web.dest, Web.http_method, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | sort - count
 ```
 
-### Web-server user (apache/nginx/php-fpm) spawns a shell or scripting interpreter
+### WordPress web server process spawns a shell/interpreter (wp2shell code execution)
 
-`UC_0_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_0_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("apache2","httpd","nginx","php-fpm","php","php7.4","php8.1","php8.2","php8.3") Processes.process_name IN ("sh","bash","dash","zsh","python","python3","perl","ruby","nc","ncat","curl","wget") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("apache2","httpd","nginx","php-fpm","php-fpm7.4","php-fpm8.1","php-fpm8.2","php","w3wp.exe")) (Processes.process_name IN ("sh","bash","dash","python","python3","perl","ruby","nc","ncat","cmd.exe","powershell.exe")) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(24h)
-| where InitiatingProcessFileName in~ ("apache2","httpd","nginx","php-fpm","php","php7.4","php8.1","php8.2","php8.3")
-| where FileName in~ ("sh","bash","dash","zsh","python","python3","perl","ruby","nc","ncat","curl","wget")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has_any ("apache2","httpd","nginx","php-fpm","php","w3wp.exe")
+| where FileName in~ ("sh","bash","dash","python","python3","perl","ruby","nc","ncat","cmd.exe","powershell.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
@@ -73,38 +74,59 @@ DeviceProcessEvents
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified") (Filesystem.file_name="*.php" OR Filesystem.file_name="*.phtml" OR Filesystem.file_name="*.php5" OR Filesystem.file_name="*.phar") (Filesystem.file_path="*wp-content/uploads*" OR Filesystem.file_path="*wp-content/plugins*" OR Filesystem.file_path="*wp-content/mu-plugins*" OR Filesystem.file_path="*/tmp/*") by Filesystem.dest Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/wp-content/uploads/*" OR Filesystem.file_path="*/wp-content/plugins/*" OR Filesystem.file_path="*/tmp/*") (Filesystem.file_name="*.php" OR Filesystem.file_name="*.phtml" OR Filesystem.file_name="*.php5" OR Filesystem.file_name="*.php7") by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name, Filesystem.action | `drop_dm_object_name(Filesystem)` | search process_name IN ("apache2","httpd","nginx","php-fpm","php","w3wp.exe") | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(24h)
+| where Timestamp > ago(7d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName in~ ("apache2","httpd","nginx","php-fpm","php","php7.4","php8.1","php8.2","php8.3")
-| where FileName endswith ".php" or FileName endswith ".phtml" or FileName endswith ".php5" or FileName endswith ".phar"
-| where FolderPath has_any ("wp-content/uploads","wp-content/plugins","wp-content/mu-plugins","/tmp/")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| where FileName endswith ".php" or FileName endswith ".phtml" or FileName endswith ".php5" or FileName endswith ".php7"
+| where FolderPath has_any ("/wp-content/uploads/","/wp-content/plugins/","\\wp-content\\uploads\\","\\wp-content\\plugins\\","/tmp/")
+| where InitiatingProcessFileName has_any ("apache2","httpd","nginx","php-fpm","php","w3wp.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### wp-config.php read by WordPress web-server or shell process (DB credential theft)
+### wp-config.php read/exfiltrated by shell utility on WordPress host
 
 `UC_0_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*wp-config.php*" Processes.process_name IN ("cat","grep","less","more","head","tail","php","strings","awk","sed","xxd","base64","curl") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*wp-config.php*" (Processes.process_name IN ("cat","grep","less","more","head","tail","curl","wget","base64","xxd","tar","cp","strings","awk","sed","nl","php")) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(24h)
+| where Timestamp > ago(7d)
 | where ProcessCommandLine has "wp-config.php"
-| where FileName in~ ("cat","grep","less","more","head","tail","php","strings","awk","sed","xxd","base64","curl")
-| where InitiatingProcessFileName in~ ("sh","bash","dash","zsh","apache2","httpd","nginx","php-fpm","php") or AccountName in~ ("www-data","apache","nginx","httpd","daemon")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| where FileName in~ ("cat","grep","less","more","head","tail","curl","wget","base64","xxd","tar","cp","strings","awk","sed","nl","php")
+| where InitiatingProcessFileName has_any ("apache2","httpd","nginx","php-fpm","php","sh","bash","dash")
+   or InitiatingProcessAccountName in~ ("www-data","apache","nginx","httpd","daemon")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Reverse-shell egress from web-spawned interpreter on WordPress host
+
+`UC_0_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name IN ("sh","bash","dash","python","python3","perl","ruby","nc","ncat")) All_Traffic.direction=outbound NOT (All_Traffic.dest_ip=10.0.0.0/8 OR All_Traffic.dest_ip=172.16.0.0/12 OR All_Traffic.dest_ip=192.168.0.0/16 OR All_Traffic.dest_ip=127.0.0.0/8) by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("sh","bash","dash","python","python3","perl","ruby","nc","ncat")
+| where InitiatingProcessParentFileName has_any ("apache2","httpd","nginx","php-fpm","php")
+| where RemoteIPType == "Public"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
@@ -118,4 +140,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
