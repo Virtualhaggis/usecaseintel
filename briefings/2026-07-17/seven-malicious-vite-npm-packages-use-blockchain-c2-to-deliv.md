@@ -24,12 +24,11 @@ The malicious package campaign, codenamed ViteVenom by Checkmarx, marks an expan
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.002** — Bidirectional Communication
 - **T1104** — Multi-Stage Channels
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
+- **T1059.004** — Unix Shell
+- **T1204.001** — Malicious Link
+- **T1546.004** — Unix Shell Configuration Modification
 
 ## Kill chain phases observed
 
@@ -37,33 +36,39 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ViteVenom malicious npm packages written to node_modules (@vitejs namespace impersonation)
+### ViteVenom malicious @vite* npm package tree written to node_modules
 
 `UC_4_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*@uw010010/vite-tree*" OR Filesystem.file_path="*@uw010010\\vite-tree*" OR Filesystem.file_path="*@vite-tab/tab*" OR Filesystem.file_path="*@vite-tab\\tab*" OR Filesystem.file_path="*@vite-ln/build-ts*" OR Filesystem.file_path="*@vite-ln\\build-ts*" OR Filesystem.file_path="*@vite-mcp/vite-type*" OR Filesystem.file_path="*@vite-mcp\\vite-type*" OR Filesystem.file_path="*@vite-pro/vite-ui*" OR Filesystem.file_path="*@vite-pro\\vite-ui*" OR Filesystem.file_path="*@vitets/vite-ts*" OR Filesystem.file_path="*@vitets\\vite-ts*" OR Filesystem.file_path="*@vite-ts/vite-ui*" OR Filesystem.file_path="*@vite-ts\\vite-ui*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*node_modules*" AND (Filesystem.file_path="*uw010010*vite-tree*" OR Filesystem.file_path="*vite-tab*tab*" OR Filesystem.file_path="*vite-ln*build-ts*" OR Filesystem.file_path="*vite-mcp*vite-type*" OR Filesystem.file_path="*vite-pro*vite-ui*" OR Filesystem.file_path="*vitets*vite-ts*" OR Filesystem.file_path="*vite-ts*vite-ui*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where FolderPath has_any ("@uw010010\\vite-tree","@uw010010/vite-tree","@vite-tab\\tab","@vite-tab/tab","@vite-ln\\build-ts","@vite-ln/build-ts","@vite-mcp\\vite-type","@vite-mcp/vite-type","@vite-pro\\vite-ui","@vite-pro/vite-ui","@vitets\\vite-ts","@vitets/vite-ts","@vite-ts\\vite-ui","@vite-ts/vite-ui")
+| where ActionType in ("FileCreated","FileRenamed")
 | where FolderPath has "node_modules"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
+| where (FolderPath contains "uw010010" and FolderPath contains "vite-tree")
+   or (FolderPath contains "vite-tab" and FolderPath contains "tab")
+   or (FolderPath contains "vite-ln" and FolderPath contains "build-ts")
+   or (FolderPath contains "vite-mcp" and FolderPath contains "vite-type")
+   or (FolderPath contains "vite-pro" and FolderPath contains "vite-ui")
+   or (FolderPath contains "vitets" and FolderPath contains "vite-ts")
+   or (FolderPath contains "vite-ts" and FolderPath contains "vite-ui")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Files=make_set(FolderPath, 20) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by FirstSeen desc
 ```
 
-### Node process contacting Tron/Aptos/BSC blockchain dead-drop C2 endpoints
+### Blockchain dead-drop C2 egress to Tron/Aptos/BSC RPC from build host
 
-`UC_4_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query IN ("api.trongrid.io","fullnode.mainnet.aptoslabs.com","bsc-dataseed.binance.org","bsc-rpc.publicnode.com")) by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query="api.trongrid.io" OR DNS.query="fullnode.mainnet.aptoslabs.com" OR DNS.query="bsc-dataseed.binance.org" OR DNS.query="bsc-rpc.publicnode.com") by DNS.src DNS.dest DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -71,48 +76,49 @@ DeviceFileEvents
 DeviceNetworkEvents
 | where Timestamp > ago(14d)
 | where RemoteUrl has_any ("api.trongrid.io","fullnode.mainnet.aptoslabs.com","bsc-dataseed.binance.org","bsc-rpc.publicnode.com")
-| where InitiatingProcessFileName has_any ("node.exe","node","npm","npm.cmd","pnpm","yarn","vite")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Endpoints=make_set(RemoteUrl, 10), ConnCount=count()
+    by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by FirstSeen desc
 ```
 
-### Node/npm build process spawning a shell or download utility (ViteVenom loader execution)
+### Node.js build process spawning an interactive/reverse shell
 
-`UC_4_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_4_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","node","npm","npm.cmd","pnpm","yarn","vite")) AND (Processes.process_name IN ("bash","sh","zsh","cmd.exe","powershell.exe","pwsh","curl","curl.exe","wget")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(process,"(?i)(-i |/dev/tcp|bash -c|-e /bin|iex|invoke-expression|downloadstring|-nop|-enc |curl |wget )") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","node","npm.cmd","npm")) AND (Processes.process_name IN ("bash","sh","zsh","cmd.exe","powershell.exe","pwsh")) AND (Processes.process="*-i*" OR Processes.process="*/dev/tcp/*" OR Processes.process="*/dev/udp/*" OR Processes.process="* nc *" OR Processes.process="*ncat*" OR Processes.process="*curl *" OR Processes.process="*wget *" OR Processes.process="*DownloadString*" OR Processes.process="*Invoke-WebRequest*") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where InitiatingProcessFileName has_any ("node.exe","node","npm","npm.cmd","pnpm","yarn","vite")
-| where FileName in~ ("bash","sh","zsh","cmd.exe","powershell.exe","pwsh","curl","curl.exe","wget")
-| where ProcessCommandLine has_any ("-i ","/dev/tcp","bash -c","-e /bin","IEX","Invoke-Expression","DownloadString","-nop","-enc ","curl ","wget ")
+| where InitiatingProcessFileName in~ ("node.exe","node","npm.cmd","npm")
+| where FileName in~ ("bash","sh","zsh","cmd.exe","powershell.exe","pwsh")
+| where ProcessCommandLine has_any ("/dev/tcp/","/dev/udp/","bash -i","sh -i"," nc ","ncat","curl ","wget ","DownloadString","Invoke-WebRequest")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Shell profile persistence (.bashrc/.zshrc/.profile) written by node/npm (ViteVenom RAT backdoor)
+### Shell profile (.bashrc/.zshrc/.profile) modified by node/npm
 
 `UC_4_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (".bashrc",".zshrc",".profile",".bash_profile",".zprofile")) AND (Filesystem.action IN ("created","modified","write")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (".bashrc",".zshrc",".profile",".bash_profile",".zprofile")) AND (Filesystem.process_name IN ("node","node.exe","npm","npm.cmd","pnpm","yarn") OR Filesystem.file_path="*node_modules*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where ActionType in ("FileModified","FileCreated")
 | where FileName in~ (".bashrc",".zshrc",".profile",".bash_profile",".zprofile")
-| where InitiatingProcessFileName has_any ("node.exe","node","npm","npm.cmd","pnpm","yarn","vite")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where InitiatingProcessFileName in~ ("node","node.exe","npm","npm.cmd","pnpm","yarn","sh","bash","zsh")
+     or InitiatingProcessCommandLine has "node_modules"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
@@ -291,4 +297,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
