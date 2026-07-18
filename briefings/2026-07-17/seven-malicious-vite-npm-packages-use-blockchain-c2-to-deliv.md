@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Installation of ViteVenom malicious scoped npm packages (@vitejs typosquats)
 
-`UC_4_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Node/Vite build process contacting Tron, Aptos or BSC blockchain C2 infrastructure
 
-`UC_4_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### Unix shell profile (.bashrc/.zshrc/.profile) modified by npm/node build process
 
-`UC_4_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceFileEvents
 
 ### Node/Vite build process spawning shell with reverse-shell indicators (import-time RAT execution)
 
-`UC_4_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_5_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

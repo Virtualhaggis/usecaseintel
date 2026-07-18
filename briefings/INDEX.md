@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2581 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2580 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -44,7 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new clicklock macos malware traps users into revealing login](./2026-07-16/new-clicklock-macos-malware-traps-users-into-revealing-login.md)
 - [openai s gpt red automates prompt injection testing to harde](./2026-07-16/openai-s-gpt-red-automates-prompt-injection-testing-to-harde.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
-- [scattered spider members behind tfl hack get five years in p](./2026-07-16/scattered-spider-members-behind-tfl-hack-get-five-years-in-p.md)
 - [threatsday game cheat spyware 24 hour ransomware chrome sync](./2026-07-16/threatsday-game-cheat-spyware-24-hour-ransomware-chrome-sync.md)
 - [two scattered spider hackers get 5 5 years each for 29 milli](./2026-07-16/two-scattered-spider-hackers-get-5-5-years-each-for-29-milli.md)
 - [uat 11795 deploys novel starland rat and bespoke wldr c2 imp](./2026-07-16/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-imp.md)

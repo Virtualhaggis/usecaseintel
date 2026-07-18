@@ -1,129 +1,3 @@
-<article class="card" id="art-2664" data-art-slug="2022-01-18-cisa-kev-cve-2020-11978-apache-airflow-command-injection"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2020-11978 — Apache Airflow Command Injection A remote code/command injection vulnerability was discovered in one of the example DAGs shipped with Airflow. Vendor: Apache, Product: Airflow. Federal patch due: 2022-07-18. CVE-2020-11978  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-01-18-cisa-kev-cve-2020-11978-apache-airflow-command-injection" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-11978 — Apache Airflow Command Injection</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2022-01-18</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">A remote code/command injection vulnerability was discovered in one of the example DAGs shipped with Airflow. Vendor: Apache, Product: Airflow. Federal patch due: 2022-07-18.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-11978</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-2664-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-2664"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-2664-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2664-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2664-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2664-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2664-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-11978&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2664-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-11978&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2664-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2664-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2664-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2664-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-11978&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-2664-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-11978&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-2665" data-art-slug="2022-01-18-cisa-kev-cve-2020-13927-apache-airflow-s-experimental-api-au"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -6031,6 +5905,327 @@ level: medium
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
 | sort - count</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-2695" data-art-slug="2021-12-29-new-log4j-2-17-1-fixes-cve-2021-44832-remote-code-execution-"
+  data-phases="c2,exploit,install,recon,weapon" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="New Log4j 2.17.1 fixes CVE-2021-44832 remote code execution (but it’s not as bad as it sounds) This new CVE-2021-44832 security vulnerability is affecting versions up to 2.17.0, which was previously thought to be fixed. This vulnerability is similar in nature to CVE-2021-4104 which affected the 1.x branch of Log4j. CVE-2021-44832 CVE-2021-4104 T1190 [LLM] Log4j logging configuration file modified (CVE-2021-44832 JDBC Appender precondition) [LLM] Java process outbound LDAP/RMI egress (CVE-2021-44832 remote JNDI data source load) [LLM] Vulnerable Apache Log4j inventory exposed to CVE-2021-44832 (pre-2.17.1/2.12.4/2.3.2) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2021-12-29-new-log4j-2-17-1-fixes-cve-2021-44832-remote-code-execution-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/new-log4j-2-17-1-fixes-cve-2021-44832-remote-code-execution-but-its-not-as-bad-as-it-sounds/" target="_blank" rel="noopener">New Log4j 2.17.1 fixes CVE-2021-44832 remote code execution (but it’s not as bad as it sounds)</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2021-12-29</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">This new CVE-2021-44832 security vulnerability is affecting versions up to 2.17.0, which was previously thought to be fixed. This vulnerability is similar in nature to CVE-2021-4104 which affected the 1.x branch of Log4j.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-44832</span> <span class="ind cve">CVE-2021-4104</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-2695-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-2695"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-2695-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Vulnerable Apache Log4j inventory exposed to CVE-2021-44832 (pre-2.17.1/2.12.4/2.3.2) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Log4j logging configuration file modified (CVE-2021-44832 JDBC Appender precondition)</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Java process outbound LDAP/RMI egress (CVE-2021-44832 remote JNDI data source load)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="010dff5c4c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Log4j logging configuration file modified (CVE-2021-44832 JDBC Appender precondition)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="010dff5c4c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for creation/modification of Apache Log4j configuration files (log4j2.xml/.properties/.yaml/.json, log4j.xml). CVE-2021-44832 requires an attacker to write to the logging config to insert a JDBC Appender whose DataSource references a remote JNDI URI, so an unexpected write to these files is the highest-fidelity precondition signal for this specific CVE.
+
+Rationale: Uses the exact CVE-2021-44832 precondition confirmed by Checkmarx/Apache: the attacker must have write access to the Log4j config file to add a JDBC Appender with a JNDI DataSource. The concrete config filenames are the article-specific pivot; pairs naturally with the Java LDAP/RMI egress UC.
+
+Cross-checked against:
+  • https://checkmarx.com/blog/cve-2021-44832-apache-log4j-2-17-0-arbitrary-code-execution-via-jdbcappender-datasource-element/
+  • https://logging.apache.org/log4j/2.x/security.html
+  • https://www.rapid7.com/db/vulnerabilities/apache-log4j-core-cve-2021-44832/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow">T1574</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CI/CD or config-management tooling (Ansible, Puppet, Chef, Salt) rolling out application config</li><li>Application installer/MSI writing a default log4j2.xml on first run</li><li>Developer editing logging config on a build/dev host</li><li>Container image rebuilds rewriting bundled log4j config</li><li>Scheduled redeploys that overwrite app config from a golden source</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;ansible.exe&quot;,&quot;puppet.exe&quot;,&quot;ruby.exe&quot;,&quot;salt-minion.exe&quot;,&quot;msiexec.exe&quot;,&quot;setup.exe&quot;,&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;docker.exe&quot;,&quot;dockerd.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the modified config and check the JDBC Appender / Configuration block for a DataSource jndiName or any &#x27;ldap:&#x27;/&#x27;rmi:&#x27;/&#x27;dns:&#x27; URI; confirm the writing process (InitiatingProcessFileName) is a sanctioned deployment tool vs an interactive shell/web-server child. 2) Contain: if a remote JNDI URI is present, isolate the host, kill the affected JVM, and restore the config from a trusted baseline. 3) Hunt: pivot on the host&#x27;s java/javaw outbound LDAP/RMI connections (UC2) and confirm the Log4j version against CVE-2021-44832 (UC3); review who had write access to the config path.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2695-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2695-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2695-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-2695-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-2695-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-2695-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2695-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FileName in~ (&quot;log4j2.xml&quot;,&quot;log4j2.properties&quot;,&quot;log4j2.yaml&quot;,&quot;log4j2.yml&quot;,&quot;log4j2.json&quot;,&quot;log4j.xml&quot;,&quot;log4j.properties&quot;)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, FileName, FolderPath, PreviousFileName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-2695-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType startswith &quot;File&quot;
+| where TargetFileName in~ (&quot;log4j2.xml&quot;,&quot;log4j2.properties&quot;,&quot;log4j2.yaml&quot;,&quot;log4j2.yml&quot;,&quot;log4j2.json&quot;,&quot;log4j.xml&quot;,&quot;log4j.properties&quot;)
+| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName, ActorUsername, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-2695-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Log4j Logging Configuration File Write (CVE-2021-44832 precondition)
+id: 6e9d1a4c-3b2f-4d7e-9a1c-2f0b8e5d4c11
+description: Detects creation or modification of Apache Log4j configuration files, the required precondition for CVE-2021-44832 where an attacker inserts a JDBC Appender referencing a remote JNDI URI.
+references:
+  - https://snyk.io/blog/new-log4j-2-17-1-fixes-cve-2021-44832-remote-code-execution-but-its-not-as-bad-as-it-sounds/
+  - https://checkmarx.com/blog/cve-2021-44832-apache-log4j-2-17-0-arbitrary-code-execution-via-jdbcappender-datasource-element/
+author: SOC Detection Engineering
+date: 2026/06/29
+tags:
+  - attack.t1574
+  - attack.t1190
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    TargetFilename|endswith:
+      - &#x27;\log4j2.xml&#x27;
+      - &#x27;\log4j2.properties&#x27;
+      - &#x27;\log4j2.yaml&#x27;
+      - &#x27;\log4j2.yml&#x27;
+      - &#x27;\log4j2.json&#x27;
+      - &#x27;\log4j.xml&#x27;
+      - &#x27;\log4j.properties&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-2695-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\\log4j2.xml OR *\\log4j2.properties OR *\\log4j2.yaml OR *\\log4j2.yml OR *\\log4j2.json OR *\\log4j.xml OR *\\log4j.properties OR *\\Log4j2.xml OR *\\LOG4J2.XML)</code></pre></div>
+    <div class="tab-content" id="art-2695-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/\\log4j2?\.(xml|properties|ya?ml|json)$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-2695-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2695-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2695-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2695-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;log4j2.xml&quot; OR Filesystem.file_name=&quot;log4j2.properties&quot; OR Filesystem.file_name=&quot;log4j2.yaml&quot; OR Filesystem.file_name=&quot;log4j2.yml&quot; OR Filesystem.file_name=&quot;log4j2.json&quot; OR Filesystem.file_name=&quot;log4j.xml&quot; OR Filesystem.file_name=&quot;log4j.properties&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2695-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;log4j2.xml&quot; OR Filesystem.file_name=&quot;log4j2.properties&quot; OR Filesystem.file_name=&quot;log4j2.yaml&quot; OR Filesystem.file_name=&quot;log4j2.yml&quot; OR Filesystem.file_name=&quot;log4j2.json&quot; OR Filesystem.file_name=&quot;log4j.xml&quot; OR Filesystem.file_name=&quot;log4j.properties&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8b777b9520" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Java process outbound LDAP/RMI egress (CVE-2021-44832 remote JNDI data source load)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="8b777b9520" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects java.exe/javaw.exe making outbound connections to LDAP/RMI ports (389/636/1099/1389) to a public IP. CVE-2021-44832&#x27;s JDBC Appender DataSource resolves a remote JNDI URI, causing the JVM to fetch and load a remote Java class — that fetch is observable as Java egress on these protocols. High-fidelity when correlated with a fresh Log4j config write (UC1).
+
+Rationale: Maps the confirmed exploitation primitive (Checkmarx/Apache: JDBC Appender DataSource resolving an attacker-controlled ldap://host:1389/Exploit JNDI URI) onto observable network telemetry — a JVM reaching a public LDAP/RMI endpoint. Ports 1099 (RMI) and 1389 (common JNDI LDAP) plus a public destination are strong signal; pairs with UC1 to disambiguate from benign directory traffic.
+
+Cross-checked against:
+  • https://checkmarx.com/blog/cve-2021-44832-apache-log4j-2-17-0-arbitrary-code-execution-via-jdbcappender-datasource-element/
+  • https://www.bleepingcomputer.com/news/security/log4j-2171-out-now-fixes-new-remote-code-execution-bug/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Java app legitimately authenticating to an external/cloud LDAP directory on 389/636</li><li>Distributed Java application using RMI (1099) to a partner/SaaS endpoint</li><li>Monitoring/APM agents probing LDAP over the internet</li><li>Federated identity connectors performing outbound LDAPS</li><li>Pen-test / vuln-scanner traffic from a Java-based scanner</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemotePort in (389,636) and RemoteUrl has_any (&quot;ldap.&quot;,&quot;directory.&quot;,&quot;ad.&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve the RemoteIP/RemoteUrl reputation and check whether this JVM has any business reason to reach an external LDAP/RMI server; correlate to a Log4j config write on the same host in the prior 24h (UC1). 2) Contain: if the destination is untrusted, block the egress at the firewall, isolate the host, and capture a JVM thread/heap dump before killing the process. 3) Hunt: enumerate child processes of the JVM for dropped classes/webshells, search the org for other Java hosts hitting the same IP, and verify Log4j version exposure (UC3).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2695-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2695-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2695-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-2695-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-2695-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-2695-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2695-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;)
+| where RemotePort in (389, 636, 1099, 1389)
+| where RemoteIPType == &quot;Public&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-2695-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstPortNumber in (389, 636, 1099, 1389)
+| where NetworkDirection =~ &quot;Outbound&quot;
+| where not(ipv4_is_private(DstIpAddr))
+| project TimeGenerated, SrcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, DvcAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-2695-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Java Outbound LDAP/RMI Connection (CVE-2021-44832 remote JNDI load)
+id: 9c2f7d11-8a4e-4b6c-bd31-5e0a1c7f2d44
+description: Detects java.exe/javaw.exe initiating outbound LDAP or RMI connections, the remote class-load channel for CVE-2021-44832&#x27;s JDBC Appender JNDI DataSource.
+references:
+  - https://snyk.io/blog/new-log4j-2-17-1-fixes-cve-2021-44832-remote-code-execution-but-its-not-as-bad-as-it-sounds/
+  - https://www.rapid7.com/db/vulnerabilities/apache-log4j-core-cve-2021-44832/
+author: SOC Detection Engineering
+date: 2026/06/29
+tags:
+  - attack.t1190
+  - attack.t1105
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;\java.exe&#x27;
+      - &#x27;\javaw.exe&#x27;
+    Initiated: &#x27;true&#x27;
+    DestinationPort:
+      - 389
+      - 636
+      - 1099
+      - 1389
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-2695-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\\java.exe OR *\\javaw.exe OR *\\Java.exe) (@DestinationPort:389 OR @DestinationPort:636 OR @DestinationPort:1099 OR @DestinationPort:1389)</code></pre></div>
+    <div class="tab-content" id="art-2695-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/\\javaw?\.exe$/i
+| in(RemotePort, values=[&quot;389&quot;,&quot;636&quot;,&quot;1099&quot;,&quot;1389&quot;])
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-2695-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2695-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2695-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2695-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=&quot;java&quot; OR All_Traffic.process_name=&quot;java.exe&quot; OR All_Traffic.process_name=&quot;javaw.exe&quot;) (All_Traffic.dest_port=389 OR All_Traffic.dest_port=636 OR All_Traffic.dest_port=1099 OR All_Traffic.dest_port=1389) All_Traffic.direction=outbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2695-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=&quot;java&quot; OR All_Traffic.process_name=&quot;java.exe&quot; OR All_Traffic.process_name=&quot;javaw.exe&quot;) (All_Traffic.dest_port=389 OR All_Traffic.dest_port=636 OR All_Traffic.dest_port=1099 OR All_Traffic.dest_port=1389) All_Traffic.direction=outbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="245fe9ab65" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Vulnerable Apache Log4j inventory exposed to CVE-2021-44832 (pre-2.17.1/2.12.4/2.3.2)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="245fe9ab65" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Exposure hunt that surfaces every asset where the vulnerability-management feed reports CVE-2021-44832, i.e. Log4j-core older than the fixed 2.17.1 (Java 8+), 2.12.4 (Java 7) or 2.3.2 (Java 6) releases named in the article. Drives prioritised patching for the medium-severity JDBC Appender RCE.
+
+Rationale: Uses the concrete CVE-2021-44832 identifier and the article&#x27;s explicit fixed-version boundaries (2.17.1 / 2.12.4 / 2.3.2). A vuln-management table keyed on the CVE is the cleanest, lowest-FP way to operationalise the article&#x27;s core &#x27;upgrade now&#x27; recommendation.
+
+Cross-checked against:
+  • https://logging.apache.org/log4j/2.x/security.html
+  • https://www.rapid7.com/db/vulnerabilities/apache-log4j-core-cve-2021-44832/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Asset already patched but scanner cache is stale (re-scan to confirm)</li><li>Shaded/relocated log4j inside a fat JAR the scanner version-detects imprecisely</li><li>Backported vendor build (e.g. RHEL) that carries the fix but reports the base version</li><li>Test/lab hosts that are out of remediation scope</li><li>Embedded appliance firmware where the bundled log4j cannot be independently upgraded</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported Log4j-core version is genuinely below 2.17.1/2.12.4/2.3.2 and rank assets by internet exposure and who can write the logging config (the CVE&#x27;s precondition). 2) Contain: schedule upgrade to the fixed release; where immediate patch isn&#x27;t possible, lock down write permissions on the log4j config files and (on fixed lines) confirm log4j2.enableJndiJdbc is not set to true. 3) Hunt: on any exposed/internet-facing match, run UC1 and UC2 against that host to rule out an existing config tamper or LDAP/RMI callback.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2695-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2695-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2695-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2695-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2021-44832&quot;
+| summarize arg_max(Timestamp, *) by DeviceId, SoftwareName, SoftwareVersion
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-2695-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2021-44832&quot;
+| summarize arg_max(TimeGenerated, *) by DeviceId, SoftwareName, SoftwareVersion
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-2695-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2695-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2695-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2695-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2021-44832&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-2695-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2021-44832&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2695-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2695-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2695-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2695-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-44832&quot;, &quot;CVE-2021-4104&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2695-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-44832&quot;, &quot;CVE-2021-4104&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2695-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2695-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2695-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2695-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-44832&quot;, &quot;CVE-2021-4104&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-2695-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-44832&quot;, &quot;CVE-2021-4104&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

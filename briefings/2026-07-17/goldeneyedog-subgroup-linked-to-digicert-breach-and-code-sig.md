@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### GoldenEyeDog .scr payload extracted from ZIP delivered via support/chat channel
 
-`UC_7_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_8_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### Golden Gh0st Loader DLL side-load with encrypted update.log payload
 
-`UC_7_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceImageLoadEvents
 
 ### Execution of known Golden Gh0st RAT / Zhong Stealer artifacts (stolen-cert-signed)
 
-`UC_7_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ union DeviceProcessEvents, DeviceImageLoadEvents, DeviceFileEvents
 
 ### Golden Gh0st RAT C2 to GoldenEyeDog infrastructure (IPs + qaqkongtiao.com)
 
-`UC_7_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceNetworkEvents
 
 ### Golden Gh0st RAT credential collection from 360/QQ browsers and Skype
 
-`UC_7_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Corporate endpoint browsing the ascarding.net carding forum
 
-`UC_11_1` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_12_1` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### Internal host connecting to NetNut / Alarum residential-proxy infrastructure
 
-`UC_11_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

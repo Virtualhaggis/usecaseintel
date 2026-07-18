@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Anonymous request to WordPress REST batch endpoint (/batch/v1 path + query-string variant)
 
-`UC_0_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_1_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Successful (2xx) response to WordPress /batch/v1 from a first-seen source IP
 
-`UC_0_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### WordPress web server process spawns a shell/interpreter (wp2shell code execution)
 
-`UC_0_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### PHP webshell dropped in WordPress web root by web-server process
 
-`UC_0_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### wp-config.php read/exfiltrated by shell utility on WordPress host
 
-`UC_0_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### Reverse-shell egress from web-spawned interpreter on WordPress host
 
-`UC_0_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

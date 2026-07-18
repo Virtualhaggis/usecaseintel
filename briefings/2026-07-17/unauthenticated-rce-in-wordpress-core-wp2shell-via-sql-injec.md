@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### WordPress wp2shell REST batch endpoint exploitation (/wp-json/batch/v1 + author__not_in SQLi)
 
-`UC_1_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Web server daemon spawning shell/interpreter after WordPress RCE (php-fpm/apache/nginx child)
 
-`UC_1_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### Web shell PHP file written into WordPress directories by web daemon (wp2shell persistence)
 
-`UC_1_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_2_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
