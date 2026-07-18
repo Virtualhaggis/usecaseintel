@@ -937,14 +937,14 @@ level: medium
 </details></div>
 </article>
 <article class="card" id="art-122" data-art-slug="2026-07-10-ghsa-critical-cve-2026-54069-siyuan-unauthenticated-admin-ap"
-  data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="crit"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1176,T1195.002"
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network"
   data-targets="vcs,windows"
-  data-uc-count="6" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-54069: SiYuan: Unauthenticated Admin API Access via Blanket chrome-extension:// Origin Allowlist SiYuan: Unauthenticated Admin API Access via Blanket chrome-extension:// Origin Allowlist CVE-2026-54069 T1176 T1195.002 [LLM] Browser process connecting to SiYuan kernel admin port 127.0.0.1:6806 (CVE-2026-54069) [LLM] Vulnerable SiYuan Note install (&lt;= v3.6.5) exposed to CVE-2026-54069 Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Trusted vendor binary / installer launching unusual children">
+  data-uc-count="7" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-54069: SiYuan: Unauthenticated Admin API Access via Blanket chrome-extension:// Origin Allowlist SiYuan: Unauthenticated Admin API Access via Blanket chrome-extension:// Origin Allowlist CVE-2026-54069 T1176 T1195.002 [LLM] External browser process connects to SiYuan kernel loopback admin port 127.0.0.1:6806 [LLM] SiYuan kernel config (conf.json) written — audit for empty/missing AccessAuthCode [LLM] Browser extension manifest rewritten adding networking/host permissions (supply-chain) Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Trusted vendor binary / installer launching unusual children">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-10-ghsa-critical-cve-2026-54069-siyuan-unauthenticated-admin-ap" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -953,9 +953,9 @@ level: medium
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-10</span>
-    <span>6 use cases</span>
+    <span>7 use cases</span>
     <span>2 techniques</span>
-    <span>6 kill-chain phases detected</span>
+    <span>5 kill-chain phases detected</span>
   </div>
   <p class="summary">SiYuan: Unauthenticated Admin API Access via Blanket chrome-extension:// Origin Allowlist</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54069</span></div>
@@ -971,10 +971,10 @@ level: medium
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 3</div>
@@ -1001,35 +1001,33 @@ level: medium
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable SiYuan Note install (&lt;= v3.6.5) exposed to CVE-2026-54069</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] SiYuan kernel config (conf.json) written — audit for empty/missing AccessAuthCode · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Browser process connecting to SiYuan kernel admin port 127.0.0.1:6806 (CVE-2026-54069) · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Suspicious browser extension installation</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] External browser process connects to SiYuan kernel loopback admin port 127.0.0.1:6806 · Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Browser extension manifest rewritten adding networking/host permissions (supply-chain) · Suspicious browser extension installation</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="047cfda8ae" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="6dcf76cb84" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
   <summary>
-    <span class="uc-title">Browser process connecting to SiYuan kernel admin port 127.0.0.1:6806 (CVE-2026-54069)</span>
+    <span class="uc-title">External browser process connects to SiYuan kernel loopback admin port 127.0.0.1:6806</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="047cfda8ae" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="6dcf76cb84" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the network signature of the SiYuan chrome-extension:// auth bypass: a Chromium-family browser process opening a loopback connection to the SiYuan kernel admin API on 127.0.0.1:6806. Legitimate SiYuan API traffic originates from SiYuan.exe / SiYuan-Kernel.exe, so a browser (where a malicious/compromised extension&#x27;s service worker runs) hitting 6806 is the exploit&#x27;s on-wire tell.
+    <div class="uc-desc">Hunts a Chrome/Chromium/Edge browser process opening a loopback connection to the SiYuan Note kernel HTTP server on port 6806. Per CVE-2026-54069 the kernel blanket-trusts any `chrome-extension://` Origin as RoleAdministrator, so a browser-context connection to 6806 (as opposed to the Electron siyuan.exe app itself) is the in-flight exploitation signal for a malicious/compromised extension exfiltrating notes or injecting stored XSS.
 
-Rationale: Uses the article&#x27;s concrete kernel endpoint 127.0.0.1:6806 plus the exploit precondition that the caller is a browser (where the extension service worker runs) rather than SiYuan&#x27;s own kernel/Electron process. Corroborated port/process via GitLab advisory and DeepWiki (SiYuan-Kernel on 6806).
+Rationale: Uses the article&#x27;s exact kernel bind address (127.0.0.1) and port (6806) plus the browser-process constraint that distinguishes a rogue extension from SiYuan&#x27;s own Electron siyuan.exe process — the Origin header itself (chrome-extension://) is not carried in EDR/network telemetry so the browser-to-loopback 5-tuple is the highest-fidelity observable proxy for it. Loopback capture varies by EDR agent, hence hunting tier; Sentinel ImNetworkSession lacks process attribution so triage the host manually.
 
 Cross-checked against:
-  • https://advisories.gitlab.com/golang/github.com/siyuan-note/siyuan/kernel/CVE-2026-54069/
-  • https://o3.security/vulnerability/CVE-2026-54069
-  • https://deepwiki.com/siyuan-note/siyuan/6-building-and-deployment</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span> <span class="ind tech" title="Remote Services: VNC / local service abuse (loopback API)">T1021.005</span></div>
+  • https://github.com/advisories/GHSA-hvr9-72v2-fff3</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>User legitimately opens the SiYuan web UI at http://127.0.0.1:6806 in a Chromium browser (SiYuan&#x27;s supported browser-access mode).</li><li>A benign SiYuan-companion browser extension (e.g. web-clipper) making authorized API calls to the local kernel.</li><li>Developer/QA running SiYuan kernel locally and testing the API from a browser tab.</li><li>Reverse-proxy or dev tooling bound to 6806 for an unrelated app on that port.</li><li>Browser process re-use where devtools/localhost debugging happens to target 6806.</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm SiYuan is installed on the host and whether the user actually uses browser-based access; capture the connecting browser&#x27;s process tree and the exact browser/profile. Check for recently installed or updated extensions in the browser&#x27;s Extensions folder. 2) Contain: if the access is not a user-driven web-UI session, disable/remove suspect extensions, and set a non-empty AccessAuthCode in SiYuan or upgrade to v3.7.0+ which removes the blanket chrome-extension allowlist. 3) Hunt: pivot on the same host for SiYuan data tampering (unexpected note edits containing img/onerror payloads), outbound connections to unfamiliar domains shortly after the 6806 access, and the same extension ID present on other endpoints.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Official SiYuan web-clipper browser extension legitimately posting captures to the kernel on 6806</li><li>Developer or power-user testing the SiYuan API from a browser devtools/console session</li><li>Browser-based localhost tooling reusing port 6806</li><li>SiYuan run in browser (non-desktop) mode where the UI itself is a browser tab talking to 6806</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the exact browser process (InitiatingProcessId/CommandLine) and enumerate that user&#x27;s installed extensions; confirm whether the official SiYuan web-clipper is installed and expected on this host. 2) Contain: if no sanctioned SiYuan clipper is installed, disable/remove the browser&#x27;s recently-updated extensions and, if a note workspace holds sensitive data, set a non-empty AccessAuthCode in SiYuan and restart the kernel. 3) Hunt: pivot on the same host/user for subsequent connections to attacker infrastructure (stored-XSS callback like attacker.example/steal) and for conf.json writes indicating /api/system/setConf tampering.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-122-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-122-uc0-sentinel">Sentinel KQL</button>
@@ -1042,30 +1040,25 @@ Cross-checked against:
 | where Timestamp &gt; ago(7d)
 | where RemotePort == 6806
 | where RemoteIP in (&quot;127.0.0.1&quot;, &quot;::1&quot;)
-| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;vivaldi.exe&quot;,&quot;chromium.exe&quot;,&quot;browser.exe&quot;)
-| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, RemoteIP, RemotePort
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-122-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-DeviceNetworkEvents
+| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;brave.exe&quot;,&quot;chromium.exe&quot;,&quot;opera.exe&quot;,&quot;vivaldi.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, RemoteIP, RemotePort, LocalPort
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-122-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
-| where RemotePort == 6806
-| where RemoteIP in (&quot;127.0.0.1&quot;, &quot;::1&quot;)
-| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;vivaldi.exe&quot;,&quot;chromium.exe&quot;,&quot;browser.exe&quot;)
-| summarize ConnCount=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, RemoteIP, RemotePort
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-122-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SiYuan Kernel Admin Port 6806 Accessed by Browser Process (CVE-2026-54069)
-id: 3f2b1c8a-6d44-4e90-9a11-7c2f0b5e9d21
-description: Chromium-family browser process opens a loopback connection to the SiYuan kernel admin API (127.0.0.1:6806). Legitimate API callers are SiYuan.exe/SiYuan-Kernel.exe; a browser here indicates the chrome-extension origin auth bypass.
+| where DstPortNumber == 6806
+| where DstIpAddr in (&quot;127.0.0.1&quot;, &quot;::1&quot;)
+| project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, Url, DvcAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-122-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: External Browser Connection to SiYuan Kernel Loopback Port 6806
+id: 6f3a1c9e-2b4d-4a71-9c88-0d5e6f7a1b23
+description: Detects a browser process connecting to the SiYuan Note kernel HTTP server on loopback port 6806, the exploitation channel for CVE-2026-54069 chrome-extension origin admin bypass.
 references:
   - https://github.com/advisories/GHSA-hvr9-72v2-fff3
-  - https://advisories.gitlab.com/golang/github.com/siyuan-note/siyuan/kernel/CVE-2026-54069/
 author: SOC Detection Engineering
 date: 2026/07/18
 tags:
   - attack.t1176
-  - attack.execution
+  - attack.t1078
 logsource:
   category: network_connection
   product: windows
@@ -1080,51 +1073,153 @@ detection:
       - &#x27;\chrome.exe&#x27;
       - &#x27;\msedge.exe&#x27;
       - &#x27;\brave.exe&#x27;
+      - &#x27;\chromium.exe&#x27;
       - &#x27;\opera.exe&#x27;
       - &#x27;\vivaldi.exe&#x27;
-      - &#x27;\chromium.exe&#x27;
   condition: selection
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-122-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:6806 (@DestinationIp:127.0.0.1 OR @DestinationIp:&quot;::1&quot;) @Image:(*\chrome.exe OR *\Chrome.exe OR *\msedge.exe OR *\MsEdge.exe OR *\brave.exe OR *\Brave.exe OR *\opera.exe OR *\vivaldi.exe OR *\chromium.exe)</code></pre></div>
-    <div class="tab-content" id="art-122-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=6806 RemoteAddressIP4=/^(127\.0\.0\.1|::1)$/ | ContextImageFileName=/\\(chrome|msedge|brave|opera|vivaldi|chromium)\.exe$/i | groupBy([aid, ComputerName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-122-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=6806 (All_Traffic.dest=&quot;127.0.0.1&quot; OR All_Traffic.dest=&quot;::1&quot;) (All_Traffic.process_name=&quot;chrome.exe&quot; OR All_Traffic.process_name=&quot;msedge.exe&quot; OR All_Traffic.process_name=&quot;brave.exe&quot; OR All_Traffic.process_name=&quot;opera.exe&quot; OR All_Traffic.process_name=&quot;vivaldi.exe&quot; OR All_Traffic.process_name=&quot;chromium.exe&quot;) by All_Traffic.src All_Traffic.process_name All_Traffic.process_id All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-122-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=6806 (All_Traffic.dest=&quot;127.0.0.1&quot; OR All_Traffic.dest=&quot;::1&quot;) (All_Traffic.process_name=&quot;chrome.exe&quot; OR All_Traffic.process_name=&quot;msedge.exe&quot; OR All_Traffic.process_name=&quot;brave.exe&quot; OR All_Traffic.process_name=&quot;opera.exe&quot; OR All_Traffic.process_name=&quot;vivaldi.exe&quot; OR All_Traffic.process_name=&quot;chromium.exe&quot;) by All_Traffic.src All_Traffic.process_name All_Traffic.process_id All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-122-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:6806 (@DestinationIp:127.0.0.1 OR @DestinationIp:::1) @Image:(*\chrome.exe OR *\Chrome.exe OR *\msedge.exe OR *\MsEdge.exe OR *\brave.exe OR *\Brave.exe OR *\chromium.exe OR *\opera.exe OR *\vivaldi.exe)</code></pre></div>
+    <div class="tab-content" id="art-122-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=6806 RemoteAddressIP4=/^(127\.|::1)/ ContextImageFileName=/\\(chrome|msedge|brave|chromium|opera|vivaldi)\.exe$/i
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-122-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=6806 (All_Traffic.dest_ip=&quot;127.0.0.1&quot; OR All_Traffic.dest_ip=&quot;::1&quot;) (All_Traffic.process=&quot;*chrome.exe&quot; OR All_Traffic.process=&quot;*msedge.exe&quot; OR All_Traffic.process=&quot;*brave.exe&quot; OR All_Traffic.process=&quot;*chromium.exe&quot; OR All_Traffic.process=&quot;*opera.exe&quot; OR All_Traffic.process=&quot;*vivaldi.exe&quot;) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-122-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=6806 (All_Traffic.dest_ip=&quot;127.0.0.1&quot; OR All_Traffic.dest_ip=&quot;::1&quot;) (All_Traffic.process=&quot;*chrome.exe&quot; OR All_Traffic.process=&quot;*msedge.exe&quot; OR All_Traffic.process=&quot;*brave.exe&quot; OR All_Traffic.process=&quot;*chromium.exe&quot; OR All_Traffic.process=&quot;*opera.exe&quot; OR All_Traffic.process=&quot;*vivaldi.exe&quot;) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="8bb9215e02" data-platforms="def,sent" data-targets="">
+<details class="uc" data-uc-slug="9e206caef0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
   <summary>
-    <span class="uc-title">Vulnerable SiYuan Note install (&lt;= v3.6.5) exposed to CVE-2026-54069</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8bb9215e02" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">SiYuan kernel config (conf.json) written — audit for empty/missing AccessAuthCode</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="9e206caef0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Inventory hunt for endpoints running SiYuan Note at or below v3.6.5, the versions carrying the blanket chrome-extension:// admin allowlist with default-empty AccessAuthCode. Surfaces the attack surface so it can be upgraded to v3.7.0+ before any extension exploits it.
+    <div class="uc-desc">Config-audit hunt that surfaces writes to a SiYuan workspace conf.json so an analyst can verify the AccessAuthCode field. CVE-2026-54069 is trivially exploitable on desktop installs where AccessAuthCode defaults to an empty string, so any host running SiYuan with unset auth is exposed to unauthenticated admin API access from any browser extension.
 
-Rationale: Directly encodes the article&#x27;s affected-version boundary (SiYuan &lt;= v3.6.5, fixed in v3.7.0 per GitLab/O3 advisories) and the CVE id, so it flags exactly the installs whose empty AccessAuthCode + chrome-extension allowlist make them exploitable.
+Rationale: Anchors on the article&#x27;s stated config surface — conf.json holding the AccessAuthCode that defaults empty on ContainerStd desktop installs. EDR file telemetry cannot read the field&#x27;s value, so this is an inventory/audit pivot: every hit is a host to check manually for unset auth, hence Low confidence and hunting tier.
 
 Cross-checked against:
-  • https://advisories.gitlab.com/golang/github.com/siyuan-note/siyuan/kernel/CVE-2026-54069/
-  • https://o3.security/vulnerability/CVE-2026-54069</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application (local kernel API)">T1190</span> <span class="ind tech" title="Browser Extensions">T1176</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped/offline SiYuan hosts where no browser extension can be installed (still worth patching but lower risk).</li><li>SiYuan install where the user has manually set a non-empty AccessAuthCode, blunting the default-config aspect of the bug.</li><li>Portable/unpacked SiYuan copies not fully reported by software inventory (under-reporting, not a false positive).</li><li>Version strings reported with build suffixes that trip naive comparison — parse_version normalizes most but odd formats may mis-sort.</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported SiYuan version and check whether the kernel is actively listening on 6806 and whether AccessAuthCode is set. 2) Contain: upgrade affected hosts to SiYuan v3.7.0 or later (removes the blanket chrome-extension allowlist); as interim mitigation set a non-empty AccessAuthCode. 3) Hunt: on each flagged host, retro-hunt UC1 (browser→127.0.0.1:6806) over the last 30 days and review installed browser extensions for recently added/updated low-reputation entries.</div></details>
+  • https://github.com/advisories/GHSA-hvr9-72v2-fff3</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Default Accounts">T1078.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Routine SiYuan settings changes writing conf.json during normal use</li><li>SiYuan data-sync/backup clients copying the workspace including conf.json</li><li>First-run workspace initialization creating conf.json</li><li>Users legitimately editing SiYuan preferences</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: on each returned host, open the referenced conf.json and inspect the AccessAuthCode value — empty string, null, or missing = exposed. 2) Contain: for exposed hosts holding sensitive notes, direct the owner to set a strong AccessAuthCode and upgrade SiYuan past the fixed kernel version (&gt;= 0.0.0-20260628153353-2d5d72223df4). 3) Hunt: on any host confirmed exposed, review for browser-to-127.0.0.1:6806 connections (UC1) and outbound connections to unfamiliar domains indicating prior data exfiltration via /api/query/sql.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-122-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-122-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-122-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-122-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-122-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-122-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-122-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
-| where SoftwareName has &quot;siyuan&quot;
-| where isnotempty(SoftwareVersion)
-| where parse_version(SoftwareVersion) &lt;= parse_version(&quot;3.6.5&quot;)
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus, Timestamp
-| order by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-122-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId == &quot;CVE-2026-54069&quot; or (SoftwareName has &quot;siyuan&quot; and isnotempty(SoftwareVersion) and parse_version(SoftwareVersion) &lt;= parse_version(&quot;3.6.5&quot;))
-| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel
-| order by DeviceName asc</code></pre></div>
+    <div class="tab-content active" id="art-122-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;conf.json&quot;
+| where FolderPath has &quot;siyuan&quot;
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| project Timestamp, DeviceName, FolderPath, FileName, ActionType, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-122-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileName =~ &quot;conf.json&quot;
+| where TargetFilePath has &quot;siyuan&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, EventType, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-122-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: SiYuan Kernel conf.json Write (AccessAuthCode Audit)
+id: 2a71b0c4-9d3e-4f18-8a55-1c2d3e4f5a6b
+description: Surfaces writes to a SiYuan workspace conf.json for manual review of the AccessAuthCode field, exposure precondition for CVE-2026-54069.
+references:
+  - https://github.com/advisories/GHSA-hvr9-72v2-fff3
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1078.001
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    TargetFilename|endswith: &#x27;\conf.json&#x27;
+    TargetFilename|contains: &#x27;siyuan&#x27;
+  condition: selection
+level: low</code></pre></div>
+    <div class="tab-content" id="art-122-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\siyuan\*\conf.json OR *\SiYuan\*\conf.json)</code></pre></div>
+    <div class="tab-content" id="art-122-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\\siyuan\\.*\\conf\.json$/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-122-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;conf.json&quot; (Filesystem.file_path=&quot;*SiYuan*&quot; OR Filesystem.file_path=&quot;*siyuan*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-122-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;conf.json&quot; (Filesystem.file_path=&quot;*SiYuan*&quot; OR Filesystem.file_path=&quot;*siyuan*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="2c6e94eed8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">Browser extension manifest rewritten adding networking/host permissions (supply-chain)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="2c6e94eed8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts writes to Chrome/Edge/Brave extension manifest.json or the profile Preferences/Secure Preferences files — the artifacts rewritten when an installed extension is updated with new permissions. CVE-2026-54069 is amplified by a supply-chain model where a previously-benign extension pushes a malicious update; because localhost:6806 is reachable with zero declared host_permissions, watch specifically for extension permission/manifest churn preceding the loopback abuse in UC1.
+
+Rationale: Grounded in the article&#x27;s supply-chain amplification note (&#x27;a single compromised popular Chrome extension update can silently exploit every SiYuan desktop user&#x27;) and the fact that the PoC extension needs zero host_permissions — so any manifest/permission churn on a Chromium profile is the earliest artifact of a weaponized update. High FP because browsers legitimately update extensions; best used chained with UC1 (same host, followed by a 6806 loopback connection). Sentinel path uses ImFileEvent (not the Defender-only DeviceRegistryEvents) to stay schema-valid.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-hvr9-72v2-fff3</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Chrome/Edge silently auto-updating installed extensions in the background</li><li>User manually installing or updating a browser extension</li><li>Enterprise force-installed (ExtensionInstallForcelist) extension deployment</li><li>New browser profile creation writing fresh Preferences/manifest files</li><li>Browser sync reconciling extension state across devices</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify which extension ID&#x27;s manifest changed and diff old vs new permissions (look for newly added networking, &lt;all_urls&gt;, or host permissions); check the extension&#x27;s reputation and update timestamp. 2) Contain: if the extension is unsanctioned or the update is unexpected, disable/remove it via browser management policy across affected hosts. 3) Hunt: on the same host/user, correlate within a short window for a browser connection to 127.0.0.1:6806 (UC1) and for outbound C2/exfil connections, confirming the update was weaponized against a running SiYuan kernel.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-122-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-122-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-122-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-122-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-122-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-122-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-122-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where FileName in~ (&quot;manifest.json&quot;,&quot;Secure Preferences&quot;,&quot;Preferences&quot;)
+| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\BraveSoftware\&quot;, @&quot;\Chromium\User Data\&quot;)
+| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;brave.exe&quot;,&quot;chromium.exe&quot;)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, ActionType, InitiatingProcessFileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-122-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where TargetFileName in~ (&quot;manifest.json&quot;,&quot;Secure Preferences&quot;,&quot;Preferences&quot;)
+| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\BraveSoftware\&quot;, @&quot;\Chromium\User Data\&quot;)
+| where ActingProcessName has_any (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;brave.exe&quot;,&quot;chromium.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, EventType, ActingProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-122-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Manifest or Preferences Rewrite (Permission Change)
+id: 8b4c5d6e-7f09-4a1b-9c2d-3e4f5a6b7c8d
+description: Detects writes to browser extension manifest.json or profile Preferences files indicating extension permission changes, the supply-chain precondition for CVE-2026-54069 exploitation.
+references:
+  - https://github.com/advisories/GHSA-hvr9-72v2-fff3
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1176
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_file:
+    TargetFilename|endswith:
+      - &#x27;\manifest.json&#x27;
+      - &#x27;\Secure Preferences&#x27;
+      - &#x27;\Preferences&#x27;
+  selection_path:
+    TargetFilename|contains:
+      - &#x27;\Google\Chrome\User Data\&#x27;
+      - &#x27;\Microsoft\Edge\User Data\&#x27;
+      - &#x27;\BraveSoftware\&#x27;
+      - &#x27;\Chromium\User Data\&#x27;
+  condition: selection_file and selection_path
+level: low</code></pre></div>
+    <div class="tab-content" id="art-122-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\Google\Chrome\User\ Data\*\manifest.json OR *\Microsoft\Edge\User\ Data\*\manifest.json OR *\BraveSoftware\*\manifest.json OR *\User\ Data\*\Secure\ Preferences OR *\User\ Data\*\Preferences)</code></pre></div>
+    <div class="tab-content" id="art-122-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\\(Google\\Chrome|Microsoft\\Edge|BraveSoftware|Chromium)\\.*\\(manifest\.json|Secure Preferences|Preferences)$/i ContextImageFileName=/\\(chrome|msedge|brave|chromium)\.exe$/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-122-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;manifest.json&quot; OR Filesystem.file_name=&quot;Secure Preferences&quot; OR Filesystem.file_name=&quot;Preferences&quot;) (Filesystem.file_path=&quot;*\\Google\\Chrome\\User Data\\*&quot; OR Filesystem.file_path=&quot;*\\Microsoft\\Edge\\User Data\\*&quot; OR Filesystem.file_path=&quot;*\\BraveSoftware\\*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-122-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;manifest.json&quot; OR Filesystem.file_name=&quot;Secure Preferences&quot; OR Filesystem.file_name=&quot;Preferences&quot;) (Filesystem.file_path=&quot;*\\Google\\Chrome\\User Data\\*&quot; OR Filesystem.file_path=&quot;*\\Microsoft\\Edge\\User Data\\*&quot; OR Filesystem.file_path=&quot;*\\BraveSoftware\\*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="bf48d37680" data-platforms="def,sent,sigma,spl" data-targets="windows">
@@ -1142,18 +1237,18 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span> <span class="ind">DeviceRegistryEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-122-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-122-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-122-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-122-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-122-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-122-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-122-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-122-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-122-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
+    <div class="tab-content active" id="art-122-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where RegistryKey has_any (&quot;\Software\Google\Chrome\Extensions\&quot;,&quot;\Software\Microsoft\Edge\Extensions\&quot;,&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName</code></pre></div>
-    <div class="tab-content" id="art-122-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
+    <div class="tab-content" id="art-122-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
 | where RegistryKey has_any (@&quot;\Software\Google\Chrome\Extensions\&quot;,
@@ -1163,7 +1258,7 @@ Cross-checked against:
           RegistryValue, RegistryValueData, ActingProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
+    <div class="tab-content" id="art-122-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
 status: experimental
 description: |
@@ -1191,13 +1286,13 @@ falsepositives:
     - Group-policy-managed extension whitelists
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-122-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Registry
     where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
     by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-122-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-122-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Registry
     where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
@@ -1221,12 +1316,12 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-122-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-122-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-122-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-122-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-122-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-122-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-122-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-122-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-122-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-122-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
@@ -1234,7 +1329,7 @@ level: medium
 | where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+    <div class="tab-content" id="art-122-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
 ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
@@ -1246,7 +1341,7 @@ ImFileEvent
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
           TargetFilePath, TargetFileName, EventType
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+    <div class="tab-content" id="art-122-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
 status: experimental
 description: |
@@ -1290,7 +1385,7 @@ falsepositives:
     - Browser sync agents from non-stock vendors
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-122-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -1299,7 +1394,7 @@ level: high
         OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-122-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-122-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -1326,11 +1421,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-122-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-122-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-122-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-122-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-122-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-122-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-122-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-122-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -1339,7 +1434,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-122-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -1351,12 +1446,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-122-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54069&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-122-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-122-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54069&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -1379,18 +1474,18 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-122-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-122-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-122-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-122-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-122-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-122-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-122-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-122-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-122-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-122-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-122-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-122-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -1410,7 +1505,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-122-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -1452,12 +1547,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-122-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-122-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-122-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-122-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
