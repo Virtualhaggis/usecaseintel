@@ -11,15 +11,9 @@ By Bill Toulas
 July 19, 2026
 10:23 AM
 0 
-
-
 An advanced threat actor is abusing the update mechanism for the ViPNet private networking product suite to target Russian organizations, including government agencies.
-
-
 Dubbed HelloNet, the campaign has been active since at least May, deploying a malicious payload that acts as a proxy and loader for additional malware.
-
-
-According to Kaspersky researchers, HelloNet has impacted orga…
+According to Kaspersky researchers, HelloNet has impacted organizations in…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -74,7 +68,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Hackers abuse ViPNet software to target Russian govt agencies
 
-`UC_0_1` · phase: **exploit** · confidence: **High**
+`UC_1_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

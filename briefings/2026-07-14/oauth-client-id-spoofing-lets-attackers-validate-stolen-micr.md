@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Entra sign-in with populated OAuth client ID but blank application name (spoofed client_id)
 
-`UC_89_1` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_90_1` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ AADSignInEventsBeta
 
 ### Single source IP presenting many distinct spoofed OAuth client IDs (fragmentation to evade per-app detection)
 
-`UC_89_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_90_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ AADSignInEventsBeta
 
 ### AADSTS700016 with blank app name — spoofed client ID confirms VALID Entra credentials
 
-`UC_89_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_90_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ AADSignInEventsBeta
 
 ### Account-lockout burst (AADSTS50053) driven by spoofed-client-ID enumeration
 
-`UC_89_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_90_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

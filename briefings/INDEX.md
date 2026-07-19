@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-19
 - [hackers abuse vipnet software to target russian govt agencie](./2026-07-19/hackers-abuse-vipnet-software-to-target-russian-govt-agencie.md)
+- [sleepergem compromised git credential manager dendreo and fa](./2026-07-19/sleepergem-compromised-git-credential-manager-dendreo-and-fa.md)
 - [sleepergem rubygems supply chain attack targets dormant main](./2026-07-19/sleepergem-rubygems-supply-chain-attack-targets-dormant-main.md)
 - [sonicwall sma zero days exploited before disclosure to gain ](./2026-07-19/sonicwall-sma-zero-days-exploited-before-disclosure-to-gain-.md)
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
@@ -848,7 +849,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical remote code execution vulnerabilities discovered in](./2025-12-15/critical-remote-code-execution-vulnerabilities-discovered-in.md)
 - [how harden runner detected the sha1 hulud supply chain attac](./2025-12-15/how-harden-runner-detected-the-sha1-hulud-supply-chain-attac.md)
 - [sha1 hulud the second coming zapier ens domains and other pr](./2025-12-15/sha1-hulud-the-second-coming-zapier-ens-domains-and-other-pr.md)
-- [supply chain security alert eslint config prettier package s](./2025-12-15/supply-chain-security-alert-eslint-config-prettier-package-s.md)
 
 ## 2025-12-12
 - [cisa kev cve 2018 4063 sierra wireless airlink aleos unrestr](./2025-12-12/cisa-kev-cve-2018-4063-sierra-wireless-airlink-aleos-unrestr.md)
