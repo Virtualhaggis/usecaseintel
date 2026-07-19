@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### PromptSpy/VNCSpy Android trojan distribution & fake-JPMorgan domains (mgardownload.com / m-mgarg.com)
 
-`UC_600_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_601_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

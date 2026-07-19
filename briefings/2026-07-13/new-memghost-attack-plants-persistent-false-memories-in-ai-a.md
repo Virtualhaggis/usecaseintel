@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Writes to AI-agent persistent memory/instruction files (AGENTS.md, MEMORY.md) — MemGhost poisoning artifact
 
-`UC_110_1` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_111_1` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceFileEvents
 
 ### Inbound email followed within minutes by agent memory-file write (MemGhost one-email chain)
 
-`UC_110_2` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_111_2` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

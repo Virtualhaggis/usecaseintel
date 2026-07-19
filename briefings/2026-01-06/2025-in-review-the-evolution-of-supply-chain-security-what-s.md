@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Nx s1ngularity: npm postinstall weaponizes AI CLI tools (claude/gemini/q) for credential recon
 
-`UC_693_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_694_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### Nx s1ngularity exfiltration via public GitHub repo 's1ngularity-repository'
 
-`UC_693_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_694_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### tj-actions/changed-files: CI runner pipes gist memdump.py to python to scrape secrets
 
-`UC_693_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_694_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

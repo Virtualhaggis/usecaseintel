@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### NPM preinstall hook fetching Bun installer from bun.sh (Sha1-Hulud dropper)
 
-`UC_713_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_714_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Bun/Node executing the Sha1-Hulud worm payload (setup_bun.js / bun_environment.js)
 
-`UC_713_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_714_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Sha1-Hulud self-hosted GitHub Actions runner deployed under ~/.dev-env (SHA1HULUD)
 
-`UC_713_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_714_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ union RunnerArchiveWrite, RunnerProcess
 
 ### Bun/Node initiating multi-cloud secret-manager enumeration burst (Sha1-Hulud aL0 harvest)
 
-`UC_713_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_714_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +187,7 @@ DeviceNetworkEvents
 
 ### Bun/Node bursty PUT to api.github.com /contents from infected host (Sha1-Hulud exfil)
 
-`UC_713_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_714_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -365,7 +365,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sha1-Hulud: The Second Coming - Zapier, ENS Domains, and Other Prominent NPM Pac
 
-`UC_713_5` · phase: **exploit** · confidence: **High**
+`UC_714_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
