@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Revoked Microsoft-signed vulnerable UEFI shim present in estate (CVE-2026-8863 / CVE-2026-10797)
 
-`UC_87_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_88_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Old shim/GRUB EFI binary written to ESP by non-package-manager process (Secure Boot bypass staging)
 
-`UC_87_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_88_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### MOK/SBAT enforcement disabled via mokutil (Secure Boot validation subversion)
 
-`UC_87_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_88_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

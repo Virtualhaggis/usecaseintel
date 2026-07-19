@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens ROX II xz-as-cat arbitrary disclosure of shadow/private keys (CVE-2025-40948)
 
-`UC_26_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_27_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens ROX II feature-key gpgv command injection to root (CVE-2025-40947)
 
-`UC_26_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_27_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens ROX II root cron persistence via web task scheduler (CVE-2025-40949)
 
-`UC_26_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_27_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens ROX II three-stage zero-day chain temporal correlation (CVE-2025-40948/40947/40949)
 
-`UC_26_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy
 
-`UC_26_3` · phase: **install** · confidence: **High**
+`UC_27_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

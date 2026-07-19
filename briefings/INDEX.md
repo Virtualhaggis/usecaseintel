@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-19
+- [critical nginx vulnerability can crash workers and may allow](./2026-07-19/critical-nginx-vulnerability-can-crash-workers-and-may-allow.md)
 - [hackers abuse vipnet software to target russian govt agencie](./2026-07-19/hackers-abuse-vipnet-software-to-target-russian-govt-agencie.md)
 - [sleepergem compromised git credential manager dendreo and fa](./2026-07-19/sleepergem-compromised-git-credential-manager-dendreo-and-fa.md)
 - [sleepergem rubygems supply chain attack targets dormant main](./2026-07-19/sleepergem-rubygems-supply-chain-attack-targets-dormant-main.md)
@@ -117,7 +118,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45579 dirac is vulnerable to rce in r](./2026-07-13/ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r.md)
 - [ghsa critical cve 2026 47677 facturascripts account takeover](./2026-07-13/ghsa-critical-cve-2026-47677-facturascripts-account-takeover.md)
 - [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)
-- [google and microsoft pull modheader with 1 6 million install](./2026-07-13/google-and-microsoft-pull-modheader-with-1-6-million-install.md)
 - [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
 - [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
