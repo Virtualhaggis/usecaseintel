@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2584 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2586 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-19
+- [hackers abuse vipnet software to target russian govt agencie](./2026-07-19/hackers-abuse-vipnet-software-to-target-russian-govt-agencie.md)
 - [sleepergem rubygems supply chain attack targets dormant main](./2026-07-19/sleepergem-rubygems-supply-chain-attack-targets-dormant-main.md)
+- [sonicwall sma zero days exploited before disclosure to gain ](./2026-07-19/sonicwall-sma-zero-days-exploited-before-disclosure-to-gain-.md)
+- [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
 
 ## 2026-07-18
 - [microsoft warns of surge in acr stealer attacks on customers](./2026-07-18/microsoft-warns-of-surge-in-acr-stealer-attacks-on-customers.md)
@@ -116,7 +119,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [google and microsoft pull modheader with 1 6 million install](./2026-07-13/google-and-microsoft-pull-modheader-with-1-6-million-install.md)
 - [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
 - [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
-- [new memghost attack plants persistent false memories in ai a](./2026-07-13/new-memghost-attack-plants-persistent-false-memories-in-ai-a.md)
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
 
 ## 2026-07-12
