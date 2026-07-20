@@ -1,15 +1,16 @@
-# [CRIT] Microsoft Maps Three Salesforce Attack Paths Tied to a Year of ShinyHunters Activity
+# [HIGH] World's Largest AI Model Repository Hugging Face Breached by Autonomous AI Agent
 
 **Source:** The Hacker News
-**Published:** 2026-07-14
-**Article:** https://thehackernews.com/2026/07/microsoft-maps-year-long-shinyhunters.html
+**Published:** 2026-07-20
+**Article:** https://thehackernews.com/2026/07/worlds-largest-ai-model-repository.html
 
 ## Threat Profile
 
-Microsoft Maps Three Salesforce Attack Paths Tied to a Year of ShinyHunters Activity 
- Swati Khandelwal  Jul 14, 2026 SaaS Security / Identity Security 
-Attackers whose methods line up with the data-extortion group ShinyHunters have spent the past year walking into corporate Salesforce environments without exploiting a single flaw in the platform.
-The way in has been the trust the organization had already extended, usually through the OAuth connections that tie Salesforce to the apps and third…
+World's Largest AI Model Repository Hugging Face Breached by Autonomous AI Agent 
+ Ravie Lakshmanan  Jul 20, 2026 AI Security / Vulnerability 
+In an ironic twist, open-source artificial intelligence (AI) platform Hugging Face revealed that it was the victim of a hack perpetrated by an autonomous AI agent system.
+The company said it detected and responded to the incident targeting its production infrastructure earlier last week.
+"We identified unauthorized access to a limited set of internal da…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -17,6 +18,11 @@ The way in has been the trust the organization had already extended, usually thr
 
 ## MITRE ATT&CK Techniques
 
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
+- **T1176** — Browser Extensions
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -26,17 +32,13 @@ The way in has been the trust the organization had already extended, usually thr
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1486** — Data Encrypted for Impact
+- **T1003.001** — LSASS Memory
+- **T1003** — OS Credential Dumping
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
+- **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1566.004** — Phishing: Spearphishing Voice
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1530** — Data from Cloud Storage
-- **T1567** — Exfiltration Over Web Service
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1213** — Data from Information Repositories
-- **T1070** — Indicator Removal
-- **T1070.004** — Indicator Removal: File Deletion
-- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -44,139 +46,93 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Salesforce consent to spoofed 'Data Loader' connected app (UNC6040 vishing)
+### Beaconing — periodic outbound to small set of destinations
 
-`UC_99_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-sourcetype=sfdc:* (EVENT_TYPE="ConnectedApp*" OR ACTION="consent" OR "OAuth" OR "connected app") 
-| search APP_NAME="*Data Loader*" OR CONNECTED_APP_NAME="*Data Loader*" OR OBJECT_NAME="*Data Loader*" 
-| stats count min(_time) as firstTime max(_time) as lastTime values(SOURCE_IP) as src values(COUNTRY) as country by USER_NAME, APP_NAME, EVENT_TYPE 
-| convert ctime(firstTime) ctime(lastTime) 
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where Application == "Salesforce"
-| where ActionType has_any ("Consent","Connected","OAuth","Authorize","Grant")
-| extend Raw = parse_json(RawEventData)
-| extend ConsentedApp = coalesce(tostring(Raw.ConnectedApplication), tostring(Raw.ConnectedAppName), ObjectName)
-| where ConsentedApp has "Data Loader"
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, ISP, UserAgent, ActionType, ConsentedApp, ObjectId
-| order by Timestamp desc
-```
-
-### Compromised vendor OAuth integration (Drift/Gainsight/Klue) mass Salesforce export
-
-`UC_99_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-sourcetype=sfdc:* (EVENT_TYPE="ApiEvent" OR EVENT_TYPE="BulkApiResultEvent" OR EVENT_TYPE="ReportExportEvent") 
-| search CONNECTED_APP_NAME IN ("*Drift*","*Gainsight*","*Klue*") OR APP_NAME IN ("*Drift*","*Gainsight*","*Klue*") 
-| eval rows=coalesce(ROWS_PROCESSED,NUMBER_OF_RECORDS,ROW_COUNT,0) 
-| stats sum(rows) as totalRows count as queries dc(SOURCE_IP) as srcIPs values(SOURCE_IP) as src min(_time) as firstTime max(_time) as lastTime by CONNECTED_APP_NAME, USER_NAME 
-| where totalRows > 50000 OR queries > 500 
-| convert ctime(firstTime) ctime(lastTime) 
-| sort - totalRows
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Salesforce"
-| where ActionType has_any ("Api","Bulk","Report","Export","Query")
-| extend Raw = parse_json(RawEventData)
-| extend AppName = coalesce(tostring(Raw.ConnectedApplication), tostring(Raw.ClientName))
-| where AppName has_any ("Drift","Gainsight","Klue")
-| extend Rows = toint(coalesce(Raw.RowsProcessed, Raw.NumberOfRecords, Raw.RowCount))
-| summarize TotalRows = sum(Rows), Queries = count(), SrcIps = make_set(IPAddress, 15), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AppName, AccountDisplayName
-| where TotalRows > 50000 or Queries > 500   // 50k rows / 500 calls = well above a normal chat/CI integration sync cadence
-| order by TotalRows desc
-```
-
-### Salesforce SOQL secret-hunting across Case/support objects (AWS/Snowflake/VPN)
-
-`UC_99_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-sourcetype=sfdc:* EVENT_TYPE="ApiEvent" 
-| eval soql=coalesce(QUERY,SOQL,QUERY_STRING) 
-| search soql IN ("*AKIA*","*aws_secret*","*aws_access*","*snowflakecomputing*","*snowflake*","*password*","*passwd*","*private_key*","*apikey*","*vpn*") 
-| stats count min(_time) as firstTime max(_time) as lastTime values(SOURCE_IP) as src values(soql) as queries by USER_NAME, CONNECTED_APP_NAME 
-| convert ctime(firstTime) ctime(lastTime) 
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where Application == "Salesforce"
-| where ActionType has_any ("Api","Query","Report","Bulk")
-| extend Raw = parse_json(RawEventData)
-| extend Soql = tostring(coalesce(Raw.Query, Raw.QueryString, Raw.Soql))
-| where Soql has_any ("AKIA","aws_secret","aws_access","snowflakecomputing","snowflake","vpn","password","passwd","private_key","apikey","api_key","secret")
-| project Timestamp, AccountDisplayName, IPAddress, CountryCode, ISP, ActionType, Soql
-| order by Timestamp desc
-```
-
-### Anti-forensic deletion of Salesforce async query/bulk job records
-
-`UC_99_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-sourcetype=sfdc:* (ACTION="delete" OR ACTION="abort" OR EVENT_TYPE="BulkApiJobAbort" OR OPERATION="delete") 
-| search OBJECT_TYPE IN ("AsyncApexJob","BackgroundOperation","BulkApiJob") OR ENTITY_NAME IN ("AsyncApexJob","BackgroundOperation") 
-| stats count min(_time) as firstTime max(_time) as lastTime values(SOURCE_IP) as src values(OBJECT_ID) as jobs by USER_NAME, CONNECTED_APP_NAME, ACTION 
-| convert ctime(firstTime) ctime(lastTime) 
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where Application == "Salesforce"
-| where ActionType has_any ("Delete","Abort","Remove")
-| extend Raw = parse_json(RawEventData)
-| extend TargetObj = coalesce(ObjectType, tostring(Raw.EntityName), tostring(Raw.ObjectType))
-| where TargetObj has_any ("AsyncApexJob","BackgroundOperation","BulkApiJob","BulkApi") or ActionType has "Abort"
-| project Timestamp, AccountDisplayName, IPAddress, CountryCode, ActionType, ObjectType, ObjectName, ObjectId
-| order by Timestamp desc
-```
-
-### Unauthenticated Salesforce Aura/GraphQL guest scraping past 2,000-record limit
-
-`UC_99_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Web.http_user_agent) as user_agents values(Web.uri_path) as paths from datamodel=Web where (Web.url="*/s/sfsites/aura*" OR Web.uri_path="*/s/sfsites/aura*") by Web.src, Web.dest, _time span=1h 
-| `drop_dm_object_name(Web)` 
-| where count > 200 
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
+```
+
+### Suspicious browser extension installation
+
+`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
 | where Timestamp > ago(7d)
-| where Application == "Salesforce"
-| extend Raw = parse_json(RawEventData)
-| extend Uri = tostring(coalesce(Raw.Uri, Raw.RequestUrl, Raw.Page))
-| where Uri has "/s/sfsites/aura" or Uri has "aura?r="
-| where AccountType has_any ("Guest","Anonymous","Unauthenticated") or UserAgent has "AuraInspector"
-| summarize Requests = count(), Uris = dcount(Uri), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by IPAddress, UserAgent, CountryCode, ISP
-| where Requests > 200   // cursor-paginated scraping (2000-row pages) far exceeds human browsing of a public site
-| order by Requests desc
+| where InitiatingProcessAccountName !endswith "$"
+| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+```
+
+### Infostealer — non-browser process accessing browser cookie/login DBs
+
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -354,6 +310,117 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
+### Ransomware-style mass file rename / extension change
+
+`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("modified","renamed")
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files > 200
+| sort - files
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
+| where ActionType in ("FileRenamed","FileModified")
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
+| order by files desc
+```
+
+### LSASS process access / dump (credential theft)
+
+`UC_LSASS` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+        OR Processes.process="*procdump*lsass*")
+       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where ActionType == "OpenProcessApiCall"
+| where FileName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                          "svchost.exe","wininit.exe","services.exe",
+                                          "lsm.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc
+```
+
+### Remote service execution — PsExec / SMB lateral movement
+
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
+
+`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
+   or FileName matches regex @"(?i)kaseya.*\.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+```
+
 ### Trusted vendor binary / installer launching unusual children
 
 `UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
@@ -381,4 +448,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

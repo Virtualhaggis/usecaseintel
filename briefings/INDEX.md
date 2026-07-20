@@ -8,6 +8,10 @@ _2586 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-20
+- [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
+- [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
+
 ## 2026-07-19
 - [critical nginx vulnerability can crash workers and may allow](./2026-07-19/critical-nginx-vulnerability-can-crash-workers-and-may-allow.md)
 - [hackers abuse vipnet software to target russian govt agencie](./2026-07-19/hackers-abuse-vipnet-software-to-target-russian-govt-agencie.md)
@@ -100,7 +104,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [grok build uploaded entire git repositories to xai storage n](./2026-07-14/grok-build-uploaded-entire-git-repositories-to-xai-storage-n.md)
 - [how pentera turns ai security workflows into validation engi](./2026-07-14/how-pentera-turns-ai-security-workflows-into-validation-engi.md)
 - [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
-- [microsoft maps three salesforce attack paths tied to a year ](./2026-07-14/microsoft-maps-three-salesforce-attack-paths-tied-to-a-year-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
 - [oauth client id spoofing lets attackers validate stolen micr](./2026-07-14/oauth-client-id-spoofing-lets-attackers-validate-stolen-micr.md)
 - [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
@@ -113,7 +116,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-13
 - [cisa kev cve 2008 4128 cisco ios cross site request forgery ](./2026-07-13/cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-.md)
-- [crashstealer macos malware uses notarized dropper to pass ga](./2026-07-13/crashstealer-macos-malware-uses-notarized-dropper-to-pass-ga.md)
 - [defending saas based applications against shinyhunters oauth](./2026-07-13/defending-saas-based-applications-against-shinyhunters-oauth.md)
 - [ghsa critical cve 2026 45579 dirac is vulnerable to rce in r](./2026-07-13/ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r.md)
 - [ghsa critical cve 2026 47677 facturascripts account takeover](./2026-07-13/ghsa-critical-cve-2026-47677-facturascripts-account-takeover.md)

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious @velora-dex/sdk (9.4.1/9.4.2) pulled into GitHub Actions build runner
 
-`UC_55_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_57_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### Build runner beacon/exfil to Velora backdoor C2 (89.36.224.5 / datahub.ink)
 
-`UC_55_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### Velora macOS backdoor launchctl persistence (com.apple.Terminal.profiler.plist)
 
-`UC_55_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_57_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceFileEvents
 
 ### npm/node install-time payload: package manager spawning curl/launchctl/osascript on a runner
 
-`UC_55_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_57_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud worm artifacts written on GitHub Actions runner (shai-hulud-workflow.yml / bundle.js)
 
-`UC_55_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_57_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
