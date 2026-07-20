@@ -1,3 +1,1101 @@
+<article class="card" id="art-87" data-art-slug="2026-07-14-labubarat-masquerades-as-nvidia-software-to-control-windows-"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
+  data-techs="T1059.001,T1190,T1204.002"
+  data-sources="The Hacker News"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="endpoint,network"
+  data-targets="windows"
+  data-uc-count="13" data-llm-uc-count="7"
+  data-search="LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts Cybersecurity researchers have flagged a previously undocumented Rust-based remote access trojan (RAT) codenamed LabubaRAT that masquerades as NVIDIA software to blend into target environments. &quot;LabubaRAT creates a reusable foothold for hands-on activity,&quot; Blackpoint Cyber researchers Sam Decker and Nevan Beal said in an analysis published today. &quot;Once deployed, it can profile the host,  T1059.001 T1190 T1204.002 [LLM] LabubaRAT nvidia-sysruntime.exe launch with runtime C2 config in command line [LLM] LabubaRAT C2 beacon to pipicka.xyz (HTTPS / DNS tunneling) from NVIDIA-impersonating host [LLM] NVIDIA-branded process spawns shell / LOLBin (LabubaRAT operator tasking) [LLM] NVIDIA-named executable without valid NVIDIA code signature [LLM] LabubaRAT user-level autostart persistence (Run key / scheduled task referencing NVIDIA loader) [LLM] Trojanized NVIDIA installer download from non-NVIDIA source [LLM] NVIDIA-branded process outbound to non-NVIDIA public infrastructure (LabubaRAT C2 / SOCKS5 proxy) Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains DNS tunneling / TXT-heavy domain queries PowerShell encoded / obfuscated command RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-14-labubarat-masquerades-as-nvidia-software-to-control-windows-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://thehackernews.com/2026/07/labubarat-masquerades-as-nvidia.html" target="_blank" rel="noopener">LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts</a></h2>
+  <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
+  <div class="pubmeta">
+    <span>2026-07-14</span>
+    <span>13 use cases</span>
+    <span>3 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Cybersecurity researchers have flagged a previously undocumented Rust-based remote access trojan (RAT) codenamed LabubaRAT that masquerades as NVIDIA software to blend into target environments. &quot;LabubaRAT creates a reusable foothold for hands-on activity,&quot; Blackpoint Cyber researchers Sam Decker and Nevan Beal said in an analysis published today. &quot;Once deployed, it can profile the host,</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Malicious File">T1204.002</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">pipicka.xyz</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-87-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-87"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-87-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Trojanized NVIDIA installer download from non-NVIDIA source</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] NVIDIA-branded process spawns shell / LOLBin (LabubaRAT operator tasking) · PowerShell encoded / obfuscated command · Article-specific behavioural hunt — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] LabubaRAT nvidia-sysruntime.exe launch with runtime C2 config in command line · [LLM] NVIDIA-named executable without valid NVIDIA code signature · [LLM] LabubaRAT user-level autostart persistence (Run key / scheduled task referencing NVIDIA loader) · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] LabubaRAT C2 beacon to pipicka.xyz (HTTPS / DNS tunneling) from NVIDIA-impersonating host · [LLM] NVIDIA-branded process outbound to non-NVIDIA public infrastructure (LabubaRAT C2 / SOCKS5 proxy) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains · DNS tunneling / TXT-heavy domain queries</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="57f56971c8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">LabubaRAT nvidia-sysruntime.exe launch with runtime C2 config in command line</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="57f56971c8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts execution of the LabubaRAT loader binary &#x27;nvidia-sysruntime.exe&#x27; that impersonates NVIDIA&#x27;s container runtime toolkit and takes its C2 server (pipicka.xyz) and polling interval as launch arguments — or as a single Base64-encoded argument. Article-specific because the same compiled binary is re-tasked per campaign purely via command line.
+
+Rationale: Pivots on the exact named loader &#x27;nvidia-sysruntime.exe&#x27; plus the hard IOC pipicka.xyz appearing in the launch arguments (article states C2 + polling interval are passed at runtime, optionally Base64-encoded). Cross-checked against SC Media and the KSEC intel forum.
+
+Cross-checked against:
+  • https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software
+  • https://forum.ksec.co.uk/t/labubarat-masquerades-as-nvidia-software-to-control-windows-hosts/16186</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="Deobfuscate/Decode Files or Information">T1140</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate NVIDIA container runtime tooling that ships a similarly named binary (validate signer + folder path)</li><li>Security researcher / malware analyst detonating the sample in a sandbox on a monitored corporate host</li><li>Red-team engagement replaying LabubaRAT TTPs</li><li>EDR sample-submission automation renaming test binaries to &#x27;nvidia-sysruntime.exe&#x27;</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(FolderPath startswith &quot;C:\\Program Files\\NVIDIA&quot; or FolderPath startswith &quot;C:\\Program Files (x86)\\NVIDIA&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ProcessCommandLine and decode any Base64 argument to recover the C2 host + polling interval; confirm the binary is NOT signed by NVIDIA and not under \Program Files\NVIDIA. 2) Contain: network-isolate the host and kill/quarantine nvidia-sysruntime.exe and its SQLite config DB. 3) Hunt: sweep for the same SHA256/filename org-wide, look for pipicka.xyz DNS/HTTPS beacons, Run-key persistence, and the AV-enumeration behavior on the same host.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-87-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;nvidia-sysruntime.exe&quot; or ProcessCommandLine has &quot;nvidia-sysruntime&quot;
+| extend C2Config = case(ProcessCommandLine has &quot;pipicka.xyz&quot;,&quot;pipicka.xyz&quot;, ProcessCommandLine matches regex @&quot;[A-Za-z0-9+/]{40,}={0,2}&quot;,&quot;base64_arg&quot;,&quot;none&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, C2Config, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where NewProcessName endswith &quot;\\nvidia-sysruntime.exe&quot; or CommandLine has &quot;nvidia-sysruntime&quot;
+| extend C2Config = case(CommandLine has &quot;pipicka.xyz&quot;,&quot;pipicka.xyz&quot;, CommandLine matches regex @&quot;[A-Za-z0-9+/]{40,}={0,2}&quot;,&quot;base64_arg&quot;,&quot;none&quot;)
+| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, C2Config, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: LabubaRAT nvidia-sysruntime.exe Launch with Runtime C2 Config
+id: 6c2f0b7a-2d5e-4f1c-9b3a-8d1e4a7c9f21
+description: Detects execution of the LabubaRAT loader nvidia-sysruntime.exe that impersonates NVIDIA and receives its pipicka.xyz C2 via command line.
+references:
+  - https://thehackernews.com/2026/07/labubarat-masquerades-as-nvidia.html
+  - https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1036.005
+  - attack.t1140
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    - Image|endswith: &#x27;\nvidia-sysruntime.exe&#x27;
+    - CommandLine|contains: &#x27;nvidia-sysruntime&#x27;
+  selection_c2:
+    CommandLine|contains: &#x27;pipicka.xyz&#x27;
+  condition: selection_img and selection_c2
+level: high</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@Image:(*\nvidia-sysruntime.exe OR *\NVIDIA-sysruntime.exe) OR @CommandLine:(*nvidia-sysruntime* OR *NVIDIA-sysruntime*)) @CommandLine:*pipicka.xyz*</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 (ImageFileName=/nvidia-sysruntime\.exe$/i OR CommandLine=/nvidia-sysruntime/i)
+| CommandLine=/pipicka\.xyz/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine, SHA256HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;nvidia-sysruntime.exe&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| eval c2_config=if(match(process,&quot;(?i)pipicka\.xyz&quot;),&quot;pipicka.xyz&quot;,if(match(process,&quot;[A-Za-z0-9+/]{40,}={0,2}&quot;),&quot;base64_arg&quot;,&quot;none&quot;))
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-87-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;nvidia-sysruntime.exe&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| eval c2_config=if(match(process,&quot;(?i)pipicka\.xyz&quot;),&quot;pipicka.xyz&quot;,if(match(process,&quot;[A-Za-z0-9+/]{40,}={0,2}&quot;),&quot;base64_arg&quot;,&quot;none&quot;))
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8e005629a4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">LabubaRAT C2 beacon to pipicka.xyz (HTTPS / DNS tunneling) from NVIDIA-impersonating host</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="8e005629a4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts network and DNS traffic to the LabubaRAT C2 domain pipicka.xyz, including data-carrying subdomains characteristic of the implant&#x27;s DNS-tunneling communication path. Article-specific because pipicka.xyz is the confirmed default C2 and DNS tunneling is one of its three named channels (HTTPS, WebView2, DNS).
+
+Rationale: pipicka.xyz is the confirmed hard C2 IOC; the subdomain-length logic surfaces the DNS-tunneling channel the article explicitly names. Corroborated by SC Media. Sentinel query rewritten to use DnsEvents.Name/ClientIP (not the invalid IPAddresses column) and ImDnsActivity.DnsQuery.
+
+Cross-checked against:
+  • https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software
+  • https://forum.ksec.co.uk/t/labubarat-masquerades-as-nvidia-software-to-control-windows-hosts/16186</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Protocol Tunneling">T1572</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel/DNS-sinkhole platforms actively resolving pipicka.xyz for enrichment</li><li>Security appliances pre-resolving IOC domains from a feed</li><li>Analyst manually querying the domain during investigation from a corporate workstation</li><li>Passive-DNS / URL-detonation sandbox traffic</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(DeviceName has_any (&quot;sinkhole&quot;,&quot;ti-&quot;,&quot;sandbox&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the ContextProcess/InitiatingProcess behind the query — confirm it is nvidia-sysruntime.exe or another non-NVIDIA binary; inspect subdomain entropy/length for tunneled data. 2) Contain: sinkhole/block pipicka.xyz at the resolver and firewall, isolate the querying host. 3) Hunt: pivot to all hosts resolving *.pipicka.xyz in 30d, correlate with nvidia-sysruntime.exe execution and Run-key persistence; capture beaconing interval to recover the polling-interval config.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-87-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteUrl endswith &quot;pipicka.xyz&quot; or RemoteUrl contains &quot;.pipicka.xyz&quot;
+| extend Subdomain = tostring(split(RemoteUrl, &quot;.pipicka.xyz&quot;)[0])
+| extend TunnelingSuspected = iff(strlen(Subdomain) &gt; 30, &quot;yes&quot;, &quot;no&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol, TunnelingSuspected
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+(ImDnsActivity | where TimeGenerated &gt; ago(30d) | where DnsQuery has &quot;pipicka.xyz&quot; | project TimeGenerated, Src=SrcIpAddr, Host=DvcHostname, Query=DnsQuery, Src2=&quot;&quot;, Source=EventProduct),
+(DnsEvents | where TimeGenerated &gt; ago(30d) | where Name has &quot;pipicka.xyz&quot; | project TimeGenerated, Src=ClientIP, Host=Computer, Query=Name, Src2=QueryType, Source=&quot;MicrosoftDNS&quot;),
+(CommonSecurityLog | where TimeGenerated &gt; ago(30d) | where DestinationDnsDomain has &quot;pipicka.xyz&quot; or RequestURL has &quot;pipicka.xyz&quot; | project TimeGenerated, Src=SourceIP, Host=DestinationHostName, Query=coalesce(DestinationDnsDomain, RequestURL), Src2=DestinationIP, Source=DeviceProduct)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: LabubaRAT C2 DNS Query to pipicka.xyz
+id: 9a41d3f0-7b62-4c88-8e2a-1f5b6c0d9e33
+description: Detects DNS resolution of the LabubaRAT command-and-control domain pipicka.xyz, including data-carrying subdomains used for DNS tunneling.
+references:
+  - https://thehackernews.com/2026/07/labubarat-masquerades-as-nvidia.html
+  - https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1071.004
+  - attack.t1572
+logsource:
+  category: dns
+detection:
+  selection:
+    query|contains: &#x27;pipicka.xyz&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @DestinationHostname:*pipicka.xyz*</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/pipicka\.xyz$/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())
+| count &gt; 0</code></pre></div>
+    <div class="tab-content" id="art-87-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;*pipicka.xyz&quot; by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| eval subdomain_len=len(replace(query,&quot;(?i)\.?pipicka\.xyz$&quot;,&quot;&quot;))
+| eval tunneling_suspected=if(subdomain_len&gt;30,&quot;yes&quot;,&quot;no&quot;)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-87-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;*pipicka.xyz&quot; by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| eval subdomain_len=len(replace(query,&quot;(?i)\.?pipicka\.xyz$&quot;,&quot;&quot;))
+| eval tunneling_suspected=if(subdomain_len&gt;30,&quot;yes&quot;,&quot;no&quot;)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bec6888058" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">NVIDIA-branded process spawns shell / LOLBin (LabubaRAT operator tasking)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bec6888058" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts any process whose image name starts with &#x27;nvidia&#x27; spawning cmd/powershell/script hosts/LOLBins — legitimate NVIDIA software does not launch interactive shells. Captures LabubaRAT&#x27;s command-execution, PowerShell-execution and JavaScript-execution operator capabilities running under its NVIDIA masquerade.
+
+Rationale: Article states LabubaRAT masquerades as NVIDIA software and supports command/PowerShell/JavaScript execution; genuine NVIDIA binaries never parent interactive shells, making the nvidia-parent → shell-child pair high-signal for the malware&#x27;s operator tasking.
+
+Cross-checked against:
+  • https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>GeForce Experience / NVIDIA installer legitimately shelling out to run driver-cleanup scripts</li><li>NVIDIA telemetry or crash-reporter invoking rundll32 during driver install</li><li>IT deployment tooling wrapping a renamed nvidia*.exe launcher</li><li>Third-party &#x27;nvidia&#x27;-prefixed OEM utility spawning cmd for a config task</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessFolderPath startswith &quot;C:\\Program Files\\NVIDIA&quot; or InitiatingProcessFolderPath startswith &quot;C:\\Program Files (x86)\\NVIDIA&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: verify the parent nvidia*.exe signer and path — genuine NVIDIA lives under \Program Files\NVIDIA and is Authenticode-signed by NVIDIA; inspect the child command line for discovery/download activity. 2) Contain: if parent is unsigned/misplaced, isolate host and quarantine the binary. 3) Hunt: check the same host for pipicka.xyz beacons, Run-key persistence, and AV/browser enumeration.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-87-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName startswith &quot;nvidia&quot; and InitiatingProcessFileName endswith &quot;.exe&quot;
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where ParentProcessName contains &quot;\\nvidia&quot; and ParentProcessName endswith &quot;.exe&quot;
+| where NewProcessName endswith &quot;\\cmd.exe&quot; or NewProcessName endswith &quot;\\powershell.exe&quot; or NewProcessName endswith &quot;\\pwsh.exe&quot; or NewProcessName endswith &quot;\\wscript.exe&quot; or NewProcessName endswith &quot;\\cscript.exe&quot; or NewProcessName endswith &quot;\\mshta.exe&quot; or NewProcessName endswith &quot;\\rundll32.exe&quot; or NewProcessName endswith &quot;\\regsvr32.exe&quot;
+| where SubjectUserName !endswith &quot;$&quot;
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: NVIDIA-Branded Process Spawns Shell or LOLBin (LabubaRAT)
+id: 3d7c8e11-6a94-45b2-9f0d-2c4e7b1a6d55
+description: Detects a process whose name starts with nvidia spawning a command shell or LOLBin, consistent with LabubaRAT operator command/script execution under an NVIDIA masquerade.
+references:
+  - https://thehackernews.com/2026/07/labubarat-masquerades-as-nvidia.html
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1036.005
+  - attack.t1059.001
+  - attack.t1059.003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|contains: &#x27;\nvidia&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\mshta.exe&#x27;
+      - &#x27;\rundll32.exe&#x27;
+      - &#x27;\regsvr32.exe&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\nvidia* OR *\NVIDIA*) @Image:(*\cmd.exe OR *\powershell.exe OR *\pwsh.exe OR *\wscript.exe OR *\cscript.exe OR *\mshta.exe OR *\rundll32.exe OR *\regsvr32.exe)</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/nvidia.*\.exe$/i
+| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32)\.exe$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;nvidia*.exe&quot;) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-87-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;nvidia*.exe&quot;) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="c2d8c1f0e1" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">NVIDIA-named executable without valid NVIDIA code signature</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="c2d8c1f0e1" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts execution of binaries whose filename starts with &#x27;nvidia&#x27; but whose embedded company/signer is not NVIDIA — the core file-level masquerade LabubaRAT relies on (impersonating NVIDIA&#x27;s container runtime toolkit). Flags nvidia-sysruntime.exe and any re-branded variant that fails to chain to NVIDIA&#x27;s trusted publisher.
+
+Rationale: Directly operationalizes the article&#x27;s &#x27;masquerades as NVIDIA software&#x27; premise: Defender&#x27;s ProcessVersionInfoCompanyName lets us flag nvidia-named binaries whose signer isn&#x27;t NVIDIA. Sentinel left blank because SecurityEvent 4688 carries no signer/company field to express the mismatch.
+
+Cross-checked against:
+  • https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="Masquerading: Invalid Code Signature">T1036.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>OEM/laptop-vendor NVIDIA helper utilities signed under the OEM&#x27;s name rather than NVIDIA</li><li>Portable NVIDIA tools run from a user Downloads folder before install</li><li>Older NVIDIA components with stripped/blank version metadata</li><li>Internal software-packaging wrappers that re-sign an nvidia launcher with a corporate cert</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ProcessVersionInfoCompanyName has_any (&quot;Dell&quot;,&quot;HP&quot;,&quot;Lenovo&quot;,&quot;ASUS&quot;,&quot;Microsoft&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: compute the SHA256 and check reputation; confirm the file is the LabubaRAT loader vs a legitimately OEM-signed helper. 2) Contain: quarantine the binary and isolate the host if the hash is unknown/malicious. 3) Hunt: sweep org-wide for the same hash/filename, then correlate with pipicka.xyz C2 and Run-key persistence on affected hosts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName startswith &quot;nvidia&quot; and FileName endswith &quot;.exe&quot;
+| where isempty(ProcessVersionInfoCompanyName) or ProcessVersionInfoCompanyName !has &quot;NVIDIA&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, SHA256, ProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where FileName startswith &quot;nvidia&quot; and FileName endswith &quot;.exe&quot;
+| where isempty(ProcessVersionInfoCompanyName) or ProcessVersionInfoCompanyName !has &quot;NVIDIA&quot;
+| where AccountName !endswith &quot;$&quot;
+| project TimeGenerated, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, SHA256, ProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: NVIDIA-Named Executable Without NVIDIA Company/Signature
+id: b1e4a2c9-0f37-4d61-8a52-7c9d3e6f01aa
+description: Detects a process whose name starts with nvidia but whose embedded Company is not NVIDIA, consistent with the LabubaRAT file masquerade (nvidia-sysruntime.exe).
+references:
+  - https://thehackernews.com/2026/07/labubarat-masquerades-as-nvidia.html
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1036.005
+  - attack.t1036.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains: &#x27;\nvidia&#x27;
+    Image|endswith: &#x27;.exe&#x27;
+  filter_legit:
+    Company|contains: &#x27;NVIDIA&#x27;
+  condition: selection and not filter_legit
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-87-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\nvidia[^\\]*\.exe$/i
+| NOT ImageFileName=/\\Program Files( \(x86\))?\\NVIDIA/i
+| NOT ImageFileName=/\\Windows\\System32\\/i
+| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;nvidia*.exe&quot;) AND NOT (Processes.process_path=&quot;*\\Program Files\\NVIDIA*&quot; OR Processes.process_path=&quot;*\\Program Files (x86)\\NVIDIA*&quot; OR Processes.process_path=&quot;*\\Windows\\System32\\*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-87-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;nvidia*.exe&quot;) AND NOT (Processes.process_path=&quot;*\\Program Files\\NVIDIA*&quot; OR Processes.process_path=&quot;*\\Program Files (x86)\\NVIDIA*&quot; OR Processes.process_path=&quot;*\\Windows\\System32\\*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bfe512eb31" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">LabubaRAT user-level autostart persistence (Run key / scheduled task referencing NVIDIA loader)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bfe512eb31" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts Run/RunOnce registry writes or scheduled-task creation that reference the LabubaRAT loader (nvidia-sysruntime) or its C2 (pipicka.xyz), or that are written by an nvidia-named process — the &#x27;user level autostart&#x27; persistence the article says LabubaRAT maintains.
+
+Rationale: Article explicitly notes LabubaRAT maintains &#x27;user level autostart&#x27;; keying Run-key value data on the named loader and pipicka.xyz IOC keeps this tight while the nvidia-writer clause catches renamed variants.
+
+Cross-checked against:
+  • https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder">T1547.001</span> <span class="ind tech" title="Scheduled Task/Job: Scheduled Task">T1053.005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Genuine NVIDIA GeForce Experience / driver auto-update writing an nvidia Run entry from \Program Files\NVIDIA</li><li>Software-deployment tooling staging an nvidia launcher in Run for post-reboot install</li><li>Backup/imaging solution restoring a legacy Run value</li><li>Analyst re-adding a known-good nvidia autostart during troubleshooting</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(RegistryValueData has &quot;\\Program Files\\NVIDIA&quot; or RegistryValueData has &quot;\\Program Files (x86)\\NVIDIA&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the full Run value data and confirm the referenced binary is the unsigned nvidia-sysruntime loader (not \Program Files\NVIDIA). 2) Contain: delete the autostart value/task, quarantine the referenced binary, isolate host. 3) Hunt: check for the same value across the fleet and correlate with pipicka.xyz beaconing and loader execution.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-87-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;RegistryValueSet&quot;,&quot;RegistryKeyCreated&quot;)
+| where RegistryKey has @&quot;\CurrentVersion\Run&quot;
+| where RegistryValueData has &quot;nvidia-sysruntime&quot; or RegistryValueData has &quot;pipicka.xyz&quot; or (InitiatingProcessFileName startswith &quot;nvidia&quot; and InitiatingProcessFileName endswith &quot;.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
+| where TimeGenerated &gt; ago(30d)
+| where RegistryKey has @&quot;\CurrentVersion\Run&quot;
+| where RegistryValueData has &quot;nvidia-sysruntime&quot; or RegistryValueData has &quot;pipicka.xyz&quot; or ActingProcessName contains &quot;\\nvidia&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, RegistryKey, RegistryValue, RegistryValueData
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: LabubaRAT Autostart Persistence via Run Key
+id: e7a9c3d5-4b18-49f0-9a6c-2d5e8f1b7c44
+description: Detects Run/RunOnce registry values referencing the LabubaRAT loader nvidia-sysruntime or its C2 pipicka.xyz.
+references:
+  - https://thehackernews.com/2026/07/labubarat-masquerades-as-nvidia.html
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1547.001
+logsource:
+  category: registry_event
+  product: windows
+detection:
+  selection_key:
+    TargetObject|contains: &#x27;\CurrentVersion\Run&#x27;
+  selection_val:
+    - Details|contains: &#x27;nvidia-sysruntime&#x27;
+    - Details|contains: &#x27;pipicka.xyz&#x27;
+  condition: selection_key and selection_val
+level: high</code></pre></div>
+    <div class="tab-content" id="art-87-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:13 @TargetObject:(*\CurrentVersion\Run* OR *\currentversion\run*) @Image:(*\nvidia-sysruntime.exe OR *\NVIDIA-sysruntime.exe OR *\nvidia* OR *\NVIDIA*)</code></pre></div>
+    <div class="tab-content" id="art-87-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=AsepValueUpdate RegObjectName=/\\CurrentVersion\\Run/i
+| (RegStringValue=/nvidia-sysruntime|pipicka\.xyz/i OR ContextImageFileName=/\\nvidia.*\.exe$/i)
+| groupBy([aid, ComputerName, RegObjectName, RegValueName, RegStringValue, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path=&quot;*\\CurrentVersion\\Run*&quot;) AND (Registry.registry_value_data=&quot;*nvidia-sysruntime*&quot; OR Registry.registry_value_data=&quot;*pipicka.xyz*&quot;) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name
+| `drop_dm_object_name(Registry)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-87-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path=&quot;*\\CurrentVersion\\Run*&quot;) AND (Registry.registry_value_data=&quot;*nvidia-sysruntime*&quot; OR Registry.registry_value_data=&quot;*pipicka.xyz*&quot;) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name
+| `drop_dm_object_name(Registry)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="9aaf28a04c" data-platforms="def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trojanized NVIDIA installer download from non-NVIDIA source</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="9aaf28a04c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts creation/download of an nvidia-named executable whose mark-of-the-web origin URL is NOT an NVIDIA domain, or that is written to disk by a browser/mail client — the delivery vector for the fake NVIDIA container-runtime installer that drops LabubaRAT.
+
+Rationale: The &#x27;masquerades as NVIDIA software&#x27; premise implies a fake installer; keying an nvidia-named exe on a non-NVIDIA origin URL (mark-of-the-web) or a browser/mail-client writer surfaces the delivery without alerting on legitimate NVIDIA downloads. Sigma/Datadog omitted because origin-URL is not a standard field for those log shapes.
+
+Cross-checked against:
+  • https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Masquerading">T1036</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Users downloading NVIDIA drivers from a legitimate mirror/CDN not on the allowlist (e.g. an OEM or Steam-hosted redistributable)</li><li>Internal software portal re-hosting NVIDIA installers on a corporate URL</li><li>Driver-management tools (Snappy/Chocolatey) fetching nvidia packages</li><li>Archived nvidia installer copied from a file share and re-tagged with a referrer URL</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(FileOriginUrl has_any (&quot;chocolatey.org&quot;,&quot;steamstatic.com&quot;) or InitiatingProcessAccountName endswith &quot;$&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull FileOriginUrl + referrer and SHA256; confirm the source domain is attacker-controlled and the file is unsigned/non-NVIDIA. 2) Contain: quarantine the file, block the source domain at the proxy, and check whether it was executed. 3) Hunt: search EmailUrlInfo/EmailAttachmentInfo for the same lure, and sweep the fleet for the hash plus subsequent nvidia-sysruntime.exe execution and pipicka.xyz traffic.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc5-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where FileName startswith &quot;nvidia&quot; and FileName endswith &quot;.exe&quot;
+| where isnotempty(FileOriginUrl)
+| where not(FileOriginUrl has &quot;nvidia.com&quot; or FileOriginUrl has &quot;nvidia.cn&quot; or FileOriginUrl has &quot;download.nvidia.com&quot; or FileOriginUrl has &quot;nvidia.co&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, SHA256, InitiatingProcessFileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(30d)
+| where FileName startswith &quot;nvidia&quot; and FileName endswith &quot;.exe&quot;
+| where not(Url has &quot;nvidia.com&quot; or Url has &quot;nvidia.cn&quot;)
+| project TimeGenerated, SrcIpAddr, SrcUsername, DstHostname, Url, FileName, HttpUserAgent = HttpRequestHeaderUserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\\nvidia[^\\]*\.exe$/i
+| ContextImageFileName=/\\(msedge|chrome|firefox|brave|outlook)\.exe$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;nvidia*.exe&quot;) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| search process_name IN (&quot;msedge.exe&quot;,&quot;chrome.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;outlook.exe&quot;)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-87-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;nvidia*.exe&quot;) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| search process_name IN (&quot;msedge.exe&quot;,&quot;chrome.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;outlook.exe&quot;)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="735f02d0c9" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">NVIDIA-branded process outbound to non-NVIDIA public infrastructure (LabubaRAT C2 / SOCKS5 proxy)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="735f02d0c9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Behavioral C2 hunt: any nvidia-named process making public network connections to destinations that are NOT NVIDIA infrastructure. Catches LabubaRAT&#x27;s HTTPS/WebView2 C2 and SOCKS5 proxy traffic even when the operator swaps out pipicka.xyz for fresh infrastructure (the article stresses the binary is re-tasked per campaign).
+
+Rationale: Behavioral complement to the pipicka.xyz IOC hunt: legitimate NVIDIA software talks only to NVIDIA/CDN infrastructure, so an nvidia-named process reaching arbitrary public IPs/domains captures LabubaRAT&#x27;s re-taskable HTTPS/WebView2 C2 and SOCKS5 proxying. Sentinel left blank — this tenant&#x27;s Sentinel network tables (ImNetworkSession/CommonSecurityLog) don&#x27;t carry the initiating process image needed to bind the connection to nvidia*.exe.
+
+Cross-checked against:
+  • https://www.scworld.com/brief/new-rust-based-rat-named-labubarat-impersonates-nvidia-software</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Proxy">T1090</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>NVIDIA software contacting a licensing/telemetry endpoint on a non-nvidia.com CDN (Akamai/Cloudflare edge)</li><li>GeForce Experience pulling game-ready driver assets from a third-party CDN</li><li>OEM nvidia utility phoning home to the OEM&#x27;s domain</li><li>Crash-reporter uploading to a non-NVIDIA error-aggregation service</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessFolderPath startswith &quot;C:\\Program Files\\NVIDIA&quot; or InitiatingProcessFolderPath startswith &quot;C:\\Program Files (x86)\\NVIDIA&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve the remote IP/domain and check reputation/passive-DNS; confirm the initiating binary is the unsigned nvidia-sysruntime loader and assess connection periodicity for beaconing. 2) Contain: block the destination, isolate the host, quarantine the binary. 3) Hunt: pivot the destination IP across the fleet, correlate with pipicka.xyz DNS, Run-key persistence, and loader execution; review for SOCKS5 listener/relay behavior.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc6-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-87-uc6-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-87-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName startswith &quot;nvidia&quot; and InitiatingProcessFileName endswith &quot;.exe&quot;
+| where RemoteIPType == &quot;Public&quot;
+| where not(RemoteUrl has &quot;nvidia.com&quot; or RemoteUrl has &quot;nvidia.cn&quot; or RemoteUrl endswith &quot;nvidia.co&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(30d)
+| where InitiatingProcessFileName startswith &quot;nvidia&quot; and InitiatingProcessFileName endswith &quot;.exe&quot;
+| where RemoteIPType == &quot;Public&quot;
+| where not(RemoteUrl has &quot;nvidia.com&quot; or RemoteUrl has &quot;nvidia.cn&quot; or RemoteUrl endswith &quot;nvidia.co&quot;)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), ConnCount=count(), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: NVIDIA-Branded Process Connects to Non-NVIDIA Host (LabubaRAT C2)
+id: 5f2b9d84-1c67-4a30-8e91-6b3d7c0e2f88
+description: Detects an nvidia-named process initiating a network connection to a destination that is not NVIDIA infrastructure, consistent with LabubaRAT C2 / SOCKS5 proxy traffic.
+references:
+  - https://thehackernews.com/2026/07/labubarat-masquerades-as-nvidia.html
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1071.001
+  - attack.t1090
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection:
+    Image|contains: &#x27;\nvidia&#x27;
+    Initiated: &#x27;true&#x27;
+  filter_nvidia:
+    DestinationHostname|contains: &#x27;nvidia.com&#x27;
+  condition: selection and not filter_nvidia
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-87-uc6-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\nvidia* OR *\NVIDIA*) -@DestinationHostname:*nvidia.com*</code></pre></div>
+    <div class="tab-content" id="art-87-uc6-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\\nvidia.*\.exe$/i
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-87-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process=&quot;*nvidia*&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process
+| `drop_dm_object_name(All_Traffic)`
+| iplocation dest
+| where isnotnull(dest) AND NOT cidrmatch(&quot;10.0.0.0/8&quot;,dest) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,dest) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,dest)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-87-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process=&quot;*nvidia*&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process
+| `drop_dm_object_name(All_Traffic)`
+| iplocation dest
+| where isnotnull(dest) AND NOT cidrmatch(&quot;10.0.0.0/8&quot;,dest) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,dest) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,dest)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="0bf69215de" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">C2 channel detection via inter-beacon-time stddev / fan-out to single dest.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc7-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(1d)
+| where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff(&#x27;second&#x27;, Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
+| order by conn_count desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(2h)
+| where DvcAction != &quot;Block&quot;
+| where ipv4_is_private(DstIpAddr) == false
+| summarize ConnCount = count(),
+            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
+            by DvcHostname, DstIpAddr, DstPortNumber
+| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
+| order by ConnCount desc
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc7-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
+| sort - count</code></pre><pre class="spl-mode-body" id="art-87-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc8-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;pipicka.xyz&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-87-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
+let BadDomains = dynamic([&quot;pipicka.xyz&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc8-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;pipicka.xyz&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;pipicka.xyz&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-87-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;pipicka.xyz&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;pipicka.xyz&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="2cc42b1dca" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">DNS tunneling / TXT-heavy domain queries</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="2cc42b1dca" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over Unencrypted Non-C2 Protocol">T1048.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc9-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(1d)
+| where RemotePort == 53 and isnotempty(RemoteUrl)
+| extend qlen = strlen(RemoteUrl)
+| where qlen &gt; 50
+| extend SecondLevelDomain = extract(@&quot;([\w-]+\.[a-zA-Z]{2,})$&quot;, 1, RemoteUrl)
+| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)
+    by DeviceName, SecondLevelDomain
+| where qcount &gt; 100 and uniqueSubs &gt; 20
+| order by qcount desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImDnsActivity normalises Windows DNS, Sysmon EID 22, Linux dnsmasq, etc.
+ImDnsActivity
+| where TimeGenerated &gt; ago(24h)
+| where DnsQueryTypeName == &quot;TXT&quot;
+| summarize Queries = count(), DistinctNames = dcount(DnsQuery)
+            by SrcIpAddr, bin(TimeGenerated, 5m)
+| where Queries &gt; 200    // tune to TXT-query baseline for environment
+| order by Queries desc
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc9-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+    where DNS.message_type=&quot;QUERY&quot;
+    by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| eval qlen=len(query)
+| where qlen &gt; 50
+| rex field=query &quot;(?&lt;second_level_domain&gt;[\w-]+\.[\w-]+)$&quot;
+| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
+    by src, second_level_domain
+| where qcount &gt; 100 AND unique_subs &gt; 20
+| sort - qcount</code></pre><pre class="spl-mode-body" id="art-87-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+    where DNS.message_type=&quot;QUERY&quot;
+    by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| eval qlen=len(query)
+| where qlen &gt; 50
+| rex field=query &quot;(?&lt;second_level_domain&gt;[\w-]+\.[\w-]+)$&quot;
+| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
+    by src, second_level_domain
+| where qcount &gt; 100 AND unique_subs &gt; 20
+| sort - qcount</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">PowerShell encoded / obfuscated command</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="27f9f5bb66" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc10-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
+| where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-87-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\pwsh.exe&quot;
+| where CommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
+| project TimeGenerated, Computer, Account, NewProcessName,
+          CommandLine, ParentProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
+status: experimental
+description: |
+    PowerShell launched with -EncodedCommand, base64 strings, hidden
+    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
+    .WebClient.DownloadString — combinations indicating evasion.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1059.001
+    - attack.t1027
+    - attack.execution
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+    selection_args:
+        CommandLine|contains:
+            - &#x27;-enc &#x27;
+            - &#x27;EncodedCommand&#x27;
+            - &#x27;FromBase64String&#x27;
+            - &#x27;Invoke-Expression&#x27;
+            - &#x27;IEX(&#x27;
+            - &#x27;DownloadString&#x27;
+            - &#x27;Net.WebClient&#x27;
+            - &#x27;-w hidden&#x27;
+            - &#x27;-WindowStyle Hidden&#x27;
+            - &#x27;-nop&#x27;
+            - &#x27;-NoProfile&#x27;
+            - &#x27;-ep bypass&#x27;
+            - &#x27;-ExecutionPolicy Bypass&#x27;
+    condition: selection_image and selection_args
+falsepositives:
+    - DevOps tooling that legitimately uses encoded command for
+      cross-shell escaping
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
+      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
+        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
+        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
+        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
+        OR Processes.process=&quot;*Net.WebClient*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-87-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
+      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
+        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
+        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
+        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
+        OR Processes.process=&quot;*Net.WebClient*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ace0fd1925" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ace0fd1925" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Access Software">T1219</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-87-uc11-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
+   or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-87-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where NewProcessName endswith &quot;\AnyDesk.exe&quot;
+   or NewProcessName endswith &quot;\TeamViewer.exe&quot;
+   or NewProcessName endswith &quot;\TeamViewer_Service.exe&quot;
+   or NewProcessName endswith &quot;\ScreenConnect.ClientService.exe&quot;
+   or NewProcessName endswith &quot;\ConnectWiseControl.ClientService.exe&quot;
+   or NewProcessName endswith &quot;\atera_agent.exe&quot;
+   or NewProcessName endswith &quot;\SplashtopStreamer.exe&quot;
+   or NewProcessName endswith &quot;\RustDesk.exe&quot;
+   or NewProcessName endswith &quot;\NinjaOne.exe&quot;
+| project TimeGenerated, Computer, Account, NewProcessName,
+          CommandLine, ParentProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
+status: experimental
+description: |
+    AnyDesk / TeamViewer / ScreenConnect / Atera / Splashtop /
+    RustDesk — RMM tools attackers commonly install for hands-on-
+    keyboard access. Filter against the IT estate&#x27;s known tool.
+references:
+    - https://attack.mitre.org/techniques/T1219/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1219
+    - attack.command-and-control
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - &#x27;\AnyDesk.exe&#x27;
+            - &#x27;\TeamViewer.exe&#x27;
+            - &#x27;\TeamViewer_Service.exe&#x27;
+            - &#x27;\ScreenConnect.ClientService.exe&#x27;
+            - &#x27;\ConnectWiseControl.ClientService.exe&#x27;
+            - &#x27;\atera_agent.exe&#x27;
+            - &#x27;\SplashtopStreamer.exe&#x27;
+            - &#x27;\RustDesk.exe&#x27;
+            - &#x27;\NinjaOne.exe&#x27;
+    condition: selection
+falsepositives:
+    - IT-approved RMM in use across the estate. Maintain a known-IT-
+      tool exclusion list per environment.
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-87-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-87-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f9e5c150c4" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f9e5c150c4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-87-uc12-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-87-uc12-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-87-uc12-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-87-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;nvidia-sysruntime.exe&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;nvidia-sysruntime.exe&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;nvidia-sysruntime.exe&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;nvidia-sysruntime.exe&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-87-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-87-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-87-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-87-uc12-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;nvidia-sysruntime.exe&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;nvidia-sysruntime.exe&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-87-uc12-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — LabubaRAT Masquerades as NVIDIA Software to Control Windows Hosts ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;nvidia-sysruntime.exe&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;nvidia-sysruntime.exe&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-89" data-art-slug="2026-07-14-rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1528"
@@ -11592,132 +12690,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-114" data-art-slug="2026-07-13-cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2008-4128 — Cisco IOS Cross-Site Request Forgery Vulnerability Cisco IOS 12.4 contains multiple cross-site forgery vulnerabilities that allows remote attackers to execute arbitrary commands via (1) a certain &quot;show privilege&quot; command to the /level/15/exec/- URI, and (2) a certain &quot;alias exec&quot; command to the /level/15/exec/-/configure/http URI. Vendor: Cisco, Product: IOS. Federal patch due: 2026-07-16. CVE-2008-4128  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-13-cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2008-4128 — Cisco IOS Cross-Site Request Forgery Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2026-07-13</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Cisco IOS 12.4 contains multiple cross-site forgery vulnerabilities that allows remote attackers to execute arbitrary commands via (1) a certain &quot;show privilege&quot; command to the /level/15/exec/- URI, and (2) a certain &quot;alias exec&quot; command to the /level/15/exec/-/configure/http URI. Vendor: Cisco, Product: IOS. Federal patch due: 2026-07-16.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2008-4128</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-114-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-114"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-114-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-114-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-114-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-114-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-114-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2008-4128&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-114-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2008-4128&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-114-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-114-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-114-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-114-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2008-4128&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-114-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2008-4128&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

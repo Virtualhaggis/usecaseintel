@@ -1,3 +1,337 @@
+<article class="card" id="art-3034" data-art-slug="2021-11-03-cisa-kev-cve-2020-10189-zoho-manageengine-desktop-central-fi"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="windows"
+  data-uc-count="3" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2020-10189 — Zoho ManageEngine Desktop Central File Upload Vulnerability Zoho ManageEngine Desktop Central contains a file upload vulnerability that allows for unauthenticated remote code execution. Vendor: Zoho, Product: ManageEngine. Federal patch due: 2022-05-03. CVE-2020-10189 T1190 Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2021-11-03-cisa-kev-cve-2020-10189-zoho-manageengine-desktop-central-fi" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2020-10189 — Zoho ManageEngine Desktop Central File Upload Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2021-11-03</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Zoho ManageEngine Desktop Central contains a file upload vulnerability that allows for unauthenticated remote code execution. Vendor: Zoho, Product: ManageEngine. Federal patch due: 2022-05-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-10189</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">exchange.dumb1.com</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">66.42.98.220</span> <span class="ind ">91.208.184.78</span> <span class="ind ">74.82.201.8</span></div>
+<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">f91f2a7e19447343…</span> <span class="ind ">de9ef08a14830596…</span> <span class="ind ">d854f775ab1071ee…</span></div>
+<div class="ind-group"><span class="ind-label">MD5</span><span class="ind ">5909983db4d9023e…</span> <span class="ind ">7966c2c546b71e80…</span> <span class="ind ">3e856162c36b5329…</span> <span class="ind ">659bd19b562059f3…</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3034-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3034"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3034-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3034-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3034-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3034-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3034-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-10189&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3034-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-10189&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3034-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3034-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3034-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3034-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-10189&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3034-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-10189&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3034-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3034-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3034-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3034-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3034-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;66.42.98.220&quot;, &quot;91.208.184.78&quot;, &quot;74.82.201.8&quot;) or RemoteUrl has_any (&quot;exchange.dumb1.com&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-3034-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;66.42.98.220&quot;, &quot;91.208.184.78&quot;, &quot;74.82.201.8&quot;]);
+let BadDomains = dynamic([&quot;exchange.dumb1.com&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-3034-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-3034-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3034-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3034-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3034-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;66.42.98.220&quot;, &quot;91.208.184.78&quot;, &quot;74.82.201.8&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;exchange.dumb1.com&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;exchange.dumb1.com&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-3034-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;66.42.98.220&quot;, &quot;91.208.184.78&quot;, &quot;74.82.201.8&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;exchange.dumb1.com&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;exchange.dumb1.com&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3034-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3034-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3034-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3034-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3034-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+// (Initiating only) so column-projection has to differ per side.
+union
+    ( DeviceFileEvents
+        | where Timestamp &gt; ago(7d)
+        | where InitiatingProcessAccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;) or SHA1 in~ (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;) or MD5 in~ (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
+    ( DeviceProcessEvents
+        | where Timestamp &gt; ago(7d)
+        | where AccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;) or SHA1 in~ (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;) or MD5 in~ (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-3034-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+// Defender version so the engine can push hash predicates per-side.
+let BadHashes = dynamic([&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;]);
+union
+    ( ImFileEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where TargetFileSHA256 in~ (BadHashes)
+           or TargetFileSHA1 in~ (BadHashes)
+           or TargetFileMD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType,
+                  TargetFileName, TargetFilePath, TargetFileSHA256,
+                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
+    ( ImProcessCreate
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
+                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
+                  TargetFileSHA256 = SHA256,
+                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-3034-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-3034-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3034-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3034-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3034-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-3034-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;f91f2a7e1944734371562f18b066f193605e07223aab90bd1e8925e23bbeaa1c&quot;, &quot;de9ef08a148305963accb8a64eb22117916aa42ab0eddf60ccb8850468a194fc&quot;, &quot;d854f775ab1071eebadc0eb44d8571c387567c233a71d2e26242cd9a80e67309&quot;, &quot;5909983db4d9023e4098e56361c96a6f&quot;, &quot;7966c2c546b71e800397a67f942858d0&quot;, &quot;3e856162c36b532925c8226b4ed3481c&quot;, &quot;659bd19b562059f3f0cc978e15624fd9&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3035" data-art-slug="2021-11-03-cisa-kev-cve-2019-8394-zoho-manageengine-servicedesk-plus-sd"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -5526,236 +5860,6 @@ level: medium
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
 | `drop_dm_object_name(Authentication)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3102" data-art-slug="2021-07-19-why-you-should-upgrade-to-maven-version-3-8-1"
-  data-phases="c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="Why you should upgrade to Maven version 3.8.1 If you are still running on an old Maven version like 3.6.3 or below you definitely need to upgrade to version 3.8.1 because of security reasons. Learn more about why you should upgrade and how to do it. CVE-2021-26291 T1190 [LLM] Vulnerable Maven (&lt;3.8.1) invocation revealed by build classpath — CVE-2021-26291 [LLM] Maven fetching dependencies over cleartext HTTP (MITM-exposed artifact download) — CVE-2021-26291 Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2021-07-19-why-you-should-upgrade-to-maven-version-3-8-1" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/why-you-should-upgrade-to-maven-version-3-8-1/" target="_blank" rel="noopener">Why you should upgrade to Maven version 3.8.1</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2021-07-19</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">If you are still running on an old Maven version like 3.6.3 or below you definitely need to upgrade to version 3.8.1 because of security reasons. Learn more about why you should upgrade and how to do it.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-26291</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3102-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3102"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3102-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Maven fetching dependencies over cleartext HTTP (MITM-exposed artifact download) — CVE-2021-26291</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable Maven (&lt;3.8.1) invocation revealed by build classpath — CVE-2021-26291</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="904950eb9f" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Vulnerable Maven (&lt;3.8.1) invocation revealed by build classpath — CVE-2021-26291</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="904950eb9f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for Maven builds running on versions prior to 3.8.1, which follow HTTP repository references from transitive POMs by default and are exposed to dependency MITM/download-hijacking (CVE-2021-26291). The Maven launcher embeds its version in the java classpath/maven.home path (apache-maven-X.Y.Z), so the in-use version is extracted from process command lines and compared against the 3.8.1 fix.
-
-Rationale: Anchors on the article&#x27;s exact fix boundary (Maven 3.8.1) and the launcher&#x27;s self-identifying &#x27;apache-maven-X.Y.Z&#x27; classpath/maven.home string, extracting the live version and comparing to the 3.8.1 patch — directly surfaces hosts still exposed to CVE-2021-26291&#x27;s HTTP-repo MITM.
-
-Cross-checked against:
-  • https://www.mend.io/blog/maven-security-vulnerability-cve-2021-26291/
-  • https://maven.apache.org/security.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Adversary-in-the-Middle">T1557</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy CI/CD build agents intentionally pinned to Maven 3.6.3 for reproducibility</li><li>Developer workstations with multiple Maven installs where only the old one is on a stale PATH</li><li>Vendor-bundled Maven inside an IDE (IntelliJ/Eclipse) shipping a pre-3.8.1 copy</li><li>Air-gapped/internal-only builds where all repos are HTTPS already despite old Maven (lower real risk)</li><li>Docker base images baking in apache-maven-3.6.x</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;airgap&quot;,&quot;isolated-build&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the extracted MavenVersion and host role (dev workstation vs build agent); check whether the project/settings.xml actually defines or pulls any http:// repository. 2) Contain: for build agents, upgrade to Maven 3.8.1+ or deploy the maven-default-http-blocker mirror (mirrorOf=external:http:*, blocked=true) into ${maven.home}/conf/settings.xml to force HTTPS-only. 3) Hunt: pivot the same host to UC2 to see if that Maven instance has actually fetched artifacts over cleartext HTTP, and review pom.xml/settings.xml for http:// &lt;repository&gt;/&lt;mirror&gt; URLs and abandoned/expired repo domains.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3102-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3102-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3102-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3102-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3102-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;java.exe&quot; or FileName =~ &quot;javaw.exe&quot; or InitiatingProcessFileName in~ (&quot;mvn.cmd&quot;,&quot;mvn.exe&quot;,&quot;mvnd.exe&quot;)
-| where ProcessCommandLine has &quot;apache-maven&quot; or ProcessCommandLine has &quot;maven.home&quot; or ProcessCommandLine has &quot;plexus.classworlds&quot;
-| extend MavenVersion = extract(@&quot;(?i)apache-maven-(\d+\.\d+\.\d+)&quot;, 1, ProcessCommandLine)
-| where isnotempty(MavenVersion)
-| where parse_version(MavenVersion) &lt; parse_version(&quot;3.8.1&quot;)
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, MavenVersion, FileName, ProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where CommandLine has &quot;apache-maven&quot;
-| extend MavenVersion = extract(@&quot;(?i)apache-maven-(\d+\.\d+\.\d+)&quot;, 1, CommandLine)
-| where isnotempty(MavenVersion)
-| where parse_version(MavenVersion) &lt; parse_version(&quot;3.8.1&quot;)
-| project TimeGenerated, Computer, SubjectUserName, NewProcessName, MavenVersion, CommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4688 @CommandLine:(*apache-maven-2.* OR *apache-maven-3.0.* OR *apache-maven-3.1.* OR *apache-maven-3.2.* OR *apache-maven-3.3.* OR *apache-maven-3.4.* OR *apache-maven-3.5.* OR *apache-maven-3.6.* OR *apache-maven-3.7.* OR *apache-maven-3.8.0*)</code></pre></div>
-    <div class="tab-content" id="art-3102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\(java|javaw)\.exe$/i
-| CommandLine=/apache-maven-(2\.|3\.([0-7]\.|8\.0))/i
-| groupBy([aid, ComputerName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3102-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*apache-maven-*&quot; by Processes.dest, Processes.user, Processes.process | drop_dm_object_name(Processes) | rex field=process &quot;apache-maven-(?&lt;MavenVersion&gt;\d+\.\d+\.\d+)&quot; | where isnotnull(MavenVersion) | eval p=split(MavenVersion,&quot;.&quot;), maj=tonumber(mvindex(p,0)), minr=tonumber(mvindex(p,1)), pat=tonumber(mvindex(p,2)) | where maj&lt;3 OR (maj==3 AND minr&lt;8) OR (maj==3 AND minr==8 AND pat&lt;1) | table dest, user, MavenVersion, process, count, firstTime, lastTime | sort MavenVersion</code></pre><pre class="spl-mode-body" id="art-3102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*apache-maven-*&quot; by Processes.dest, Processes.user, Processes.process | drop_dm_object_name(Processes) | rex field=process &quot;apache-maven-(?&lt;MavenVersion&gt;\d+\.\d+\.\d+)&quot; | where isnotnull(MavenVersion) | eval p=split(MavenVersion,&quot;.&quot;), maj=tonumber(mvindex(p,0)), minr=tonumber(mvindex(p,1)), pat=tonumber(mvindex(p,2)) | where maj&lt;3 OR (maj==3 AND minr&lt;8) OR (maj==3 AND minr==8 AND pat&lt;1) | table dest, user, MavenVersion, process, count, firstTime, lastTime | sort MavenVersion</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1c48155743" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Maven fetching dependencies over cleartext HTTP (MITM-exposed artifact download) — CVE-2021-26291</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1c48155743" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for the actual exposed behavior behind CVE-2021-26291: a Maven client retrieving artifacts (.jar/.pom/maven-metadata.xml) from an external repository over HTTP/port 80 instead of HTTPS, which is interceptable by an adversary-in-the-middle or via hijacked/abandoned repo domains. Anchors on the &#x27;Apache-Maven/x&#x27; User-Agent and Maven&#x27;s java process reaching public IPs on port 80.
-
-Rationale: Uses Maven&#x27;s self-identifying &#x27;Apache-Maven/&lt;ver&gt;&#x27; HTTP User-Agent plus cleartext port-80 to a public destination — the precise MITM-exposed channel CVE-2021-26291 warns about (transitive POMs pointing repos at http:// or abandoned domains). Excludes localhost/private ranges, which the article notes remain allowed.
-
-Cross-checked against:
-  • https://www.mend.io/blog/maven-security-vulnerability-cve-2021-26291/
-  • https://maven.apache.org/security.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Adversary-in-the-Middle">T1557</span> <span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal Nexus/Artifactory mirror still served over HTTP on a private IP (excluded by Public/RFC1918 filters but a public-IP internal mirror would slip through)</li><li>Legitimate vendor repo that only offers HTTP (e.g. older plugin repos) — real but lower-severity exposure</li><li>Corporate proxy that downgrades to port 80 internally before TLS egress</li><li>Build agent using a deliberately allow-listed HTTP repo for a non-Central artifact</li><li>Non-Maven Java app coincidentally sending an HTTP request on port 80 (filtered out by the Apache-Maven UA / maven cmdline anchor)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteUrl !has &quot;://nexus.internal&quot; and RemoteUrl !has &quot;://artifactory.corp&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the destination host/domain of the http:// fetch and whether it is an external (non-corporate) repo; capture the artifact path (group/artifact/version) and the requesting build host/user. 2) Contain: block external HTTP egress for build agents at the proxy/firewall and push the maven-default-http-blocker mirror (mirrorOf=external:http:*, blocked=true, url=https://0.0.0.0/) so the build fails closed instead of fetching cleartext. 3) Hunt: identify which pom.xml/parent POM introduced the http:// repository (often a transitive dependency), check whether the domain is expired/hijackable, and validate downloaded artifact hashes against Maven Central to rule out a swapped jar.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3102-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3102-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3102-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3102-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3102-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemotePort == 80
-| where RemoteIPType == &quot;Public&quot;
-| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;mvn.cmd&quot;,&quot;mvnd.exe&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;apache-maven&quot;,&quot;plexus.classworlds&quot;,&quot;maven.home&quot;,&quot;\\.m2\\repository&quot;)
-   or RemoteUrl has_any (&quot;maven-metadata.xml&quot;,&quot;/maven2/&quot;,&quot;/repository/&quot;,&quot;.pom&quot;,&quot;.jar&quot;)
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where DstPortNumber == 80
-| where HttpRequestHeaderUserAgent startswith &quot;Apache-Maven&quot;
-| where Url startswith &quot;http://&quot;
-| project TimeGenerated, SrcIpAddr, SrcUsername, Url, HttpHostName, DstIpAddr, DstPortNumber, HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:80 @Image:(*\java.exe OR *\javaw.exe OR *\JAVA.EXE OR *\Java.exe)</code></pre></div>
-    <div class="tab-content" id="art-3102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=80
-| ContextImageFileName=/\\(java|javaw|mvn)\.exe$/i
-| NOT (cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) OR cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4) OR cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4) OR cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4))
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3102-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_user_agent=&quot;Apache-Maven*&quot; AND Web.dest_port=80 by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_user_agent | drop_dm_object_name(Web) | where like(url,&quot;http://%&quot;) | table firstTime, lastTime, src, dest, dest_port, http_user_agent, url, count | sort -lastTime</code></pre><pre class="spl-mode-body" id="art-3102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_user_agent=&quot;Apache-Maven*&quot; AND Web.dest_port=80 by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_user_agent | drop_dm_object_name(Web) | where like(url,&quot;http://%&quot;) | table firstTime, lastTime, src, dest, dest_port, http_user_agent, url, count | sort -lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3102-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3102-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3102-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-26291&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-26291&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3102-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-26291&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-26291&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

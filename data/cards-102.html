@@ -1,3 +1,147 @@
+<article class="card" id="art-3529" data-art-slug="2019-03-13-snyking-in-regular-expression-denial-of-service-vulnerabilit"
+  data-phases="c2,exploit,install" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="sent,sigma,spl"
+  data-splunk-cats="cloud"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="1"
+  data-search="Snyking in - regular expression denial of service vulnerability exploit in the ms package Welcome to another edition of our Snyking In exploit series! In this episode, we’ll be looking at the regular expression denial of service vulnerability, demonstrating how it can be exploited, as well as the potential risk they pose to your data and systems.  T1190 [LLM] ReDoS in ms time-parser: oversized web request body with multi-second server processing time">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2019-03-13-snyking-in-regular-expression-denial-of-service-vulnerabilit" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/snyking-in-regular-expression-denial-of-service-vulnerability-exploit-in-the-ms-package/" target="_blank" rel="noopener">Snyking in - regular expression denial of service vulnerability exploit in the ms package</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2019-03-13</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>1 kill-chain phase detected</span>
+  </div>
+  <p class="summary">Welcome to another edition of our Snyking In exploit series! In this episode, we’ll be looking at the regular expression denial of service vulnerability, demonstrating how it can be exploited, as well as the potential risk they pose to your data and systems.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3529-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3529"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3529-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] ReDoS in ms time-parser: oversized web request body with multi-second server processing time</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="ad577e5371" data-platforms="sent,sigma,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">ReDoS in ms time-parser: oversized web request body with multi-second server processing time</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="ad577e5371" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the server-side symptom of the ms npm package ReDoS (CVE-2017-20162) demonstrated in this article: a POST whose body carries a very long repeated-character run followed by a near-miss time token (e.g. 60000x &#x27;5&#x27; + &#x27; minutea&#x27;) that never matches the duration regex, forcing catastrophic backtracking. Surfaces requests that combine an abnormally large request body with a multi-second processing time — the observable fingerprint of a single-request ReDoS denial of service against an app that parses user-supplied durations.
+
+Rationale: Anchored on the article&#x27;s concrete ReDoS mechanism against the ms duration regex: a very large input (~60000 chars in the demo) that fails to match forces catastrophic backtracking and a 10-15s hang, versus ~52ms for a normal parse. The two-field combination (CsBytes &gt;= 10000, above the ms incomplete-fix cap, AND TimeTaken &gt;= 5000ms) is the high-fidelity server-side signature; single-request DoS leaves no EDR/network IOC, so only web-access telemetry can see it. Cross-checked the Snyk vuln DB (CVE-2017-20162, fixed in ms 2.0.0) against the article.
+
+Cross-checked against:
+  • https://security.snyk.io/vuln/npm:ms:20170412
+  • https://snyk.io/blog/snyking-in-regular-expression-denial-of-service-vulnerability-exploit-in-the-ms-package/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Endpoint Denial of Service: Application or System Exploitation">T1499.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate large file uploads to a POST endpoint that are processed slowly</li><li>Report-generation or data-export endpoints that are inherently multi-second</li><li>Bulk API import / batch ingestion jobs posting large payloads</li><li>Slow downstream/third-party integration calls inflating server processing time on a large request</li><li>Backup or sync endpoints receiving large bodies during scheduled windows</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Sentinel: exclude known-legit large/slow endpoints once identified
+| where CsUriStem !has_any (&quot;/upload&quot;, &quot;/import&quot;, &quot;/export&quot;, &quot;/report&quot;, &quot;/backup&quot;, &quot;/sync&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the raw request for the flagged CsHost/CsUriStem and inspect the body/params for a long repeated-character run followed by a near-miss time token (e.g. digits + &#x27; minutea&#x27;); confirm the endpoint feeds user input into a duration/time parser (ms or similar) and check the deployed ms version (&lt; 2.0.0 is vulnerable to CVE-2017-20162). 2) Contain: add a WAF/reverse-proxy rule capping request-body size and enforce server-side input-length validation on the affected parameter; upgrade ms to &gt;= 2.0.0. 3) Hunt: pivot on the source IP for repeated large slow POSTs (volumetric attempts) and check other endpoints that parse user-supplied durations/regex-heavy fields for the same oversized-body + high-latency pattern.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3529-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3529-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3529-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3529-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// ms package ReDoS (CVE-2017-20162) symptom on Azure App Service / Node web front-end.
+// TimeTaken is milliseconds; CsBytes is bytes received (includes the POST body).
+// Signal = large request body AND multi-second server processing time on the same request.
+AppServiceHTTPLogs
+| where TimeGenerated &gt; ago(7d)
+| where CsMethod == &quot;POST&quot;
+| where CsBytes &gt;= 10000          // exceeds the ms 10,000-char incomplete-fix cap; article payload was ~60000 chars
+| where TimeTaken &gt;= 5000         // &gt;=5s server processing; article showed 10-15s hangs (normal parse ~52ms)
+| project TimeGenerated, CsHost, CIp, CsMethod, CsUriStem, CsUriQuery, CsBytes, TimeTaken, ScStatus, UserAgent
+| order by TimeTaken desc
+// IIS-fronted variant: W3CIISLog | where csMethod == &quot;POST&quot; | where csBytes &gt;= 10000 | where TimeTaken &gt;= 5000</code></pre></div>
+    <div class="tab-content" id="art-3529-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web ReDoS Symptom - Oversized POST Body With Multi-Second Processing Time (ms CVE-2017-20162)
+id: 6f2a9c4e-1d7b-4e2a-9b3f-0c5a7e8d1234
+description: Detects the server-side fingerprint of a regular-expression denial-of-service against a duration-parsing endpoint (as shown in Snyk&#x27;s ms package ReDoS demo). A POST carrying an oversized body that also incurs multi-second server processing time indicates catastrophic backtracking triggered by a long unmatched input.
+references:
+  - https://snyk.io/blog/snyking-in-regular-expression-denial-of-service-vulnerability-exploit-in-the-ms-package/
+  - https://security.snyk.io/vuln/npm:ms:20170412
+author: SOC Detection Engineering
+date: 2026/07/02
+tags:
+  - attack.impact
+  - attack.t1499.004
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: POST
+    cs-bytes|gte: 10000
+    time-taken|gte: 5000
+  condition: selection
+falsepositives:
+  - Legitimate large file uploads or bulk imports processed slowly
+  - Report generation / export endpoints that are inherently slow
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-3529-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3529-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3529-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3529-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count as request_count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.bytes_in&gt;10000 by Web.src Web.dest Web.site Web.uri_path Web.http_method Web.bytes_in 
+| `drop_dm_object_name(Web)` 
+| eval note=&quot;oversized POST body (&gt;10000 bytes) to a duration-parsing endpoint - candidate ms ReDoS (CVE-2017-20162); correlate with raw web logs for multi-second response_time&quot; 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - bytes_in</code></pre><pre class="spl-mode-body" id="art-3529-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as request_count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.bytes_in&gt;10000 by Web.src Web.dest Web.site Web.uri_path Web.http_method Web.bytes_in 
+| `drop_dm_object_name(Web)` 
+| eval note=&quot;oversized POST body (&gt;10000 bytes) to a duration-parsing endpoint - candidate ms ReDoS (CVE-2017-20162); correlate with raw web logs for multi-second response_time&quot; 
+| convert ctime(firstTime) ctime(lastTime) 
+| sort - bytes_in</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3536" data-art-slug="2019-02-26-open-source-maintainers-want-to-be-secure-but-70-lack-skills"
   data-phases="c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190"
@@ -5663,176 +5807,6 @@ DeviceFileEvents
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_name IN (&quot;my_module.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3604" data-art-slug="2018-01-25-where-do-security-patches-come-from"
-  data-phases="c2,exploit,install" data-sev="med"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Where do security patches come from? The best solution for known vulnerabilities is to upgrade your software. But sometimes there’s not a security update immediately available. The next best solution is to patch your software. In this post, we go through four ways to find security patches for open source software.  T1190 Article-specific behavioural hunt — Where do security patches come from?">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2018-01-25-where-do-security-patches-come-from" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/where-do-security-patches-come-from/" target="_blank" rel="noopener">Where do security patches come from?</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2018-01-25</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>1 kill-chain phase detected</span>
-  </div>
-  <p class="summary">The best solution for known vulnerabilities is to upgrade your software. But sometimes there’s not a security update immediately available. The next best solution is to patch your software. In this post, we go through four ways to find security patches for open source software.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3604-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3604"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3604-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Where do security patches come from?</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="76fb7aaaab" data-platforms="def,sent,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Where do security patches come from?</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="76fb7aaaab" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3604-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3604-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3604-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3604-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Where do security patches come from?
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3604-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Where do security patches come from?
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3604-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3604-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3604-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3604-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Where do security patches come from? ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3604-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Where do security patches come from? ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
