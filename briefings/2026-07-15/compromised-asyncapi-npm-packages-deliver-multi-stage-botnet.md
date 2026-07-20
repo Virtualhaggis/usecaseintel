@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Install of compromised @asyncapi npm package versions (generator/helpers/components/specs)
 
-`UC_84_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_86_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Node.js spawns detached background node fetching Miasma stage-2 from IPFS gatewa
 
-`UC_84_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_86_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### IPFS gateway fetch of Miasma stage-2 CID (ipfs.io/ipfs/QmQobZSp...)
 
-`UC_84_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_86_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceNetworkEvents
 
 ### Miasma sync.js loader dropped to OS-specific path by node and executed
 
-`UC_84_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_86_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceFileEvents
 
 ### Miasma botnet C2 beacon to 85.137.53.71 on ports 8080/8081/8091
 
-`UC_84_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_86_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ DeviceNetworkEvents
 
 ### Miasma persistence via Windows Run key or startup written by node/npm process
 
-`UC_84_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_86_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceRegistryEvents
 
 ### Suspicious downloader child (powershell/cmd/curl) spawned by npm/node_modules
 
-`UC_84_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_86_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -333,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised AsyncAPI npm Packages Deliver Multi-Stage Botnet Malware
 
-`UC_84_7` · phase: **exploit** · confidence: **High**
+`UC_86_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

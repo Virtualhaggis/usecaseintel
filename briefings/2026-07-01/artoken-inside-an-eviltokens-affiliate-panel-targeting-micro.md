@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### ARToken vendor-impersonation phish: inbound mail failing SPF+DKIM+DMARC with pumber.png signature lure
 
-`UC_202_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_203_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ EmailEvents
 
 ### SharePoint tenant lookalike via .com-folding (mononapfpcom.sharepoint.com) in phishing URL
 
-`UC_202_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_203_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ EmailUrlInfo
 
 ### EvilTokens device-code phishing API call: POST /api/device/start with clientMode broker to C2
 
-`UC_202_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_203_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ EmailUrlInfo
 
 ### EvilTokens PRT persistence chain: /prt/setup /prt/refresh /prt/renew /prt/reacquire /prt/cookie to C2
 
-`UC_202_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_203_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ EmailUrlInfo
 
 ### ARToken Cloudflare Workers lure delivery: {uuid}-docviewer/onedrive/adobe2/document.workers.dev
 
-`UC_202_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_203_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceNetworkEvents
 
 ### Endpoint egress to ARToken C2 / phishing infrastructure (pamconj.com, workers.dev)
 
-`UC_202_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_203_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

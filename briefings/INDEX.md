@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2589 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,8 +12,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [an ai soc evaluation guide for security leaders](./2026-07-20/an-ai-soc-evaluation-guide-for-security-leaders.md)
 - [critical servicenow code execution flaw now exploited in att](./2026-07-20/critical-servicenow-code-execution-flaw-now-exploited-in-att.md)
 - [exposed server reveals ai assisted phishing toolkit behind w](./2026-07-20/exposed-server-reveals-ai-assisted-phishing-toolkit-behind-w.md)
+- [fakegit campaign uses 7 600 github repositories to spread sm](./2026-07-20/fakegit-campaign-uses-7-600-github-repositories-to-spread-sm.md)
 - [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
 - [hugging face warns an autonomous ai agent hacked its network](./2026-07-20/hugging-face-warns-an-autonomous-ai-agent-hacked-its-network.md)
+- [jadepuffer agentic attacks now target ai model data with ran](./2026-07-20/jadepuffer-agentic-attacks-now-target-ai-model-data-with-ran.md)
 - [mythos didn t break your security program your exposure wind](./2026-07-20/mythos-didn-t-break-your-security-program-your-exposure-wind.md)
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
 - [new hollowgraph malware uses microsoft graph for stealthy c2](./2026-07-20/new-hollowgraph-malware-uses-microsoft-graph-for-stealthy-c2.md)
@@ -40,10 +42,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [armenia detains russian tourist on u s warrant for revil hac](./2026-07-17/armenia-detains-russian-tourist-on-u-s-warrant-for-revil-hac.md)
 - [cisa adds exploited sharepoint rce zero day cve 2026 58644 t](./2026-07-17/cisa-adds-exploited-sharepoint-rce-zero-day-cve-2026-58644-t.md)
 - [e u orders google to open android mic camera and screen to r](./2026-07-17/e-u-orders-google-to-open-android-mic-camera-and-screen-to-r.md)
-- [ernst young discloses data breach after support system hack](./2026-07-17/ernst-young-discloses-data-breach-after-support-system-hack.md)
 - [fake coding tests deliver ottercookie aligned malware hidden](./2026-07-17/fake-coding-tests-deliver-ottercookie-aligned-malware-hidden.md)
 - [goldeneyedog subgroup linked to digicert breach and code sig](./2026-07-17/goldeneyedog-subgroup-linked-to-digicert-breach-and-code-sig.md)
-- [inside the search for clean residential proxies for carding](./2026-07-17/inside-the-search-for-clean-residential-proxies-for-carding.md)
 - [new goserpent malware targets southeast asian governments an](./2026-07-17/new-goserpent-malware-targets-southeast-asian-governments-an.md)
 - [new nadmesh botnet hunts exposed ai services for cloud keys ](./2026-07-17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-.md)
 - [new wp2shell wordpress core flaw lets unauthenticated attack](./2026-07-17/new-wp2shell-wordpress-core-flaw-lets-unauthenticated-attack.md)
@@ -111,7 +111,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa hgjx r89m m7v4 facturascripts path traver](./2026-07-14/ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver.md)
 - [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
-- [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
 - [researchers say claude for chrome flaw lets rogue extensions](./2026-07-14/researchers-say-claude-for-chrome-flaw-lets-rogue-extensions.md)
 - [sap patches cvss 9 9 netweaver abap flaw that could expose o](./2026-07-14/sap-patches-cvss-9-9-netweaver-abap-flaw-that-could-expose-o.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)

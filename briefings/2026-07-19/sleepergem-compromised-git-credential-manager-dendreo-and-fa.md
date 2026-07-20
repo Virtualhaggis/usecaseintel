@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SleeperGem: Compromised git_credential_manager, Dendreo, and fastlane RubyGems D
 
-`UC_16_3` · phase: **exploit** · confidence: **High**
+`UC_20_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

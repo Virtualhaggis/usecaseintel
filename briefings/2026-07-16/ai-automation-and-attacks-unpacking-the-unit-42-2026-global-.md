@@ -2,7 +2,7 @@
 
 **Source:** Unit 42 (Palo Alto)
 **Published:** 2026-07-16
-**Article:** https://unit42.paloaltonetworks.com/ai-incident-response-report/
+**Article:** https://unit42.paloaltonetworks.com/ai-insights-incident-response-report/
 
 ## Threat Profile
 
