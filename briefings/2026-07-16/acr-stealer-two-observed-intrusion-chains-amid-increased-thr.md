@@ -414,7 +414,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ACR Stealer: Two observed intrusion chains amid increased threat activity
 
-`UC_40_11` · phase: **exploit** · confidence: **High**
+`UC_42_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

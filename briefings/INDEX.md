@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2587 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,7 +10,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-20
 - [critical servicenow code execution flaw now exploited in att](./2026-07-20/critical-servicenow-code-execution-flaw-now-exploited-in-att.md)
+- [hugging face warns an autonomous ai agent hacked its network](./2026-07-20/hugging-face-warns-an-autonomous-ai-agent-hacked-its-network.md)
+- [mythos didn t break your security program your exposure wind](./2026-07-20/mythos-didn-t-break-your-security-program-your-exposure-wind.md)
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
+- [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
 - [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
 - [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
@@ -103,11 +106,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54052 n8n mcp cross tenant access to ](./2026-07-14/ghsa-critical-cve-2026-54052-n8n-mcp-cross-tenant-access-to-.md)
 - [ghsa critical ghsa 9hc2 hjx8 q6pv tidgi desktop remote code ](./2026-07-14/ghsa-critical-ghsa-9hc2-hjx8-q6pv-tidgi-desktop-remote-code-.md)
 - [ghsa critical ghsa hgjx r89m m7v4 facturascripts path traver](./2026-07-14/ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver.md)
-- [grok build uploaded entire git repositories to xai storage n](./2026-07-14/grok-build-uploaded-entire-git-repositories-to-xai-storage-n.md)
 - [how pentera turns ai security workflows into validation engi](./2026-07-14/how-pentera-turns-ai-security-workflows-into-validation-engi.md)
 - [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
-- [oauth client id spoofing lets attackers validate stolen micr](./2026-07-14/oauth-client-id-spoofing-lets-attackers-validate-stolen-micr.md)
 - [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
 - [researchers say claude for chrome flaw lets rogue extensions](./2026-07-14/researchers-say-claude-for-chrome-flaw-lets-rogue-extensions.md)
 - [sap patches cvss 9 9 netweaver abap flaw that could expose o](./2026-07-14/sap-patches-cvss-9-9-netweaver-abap-flaw-that-could-expose-o.md)
