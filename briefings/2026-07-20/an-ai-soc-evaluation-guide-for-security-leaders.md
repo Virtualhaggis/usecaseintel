@@ -11,20 +11,10 @@ Sponsored by Prophet Security
 July 20, 2026
 10:01 AM
 0 
-
-
 The market for AI in the SOC has moved faster than the methods for evaluating it.
-
-
 Just last year, Gartner placed AI SOC Agents at the Innovation Trigger stage with single-digit adoption. 
-
-
 As of a few weeks ago, Gartner’s “Hype Cycle for Security Operations, 2026” put them at the Peak of Inflated Expectations.
-
-
-
-
-Most AI SOC vendors have a demo that feels like science fiction…
+Most AI SOC vendors have a demo that feels like science fiction. Clean alerts go in…
 
 ## Indicators of Compromise (high-fidelity only)
 
