@@ -88,7 +88,7 @@ _(none detected from narrative keywords)_
 
 ### Rundll32 loading remote WebDAV DLL via ClickFix (ACR Stealer chain 1)
 
-`UC_18_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_21_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### MSHTA fetching remote content then spawning PowerShell (ACR Stealer chain 2)
 
-`UC_18_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_21_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceProcessEvents
 
 ### Outbound connection/DNS to ACR Stealer C2 dead-drop domains
 
-`UC_18_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_21_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceNetworkEvents
 
 ### Scheduled task masquerading as a software update launching a LOLBin
 
-`UC_18_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_21_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### Deletion of PowerShell PSReadline command history (anti-forensics)
 
-`UC_18_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_21_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceFileEvents
 
 ### Non-browser process accessing Chromium credential databases (DPAPI browser theft)
 
-`UC_18_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_21_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

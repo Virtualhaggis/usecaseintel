@@ -9,7 +9,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-20
+- [an ai soc evaluation guide for security leaders](./2026-07-20/an-ai-soc-evaluation-guide-for-security-leaders.md)
 - [critical servicenow code execution flaw now exploited in att](./2026-07-20/critical-servicenow-code-execution-flaw-now-exploited-in-att.md)
+- [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
 - [hugging face warns an autonomous ai agent hacked its network](./2026-07-20/hugging-face-warns-an-autonomous-ai-agent-hacked-its-network.md)
 - [mythos didn t break your security program your exposure wind](./2026-07-20/mythos-didn-t-break-your-security-program-your-exposure-wind.md)
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
@@ -106,13 +108,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54052 n8n mcp cross tenant access to ](./2026-07-14/ghsa-critical-cve-2026-54052-n8n-mcp-cross-tenant-access-to-.md)
 - [ghsa critical ghsa 9hc2 hjx8 q6pv tidgi desktop remote code ](./2026-07-14/ghsa-critical-ghsa-9hc2-hjx8-q6pv-tidgi-desktop-remote-code-.md)
 - [ghsa critical ghsa hgjx r89m m7v4 facturascripts path traver](./2026-07-14/ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver.md)
-- [how pentera turns ai security workflows into validation engi](./2026-07-14/how-pentera-turns-ai-security-workflows-into-validation-engi.md)
 - [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
 - [rabbitmq flaws could leak oauth secrets and expose cross ten](./2026-07-14/rabbitmq-flaws-could-leak-oauth-secrets-and-expose-cross-ten.md)
 - [researchers say claude for chrome flaw lets rogue extensions](./2026-07-14/researchers-say-claude-for-chrome-flaw-lets-rogue-extensions.md)
 - [sap patches cvss 9 9 netweaver abap flaw that could expose o](./2026-07-14/sap-patches-cvss-9-9-netweaver-abap-flaw-that-could-expose-o.md)
-- [study of 85 crypto wallet extensions finds address leaks and](./2026-07-14/study-of-85-crypto-wallet-extensions-finds-address-leaks-and.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
 

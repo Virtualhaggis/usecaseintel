@@ -11,12 +11,9 @@ By Sergiu Gatlan
 July 20, 2026
 07:56 AM
 0 
-
-
 The Hugging Face artificial intelligence repository disclosed that attackers gained access to internal datasets and credentials after breaching its production infrastructure using an autonomous AI agent system.
-
-
-Hugging Face is an open-source AI and machine learning platform that provides access to over 45,000 models from leading AI providers and is used by more than 50,000 organizati…
+Hugging Face is an open-source AI and machine learning platform that provides access to over 45,000 models from leading AI providers and is used by more than 50,000 organizations.
+The…
 
 ## Indicators of Compromise (high-fidelity only)
 

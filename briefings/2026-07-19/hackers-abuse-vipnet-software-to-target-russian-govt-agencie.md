@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Hackers abuse ViPNet software to target Russian govt agencies
 
-`UC_12_1` · phase: **exploit** · confidence: **High**
+`UC_15_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

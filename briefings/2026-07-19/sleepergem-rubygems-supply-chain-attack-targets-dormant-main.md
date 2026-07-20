@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SleeperGem: RubyGems supply chain attack targets dormant maintainer accounts
 
-`UC_15_3` · phase: **install** · confidence: **High**
+`UC_18_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
