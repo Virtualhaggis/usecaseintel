@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Apache Spark CVE-2022-33891 doAs command injection — shell spawned by Spark JVM running 'id -Gn' with metacharacters
 
-`UC_1042_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1044_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### GitPython CVE-2022-24439 RCE — git 'ext::sh' transport command injection via crafted clone URL
 
-`UC_1042_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1044_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

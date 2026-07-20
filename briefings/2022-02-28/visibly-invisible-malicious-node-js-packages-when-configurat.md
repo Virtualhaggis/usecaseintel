@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### npm/yarn install spawning anomalous shell or working-dir binary (.npmrc/.yarnrc config override RCE)
 
-`UC_2578_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2580_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### File dropped with invisible Unicode in its name (Hangul Filler U+3164 masquerading)
 
-`UC_2578_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_2580_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Visibly invisible malicious Node.js packages: When configuration niche meets inv
 
-`UC_2578_0` · phase: **exploit** · confidence: **High**
+`UC_2580_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

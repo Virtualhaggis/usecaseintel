@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### WordPress wp2shell batch REST API pre-auth RCE exploitation (CVE-2026-63030/60137)
 
-`UC_14_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_18_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Web server daemon (php-fpm/apache/nginx/w3wp) spawning a shell or network tool — wp2shell post-exploit code execution
 
-`UC_14_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_18_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### New PHP file written into WordPress web root by a web daemon — wp2shell web shell drop
 
-`UC_14_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_18_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

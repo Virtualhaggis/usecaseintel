@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Improving code quality with linting in Python
 
-`UC_1956_0` · phase: **exploit** · confidence: **High**
+`UC_1958_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### TinyRCT backdoor masquerading as PerfWatson2.exe executing from %LOCALAPPDATA%
 
-`UC_238_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_240_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Outbound connection to CL-STA-1062 / TinyRCT C2 and tool-staging infrastructure
 
-`UC_238_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_240_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### SoftEther VPN / VNT tunneler masquerading as VMware vmtools.exe
 
-`UC_238_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_240_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### Scheduled task persistence for GoogleUpdater or VMware-disguised VNT binary
 
-`UC_238_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_240_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### IIS web shell (w3wp.exe) spawning recon, curl exfil, or RAR staging
 
-`UC_238_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_240_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceProcessEvents
 
 ### Password-protected RAR staging of data for exfiltration (-hp)
 
-`UC_238_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_240_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -528,7 +528,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CL-STA-1062 Targets Southeast Asian Governments and Critical Infrastructure
 
-`UC_238_11` · phase: **exploit** · confidence: **High**
+`UC_240_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

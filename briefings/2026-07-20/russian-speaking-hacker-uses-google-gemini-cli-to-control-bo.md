@@ -1,22 +1,15 @@
-# [HIGH] New ClickLock macOS malware traps users into revealing login password
+# [HIGH] Russian-Speaking Hacker Uses Google Gemini CLI to Control Botnet of Eight Dental Clinic PCs
 
-**Source:** BleepingComputer, Microsoft Security Blog
-**Published:** 2026-07-16
-**Article:** https://www.bleepingcomputer.com/news/security/new-clicklock-macos-malware-traps-users-into-revealing-login-password/
+**Source:** The Hacker News
+**Published:** 2026-07-20
+**Article:** https://thehackernews.com/2026/07/russian-speaking-hacker-uses-google.html
 
 ## Threat Profile
 
-Tags ClickFix 
-Malware 
-Social engineering 
-Content types Research 
-Products and services Microsoft Defender 
-Microsoft Defender Experts for XDR 
-Microsoft Security Experts 
-Topics Actionable threat insights 
-Defending against advanced tactics 
-Threat intelligence 
-From late April 2026 to mid-June 2026, Microsoft Defender Experts observed increased ACR Stealer activity across customer environments. These campaigns are successfully using ClickFix lures to steal browser credentials, authentication…
+Russian-Speaking Hacker Uses Google Gemini CLI to Control Botnet of Eight Dental Clinic PCs 
+ Ravie Lakshmanan  Jul 20, 2026 Artificial Intelligence / Cybercrime 
+A solo Russian-speaking threat actor known as " bandcampro " outsourced a chunk of their operations to Google's open-source Gemini CLI artificial intelligence (AI) and commandeered a live botnet.
+The findings come from an analysis of 200 Gemini CLI session logs between March 19 and April 21, 2026, which found the threat actor using A…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -26,6 +19,7 @@ From late April 2026 to mid-June 2026, Microsoft Defender Experts observed incre
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
@@ -35,133 +29,21 @@ From late April 2026 to mid-June 2026, Microsoft Defender Experts observed incre
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1053.005** — Scheduled Task
-- **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1528** — Steal Application Access Token
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1027** — Obfuscated Files or Information
-- **T1219** — Remote Access Software
+- **T1486** — Data Encrypted for Impact
+- **T1003.001** — LSASS Memory
+- **T1003** — OS Credential Dumping
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1053.005** — Persistence (article-specific)
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1056.002** — Input Capture: GUI Input Capture
-- **T1059.002** — Command and Scripting Interpreter: AppleScript
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1543.001** — Create or Modify System Process: Launch Agent
-- **T1567.002** — Exfiltration Over Web Service: Exfiltration to Cloud Storage
-- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### ClickFix Terminal one-liner pulling ClickLock payload from compromised macOS host domains
-
-`UC_36_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("curl","bash","sh","zsh","nohup") (Processes.process="*panalobet.ph*" OR Processes.process="*store.grafsynergy.com*" OR Processes.process="*cottonbox.co.il*" OR Processes.process="*gsnc.eu*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("curl","bash","sh","zsh","nohup")
-| where ProcessCommandLine has_any ("panalobet.ph","store.grafsynergy.com","cottonbox.co.il","gsnc.eu")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### osascript fake macOS login-password dialog (ClickLock credential coercion)
-
-`UC_36_12` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="osascript" Processes.process="*display dialog*" (Processes.process="*hidden answer*" OR Processes.process="*password*") by Processes.dest Processes.user Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "osascript"
-| where ProcessCommandLine has "display dialog"
-| where ProcessCommandLine has_any ("hidden answer","password")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### ClickLock coercion kill-loop terminating Finder/Dock/Activity Monitor at sub-second cadence
-
-`UC_36_13` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN ("killall","kill","pkill") (Processes.process="*Finder*" OR Processes.process="*Dock*" OR Processes.process="*Activity Monitor*" OR Processes.process="*Terminal*" OR Processes.process="*Console*" OR Processes.process="*System Settings*" OR Processes.process="*Spotlight*") by Processes.dest Processes.user _time span=5m
-| `drop_dm_object_name(Processes)`
-| where count > 20
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("killall","kill","pkill")
-| where ProcessCommandLine has_any ("Finder","Dock","Activity Monitor","Terminal","Console","System Settings","Spotlight","System Preferences")
-| summarize KillCount = count(), Targets = make_set(ProcessCommandLine, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Parent = any(InitiatingProcessCommandLine) by DeviceName, AccountName, bin(Timestamp, 5m)
-| where KillCount > 20   // 200-210ms loop yields hundreds of kills/min; 20 in 5m is far above interactive use
-| order by KillCount desc
-```
-
-### ClickLock LaunchAgent persistence (com.authirity.plist / com.chromer.plist)
-
-`UC_36_14` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name IN ("com.authirity.plist","com.chromer.plist") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType == "FileCreated"
-| where FileName in~ ("com.authirity.plist","com.chromer.plist")
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### ClickLock exfiltration/C2 to Telegram Bot API and GSocket relay from non-browser process
-
-`UC_36_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("api.telegram.org","gsnc.eu","panalobet.ph","store.grafsynergy.com","cottonbox.co.il") by DNS.src DNS.query
-| `drop_dm_object_name(DNS)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("api.telegram.org","gsnc.eu","panalobet.ph","store.grafsynergy.com","cottonbox.co.il")
-| where InitiatingProcessFileName !in~ ("Google Chrome","firefox","Safari","com.apple.WebKit.Networking","Brave Browser","Microsoft Edge","Telegram","Arc")
-| where InitiatingProcessFileName has_any ("curl","bash","sh","zsh","python","osascript","nohup","gs-netcat","gsocket")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -196,6 +78,31 @@ DeviceNetworkEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
 | order by conn_count desc
+```
+
+### Suspicious browser extension installation
+
+`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -375,60 +282,31 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Scheduled task created with suspicious image / encoded args
+### OAuth consent / suspicious app grant
 
-`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
-      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
-        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
-        OR Processes.process="*\AppData\*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
-```
-
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
-
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success"
+      AND Authentication.signature IN (
+        "Consent to application",
+        "Add app role assignment grant to user",
+        "Add OAuth2PermissionGrant",
+        "Add delegated permission grant")
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+CloudAppEvents
 | where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -460,17 +338,75 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
+### Ransomware-style mass file rename / extension change
 
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
+`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("modified","renamed")
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files > 200
+| sort - files
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
+| where ActionType in ("FileRenamed","FileModified")
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
+| order by files desc
+```
+
+### LSASS process access / dump (credential theft)
+
+`UC_LSASS` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
+    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+        OR Processes.process="*procdump*lsass*")
+       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where ActionType == "OpenProcessApiCall"
+| where FileName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                          "svchost.exe","wininit.exe","services.exe",
+                                          "lsm.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc
+```
+
+### Remote service execution — PsExec / SMB lateral movement
+
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
@@ -480,11 +416,10 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -511,56 +446,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — New ClickLock macOS malware traps users into revealing login password
-
-`UC_36_10` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — New ClickLock macOS malware traps users into revealing login password ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("conhost.exe","pythonw.exe"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("conhost.exe","pythonw.exe"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — New ClickLock macOS malware traps users into revealing login password
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("conhost.exe", "pythonw.exe"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("conhost.exe", "pythonw.exe"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 16 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

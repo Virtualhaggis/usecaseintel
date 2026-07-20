@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Yarn 2 — the future of package managers for JavaScript?
 
-`UC_3366_0` · phase: **exploit** · confidence: **High**
+`UC_3368_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

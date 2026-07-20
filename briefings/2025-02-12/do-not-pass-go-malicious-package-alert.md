@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### BoltDB Go backdoor C2 callback to 49.12.198.231:20022
 
-`UC_1048_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1050_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### Go typosquat module reference: github.com/boltdb-go/bolt in process or build telemetry
 
-`UC_1048_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_1050_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

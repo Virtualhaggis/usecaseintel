@@ -10,6 +10,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-20
 - [critical servicenow code execution flaw now exploited in att](./2026-07-20/critical-servicenow-code-execution-flaw-now-exploited-in-att.md)
+- [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
+- [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
 - [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
 - [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
 
@@ -46,6 +48,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-16
 - [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
+- [acr stealer two observed intrusion chains amid increased thr](./2026-07-16/acr-stealer-two-observed-intrusion-chains-amid-increased-thr.md)
 - [ai automation and attacks unpacking the unit 42 2026 global ](./2026-07-16/ai-automation-and-attacks-unpacking-the-unit-42-2026-global-.md)
 - [ai can find bugs but human knowledge still proves them](./2026-07-16/ai-can-find-bugs-but-human-knowledge-still-proves-them.md)
 - [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)
@@ -59,7 +62,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
 - [n8n token exchange flaw could let attackers log in as users ](./2026-07-16/n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-.md)
 - [new agent data injection attack can make ai agents misclick ](./2026-07-16/new-agent-data-injection-attack-can-make-ai-agents-misclick-.md)
-- [new clicklock macos malware traps users into revealing login](./2026-07-16/new-clicklock-macos-malware-traps-users-into-revealing-login.md)
 - [openai s gpt red automates prompt injection testing to harde](./2026-07-16/openai-s-gpt-red-automates-prompt-injection-testing-to-harde.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [threatsday game cheat spyware 24 hour ransomware chrome sync](./2026-07-16/threatsday-game-cheat-spyware-24-hour-ransomware-chrome-sync.md)
@@ -89,7 +91,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-14
 - [11 old microsoft signed linux uefi shims could let attackers](./2026-07-14/11-old-microsoft-signed-linux-uefi-shims-could-let-attackers.md)
-- [148 npm packages disguised as student proxies turned browser](./2026-07-14/148-npm-packages-disguised-as-student-proxies-turned-browser.md)
 - [asyncapi npm packages backdoored via github actions](./2026-07-14/asyncapi-npm-packages-backdoored-via-github-actions.md)
 - [cisa kev cve 2026 15409 sonicwall sma1000 appliances server ](./2026-07-14/cisa-kev-cve-2026-15409-sonicwall-sma1000-appliances-server-.md)
 - [cisa kev cve 2026 15410 sonicwall sma1000 appliances code in](./2026-07-14/cisa-kev-cve-2026-15410-sonicwall-sma1000-appliances-code-in.md)
@@ -112,7 +113,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [sap patches cvss 9 9 netweaver abap flaw that could expose o](./2026-07-14/sap-patches-cvss-9-9-netweaver-abap-flaw-that-could-expose-o.md)
 - [study of 85 crypto wallet extensions finds address leaks and](./2026-07-14/study-of-85-crypto-wallet-extensions-finds-address-leaks-and.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
-- [u s sanctions first vpn service and malware cryptor seller o](./2026-07-14/u-s-sanctions-first-vpn-service-and-malware-cryptor-seller-o.md)
 - [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
 
 ## 2026-07-13
