@@ -11,12 +11,9 @@ By Bill Toulas
 July 20, 2026
 05:08 PM
 0 
-
-
 The JadePuffer autonomous AI agent has upgraded with custom malware called EncForge that focuses on encrypting AI assets, such as training datasets, vector databases, and model checkpoints.
-
-
-JadePuffer was disclosed earlier this month as an agentic threat actor (ATA) capable of running autonomously through the stages of a ransomware attack, from initial access to data encryption.…
+JadePuffer was disclosed earlier this month as an agentic threat actor (ATA) capable of running autonomously through the stages of a ransomware attack, from initial access to data encryption.
+Cloud s…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -124,7 +121,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JadePuffer agentic attacks now target AI model data with ransomware
 
-`UC_1_4` · phase: **exploit** · confidence: **High**
+`UC_7_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -445,7 +445,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SleeperGem Uses Three Malicious RubyGems Packages to Target Developer Machines
 
-`UC_18_13` · phase: **exploit** · confidence: **High**
+`UC_24_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

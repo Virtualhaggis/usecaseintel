@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2590 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,8 +11,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-20
 - [an ai soc evaluation guide for security leaders](./2026-07-20/an-ai-soc-evaluation-guide-for-security-leaders.md)
 - [critical servicenow code execution flaw now exploited in att](./2026-07-20/critical-servicenow-code-execution-flaw-now-exploited-in-att.md)
+- [est e lauder discloses data breach via oracle e business fla](./2026-07-20/est-e-lauder-discloses-data-breach-via-oracle-e-business-fla.md)
 - [exposed server reveals ai assisted phishing toolkit behind w](./2026-07-20/exposed-server-reveals-ai-assisted-phishing-toolkit-behind-w.md)
 - [fakegit campaign uses 7 600 github repositories to spread sm](./2026-07-20/fakegit-campaign-uses-7-600-github-repositories-to-spread-sm.md)
+- [ghsa critical cve 2026 59873 node tar decompression parse do](./2026-07-20/ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do.md)
+- [ghsa critical cve 2026 61736 lightrag cors wildcard credenti](./2026-07-20/ghsa-critical-cve-2026-61736-lightrag-cors-wildcard-credenti.md)
+- [ghsa critical cve 2026 61740 lightrag is vulnerable to authe](./2026-07-20/ghsa-critical-cve-2026-61740-lightrag-is-vulnerable-to-authe.md)
 - [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
 - [hugging face warns an autonomous ai agent hacked its network](./2026-07-20/hugging-face-warns-an-autonomous-ai-agent-hacked-its-network.md)
 - [jadepuffer agentic attacks now target ai model data with ran](./2026-07-20/jadepuffer-agentic-attacks-now-target-ai-model-data-with-ran.md)
@@ -22,6 +26,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
 - [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
+- [sonicwall sma1000 flaws exploited as zero days to push custo](./2026-07-20/sonicwall-sma1000-flaws-exploited-as-zero-days-to-push-custo.md)
 - [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
 
 ## 2026-07-19
@@ -288,9 +293,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
 
 ## 2026-06-22
-- [ghsa critical cve 2026 44179 xwiki pro macros has remote cod](./2026-06-22/ghsa-critical-cve-2026-44179-xwiki-pro-macros-has-remote-cod.md)
-- [ghsa critical cve 2026 44203 openam has pre auth reflected x](./2026-06-22/ghsa-critical-cve-2026-44203-openam-has-pre-auth-reflected-x.md)
-- [ghsa critical cve 2026 46488 motioneye authentication possib](./2026-06-22/ghsa-critical-cve-2026-46488-motioneye-authentication-possib.md)
 - [ghsa critical cve 2026 54352 budibase has arbitrary file rea](./2026-06-22/ghsa-critical-cve-2026-54352-budibase-has-arbitrary-file-rea.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 

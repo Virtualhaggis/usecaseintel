@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### TeamPCP Trivy/KICS supply-chain credential exfil to scan.aquasecurtiy.org & 45.148.10.212
 
-`UC_176_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_179_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceNetworkEvents
 
 ### Credential harvest via /proc/<pid>/mem read of GitHub Actions Runner.Worker
 
-`UC_176_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_179_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### DNS resolution of TeamPCP typosquat exfil domain scan.aquasecurtiy.org
 
-`UC_176_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_179_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceEvents
 
 ### GitHub Actions runner spawns network tool / interpreter under compromised trivy-action or KICS
 
-`UC_176_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_179_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

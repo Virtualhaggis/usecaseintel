@@ -87,7 +87,7 @@ _(none detected from narrative keywords)_
 
 ### The Gentlemen ransomware scheduled task named gentlemen*
 
-`UC_121_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_124_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### GentleKiller BYOVD: ThrottleBlood.sys vulnerable driver load (CVE-2025-7771)
 
-`UC_121_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_124_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ union
 
 ### GentleKiller EDR-killer binaries Allpatch2.exe / All.exe execution
 
-`UC_121_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_124_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### The Gentlemen wevtutil clearing of Security/System/Application event logs
 
-`UC_121_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_17` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceProcessEvents
 
 ### The Gentlemen internal reconnaissance via Advanced IP Scanner
 
-`UC_121_18` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_124_18` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### The Gentlemen SystemBC C2 beacon to known operator IPs
 
-`UC_121_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_124_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -199,7 +199,7 @@ DeviceNetworkEvents
 
 ### The Gentlemen pre-encryption Volume Shadow Copy deletion
 
-`UC_121_20` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_20` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,7 +220,7 @@ DeviceProcessEvents
 
 ### The Gentlemen Go encryptor mass file rename to actor extensions
 
-`UC_121_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_124_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -591,7 +591,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — No Manners Here: The Ruthless Rise of The Gentlemen Ransomware
 
-`UC_121_13` · phase: **exploit** · confidence: **High**
+`UC_124_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

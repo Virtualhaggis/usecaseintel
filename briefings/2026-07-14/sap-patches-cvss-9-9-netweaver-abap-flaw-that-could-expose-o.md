@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### SAP July 2026 Patch Day exposure hunt — critical NetWeaver/Approuter/Commerce Cloud CVEs (internet-facing first)
 
-`UC_95_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_98_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
