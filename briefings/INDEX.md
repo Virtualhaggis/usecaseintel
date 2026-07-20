@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2589 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,10 +11,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-20
 - [an ai soc evaluation guide for security leaders](./2026-07-20/an-ai-soc-evaluation-guide-for-security-leaders.md)
 - [critical servicenow code execution flaw now exploited in att](./2026-07-20/critical-servicenow-code-execution-flaw-now-exploited-in-att.md)
+- [exposed server reveals ai assisted phishing toolkit behind w](./2026-07-20/exposed-server-reveals-ai-assisted-phishing-toolkit-behind-w.md)
 - [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
 - [hugging face warns an autonomous ai agent hacked its network](./2026-07-20/hugging-face-warns-an-autonomous-ai-agent-hacked-its-network.md)
 - [mythos didn t break your security program your exposure wind](./2026-07-20/mythos-didn-t-break-your-security-program-your-exposure-wind.md)
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
+- [new hollowgraph malware uses microsoft graph for stealthy c2](./2026-07-20/new-hollowgraph-malware-uses-microsoft-graph-for-stealthy-c2.md)
 - [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
 - [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
@@ -95,7 +97,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [two sonicwall sma 1000 zero days exploited one could enable ](./2026-07-15/two-sonicwall-sma-1000-zero-days-exploited-one-could-enable-.md)
 
 ## 2026-07-14
-- [11 old microsoft signed linux uefi shims could let attackers](./2026-07-14/11-old-microsoft-signed-linux-uefi-shims-could-let-attackers.md)
 - [asyncapi npm packages backdoored via github actions](./2026-07-14/asyncapi-npm-packages-backdoored-via-github-actions.md)
 - [cisa kev cve 2026 15409 sonicwall sma1000 appliances server ](./2026-07-14/cisa-kev-cve-2026-15409-sonicwall-sma1000-appliances-server-.md)
 - [cisa kev cve 2026 15410 sonicwall sma1000 appliances code in](./2026-07-14/cisa-kev-cve-2026-15410-sonicwall-sma1000-appliances-code-in.md)

@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Adversary MFA method registration within 1h of a password reset (Scattered Spider / ShinyHunters ATO)
 
-`UC_49_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_50_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ CloudAppEvents
 
 ### MFA device registered from an IP never seen for the user (attacker enrollment for persistence)
 
-`UC_49_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_50_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
