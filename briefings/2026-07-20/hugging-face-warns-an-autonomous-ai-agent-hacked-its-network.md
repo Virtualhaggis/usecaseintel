@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### HuggingFace datasets worker RCE: Python dataset loader spawns shell/network tool
 
-`UC_38_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_39_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Cloud/cluster credential harvesting on Hugging Face dataset-processing worker
 
-`UC_38_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_39_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### Dataset worker beaconing to public staging services (self-migrating C2)
 
-`UC_38_6` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_39_6` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

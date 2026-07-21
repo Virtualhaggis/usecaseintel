@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2590 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2591 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-21
 - [a new extortion cocktail office printers small ransoms and b](./2026-07-21/a-new-extortion-cocktail-office-printers-small-ransoms-and-b.md)
+- [anubis ransomware claims coca cola fairlife attack threatens](./2026-07-21/anubis-ransomware-claims-coca-cola-fairlife-attack-threatens.md)
 - [aws kiro flaw let a poisoned web page rewrite its config and](./2026-07-21/aws-kiro-flaw-let-a-poisoned-web-page-rewrite-its-config-and.md)
 - [cisa kev cve 2021 27137 dd wrt stack based buffer overflow v](./2026-07-21/cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v.md)
 - [cisa kev cve 2026 0770 langflow inclusion of functionality f](./2026-07-21/cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f.md)

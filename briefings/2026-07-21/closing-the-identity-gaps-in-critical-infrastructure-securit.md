@@ -11,9 +11,7 @@ Sponsored by Specops Software
 July 21, 2026
 10:00 AM
 0 
-
-
-In May 2021, the Colonial Pipeline ransomware attack showed how quickly a compromised account can become a national issue. The attackers reportedly achieved initial access through an inactive VPN account without multi-factor authentication (MFA), hit business systems including billing infrastructure, and triggered a shutdown that disrupted fuel supply across the U.S. East C…
+In May 2021, the Colonial Pipeline ransomware attack showed how quickly a compromised account can become a national issue. The attackers reportedly achieved initial access through an inactive VPN account without multi-factor authentication (MFA), hit business systems including billing infrastructure, and triggered a shutdown that disrupted fuel supply across the U.S. East Coast…
 
 ## Indicators of Compromise (high-fidelity only)
 

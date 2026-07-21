@@ -1,3 +1,129 @@
+<article class="card" id="art-392" data-art-slug="2026-05-20-cisa-kev-cve-2010-0806-microsoft-internet-explorer-use-after"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2010-0806 — Microsoft Internet Explorer Use-After-Free Vulnerability Microsoft Internet Explorer contains an use-after-free vulnerability that could allow remote attackers to execute arbitrary code via vectors involving access to an invalid pointer after the deletion of an object. The impacted product could be end-of-life (EoL) and/or end-of-service (EoS). Users should discontinue product utilization. Vendor: Microsoft, Product: Internet Explorer. Federal patch due: 2026-06-03. CVE-2010-0806 CVE-2010-0249  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-20-cisa-kev-cve-2010-0806-microsoft-internet-explorer-use-after" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2010-0806 — Microsoft Internet Explorer Use-After-Free Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-05-20</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Microsoft Internet Explorer contains an use-after-free vulnerability that could allow remote attackers to execute arbitrary code via vectors involving access to an invalid pointer after the deletion of an object. The impacted product could be end-of-life (EoL) and/or end-of-service (EoS). Users should discontinue product utilization. Vendor: Microsoft, Product: Internet Explorer. Federal patch due: 2026-06-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2010-0806</span> <span class="ind cve">CVE-2010-0249</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-392-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-392"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-392-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-392-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-392-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-392-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-392-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2010-0806&quot;, &quot;CVE-2010-0249&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-392-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2010-0806&quot;, &quot;CVE-2010-0249&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-392-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-392-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-392-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-392-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2010-0806&quot;, &quot;CVE-2010-0249&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-392-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2010-0806&quot;, &quot;CVE-2010-0249&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-393" data-art-slug="2026-05-20-cisa-kev-cve-2026-41091-microsoft-defender-link-following-vu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -18411,1058 +18537,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-430" data-art-slug="2026-05-04-elementary-data-compromised-on-pypi-and-ghcr-forged-release-"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
-  data-techs="T1021.002,T1190,T1195.002,T1204.002,T1555.003"
-  data-sources="StepSecurity"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="cloud,endpoint,network"
-  data-targets="kubernetes,linux,windows"
-  data-uc-count="11" data-llm-uc-count="5"
-  data-search="elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub Actions Script Injection A malicious version of elementary-data (0.23.3) was published to PyPI and is, at the time of writing, still listed as the latest release. The same release run also pushed a multi-arch container image to GitHub Container Registry at ghcr.io/elementary-data/elementary, tagged both 0.23.3 and latest.  T1021.002 T1190 T1195.002 T1204.002 T1555.003 [LLM] Outbound to elementary-data exfil C2 igotnofriendsonlineorirl-imgonnakmslmao.sky [LLM] Malicious elementary.pth dropped in Python site-packages [LLM] Install of trojaned elementary-data 0.23.3 via pip / poetry / uv [LLM] Docker / Kubernetes pull of compromised ghcr.io/elementary-data/elementary image [LLM] Stage-3 exfil archive trin.tar.gz POST via curl --data-binary Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Crypto-wallet file/keystore access by non-wallet process Infostealer — non-browser process accessing browser cookie/login DBs Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-05-04-elementary-data-compromised-on-pypi-and-ghcr-forged-release-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.stepsecurity.io/blog/elementary-data-compromised-on-pypi-and-ghcr-forged-release-pushed-via-github-actions-script-injection" target="_blank" rel="noopener">elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub Actions Script Injection</a></h2>
-  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
-  <div class="pubmeta">
-    <span>2026-05-04</span>
-    <span>11 use cases</span>
-    <span>5 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">A malicious version of elementary-data (0.23.3) was published to PyPI and is, at the time of writing, still listed as the latest release. The same release run also pushed a multi-arch container image to GitHub Container Registry at ghcr.io/elementary-data/elementary, tagged both 0.23.3 and latest.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Malicious File">T1204.002</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-430-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-430"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-430-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Install of trojaned elementary-data 0.23.3 via pip / poetry / uv · [LLM] Docker / Kubernetes pull of compromised ghcr.io/elementary-data/elementary image</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Malicious elementary.pth dropped in Python site-packages · Article-specific behavioural hunt — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound to elementary-data exfil C2 igotnofriendsonlineorirl-imgonnakmslmao.sky · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Stage-3 exfil archive trin.tar.gz POST via curl --data-binary · Crypto-wallet file/keystore access by non-wallet process · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="8de61aa9fe" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">Outbound to elementary-data exfil C2 igotnofriendsonlineorirl-imgonnakmslmao.sky</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8de61aa9fe" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects DNS resolution, HTTP/S egress, or proxy traffic to the credential-stealer C2 hard-coded in the trojaned elementary-data 0.23.3 .pth payload. A single hit anywhere in the org indicates a host has installed the compromised PyPI package or pulled the trojaned ghcr.io/elementary-data/elementary image and that the stage-3 collector has reached the network.
-
-Rationale: Anchored on the single hard-coded exfil host igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud named in the StepSecurity write-up. Any DNS / HTTP egress to this host is unambiguous: the domain has no benign use case and was registered for this campaign.
-
-Cross-checked against:
-  • https://github.com/elementary-data/elementary/issues/2205
-  • https://www.stepsecurity.io/blog/elementary-data-compromised-on-pypi-and-ghcr-forged-release-pushed-via-github-actions-script-injection</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal SOC sandbox detonations of the trojaned package (whitelist sandbox source IPs)</li><li>Security researchers manually resolving the IOC during triage from analyst workstations</li><li>Threat-intel platform IOC enrichment workers (e.g. VirusTotal / OPSWAT relays in your tenant)</li><li>DNS sinkhole/SIE feeds replaying historical queries</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;, &quot;detonation&quot;, &quot;sec-research&quot;)) and not (InitiatingProcessFileName in~ (&quot;vt-uploader.exe&quot;, &quot;opswat-relay.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm which process on the source host issued the lookup — pivot to DeviceProcessEvents for python.exe / docker-shim / kubelet ancestry, and check whether `elementary.pth` exists under any site-packages. 2) Contain: isolate the host, block the C2 domain at the egress proxy / DNS RPZ, and rotate every credential the host could touch — AWS access keys, GCP ADC, Azure tokens, kubeconfigs, gh tokens, SSH keys, npm/pypi/cargo tokens, and crypto wallets — assume harvested. 3) Hunt: inventory all hosts and CI runners that ran `pip install elementary-data==0.23.3` or pulled `ghcr.io/elementary-data/elementary:{0.23.3,latest}`; query the registry/proxy logs for prior pulls of digest sha256:31ecc5939de6...634255.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-430-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-430-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let MaliciousDomain = &quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;;
-let WindowDays = 30d;
-union isfuzzy=true
-    (DeviceNetworkEvents
-        | where Timestamp &gt; ago(WindowDays)
-        | where RemoteUrl has MaliciousDomain
-        | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Source = &quot;DeviceNetworkEvents&quot;),
-    (DeviceEvents
-        | where Timestamp &gt; ago(WindowDays)
-        | where ActionType == &quot;DnsQueryResponse&quot;
-        | where AdditionalFields has MaliciousDomain or RemoteUrl has MaliciousDomain
-        | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort = toint(0), Source = &quot;DeviceEvents(DNS)&quot;)
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let MaliciousDomain = &quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;;
-let WindowDays = 30d;
-union isfuzzy=true
-    (ImDnsActivity
-        | where TimeGenerated &gt; ago(WindowDays)
-        | where DnsQuery has MaliciousDomain
-        | project TimeGenerated, Host = DvcHostname, SrcHost = SrcHostname, SrcIP = SrcIpAddr, Indicator = DnsQuery, Source = &quot;ImDnsActivity&quot;),
-    (DnsEvents
-        | where TimeGenerated &gt; ago(WindowDays)
-        | where Name has MaliciousDomain
-        | project TimeGenerated, Host = Computer, SrcHost = Computer, SrcIP = ClientIP, Indicator = Name, Source = &quot;DnsEvents&quot;),
-    (CommonSecurityLog
-        | where TimeGenerated &gt; ago(WindowDays)
-        | where DestinationHostName has MaliciousDomain or RequestURL has MaliciousDomain or DestinationDnsDomain has MaliciousDomain
-        | project TimeGenerated, Host = Computer, SrcHost = SourceHostName, SrcIP = SourceIP, Indicator = coalesce(RequestURL, DestinationHostName, DestinationDnsDomain), Source = &quot;CommonSecurityLog&quot;),
-    (Syslog
-        | where TimeGenerated &gt; ago(WindowDays)
-        | where SyslogMessage has MaliciousDomain
-        | project TimeGenerated, Host = Computer, SrcHost = HostName, SrcIP = HostIP, Indicator = SyslogMessage, Source = &quot;Syslog&quot;)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: elementary-data Compromise C2 Egress (skyhanni.cloud)
-id: 6f7e3a52-3b8d-4c91-9f0a-1b3c2d4e5f60
-description: Detects DNS resolution or network connection to the credential-stealer C2 domain embedded in the trojaned elementary-data 0.23.3 PyPI/GHCR release.
-references:
-  - https://www.stepsecurity.io/blog/elementary-data-compromised-on-pypi-and-ghcr-forged-release-pushed-via-github-actions-script-injection
-author: SOC Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.t1071.001
-  - attack.t1041
-logsource:
-  category: dns
-detection:
-  selection:
-    QueryName|contains: &#x27;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-430-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:(windows.sysmon OR linux.auditd OR linux.syslog OR kubernetes.audit) AND (@DestinationHostname:*igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud* OR @network.destination.name:*igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud* OR *igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud*))</code></pre></div>
-    <div class="tab-content" id="art-430-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=DnsRequest DomainName=/igotnofriendsonlineorirl-imgonnakmslmao\.skyhanni\.cloud/i) OR (#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=*) OR (#event_simpleName=ProcessRollup2 CommandLine=/igotnofriendsonlineorirl-imgonnakmslmao\.skyhanni\.cloud/i)
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-430-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest_host=&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot; OR All_Traffic.dest=&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot; by All_Traffic.src host All_Traffic.app | `drop_dm_object_name(All_Traffic)` | appendpipe [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.dest) as dest from datamodel=Web where Web.url=&quot;*igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud*&quot; OR Web.dest=&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot; by Web.src host Web.http_method | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-430-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest_host=&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot; OR All_Traffic.dest=&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot; by All_Traffic.src host All_Traffic.app | `drop_dm_object_name(All_Traffic)` | appendpipe [| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.dest) as dest from datamodel=Web where Web.url=&quot;*igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud*&quot; OR Web.dest=&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot; by Web.src host Web.http_method | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="82a8e3dded" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Malicious elementary.pth dropped in Python site-packages</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="82a8e3dded" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects creation of the trojaned `elementary.pth` loader inside any Python site-packages directory. Legitimate elementary-data releases ship no top-level .pth file; this file is unique to 0.23.3 and is what triggers payload execution on every Python interpreter startup.
-
-Rationale: The article confirms `elementary.pth` is the single malicious artifact added in 0.23.3 vs 0.23.2 and that no legitimate elementary release ships a .pth file — making the filename in site-packages a near-zero-FP signal. Size gate of 50KB further separates the ~245KB base64 payload from any legit user-created .pth.
-
-Cross-checked against:
-  • https://github.com/elementary-data/elementary/issues/2205
-  • https://pypi.org/project/elementary-data/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Event Triggered Execution">T1546</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sandbox detonation of the IOC for analysis (filter by host tag)</li><li>Forensic acquisition tooling copying the file into evidence folders (not really FP — investigate the source host)</li><li>Backup/restore of a previously-infected snapshot (still need to remediate)</li><li>Developer manually reproducing the issue in a venv for triage</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;, &quot;detonation&quot;)) and not (InitiatingProcessFileName in~ (&quot;forensics-collector.exe&quot;, &quot;velociraptor.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm file SHA256 and size; collect the file; check the parent process — `pip.exe` / `pip3` / `python -m pip` indicates install via PyPI, while `dockerd` / `containerd` indicates a container layer extract. 2) Contain: isolate the host or kill the container, delete the .pth file, kill any python.exe processes that may have already loaded the payload. 3) Hunt: pull `pip install` history and lockfiles across the org for `elementary-data==0.23.3`; check Argo CD / k8s manifests for `ghcr.io/elementary-data/elementary:latest` or `:0.23.3`; rotate any credentials reachable by the infected host (see UC #1 runbook).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-430-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-430-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;, &quot;FileModified&quot;, &quot;FileRenamed&quot;)
-| where FileName =~ &quot;elementary.pth&quot;
-| where FolderPath has_any (&quot;\\site-packages\\&quot;, &quot;/site-packages/&quot;, &quot;/dist-packages/&quot;)
-| extend IsOversized = (FileSize &gt; 50000)  // legit .pth files are &lt;1KB; payload is ~245KB
-| project Timestamp, DeviceName, FolderPath, FileName, FileSize, IsOversized,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventType in (&quot;FileCreated&quot;, &quot;FileModified&quot;)
-| where TargetFileName =~ &quot;elementary.pth&quot;
-| where TargetFilePath has_any (&quot;\\site-packages\\&quot;, &quot;/site-packages/&quot;, &quot;/dist-packages/&quot;)
-| extend IsOversized = (TargetFileSize &gt; 50000)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, TargetFileSize, IsOversized, ActingProcessName, ActingProcessCommandLine, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious elementary.pth Loader Dropped in site-packages
-id: 8b2c5d71-9f3e-4a1b-b8c6-2d3e4f5a6b71
-description: Detects creation of the elementary.pth payload from the compromised elementary-data 0.23.3 release.
-references:
-  - https://www.stepsecurity.io/blog/elementary-data-compromised-on-pypi-and-ghcr-forged-release-pushed-via-github-actions-script-injection
-author: SOC Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.t1546
-  - attack.t1195.002
-logsource:
-  category: file_event
-detection:
-  selection:
-    TargetFilename|endswith: &#x27;\elementary.pth&#x27;
-  selection_path:
-    TargetFilename|contains:
-      - &#x27;\site-packages\&#x27;
-      - &#x27;/site-packages/&#x27;
-      - &#x27;/dist-packages/&#x27;
-  condition: selection and selection_path
-level: high</code></pre></div>
-    <div class="tab-content" id="art-430-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) AND (@TargetFilename:(*\\site-packages\\elementary.pth OR */site-packages/elementary.pth OR */dist-packages/elementary.pth) OR @file.path:(*/site-packages/elementary.pth OR */dist-packages/elementary.pth))</code></pre></div>
-    <div class="tab-content" id="art-430-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/(site-packages|dist-packages)[\\\/]elementary\.pth$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-430-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;elementary.pth&quot;) AND (Filesystem.file_path=&quot;*site-packages*&quot; OR Filesystem.file_path=&quot;*dist-packages*&quot;) by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-430-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;elementary.pth&quot;) AND (Filesystem.file_path=&quot;*site-packages*&quot; OR Filesystem.file_path=&quot;*dist-packages*&quot;) by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="508270e73d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Install of trojaned elementary-data 0.23.3 via pip / poetry / uv</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="508270e73d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects any package manager invocation requesting the malicious pinned version `elementary-data==0.23.3` (or the unpinned `latest`/`&gt;=0.23.3` form that PyPI still resolves to the trojaned release at the time of the StepSecurity report). Catches the install moment so the host can be quarantined before the .pth fires on next interpreter startup.
-
-Rationale: Article names the exact poisoned version (0.23.3) and the package canonical names (`elementary-data` / `elementary_data`). Process-create with these two strings in the command line is high-fidelity because no benign install would target a known-malicious pinned version after the StepSecurity disclosure.
-
-Cross-checked against:
-  • https://pypi.org/project/elementary-data/#history
-  • https://github.com/elementary-data/elementary/issues/2205</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Detection engineer reproducing the install in an isolated VM</li><li>Sandbox / CI pipeline that intentionally installs the IOC to validate this very detection</li><li>Forensic re-installation of the package to confirm scope on a known-infected host</li><li>Backup restore of an old lockfile that referenced 0.23.3 before the .pth payload existed (rare — 0.23.3 was always malicious)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;, &quot;ci-detonation&quot;, &quot;sec-lab&quot;)) and not (AccountName in~ (&quot;detection-eng&quot;, &quot;redteam&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the install actually succeeded (look for the follow-up `elementary.pth` write — see UC #2) and whether the python interpreter that consumes the venv has been launched yet. 2) Contain: isolate the host, kill running python processes that loaded the venv, `pip uninstall elementary-data` then re-install 0.23.4 (the clean replacement noted in issue #2205). 3) Hunt: scan code repos, Dockerfiles, requirements.txt, pyproject.toml, poetry.lock, uv.lock, Pipfile.lock, conda env.yml across the org for `elementary-data==0.23.3` or any unpinned `elementary-data` reference; check CI artefacts produced during the window 2026-04-24T22:20Z → 2026-04-25 for cached wheels.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-430-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-430-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName in~ (&quot;pip.exe&quot;, &quot;pip3.exe&quot;, &quot;pip&quot;, &quot;pip3&quot;, &quot;poetry.exe&quot;, &quot;poetry&quot;, &quot;uv.exe&quot;, &quot;uv&quot;, &quot;python.exe&quot;, &quot;python3&quot;, &quot;python&quot;)
-   or InitiatingProcessFileName in~ (&quot;pip.exe&quot;, &quot;pip3.exe&quot;, &quot;poetry.exe&quot;, &quot;uv.exe&quot;)
-| where ProcessCommandLine has &quot;elementary-data&quot;
-| where ProcessCommandLine has_any (&quot;==0.23.3&quot;, &quot; 0.23.3&quot;, &quot;elementary_data-0.23.3&quot;, &quot;elementary-data-0.23.3&quot;)
-   or (ProcessCommandLine has &quot;elementary-data&quot; and ProcessCommandLine has_any (&quot;install&quot;, &quot;add&quot;, &quot;sync&quot;) and not(ProcessCommandLine has &quot;==0.23.4&quot; or ProcessCommandLine has &quot;&lt;0.23.3&quot;))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-    (SecurityEvent
-        | where TimeGenerated &gt; ago(30d)
-        | where EventID == 4688
-        | where NewProcessName has_any (&quot;\\pip.exe&quot;, &quot;\\pip3.exe&quot;, &quot;\\poetry.exe&quot;, &quot;\\uv.exe&quot;, &quot;\\python.exe&quot;)
-        | where CommandLine has &quot;elementary-data&quot;
-        | where CommandLine has_any (&quot;==0.23.3&quot;, &quot; 0.23.3&quot;, &quot;elementary_data-0.23.3&quot;, &quot;elementary-data-0.23.3&quot;)
-        | project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName),
-    (ImProcessCreate
-        | where TimeGenerated &gt; ago(30d)
-        | where TargetProcessName has_any (&quot;pip&quot;, &quot;pip3&quot;, &quot;poetry&quot;, &quot;uv&quot;, &quot;python&quot;)
-        | where ActingProcessCommandLine has &quot;elementary-data&quot; or TargetProcessCommandLine has &quot;elementary-data&quot;
-        | where (ActingProcessCommandLine has &quot;0.23.3&quot;) or (TargetProcessCommandLine has &quot;0.23.3&quot;)
-        | project TimeGenerated, Computer = DvcHostname, Account = ActorUsername, NewProcessName = TargetProcessName, CommandLine = TargetProcessCommandLine, ParentProcessName = ParentProcessName)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Install of Compromised elementary-data 0.23.3 PyPI Package
-id: 4d9a8c63-2e7b-4f5a-8c1d-9e0f1a2b3c84
-description: Detects pip / poetry / uv invocation installing the trojaned elementary-data 0.23.3 release.
-references:
-  - https://www.stepsecurity.io/blog/elementary-data-compromised-on-pypi-and-ghcr-forged-release-pushed-via-github-actions-script-injection
-author: SOC Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.t1195.002
-logsource:
-  category: process_creation
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;\pip.exe&#x27;
-      - &#x27;\pip3.exe&#x27;
-      - &#x27;\poetry.exe&#x27;
-      - &#x27;\uv.exe&#x27;
-      - &#x27;\python.exe&#x27;
-      - &#x27;/pip&#x27;
-      - &#x27;/pip3&#x27;
-      - &#x27;/poetry&#x27;
-      - &#x27;/uv&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-  selection_cmd:
-    CommandLine|contains|all:
-      - &#x27;elementary-data&#x27;
-      - &#x27;0.23.3&#x27;
-  condition: selection_proc and selection_cmd
-level: high</code></pre></div>
-    <div class="tab-content" id="art-430-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.security OR windows.sysmon OR linux.auditd) AND (@Image:(*\\pip.exe OR *\\pip3.exe OR *\\poetry.exe OR *\\uv.exe OR *\\python.exe) OR @process.executable.path:(*/pip OR */pip3 OR */poetry OR */uv OR */python OR */python3)) AND @CommandLine:(*elementary-data*0.23.3* OR *elementary_data-0.23.3*) OR @process.command_line:(*elementary-data*0.23.3* OR *elementary_data-0.23.3*)</code></pre></div>
-    <div class="tab-content" id="art-430-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(pip|pip3|poetry|uv|python|python3)(\.exe)?$/i CommandLine=/elementary[-_]data/i CommandLine=/0\.23\.3/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-430-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;poetry&quot;,&quot;poetry.exe&quot;,&quot;uv&quot;,&quot;uv.exe&quot;,&quot;python.exe&quot;,&quot;python3&quot;,&quot;python&quot;)) AND (Processes.process=&quot;*elementary-data==0.23.3*&quot; OR Processes.process=&quot;*elementary-data 0.23.3*&quot; OR Processes.process=&quot;*elementary_data-0.23.3*&quot;) by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-430-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;poetry&quot;,&quot;poetry.exe&quot;,&quot;uv&quot;,&quot;uv.exe&quot;,&quot;python.exe&quot;,&quot;python3&quot;,&quot;python&quot;)) AND (Processes.process=&quot;*elementary-data==0.23.3*&quot; OR Processes.process=&quot;*elementary-data 0.23.3*&quot; OR Processes.process=&quot;*elementary_data-0.23.3*&quot;) by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ff20b25112" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="kubernetes,linux,windows">
-  <summary>
-    <span class="uc-title">Docker / Kubernetes pull of compromised ghcr.io/elementary-data/elementary image</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ff20b25112" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects docker, containerd, podman, crictl, kubectl, or kubelet pulls of the trojaned GHCR image — including the dangerous unpinned `:latest` form that resolved to the malicious digest sha256:31ecc5939de6...634255 between 2026-04-24 and the cleanup. Fires on the pull itself rather than at runtime so deployments can be blocked before the container ever runs the .pth payload.
-
-Rationale: Anchored on the exact registry path called out in the article (`ghcr.io/elementary-data/elementary`) and the known-bad digest prefix (`sha256:31ecc5939de6...634255`). Catches both Docker CLI users and Kubernetes admission for image creates — the article specifically warns that `:latest` resolved to the trojaned image for every team that didn&#x27;t pin by digest.
-
-Cross-checked against:
-  • https://github.com/elementary-data/elementary/pkgs/container/elementary
-  • https://github.com/elementary-data/elementary/issues/2205</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Deploy Container">T1610</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Detection authors validating this rule by deliberately pulling the image into a sandbox</li><li>Inventory tools (e.g. trivy, syft, grype) running `docker pull` to scan the image (legit but should still be triaged once)</li><li>GitOps reconciliation re-pulling an already-deployed image after the rule deploys</li><li>CI build cache warm-up jobs that pre-pull common images</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;, &quot;image-scanner&quot;)) and not (InitiatingProcessFileName in~ (&quot;trivy.exe&quot;, &quot;syft.exe&quot;, &quot;grype.exe&quot;, &quot;snyk.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the host / k8s node that ran the pull and the cluster context; confirm the resolved digest — if it matches `sha256:31ecc5939de6...634255` you have the trojaned image. 2) Contain: cordon and drain the node, kill or `kubectl delete pod` any running containers using the image, patch deployments to `0.23.4` pinned by digest, purge the local image cache (`docker rmi`/`crictl rmi`). 3) Hunt: query the registry mirror / Harbor / ECR pull logs for every previous pull of this image, scan all kustomize/helm/argocd manifests for unpinned references, check workload identity bindings — if the pod ran with cloud IAM roles, those credentials are compromised (see UC #1 runbook).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-430-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-430-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName in~ (&quot;docker.exe&quot;, &quot;docker&quot;, &quot;podman.exe&quot;, &quot;podman&quot;, &quot;crictl.exe&quot;, &quot;crictl&quot;, &quot;kubectl.exe&quot;, &quot;kubectl&quot;, &quot;nerdctl.exe&quot;, &quot;nerdctl&quot;, &quot;buildah&quot;, &quot;skopeo&quot;)
-| where ProcessCommandLine has &quot;ghcr.io/elementary-data/elementary&quot;
-| extend IsLatestOrBad = ProcessCommandLine has_any (&quot;:latest&quot;, &quot;:0.23.3&quot;, &quot;sha256:31ecc5939de6&quot;) or not(ProcessCommandLine matches regex @&quot;:(0\.23\.[4-9]|0\.2[4-9]|[1-9])&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, IsLatestOrBad
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let TargetImage = &quot;ghcr.io/elementary-data/elementary&quot;;
-union isfuzzy=true
-    (SecurityEvent
-        | where TimeGenerated &gt; ago(30d)
-        | where EventID == 4688
-        | where NewProcessName has_any (&quot;\\docker.exe&quot;, &quot;\\podman.exe&quot;, &quot;\\crictl.exe&quot;, &quot;\\kubectl.exe&quot;, &quot;\\nerdctl.exe&quot;)
-        | where CommandLine has TargetImage
-        | project TimeGenerated, Computer, Account, NewProcessName, CommandLine, Source = &quot;SecurityEvent4688&quot;),
-    (ImProcessCreate
-        | where TimeGenerated &gt; ago(30d)
-        | where TargetProcessName has_any (&quot;docker&quot;, &quot;podman&quot;, &quot;crictl&quot;, &quot;kubectl&quot;, &quot;nerdctl&quot;, &quot;buildah&quot;, &quot;skopeo&quot;)
-        | where TargetProcessCommandLine has TargetImage
-        | project TimeGenerated, Computer = DvcHostname, Account = ActorUsername, NewProcessName = TargetProcessName, CommandLine = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot;),
-    (Syslog
-        | where TimeGenerated &gt; ago(30d)
-        | where ProcessName in~ (&quot;dockerd&quot;, &quot;containerd&quot;, &quot;kubelet&quot;, &quot;crio&quot;)
-        | where SyslogMessage has TargetImage
-        | project TimeGenerated, Computer, Account = &quot;&quot;, NewProcessName = ProcessName, CommandLine = SyslogMessage, Source = &quot;Syslog&quot;),
-    (AKSAudit
-        | where TimeGenerated &gt; ago(30d)
-        | where Verb in (&quot;create&quot;, &quot;update&quot;, &quot;patch&quot;)
-        | where ObjectRef has &quot;pods&quot; or ObjectRef has &quot;deployments&quot; or ObjectRef has &quot;statefulsets&quot; or ObjectRef has &quot;daemonsets&quot; or ObjectRef has &quot;cronjobs&quot;
-        | where RequestObject has TargetImage
-        | project TimeGenerated, Computer = tostring(parse_json(tostring(User)).username), Account = Username, NewProcessName = Verb, CommandLine = tostring(RequestObject), Source = &quot;AKSAudit&quot;)
-| extend IsLatestOrBad = CommandLine has_any (&quot;:latest&quot;, &quot;:0.23.3&quot;, &quot;sha256:31ecc5939de6&quot;) or not(CommandLine matches regex @&quot;:(0\.23\.[4-9]|0\.2[4-9]|[1-9])&quot;)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Pull of Compromised ghcr.io/elementary-data/elementary Container Image
-id: 1c5e2a91-7b4d-4f8e-9b2a-8c3d4e5f6a72
-description: Detects container runtime / orchestrator pulling the trojaned elementary GHCR image (any tag at or before 0.23.3, especially :latest).
-references:
-  - https://www.stepsecurity.io/blog/elementary-data-compromised-on-pypi-and-ghcr-forged-release-pushed-via-github-actions-script-injection
-author: SOC Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.t1195.002
-  - attack.t1610
-logsource:
-  category: process_creation
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;\docker.exe&#x27;
-      - &#x27;\podman.exe&#x27;
-      - &#x27;\crictl.exe&#x27;
-      - &#x27;\kubectl.exe&#x27;
-      - &#x27;\nerdctl.exe&#x27;
-      - &#x27;/docker&#x27;
-      - &#x27;/podman&#x27;
-      - &#x27;/crictl&#x27;
-      - &#x27;/kubectl&#x27;
-      - &#x27;/nerdctl&#x27;
-  selection_img:
-    CommandLine|contains: &#x27;ghcr.io/elementary-data/elementary&#x27;
-  condition: selection_proc and selection_img
-level: high</code></pre></div>
-    <div class="tab-content" id="art-430-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:(windows.security OR windows.sysmon OR linux.auditd) AND (@Image:(*\\docker.exe OR *\\podman.exe OR *\\crictl.exe OR *\\kubectl.exe OR *\\nerdctl.exe) OR @process.executable.path:(*/docker OR */podman OR */crictl OR */kubectl OR */nerdctl OR */buildah OR */skopeo)) AND (@CommandLine:*ghcr.io\/elementary-data\/elementary* OR @process.command_line:*ghcr.io\/elementary-data\/elementary*)) OR (source:kubernetes.audit @verb:(create OR update OR patch) @requestObject.spec.containers.image:*ghcr.io\/elementary-data\/elementary*)</code></pre></div>
-    <div class="tab-content" id="art-430-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(docker|podman|crictl|kubectl|nerdctl|buildah|skopeo)(\.exe)?$/i CommandLine=/ghcr\.io\/elementary-data\/elementary/i
-| ImageTag := regex(&quot;ghcr\\.io/elementary-data/elementary(?::(?&lt;tag&gt;[\\w\\.-]+))?&quot;, field=CommandLine, strict=false)
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-430-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;docker.exe&quot;,&quot;docker&quot;,&quot;podman&quot;,&quot;podman.exe&quot;,&quot;crictl&quot;,&quot;crictl.exe&quot;,&quot;kubectl&quot;,&quot;kubectl.exe&quot;,&quot;nerdctl&quot;,&quot;nerdctl.exe&quot;,&quot;buildah&quot;,&quot;skopeo&quot;)) AND Processes.process=&quot;*ghcr.io/elementary-data/elementary*&quot; AND (Processes.process=&quot;*pull*&quot; OR Processes.process=&quot;*run*&quot; OR Processes.process=&quot;*create*&quot;) by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-430-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;docker.exe&quot;,&quot;docker&quot;,&quot;podman&quot;,&quot;podman.exe&quot;,&quot;crictl&quot;,&quot;crictl.exe&quot;,&quot;kubectl&quot;,&quot;kubectl.exe&quot;,&quot;nerdctl&quot;,&quot;nerdctl.exe&quot;,&quot;buildah&quot;,&quot;skopeo&quot;)) AND Processes.process=&quot;*ghcr.io/elementary-data/elementary*&quot; AND (Processes.process=&quot;*pull*&quot; OR Processes.process=&quot;*run*&quot; OR Processes.process=&quot;*create*&quot;) by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="3895df66fd" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Stage-3 exfil archive trin.tar.gz POST via curl --data-binary</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3895df66fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the stage-3 collector packaging harvested credentials into `trin.tar.gz` and exfiltrating via `curl --data-binary` (the exact mechanism named in the article). Fires on either the file write of trin.tar.gz or a curl process command line carrying `--data-binary` together with the C2 host — both are signature-grade for this specific payload.
-
-Rationale: Three article-named anchors combined: the archive filename `trin.tar.gz`, the exact `curl --data-binary` invocation, and either the C2 domain or the custom request header `X-Rise-To-The-Trinny: agree`. The triple makes false positives effectively impossible — generic curl POST traffic won&#x27;t carry these strings.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/elementary-data-compromised-on-pypi-and-ghcr-forged-release-pushed-via-github-actions-script-injection
-  • https://github.com/elementary-data/elementary/issues/2205</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Archive Collected Data: Archive via Utility">T1560.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal sandbox / detonation environment running the malware to validate detection (filter by lab host tags)</li><li>Threat-intel team uploading captured artefacts for analysis where `trin.tar.gz` is the analysed file name</li><li>Detection-engineering replay of the IOC in a contained VM (should still alert; tag the host as known-test)</li><li>Forensic copy operations preserving the archive name in evidence storage</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;, &quot;detonation&quot;, &quot;malware-lab&quot;)) and not (AccountName in~ (&quot;redteam&quot;, &quot;sec-research&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm host has the trojaned package or container; capture `trin.tar.gz` if present (it lists exactly which secrets were harvested — irreplaceable for scoping rotation); preserve the curl command line for the exact request body sent. 2) Contain: isolate the host immediately, kill the curl PID, block the C2 host at the proxy and DNS RPZ. 3) Hunt: assume *every* credential reachable from the host is burned — SSH private keys, ~/.git-credentials, gh auth token, AWS keys + IMDSv2 role + Secrets Manager / SSM secrets, GCP ADC, ~/.azure, ~/.docker/config.json, ~/.kube/config, /etc/kubernetes/*.conf, ServiceAccount tokens, all .env files to depth 6, ~/.npmrc, ~/.pypirc, ~/.cargo/credentials.toml, ~/.vault-token, ~/.netrc, ~/.pgpass, ~/.my.cnf, BTC/LTC/DOGE/ZEC/DASH/XMR/XRP wallets, ETH keystores, Cardano/Solana keys. Rotate every one before lifting containment.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-430-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-430-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let WindowDays = 30d;
-let C2 = &quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;;
-union isfuzzy=true
-    (DeviceProcessEvents
-        | where Timestamp &gt; ago(WindowDays)
-        | where FileName in~ (&quot;curl&quot;, &quot;curl.exe&quot;)
-        | where ProcessCommandLine has &quot;--data-binary&quot;
-        | where ProcessCommandLine has_any (C2, &quot;trin.tar.gz&quot;, &quot;X-Rise-To-The-Trinny&quot;)
-        | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, Source = &quot;ProcessExec&quot;),
-    (DeviceFileEvents
-        | where Timestamp &gt; ago(WindowDays)
-        | where ActionType in (&quot;FileCreated&quot;, &quot;FileModified&quot;)
-        | where FileName =~ &quot;trin.tar.gz&quot;
-        | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine = strcat(FolderPath, &quot;\\&quot;, FileName), Source = &quot;FileWrite&quot;)
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowDays = 30d;
-let C2 = &quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;;
-union isfuzzy=true
-    (SecurityEvent
-        | where TimeGenerated &gt; ago(WindowDays)
-        | where EventID == 4688
-        | where NewProcessName endswith &quot;\\curl.exe&quot; or NewProcessName endswith &quot;/curl&quot;
-        | where CommandLine has &quot;--data-binary&quot;
-        | where CommandLine has_any (C2, &quot;trin.tar.gz&quot;, &quot;X-Rise-To-The-Trinny&quot;)
-        | project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName, Source = &quot;SecurityEvent4688&quot;),
-    (ImProcessCreate
-        | where TimeGenerated &gt; ago(WindowDays)
-        | where TargetProcessName has &quot;curl&quot;
-        | where TargetProcessCommandLine has &quot;--data-binary&quot;
-        | where TargetProcessCommandLine has_any (C2, &quot;trin.tar.gz&quot;, &quot;X-Rise-To-The-Trinny&quot;)
-        | project TimeGenerated, Computer = DvcHostname, Account = ActorUsername, NewProcessName = TargetProcessName, CommandLine = TargetProcessCommandLine, ParentProcessName, Source = &quot;ImProcessCreate&quot;),
-    (ImFileEvent
-        | where TimeGenerated &gt; ago(WindowDays)
-        | where EventType in (&quot;FileCreated&quot;, &quot;FileModified&quot;)
-        | where TargetFileName =~ &quot;trin.tar.gz&quot;
-        | project TimeGenerated, Computer = DvcHostname, Account = ActorUsername, NewProcessName = ActingProcessName, CommandLine = ActingProcessCommandLine, ParentProcessName = &quot;&quot;, Source = &quot;ImFileEvent&quot;),
-    (Syslog
-        | where TimeGenerated &gt; ago(WindowDays)
-        | where SyslogMessage has_any (&quot;trin.tar.gz&quot;, &quot;X-Rise-To-The-Trinny&quot;, C2)
-        | project TimeGenerated, Computer, Account = &quot;&quot;, NewProcessName = ProcessName, CommandLine = SyslogMessage, ParentProcessName = &quot;&quot;, Source = &quot;Syslog&quot;)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: elementary-data Stealer trin.tar.gz Exfil via curl --data-binary
-id: 9f3b1d44-6c2e-4a7f-8d51-3e4f5a6b7c8d
-description: Detects the stage-3 collector exfiltrating trin.tar.gz to the elementary-data C2 host via curl --data-binary.
-references:
-  - https://www.stepsecurity.io/blog/elementary-data-compromised-on-pypi-and-ghcr-forged-release-pushed-via-github-actions-script-injection
-author: SOC Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.t1560.001
-  - attack.t1041
-logsource:
-  category: process_creation
-detection:
-  selection_curl:
-    Image|endswith:
-      - &#x27;\curl.exe&#x27;
-      - &#x27;/curl&#x27;
-    CommandLine|contains: &#x27;--data-binary&#x27;
-  selection_ioc:
-    CommandLine|contains:
-      - &#x27;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&#x27;
-      - &#x27;trin.tar.gz&#x27;
-      - &#x27;X-Rise-To-The-Trinny&#x27;
-  condition: selection_curl and selection_ioc
-level: high</code></pre></div>
-    <div class="tab-content" id="art-430-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR windows.security OR linux.auditd) AND (@Image:(*\\curl.exe OR *\\CURL.EXE) OR @process.executable.path:(*/curl OR */CURL)) AND (@CommandLine:*--data-binary* OR @process.command_line:*--data-binary*) AND (@CommandLine:(*igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud* OR *trin.tar.gz* OR *X-Rise-To-The-Trinny*) OR @process.command_line:(*igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud* OR *trin.tar.gz* OR *X-Rise-To-The-Trinny*))</code></pre></div>
-    <div class="tab-content" id="art-430-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=ProcessRollup2 ImageFileName=/curl(\.exe)?$/i CommandLine=/--data-binary/i CommandLine=/(skyhanni\.cloud|trin\.tar\.gz|X-Rise-To-The-Trinny)/i) OR (#event_simpleName=FileWritten TargetFileName=/trin\.tar\.gz$/i)
-| groupBy([aid, ComputerName, ContextImageFileName, ImageFileName, CommandLine, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-430-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc4-spl-acc"><button class="copy-btn">COPY</button><code>(| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;curl&quot;,&quot;curl.exe&quot;) AND Processes.process=&quot;*--data-binary*&quot; AND (Processes.process=&quot;*skyhanni.cloud*&quot; OR Processes.process=&quot;*trin.tar.gz*&quot;) by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)`) | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;trin.tar.gz&quot; by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-430-uc4-spl-raw"><button class="copy-btn">COPY</button><code>(| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;curl&quot;,&quot;curl.exe&quot;) AND Processes.process=&quot;*--data-binary*&quot; AND (Processes.process=&quot;*skyhanni.cloud*&quot; OR Processes.process=&quot;*trin.tar.gz*&quot;) by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)`) | append [| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;trin.tar.gz&quot; by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0bf69215de" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">C2 channel detection via inter-beacon-time stddev / fan-out to single dest.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff(&#x27;second&#x27;, Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
-| order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(2h)
-| where DvcAction != &quot;Block&quot;
-| where ipv4_is_private(DstIpAddr) == false
-| summarize ConnCount = count(),
-            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
-            by DvcHostname, DstIpAddr, DstPortNumber
-| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
-| order by ConnCount desc
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-430-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-430-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
-let BadDomains = dynamic([&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-430-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="673ab6c4b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Crypto-wallet file/keystore access by non-wallet process</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="673ab6c4b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc7-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;, @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;, @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;, @&quot;\Atomic\Local Storage\&quot;)
-| where InitiatingProcessFileName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;,
-                                  @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;,
-                                  @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;,
-                                  @&quot;\Atomic\Local Storage\&quot;)
-| where ActingProcessName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,
-                                  &quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
-status: experimental
-description: |
-    Stealers / wallet drainers read keystore files from MetaMask,
-    Exodus, Atomic, Phantom, Bitcoin, Electrum, Ethereum-cli wallets.
-    Filtering out the legitimate wallet binaries leaves only attacker
-    activity.
-references:
-    - https://attack.mitre.org/techniques/T1005/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1005
-    - attack.collection
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Ethereum\keystore\&#x27;
-            - &#x27;\Bitcoin\&#x27;
-            - &#x27;\Exodus\&#x27;
-            - &#x27;\Electrum\wallets\&#x27;
-            - &#x27;\MetaMask\&#x27;
-            - &#x27;\Phantom\&#x27;
-            - &#x27;\Atomic\Local Storage\&#x27;
-    filter_legit:
-        Image|endswith:
-            - &#x27;\MetaMask.exe&#x27;
-            - &#x27;\Exodus.exe&#x27;
-            - &#x27;\Atomic.exe&#x27;
-            - &#x27;\electrum.exe&#x27;
-            - &#x27;\Bitcoin.exe&#x27;
-            - &#x27;\Phantom.exe&#x27;
-    condition: selection_path and not filter_legit
-falsepositives:
-    - Backup software
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
-        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
-        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
-        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
-        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
-        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
-        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-430-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
-        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
-        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
-        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
-        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
-        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
-        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc8-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-430-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-430-uc9-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-430-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-430-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-430-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ee6ad342d6" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ee6ad342d6" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-430-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-430-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-430-uc10-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-430-uc10-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/kubernetes/&quot;, &quot;/etc/passwd&quot;, &quot;/etc/shadow&quot;, &quot;/var/log/auth.log&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/kubernetes/&quot;, &quot;/etc/passwd&quot;, &quot;/etc/shadow&quot;, &quot;/var/log/auth.log&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-430-uc10-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-430-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-430-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-430-uc10-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/kubernetes/*&quot; OR Filesystem.file_path=&quot;*/etc/passwd*&quot; OR Filesystem.file_path=&quot;*/etc/shadow*&quot; OR Filesystem.file_path=&quot;*/var/log/auth.log*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-430-uc10-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/kubernetes/*&quot; OR Filesystem.file_path=&quot;*/etc/passwd*&quot; OR Filesystem.file_path=&quot;*/etc/shadow*&quot; OR Filesystem.file_path=&quot;*/var/log/auth.log*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>
