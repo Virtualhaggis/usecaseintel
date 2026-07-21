@@ -11,15 +11,9 @@ By Bill Toulas
 July 20, 2026
 06:39 PM
 0 
-
-
 Cosmetics giant Estée Lauder is notifying customers of a data breach after hackers exploited a flaw in Oracle E-Business Suite that the company used for human resources (HR) operations.
-
-
 The company says that last month it identified an intrusion that had occurred on August 9, 2025, which led to the threat actor obtaining " personal information of certain individuals."
-
-
-“We became a…
+“We became aware of a cy…
 
 ## Indicators of Compromise (high-fidelity only)
 
