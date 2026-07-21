@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### node-ipc/peacenotwar protestware drops WITH-LOVE-FROM-AMERICA.txt on Desktop/OneDrive
 
-`UC_1913_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1916_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceFileEvents
 
 ### node-ipc destructive wiper component ssl-geospec.js written under node_modules\node-ipc\dao
 
-`UC_1913_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1916_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceFileEvents
 
 ### Lockfile injection: npm/yarn fetching dependencies from GitHub gist/repo instead of the registry
 
-`UC_1913_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_1916_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### npm/yarn install-script (postinstall) spawning download LOLBins for secret theft / payload fetch
 
-`UC_1913_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1916_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — NPM security: preventing supply chain attacks
 
-`UC_1913_3` · phase: **exploit** · confidence: **High**
+`UC_1916_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,10 +28,14 @@ The…
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1203** — Exploitation for Client Execution
+- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.007** — Unsecured Credentials: Container API
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1528** — Steal Application Access Token
+- **T1102** — Web Service
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568.002** — Dynamic Resolution: Domain Generation via Fast Flux / Migration
 
 ## Kill chain phases observed
 
@@ -39,64 +43,64 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Hugging Face malicious-dataset RCE: Python ML worker spawns shell/network tool
+### HuggingFace datasets worker RCE: Python dataset loader spawns shell/network tool
 
-`UC_29_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_38_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python","python3","python3.10","python3.11","python3.12") AND (Processes.parent_process="*datasets*" OR Processes.parent_process="*load_dataset*" OR Processes.parent_process="*trust_remote_code*" OR Processes.parent_process="*huggingface*") AND Processes.process_name IN ("sh","bash","dash","curl","wget","nc","ncat","scp","chmod","base64") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","python3.10","python3.11")) AND (Processes.parent_process="*load_dataset*" OR Processes.parent_process="*trust_remote_code*" OR Processes.parent_process="*datasets*") AND Processes.process_name IN ("sh","bash","dash","curl","wget","nc","ncat","chmod","base64") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python","python3","python3.10","python3.11","python3.12")
-| where InitiatingProcessCommandLine has_any ("datasets","load_dataset","trust_remote_code","huggingface","hf_datasets")
-| where FileName in~ ("sh","bash","dash","curl","wget","nc","ncat","scp","chmod","base64")
+| where InitiatingProcessFileName in~ ("python","python3","python3.10","python3.11")
+| where InitiatingProcessCommandLine has_any ("load_dataset","trust_remote_code","datasets","dataset_infos","datasets_modules")
+| where FileName in~ ("sh","bash","dash","curl","wget","nc","ncat","chmod","base64","python","python3")
 | where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Cloud credential theft via IMDS (169.254.169.254) from data-processing worker
+### Cloud/cluster credential harvesting on Hugging Face dataset-processing worker
 
-`UC_29_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_38_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("curl","wget","sh","bash","dash","busybox","nc","ncat","python","python3") AND Processes.process="*169.254.169.254*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("cat","cp","tar","curl","base64","grep","python","python3","sh","bash") AND (Processes.process="*.aws/credentials*" OR Processes.process="*.aws/config*" OR Processes.process="*.kube/config*" OR Processes.process="*kubeconfig*" OR Processes.process="*.git-credentials*" OR Processes.process="*serviceaccount/token*" OR Processes.process="*var/run/secrets/kubernetes.io*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any (".aws/credentials",".aws/config",".kube/config","kubeconfig",".git-credentials","serviceaccount/token","/var/run/secrets/kubernetes.io")
+| where FileName in~ ("cat","cp","tar","curl","base64","grep","python","python3","sh","bash","dd","head")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Dataset worker beaconing to public staging services (self-migrating C2)
+
+`UC_38_6` · phase: **c2** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("python","python3","curl","wget","sh","bash") AND (All_Traffic.dest_host="*pastebin.com" OR All_Traffic.dest_host="*raw.githubusercontent.com" OR All_Traffic.dest_host="*gist.githubusercontent.com" OR All_Traffic.dest_host="*workers.dev" OR All_Traffic.dest_host="*pages.dev" OR All_Traffic.dest_host="*trycloudflare.com" OR All_Traffic.dest_host="*transfer.sh" OR All_Traffic.dest_host="*0x0.st" OR All_Traffic.dest_host="*termbin.com") by All_Traffic.src All_Traffic.app All_Traffic.dest_host All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteIP == "169.254.169.254"
-| where InitiatingProcessFileName in~ ("curl","wget","sh","bash","dash","busybox","nc","ncat","perl","ruby")
-    or (InitiatingProcessFileName in~ ("python","python3") and InitiatingProcessCommandLine has_any ("security-credentials","meta-data/iam","load_dataset","datasets"))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc
-```
-
-### Cluster/cloud credential harvesting for lateral movement from ML worker
-
-`UC_29_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*/var/run/secrets/kubernetes.io*" OR Processes.process="*/.kube/config*" OR Processes.process="*.aws/credentials*" OR Processes.process="*serviceaccount/token*") OR (Processes.process_name IN ("kubectl","aws","gcloud","az") AND Processes.parent_process_name IN ("python","python3","sh","bash","dash")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has_any ("/var/run/secrets/kubernetes.io","/.kube/config",".aws/credentials",".aws/config","serviceaccount/token","serviceaccount/namespace")
-    or (FileName in~ ("kubectl","aws","gcloud","az") and InitiatingProcessFileName in~ ("python","python3","sh","bash","dash"))
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| where InitiatingProcessFileName in~ ("python","python3","curl","wget","sh","bash","nc","ncat")
+| where RemoteIPType == "Public"
+| where RemoteUrl has_any ("pastebin.com","raw.githubusercontent.com","gist.githubusercontent.com","workers.dev","pages.dev","trycloudflare.com","transfer.sh","0x0.st","termbin.com","ngrok","discord.com/api/webhooks")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
@@ -218,4 +222,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

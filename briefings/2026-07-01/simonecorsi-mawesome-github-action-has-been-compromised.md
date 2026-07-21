@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised simonecorsi/mawesome GitHub Action payload by known hash
 
-`UC_205_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_208_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ union DeviceProcessEvents, DeviceFileEvents
 
 ### Runner.Worker process memory scrape via /proc on self-hosted GitHub Actions runner
 
-`UC_205_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_208_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### First-seen external egress from GitHub Actions Runner.Worker child process
 
-`UC_205_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_208_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

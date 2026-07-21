@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### macOS.Gaslight Telegram Bot API C2 polling from non-browser process
 
-`UC_262_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_265_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### macOS.Gaslight keychain theft + collected_data.zip staging
 
-`UC_262_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_265_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceFileEvents
 
 ### macOS.Gaslight LaunchAgent persistence masquerading as com.apple.system.services.activity
 
-`UC_262_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_265_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### macOS.Gaslight self-staged standalone CPython 3.10.18 fetch (astral-sh python-build-standalone)
 
-`UC_262_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_265_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### macOS.Gaslight known-bad file hashes (Mach-O implant, BONZAI sibling, Python/bash stages)
 
-`UC_262_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_265_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

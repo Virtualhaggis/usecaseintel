@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Vertex AI model upload to default predictable staging bucket (bucket-squat exposure)
 
-`UC_296_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_299_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ index=gcp sourcetype=google:gcp:pubsub:message "data.protoPayload.methodName"="g
 
 ### Foreign / non-Vertex principal accessing Vertex AI staging-bucket objects
 
-`UC_296_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_299_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ index=gcp sourcetype=google:gcp:pubsub:message ("data.protoPayload.methodName"="
 
 ### Vertex AI model deployment following default-staged upload (poisoned-model deploy)
 
-`UC_296_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_299_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -326,7 +326,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pickle in the Middle – Hijacking Vertex AI Model Uploads for Cross-Tenant RCE
 
-`UC_296_7` · phase: **exploit** · confidence: **High**
+`UC_299_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

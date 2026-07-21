@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Building Vue 3 components with Tailwind CSS
 
-`UC_1817_0` · phase: **exploit** · confidence: **High**
+`UC_1820_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

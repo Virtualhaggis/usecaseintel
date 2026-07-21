@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### EC2 instance IMDS credential theft via curl/wget to security-credentials path
 
-`UC_3479_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3482_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### WAF-Role EC2 instance credentials used from external IP (instance credential exfiltration)
 
-`UC_3479_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3482_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ index=* sourcetype=aws:cloudtrail userIdentity.type=AssumedRole "userIdentity.se
 
 ### WAF-Role mass S3 bucket enumeration and object download
 
-`UC_3479_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3482_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

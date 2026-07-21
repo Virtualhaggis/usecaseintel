@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2587 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2590 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,18 +10,25 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-21
 - [a new extortion cocktail office printers small ransoms and b](./2026-07-21/a-new-extortion-cocktail-office-printers-small-ransoms-and-b.md)
-- [critical palo alto vpn bug now exploited by qilin ransomware](./2026-07-21/critical-palo-alto-vpn-bug-now-exploited-by-qilin-ransomware.md)
+- [aws kiro flaw let a poisoned web page rewrite its config and](./2026-07-21/aws-kiro-flaw-let-a-poisoned-web-page-rewrite-its-config-and.md)
+- [cisa kev cve 2021 27137 dd wrt stack based buffer overflow v](./2026-07-21/cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v.md)
+- [cisa kev cve 2026 0770 langflow inclusion of functionality f](./2026-07-21/cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f.md)
+- [cisa kev cve 2026 60137 wordpress core sql injection vulnera](./2026-07-21/cisa-kev-cve-2026-60137-wordpress-core-sql-injection-vulnera.md)
+- [closing the identity gaps in critical infrastructure securit](./2026-07-21/closing-the-identity-gaps-in-critical-infrastructure-securit.md)
 - [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
+- [critical sharepoint rce cve 2026 50522 under active exploita](./2026-07-21/critical-sharepoint-rce-cve-2026-50522-under-active-exploita.md)
+- [critical wp2shell wordpress flaws exploited to install websh](./2026-07-21/critical-wp2shell-wordpress-flaws-exploited-to-install-websh.md)
 - [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
 - [new bit2watt attack could let cloud tenants disrupt power gr](./2026-07-21/new-bit2watt-attack-could-let-cloud-tenants-disrupt-power-gr.md)
 - [new encforge ransomware targets ai model files in langflow r](./2026-07-21/new-encforge-ransomware-targets-ai-model-files-in-langflow-r.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
 - [open source android ai agents could let invisible screen tex](./2026-07-21/open-source-android-ai-agents-could-let-invisible-screen-tex.md)
+- [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)
 - [windows legacyhive zero day flaw gets free unofficial patche](./2026-07-21/windows-legacyhive-zero-day-flaw-gets-free-unofficial-patche.md)
 - [wordpress wp2shell exploitation grows as public exploit fuel](./2026-07-21/wordpress-wp2shell-exploitation-grows-as-public-exploit-fuel.md)
+- [zimbra patches critical snmp command injection and four xss ](./2026-07-21/zimbra-patches-critical-snmp-command-injection-and-four-xss-.md)
 
 ## 2026-07-20
-- [critical servicenow code execution flaw now exploited in att](./2026-07-20/critical-servicenow-code-execution-flaw-now-exploited-in-att.md)
 - [est e lauder discloses data breach via oracle e business fla](./2026-07-20/est-e-lauder-discloses-data-breach-via-oracle-e-business-fla.md)
 - [exposed server reveals ai assisted phishing toolkit behind w](./2026-07-20/exposed-server-reveals-ai-assisted-phishing-toolkit-behind-w.md)
 - [fakegit campaign uses 7 600 github repositories to spread sm](./2026-07-20/fakegit-campaign-uses-7-600-github-repositories-to-spread-sm.md)
@@ -90,14 +97,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-15
 - [cisa kev cve 2023 4346 knx association knx protocol connecti](./2026-07-15/cisa-kev-cve-2023-4346-knx-association-knx-protocol-connecti.md)
 - [cisa kev cve 2026 46817 oracle e business suite improper pri](./2026-07-15/cisa-kev-cve-2026-46817-oracle-e-business-suite-improper-pri.md)
-- [cursor flaw lets malicious cloned repositories trigger windo](./2026-07-15/cursor-flaw-lets-malicious-cloned-repositories-trigger-windo.md)
-- [firefox chrome adobe and vmware updates fix multiple critica](./2026-07-15/firefox-chrome-adobe-and-vmware-updates-fix-multiple-critica.md)
 - [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
 - [ghsa critical cve 2026 52881 mantisbt reflected xss in admin](./2026-07-15/ghsa-critical-cve-2026-52881-mantisbt-reflected-xss-in-admin.md)
 - [okobot malware framework injects seed phrase phishing into l](./2026-07-15/okobot-malware-framework-injects-seed-phrase-phishing-into-l.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
-- [researcher drops new windows zero day poc hours after micros](./2026-07-15/researcher-drops-new-windows-zero-day-poc-hours-after-micros.md)
-- [sase has an ai blind spot inspecting packets is no longer en](./2026-07-15/sase-has-an-ai-blind-spot-inspecting-packets-is-no-longer-en.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-07-15/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [turning threat intelligence into decisive action with defend](./2026-07-15/turning-threat-intelligence-into-decisive-action-with-defend.md)
 - [tuxbot v3 evolution shows signs of llm assisted iot botnet d](./2026-07-15/tuxbot-v3-evolution-shows-signs-of-llm-assisted-iot-botnet-d.md)

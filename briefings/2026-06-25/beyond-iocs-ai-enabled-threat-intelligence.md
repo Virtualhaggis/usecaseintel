@@ -278,7 +278,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Beyond IOCs: AI-enabled threat intelligence
 
-`UC_247_7` · phase: **exploit** · confidence: **High**
+`UC_250_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

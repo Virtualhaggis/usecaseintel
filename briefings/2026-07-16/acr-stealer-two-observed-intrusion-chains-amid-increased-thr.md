@@ -20,22 +20,11 @@ From late April 2026 to mid-June 2026, Microsoft Defender Experts observed incre
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `looksta.icu`
-- **Domain (defanged):** `contrite.quirksturdy.icu`
-- **Domain (defanged):** `ux.strainedeasily.icu`
-- **Domain (defanged):** `cpppemwjewjoiwejow.sale`
-- **Domain (defanged):** `breaksd.wifihot.icu`
-- **Domain (defanged):** `walter.filloco.icu`
-- **Domain (defanged):** `fast.raidher.icu`
-- **Domain (defanged):** `apigrokcloud.icu`
-- **Domain (defanged):** `enhanceblabber.cc`
-- **Domain (defanged):** `deep-harborio.com`
-- **Domain (defanged):** `auramatrixa.com`
-- **Domain (defanged):** `zealpraxis.com`
-- **Domain (defanged):** `prism-vertex.com`
-- **Domain (defanged):** `prism-matrixs.com`
-- **Domain (defanged):** `proton-network.com`
 - **Domain (defanged):** `creativecommunityinfo.art`
+- **Domain (defanged):** `enhanceblabber.cc`
+- **Domain (defanged):** `sphere-api.dialectosphere.in.net`
+- **Domain (defanged):** `looksta.icu`
+- **Domain (defanged):** `claude-desktop.gitlab.io`
 
 ## MITRE ATT&CK Techniques
 
@@ -57,12 +46,146 @@ From late April 2026 to mid-June 2026, Microsoft Defender Experts observed incre
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
+- **T1218.011** — System Binary Proxy Execution: Rundll32
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1218.005** — System Binary Proxy Execution: Mshta
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1036** — Masquerading
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1055** — Process Injection
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### ClickFix RunMRU entry launching rundll32 against WebDAV GUID share (ACR Stealer)
+
+`UC_66_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_key_name="*RunMRU*" (Registry.registry_value_data="*rundll32*" AND Registry.registry_value_data="*@ssl*") by Registry.dest Registry.registry_key_name Registry.registry_value_name Registry.registry_value_data Registry.process_id | `drop_dm_object_name(Registry)` | regex registry_value_data="(?i)@ssl\\[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where RegistryKey has "RunMRU"
+| where RegistryValueData has_all ("rundll32", "@ssl")
+| where RegistryValueData matches regex @"(?i)@ssl\\[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\"
+| where RegistryValueData has_any ("start", "pushd", ",#1", ".google")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### rundll32 loading DLL from remote WebDAV @ssl GUID share with ordinal export (ACR Stealer)
+
+`UC_66_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="rundll32.exe" (Processes.process="*@ssl*" OR Processes.process="*sphere-api.dialectosphere.in.net*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | regex process="(?i)\\\\[^\\]+@ssl\\[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.*,#\d+" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "rundll32.exe"
+| where ProcessCommandLine matches regex @"(?i),#\d+\s*$"
+| where ProcessCommandLine has "@ssl" or ProcessCommandLine has_any ("sphere-api.dialectosphere.in.net","creativecommunityinfo.art","enhanceblabber.cc","looksta.icu")
+| where ProcessCommandLine matches regex @"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### MSHTA remote HTA launched by explorer→powershell chain (ACR Stealer fileless campaign)
+
+`UC_66_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="mshta.exe" Processes.parent_process_name="powershell.exe" Processes.process="*https://*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)https://[^ ]*/[0-9]{7}" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessParentFileName has "explorer.exe"
+| where InitiatingProcessFileName =~ "powershell.exe"
+| where InitiatingProcessCommandLine in~ ('"PowerShell.exe" ', '"PowerShell.exe"')
+| where FileName =~ "mshta.exe"
+| where ProcessCommandLine has "https://" and ProcessCommandLine matches regex "/[0-9]{7}"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### Masqueraded 'Autoupdate' scheduled task run by PowerShell loader (ACR Stealer persistence)
+
+`UC_66_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.parent_process_name="powershell.exe" Processes.process="*Autoupdate*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)/tn\s+\S*Autoupdate\S*[0-9]{8}" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "powershell.exe"
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has_all ("schtasks", "/tn", "Autoupdate")
+| where ProcessCommandLine matches regex "[0-9]{8}"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### pythonw.exe loader executing from deceptive %LocalAppData%\Temp dir (ACR Stealer)
+
+`UC_66_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="pythonw.exe" (Processes.parent_process_name="powershell.exe" OR Processes.parent_process_name="cmd.exe") Processes.process_path="*\\AppData\\Local\\Temp\\*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "pythonw.exe"
+| where FolderPath has @"\AppData\Local\Temp\"
+| where InitiatingProcessFileName in~ ("powershell.exe", "cmd.exe")
+| project Timestamp, DeviceName, AccountName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### Endpoint traffic to ACR Stealer C2 / dead-drop domains
+
+`UC_66_17` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("creativecommunityinfo.art","enhanceblabber.cc","sphere-api.dialectosphere.in.net","looksta.icu","claude-desktop.gitlab.io") by All_Traffic.src All_Traffic.dest All_Traffic.app All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("creativecommunityinfo.art","enhanceblabber.cc","sphere-api.dialectosphere.in.net","looksta.icu","claude-desktop.gitlab.io")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -414,7 +537,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ACR Stealer: Two observed intrusion chains amid increased threat activity
 
-`UC_59_11` · phase: **exploit** · confidence: **High**
+`UC_66_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -466,9 +589,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `looksta.icu`, `contrite.quirksturdy.icu`, `ux.strainedeasily.icu`, `cpppemwjewjoiwejow.sale`, `breaksd.wifihot.icu`, `walter.filloco.icu`, `fast.raidher.icu`, `apigrokcloud.icu` _(+8 more)_
+  - IP / domain IOC(s): `creativecommunityinfo.art`, `enhanceblabber.cc`, `sphere-api.dialectosphere.in.net`, `looksta.icu`, `claude-desktop.gitlab.io`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 18 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Safer together: Snyk and CISPA collaborate for the greater good
 
-`UC_2147_1` · phase: **exploit** · confidence: **High**
+`UC_2150_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
