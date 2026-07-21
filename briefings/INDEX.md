@@ -1,12 +1,18 @@
 # Briefings — full archive
 
-_2590 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-21
+- [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
+- [new encforge ransomware targets ai model files in langflow r](./2026-07-21/new-encforge-ransomware-targets-ai-model-files-in-langflow-r.md)
+- [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
+- [wordpress wp2shell exploitation grows as public exploit fuel](./2026-07-21/wordpress-wp2shell-exploitation-grows-as-public-exploit-fuel.md)
 
 ## 2026-07-20
 - [an ai soc evaluation guide for security leaders](./2026-07-20/an-ai-soc-evaluation-guide-for-security-leaders.md)
@@ -38,9 +44,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
 
 ## 2026-07-18
-- [microsoft warns of surge in acr stealer attacks on customers](./2026-07-18/microsoft-warns-of-surge-in-acr-stealer-attacks-on-customers.md)
 - [update now 7 zip fixes rce flaw exploitable with malicious a](./2026-07-18/update-now-7-zip-fixes-rce-flaw-exploitable-with-malicious-a.md)
-- [wordpress core wp2shell rce flaws get public exploits patch ](./2026-07-18/wordpress-core-wp2shell-rce-flaws-get-public-exploits-patch-.md)
 
 ## 2026-07-17
 - [acr stealer uses clickfix lures to steal browser tokens and ](./2026-07-17/acr-stealer-uses-clickfix-lures-to-steal-browser-tokens-and-.md)
@@ -114,10 +118,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54052 n8n mcp cross tenant access to ](./2026-07-14/ghsa-critical-cve-2026-54052-n8n-mcp-cross-tenant-access-to-.md)
 - [ghsa critical ghsa 9hc2 hjx8 q6pv tidgi desktop remote code ](./2026-07-14/ghsa-critical-ghsa-9hc2-hjx8-q6pv-tidgi-desktop-remote-code-.md)
 - [ghsa critical ghsa hgjx r89m m7v4 facturascripts path traver](./2026-07-14/ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver.md)
-- [labubarat masquerades as nvidia software to control windows ](./2026-07-14/labubarat-masquerades-as-nvidia-software-to-control-windows-.md)
 - [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
-- [researchers say claude for chrome flaw lets rogue extensions](./2026-07-14/researchers-say-claude-for-chrome-flaw-lets-rogue-extensions.md)
-- [sap patches cvss 9 9 netweaver abap flaw that could expose o](./2026-07-14/sap-patches-cvss-9-9-netweaver-abap-flaw-that-could-expose-o.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
 
@@ -229,7 +230,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-30
 - [ghsa critical cve 2026 50566 fission environment runtime con](./2026-06-30/ghsa-critical-cve-2026-50566-fission-environment-runtime-con.md)
-- [toddycat your hidden email assistant part 2](./2026-06-30/toddycat-your-hidden-email-assistant-part-2.md)
 
 ## 2026-06-29
 - [cisa kev cve 2026 48558 simplehelp authentication bypass vul](./2026-06-29/cisa-kev-cve-2026-48558-simplehelp-authentication-bypass-vul.md)

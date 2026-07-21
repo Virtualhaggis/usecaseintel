@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### ARToken/EvilTokens PhaaS infrastructure contact (pamconj.com panel + Cloudflare Worker lure)
 
-`UC_187_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_188_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### Entra ID device registration = ARToken PRT persistence after device-code token theft
 
-`UC_187_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_188_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -94,7 +94,7 @@ CloudAppEvents
 
 ### ARToken BEC toolkit: inbox forwarding/hiding rule creation on compromised M365 mailbox
 
-`UC_187_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_188_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -256,7 +256,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Catan and Mouse
 
-`UC_187_6` · phase: **exploit** · confidence: **High**
+`UC_188_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

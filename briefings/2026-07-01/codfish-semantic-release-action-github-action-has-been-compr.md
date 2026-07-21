@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious index.js dropped into codfish/semantic-release-action runner checkout
 
-`UC_202_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_203_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceFileEvents
 
 ### Bun runtime executing payload index.js from semantic-release-action path
 
-`UC_202_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_203_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### GitHub dead-drop C2 — commit-search for RevokeAndItGoesKaboom / TheBeautifulSandsOfTime
 
-`UC_202_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_203_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -239,7 +239,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — codfish/semantic-release-action GitHub Action has been compromised
 
-`UC_202_6` · phase: **exploit** · confidence: **High**
+`UC_203_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
