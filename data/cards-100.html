@@ -1,207 +1,3 @@
-<article class="card" id="art-3371" data-art-slug="2020-03-31-vulnerable-gradle-plugin-publish-plugin-reveals-sensitive-in"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="windows"
-  data-uc-count="2" data-llm-uc-count="1"
-  data-search="Vulnerable Gradle plugin-publish plugin reveals sensitive information This post highlights the recently disclosed &quot;Insertion of Sensitive Information&quot; vulnerability, which affects Gradle&#x27;s plugin-publish plugin. CVE-2020-7599 T1190 [LLM] Gradle plugin-publish run with verbose logging leaks pre-signed AWS URL (CVE-2020-7599) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2020-03-31-vulnerable-gradle-plugin-publish-plugin-reveals-sensitive-in" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/vulnerable-gradle-plugin/" target="_blank" rel="noopener">Vulnerable Gradle plugin-publish plugin reveals sensitive information</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-03-31</span>
-    <span>2 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">This post highlights the recently disclosed &quot;Insertion of Sensitive Information&quot; vulnerability, which affects Gradle&#x27;s plugin-publish plugin.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-7599</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3371-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3371"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3371-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Gradle plugin-publish run with verbose logging leaks pre-signed AWS URL (CVE-2020-7599) · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="17dc8d141e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Gradle plugin-publish run with verbose logging leaks pre-signed AWS URL (CVE-2020-7599)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="17dc8d141e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts developer/CI hosts invoking the com.gradle.plugin-publish &#x27;publishPlugins&#x27; task with --info or --debug log level, the exact condition that writes the one-hour pre-signed AWS S3 upload URL into the build log per CVE-2020-7599. Article-specific because it keys on the plugin id, the publish task, and the precise log-level flags named as the leak trigger.
-
-Rationale: Anchors on the exact strings the advisory names as the leak trigger — the com.gradle.plugin-publish plugin id / publishPlugins task plus the --info and --debug Gradle log-level flags. Cross-checked against Gradle&#x27;s own plugin-portal advisory and the GitHub Advisory Database (GHSA-cv78-v957-jx34), both confirming the URL is exposed at --info or below and still at --debug post-patch.
-
-Cross-checked against:
-  • https://blog.gradle.org/plugin-portal-update
-  • https://github.com/advisories/GHSA-cv78-v957-jx34
-  • https://nvd.nist.gov/vuln/detail/CVE-2020-7599</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A plugin author legitimately publishing to an internal/private plugin portal and using --info to troubleshoot an upload failure.</li><li>A CI pipeline temporarily set to --debug to diagnose a flaky publish step.</li><li>A developer running `gradlew publishPlugins --debug` against internal Artifactory rather than the public Gradle Plugin Portal (lower exposure risk).</li><li>An unrelated Gradle task whose help/output text incidentally contains the &#x27;plugin-publish&#x27; substring while a verbose flag is set.</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host/account is a real build agent or developer workstation and inspect the full command line — does it target the public Gradle Plugin Portal (plugins.gradle.org) and use plugin-publish &lt; 0.11.0? Check whether the resulting build log is shipped to a publicly visible CI (Travis, CircleCI, public GitHub Actions). 2) Contain: if the log is or was public, treat the pre-signed URL as exposed — notify the plugin owner to verify on the Plugin Portal that the published artifact was not replaced, and upgrade com.gradle.plugin-publish to &gt;= 0.11.0; remove --info/--debug from publish jobs. 3) Hunt: sweep CI config/build logs in source control for the plugin-publish task combined with verbose flags, and search log archives for leaked S3 pre-signed URL parameters (X-Amz-Signature, X-Amz-Credential) to scope other exposed publishes.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3371-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3371-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3371-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3371-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3371-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3371-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3371-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where ProcessCommandLine has_any (&quot;publishPlugins&quot;,&quot;plugin-publish&quot;,&quot;com.gradle.plugin-publish&quot;)
-| where ProcessCommandLine has_any (&quot;--info&quot;,&quot;--debug&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3371-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where CommandLine has_any (&quot;publishPlugins&quot;,&quot;plugin-publish&quot;,&quot;com.gradle.plugin-publish&quot;)
-| where CommandLine has_any (&quot;--info&quot;,&quot;--debug&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3371-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gradle plugin-publish Publish Run With Verbose Logging (CVE-2020-7599)
-id: b3f1c2a4-5d6e-4a7b-8c9d-0e1f2a3b4c5d
-description: Detects invocation of the com.gradle.plugin-publish publishPlugins task with --info or --debug log level, which writes the pre-signed AWS S3 upload URL into the build log (CVE-2020-7599).
-references:
-  - https://snyk.io/blog/vulnerable-gradle-plugin/
-  - https://blog.gradle.org/plugin-portal-update
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1552.001
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_task:
-    CommandLine|contains:
-      - &#x27;publishPlugins&#x27;
-      - &#x27;plugin-publish&#x27;
-      - &#x27;com.gradle.plugin-publish&#x27;
-  selection_loglevel:
-    CommandLine|contains:
-      - &#x27;--info&#x27;
-      - &#x27;--debug&#x27;
-  condition: selection_task and selection_loglevel
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-3371-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@CommandLine:*publishPlugins* OR @CommandLine:*plugin-publish* OR @CommandLine:*com.gradle.plugin-publish*) (@CommandLine:*--info* OR @CommandLine:*--debug* OR @CommandLine:*--INFO* OR @CommandLine:*--DEBUG*)</code></pre></div>
-    <div class="tab-content" id="art-3371-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/(publishPlugins|plugin-publish|com\.gradle\.plugin-publish)/i
-| CommandLine=/--(info|debug)/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3371-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3371-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3371-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3371-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*publishPlugins*&quot; OR Processes.process=&quot;*plugin-publish*&quot; OR Processes.process=&quot;*com.gradle.plugin-publish*&quot;) AND (Processes.process=&quot;*--info*&quot; OR Processes.process=&quot;*--debug*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3371-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*publishPlugins*&quot; OR Processes.process=&quot;*plugin-publish*&quot; OR Processes.process=&quot;*com.gradle.plugin-publish*&quot;) AND (Processes.process=&quot;*--info*&quot; OR Processes.process=&quot;*--debug*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3371-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3371-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3371-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3371-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-7599&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3371-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-7599&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3371-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3371-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3371-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3371-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-7599&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3371-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-7599&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3372" data-art-slug="2020-03-31-march-in-review-state-of-open-source-security-survey-all-the"
   data-phases="actions,c2,exploit,install,recon" data-sev="high"
   data-techs="T1190"
@@ -5785,6 +5581,302 @@ level: critical
         where Processes.process_hash IN (&quot;fe8a0be91ee3e7dea812e8694491e1dde5b75e6d&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3463" data-art-slug="2019-09-11-sequelize-orm-npm-library-found-vulnerable-to-sql-injection-"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint"
+  data-targets="vcs,web-app,windows"
+  data-uc-count="3" data-llm-uc-count="1"
+  data-search="Sequelize ORM npm library found vulnerable to SQL Injection attacks We’ve written about SQL Injection and ORMs in more detail in the past. In this post, we&#x27;ll focus on the recent SQL injection example that the Snyk team discovered in the popular npm library sequelize. CVE-2019-10752 CVE-2019-10749 CVE-2019-10748 T1190 [LLM] Sequelize ORM JSON-path SQLi exploitation via &#x27;)) AS DECIMAL)&#x27; cast-break (CVE-2019-10748) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Sequelize ORM npm library found vulnerable to SQL Injection attacks">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2019-09-11-sequelize-orm-npm-library-found-vulnerable-to-sql-injection-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/sequelize-orm-npm-library-found-vulnerable-to-sql-injection-attacks/" target="_blank" rel="noopener">Sequelize ORM npm library found vulnerable to SQL Injection attacks</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2019-09-11</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">We’ve written about SQL Injection and ORMs in more detail in the past. In this post, we&#x27;ll focus on the recent SQL injection example that the Snyk team discovered in the popular npm library sequelize.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2019-10752</span> <span class="ind cve">CVE-2019-10749</span> <span class="ind cve">CVE-2019-10748</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3463-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3463"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3463-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Sequelize ORM JSON-path SQLi exploitation via &#x27;)) AS DECIMAL)&#x27; cast-break (CVE-2019-10748) · Article-specific behavioural hunt — Sequelize ORM npm library found vulnerable to SQL Injection attacks</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="e20ed38e85" data-platforms="sent,sigma,spl" data-targets="vcs,web-app" open>
+  <summary>
+    <span class="uc-title">Sequelize ORM JSON-path SQLi exploitation via &#x27;)) AS DECIMAL)&#x27; cast-break (CVE-2019-10748)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e20ed38e85" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound web requests carrying the Sequelize JSON-path key injection signature published in the article — the `)) AS DECIMAL)` cast-break combined with a UNION SELECT / VERSION() probe — used against MySQL/MariaDB and PostgreSQL Sequelize apps below 5.8.11 / 4.44.3 / 3.35.1. This is far tighter than a generic UNION-SELECT WAF rule because the double-paren DECIMAL cast-break is the specific bypass Sequelize fails to escape in JSON path keys.
+
+Rationale: Anchored on the article&#x27;s verbatim PoC payload `a&#x27;)) AS DECIMAL) = 1 UNION SELECT VERSION(); --`; the `)) AS DECIMAL)` double-paren cast-break is the exact escape Sequelize fails on for JSON path keys (CVE-2019-10748), so requiring it plus a UNION/VERSION()/DROP token yields a low-FP, Sequelize-specific signature rather than a generic SQLi rule. defender_kql/falcon/datadog/cloudwatch left empty because Microsoft Defender XDR, CrowdStrike FDR, Datadog standard sources and CloudWatch CloudTrail do not carry inbound web-request URI telemetry; this detection lives on web/WAF access logs (Sentinel ASIM ImWebSession / Splunk Web DM). Cross-checked NVD, GitHub Advisory GHSA-j9xp-92vc-559j (which adds the 4.x fix line 4.44.3 the article omitted) and Acunetix.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2019-10748
+  • https://github.com/advisories/GHSA-j9xp-92vc-559j
+  • https://www.acunetix.com/vulnerabilities/sca/cve-2019-10748-vulnerability-in-npm-package-sequelize/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized DAST/SAST scans in CI/CD (Acunetix, Burp, sqlmap, OWASP ZAP) replaying SQLi payloads against staging</li><li>Bug-bounty / pentest researchers probing the public app</li><li>WAF in detection-only mode logging blocked attack traffic that never reached the app</li><li>Internal security-team vulnerability rescans from a known scanner subnet</li><li>A benign query parameter coincidentally containing the literal string &#x27;AS DECIMAL)&#x27; (rare, and the required UNION/VERSION token largely eliminates it)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HttpRequestHeaderUserAgent !has_any (&quot;sqlmap&quot;,&quot;acunetix&quot;,&quot;nessus&quot;,&quot;nuclei&quot;,&quot;burp&quot;,&quot;zap&quot;,&quot;qualys&quot;) and SrcIpAddr !in (&quot;10.10.10.10&quot;)  // replace with your authorized scanner egress IPs</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the target host actually runs a Sequelize/Node.js app and check the response status/size for the flagged request — a 200 returning a DB version string (e.g. &#x27;8.0.x&#x27; / &#x27;PostgreSQL&#x27;) means the injection succeeded, not just attempted. Note the source IP and user-agent (scanner vs. real). 2) Contain: Block the source IP at the WAF/edge, and verify the app&#x27;s sequelize version — patch to 5.8.11+ (5.x), 4.44.3+ (4.x), or 3.35.1+ (3.x) immediately if below. 3) Hunt: Pivot on the source IP for other payloads (stacked &#x27;; DROP TABLE&#x27;, additional UNION columns), review database query/error logs for executed UNION/VERSION()/DDL during the window, and assess whether sensitive tables were enumerated or exfiltrated.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3463-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3463-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3463-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3463-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 7d;
+ImWebSession
+| where TimeGenerated &gt; ago(lookback)
+| where isnotempty(Url)
+// url_decode normalises %29%29%20AS%20DECIMAL%29 style encoding back to the raw payload
+| extend DecodedUrl = tolower(url_decode(Url))
+// the Sequelize JSON-path cast-break the article shows: a&#x27;)) AS DECIMAL) = 1 ...
+| where DecodedUrl matches regex @&quot;\)\s*\)\s*as\s+decimal\s*\)&quot;
+// require a SQLi follow-on token so a stray &#x27;AS DECIMAL)&#x27; in legit traffic doesn&#x27;t fire
+| where DecodedUrl has &quot;union&quot; or DecodedUrl contains &quot;version()&quot; or DecodedUrl contains &quot;drop table&quot;
+| project TimeGenerated, SrcIpAddr, HttpRequestHeaderUserAgent, HttpMethod, DstHostname, Url, DecodedUrl, HttpStatusCode, EventProduct
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3463-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Sequelize JSON-Path SQL Injection Cast-Break (CVE-2019-10748)
+id: b7e4c2a1-9f3d-4c6a-8e21-1a2b3c4d5e6f
+description: Detects the Sequelize ORM JSON-path key SQL injection signature - the &#x27;)) AS DECIMAL)&#x27; cast-break paired with a UNION SELECT / VERSION() probe - in inbound web request URIs.
+references:
+  - https://snyk.io/blog/sequelize-orm-npm-library-found-vulnerable-to-sql-injection-attacks/
+  - https://nvd.nist.gov/vuln/detail/CVE-2019-10748
+  - https://github.com/advisories/GHSA-j9xp-92vc-559j
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  cast_break:
+    c-uri|contains:
+      - &#x27;)) AS DECIMAL)&#x27;
+      - &#x27;))%20AS%20DECIMAL%29&#x27;
+      - &#x27;))+AS+DECIMAL%29&#x27;
+  sqli_followon:
+    c-uri|contains:
+      - &#x27;UNION SELECT&#x27;
+      - &#x27;UNION%20SELECT&#x27;
+      - &#x27;VERSION()&#x27;
+      - &#x27;VERSION%28%29&#x27;
+      - &#x27;DROP TABLE&#x27;
+  condition: cast_break and sqli_followon
+falsepositives:
+  - Authorized DAST / WAF penetration testing (sqlmap, Acunetix, Burp)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3463-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3463-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3463-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3463-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*AS DECIMAL)*&quot; OR Web.uri_query=&quot;*AS%20DECIMAL%29*&quot; OR Web.uri_query=&quot;*AS+DECIMAL%29*&quot; OR Web.url=&quot;*AS DECIMAL)*&quot; OR Web.url=&quot;*AS%20DECIMAL%29*&quot;) (Web.uri_query=&quot;*UNION*&quot; OR Web.url=&quot;*UNION*&quot; OR Web.uri_query=&quot;*VERSION(*&quot; OR Web.url=&quot;*VERSION(*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | where count &gt; 0 | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3463-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*AS DECIMAL)*&quot; OR Web.uri_query=&quot;*AS%20DECIMAL%29*&quot; OR Web.uri_query=&quot;*AS+DECIMAL%29*&quot; OR Web.url=&quot;*AS DECIMAL)*&quot; OR Web.url=&quot;*AS%20DECIMAL%29*&quot;) (Web.uri_query=&quot;*UNION*&quot; OR Web.url=&quot;*UNION*&quot; OR Web.uri_query=&quot;*VERSION(*&quot; OR Web.url=&quot;*VERSION(*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | where count &gt; 0 | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3463-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3463-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3463-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3463-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2019-10752&quot;, &quot;CVE-2019-10749&quot;, &quot;CVE-2019-10748&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3463-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2019-10752&quot;, &quot;CVE-2019-10749&quot;, &quot;CVE-2019-10748&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3463-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3463-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3463-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3463-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2019-10752&quot;, &quot;CVE-2019-10749&quot;, &quot;CVE-2019-10748&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3463-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2019-10752&quot;, &quot;CVE-2019-10749&quot;, &quot;CVE-2019-10748&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="84f164118a" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Sequelize ORM npm library found vulnerable to SQL Injection attacks</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="84f164118a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3463-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3463-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3463-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3463-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Sequelize ORM npm library found vulnerable to SQL Injection attacks
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3463-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Sequelize ORM npm library found vulnerable to SQL Injection attacks
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3463-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3463-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3463-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3463-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Sequelize ORM npm library found vulnerable to SQL Injection attacks ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3463-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Sequelize ORM npm library found vulnerable to SQL Injection attacks ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
   </div>
 </details></div>
 </article>

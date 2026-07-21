@@ -1,527 +1,3 @@
-<article class="card" id="art-2328" data-art-slug="2022-03-31-spring4shell-what-we-know-about-the-java-rce-vulnerability"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network,web"
-  data-targets="linux,windows"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="Spring4Shell: What we know about the Java RCE vulnerability Spring4Shell or SpringShell is a credible RCE vulnerability in spring-beans package, which is part of Spring Core. This is a key enabler of the inversion of control (IoC) capabilities of Spring. This is often referred to as dependency injection. CVE-2022-22965 CVE-2022-22963 T1190 [LLM] Spring4Shell (CVE-2022-22965) exploit: class.module.classLoader ClassLoader manipulation in HTTP request [LLM] Tomcat/Java writes JSP webshell into webapps (Spring4Shell post-exploit drop) [LLM] Java/Tomcat spawns command shell or download tool (Spring4Shell RCE execution) [LLM] Outbound connection to Spring4Shell Mirai staging IPs (107.174.133.167 / 194.31.98.186) Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-31-spring4shell-what-we-know-about-the-java-rce-vulnerability" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/is-there-such-a-thing-as-spring4shell/" target="_blank" rel="noopener">Spring4Shell: What we know about the Java RCE vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2022-03-31</span>
-    <span>6 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Spring4Shell or SpringShell is a credible RCE vulnerability in spring-beans package, which is part of Spring Core. This is a key enabler of the inversion of control (IoC) capabilities of Spring. This is often referred to as dependency injection.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2022-22965</span> <span class="ind cve">CVE-2022-22963</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">test6.ggdd.co.uk</span></div>
-<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">107.174.133.167</span> <span class="ind ">194.31.98.186</span> <span class="ind ">178.79.148.229</span> <span class="ind ">82.165.137.177</span> <span class="ind ">172.104.159.48</span> <span class="ind ">109.74.204.123</span> <span class="ind ">5.253.204.37</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-2328-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-2328"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-2328-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Spring4Shell (CVE-2022-22965) exploit: class.module.classLoader ClassLoader manipulation in HTTP request · [LLM] Java/Tomcat spawns command shell or download tool (Spring4Shell RCE execution)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Tomcat/Java writes JSP webshell into webapps (Spring4Shell post-exploit drop)</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound connection to Spring4Shell Mirai staging IPs (107.174.133.167 / 194.31.98.186) · Network connections to article IPs / domains</em></div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="165fb7859e" data-platforms="sent,sigma,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Spring4Shell (CVE-2022-22965) exploit: class.module.classLoader ClassLoader manipulation in HTTP request</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="165fb7859e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts inbound web requests carrying the Spring4Shell data-binding payload that pivots through &#x27;class.module.classLoader.resources.context.parent.pipeline&#x27; to reconfigure Tomcat&#x27;s AccessLogValve and write a JSP webshell. This is the single most specific network-layer signature of CVE-2022-22965 exploitation against a Tomcat WAR deployment.
-
-Rationale: Anchors on the exact Spring4Shell exploit token &#x27;class.module.classLoader.resources.context.parent.pipeline&#x27; used to repurpose Tomcat&#x27;s AccessLogValve — a string that never appears in legitimate traffic. Confirmed by Microsoft, Unit42 and Huntress write-ups.
-
-Cross-checked against:
-  • https://www.microsoft.com/en-us/security/blog/2022/04/04/springshell-rce-vulnerability-guidance-for-protecting-against-and-detecting-cve-2022-22965/
-  • https://unit42.paloaltonetworks.com/cve-2022-22965-springshell/
-  • https://www.huntress.com/threat-library/vulnerabilities/spring4shell</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised vulnerability scanners (Nessus/Qualys/Snyk) probing for Spring4Shell</li><li>Internal red-team / pentest exercises against Spring apps</li><li>Security researchers replaying public PoC against a staging host</li><li>WAF in detect-only mode logging blocked-but-recorded exploit strings</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestClientApplication !has_any (&quot;Nessus&quot;, &quot;Qualys&quot;, &quot;Nuclei&quot;, &quot;zgrab&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the destination is a Java/Tomcat WAR app and whether it responded 200 with body; pull the full RequestURL/body and source IP. 2) Contain: block the source IP at the WAF/edge, isolate the host if a 2xx response was returned, and snapshot the Tomcat webapps/ROOT directory for forensics. 3) Hunt: pivot to UC2/UC3 on the same host for a freshly written .jsp and any java-spawned shell, and verify Spring is patched to 5.2.20/5.3.18 (Boot 2.5.12/2.6.6).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2328-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2328-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2328-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestURL has &quot;class.module.classLoader&quot; or RequestURL has &quot;classLoader.resources.context.parent.pipeline&quot; or RequestContext has &quot;class.module.classLoader&quot;
-| project TimeGenerated, SourceIP, DestinationIP, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication, DeviceVendor, DeviceProduct
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2328-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Spring4Shell CVE-2022-22965 ClassLoader Manipulation in Web Request
-id: 6a1f7d2e-9c34-4b8a-8f21-3e7c5d9a1b40
-description: Detects the Spring4Shell data-binding payload that abuses class.module.classLoader to reconfigure Tomcat AccessLogValve and drop a JSP webshell.
-references:
-  - https://www.microsoft.com/en-us/security/blog/2022/04/04/springshell-rce-vulnerability-guidance-for-protecting-against-and-detecting-cve-2022-22965/
-  - https://unit42.paloaltonetworks.com/cve-2022-22965-springshell/
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-  - attack.t1505.003
-logsource:
-  category: webserver
-detection:
-  selection:
-    c-uri|contains:
-      - &#x27;class.module.classLoader&#x27;
-      - &#x27;classLoader.resources.context.parent.pipeline&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2328-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2328-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2328-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2328-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*class.module.classLoader*&quot; OR Web.uri_query=&quot;*class.module.classLoader*&quot; OR Web.url=&quot;*classLoader.resources.context.parent.pipeline*&quot; OR Web.uri_query=&quot;*classLoader.resources.context.parent.pipeline*&quot;) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.http_user_agent, Web.status
-| `drop_dm_object_name(Web)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-2328-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*class.module.classLoader*&quot; OR Web.uri_query=&quot;*class.module.classLoader*&quot; OR Web.url=&quot;*classLoader.resources.context.parent.pipeline*&quot; OR Web.uri_query=&quot;*classLoader.resources.context.parent.pipeline*&quot;) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.http_user_agent, Web.status
-| `drop_dm_object_name(Web)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="129a5e16bf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Tomcat/Java writes JSP webshell into webapps (Spring4Shell post-exploit drop)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="129a5e16bf" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects a Java/Tomcat process writing a .jsp/.jspx file into a Tomcat webapps/ROOT directory — the file-system footprint of a successful Spring4Shell ClassLoader webshell drop (e.g. tomcatwar.jsp, shell.jsp). Catches exploitation even when the inbound payload was missed at the network layer.
-
-Rationale: Combines the article&#x27;s Tomcat-9+/Spring requirement with the corroborated webshell artefact (.jsp dropped into webapps/ROOT, e.g. tomcatwar.jsp) and ties it to a java/catalina parent, making a benign .jsp deploy distinguishable from an exploit-driven write.
-
-Cross-checked against:
-  • https://www.trendmicro.com/en_us/research/22/d/cve-2022-22965-analyzing-the-exploitation-of-spring4shell-vulner.html
-  • https://www.huntress.com/threat-library/vulnerabilities/spring4shell</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate WAR/app redeployment auto-extracting JSPs into webapps</li><li>CI/CD pipeline hot-deploying a new JSP page during a release</li><li>Tomcat manager-app deploying an application</li><li>Developer copying a JSP into ROOT during local troubleshooting</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;org.apache.catalina.startup.Bootstrap&quot;) and TargetFilePath has &quot;work/Catalina&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the written .jsp and check for Runtime.exec/ProcessBuilder/getParameter webshell content and an unusual recent mtime versus the rest of the deployment. 2) Contain: quarantine the file, remove world-write on webapps/ROOT, and isolate the host if the file is a confirmed shell. 3) Hunt: correlate to UC1 (inbound class.module.classLoader request) and UC3 (java spawning a shell) on the same host within the surrounding minutes, and review access logs for subsequent GET/POST to the new .jsp path.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2328-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2328-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2328-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2328-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2328-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where FileName endswith &quot;.jsp&quot; or FileName endswith &quot;.jspx&quot;
-| where (InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;java&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;)) or InitiatingProcessFolderPath has_any (&quot;tomcat&quot;,&quot;catalina&quot;)
-| where FolderPath has_any (&quot;webapps&quot;,&quot;\\ROOT\\&quot;,&quot;/ROOT/&quot;,&quot;tomcat&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2328-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where TargetFileName endswith &quot;.jsp&quot; or TargetFileName endswith &quot;.jspx&quot;
-| where ActingProcessName has_any (&quot;java&quot;,&quot;tomcat&quot;,&quot;catalina&quot;)
-| where TargetFilePath has_any (&quot;webapps&quot;,&quot;ROOT&quot;,&quot;tomcat&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2328-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Spring4Shell JSP Webshell Written by Java/Tomcat
-id: b27c4e91-5a8d-49f2-9b1c-0d6f3a2e7c18
-description: Detects a Java/Tomcat process writing a JSP/JSPX file into a Tomcat webapps directory, consistent with a Spring4Shell webshell drop.
-references:
-  - https://www.trendmicro.com/en_us/research/22/d/cve-2022-22965-analyzing-the-exploitation-of-spring4shell-vulner.html
-  - https://www.huntress.com/threat-library/vulnerabilities/spring4shell
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1505.003
-  - attack.t1190
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection:
-    Image|contains:
-      - &#x27;java&#x27;
-      - &#x27;tomcat&#x27;
-      - &#x27;catalina&#x27;
-    TargetFilename|endswith:
-      - &#x27;.jsp&#x27;
-      - &#x27;.jspx&#x27;
-    TargetFilename|contains:
-      - &#x27;webapps&#x27;
-      - &#x27;tomcat&#x27;
-      - &#x27;/ROOT/&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2328-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*.jsp OR *.JSP OR *.jspx OR *.JSPX)) (@Image:(*\\java.exe OR *\\Java.exe OR *tomcat* OR *Tomcat*)) (@TargetFilename:(*webapps* OR *Webapps* OR *tomcat* OR *Tomcat* OR *\\ROOT\\*))</code></pre></div>
-    <div class="tab-content" id="art-2328-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\.jspx?$/i
-| ContextImageFileName=/(java|tomcat|catalina)/i
-| regex(&quot;(?i)(webapps|/ROOT/|tomcat)&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-2328-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2328-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2328-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2328-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_name=&quot;*.jsp&quot; OR Endpoint.Filesystem.file_name=&quot;*.jspx&quot;) AND (Endpoint.Filesystem.file_path=&quot;*webapps*&quot; OR Endpoint.Filesystem.file_path=&quot;*tomcat*&quot; OR Endpoint.Filesystem.file_path=&quot;*/ROOT/*&quot;) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_name, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_guid
-| `drop_dm_object_name(Endpoint.Filesystem)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-2328-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_name=&quot;*.jsp&quot; OR Endpoint.Filesystem.file_name=&quot;*.jspx&quot;) AND (Endpoint.Filesystem.file_path=&quot;*webapps*&quot; OR Endpoint.Filesystem.file_path=&quot;*tomcat*&quot; OR Endpoint.Filesystem.file_path=&quot;*/ROOT/*&quot;) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_name, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_guid
-| `drop_dm_object_name(Endpoint.Filesystem)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="84cb7d39bc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Java/Tomcat spawns command shell or download tool (Spring4Shell RCE execution)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="84cb7d39bc" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects a Java/Tomcat process spawning an interactive shell or download utility (cmd, powershell, sh/bash, curl, wget, whoami, python) — the execution signal of a Spring4Shell webshell or direct RCE running attacker commands. Java servers very rarely fork these binaries in normal operation.
-
-Rationale: Pairs the article&#x27;s hard precondition (RCE only on JRE 9+ AND Tomcat 9+) with the parent→child relationship every public Spring4Shell PoC and the Trend Micro Mirai chain produce: the Java/Catalina process forking a shell or wget/curl to stage payloads.
-
-Cross-checked against:
-  • https://www.trendmicro.com/en_us/research/22/d/cve-2022-22965-analyzing-the-exploitation-of-spring4shell-vulner.html
-  • https://unit42.paloaltonetworks.com/cve-2022-22965-springshell/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Java app legitimately shelling out to ImageMagick/ffmpeg/git via ProcessBuilder</li><li>Tomcat health-check or backup scripts invoking sh/curl</li><li>CI build agents running on a JVM that fork shells</li><li>Application calling whoami/uname for environment introspection at startup</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;ffmpeg&quot;,&quot;convert&quot;,&quot;identify&quot;,&quot;git &quot;) )</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the child ProcessCommandLine — benign apps shell out with stable, repeatable args; exploitation shows recon (whoami/id/uname) or wget/curl to an external IP. 2) Contain: kill the offending child tree and isolate the host if recon or external download is present. 3) Hunt: pivot on UC4 for connections to the Mirai staging IPs, search the same host for new .jsp files (UC2), and review the parent JVM&#x27;s recent inbound web requests for UC1&#x27;s ClassLoader payload.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2328-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2328-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2328-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2328-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2328-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where (InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;java&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;)) or InitiatingProcessCommandLine has_any (&quot;org.apache.catalina&quot;,&quot;catalina.startup.Bootstrap&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2328-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;java&quot;,&quot;tomcat&quot;,&quot;catalina&quot;)
-| where ActingProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell&quot;,&quot;/sh&quot;,&quot;/bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;python&quot;,&quot;perl&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2328-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Java/Tomcat Spawns Shell or Download Tool (Spring4Shell RCE)
-id: c93a1f44-2e7b-4d56-91a8-7b0e2c6d4f33
-description: Detects a Java/Tomcat parent process spawning a command shell or download utility, indicative of Spring4Shell webshell command execution.
-references:
-  - https://www.trendmicro.com/en_us/research/22/d/cve-2022-22965-analyzing-the-exploitation-of-spring4shell-vulner.html
-  - https://unit42.paloaltonetworks.com/cve-2022-22965-springshell/
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-  - attack.t1059.004
-  - attack.t1505.003
-logsource:
-  category: process_creation
-detection:
-  selection:
-    ParentImage|contains:
-      - &#x27;java&#x27;
-      - &#x27;tomcat&#x27;
-      - &#x27;catalina&#x27;
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/whoami&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/perl&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2328-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@ParentImage:(*\\java.exe OR *\\Java.exe OR *tomcat* OR *Tomcat*)) (@Image:(*\\cmd.exe OR *\\powershell.exe OR *\\whoami.exe OR *\\curl.exe OR *\\wget.exe OR *\\python.exe))</code></pre></div>
-    <div class="tab-content" id="art-2328-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(java|tomcat|catalina)/i
-| ImageFileName=/[\\/](cmd\.exe|powershell\.exe|sh|bash|dash|curl|wget|whoami(\.exe)?|python[0-9]?|perl)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-2328-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2328-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2328-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2328-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name IN (&quot;java&quot;,&quot;java.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;catalina.sh&quot;)) AND (Endpoint.Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process
-| `drop_dm_object_name(Endpoint.Processes)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-2328-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name IN (&quot;java&quot;,&quot;java.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;catalina.sh&quot;)) AND (Endpoint.Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process
-| `drop_dm_object_name(Endpoint.Processes)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b15a96a5e7" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Outbound connection to Spring4Shell Mirai staging IPs (107.174.133.167 / 194.31.98.186)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b15a96a5e7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects any host connecting to the two IPs tied to the Spring4Shell-driven Mirai campaign: 194.31.98.186 (exploitation source / payload host) and 107.174.133.167 (hosted the t.sh dropper pulled into /tmp). A hit indicates either inbound exploitation or successful second-stage payload retrieval.
-
-Rationale: Uses the two campaign IPs that two sources (Trend Micro + the article&#x27;s IOC list) both attribute to Spring4Shell Mirai activity — 194.31.98.186 as the exploitation/payload source and 107.174.133.167 as the t.sh dropper host. The unconfirmed domain test6.ggdd.co.uk was deliberately excluded.
-
-Cross-checked against:
-  • https://www.trendmicro.com/en_us/research/22/d/cve-2022-22965-analyzing-the-exploitation-of-spring4shell-vulner.html
-  • https://unit42.paloaltonetworks.com/cve-2022-22965-springshell/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IP reassigned to benign hosting years after the 2022 campaign (verify infra age / WHOIS before alerting)</li><li>Threat-intel platform or sandbox detonating samples that beacon to these IPs</li><li>Researcher reproducing the campaign in a lab</li><li>Shared-hosting reuse where the IP now serves unrelated content</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the local process owning the connection (InitiatingProcessFileName/ContextImageFileName) — wget/curl/sh from a Java context is high-confidence; confirm the IP is still attacker-controlled via current TI. 2) Contain: block both IPs at the egress firewall and isolate any internet-facing Tomcat host that initiated outbound to them. 3) Hunt: on the connecting host, search /tmp for a dropped t.sh and Mirai binary, check UC2/UC3 for the webshell and java-spawned wget, and sweep all Spring/Tomcat assets for the same IOC connections.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2328-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2328-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-2328-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-2328-uc3-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-2328-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2328-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP in (&quot;107.174.133.167&quot;,&quot;194.31.98.186&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2328-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(30d)
-| where DstIpAddr in (&quot;107.174.133.167&quot;,&quot;194.31.98.186&quot;) or SrcIpAddr in (&quot;107.174.133.167&quot;,&quot;194.31.98.186&quot;)
-| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, Url
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-2328-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Connection to Spring4Shell Mirai Staging Infrastructure
-id: d4e8b6a2-7c19-4f53-8a0d-2b9e5c1f7a66
-description: Detects network connections to IPs tied to the Spring4Shell-driven Mirai campaign (t.sh dropper host and exploitation source).
-references:
-  - https://www.trendmicro.com/en_us/research/22/d/cve-2022-22965-analyzing-the-exploitation-of-spring4shell-vulner.html
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1105
-  - attack.t1190
-logsource:
-  category: network_connection
-  product: windows
-detection:
-  selection:
-    DestinationIp:
-      - &#x27;107.174.133.167&#x27;
-      - &#x27;194.31.98.186&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-2328-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(107.174.133.167 OR 194.31.98.186)</code></pre></div>
-    <div class="tab-content" id="art-2328-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(107\.174\.133\.167|194\.31\.98\.186)$/
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-2328-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
-| filter dstAddr in [&quot;107.174.133.167&quot;, &quot;194.31.98.186&quot;] or srcAddr in [&quot;107.174.133.167&quot;, &quot;194.31.98.186&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-2328-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2328-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2328-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2328-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where Network_Traffic.All_Traffic.dest IN (&quot;107.174.133.167&quot;,&quot;194.31.98.186&quot;) OR Network_Traffic.All_Traffic.src IN (&quot;107.174.133.167&quot;,&quot;194.31.98.186&quot;) by Network_Traffic.All_Traffic.src, Network_Traffic.All_Traffic.dest, Network_Traffic.All_Traffic.dest_port, Network_Traffic.All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-2328-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where Network_Traffic.All_Traffic.dest IN (&quot;107.174.133.167&quot;,&quot;194.31.98.186&quot;) OR Network_Traffic.All_Traffic.src IN (&quot;107.174.133.167&quot;,&quot;194.31.98.186&quot;) by Network_Traffic.All_Traffic.src, Network_Traffic.All_Traffic.dest, Network_Traffic.All_Traffic.dest_port, Network_Traffic.All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2328-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2328-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2022-22965&quot;, &quot;CVE-2022-22963&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2328-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2022-22965&quot;, &quot;CVE-2022-22963&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2328-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2328-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2328-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2328-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2022-22965&quot;, &quot;CVE-2022-22963&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-2328-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2022-22965&quot;, &quot;CVE-2022-22963&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2328-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2328-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-2328-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2328-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;107.174.133.167&quot;, &quot;194.31.98.186&quot;, &quot;178.79.148.229&quot;, &quot;82.165.137.177&quot;, &quot;172.104.159.48&quot;, &quot;109.74.204.123&quot;, &quot;5.253.204.37&quot;) or RemoteUrl has_any (&quot;test6.ggdd.co.uk&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-2328-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;107.174.133.167&quot;, &quot;194.31.98.186&quot;, &quot;178.79.148.229&quot;, &quot;82.165.137.177&quot;, &quot;172.104.159.48&quot;, &quot;109.74.204.123&quot;, &quot;5.253.204.37&quot;]);
-let BadDomains = dynamic([&quot;test6.ggdd.co.uk&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-2328-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-2328-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2328-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2328-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2328-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;107.174.133.167&quot;, &quot;194.31.98.186&quot;, &quot;178.79.148.229&quot;, &quot;82.165.137.177&quot;, &quot;172.104.159.48&quot;, &quot;109.74.204.123&quot;, &quot;5.253.204.37&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;test6.ggdd.co.uk&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;test6.ggdd.co.uk&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-2328-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;107.174.133.167&quot;, &quot;194.31.98.186&quot;, &quot;178.79.148.229&quot;, &quot;82.165.137.177&quot;, &quot;172.104.159.48&quot;, &quot;109.74.204.123&quot;, &quot;5.253.204.37&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;test6.ggdd.co.uk&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;test6.ggdd.co.uk&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-2329" data-art-slug="2022-03-31-cisa-kev-cve-2022-26871-trend-micro-apex-central-arbitrary-f"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -6739,6 +6215,132 @@ level: critical
         where Processes.process_hash IN (&quot;b5567655caabb75af68f6ea33c7a22dbc1a6006ca427da6be0066c093f592610&quot;, &quot;6c919213b5318cdb60d67a4b4ace709dfb7e544982c0e101c8526eff067c8332&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-2353" data-art-slug="2022-03-28-cisa-kev-cve-2016-0189-microsoft-internet-explorer-memory-co"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2016-0189 — Microsoft Internet Explorer Memory Corruption Vulnerability The Microsoft JScript nd VBScript engines, as used in Internet Explorer and other products, allow attackers to execute remote code or cause a denial of service (memory corruption) via a crafted web site. Vendor: Microsoft, Product: Internet Explorer. Federal patch due: 2022-04-18. CVE-2016-0189  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2022-03-28-cisa-kev-cve-2016-0189-microsoft-internet-explorer-memory-co" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-0189 — Microsoft Internet Explorer Memory Corruption Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2022-03-28</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">The Microsoft JScript nd VBScript engines, as used in Internet Explorer and other products, allow attackers to execute remote code or cause a denial of service (memory corruption) via a crafted web site. Vendor: Microsoft, Product: Internet Explorer. Federal patch due: 2022-04-18.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-0189</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-2353-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-2353"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-2353-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2353-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2353-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2353-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2353-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2016-0189&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2353-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2016-0189&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2353-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2353-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2353-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2353-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2016-0189&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-2353-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2016-0189&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

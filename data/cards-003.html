@@ -1,297 +1,3 @@
-<article class="card" id="art-61" data-art-slug="2026-07-16-n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190,T1528"
-  data-sources="The Hacker News"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application"
-  data-targets="azure"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="n8n Token Exchange Flaw Could Let Attackers Log In as Users From Another Issuer n8n, the workflow automation platform, handed out the wrong accounts at login. On Enterprise instances configured to trust more than one external token issuer, it matched an incoming JWT to a local user on the&amp;nbsp;sub&amp;nbsp;claim alone and ignored&amp;nbsp;iss. A valid token from issuer A carrying a&amp;nbsp;sub&amp;nbsp;that belongs to someone under issuer B logged you in as them. Their password never CVE-2026-59208 CVE-2026-54305 T1190 T1528 [LLM] Exposed n8n Enterprise vulnerable to cross-issuer token-exchange auth bypass (CVE-2026-59208) [LLM] n8n running below the CVE-2026-59208 patch floor (2.27.4 / 2.28.1) in software inventory Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-16-n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://thehackernews.com/2026/07/n8n-token-exchange-flaw-could-let.html" target="_blank" rel="noopener">n8n Token Exchange Flaw Could Let Attackers Log In as Users From Another Issuer</a></h2>
-  <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
-  <div class="pubmeta">
-    <span>2026-07-16</span>
-    <span>4 use cases</span>
-    <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">n8n, the workflow automation platform, handed out the wrong accounts at login. On Enterprise instances configured to trust more than one external token issuer, it matched an incoming JWT to a local user on the&amp;nbsp;sub&amp;nbsp;claim alone and ignored&amp;nbsp;iss. A valid token from issuer A carrying a&amp;nbsp;sub&amp;nbsp;that belongs to someone under issuer B logged you in as them. Their password never</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-59208</span> <span class="ind cve">CVE-2026-54305</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-61-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-61"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-61-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Exposed n8n Enterprise vulnerable to cross-issuer token-exchange auth bypass (CVE-2026-59208) · [LLM] n8n running below the CVE-2026-59208 patch floor (2.27.4 / 2.28.1) in software inventory</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="d49c6b0f30" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Exposed n8n Enterprise vulnerable to cross-issuer token-exchange auth bypass (CVE-2026-59208)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d49c6b0f30" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts where Defender/TVM reports n8n affected by CVE-2026-59208 (the JWT sub-only / iss-ignored token-exchange identity-binding flaw) or the sibling Enterprise auth flaw CVE-2026-54305. Article-specific because it keys on the exact CVE IDs and the n8n Enterprise token-exchange / Dynamic-Credentials attack surface rather than a generic &#x27;outdated software&#x27; rule.
-
-Rationale: Anchors on the two concrete CVE IDs the article names (CVE-2026-59208 primary, CVE-2026-54305 same Enterprise surface) plus the &#x27;n8n&#x27; product string — no narrative-only guessing. Cross-checked the GitHub Advisory DB and CVE record which confirm the sub-only-vs-iss root cause and the 2.27.4/2.28.1 fix floor.
-
-Cross-checked against:
-  • https://cve.threatint.eu/CVE/CVE-2026-59208
-  • https://github.com/n8n-io/n8n/security/advisories
-  • https://github.com/advisories/GHSA-v4pr-fm98-w9pg</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Credential Access">T1212</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>n8n instance running a vulnerable version but with token exchange disabled (N8N_TOKEN_EXCHANGE_TRUSTED_KEYS unset) — flagged by version but not actually exploitable per vendor scope</li><li>n8n Enterprise configured with only a single trusted issuer — the flaw requires two or more trusted issuers to be exploitable</li><li>Community/self-hosted n8n where token exchange (Enterprise-only preview) is not licensed or available</li><li>TVM CVE-to-software mapping lag: a freshly patched host still showing the CVE until the next TVM scan cycle</li><li>Vendor-virtual-patched instances behind a WAF/reverse proxy that blocks the token-exchange endpoint</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the flagged host runs n8n Enterprise and whether token exchange is actually on — check for the N8N_TOKEN_EXCHANGE_TRUSTED_KEYS env var and the token-exchange preview flag, and count configured trusted issuers (two or more = exploitable). 2) Contain: If exploitable and immediate patching isn&#x27;t possible, cut the trusted-issuer list back to a single issuer or disable token exchange entirely; otherwise upgrade to the newest stable build the deployment supports (&gt;= 2.28.1; 2.30.6 was current on 2026-07-16). 3) Hunt: Review n8n auth/audit logs on the instance for token-exchange logins where one local account was reached via tokens bearing different iss values with a colliding sub, and check for unexpected Dynamic Credentials ownership/OAuth-token changes (CVE-2026-54305) on the same hosts.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-61-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-61-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-61-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-61-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in (&quot;CVE-2026-59208&quot;, &quot;CVE-2026-54305&quot;)
-| where SoftwareName has &quot;n8n&quot; or SoftwareVendor has &quot;n8n&quot;
-| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-61-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in (&quot;CVE-2026-59208&quot;, &quot;CVE-2026-54305&quot;)
-| where SoftwareName has &quot;n8n&quot; or SoftwareVendor has &quot;n8n&quot;
-| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-61-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-61-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-61-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-61-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-59208&quot;,&quot;CVE-2026-54305&quot;) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-61-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-59208&quot;,&quot;CVE-2026-54305&quot;) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="787f10aa8b" data-platforms="def" data-targets="">
-  <summary>
-    <span class="uc-title">n8n running below the CVE-2026-59208 patch floor (2.27.4 / 2.28.1) in software inventory</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="787f10aa8b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Catches n8n installs whose version predates the fix even before the CVE is mapped into the TVM vulnerability KB — a real gap for npm/Docker self-hosted n8n that ships a new minor most weeks. Flags any build below 2.27.4 plus the specific vulnerable 2.28.0 build (fixed in 2.28.1), per the exact floors the article states.
-
-Rationale: Uses the exact patch floors the article specifies (fix landed in 2.27.4 and 2.28.1; 2.28.0 is vulnerable) parsed against inventory version strings, so it fires even when the vuln KB hasn&#x27;t yet linked CVE-2026-59208 to the n8n package — the common case for npm/Docker self-hosted installs. Version floor corroborated against the n8n release notes and GitHub advisory.
-
-Cross-checked against:
-  • https://docs.n8n.io/release-notes
-  • https://cve.threatint.eu/CVE/CVE-2026-59208</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Credential Access">T1212</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerable version present but token exchange disabled (N8N_TOKEN_EXCHANGE_TRUSTED_KEYS unset) — not exploitable per vendor scope</li><li>Single-trusted-issuer configurations, which the vendor states are unaffected</li><li>Non-Enterprise/community n8n where the token-exchange preview feature is unavailable</li><li>Pre-release/build-suffixed versions (e.g. &#x27;2.28.0-rc1&#x27;) that skew the split()-based semver parse</li><li>Sentinel and Splunk fields left empty here because the provided Sentinel schema lacks DeviceTvmSoftwareInventory and there is no CIM software-inventory datamodel — use UC1&#x27;s vuln-KB query on those platforms</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVersion !contains &quot;-&quot;   // drop pre-release/build-suffixed builds that break semver parsing</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Verify the reported SoftwareVersion is genuine (rule out RC/build suffixes) and confirm the instance is n8n Enterprise with token exchange enabled and more than one trusted issuer. 2) Contain: Upgrade to the newest stable build (&gt;= 2.28.1) or, as an interim measure, reduce the trusted-issuer list to one issuer or disable token exchange. 3) Hunt: Pivot the confirmed vulnerable hosts into UC1 (CVE-KB view) and review n8n audit logs for cross-issuer token-exchange sign-ins and Dynamic Credentials ownership changes on the same instances.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-61-uc1-kql">Defender KQL</button>
-    </div>
-    <div class="tab-content active" id="art-61-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
-| where Timestamp &gt; ago(1d)
-| where SoftwareName has &quot;n8n&quot; or SoftwareVendor has &quot;n8n&quot;
-| extend Ver = split(SoftwareVersion, &quot;.&quot;)
-| extend Major = toint(Ver[0]), Minor = toint(Ver[1]), Patch = toint(Ver[2])
-| extend Vulnerable = (Major &lt; 2)
-    or (Major == 2 and Minor &lt; 27)
-    or (Major == 2 and Minor == 27 and Patch &lt; 4)   // everything below 2.27.4
-    or (Major == 2 and Minor == 28 and Patch == 0)  // 2.28.0 shipped the bug; fixed in 2.28.1
-| where Vulnerable
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform, EndOfSupportStatus
-| sort by DeviceName asc</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-61-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-61-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-61-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-61-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-59208&quot;, &quot;CVE-2026-54305&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-59208&quot;, &quot;CVE-2026-54305&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-61-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-61-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-61-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-59208&quot;, &quot;CVE-2026-54305&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-61-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-59208&quot;, &quot;CVE-2026-54305&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">OAuth consent / suspicious app grant</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-61-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-61-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-61-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-61-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-61-uc3-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-61-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
-AuditLogs
-| where TimeGenerated &gt; ago(7d)
-| where OperationName has &quot;Consent to application&quot;
-| where Result =~ &quot;success&quot;
-| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
-         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
-         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
-| project TimeGenerated, OperationName, User, AppName, AppId, Result
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
-status: experimental
-description: |
-    User-driven consent to a third-party OAuth application — illicit-
-    consent attack precursor. Pair with first-time-seen-app heuristic
-    in your SIEM for higher fidelity.
-references:
-    - https://attack.mitre.org/techniques/T1528/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1528
-    - attack.persistence
-logsource:
-    product: azure
-    service: auditlogs
-detection:
-    selection:
-        OperationName: &#x27;Consent to application&#x27;
-        Result: &#x27;success&#x27;
-    condition: selection
-falsepositives:
-    - Legitimate first-time SaaS app onboarding
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-61-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-61-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-61-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-61-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-61-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-62" data-art-slug="2026-07-16-hellonet-campaign-new-malicious-modules-launched-through-the"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1005,T1007,T1016,T1018,T1021.004,T1036,T1049,T1057,T1059,T1059.003,T1070.004,T1074.001,T1082,T1083,T1090,T1105,T1112,T1190,T1204.002,T1218,T1543.003,T1562.001,T1569.002,T1572,T1574.002"
@@ -16389,6 +16095,353 @@ level: high
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
 | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-89" data-art-slug="2026-07-15-researcher-drops-new-windows-zero-day-poc-hours-after-micros"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="The Hacker News"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="m365,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="Researcher Drops New Windows Zero-Day PoC Hours After Microsoft Patch Tuesday Security researcher Chaotic Eclipse (aka Nightmare-Eclipse) has released a new proof-of-concept (PoC) exploit called LegacyHive. It has been described as a Windows User Profile Service arbitrary hive load elevation of privileges vulnerability. The Windows User Profile Service, also referred to as ProfSvc, is a core system component that manages user accounts and environments. &quot;The PoC requires CVE-2026-56164 CVE-2026-56155 CVE-2026-32201 CVE-2026-45659 CVE-2026-55040 T1190 [LLM] SharePoint IIS worker (w3wp.exe) spawning command/script interpreter — CVE-2026-56164/45659/32201 RCE [LLM] SharePoint web shell / .aspx payload written by w3wp.exe into LAYOUTS directory [LLM] LegacyHive EoP — cross-user UsrClass.dat mounted under another user&#x27;s HKU\&lt;SID&gt;\_Classes Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-15-researcher-drops-new-windows-zero-day-poc-hours-after-micros" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://thehackernews.com/2026/07/researcher-drops-new-windows-zero-day.html" target="_blank" rel="noopener">Researcher Drops New Windows Zero-Day PoC Hours After Microsoft Patch Tuesday</a></h2>
+  <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
+  <div class="pubmeta">
+    <span>2026-07-15</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Security researcher Chaotic Eclipse (aka Nightmare-Eclipse) has released a new proof-of-concept (PoC) exploit called LegacyHive. It has been described as a Windows User Profile Service arbitrary hive load elevation of privileges vulnerability. The Windows User Profile Service, also referred to as ProfSvc, is a core system component that manages user accounts and environments. &quot;The PoC requires</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-56164</span> <span class="ind cve">CVE-2026-56155</span> <span class="ind cve">CVE-2026-32201</span> <span class="ind cve">CVE-2026-45659</span> <span class="ind cve">CVE-2026-55040</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-89-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-89"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-89-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] SharePoint IIS worker (w3wp.exe) spawning command/script interpreter — CVE-2026-56164/45659/32201 RCE · [LLM] LegacyHive EoP — cross-user UsrClass.dat mounted under another user&#x27;s HKU\&lt;SID&gt;\_Classes</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] SharePoint web shell / .aspx payload written by w3wp.exe into LAYOUTS directory</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="afcdc53698" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="m365,windows" open>
+  <summary>
+    <span class="uc-title">SharePoint IIS worker (w3wp.exe) spawning command/script interpreter — CVE-2026-56164/45659/32201 RCE</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="afcdc53698" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts post-exploitation command execution on on-prem SharePoint Servers where the IIS worker process w3wp.exe spawns a shell or LOLBin. CISA flagged CVE-2026-56164, CVE-2026-45659 and CVE-2026-32201 as actively exploited for unauthenticated RCE followed by hands-on-keyboard activity — a SharePoint app-pool worker launching cmd/powershell is the canonical webshell-to-RCE tell.
+
+Rationale: Anchors on the article&#x27;s stated SharePoint RCE + post-exploitation chain (CVE-2026-56164/45659/32201) and the near-universally-rare w3wp.exe→interpreter parent/child pair; a SharePoint app-pool worker never legitimately launches cmd/powershell.
+
+Cross-checked against:
+  • https://www.cisa.gov/news-events/alerts/2026/07/14/cisa-adds-four-known-exploited-vulnerabilities-catalog
+  • https://www.bleepingcomputer.com/news/security/cisa-warns-admins-to-patch-actively-exploited-sharepoint-flaws/
+  • https://thehackernews.com/2026/07/sharepoint-rce-cve-2026-45659-added-to.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SharePoint timer/health jobs invoking PSConfig via a custom app pool during patch/PSConfig runs</li><li>Admin-authored SharePoint solution deployments (stsadm/Add-SPSolution) that shell out</li><li>Monitoring agents (SCOM/Nagios) configured to run scripts under the IIS identity</li><li>Legitimate custom web parts that call certutil for certificate operations</li><li>Backup/AV products briefly hosting under w3wp during scans</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;psconfig&quot;,&quot;stsadm&quot;,&quot;Add-SPSolution&quot;,&quot;Install-SPFeature&quot;) and InitiatingProcessCommandLine has &quot;SharePoint&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the full ProcessCommandLine and grandparent chain; confirm the host is an on-prem SharePoint server (2016/2019/SE) and whether it is internet-facing. Check IIS logs for a preceding unauthenticated POST to /_layouts/ endpoints around the process time. 2) CONTAIN: Isolate the host, kill the child process tree, and take w3wp offline; block the source IP at the edge. 3) HUNT: Search DeviceFileEvents for .aspx/.ashx dropped by w3wp (webshell), and pivot to machine-key theft — treat ASP.NET machineKey as compromised and rotate it, since a stolen key survives patching.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-89-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-89-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-89-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-89-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-89-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-89-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-89-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;w3wp.exe&quot;
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;whoami.exe&quot;,&quot;nltest.exe&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where ParentProcessName endswith &quot;w3wp.exe&quot;
+| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;whoami.exe&quot;,&quot;nltest.exe&quot;)
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SharePoint IIS Worker Spawning Command Interpreter
+id: 6b0e9a2c-7d31-4f18-9a4b-2c1f5e8d7a11
+description: Detects w3wp.exe (SharePoint IIS worker) spawning a shell or LOLBin, indicative of CVE-2026-56164/45659/32201 SharePoint RCE post-exploitation.
+references:
+  - https://thehackernews.com/2026/07/researcher-drops-new-windows-zero-day.html
+  - https://www.cisa.gov/news-events/alerts/2026/07/14/cisa-adds-four-known-exploited-vulnerabilities-catalog
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1190
+  - attack.t1505.003
+  - attack.t1059.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith: &#x27;\w3wp.exe&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\mshta.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;\net.exe&#x27;
+      - &#x27;\net1.exe&#x27;
+      - &#x27;\whoami.exe&#x27;
+      - &#x27;\nltest.exe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-89-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4688 @ParentImage:(*\\w3wp.exe OR *\\W3WP.EXE) @Image:(*\\cmd.exe OR *\\Cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\wscript.exe OR *\\cscript.exe OR *\\certutil.exe OR *\\CertUtil.exe OR *\\bitsadmin.exe OR *\\curl.exe OR *\\net.exe OR *\\net1.exe OR *\\whoami.exe OR *\\nltest.exe)</code></pre></div>
+    <div class="tab-content" id="art-89-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/w3wp\.exe/i
+| ImageFileName=/\\(cmd|powershell|pwsh|mshta|wscript|cscript|certutil|bitsadmin|curl|net|net1|whoami|nltest)\.exe$/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-89-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-89-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-89-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-89-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;w3wp.exe&quot; AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;whoami.exe&quot;,&quot;nltest.exe&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-89-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;w3wp.exe&quot; AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;whoami.exe&quot;,&quot;nltest.exe&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ade977b623" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="m365,windows">
+  <summary>
+    <span class="uc-title">SharePoint web shell / .aspx payload written by w3wp.exe into LAYOUTS directory</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ade977b623" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts persistence following SharePoint RCE where the IIS worker w3wp.exe writes a web-accessible .aspx/.ashx/.asmx file into the SharePoint LAYOUTS / Web Server Extensions tree. The article states attackers used these SharePoint flaws to steal IIS machine keys and deploy malware for persistence; an IIS worker writing script files into its own web root is the classic web-shell drop.
+
+Rationale: Uses the article&#x27;s explicit post-exploitation behaviours (machine-key theft, deserialization, malware deploy for persistence) mapped to the highest-fidelity SharePoint web-shell artifact: an IIS worker writing server-side script into the LAYOUTS web root, which never happens in normal operation.
+
+Cross-checked against:
+  • https://www.bleepingcomputer.com/news/security/cisa-warns-admins-to-patch-actively-exploited-sharepoint-flaws/
+  • https://www.securityweek.com/cisa-urges-immediate-patching-of-exploited-sharepoint-vulnerabilities/
+  • https://www.cisa.gov/news-events/alerts/2026/07/14/cisa-urges-sharepoint-hardening-after-new-exploitations</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Forge Web Credentials: SAML Tokens">T1606.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate SharePoint solution/feature deployment (WSP) that provisions .aspx application pages</li><li>Cumulative-update/PSConfig runs staging new layouts pages</li><li>Third-party SharePoint add-in installers writing application pages under LAYOUTS</li><li>Admin manually copying a custom application page via an authenticated content-deployment job</li><li>Backup/restore of the hive/site collection that re-materializes .aspx files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;psconfig&quot;,&quot;owstimer&quot;,&quot;SPUCWorkerProcess&quot;) or FolderPath has @&quot;\CONFIG\Upgrade\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Retrieve and read the written file — confirm whether it contains eval/Request/Process web-shell code vs a signed vendor page; check its SHA256 against known-good SharePoint pages and note the writing w3wp identity. 2) CONTAIN: Quarantine the file, isolate the server, and rotate the ASP.NET machineKey immediately (a stolen key lets the attacker forge auth even after patching). 3) HUNT: Search DeviceNetworkEvents for the source IP hitting the new page path, and DeviceProcessEvents for w3wp→interpreter execution proving hands-on-keyboard use of the shell.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-89-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-89-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-89-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-89-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-89-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-89-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-89-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;w3wp.exe&quot;
+| where FileName endswith &quot;.aspx&quot; or FileName endswith &quot;.ashx&quot; or FileName endswith &quot;.asmx&quot;
+| where FolderPath has_any (@&quot;TEMPLATE\LAYOUTS&quot;, &quot;Web Server Extensions&quot;)
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessAccountName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessName has &quot;w3wp.exe&quot;
+| where TargetFileExtension in~ (&quot;aspx&quot;,&quot;ashx&quot;,&quot;asmx&quot;)
+| where TargetFilePath has_any (@&quot;TEMPLATE\LAYOUTS&quot;, &quot;Web Server Extensions&quot;)
+| project TimeGenerated, DvcHostname, DvcAction, TargetFilePath, TargetFileName, ActingProcessName, TargetFileSHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: SharePoint Web Shell Written by IIS Worker to LAYOUTS Directory
+id: 2f9c4d17-8a63-4b0e-91d2-7e5a3c9b6d40
+description: Detects w3wp.exe writing an .aspx/.ashx/.asmx file into the SharePoint LAYOUTS / Web Server Extensions tree, a web-shell persistence artifact of CVE-2026-56164/45659/32201 exploitation.
+references:
+  - https://thehackernews.com/2026/07/researcher-drops-new-windows-zero-day.html
+  - https://www.bleepingcomputer.com/news/security/cisa-warns-admins-to-patch-actively-exploited-sharepoint-flaws/
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1505.003
+  - attack.t1190
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    Image|endswith: &#x27;\w3wp.exe&#x27;
+    TargetFilename|contains:
+      - &#x27;\TEMPLATE\LAYOUTS\&#x27;
+      - &#x27;\Web Server Extensions\&#x27;
+    TargetFilename|endswith:
+      - &#x27;.aspx&#x27;
+      - &#x27;.ashx&#x27;
+      - &#x27;.asmx&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @Image:(*\\w3wp.exe OR *\\W3WP.EXE) @TargetFilename:(*\\TEMPLATE\\LAYOUTS\\* OR *\\Web Server Extensions\\*) @TargetFilename:(*.aspx OR *.ashx OR *.asmx OR *.ASPX)</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/w3wp\.exe/i
+| TargetFileName=/\.(aspx|ashx|asmx)$/i
+| regex(&quot;(?i)(\\\\TEMPLATE\\\\LAYOUTS\\\\|\\\\Web Server Extensions\\\\)&quot;, field=TargetFileName)
+| groupBy([aid, ComputerName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-89-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-89-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-89-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=&quot;w3wp.exe&quot; (Filesystem.file_name=&quot;*.aspx&quot; OR Filesystem.file_name=&quot;*.ashx&quot; OR Filesystem.file_name=&quot;*.asmx&quot;) (Filesystem.file_path=&quot;*\\TEMPLATE\\LAYOUTS\\*&quot; OR Filesystem.file_path=&quot;*\\Web Server Extensions\\*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-89-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=&quot;w3wp.exe&quot; (Filesystem.file_name=&quot;*.aspx&quot; OR Filesystem.file_name=&quot;*.ashx&quot; OR Filesystem.file_name=&quot;*.asmx&quot;) (Filesystem.file_path=&quot;*\\TEMPLATE\\LAYOUTS\\*&quot; OR Filesystem.file_path=&quot;*\\Web Server Extensions\\*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="248bc8d459" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">LegacyHive EoP — cross-user UsrClass.dat mounted under another user&#x27;s HKU\&lt;SID&gt;\_Classes</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="248bc8d459" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the LegacyHive (Nightmare-Eclipse) Windows User Profile Service arbitrary-hive-load zero-day, where a standard-user process steers a profile load so one user&#x27;s UsrClass.dat is mounted under a DIFFERENT user&#x27;s HKU\&lt;SID&gt;\_Classes namespace. Detects registry value writes into a _Classes hive whose SID does not match the initiating process&#x27;s own SID — the highest-confidence redirection indicator for this exploit.
+
+Rationale: Built from the corroborated LegacyHive mechanics (offline hive edit + Object Manager symlink + synchronized profile load) using the article/Cyderes-confirmed tell — a UsrClass.dat mounted under another user&#x27;s HKU\&lt;SID&gt;\_Classes — expressed as a cross-SID registry-write comparison that surfaces the mismatched SID at runtime (no placeholder). Sigma/Datadog/Falcon left empty because the detection requires comparing two fields (writer SID vs key-path SID), which those single-selection/no-field-comparison query surfaces cannot express.
+
+Cross-checked against:
+  • https://www.cyderes.com/howler-cell/legacyhive-windows-user-profile-loading-vulnerability
+  • https://cybersecuritynews.com/legacyhive-windows-0-day-vulnerability/
+  • https://securityonline.info/legacyhive-windows-exploit/
+  • https://www.theregister.com/security/2026/07/15/microsofts-serial-tormentor-drops-legacyhive-0-day/5271723</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Modify Registry">T1112</span> <span class="ind tech" title="Access Token Manipulation">T1134</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Roaming/mandatory profile provisioning where ProfSvc (SYSTEM) loads another user&#x27;s classes hive — excluded by the SYSTEM/service-SID filter</li><li>Terminal Server / Citrix multi-session hosts where profile tooling touches many user hives under a service context</li><li>FSLogix / UPM profile-container mounts operating under a machine or service account (machine-account filter)</li><li>Backup agents enumerating user hives</li><li>Fast-user-switching or runas scenarios where an admin legitimately loaded a colleague&#x27;s hive for troubleshooting</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;svchost.exe&quot;,&quot;frxsvc.exe&quot;,&quot;frxccd.exe&quot;,&quot;UserProfileService.exe&quot;) and InitiatingProcessFolderPath !has @&quot;\FSLogix\&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the initiating process is a Medium/Low integrity standard-user process (not ProfSvc/SYSTEM) and that KeySid belongs to a different, higher-privileged account; inspect the parent chain for a suspended benign binary (notepad.exe) launched via CreateProcessWithLogonW. 2) CONTAIN: Isolate the host, suspend the standard user&#x27;s sessions, and force a password reset for both the attacker-supplied standard account and the targeted (often admin) account. 3) HUNT: Look on the same host for NTUSER.DAT offline modification of the Local AppData value and Object Manager symlink creation under \BaseNamedObjects\Restricted; review DeviceProcessEvents for any SYSTEM-context children spawned by the standard user shortly after.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-89-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-89-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-89-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-89-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;RegistryValueSet&quot;,&quot;RegistryKeyCreated&quot;)
+| where RegistryKey has &quot;_Classes&quot;
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where InitiatingProcessAccountSid !in (&quot;S-1-5-18&quot;,&quot;S-1-5-19&quot;,&quot;S-1-5-20&quot;)
+| where InitiatingProcessIntegrityLevel in (&quot;Medium&quot;,&quot;Low&quot;)
+| extend KeySid = extract(@&quot;(S-1-5-21-[0-9\-]+)_Classes&quot;, 1, RegistryKey)
+| where isnotempty(KeySid)
+| where InitiatingProcessAccountSid != KeySid
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessAccountSid,
+          KeySid, RegistryKey, RegistryValueName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4657
+| where ObjectName has &quot;_Classes&quot;
+| where SubjectUserName !endswith &quot;$&quot;
+| where SubjectUserSid !in (&quot;S-1-5-18&quot;,&quot;S-1-5-19&quot;,&quot;S-1-5-20&quot;)
+| extend KeySid = extract(@&quot;(S-1-5-21-[0-9\-]+)_Classes&quot;, 1, ObjectName)
+| where isnotempty(KeySid)
+| where SubjectUserSid != KeySid
+| project TimeGenerated, Computer, SubjectUserName, SubjectUserSid, KeySid, ObjectName, ObjectValueName, ProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-89-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-89-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-89-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path=&quot;*_Classes*&quot; AND Registry.user!=&quot;SYSTEM&quot; AND Registry.user!=&quot;*$&quot; by Registry.dest Registry.user Registry.process_name Registry.registry_path | `drop_dm_object_name(Registry)` | rex field=registry_path &quot;(?&lt;KeySid&gt;S-1-5-21-[0-9\-]+)_Classes&quot; | where isnotnull(KeySid) | eval firstTime=strftime(firstTime,&quot;%F %T&quot;) | table firstTime dest user process_name KeySid registry_path count | sort - firstTime</code></pre><pre class="spl-mode-body" id="art-89-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path=&quot;*_Classes*&quot; AND Registry.user!=&quot;SYSTEM&quot; AND Registry.user!=&quot;*$&quot; by Registry.dest Registry.user Registry.process_name Registry.registry_path | `drop_dm_object_name(Registry)` | rex field=registry_path &quot;(?&lt;KeySid&gt;S-1-5-21-[0-9\-]+)_Classes&quot; | where isnotnull(KeySid) | eval firstTime=strftime(firstTime,&quot;%F %T&quot;) | table firstTime dest user process_name KeySid registry_path count | sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-89-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-89-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-89-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-89-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-56164&quot;, &quot;CVE-2026-56155&quot;, &quot;CVE-2026-32201&quot;, &quot;CVE-2026-45659&quot;, &quot;CVE-2026-55040&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-89-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-56164&quot;, &quot;CVE-2026-56155&quot;, &quot;CVE-2026-32201&quot;, &quot;CVE-2026-45659&quot;, &quot;CVE-2026-55040&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-89-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-89-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-89-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-89-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-56164&quot;, &quot;CVE-2026-56155&quot;, &quot;CVE-2026-32201&quot;, &quot;CVE-2026-45659&quot;, &quot;CVE-2026-55040&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-89-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-56164&quot;, &quot;CVE-2026-56155&quot;, &quot;CVE-2026-32201&quot;, &quot;CVE-2026-45659&quot;, &quot;CVE-2026-55040&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -1,440 +1,3 @@
-<article class="card" id="art-230" data-art-slug="2026-06-26-ghsa-critical-cve-2026-48752-incus-has-arbitrary-file-read-w"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host via templates/ symlink in malicious image Incus has arbitrary file read+write on host via templates/ symlink in malicious image CVE-2026-48752  [LLM] Incus config template read/write primitive abuse (CVE-2026-48752) [LLM] incusd daemon writing to sensitive host paths (Incus templates symlink escape) [LLM] Untrusted Incus image/backup import immediately followed by template write Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host vi">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-26-ghsa-critical-cve-2026-48752-incus-has-arbitrary-file-read-w" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-vxp5-584q-c479" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host via templates/ symlink in malicious image</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-26</span>
-    <span>5 use cases</span>
-    <span>0 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Incus has arbitrary file read+write on host via templates/ symlink in malicious image</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48752</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-230-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-230"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-230-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Incus config template read/write primitive abuse (CVE-2026-48752) · [LLM] Untrusted Incus image/backup import immediately followed by template write</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] incusd daemon writing to sensitive host paths (Incus templates symlink escape) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host vi</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="0759a5352a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Incus config template read/write primitive abuse (CVE-2026-48752)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0759a5352a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the exploitation primitive for the Incus templates/ symlink escape: use of `incus config template create|edit|show` against an instance/image, which — when the image contained a top-level `templates` symlink — reads or writes arbitrary host files as root. Article-specific because it keys on the exact CLI verb chain the PoC uses to trigger host file access.
-
-Rationale: Keys on the article&#x27;s exact PoC verbs (`incus config template create|edit|show`) that are the only interface through which the symlinked host directory is read/written; template use is uncommon enough for a hunt. Cross-checked GHSA-vxp5-584q-c479, DailyCVE and Eventus Security write-ups.
-
-Cross-checked against:
-  • https://github.com/lxc/incus/security/advisories/GHSA-vxp5-584q-c479
-  • https://dailycve.com/incus-arbitrary-file-read-write-via-unsanitized-symlink-cve-2026-48752-critical-dc-jun2026-681/
-  • https://advisory.eventussecurity.com/advisory/incus-vulnerabilities-break-host-instance-boundary/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Escape to Host">T1611</span> <span class="ind tech" title="Deploy Container">T1610</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admins authoring cloud-init/config templates on instances via `incus config template edit`</li><li>CI/provisioning tooling (Packer-style) that ships images carrying templates and edits them post-import</li><li>Operator running `incus config template show` to audit an existing template</li><li>Incus documentation/lab walkthroughs exercising the template feature</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full command line and the account; confirm whether the target instance/image was imported from an untrusted tar shortly beforehand and whether the referenced template FILENAME resolves to a host path (e.g. an absolute /etc path) rather than an in-container relative path. 2) Contain: freeze/stop the instance, quarantine the imported image/backup tar, and revoke the user&#x27;s `incus` group membership pending review. 3) Hunt: check `/etc/cron.d`, `/root/.ssh`, `/etc/sudoers.d`, `/etc/ld.so.preload` for recent writes by incusd, and inventory Incus version — anything &lt; 6.0.6 / 6.21.0 is vulnerable.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-230-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-230-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;incus&quot;
-| where ProcessCommandLine has &quot;config&quot; and ProcessCommandLine has &quot;template&quot;
-| where ProcessCommandLine has_any (&quot;create&quot;,&quot;edit&quot;,&quot;show&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has &quot;incus&quot;
-| where ActingProcessCommandLine has &quot;config&quot; and ActingProcessCommandLine has &quot;template&quot;
-| where ActingProcessCommandLine has_any (&quot;create&quot;,&quot;edit&quot;,&quot;show&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessCommandLine, ActingProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Incus config template read/write primitive (CVE-2026-48752)
-id: 3f1c9c2e-6a4b-4d8e-9c11-2b7f0a5d9e01
-description: Detects use of the incus config template create/edit/show verbs, the exploitation primitive for the templates/ symlink host file read+write escape (CVE-2026-48752).
-references:
-  - https://github.com/lxc/incus/security/advisories/GHSA-vxp5-584q-c479
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1611
-  - attack.t1610
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    Image|endswith: &#x27;/incus&#x27;
-    CommandLine|contains|all:
-      - &#x27;config&#x27;
-      - &#x27;template&#x27;
-    CommandLine|contains:
-      - &#x27;create&#x27;
-      - &#x27;edit&#x27;
-      - &#x27;show&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.name:incus OR @process.executable.path:*/incus) (@process.command_line:*&quot;config template create&quot;* OR @process.command_line:*&quot;config template edit&quot;* OR @process.command_line:*&quot;config template show&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/\/incus$/i
-| regex(&quot;config\\s+template\\s+(create|edit|show)&quot;, field=CommandLine)
-| table([_time, aid, ComputerName, UserName, ImageFileName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=incus (Processes.process=&quot;*config*template*create*&quot; OR Processes.process=&quot;*config*template*edit*&quot; OR Processes.process=&quot;*config*template*show*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process host
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-230-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=incus (Processes.process=&quot;*config*template*create*&quot; OR Processes.process=&quot;*config*template*edit*&quot; OR Processes.process=&quot;*config*template*show*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process host
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="9180f6a80f" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">incusd daemon writing to sensitive host paths (Incus templates symlink escape)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9180f6a80f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the Incus daemon (incusd, running as root) writing files into privileged host directories that live outside any container storage pool — the concrete host-filesystem escape produced by the templates/ symlink in a malicious image or backup. Article-specific because incusd has no legitimate reason to write /etc/cron.d, /root/.ssh, /etc/shadow, etc.
-
-Rationale: incusd is a root daemon whose legitimate writes stay inside the storage pool (e.g. /var/lib/incus); any write it makes to /etc/cron.d, /root/.ssh or /etc/shadow is the direct fingerprint of the symlink escape and the PoC&#x27;s /etc/cron.d cronjob drop. Datadog left empty — the standard linux.auditd Datadog schema exposes no file-path attribute to pivot on.
-
-Cross-checked against:
-  • https://github.com/lxc/incus/security/advisories/GHSA-vxp5-584q-c479
-  • https://advisory.eventussecurity.com/advisory/incus-vulnerabilities-break-host-instance-boundary/
-  • https://dailycve.com/incus-arbitrary-file-read-write-via-unsanitized-symlink-cve-2026-48752-critical-dc-jun2026-681/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Escape to Host">T1611</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Incus host-managed automation that legitimately edits /etc via a custom hook (rare, environment-specific)</li><li>Storage pool misconfigured to sit under /etc (highly unusual — verify pool path)</li><li>Backup/restore of a legitimately templated instance whose template path was misconfigured</li><li>Configuration-management tooling co-located on the host that shares the incusd binary name (verify full path /usr/sbin/incusd)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the written file and its contents — a cron entry running as root, an authorized_keys line, or a /etc/ld.so.preload path is confirmation of exploitation, not a benign write. 2) Contain: remove the malicious file, stop incusd, isolate the host, and rotate any credentials/keys reachable from it; quarantine the source image/backup tar. 3) Hunt: pull the preceding `incus image import` / `incus import` and `incus config template` commands (see companion UC), enumerate all instances created from untrusted images, and confirm Incus is patched to 6.0.6 / 6.21.0+.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-230-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName =~ &quot;incusd&quot;
-| where FolderPath has_any (&quot;/etc/cron.d&quot;,&quot;/etc/cron.daily&quot;,&quot;/etc/cron.hourly&quot;,&quot;/etc/cron.weekly&quot;,&quot;/etc/crontab&quot;,&quot;/root/.ssh&quot;,&quot;/etc/passwd&quot;,&quot;/etc/shadow&quot;,&quot;/etc/sudoers&quot;,&quot;/etc/sudoers.d&quot;,&quot;/etc/ld.so.preload&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has &quot;incusd&quot;
-| where TargetFilePath has_any (&quot;/etc/cron.d&quot;,&quot;/etc/cron.daily&quot;,&quot;/etc/cron.hourly&quot;,&quot;/etc/cron.weekly&quot;,&quot;/etc/crontab&quot;,&quot;/root/.ssh&quot;,&quot;/etc/passwd&quot;,&quot;/etc/shadow&quot;,&quot;/etc/sudoers&quot;,&quot;/etc/sudoers.d&quot;,&quot;/etc/ld.so.preload&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, DvcAction, TargetFilePath, ActingProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: incusd writing to sensitive host paths (CVE-2026-48752)
-id: 8b2e4a17-0d5c-4f39-9a6e-71c3d2e8b4a2
-description: The Incus daemon writing into privileged host directories outside any storage pool indicates the templates/ symlink host file-write escape (CVE-2026-48752).
-references:
-  - https://github.com/lxc/incus/security/advisories/GHSA-vxp5-584q-c479
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1611
-  - attack.t1053.003
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection_dir:
-    Image|endswith: &#x27;/incusd&#x27;
-    TargetFilename|startswith:
-      - &#x27;/etc/cron.d/&#x27;
-      - &#x27;/etc/cron.daily/&#x27;
-      - &#x27;/etc/cron.hourly/&#x27;
-      - &#x27;/etc/cron.weekly/&#x27;
-      - &#x27;/root/.ssh/&#x27;
-      - &#x27;/etc/sudoers.d/&#x27;
-  selection_file:
-    Image|endswith: &#x27;/incusd&#x27;
-    TargetFilename:
-      - &#x27;/etc/crontab&#x27;
-      - &#x27;/etc/passwd&#x27;
-      - &#x27;/etc/shadow&#x27;
-      - &#x27;/etc/sudoers&#x27;
-      - &#x27;/etc/ld.so.preload&#x27;
-  condition: selection_dir or selection_file
-level: high</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/\/incusd$/i
-| TargetFileName=/^\/(etc\/(cron\.(d|daily|hourly|weekly)|crontab|passwd|shadow|sudoers|sudoers\.d|ld\.so\.preload)|root\/\.ssh)/i
-| table([_time, aid, ComputerName, ContextImageFileName, TargetFileName])</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=incusd (Filesystem.file_path=&quot;/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;/etc/cron.daily/*&quot; OR Filesystem.file_path=&quot;/etc/cron.hourly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.weekly/*&quot; OR Filesystem.file_path=&quot;/etc/crontab&quot; OR Filesystem.file_path=&quot;/root/.ssh/*&quot; OR Filesystem.file_path=&quot;/etc/passwd&quot; OR Filesystem.file_path=&quot;/etc/shadow&quot; OR Filesystem.file_path=&quot;/etc/sudoers&quot; OR Filesystem.file_path=&quot;/etc/sudoers.d/*&quot; OR Filesystem.file_path=&quot;/etc/ld.so.preload&quot;) by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user host
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-230-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=incusd (Filesystem.file_path=&quot;/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;/etc/cron.daily/*&quot; OR Filesystem.file_path=&quot;/etc/cron.hourly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.weekly/*&quot; OR Filesystem.file_path=&quot;/etc/crontab&quot; OR Filesystem.file_path=&quot;/root/.ssh/*&quot; OR Filesystem.file_path=&quot;/etc/passwd&quot; OR Filesystem.file_path=&quot;/etc/shadow&quot; OR Filesystem.file_path=&quot;/etc/sudoers&quot; OR Filesystem.file_path=&quot;/etc/sudoers.d/*&quot; OR Filesystem.file_path=&quot;/etc/ld.so.preload&quot;) by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user host
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="a99b51f92a" data-platforms="def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Untrusted Incus image/backup import immediately followed by template write</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="a99b51f92a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Correlates an `incus image import` or `incus import` (backup restore) with an `incus config template create|edit` on the same host+user within one hour — the full CVE-2026-48752 exploitation sequence where an attacker imports a tar carrying a templates/ symlink then writes through it to the host. Higher fidelity than either event alone.
-
-Rationale: The import (deploy malicious container) followed within minutes by a template write is the complete PoC chain from the advisory; correlating the two on host+user removes the benign-template-edit false positives that UC1 alone carries. Sigma/Datadog/CloudWatch left empty — this is a cross-event temporal correlation not expressible as a single-event rule.
-
-Cross-checked against:
-  • https://github.com/lxc/incus/security/advisories/GHSA-vxp5-584q-c479
-  • https://dailycve.com/incus-arbitrary-file-read-write-via-unsanitized-symlink-cve-2026-48752-critical-dc-jun2026-681/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Deploy Container">T1610</span> <span class="ind tech" title="Escape to Host">T1611</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Automated provisioning that imports an image then applies a cloud-init template in the same run</li><li>Operator restoring a backup and immediately editing its config template legitimately</li><li>Golden-image build pipeline on a dedicated Incus host that always imports+templates in sequence</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: examine the imported tar&#x27;s origin and whether it contains a top-level `templates` entry that is a symlink (tar -tv); inspect the template FILENAME argument for an absolute host path. 2) Contain: stop and quarantine the instance and the source tar, revoke the user&#x27;s `incus` group access, and snapshot the host for forensics. 3) Hunt: run the incusd sensitive-path-write UC to confirm host-side impact, review all images/backups imported by the same user, and verify/patch the Incus version to 6.0.6 / 6.21.0+.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-230-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let Window = 1h;
-let Imports = DeviceProcessEvents
-    | where Timestamp &gt; ago(30d)
-    | where FileName =~ &quot;incus&quot;
-    | where (ProcessCommandLine has &quot;image&quot; and ProcessCommandLine has &quot;import&quot;) or (ProcessCommandLine has &quot;import&quot; and ProcessCommandLine has &quot;.tar&quot;)
-    | project ImportTime = Timestamp, DeviceName, AccountName, ImportCmd = ProcessCommandLine;
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;incus&quot;
-| where ProcessCommandLine has &quot;config&quot; and ProcessCommandLine has &quot;template&quot;
-| where ProcessCommandLine has_any (&quot;create&quot;,&quot;edit&quot;)
-| where AccountName !endswith &quot;$&quot;
-| join kind=inner Imports on DeviceName, AccountName
-| where Timestamp between (ImportTime .. ImportTime + Window)
-| project ImportTime, TemplateTime = Timestamp, DeviceName, AccountName, ImportCmd, TemplateCmd = ProcessCommandLine
-| order by TemplateTime desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let Window = 1h;
-let Imports = ImProcessCreate
-    | where TimeGenerated &gt; ago(30d)
-    | where ActingProcessName has &quot;incus&quot;
-    | where (ActingProcessCommandLine has &quot;image&quot; and ActingProcessCommandLine has &quot;import&quot;) or (ActingProcessCommandLine has &quot;import&quot; and ActingProcessCommandLine has &quot;.tar&quot;)
-    | project ImportTime = TimeGenerated, DvcHostname, ActorUsername, ImportCmd = ActingProcessCommandLine;
-ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has &quot;incus&quot;
-| where ActingProcessCommandLine has &quot;config&quot; and ActingProcessCommandLine has &quot;template&quot;
-| where ActingProcessCommandLine has_any (&quot;create&quot;,&quot;edit&quot;)
-| join kind=inner Imports on DvcHostname, ActorUsername
-| where TimeGenerated between (ImportTime .. ImportTime + Window)
-| project ImportTime, TemplateTime = TimeGenerated, DvcHostname, ActorUsername, ImportCmd, TemplateCmd = ActingProcessCommandLine
-| order by TemplateTime desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/\/incus$/i
-| regex(&quot;config\\s+template\\s+(create|edit)&quot;, field=CommandLine)
-| join({#event_simpleName=ProcessRollup2 | ImageFileName=/\/incus$/i | regex(&quot;(image\\s+import|import\\s+\\S+\\.tar)&quot;, field=CommandLine)}, field=[aid], include=[CommandLine], mode=inner)
-| table([_time, aid, ComputerName, UserName, CommandLine])</code></pre></div>
-    <div class="tab-content" id="art-230-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name=incus by _time span=1s Processes.dest Processes.user Processes.process
-| `drop_dm_object_name(Processes)`
-| eval phase=case(match(process,&quot;(?i)image\s+import&quot;) OR match(process,&quot;(?i)import\s+\S+\.tar&quot;),&quot;import&quot;, match(process,&quot;(?i)config\s+template\s+(create|edit)&quot;),&quot;exploit&quot;)
-| where isnotnull(phase)
-| transaction dest user maxspan=1h
-| search phase=&quot;import&quot; phase=&quot;exploit&quot;
-| table _time dest user phase process</code></pre><pre class="spl-mode-body" id="art-230-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.process_name=incus by _time span=1s Processes.dest Processes.user Processes.process
-| `drop_dm_object_name(Processes)`
-| eval phase=case(match(process,&quot;(?i)image\s+import&quot;) OR match(process,&quot;(?i)import\s+\S+\.tar&quot;),&quot;import&quot;, match(process,&quot;(?i)config\s+template\s+(create|edit)&quot;),&quot;exploit&quot;)
-| where isnotnull(phase)
-| transaction dest user maxspan=1h
-| search phase=&quot;import&quot; phase=&quot;exploit&quot;
-| table _time dest user phase process</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-48752&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-48752&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-48752&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-230-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-48752&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="630b2bfb2f" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host vi</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="630b2bfb2f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host vi
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/cron.d&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host vi
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/cron.d&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host vi ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/cron.d*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-230-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48752: Incus has arbitrary file read+write on host vi ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/cron.d*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-231" data-art-slug="2026-06-26-ghsa-critical-cve-2026-48751-incus-has-a-restricted-project-"
   data-phases="c2,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
@@ -12997,6 +12560,360 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-262" data-art-slug="2026-06-23-ghsa-critical-ghsa-qxvg-h7q2-hcxh-motioneye-lfi-pass-the-has"
+  data-phases="actions,c2,exploit,install" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="endpoint,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → unsafe restore → unauth action exec (RCE) motionEye: LFI → pass‑the‑hash admin → unsafe restore → unauth action exec (RCE)  T1190 [LLM] motionEye picture-download LFI via absolute path (/picture/&lt;id&gt;/download/&lt;abs&gt;) [LLM] motionEye unsafe restore drops non-config file into CONF_PATH (/etc/motioneye) [LLM] motionEye RCE: process executed from CONF_PATH (/etc/motioneye) via action handler Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → un">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-23-ghsa-critical-ghsa-qxvg-h7q2-hcxh-motioneye-lfi-pass-the-has" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-qxvg-h7q2-hcxh" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → unsafe restore → unauth action exec (RCE)</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-23</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">motionEye: LFI → pass‑the‑hash admin → unsafe restore → unauth action exec (RCE)</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-262-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-262"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-262-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] motionEye picture-download LFI via absolute path (/picture/&lt;id&gt;/download/&lt;abs&gt;) · [LLM] motionEye RCE: process executed from CONF_PATH (/etc/motioneye) via action handler</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] motionEye unsafe restore drops non-config file into CONF_PATH (/etc/motioneye) · Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → un</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="b26d19f762" data-platforms="sent,sigma,spl" data-targets="linux,vcs" open>
+  <summary>
+    <span class="uc-title">motionEye picture-download LFI via absolute path (/picture/&lt;id&gt;/download/&lt;abs&gt;)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="b26d19f762" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the motionEye arbitrary-file-read primitive (GHSA-qxvg-h7q2-hcxh) where get_media_content() only blocks &#x27;..&#x27; but honours absolute paths, so /picture/&lt;id&gt;/download/%2Fetc%2Fmotioneye%2Fmotion.conf leaks the @admin_password SHA1 hash. Targets the specific download endpoint carrying an absolute/sensitive path, which never appears in legitimate media downloads that use relative date-folder paths.
+
+Rationale: Uses the exact vulnerable endpoint shape /picture/&lt;id&gt;/download/ combined with absolute-path / URL-encoded-slash markers and the specific sensitive target /etc/motioneye/motion.conf named in the advisory as holding @admin_password. Legit downloads never pass an absolute path, so the combination is near-zero-FP.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-qxvg-h7q2-hcxh
+  • https://advisories.gitlab.com/pypi/motioneye/GHSA-qxvg-h7q2-hcxh/
+  • https://github.com/motioneye-project/motioneye/releases</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="File and Directory Discovery">T1083</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate camera media download using a relative date path that coincidentally contains the word &#x27;motion&#x27; (unlikely to include /etc/ or an absolute path)</li><li>Vulnerability scanners (Nessus/Nuclei) probing the motionEye host — true detection of scanning, not a benign FP</li><li>Security-team validation of the patch on 0.44.0 (path now blocked, request may still be logged)</li><li>Backup tooling that fetches media via the API using absolute host paths (rare, should be allow-listed by source IP)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (HttpStatusCode in (&quot;404&quot;,&quot;403&quot;) and Url !contains &quot;/etc/&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the request returned HTTP 200 and the path targeted /etc/motioneye/motion.conf or /etc/passwd; pull the source IP and check whether it also hit /config/restore and /action/* shortly after (the full chain). 2) CONTAIN: Block the source IP at the proxy/WAF, and rotate the motionEye admin/normal passwords immediately since the SHA1 hash enables pass-the-hash admin. Take the instance offline if it is &lt;0.44.0. 3) HUNT: Search host process/file telemetry for any process executing from /etc/motioneye/ and for tar/python writing non-.conf files there (see companion UCs).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-262-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-262-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-262-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-262-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where Url contains &quot;/picture/&quot; and Url contains &quot;/download/&quot;
+| where Url contains &quot;/download//&quot; or Url contains &quot;/download/%2f&quot; or Url contains &quot;/etc/motioneye&quot; or Url contains &quot;/etc/passwd&quot; or Url contains &quot;/etc/shadow&quot; or Url contains &quot;motion.conf&quot;
+| project TimeGenerated, SrcIpAddr, DstHostname, HttpStatusCode, UserAgent = HttpRequestHeaderUserAgent, Url
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-262-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: motionEye picture-download LFI via absolute path
+id: 5b0e7a2c-9c11-4c8e-8b6d-2f3a1e7c9d40
+status: experimental
+description: Detects the motionEye arbitrary file read (GHSA-qxvg-h7q2-hcxh) where the picture download endpoint honours absolute paths, allowing read of /etc/motioneye/motion.conf and the admin password hash.
+references:
+  - https://github.com/advisories/GHSA-qxvg-h7q2-hcxh
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+  - attack.t1083
+  - attack.t1552.001
+logsource:
+  category: webserver
+detection:
+  path:
+    c-uri|contains: &#x27;/picture/&#x27;
+  endpoint:
+    c-uri|contains: &#x27;/download/&#x27;
+  lfi:
+    c-uri|contains:
+      - &#x27;/download//&#x27;
+      - &#x27;/download/%2f&#x27;
+      - &#x27;/etc/motioneye&#x27;
+      - &#x27;/etc/passwd&#x27;
+      - &#x27;/etc/shadow&#x27;
+      - &#x27;motion.conf&#x27;
+  condition: path and endpoint and lfi
+falsepositives:
+  - None expected; legitimate media downloads use relative date-folder paths
+level: high</code></pre></div>
+    <div class="tab-content" id="art-262-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-262-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-262-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-262-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/picture/*/download/*&quot;) AND (Web.url=&quot;*/download//*&quot; OR Web.url=&quot;*/download/%2f*&quot; OR Web.url=&quot;*/etc/motioneye*&quot; OR Web.url=&quot;*/etc/passwd*&quot; OR Web.url=&quot;*/etc/shadow*&quot; OR Web.url=&quot;*motion.conf*&quot;) by Web.src Web.dest Web.http_user_agent Web.url Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-262-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/picture/*/download/*&quot;) AND (Web.url=&quot;*/download//*&quot; OR Web.url=&quot;*/download/%2f*&quot; OR Web.url=&quot;*/etc/motioneye*&quot; OR Web.url=&quot;*/etc/passwd*&quot; OR Web.url=&quot;*/etc/shadow*&quot; OR Web.url=&quot;*motion.conf*&quot;) by Web.src Web.dest Web.http_user_agent Web.url Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="18cff79956" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">motionEye unsafe restore drops non-config file into CONF_PATH (/etc/motioneye)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="18cff79956" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the unsafe config-restore step (config.py restore() using &#x27;tar zxC CONF_PATH&#x27; without sanitisation) that extracts an attacker tarball into /etc/motioneye/, dropping an executable camera-action script (e.g. lock_1). Filters out the four legitimate restore artefacts confirmed by the 0.44.0 fix (motion.conf, camera-*.conf, prefs.json, mask-*.pgm), leaving only the injected payload.
+
+Rationale: Anchors on CONF_PATH (/etc/motioneye/) and the &#x27;tar zxC&#x27; restore mechanism from config.py, and derives the exclusion list (.conf/.json/.pgm) directly from the 0.44.0 fix note that legitimate restore only handles motion.conf, camera-*.conf, prefs.json and mask-*.pgm — so any other file written there by tar/python is the injected action script.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-qxvg-h7q2-hcxh
+  • https://advisories.gitlab.com/pypi/motioneye/GHSA-qxvg-h7q2-hcxh/
+  • https://github.com/motioneye-project/motioneye/releases</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin performing a genuine backup restore that legitimately contains a custom action script (rare; still worth reviewing)</li><li>Package upgrade to 0.44.0 rewriting files under /etc/motioneye/</li><li>Manual sysadmin editing/creating an action script via an editor (Image would be vim/nano, not tar/python — largely excluded by the process filter)</li><li>Configuration-management tooling (Ansible/Puppet) deploying camera action scripts to CONF_PATH</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;dpkg&quot;,&quot;apt&quot;,&quot;rpm&quot;) or InitiatingProcessCommandLine has &quot;upgrade&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify the file written (name and hash), read its contents — an injected action script is a small executable/shell payload, not a .conf. Check whether a /config/restore POST preceded it and whether /action/&lt;id&gt;/&lt;action&gt; was called after. 2) CONTAIN: Quarantine/delete the dropped file, kill any child process spawned from /etc/motioneye/, and isolate the host if the file executed. 3) HUNT: Pivot on the SHA256 across the fleet, review web logs for the LFI (companion UC) and restore requests, and rotate motionEye credentials.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-262-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-262-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-262-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-262-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-262-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-262-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-262-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FolderPath startswith &quot;/etc/motioneye/&quot;
+| where InitiatingProcessFileName in~ (&quot;tar&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;meyectl&quot;)
+| where FileName !endswith &quot;.conf&quot; and FileName !endswith &quot;.json&quot; and FileName !endswith &quot;.pgm&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-262-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where TargetFilePath startswith &quot;/etc/motioneye/&quot;
+| where ActingProcessName has_any (&quot;tar&quot;,&quot;python&quot;,&quot;meyectl&quot;)
+| where TargetFileName !endswith &quot;.conf&quot; and TargetFileName !endswith &quot;.json&quot; and TargetFileName !endswith &quot;.pgm&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-262-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: motionEye unsafe restore drops non-config payload into CONF_PATH
+id: 2c9d41a6-7e3b-4f2a-9a1c-8d6e0b4f7c22
+status: experimental
+description: Detects tar/python writing a non-config file into /etc/motioneye/, indicative of the unsafe config restore (GHSA-qxvg-h7q2-hcxh) dropping an executable camera-action script.
+references:
+  - https://github.com/advisories/GHSA-qxvg-h7q2-hcxh
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1105
+  - attack.t1190
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection:
+    TargetFilename|startswith: &#x27;/etc/motioneye/&#x27;
+    Image|endswith:
+      - &#x27;/tar&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/meyectl&#x27;
+  filter_config:
+    TargetFilename|endswith:
+      - &#x27;.conf&#x27;
+      - &#x27;.json&#x27;
+      - &#x27;.pgm&#x27;
+  condition: selection and not filter_config
+falsepositives:
+  - Legitimate config restore of a genuinely non-standard file
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-262-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:tar @process.command_line:*/etc/motioneye*</code></pre></div>
+    <div class="tab-content" id="art-262-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\/etc\/motioneye\//i
+| ContextImageFileName=/(tar|python|meyectl)/i
+| NOT (TargetFileName=/\.(conf|json|pgm)$/i)
+| table([aid, ComputerName, ContextImageFileName, TargetFileName, WrittenBytes])</code></pre></div>
+    <div class="tab-content" id="art-262-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-262-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-262-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-262-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/motioneye/*&quot;) AND (Filesystem.action=created OR Filesystem.action=modified) AND (Filesystem.process_name=tar OR Filesystem.process_name=python OR Filesystem.process_name=python3 OR Filesystem.process_name=meyectl) AND NOT (Filesystem.file_name=&quot;*.conf&quot; OR Filesystem.file_name=&quot;*.json&quot; OR Filesystem.file_name=&quot;*.pgm&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-262-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/motioneye/*&quot;) AND (Filesystem.action=created OR Filesystem.action=modified) AND (Filesystem.process_name=tar OR Filesystem.process_name=python OR Filesystem.process_name=python3 OR Filesystem.process_name=meyectl) AND NOT (Filesystem.file_name=&quot;*.conf&quot; OR Filesystem.file_name=&quot;*.json&quot; OR Filesystem.file_name=&quot;*.pgm&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="9aba3a5866" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">motionEye RCE: process executed from CONF_PATH (/etc/motioneye) via action handler</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="9aba3a5866" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the terminal RCE of GHSA-qxvg-h7q2-hcxh where the unauthenticated /action/&lt;id&gt;/&lt;action&gt; handler calls subprocess.Popen on &#x27;&lt;action&gt;_&lt;camera_id&gt;&#x27; living in CONF_PATH, so a payload executes directly from /etc/motioneye/. A configuration directory should never be a process image location, making any execution from that path high-fidelity.
+
+Rationale: Directly targets the subprocess.Popen execution of &#x27;&lt;action&gt;_&lt;camera_id&gt;&#x27; from CONF_PATH described in action.py; executing a process from /etc/motioneye/ has no legitimate cause, so a single-clause path filter is both precise and low-FP, warranting alerting tier.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-qxvg-h7q2-hcxh
+  • https://advisories.gitlab.com/pypi/motioneye/GHSA-qxvg-h7q2-hcxh/
+  • https://github.com/motioneye-project/motioneye/releases</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Administrator legitimately configured a custom camera action script that motionEye executes on a real event (lock/unlock/light_on) — verify the script&#x27;s provenance and web-request trigger</li><li>Security testing/validation of the vulnerability in a lab</li><li>Backup/restore tooling temporarily executing helper scripts from the config dir (rare)</li><li>A monitoring agent mistakenly configured to run from /etc/motioneye/ (misconfiguration, still worth flagging)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Capture the process image, hash, command line and parent (should be the motionEye python/meyectl process); read the on-disk file at FolderPath. Correlate with a preceding unauthenticated POST /action/&lt;id&gt;/&lt;action&gt; in web logs. 2) CONTAIN: Kill the process, isolate the host, delete the injected script from /etc/motioneye/, and rotate motionEye admin/normal credentials (pass-the-hash exposure). 3) HUNT: Sweep the SHA256 fleet-wide, review outbound connections from the spawned process (reverse shell / C2), and confirm the instance is upgraded to motionEye &gt;= 0.44.0.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-262-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-262-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-262-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-262-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-262-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-262-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-262-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where FolderPath startswith &quot;/etc/motioneye/&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-262-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where TargetProcessName has &quot;/etc/motioneye/&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-262-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: motionEye RCE - process executed from CONF_PATH
+id: 8f1a6b30-4d2e-4b7a-9c55-1e0a2f6d3b19
+status: experimental
+description: Detects any process whose image resides under /etc/motioneye/, the terminal RCE of GHSA-qxvg-h7q2-hcxh where the unauthenticated action handler Popen-executes an injected camera-action script from CONF_PATH.
+references:
+  - https://github.com/advisories/GHSA-qxvg-h7q2-hcxh
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    Image|startswith: &#x27;/etc/motioneye/&#x27;
+  condition: selection
+falsepositives:
+  - None expected; /etc is not a legitimate execution directory
+level: high</code></pre></div>
+    <div class="tab-content" id="art-262-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.executable.path:/etc/motioneye/*</code></pre></div>
+    <div class="tab-content" id="art-262-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/etc\/motioneye\//i
+| table([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine, SHA256HashData])</code></pre></div>
+    <div class="tab-content" id="art-262-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-262-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-262-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-262-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path=&quot;/etc/motioneye/*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-262-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path=&quot;/etc/motioneye/*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="eec4e6ff44" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → un</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="eec4e6ff44" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-262-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-262-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-262-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-262-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → un
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/hosts&quot;, &quot;/etc/motioneye/motion.conf&quot;, &quot;/tmp/meye_rce_ok&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-262-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → un
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/hosts&quot;, &quot;/etc/motioneye/motion.conf&quot;, &quot;/tmp/meye_rce_ok&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-262-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-262-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-262-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-262-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → un ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/hosts*&quot; OR Filesystem.file_path=&quot;*/etc/motioneye/motion.conf*&quot; OR Filesystem.file_path=&quot;*/tmp/meye_rce_ok*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-262-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → un ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/hosts*&quot; OR Filesystem.file_path=&quot;*/etc/motioneye/motion.conf*&quot; OR Filesystem.file_path=&quot;*/tmp/meye_rce_ok*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -424,7 +424,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New ENCFORGE Ransomware Targets AI Model Files in Langflow RCE Attack
 
-`UC_4_13` · phase: **install** · confidence: **High**
+`UC_6_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

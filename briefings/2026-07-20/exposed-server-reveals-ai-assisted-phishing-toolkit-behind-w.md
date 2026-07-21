@@ -423,7 +423,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Exposed Server Reveals AI-Assisted Phishing Toolkit Behind WebDAV Malware Campai
 
-`UC_16_13` · phase: **exploit** · confidence: **High**
+`UC_18_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

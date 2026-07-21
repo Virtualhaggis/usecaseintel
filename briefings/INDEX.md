@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2587 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-21
+- [critical palo alto vpn bug now exploited by qilin ransomware](./2026-07-21/critical-palo-alto-vpn-bug-now-exploited-by-qilin-ransomware.md)
 - [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
 - [new encforge ransomware targets ai model files in langflow r](./2026-07-21/new-encforge-ransomware-targets-ai-model-files-in-langflow-r.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
@@ -37,14 +38,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-19
 - [critical nginx vulnerability can crash workers and may allow](./2026-07-19/critical-nginx-vulnerability-can-crash-workers-and-may-allow.md)
-- [hackers abuse vipnet software to target russian govt agencie](./2026-07-19/hackers-abuse-vipnet-software-to-target-russian-govt-agencie.md)
 - [sleepergem compromised git credential manager dendreo and fa](./2026-07-19/sleepergem-compromised-git-credential-manager-dendreo-and-fa.md)
 - [sleepergem rubygems supply chain attack targets dormant main](./2026-07-19/sleepergem-rubygems-supply-chain-attack-targets-dormant-main.md)
 - [sonicwall sma zero days exploited before disclosure to gain ](./2026-07-19/sonicwall-sma-zero-days-exploited-before-disclosure-to-gain-.md)
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
-
-## 2026-07-18
-- [update now 7 zip fixes rce flaw exploitable with malicious a](./2026-07-18/update-now-7-zip-fixes-rce-flaw-exploitable-with-malicious-a.md)
 
 ## 2026-07-17
 - [acr stealer uses clickfix lures to steal browser tokens and ](./2026-07-17/acr-stealer-uses-clickfix-lures-to-steal-browser-tokens-and-.md)

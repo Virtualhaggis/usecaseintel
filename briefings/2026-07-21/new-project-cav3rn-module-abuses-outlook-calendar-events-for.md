@@ -127,7 +127,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — New Project CAV3RN module abuses Outlook calendar events for C2 and DNS AAAA rec
 
-`UC_2_4` · phase: **exploit** · confidence: **High**
+`UC_4_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
