@@ -9,14 +9,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-21
+- [a new extortion cocktail office printers small ransoms and b](./2026-07-21/a-new-extortion-cocktail-office-printers-small-ransoms-and-b.md)
 - [critical palo alto vpn bug now exploited by qilin ransomware](./2026-07-21/critical-palo-alto-vpn-bug-now-exploited-by-qilin-ransomware.md)
 - [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
+- [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
+- [new bit2watt attack could let cloud tenants disrupt power gr](./2026-07-21/new-bit2watt-attack-could-let-cloud-tenants-disrupt-power-gr.md)
 - [new encforge ransomware targets ai model files in langflow r](./2026-07-21/new-encforge-ransomware-targets-ai-model-files-in-langflow-r.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
+- [open source android ai agents could let invisible screen tex](./2026-07-21/open-source-android-ai-agents-could-let-invisible-screen-tex.md)
+- [windows legacyhive zero day flaw gets free unofficial patche](./2026-07-21/windows-legacyhive-zero-day-flaw-gets-free-unofficial-patche.md)
 - [wordpress wp2shell exploitation grows as public exploit fuel](./2026-07-21/wordpress-wp2shell-exploitation-grows-as-public-exploit-fuel.md)
 
 ## 2026-07-20
-- [an ai soc evaluation guide for security leaders](./2026-07-20/an-ai-soc-evaluation-guide-for-security-leaders.md)
 - [critical servicenow code execution flaw now exploited in att](./2026-07-20/critical-servicenow-code-execution-flaw-now-exploited-in-att.md)
 - [est e lauder discloses data breach via oracle e business fla](./2026-07-20/est-e-lauder-discloses-data-breach-via-oracle-e-business-fla.md)
 - [exposed server reveals ai assisted phishing toolkit behind w](./2026-07-20/exposed-server-reveals-ai-assisted-phishing-toolkit-behind-w.md)
@@ -27,7 +31,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
 - [hugging face warns an autonomous ai agent hacked its network](./2026-07-20/hugging-face-warns-an-autonomous-ai-agent-hacked-its-network.md)
 - [jadepuffer agentic attacks now target ai model data with ran](./2026-07-20/jadepuffer-agentic-attacks-now-target-ai-model-data-with-ran.md)
-- [mythos didn t break your security program your exposure wind](./2026-07-20/mythos-didn-t-break-your-security-program-your-exposure-wind.md)
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
 - [new hollowgraph malware uses microsoft graph for stealthy c2](./2026-07-20/new-hollowgraph-malware-uses-microsoft-graph-for-stealthy-c2.md)
 - [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
@@ -87,7 +90,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-15
 - [cisa kev cve 2023 4346 knx association knx protocol connecti](./2026-07-15/cisa-kev-cve-2023-4346-knx-association-knx-protocol-connecti.md)
 - [cisa kev cve 2026 46817 oracle e business suite improper pri](./2026-07-15/cisa-kev-cve-2026-46817-oracle-e-business-suite-improper-pri.md)
-- [compromised asyncapi npm packages deliver multi stage botnet](./2026-07-15/compromised-asyncapi-npm-packages-deliver-multi-stage-botnet.md)
 - [cursor flaw lets malicious cloned repositories trigger windo](./2026-07-15/cursor-flaw-lets-malicious-cloned-repositories-trigger-windo.md)
 - [firefox chrome adobe and vmware updates fix multiple critica](./2026-07-15/firefox-chrome-adobe-and-vmware-updates-fix-multiple-critica.md)
 - [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
@@ -100,7 +102,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [turning threat intelligence into decisive action with defend](./2026-07-15/turning-threat-intelligence-into-decisive-action-with-defend.md)
 - [tuxbot v3 evolution shows signs of llm assisted iot botnet d](./2026-07-15/tuxbot-v3-evolution-shows-signs-of-llm-assisted-iot-botnet-d.md)
 - [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
-- [two sonicwall sma 1000 zero days exploited one could enable ](./2026-07-15/two-sonicwall-sma-1000-zero-days-exploited-one-could-enable-.md)
 
 ## 2026-07-14
 - [asyncapi npm packages backdoored via github actions](./2026-07-14/asyncapi-npm-packages-backdoored-via-github-actions.md)
@@ -115,7 +116,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54052 n8n mcp cross tenant access to ](./2026-07-14/ghsa-critical-cve-2026-54052-n8n-mcp-cross-tenant-access-to-.md)
 - [ghsa critical ghsa 9hc2 hjx8 q6pv tidgi desktop remote code ](./2026-07-14/ghsa-critical-ghsa-9hc2-hjx8-q6pv-tidgi-desktop-remote-code-.md)
 - [ghsa critical ghsa hgjx r89m m7v4 facturascripts path traver](./2026-07-14/ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver.md)
-- [microsoft patches record 622 flaws including two zero days u](./2026-07-14/microsoft-patches-record-622-flaws-including-two-zero-days-u.md)
+- [microsoft patch tuesday for july 2026 snort rules and promin](./2026-07-14/microsoft-patch-tuesday-for-july-2026-snort-rules-and-promin.md)
 - [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
 - [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
 
@@ -219,7 +220,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-07-01/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-07-01/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [multiple immobiliarelabs backstage plugins compromised on np](./2026-07-01/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
-- [openclaw risks for the users and how to mitigate them](./2026-07-01/openclaw-risks-for-the-users-and-how-to-mitigate-them.md)
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)

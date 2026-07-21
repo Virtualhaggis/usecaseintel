@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Azure Repos enriched with DevSecOps capabilities
 
-`UC_3516_0` · phase: **exploit** · confidence: **High**
+`UC_3517_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Regular Expression Denial-of-Service in websocket-extensions
 
-`UC_3322_1` · phase: **exploit** · confidence: **High**
+`UC_3323_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

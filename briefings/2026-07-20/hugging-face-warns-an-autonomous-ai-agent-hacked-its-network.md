@@ -27,12 +27,78 @@ The…
 - **T1555.003** — Credentials from Web Browsers
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1203** — Exploitation for Client Execution
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.007** — Unsecured Credentials: Container API
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Hugging Face malicious-dataset RCE: Python ML worker spawns shell/network tool
+
+`UC_29_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python","python3","python3.10","python3.11","python3.12") AND (Processes.parent_process="*datasets*" OR Processes.parent_process="*load_dataset*" OR Processes.parent_process="*trust_remote_code*" OR Processes.parent_process="*huggingface*") AND Processes.process_name IN ("sh","bash","dash","curl","wget","nc","ncat","scp","chmod","base64") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("python","python3","python3.10","python3.11","python3.12")
+| where InitiatingProcessCommandLine has_any ("datasets","load_dataset","trust_remote_code","huggingface","hf_datasets")
+| where FileName in~ ("sh","bash","dash","curl","wget","nc","ncat","scp","chmod","base64")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Cloud credential theft via IMDS (169.254.169.254) from data-processing worker
+
+`UC_29_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("curl","wget","sh","bash","dash","busybox","nc","ncat","python","python3") AND Processes.process="*169.254.169.254*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP == "169.254.169.254"
+| where InitiatingProcessFileName in~ ("curl","wget","sh","bash","dash","busybox","nc","ncat","perl","ruby")
+    or (InitiatingProcessFileName in~ ("python","python3") and InitiatingProcessCommandLine has_any ("security-credentials","meta-data/iam","load_dataset","datasets"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### Cluster/cloud credential harvesting for lateral movement from ML worker
+
+`UC_29_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*/var/run/secrets/kubernetes.io*" OR Processes.process="*/.kube/config*" OR Processes.process="*.aws/credentials*" OR Processes.process="*serviceaccount/token*") OR (Processes.process_name IN ("kubectl","aws","gcloud","az") AND Processes.parent_process_name IN ("python","python3","sh","bash","dash")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any ("/var/run/secrets/kubernetes.io","/.kube/config",".aws/credentials",".aws/config","serviceaccount/token","serviceaccount/namespace")
+    or (FileName in~ ("kubectl","aws","gcloud","az") and InitiatingProcessFileName in~ ("python","python3","sh","bash","dash"))
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -152,4 +218,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

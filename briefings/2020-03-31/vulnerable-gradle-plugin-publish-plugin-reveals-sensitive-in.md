@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Gradle plugin-publish run with verbose logging leaks pre-signed AWS URL (CVE-2020-7599)
 
-`UC_3371_1` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_3372_1` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

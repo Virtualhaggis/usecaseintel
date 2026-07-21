@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious litellm 1.82.7/1.82.8 wheel install drops litellm_init.pth in site-packages
 
-`UC_535_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_536_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceFileEvents
 
 ### Python .pth startup hook executes subprocess to curl C2 (litellm fork-bomb pattern)
 
-`UC_535_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_536_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### DNS / HTTPS egress to TeamPCP exfil infra (models.litellm.cloud, checkmarx.zone)
 
-`UC_535_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_536_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ union
 
 ### Exfil staging artefacts: session.key, payload.enc, session.key.enc, tpcp.tar.gz in temp
 
-`UC_535_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_536_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceFileEvents
 
 ### TeamPCP Linux credential harvest: Python reading /etc/shadow + auth.log + cloud
 
-`UC_535_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_536_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -443,7 +443,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM
 
-`UC_535_8` · phase: **exploit** · confidence: **High**
+`UC_536_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

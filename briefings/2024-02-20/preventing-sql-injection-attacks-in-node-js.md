@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Boolean-tautology SQL injection against Node.js/Express search endpoint
 
-`UC_1382_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1383_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Preventing SQL injection attacks in Node.js
 
-`UC_1382_0` · phase: **exploit** · confidence: **High**
+`UC_1383_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### motionEye picture-download LFI via absolute path (/picture/<id>/download/<abs>)
 
-`UC_262_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_264_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### motionEye unsafe restore drops non-config file into CONF_PATH (/etc/motioneye)
 
-`UC_262_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_264_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### motionEye RCE: process executed from CONF_PATH (/etc/motioneye) via action handler
 
-`UC_262_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_264_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-qxvg-h7q2-hcxh: motionEye: LFI → pass‑the‑hash admin → un
 
-`UC_262_0` · phase: **install** · confidence: **High**
+`UC_264_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

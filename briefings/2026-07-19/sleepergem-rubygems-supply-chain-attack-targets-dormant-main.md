@@ -20,12 +20,109 @@ A brand-new ge…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
+- **T1105** — Ingress Tool Transfer
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1059.004** — Unix Shell
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1543.001** — Create or Modify System Process: Launch Agent
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Ruby/gem process downloading payload from git.disroot.org (SleeperGem)
+
+`UC_42_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="git.disroot.org" by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "git.disroot.org"
+| where InitiatingProcessFileName in~ ("ruby.exe","ruby","gem","bundle","bundler","rake","irb")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Ruby interpreter spawning PowerShell -ExecutionPolicy bypass or /bin/sh (SleeperGem dropper)
+
+`UC_42_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("ruby.exe","ruby","gem","bundle","bundler","rake","irb") AND Processes.process_name IN ("powershell.exe","pwsh.exe","sh","bash","dash","zsh")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| where match(process,"(?i)-ExecutionPolicy\s+bypass") OR process_name IN ("sh","bash","dash","zsh")
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("ruby.exe","ruby","gem","bundle","bundler","rake","irb")
+| where FileName in~ ("powershell.exe","pwsh.exe","sh","bash","dash","zsh")
+| where (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "ExecutionPolicy" and ProcessCommandLine has "bypass")
+      or FileName in~ ("sh","bash","dash","zsh")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### SleeperGem malicious gem artifacts written to gems path (git_credential_manager / Dendreo / fastlane-plugin)
+
+`UC_42_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*git_credential_manager*","*fastlane-plugin-run_tests_firebase_testlab*") OR Filesystem.file_path="*Dendreo-*") AND Filesystem.file_path IN ("*/gems/*","*\\gems\\*","*/specifications/*","*\\specifications\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where (FolderPath has "gems" or FolderPath has "specifications")
+| where FolderPath has_any ("git_credential_manager","fastlane-plugin-run_tests_firebase_testlab") or FolderPath matches regex @"(?i)[\\/]Dendreo-\d"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### SleeperGem Unix persistence: cron/systemd/LaunchAgent write by Ruby-descended shell
+
+`UC_42_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/etc/systemd/system/*","/lib/systemd/system/*","/etc/cron.d/*","/var/spool/cron/*","/etc/crontab","/Library/LaunchAgents/*","/Library/LaunchDaemons/*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| where process_name IN ("ruby","sh","bash","dash","zsh","gem","bundle")
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has_any ("/etc/systemd/system/","/lib/systemd/system/","/etc/cron.d/","/var/spool/cron/","/etc/crontab","/Library/LaunchAgents/","/Library/LaunchDaemons/")
+| where InitiatingProcessFileName in~ ("ruby","sh","bash","dash","zsh","gem","bundle")
+   or InitiatingProcessParentFileName in~ ("ruby","gem","bundle")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FileName, FolderPath
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -82,7 +179,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SleeperGem: RubyGems supply chain attack targets dormant maintainer accounts
 
-`UC_37_3` · phase: **install** · confidence: **High**
+`UC_42_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,4 +220,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

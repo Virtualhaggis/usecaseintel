@@ -14,15 +14,17 @@ The same operator has now been spotted deploying ENCFORGE , a new compiled Go ra
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-3248`
-- **CVE:** `CVE-2026-33017`
-- **CVE:** `CVE-2026-55255`
+- **IPv4 (defanged):** `45.131.66.106`
+- **IPv4 (defanged):** `34.153.223.102`
 - **SHA256:** `8cb0c223b018cecef1d990ec81c67b826eb3c30d54f06193cf69969e9a8baea2`
 - **SHA256:** `ea7822eac6cecef7746c606b862b4d3034856caf754c4cf69533662637905328`
+- **SHA256:** `ab9824b61587c77a8d8649545cdbdc63ed2c384e45c9aba534e3f457f96efa7a`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -43,12 +45,133 @@ The same operator has now been spotted deploying ENCFORGE , a new compiled Go ra
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1611** — Escape to Host
+- **T1610** — Deploy Container
+- **T1027.002** — Obfuscated Files or Information: Software Packing
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1489** — Service Stop
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Langflow unauthenticated RCE via /api/v1/validate/code (CVE-2025-3248)
+
+`UC_11_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*/api/v1/validate/code*" by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| where http_method="POST" OR status>=200
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+### Langflow Python runtime spawning shell / nsenter / base64-decoded child process
+
+`UC_11_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","langflow","uvicorn","gunicorn") AND (Processes.process_name IN ("sh","bash","dash","nsenter","docker") OR Processes.process IN ("*docker.sock*","*nsenter*","*b64decode*","*exec(*"))) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process, Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("python","python3","langflow","uvicorn","gunicorn")
+| where FileName in~ ("sh","bash","dash","nsenter","docker")
+   or ProcessCommandLine has_any ("nsenter","/var/run/docker.sock","docker.sock","b64decode","exec(")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Docker-socket privileged container breakout + nsenter host escape
+
+`UC_11_17` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="nsenter" AND (Processes.process="*--target 1*" OR Processes.process="*-t 1*" OR Processes.process="*--mount*" OR Processes.process="*--pid*")) OR (Processes.process_name="docker" AND Processes.process="*--privileged*" AND (Processes.process="*--pid=host*" OR Processes.process="*--net=host*" OR Processes.process="*-v /:*" OR Processes.process="*/:/host*")) OR Processes.process="*/var/run/docker.sock*") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where (FileName =~ "nsenter" and ProcessCommandLine has_any ("--target 1","-t 1","--mount","--pid","--net"))
+   or (FileName =~ "docker" and ProcessCommandLine has "--privileged" and ProcessCommandLine has_any ("--pid=host","--pid host","--net=host","-v /:","/:/host"))
+   or (ProcessCommandLine has "/var/run/docker.sock" and ProcessCommandLine has_any ("Privileged","PidMode","/proc/"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### ENCFORGE Go ransomware execution — hashes, hidden path, and cmdline flags
+
+`UC_11_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("8cb0c223b018cecef1d990ec81c67b826eb3c30d54f06193cf69969e9a8baea2","ea7822eac6cecef7746c606b862b4d3034856caf754c4cf69533662637905328","ab9824b61587c77a8d8649545cdbdc63ed2c384e45c9aba534e3f457f96efa7a") OR Processes.process IN ("*--try-run*","*--task-id gcp_h1*","*--task-id gcp_test*","*keyforge*","*encfile*") OR (Processes.process="*--lock*" AND Processes.process="*--include*") OR Processes.process_path="*/.lockd*") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.process_path, Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA256 in ("8cb0c223b018cecef1d990ec81c67b826eb3c30d54f06193cf69969e9a8baea2","ea7822eac6cecef7746c606b862b4d3034856caf754c4cf69533662637905328","ab9824b61587c77a8d8649545cdbdc63ed2c384e45c9aba534e3f457f96efa7a")
+   or ProcessCommandLine has_any ("--try-run","--task-id gcp_h1","--task-id gcp_test","keyforge","encfile")
+   or (ProcessCommandLine has "--lock" and ProcessCommandLine has "--include")
+   or FolderPath has "/.lockd"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Mass .locked rename + ENCFORGE ransom-note drop on AI model stores
+
+`UC_11_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.action IN ("created","modified","renamed")) AND (Filesystem.file_name="*.locked" OR Filesystem.file_name IN ("HOW_TO_DECRYPT","README_DECRYPT","README")) by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name, _time span=5m
+| `drop_dm_object_name(Filesystem)`
+| stats count(eval(match(file_name,"\.locked$"))) as locked_count, count(eval(file_name IN ("HOW_TO_DECRYPT","README_DECRYPT"))) as note_count, values(file_path) as paths, values(process_name) as procs by dest, _time
+| where locked_count>=25 OR note_count>=1
+| sort - locked_count
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where (ActionType == "FileRenamed" and FileName endswith ".locked")
+   or (ActionType in ("FileCreated","FileModified") and FileName in~ ("HOW_TO_DECRYPT","README_DECRYPT","README"))
+| extend ModelTarget = tostring(PreviousFileName)
+| summarize LockedCount = countif(FileName endswith ".locked"),
+            NoteCount = countif(FileName in~ ("HOW_TO_DECRYPT","README_DECRYPT","README")),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            SampleFolders = make_set(FolderPath, 10),
+            SampleModelFiles = make_set(ModelTarget, 10),
+            Actor = any(InitiatingProcessFileName), ActorCmd = any(InitiatingProcessCommandLine)
+            by DeviceName, InitiatingProcessId, bin(Timestamp, 5m)
+| where LockedCount >= 25 or NoteCount >= 1
+| order by LockedCount desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -424,7 +547,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New ENCFORGE Ransomware Targets AI Model Files in Langflow RCE Attack
 
-`UC_6_13` · phase: **install** · confidence: **High**
+`UC_11_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -459,13 +582,16 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `45.131.66.106`, `34.153.223.102`
+
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-3248`, `CVE-2026-33017`, `CVE-2026-55255`
+  - CVE(s): `CVE-2025-3248`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `8cb0c223b018cecef1d990ec81c67b826eb3c30d54f06193cf69969e9a8baea2`, `ea7822eac6cecef7746c606b862b4d3034856caf754c4cf69533662637905328`
+  - file hash IOC(s): `8cb0c223b018cecef1d990ec81c67b826eb3c30d54f06193cf69969e9a8baea2`, `ea7822eac6cecef7746c606b862b4d3034856caf754c4cf69533662637905328`, `ab9824b61587c77a8d8649545cdbdc63ed2c384e45c9aba534e3f457f96efa7a`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 20 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

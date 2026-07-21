@@ -13,7 +13,10 @@ According to the Computer Emergency Response Team of Ukraine (CERT-UA), the acti
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `steamcommunity.com`
+- **Domain (defanged):** `office366.com`
+- **Domain (defanged):** `365softupdate.com`
+- **Domain (defanged):** `cloaking.house`
+- **Domain (defanged):** `delta.smartlinkupload.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -38,12 +41,100 @@ According to the Computer Emergency Response Team of Ukraine (CERT-UA), the acti
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1547.001** — Boot or Logon Autostart Execution: Startup Folder
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1102** — Web Service
+- **T1571** — Non-Standard Port
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### UAC-0145 ClickFix: explorer-spawned PowerShell downloads + drops VBS to Startup (GHETTOVIBE)
+
+`UC_40_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=explorer.exe) (Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe OR Processes.process_name=cmd.exe OR Processes.process_name=mshta.exe) (Processes.process="*Invoke-WebRequest*" OR Processes.process="*iwr *" OR Processes.process="*DownloadString*" OR Processes.process="*DownloadFile*" OR Processes.process="*Start-BitsTransfer*" OR Processes.process="*curl *" OR Processes.process="*certutil*") (Processes.process="*Startup*" OR Processes.process="*.vbs*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where NOT match(user, "\$$") | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "explorer.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe")
+| where ProcessCommandLine has_any ("Invoke-WebRequest","iwr ","DownloadString","DownloadFile","Start-BitsTransfer","curl ","certutil")
+| where ProcessCommandLine has_any ("Startup",@"\Start Menu\Programs\Startup",".vbs")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### GHETTOVIBE persistence: VBS written to Startup folder by script host / PowerShell
+
+`UC_40_14` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.vbs" Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName endswith ".vbs"
+| where FolderPath has @"\Start Menu\Programs\Startup"
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### UAC-0145 ClickFix C2 / staging domain contact (office366.com, 365softupdate.com, delta.smartlinkupload.com)
+
+`UC_40_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="office366.com" OR DNS.query="*.office366.com" OR DNS.query="365softupdate.com" OR DNS.query="*.365softupdate.com" OR DNS.query="delta.smartlinkupload.com" OR DNS.query="*.smartlinkupload.com" OR DNS.query="cloaking.house" OR DNS.query="*.cloaking.house") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("office366.com","365softupdate.com","delta.smartlinkupload.com","cloaking.house")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### EtherHiding: browser fetching UAC-0145 C2 domain from Ethereum/BSC smart contract via public RPC
+
+`UC_40_16` · phase: **c2** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=chrome.exe OR All_Traffic.app=msedge.exe OR All_Traffic.app=firefox.exe OR All_Traffic.app=brave.exe OR All_Traffic.app=opera.exe) (All_Traffic.dest_host="*bsc-dataseed*" OR All_Traffic.dest_host="*cloudflare-eth.com" OR All_Traffic.dest_host="*mainnet.infura.io" OR All_Traffic.dest_host="*rpc.ankr.com*" OR All_Traffic.dest_host="*eth.llamarpc.com" OR All_Traffic.dest_host="*bscrpc.com" OR All_Traffic.dest_host="*binance.org") by All_Traffic.src All_Traffic.app All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe")
+| where RemoteUrl has_any ("bsc-dataseed","cloudflare-eth.com","mainnet.infura.io","rpc.ankr.com","eth.llamarpc.com","bscrpc.com","binance.org","nodereal.io","quiknode.pro")
+| summarize FirstSeen=min(Timestamp), Hits=count(), Endpoints=make_set(RemoteUrl, 20) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by FirstSeen desc
+```
 
 ### Suspicious browser extension installation
 
@@ -444,9 +535,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `steamcommunity.com`
+  - IP / domain IOC(s): `office366.com`, `365softupdate.com`, `cloaking.house`, `delta.smartlinkupload.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

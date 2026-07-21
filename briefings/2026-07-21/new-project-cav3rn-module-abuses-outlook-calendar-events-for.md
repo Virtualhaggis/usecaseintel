@@ -56,12 +56,102 @@ Domains and IPs …
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1132.001** — Data Encoding: Standard Encoding
+- **T1008** — Fallback Channels
+- **T1074.001** — Local Data Staging
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1574.001** — Hijack Execution Flow: DLL
+- **T1027.007** — Obfuscated Files: Dynamic API Resolution
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### CAV3RN/HOLLOWGRAPH DNS AAAA config-recovery beaconing to cloudlanecdn[.]com
+
+`UC_9_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*.cloudlanecdn.com" OR DNS.query="cloudlanecdn.com") DNS.record_type=AAAA by DNS.src DNS.query DNS.record_type DNS.answer | `drop_dm_object_name(DNS)` | eval config_recovery=if(match(query,"\.(p|q)\.cloudlanecdn\.com$"),"yes","no") | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl endswith "cloudlanecdn.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+// Defender does not expose DNS query-type; any resolution/connection to cloudlanecdn.com is the C2 domain
+```
+
+### CAV3RN AzureCommunication.dll config file 'logAzure.txt' written to disk
+
+`UC_9_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="logAzure.txt" Filesystem.action=created by Filesystem.dest Filesystem.file_path Filesystem.process_id Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName =~ "logAzure.txt"
+| project Timestamp, DeviceName, FolderPath, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### CAV3RN framework module DLLs loaded/dropped (AzureCommunication / n-HTCommp / masqueraded uxtheme)
+
+`UC_9_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="AzureCommunication.dll" OR Filesystem.file_name="n-HTCommp.dll") OR (Filesystem.file_name="uxtheme.dll" AND NOT (Filesystem.file_path="*\\System32\\*" OR Filesystem.file_path="*\\SysWOW64\\*" OR Filesystem.file_path="*\\WinSxS\\*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("AzureCommunication.dll","n-HTCommp.dll"))
+    or (FileName =~ "uxtheme.dll" and FolderPath !has "\\System32\\" and FolderPath !has "\\SysWOW64\\" and FolderPath !has "\\WinSxS\\")
+    or (MD5 in~ ("caf021dda726b8ba049c2aa395e505a1","c092b02fbc0fdf7ee9608dd016673806","29b2b8c5d99f05bfcdd0d8d976eb5678"))
+| project Timestamp, DeviceName, FileName, FolderPath, MD5, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Anomalous DLL-host process reaching Microsoft Graph/login.microsoftonline for calendar C2
+
+`UC_9_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="graph.microsoft.com" OR All_Traffic.dest="login.microsoftonline.com") (All_Traffic.process_name="rundll32.exe" OR All_Traffic.process_name="regsvr32.exe" OR All_Traffic.process_name="dllhost.exe") by All_Traffic.src All_Traffic.process_name All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has_any ("graph.microsoft.com","login.microsoftonline.com")
+| where InitiatingProcessFileName in~ ("rundll32.exe","regsvr32.exe","dllhost.exe")
+    or InitiatingProcessFolderPath has_any ("\\AppData\\","\\Temp\\","\\ProgramData\\","\\Public\\")
+| summarize FirstSeen=min(Timestamp), Endpoints=make_set(RemoteUrl), Count=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| where array_length(Endpoints) >= 1
+| order by FirstSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -127,7 +217,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — New Project CAV3RN module abuses Outlook calendar events for C2 and DNS AAAA rec
 
-`UC_4_4` · phase: **exploit** · confidence: **High**
+`UC_9_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,4 +277,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Run AutoMCP To Supercharge Your AI Agent with Libraries MCP Servers
 
-`UC_735_0` · phase: **exploit** · confidence: **High**
+`UC_736_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

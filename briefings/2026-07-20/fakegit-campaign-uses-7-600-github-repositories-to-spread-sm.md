@@ -13,7 +13,47 @@ Cybersecurity researchers have discovered nearly 7,600 malicious GitHub reposito
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `213.176.73.80`
+- **IPv4 (defanged):** `95.164.53.100`
+- **IPv4 (defanged):** `94.156.114.56`
+- **IPv4 (defanged):** `150.241.105.82`
+- **Domain (defanged):** `pasteflawwed.world`
+- **SHA256:** `216a2c99fd42c00f9323d8b16dd19f622f7f4778b2b1d7cf07a3de5621fd1546`
+- **SHA256:** `91e5dbfaf45edf25fbc2168f92083e05dfa427afa7633e991392e33cc7427dad`
+- **SHA256:** `498fe8fb806cd0e6685f97fc7d74de769dae5a28cdc821557b7585ad5ad83147`
+- **SHA256:** `62744baa8077bb8be237647fd78e3bea2ca0932bf4be3d5618600f97118095f8`
+- **SHA256:** `1da8df487d30b988f3c350c065206726aaa13f079a07151cd42ab5579994b9de`
+- **SHA256:** `c15693106682f2ddb26649cab6e1962a64537627cde4c5d3c79d5a0be8c1b5a8`
+- **SHA256:** `66afc7d87d10dbe392898c4e5c613e0442fabb396415c2bef3a5ef2ac752c5ad`
+- **SHA256:** `a33f40cab1ab7f971d3464af3e7595918107332b9e83342007571842b9e22826`
+- **SHA256:** `3c858facbad66f5479e2c4add171421dc1b6488b36f33e7cff073aba585954a7`
+- **SHA256:** `fc1278f419e611bf40ca414099bfd9ad98a31ffb054371e8cb65a84849b00eaf`
+- **SHA1:** `c36e15f0532569d789ba9fdbfccf6a1bb5ac2c75`
+- **SHA1:** `2a2ef9cd83bdb635bb3da2fe6b6a42c9b0cc657f`
+- **SHA1:** `43eae0fb588987107a4805ecd1cf5c301263643b`
+- **SHA1:** `082b2d602c39488b7220523cc9d9a03f4cff53bc`
+- **SHA1:** `9953b71fe900614844737a8dba726d2c0dc7ca51`
+- **SHA1:** `fb7a7cb18055a8fa617c707ee784bd292d8bb0ab`
+- **SHA1:** `28b6a72672848e8ee7bbe00c839e899160fed839`
+- **SHA1:** `496f07dfccc038d7090f6ecc273f0505b2b102bf`
+- **SHA1:** `cc4d85f11a4dc8e8cbe3f49f758bb8100485bd84`
+- **SHA1:** `0f18746b59f33ca8480475ef91fdd01ea1e3eac4`
+- **SHA1:** `7367ef2b7836682f248bbc97539e9e9e67d92a20`
+- **SHA1:** `5ed50cba806d2079198e0b17385e9166ecdc39cd`
+- **SHA1:** `f11acd444d07ba4322f2b9c9c95bc1e26a03e617`
+- **SHA1:** `2aed982366efcc32490487c82621ddff6348efa4`
+- **SHA1:** `559bcdd9152d76b38b231dc024e66d82ce7db08f`
+- **SHA1:** `414917635afdd6718840e6e689da773f8865e6a7`
+- **SHA1:** `c176528eb230cc5b485a528ec0e2bcc9329ec875`
+- **SHA1:** `813f977b8757587529dd1be5709503d2d7071fb5`
+- **SHA1:** `e1d5c2344d204253932ae0bb57e87927db535394`
+- **SHA1:** `e70848f41b597776238ca26c8428133eeeed7408`
+- **SHA1:** `fcd528e8775a4827223357ca28e8ee8156005954`
+- **SHA1:** `ae54422e334e0cbcf839955fbe2986a7d886b894`
+- **SHA1:** `93aa2fe0456b4795ce21cecc7db75068cc2ff159`
+- **SHA1:** `4f3fbe9a1c37aa0ee7ed4d4a2feb4e1af7dffa81`
+- **SHA1:** `e53598fc0451cf39438f029bb0365dd29013c089`
+- **SHA1:** `5fc426d7f48e00266cead84746504b2067d74e32`
 
 ## MITRE ATT&CK Techniques
 
@@ -36,12 +76,82 @@ Cybersecurity researchers have discovered nearly 7,600 malicious GitHub reposito
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1059** — Command and Scripting Interpreter
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1547.001** — Boot or Logon Autostart Execution
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### SmartLoader LuaJIT loader chain: luajit.exe/Compiler.exe executing userdata.txt Lua script
+
+`UC_21_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("luajit.exe","compiler.exe","ODE3.exe") OR Processes.parent_process_name IN ("luajit.exe","compiler.exe","launcher.bat")) (Processes.process="*userdata.txt*" OR Processes.process="*.txt*" OR Processes.process="*.log*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process Processes.process_path | `drop_dm_object_name(Processes)` | where match(process_path,"(?i)\\(Downloads|Temp|AppData|Public)\\") | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName in~ ("luajit.exe","Compiler.exe","ODE3.exe") or InitiatingProcessFileName in~ ("luajit.exe","Compiler.exe")
+| where ProcessCommandLine has_any ("userdata.txt",".txt",".log")
+| where FolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\", @"\Public\") or InitiatingProcessFolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\", @"\Public\")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### SmartLoader persistence: LuaJIT runtime copied to %AppData%\ODE3 (module.class/lua51.dll)
+
+`UC_21_14` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_path="*\\ODE3\\*" Filesystem.file_name IN ("ODE3.exe","module.class","lua51.dll") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | stats dc(file_name) as distinct_artifacts values(file_name) as files values(process_name) as writer min(firstTime) as firstTime by dest file_path | where distinct_artifacts >= 2 | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FolderPath has @"\ODE3\"
+| where FileName in~ ("ODE3.exe","module.class","lua51.dll")
+| summarize Artifacts=make_set(FileName), Writer=any(InitiatingProcessFileName), WriterCmd=any(InitiatingProcessCommandLine), FirstSeen=min(Timestamp) by DeviceName, FolderPath, InitiatingProcessAccountName
+| where array_length(Artifacts) >= 2
+| order by FirstSeen desc
+```
+
+### SmartLoader blockchain C2: non-browser process resolving pasteflawwed[.]world / Polygon eth_call dead-drop
+
+`UC_21_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*pasteflawwed.world*" OR DNS.query="*polygon-rpc.com*" OR DNS.query="*polygon.llamarpc.com*" OR DNS.query="*rpc.ankr.com*") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has "pasteflawwed.world")
+    or (InitiatingProcessFileName in~ ("luajit.exe","ODE3.exe","Compiler.exe")
+        and RemoteUrl has_any ("polygon-rpc.com","polygon.llamarpc.com","rpc.ankr.com","polygon.drpc.org"))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -409,7 +519,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `213.176.73.80`, `95.164.53.100`, `94.156.114.56`, `150.241.105.82`, `pasteflawwed.world`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `216a2c99fd42c00f9323d8b16dd19f622f7f4778b2b1d7cf07a3de5621fd1546`, `91e5dbfaf45edf25fbc2168f92083e05dfa427afa7633e991392e33cc7427dad`, `498fe8fb806cd0e6685f97fc7d74de769dae5a28cdc821557b7585ad5ad83147`, `62744baa8077bb8be237647fd78e3bea2ca0932bf4be3d5618600f97118095f8`, `1da8df487d30b988f3c350c065206726aaa13f079a07151cd42ab5579994b9de`, `c15693106682f2ddb26649cab6e1962a64537627cde4c5d3c79d5a0be8c1b5a8`, `66afc7d87d10dbe392898c4e5c613e0442fabb396415c2bef3a5ef2ac752c5ad`, `a33f40cab1ab7f971d3464af3e7595918107332b9e83342007571842b9e22826` _(+28 more)_
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 16 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

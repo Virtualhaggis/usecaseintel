@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JadePuffer agentic attacks now target AI model data with ransomware
 
-`UC_15_4` · phase: **exploit** · confidence: **High**
+`UC_20_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

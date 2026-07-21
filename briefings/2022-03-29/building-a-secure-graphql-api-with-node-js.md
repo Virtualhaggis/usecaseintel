@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Building a secure GraphQL API with Node.js
 
-`UC_2336_0` · phase: **exploit** · confidence: **High**
+`UC_2337_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -15,8 +15,18 @@ A malware operator left its delivery server wide open, and Rapid7 pulled down th
 - **CVE:** `CVE-2025-33053`
 - **CVE:** `CVE-2026-21513`
 - **CVE:** `CVE-2025-24054`
-- **Domain (defanged):** `summerartcamp.net`
+- **IPv4 (defanged):** `77.110.127.205`
+- **IPv4 (defanged):** `23.94.252.228`
 - **Domain (defanged):** `gobf.mx`
+- **Domain (defanged):** `onedrive.cv`
+- **Domain (defanged):** `google.services.ug`
+- **Domain (defanged):** `summerartcamp.net`
+- **SHA256:** `04a8018191f2e9e76072d072a933371d9d669a42de2b2a087541cd3a653b0ba7`
+- **SHA256:** `e8be17a7fbef48b45f1e958b3ae5ebdfcad58808969982c431a905eefcae5268`
+- **SHA256:** `449d1121fa275879af22a20407aa7253ac750ac8fa7ff5691101752600d645df`
+- **SHA256:** `a88f5ee748e60f889d046718bfe3ddcf1c5f3cba2001cad587e8953a76bf7aa9`
+- **SHA256:** `51a02eccdcae0483c7cbb9796738eee6c2a13b740d30e5417cda09bf418ea93b`
+- **SHA256:** `82e67735cf822db8f2f759e742e5bf8c54fdbd01a4170619b9e0916e1b3f5923`
 
 ## MITRE ATT&CK Techniques
 
@@ -42,12 +52,123 @@ A malware operator left its delivery server wide open, and Rapid7 pulled down th
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
+- **T1574.008** — Path Interception by Search Order Hijacking
+- **T1105** — Ingress Tool Transfer
+- **T1036.002** — Masquerading: Right-to-Left Override
+- **T1036.007** — Masquerading: Double File Extension
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### WebDAV working-directory hijack: signed binary spawns child from remote share (CVE-2025-33053)
+
+`UC_23_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path="*DavWWWRoot*" OR Processes.process_path="*@SSL@*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "DavWWWRoot" or FolderPath has "@SSL@"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### search-ms: URI opening a remote WebDAV share filtered to .scr payloads
+
+`UC_23_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process="*search-ms:*" (Processes.process="*DavWWWRoot*" OR Processes.process="*@SSL@*" OR Processes.process="*crumb*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "search-ms:"
+| where ProcessCommandLine has_any ("DavWWWRoot", "@SSL@", "crumb")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### RTLO / double-extension executable masquerading as a CURP PDF report
+
+`UC_23_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.pdf.scr" OR Filesystem.file_name="*.pdf.exe" OR Filesystem.file_name="*.docx.scr" OR Filesystem.file_name="*.doc.scr" OR Filesystem.file_name="*.jpg.scr") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName matches regex @"\x{202E}" or FileName matches regex @"(?i)\.(pdf|docx?|jpe?g|png)\s*\.(scr|exe)$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, SHA256
+| order by Timestamp desc
+```
+
+### Signed Ubisoft-branded binary executing from a user-writable path (DlrtyGames DLL side-load)
+
+`UC_23_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_path="*\\AppData\\*" OR Processes.process_path="*\\Downloads\\*" OR Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\ProgramData\\*") Processes.vendor_product="*Ubisoft*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessVersionInfoCompanyName has "Ubisoft" or InitiatingProcessVersionInfoCompanyName has "Ubisoft"
+| where FolderPath has_any ("AppData", "Downloads", "Temp", "ProgramData", "Public")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessVersionInfoCompanyName, SHA256
+| order by Timestamp desc
+```
+
+### Known Simba Service WebDAV campaign C2 IPs, domains and payload hashes
+
+`UC_23_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="77.110.127.205" OR All_Traffic.dest_ip="23.94.252.228") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let C2Ips = dynamic(["77.110.127.205", "23.94.252.228"]);
+let C2Domains = dynamic(["gobf.mx", "onedrive.cv", "google.services.ug", "summerartcamp.net"]);
+let Payloads = dynamic(["04a8018191f2e9e76072d072a933371d9d669a42de2b2a087541cd3a653b0ba7", "e8be17a7fbef48b45f1e958b3ae5ebdfcad58808969982c431a905eefcae5268", "449d1121fa275879af22a20407aa7253ac750ac8fa7ff5691101752600d645df", "a88f5ee748e60f889d046718bfe3ddcf1c5f3cba2001cad587e8953a76bf7aa9", "51a02eccdcae0483c7cbb9796738eee6c2a13b740d30e5417cda09bf418ea93b", "82e67735cf822db8f2f759e742e5bf8c54fdbd01a4170619b9e0916e1b3f5923"]);
+union
+(DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (C2Ips) or RemoteUrl has_any (C2Domains)
+| project Timestamp, DeviceName, Account = InitiatingProcessAccountName, Indicator = strcat(RemoteIP, " ", RemoteUrl), Proc = InitiatingProcessFileName, Detail = InitiatingProcessCommandLine),
+(DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in (Payloads)
+| project Timestamp, DeviceName, Account = InitiatingProcessAccountName, Indicator = SHA256, Proc = InitiatingProcessFileName, Detail = FolderPath)
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -423,7 +544,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Exposed Server Reveals AI-Assisted Phishing Toolkit Behind WebDAV Malware Campai
 
-`UC_18_13` · phase: **exploit** · confidence: **High**
+`UC_23_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -475,12 +596,15 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `summerartcamp.net`, `gobf.mx`
+  - IP / domain IOC(s): `77.110.127.205`, `23.94.252.228`, `gobf.mx`, `onedrive.cv`, `google.services.ug`, `summerartcamp.net`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-33053`, `CVE-2026-21513`, `CVE-2025-24054`
 
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `04a8018191f2e9e76072d072a933371d9d669a42de2b2a087541cd3a653b0ba7`, `e8be17a7fbef48b45f1e958b3ae5ebdfcad58808969982c431a905eefcae5268`, `449d1121fa275879af22a20407aa7253ac750ac8fa7ff5691101752600d645df`, `a88f5ee748e60f889d046718bfe3ddcf1c5f3cba2001cad587e8953a76bf7aa9`, `51a02eccdcae0483c7cbb9796738eee6c2a13b740d30e5417cda09bf418ea93b`, `82e67735cf822db8f2f759e742e5bf8c54fdbd01a4170619b9e0916e1b3f5923`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 20 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

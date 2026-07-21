@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable urllib3 (<= 1.24.2 / CVE-2019-11236) present in software inventory
 
-`UC_3503_0` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_3504_0` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -41,7 +41,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### CRLF / HTTP-header injection in URL query string (urllib3 CVE-2019-11236 PoC shape)
 
-`UC_3503_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3504_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

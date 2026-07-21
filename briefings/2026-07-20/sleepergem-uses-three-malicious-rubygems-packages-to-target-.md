@@ -40,12 +40,104 @@ De…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1548.001** — Abuse Elevation Control Mechanism: Setuid and Setgid
+- **T1068** — Exploitation for Privilege Escalation
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### SleeperGem RubyGems loader — C2/staging egress to Forgejo host git.disroot.org
+
+`UC_37_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*disroot.org*" by Web.src, Web.dest, Web.url, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "disroot.org"
+| where InitiatingProcessFileName in~ ("ruby","gem","bundle","curl","wget","powershell","pwsh","git_credential_manager") or isempty(InitiatingProcessFileName)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### SleeperGem native daemon drop at ~/.local/share/gcm/ and deploy.sh install script
+
+`UC_37_15` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.action=created AND (Endpoint.Filesystem.file_path="*/.local/share/gcm/*" OR Endpoint.Filesystem.file_name="deploy.sh") by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_id
+| `drop_dm_object_name(Endpoint.Filesystem)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath has "/.local/share/gcm" or FileName =~ "deploy.sh"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### SleeperGem setuid-root shell masquerading as ping6 at /usr/local/sbin/ping6
+
+`UC_37_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path="/usr/local/sbin/ping6" by Endpoint.Filesystem.dest, Endpoint.Filesystem.action, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_id
+| `drop_dm_object_name(Endpoint.Filesystem)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+union DeviceFileEvents, DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FolderPath endswith "/usr/local/sbin/ping6")
+    or (FileName in~ ("chmod","cp","install") and ProcessCommandLine has "ping6" and ProcessCommandLine has_any ("4755","u+s","+s","6755"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### SleeperGem ruby gem loader spawning downloader to fetch second stage
+
+`UC_37_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name IN ("ruby","gem","bundle","irb") AND (Endpoint.Processes.process="*disroot.org*" OR Endpoint.Processes.process="*deploy.sh*" OR Endpoint.Processes.process_name="git_credential_manager") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process
+| `drop_dm_object_name(Endpoint.Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("ruby","gem","bundle","irb")
+| where FileName in~ ("curl","wget","sh","bash","powershell","pwsh","git_credential_manager")
+| where ProcessCommandLine has "disroot.org" or ProcessCommandLine has "deploy.sh" or FileName =~ "git_credential_manager"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -445,7 +537,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SleeperGem Uses Three Malicious RubyGems Packages to Target Developer Machines
 
-`UC_32_13` · phase: **exploit** · confidence: **High**
+`UC_37_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -502,4 +594,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 18 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Automating Terraform security in Scalr deployments with Regula [Tutorial]
 
-`UC_2608_0` · phase: **install** · confidence: **High**
+`UC_2609_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

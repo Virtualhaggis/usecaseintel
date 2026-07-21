@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### PromptSpy Android GenAI malware C2/distribution domain contact (mgardownload.com, m-mgarg.com)
 
-`UC_151_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_154_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceNetworkEvents
 
 ### PromptSpy dropper APK sample hash landing on monitored endpoint
 
-`UC_151_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_154_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
