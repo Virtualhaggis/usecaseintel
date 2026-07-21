@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2591 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2592 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -18,7 +18,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [closing the identity gaps in critical infrastructure securit](./2026-07-21/closing-the-identity-gaps-in-critical-infrastructure-securit.md)
 - [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
 - [critical sharepoint rce cve 2026 50522 under active exploita](./2026-07-21/critical-sharepoint-rce-cve-2026-50522-under-active-exploita.md)
+- [critical sharepoint rce flaw exploited to steal machine keys](./2026-07-21/critical-sharepoint-rce-flaw-exploited-to-steal-machine-keys.md)
 - [critical wp2shell wordpress flaws exploited to install websh](./2026-07-21/critical-wp2shell-wordpress-flaws-exploited-to-install-websh.md)
+- [ghsa critical cve 2026 20896 gitea docker image reverse prox](./2026-07-21/ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox.md)
+- [ghsa critical cve 2026 22874 gitea incomplete ssrf protectio](./2026-07-21/ghsa-critical-cve-2026-22874-gitea-incomplete-ssrf-protectio.md)
+- [ghsa critical cve 2026 56750 gitea remember me token theft n](./2026-07-21/ghsa-critical-cve-2026-56750-gitea-remember-me-token-theft-n.md)
+- [ghsa critical cve 2026 58426 gitea actions artifacts v4 sign](./2026-07-21/ghsa-critical-cve-2026-58426-gitea-actions-artifacts-v4-sign.md)
+- [ghsa critical cve 2026 58443 gitea public only repository to](./2026-07-21/ghsa-critical-cve-2026-58443-gitea-public-only-repository-to.md)
+- [ghsa critical cve 2026 59891 credential confusion in sigstor](./2026-07-21/ghsa-critical-cve-2026-59891-credential-confusion-in-sigstor.md)
+- [ghsa critical ghsa p63j vcc4 9vmv vitest browser browser mod](./2026-07-21/ghsa-critical-ghsa-p63j-vcc4-9vmv-vitest-browser-browser-mod.md)
 - [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
 - [new bit2watt attack could let cloud tenants disrupt power gr](./2026-07-21/new-bit2watt-attack-could-let-cloud-tenants-disrupt-power-gr.md)
 - [new encforge ransomware targets ai model files in langflow r](./2026-07-21/new-encforge-ransomware-targets-ai-model-files-in-langflow-r.md)
@@ -37,7 +45,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 61736 lightrag cors wildcard credenti](./2026-07-20/ghsa-critical-cve-2026-61736-lightrag-cors-wildcard-credenti.md)
 - [ghsa critical cve 2026 61740 lightrag is vulnerable to authe](./2026-07-20/ghsa-critical-cve-2026-61740-lightrag-is-vulnerable-to-authe.md)
 - [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
-- [hugging face warns an autonomous ai agent hacked its network](./2026-07-20/hugging-face-warns-an-autonomous-ai-agent-hacked-its-network.md)
 - [jadepuffer agentic attacks now target ai model data with ran](./2026-07-20/jadepuffer-agentic-attacks-now-target-ai-model-data-with-ran.md)
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
 - [new hollowgraph malware uses microsoft graph for stealthy c2](./2026-07-20/new-hollowgraph-malware-uses-microsoft-graph-for-stealthy-c2.md)
@@ -100,7 +107,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 46817 oracle e business suite improper pri](./2026-07-15/cisa-kev-cve-2026-46817-oracle-e-business-suite-improper-pri.md)
 - [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
 - [ghsa critical cve 2026 52881 mantisbt reflected xss in admin](./2026-07-15/ghsa-critical-cve-2026-52881-mantisbt-reflected-xss-in-admin.md)
-- [okobot malware framework injects seed phrase phishing into l](./2026-07-15/okobot-malware-framework-injects-seed-phrase-phishing-into-l.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-07-15/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [turning threat intelligence into decisive action with defend](./2026-07-15/turning-threat-intelligence-into-decisive-action-with-defend.md)
@@ -282,10 +288,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 34908 ubiquiti unifi os improper access co](./2026-06-23/cisa-kev-cve-2026-34908-ubiquiti-unifi-os-improper-access-co.md)
 - [cisa kev cve 2026 34909 ubiquiti unifi os path traversal vul](./2026-06-23/cisa-kev-cve-2026-34909-ubiquiti-unifi-os-path-traversal-vul.md)
 - [cisa kev cve 2026 34910 ubiquiti unifi os improper input val](./2026-06-23/cisa-kev-cve-2026-34910-ubiquiti-unifi-os-improper-input-val.md)
-- [ghsa critical cve 2026 52806 gogs vulnerable to rce via git ](./2026-06-23/ghsa-critical-cve-2026-52806-gogs-vulnerable-to-rce-via-git-.md)
-- [ghsa critical cve 2026 52811 gogs uploadrepofiles writes out](./2026-06-23/ghsa-critical-cve-2026-52811-gogs-uploadrepofiles-writes-out.md)
-- [ghsa critical cve 2026 52813 gogs has path traversal in orga](./2026-06-23/ghsa-critical-cve-2026-52813-gogs-has-path-traversal-in-orga.md)
-- [ghsa critical cve 2026 54350 budibase has nonymous nosql ope](./2026-06-23/ghsa-critical-cve-2026-54350-budibase-has-nonymous-nosql-ope.md)
 - [ghsa critical ghsa phv5 334h mxcw motioneye partial authenti](./2026-06-23/ghsa-critical-ghsa-phv5-334h-mxcw-motioneye-partial-authenti.md)
 - [ghsa critical ghsa qxvg h7q2 hcxh motioneye lfi pass the has](./2026-06-23/ghsa-critical-ghsa-qxvg-h7q2-hcxh-motioneye-lfi-pass-the-has.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
@@ -294,7 +296,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
 
 ## 2026-06-22
-- [ghsa critical cve 2026 54352 budibase has arbitrary file rea](./2026-06-22/ghsa-critical-cve-2026-54352-budibase-has-arbitrary-file-rea.md)
 - [the global namespace risk universal bucket hijacking techniq](./2026-06-22/the-global-namespace-risk-universal-bucket-hijacking-techniq.md)
 
 ## 2026-06-18

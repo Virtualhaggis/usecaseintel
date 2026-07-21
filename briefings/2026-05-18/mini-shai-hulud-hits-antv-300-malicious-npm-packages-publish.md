@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Mini Shai-Hulud npm preinstall hook spawning bun runtime
 
-`UC_401_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_402_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### Mini Shai-Hulud Claude Code SessionStart hook injection via npm install
 
-`UC_401_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_402_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceFileEvents
 
 ### VS Code tasks.json folderOpen persistence written by npm install chain
 
-`UC_401_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_402_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceFileEvents
 
 ### Mini Shai-Hulud Linux daemon persistence: kitty/cat.py and systemd user service
 
-`UC_401_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_402_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceFileEvents
 
 ### Mini Shai-Hulud C2 backchannel: python polling GitHub commit search for 'firedalazer'
 
-`UC_401_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_402_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceNetworkEvents
 
 ### Mini Shai-Hulud GitHub dead-drop exfiltration via python-requests/2.31.0
 
-`UC_401_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_402_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -409,7 +409,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Hits AntV: 300+ Malicious npm Packages Published via Compromised
 
-`UC_401_7` · phase: **exploit** · confidence: **High**
+`UC_402_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

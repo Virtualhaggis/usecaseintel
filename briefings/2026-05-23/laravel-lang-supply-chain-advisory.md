@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Laravel-Lang supply chain C2/exfil to flipboxstudio.info
 
-`UC_372_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_373_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### Laravel-Lang stealer file drop in .laravel_locale temp directory
 
-`UC_372_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_373_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceFileEvents
 
 ### DebugChromium.exe execution (Laravel-Lang stealer Windows artifact)
 
-`UC_372_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_373_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceProcessEvents
 
 ### cscript/wscript executing a script from .laravel_locale temp directory
 
-`UC_372_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_373_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### Compromised laravel-lang Composer package: helpers.php in vendor tree
 
-`UC_372_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_373_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Laravel Lang Supply Chain Advisory
 
-`UC_372_7` · phase: **exploit** · confidence: **High**
+`UC_373_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

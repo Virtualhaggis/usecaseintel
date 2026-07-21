@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 21, 2026
 02:50 PM
 0 
-
-
 The Anubis ransomware gang has claimed responsibility for the cyberattack on Coca-Cola's Fairlife dairy subsidiary, threatening to publish allegedly stolen corporate data unless the company pays a ransom.
-
-
-Fairlife is one of Coca-Cola's dairy brands and produces a range of ultra-filtered milk products, protein shakes, and nutrition drinks sold throughout the United States…
+Fairlife is one of Coca-Cola's dairy brands and produces a range of ultra-filtered milk products, protein shakes, and nutrition drinks sold throughout the United States. The co…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Anubis ransomware execution via distinctive /KEY /PFAD /WIPEMODE command-line flags
 
-`UC_0_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_9_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +56,7 @@ DeviceProcessEvents
 
 ### Anubis ransomware shadow-copy deletion via signature 'norealvolume' vssadmin string
 
-`UC_0_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_9_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +75,7 @@ DeviceProcessEvents
 
 ### Anubis ransomware impact artifacts — .anubis extension and RESTORE FILES.html note
 
-`UC_0_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_9_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
