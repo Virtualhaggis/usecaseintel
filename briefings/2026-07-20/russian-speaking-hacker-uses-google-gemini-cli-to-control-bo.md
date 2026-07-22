@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### PowerShell 5-second HTTPS beacon to Cloudflare tunnel C&C (bandcampro botnet)
 
-`UC_51_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_54_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### PowerShell one-liner pulling agent from Cloudflare tunnel (/api/v1) and IEX-executing
 
-`UC_51_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_54_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### PowerShell-created WMI permanent event subscription persistence (bandcampro agent)
 
-`UC_51_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_54_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Scheduled task masquerading as OneDrive update running PowerShell (bandcampro agent)
 
-`UC_51_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_54_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
