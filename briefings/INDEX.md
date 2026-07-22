@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2592 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2591 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,6 +13,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [openai says its ai models escaped sandbox targeted hugging f](./2026-07-22/openai-says-its-ai-models-escaped-sandbox-targeted-hugging-f.md)
 - [police dismantle kratos phishing kit built to steal microsof](./2026-07-22/police-dismantle-kratos-phishing-kit-built-to-steal-microsof.md)
 - [trojanized newtonsoft json fork hides game rigging code in a](./2026-07-22/trojanized-newtonsoft-json-fork-hides-game-rigging-code-in-a.md)
+- [why modern socs need multi layered detections](./2026-07-22/why-modern-socs-need-multi-layered-detections.md)
 
 ## 2026-07-21
 - [a new extortion cocktail office printers small ransoms and b](./2026-07-21/a-new-extortion-cocktail-office-printers-small-ransoms-and-b.md)
@@ -57,7 +58,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
 - [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
-- [sonicwall sma1000 flaws exploited as zero days to push custo](./2026-07-20/sonicwall-sma1000-flaws-exploited-as-zero-days-to-push-custo.md)
 - [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-20/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
 - [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
 
@@ -88,7 +88,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
 - [acr stealer two observed intrusion chains amid increased thr](./2026-07-16/acr-stealer-two-observed-intrusion-chains-amid-increased-thr.md)
 - [ai automation and attacks unpacking the unit 42 2026 global ](./2026-07-16/ai-automation-and-attacks-unpacking-the-unit-42-2026-global-.md)
-- [ai can find bugs but human knowledge still proves them](./2026-07-16/ai-can-find-bugs-but-human-knowledge-still-proves-them.md)
 - [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 39808 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-39808-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 58644 microsoft sharepoint deserialization](./2026-07-16/cisa-kev-cve-2026-58644-microsoft-sharepoint-deserialization.md)

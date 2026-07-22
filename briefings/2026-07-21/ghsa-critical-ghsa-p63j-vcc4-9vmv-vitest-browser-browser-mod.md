@@ -21,9 +21,9 @@ Several of these commands accept a file path from the browser and act on it with
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
-- **T1190** — Exploit Public-Facing Application
 - **T1565.001** — Data Manipulation: Stored Data Manipulation
-- **T1485** — Data Destruction
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -31,39 +31,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### @vitest/browser Browser Mode API exposed to non-loopback network (inbound to node/vitest)
+### Vitest Browser Mode node.exe writes/deletes PNG or trace archive outside project into system paths
 
-`UC_15_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="node.exe" All_Traffic.direction="inbound" All_Traffic.src_category!="loopback" by All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| where src_ip!="127.0.0.1" AND src_ip!="::1"
-| `ctime(firstTime)` | `ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "node.exe"
-| where InitiatingProcessCommandLine has "vitest"
-| where ActionType == "InboundConnectionAccepted"
-| where RemoteIPType == "Public" or (RemoteIP !startswith "127." and RemoteIP != "::1" and RemoteIP != "::")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, RemoteIP, RemotePort, LocalPort
-| order by Timestamp desc
-```
-
-### Vitest Browser Mode provider command writes/deletes files outside project (node.exe PNG/zip to sensitive paths)
-
-`UC_15_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_18_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name="node.exe" (Filesystem.action="created" OR Filesystem.action="deleted" OR Filesystem.action="modified") (Filesystem.file_path="*\\Windows\\*" OR Filesystem.file_path="*\\Startup\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\System32\\*" OR Filesystem.file_path="*\\Users\\Public\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name="node.exe" AND Filesystem.action IN ("created","modified","deleted") AND (Filesystem.file_path="*\\Windows\\*" OR Filesystem.file_path="*\\System32\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\Programs\\Startup\\*") by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.action
 | `drop_dm_object_name(Filesystem)`
-| `ctime(firstTime)` | `ctime(lastTime)`
+| where match(file_name,"(?i)\.(png|zip)$") OR action="deleted"
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -71,18 +48,42 @@ DeviceNetworkEvents
 DeviceFileEvents
 | where Timestamp > ago(7d)
 | where InitiatingProcessFileName =~ "node.exe"
-| where InitiatingProcessCommandLine has "vitest"
-| where ActionType in ("FileCreated","FileModified","FileRenamed","FileDeleted")
+| where InitiatingProcessCommandLine has_any ("vitest","@vitest/browser")
+| where ActionType in ("FileCreated","FileModified","FileDeleted","FileRenamed")
+| where FolderPath has_any (@"\Windows\", @"\System32\", @"\ProgramData\", @"\Users\Public\", @"\Programs\Startup\")
 | where (FileName endswith ".png" or FileName endswith ".zip" or ActionType == "FileDeleted")
-| where FolderPath has_any (@"\Windows\", @"\System32\", @"\ProgramData\", @"\Users\Public\", @"\Start Menu\Programs\Startup", @"\Users\Administrator\")
-   or FolderPath matches regex @"(?i)^[a-z]:\\[^\\]+\.(png|zip)$"
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessAccountName, InitiatingProcessCommandLine
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessCommandLine, InitiatingProcessId
+| order by Timestamp desc
+```
+
+### Vitest Browser Mode / test API (node.exe) accepting inbound connections on 63315/51204 from non-loopback host
+
+`UC_18_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="node.exe" AND All_Traffic.direction="inbound" AND All_Traffic.dest_port IN (63315,51204) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| where NOT cidrmatch("127.0.0.0/8",src) AND NOT cidrmatch("::1/128",src)
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where ActionType == "InboundConnectionAccepted"
+| where LocalPort in (63315, 51204) or InitiatingProcessCommandLine has_any ("--browser.api","--api","test.api","vitest")
+| where RemoteIPType == "Public" or (RemoteIP !in ("127.0.0.1","::1") and RemoteIPType != "Loopback")
+| project Timestamp, DeviceName, InitiatingProcessCommandLine, LocalPort, RemoteIP, RemoteIPType, RemotePort, InitiatingProcessId
 | order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p63j-vcc4-9vmv: @vitest/browser: Browser Mode provider co
 
-`UC_15_0` · phase: **exploit** · confidence: **High**
+`UC_18_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

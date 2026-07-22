@@ -84,7 +84,7 @@ _(none detected from narrative keywords)_
 
 ### Kratos/SneakyLog AiTM landing page tell: paired barr.svg + lg.svg asset load
 
-`UC_1_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_4_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceNetworkEvents
 
 ### Microsoft 365 sign-in sourced from Kratos/SneakyLog AiTM relay IPs
 
-`UC_1_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ AADSignInEventsBeta
 
 ### Endpoint egress to Kratos/SneakyLog phishing infrastructure (domains + IPs)
 
-`UC_1_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_4_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceNetworkEvents
 
 ### Tax/W-2 QR-code lure emails (SneakyLog Feb-10 M365 quishing campaign)
 
-`UC_1_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_4_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -508,7 +508,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Police Dismantle Kratos Phishing Kit Built to Steal Microsoft 365 Sessions and B
 
-`UC_1_12` · phase: **exploit** · confidence: **High**
+`UC_4_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

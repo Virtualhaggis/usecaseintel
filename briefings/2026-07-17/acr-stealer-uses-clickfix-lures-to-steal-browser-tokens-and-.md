@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### ClickFix Run-dialog paste writes mshta/rundll32/pushd command to Explorer RunMRU
 
-`UC_77_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_78_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceRegistryEvents
 
 ### mshta.exe fileless chain: remote HTA fetch then in-memory PowerShell with TLS-validation bypass
 
-`UC_77_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_78_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### rundll32.exe loading a DLL from a WebDAV/UNC share by ordinal export
 
-`UC_77_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_78_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### conhost.exe --headless wrapping pushd/rundll32 (ClickFix console-hiding variant)
 
-`UC_77_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_78_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceProcessEvents
 
 ### pythonw.exe silently running a script from %LocalAppData%\Temp (LogiOptionsPlus lure)
 
-`UC_77_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_78_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceProcessEvents
 
 ### Hidden scheduled task masquerading as a software update, created by a script host
 
-`UC_77_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_78_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -201,7 +201,7 @@ DeviceProcessEvents
 
 ### Python loader making EtherHiding calls to blockchain RPC / Web3 node infrastructure
 
-`UC_77_16` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_78_16` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +222,7 @@ DeviceNetworkEvents
 
 ### Non-browser process touching Chrome/Edge 'Login Data' and 'Web Data' credential stores
 
-`UC_77_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_78_17` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -243,7 +243,7 @@ DeviceFileEvents
 
 ### Endpoint beaconing to ACR Stealer ClickFix campaign payload-host / C2 domains
 
-`UC_77_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_78_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -523,7 +523,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ACR Stealer Uses ClickFix Lures to Steal Browser Tokens and Microsoft 365 Files
 
-`UC_77_9` · phase: **exploit** · confidence: **High**
+`UC_78_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

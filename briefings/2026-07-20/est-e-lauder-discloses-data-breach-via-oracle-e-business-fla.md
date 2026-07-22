@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Clop CVE-2025-61882 Oracle EBS exploitation via BI Publisher TemplatePreview / SyncServlet URIs
 
-`UC_41_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_44_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### Oracle EBS Java app-tier service spawning shell / reverse shell (CVE-2025-61882 post-exploitation)
 
-`UC_41_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_44_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### Clop CVE-2025-61882 Oracle EBS C2 / exfiltration beacon to known infrastructure
 
-`UC_41_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_44_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
