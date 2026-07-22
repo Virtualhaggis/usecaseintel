@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2592 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2593 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -20,6 +20,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical sharepoint rce cve 2026 50522 under active exploita](./2026-07-21/critical-sharepoint-rce-cve-2026-50522-under-active-exploita.md)
 - [critical sharepoint rce flaw exploited to steal machine keys](./2026-07-21/critical-sharepoint-rce-flaw-exploited-to-steal-machine-keys.md)
 - [critical wp2shell wordpress flaws exploited to install websh](./2026-07-21/critical-wp2shell-wordpress-flaws-exploited-to-install-websh.md)
+- [fakegit campaign uses 7 600 github repos to push smartloader](./2026-07-21/fakegit-campaign-uses-7-600-github-repos-to-push-smartloader.md)
 - [ghsa critical cve 2026 20896 gitea docker image reverse prox](./2026-07-21/ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox.md)
 - [ghsa critical cve 2026 22874 gitea incomplete ssrf protectio](./2026-07-21/ghsa-critical-cve-2026-22874-gitea-incomplete-ssrf-protectio.md)
 - [ghsa critical cve 2026 56750 gitea remember me token theft n](./2026-07-21/ghsa-critical-cve-2026-56750-gitea-remember-me-token-theft-n.md)
@@ -32,6 +33,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new encforge ransomware targets ai model files in langflow r](./2026-07-21/new-encforge-ransomware-targets-ai-model-files-in-langflow-r.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
 - [open source android ai agents could let invisible screen tex](./2026-07-21/open-source-android-ai-agents-could-let-invisible-screen-tex.md)
+- [police dismantle kratos phishing platform arrest developer](./2026-07-21/police-dismantle-kratos-phishing-platform-arrest-developer.md)
 - [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)
 - [windows legacyhive zero day flaw gets free unofficial patche](./2026-07-21/windows-legacyhive-zero-day-flaw-gets-free-unofficial-patche.md)
 - [wordpress wp2shell exploitation grows as public exploit fuel](./2026-07-21/wordpress-wp2shell-exploitation-grows-as-public-exploit-fuel.md)
@@ -47,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
 - [jadepuffer agentic attacks now target ai model data with ran](./2026-07-20/jadepuffer-agentic-attacks-now-target-ai-model-data-with-ran.md)
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
-- [new hollowgraph malware uses microsoft graph for stealthy c2](./2026-07-20/new-hollowgraph-malware-uses-microsoft-graph-for-stealthy-c2.md)
 - [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
 - [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)

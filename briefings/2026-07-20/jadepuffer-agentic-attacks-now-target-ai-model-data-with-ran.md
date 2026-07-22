@@ -18,6 +18,11 @@ Cloud s…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-3248`
+- **IPv4 (defanged):** `45.131.66.106`
+- **IPv4 (defanged):** `34.153.223.102`
+- **SHA256:** `8cb0c223b018cecef1d990ec81c67b826eb3c30d54f06193cf69969e9a8baea2`
+- **SHA256:** `ea7822eac6cecef7746c606b862b4d3034856caf754c4cf69533662637905328`
+- **SHA256:** `ab9824b61587c77a8d8649545cdbdc63ed2c384e45c9aba534e3f457f96efa7a`
 
 ## MITRE ATT&CK Techniques
 
@@ -27,6 +32,8 @@ Cloud s…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
@@ -121,7 +128,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JadePuffer agentic attacks now target AI model data with ransomware
 
-`UC_40_4` · phase: **exploit** · confidence: **High**
+`UC_42_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +182,13 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-3248`
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `45.131.66.106`, `34.153.223.102`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `8cb0c223b018cecef1d990ec81c67b826eb3c30d54f06193cf69969e9a8baea2`, `ea7822eac6cecef7746c606b862b4d3034856caf754c4cf69533662637905328`, `ab9824b61587c77a8d8649545cdbdc63ed2c384e45c9aba534e3f457f96efa7a`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

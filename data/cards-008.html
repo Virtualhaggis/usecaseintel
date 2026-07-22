@@ -1,3 +1,236 @@
+<article class="card" id="art-201" data-art-slug="2026-07-02-ghsa-critical-cve-2026-52735-zebrad-has-consensus-divergence"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-52735: zebrad has consensus divergence via P2SH sigop undercount in pure-Rust disabled-opcode parser zebrad has consensus divergence via P2SH sigop undercount in pure-Rust disabled-opcode parser CVE-2026-52735  [LLM] Affected zebrad (&lt;= v4.4.1) exposure to P2SH sigop consensus-split (CVE-2026-52735) [LLM] zebrad node process execution at vulnerable version (CVE-2026-52735) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-02-ghsa-critical-cve-2026-52735-zebrad-has-consensus-divergence" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-gf9r-m956-97qx" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-52735: zebrad has consensus divergence via P2SH sigop undercount in pure-Rust disabled-opcode parser</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-02</span>
+    <span>3 use cases</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">zebrad has consensus divergence via P2SH sigop undercount in pure-Rust disabled-opcode parser</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-52735</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-201-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-201"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-201-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Affected zebrad (&lt;= v4.4.1) exposure to P2SH sigop consensus-split (CVE-2026-52735) · [LLM] zebrad node process execution at vulnerable version (CVE-2026-52735)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="9893fb97e7" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Affected zebrad (&lt;= v4.4.1) exposure to P2SH sigop consensus-split (CVE-2026-52735)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="9893fb97e7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces hosts with an installed Zebra/zebrad build at or below v4.4.1, which undercounts P2SH sigops and can be forced into a chain split from zcashd. This is asset-exposure hunting: identify vulnerable Zcash full nodes before an attacker broadcasts malicious P2SH-spend transactions.
+
+Rationale: Uses the concrete affected boundary from the advisory (zebrad &lt;= v4.4.1, patched in 4.4.2) and CVE-2026-52735. parse_version gives an exact vulnerable-version test; SoftwareName &#x27;zebrad&#x27; avoids collision with unrelated Zebra Technologies printer software. Note: GHSA-2prc-cj5x-4443 later found the 4.4.2 fix incomplete, so 4.5.1 is the true-safe floor.
+
+Cross-checked against:
+  • https://github.com/ZcashFoundation/zebra/security/advisories/GHSA-gf9r-m956-97qx
+  • https://zfnd.org/zebra-4-5-1-security-fixes/
+  • https://github.com/ZcashFoundation/zebra/security/advisories/GHSA-2prc-cj5x-4443
+  • https://dailycve.com/zebra-consensus-divergence-critical/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Zebra Technologies label-printer / barcode driver software matching the &#x27;zebra&#x27; string (mitigated by SoftwareName &#x27;zebrad&#x27; filter)</li><li>Decommissioned or lab-only Zcash test nodes that never touch mainnet consensus</li><li>Host already upgraded but vuln scanner holding a stale software-inventory record</li><li>Vulnerability scanner mis-mapping a different Zebra advisory to this CVE</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVendor !has &quot;Zebra Technologies&quot; and SoftwareName !has &quot;printer&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host actually runs a validating full node (not just an installed binary) and note the exact SoftwareVersion — anything &lt; 4.4.2 is exposed to CVE-2026-52735. 2) Contain: schedule upgrade to a patched build; because the 4.4.2 fix was found incomplete (GHSA-2prc-cj5x-4443), upgrade straight to &gt;= 4.5.1. Until patched, monitor the node&#x27;s chain tip against a reference zcashd node for divergence. 3) Hunt: enumerate all zebrad hosts via inventory, and pivot to UC &#x27;zebrad node process execution&#x27; and the &#x27;bad-blk-sigops&#x27; log hunt to see whether an exploit block was already accepted.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-201-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-201-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-201-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-201-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+| where SoftwareName has &quot;zebrad&quot; or (SoftwareVendor has &quot;Zcash&quot; and SoftwareName has &quot;zebra&quot;)
+| where isnotempty(SoftwareVersion)
+| where parse_version(SoftwareVersion) &lt; parse_version(&quot;4.4.2&quot;)   // 4.4.2 = first patched build per CVE-2026-52735
+| project Timestamp, DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId =~ &quot;CVE-2026-52735&quot; or (SoftwareName has &quot;zebrad&quot; and parse_version(SoftwareVersion) &lt; parse_version(&quot;4.4.2&quot;))
+| project TimeGenerated, DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-52735&quot; OR (Vulnerabilities.signature=&quot;*zebra*&quot; AND Vulnerabilities.signature=&quot;*sigop*&quot;) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve | `drop_dm_object_name(&quot;Vulnerabilities&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-201-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-52735&quot; OR (Vulnerabilities.signature=&quot;*zebra*&quot; AND Vulnerabilities.signature=&quot;*sigop*&quot;) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve | `drop_dm_object_name(&quot;Vulnerabilities&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="24f0389afb" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">zebrad node process execution at vulnerable version (CVE-2026-52735)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="24f0389afb" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts live execution of the zebrad binary and surfaces its product version so analysts can confirm exposure to the P2SH sigop-undercount consensus split. Complements inventory-based detection by catching nodes launched from non-packaged paths (source builds, containers) that TVM may miss.
+
+Rationale: Anchors on the exact binary name &#x27;zebrad&#x27; from the advisory and surfaces ProcessVersionInfoProductVersion so analysts can read the version off Windows builds; Linux builds (no version info) are still surfaced rather than dropped. Distinct pivot from the TVM inventory UC — catches source/container launches inventory misses.
+
+Cross-checked against:
+  • https://github.com/ZcashFoundation/zebra/security/advisories/GHSA-gf9r-m956-97qx
+  • https://zfnd.org/zebra-4-5-1-security-fixes/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate zebrad node operators running an already-patched build (&gt;= 4.5.1) — version column disambiguates on Windows</li><li>CI/CD or automated test harnesses repeatedly spawning zebrad</li><li>Container orchestration restarting zebrad pods (high event volume, benign)</li><li>Linux hosts where product-version metadata is empty, forcing manual version confirmation</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where isempty(ProcessVersionInfoProductVersion) or parse_version(ProcessVersionInfoProductVersion) &lt; parse_version(&quot;4.4.2&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read ProcessVersionInfoProductVersion; if empty (typical on Linux), query the node RPC/`zebrad --version` to get the build. Versions &lt; 4.4.2 are exposed. 2) Contain: for exposed validating nodes, plan upgrade to &gt;= 4.5.1 (the 4.4.2 patch was incomplete) and watch the chain tip vs a reference zcashd. 3) Hunt: for every host seen running zebrad, run the &#x27;bad-blk-sigops&#x27; log-reject hunt and cross-check the inventory UC to build the full affected-asset list.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-201-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-201-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-201-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-201-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-201-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-201-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-201-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;zebrad&quot; or FileName =~ &quot;zebrad.exe&quot;
+| where isempty(ProcessVersionInfoProductVersion) or parse_version(ProcessVersionInfoProductVersion) &lt; parse_version(&quot;4.4.2&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoProductVersion, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessName has &quot;zebrad&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, SHA256, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Zebra (zebrad) full-node process execution — CVE-2026-52735 exposure
+id: 7d3e2c1a-9b4f-4e6a-8c2d-1f0a5b6c7d8e
+status: experimental
+description: Detects execution of the zebrad Zcash full node, whose builds &lt;= v4.4.1 undercount P2SH sigops and can be forced into a consensus split with zcashd (CVE-2026-52735).
+references:
+  - https://github.com/ZcashFoundation/zebra/security/advisories/GHSA-gf9r-m956-97qx
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+logsource:
+  category: process_creation
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;/zebrad&#x27;
+      - &#x27;\zebrad.exe&#x27;
+  condition: selection
+falsepositives:
+  - Legitimate Zcash node operators already on a patched build (&gt;= 4.5.1)
+level: low</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:zebrad</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/zebrad(\.exe)?$/i
+| groupBy([aid, ComputerName, ImageFileName, SHA256HashData, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;zebrad&quot;,&quot;zebrad.exe&quot;) by Processes.dest, Processes.user, Processes.process_name, Processes.process_path, Processes.process | `drop_dm_object_name(&quot;Processes&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-201-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;zebrad&quot;,&quot;zebrad.exe&quot;) by Processes.dest, Processes.user, Processes.process_name, Processes.process_path, Processes.process | `drop_dm_object_name(&quot;Processes&quot;)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-201-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-201-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-201-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-201-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-52735&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-201-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-52735&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-201-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-52735&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-201-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-52735&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-202" data-art-slug="2026-07-02-catan-and-mouse"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1566"
@@ -15149,430 +15382,6 @@ level: high
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
 | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-233" data-art-slug="2026-06-26-ghsa-critical-cve-2026-49257-mcp-pinot-unauthenticated-tool-"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190,T1528"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network,web"
-  data-targets="azure,vcs,windows"
-  data-uc-count="5" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via default oauth_enabled=False + host 0.0.0.0 bind mcp-pinot: Unauthenticated tool invocation via default oauth_enabled=False + host 0.0.0.0 bind CVE-2026-49257 T1190 T1528 [LLM] mcp-pinot MCP server accepting non-loopback inbound connections on 0.0.0.0:8080 [LLM] Unauthenticated JSON-RPC tool invocation on mcp-pinot /mcp endpoint (no Authorization header) Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-26-ghsa-critical-cve-2026-49257-mcp-pinot-unauthenticated-tool-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-73cv-556c-w3g6" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via default oauth_enabled=False + host 0.0.0.0 bind</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-26</span>
-    <span>5 use cases</span>
-    <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">mcp-pinot: Unauthenticated tool invocation via default oauth_enabled=False + host 0.0.0.0 bind</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-49257</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-233-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-233"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-233-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] mcp-pinot MCP server accepting non-loopback inbound connections on 0.0.0.0:8080 · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Unauthenticated JSON-RPC tool invocation on mcp-pinot /mcp endpoint (no Authorization header) · OAuth consent / suspicious app grant</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="b03ef7470c" data-platforms="def,falcon,sent,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">mcp-pinot MCP server accepting non-loopback inbound connections on 0.0.0.0:8080</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b03ef7470c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the CVE-2026-49257 exposure condition: a Python/uvicorn process running mcp-pinot accepting inbound TCP connections on port 8080 from a non-loopback, public source. Pre-v3.1.0 the server binds 0.0.0.0:8080 with OAuth off, so any inbound connection from off-host is a candidate for unauthenticated tool invocation against the Pinot cluster.
-
-Rationale: Anchors on the article&#x27;s exact exposure primitive — the mcp-pinot Python/uvicorn process (default bind 0.0.0.0:8080) accepting inbound from a non-loopback/public source, the precondition the v3.1.0 fix removes by rebinding to 127.0.0.1. Command-line anchor &#x27;mcp_pinot&#x27; tightens it; port 8080 alone is noisy, hence hunting tier.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-73cv-556c-w3g6
-  • https://www.akamai.com/blog/security-research/one-fluke-3-pattern-mcp-back-end-vulnerabilities
-  • https://vulnerability.circl.lu/vuln/cve-2026-49257
-  • https://radar.offseq.com/threat/cve-2026-49257-cwe-306-missing-authentication-for--c0c28b77341e3a12</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate internal MCP client (LLM agent host) on another subnet reaching the server for authorized Pinot queries</li><li>DevOps/monitoring health-check probes hitting :8080 from a scanner or load balancer</li><li>Kubernetes readiness/liveness probes or service-mesh sidecar connecting to the pod on 8080</li><li>Another unrelated Python web service (Flask/uvicorn) legitimately bound to 8080 on the host</li><li>Internal vulnerability scanner (Nessus/Qualys) sweeping port 8080</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;healthz&quot;,&quot;readiness&quot;,&quot;liveness&quot;)) and RemoteIP !in (&quot;&lt;known-agent-host-ip&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the listening process is mcp-pinot and its version (&lt;3.1.0 is vulnerable); check whether OAUTH_ENABLED and MCP_HOST are set. Verify the source IP is expected (known agent host vs. arbitrary/off-net). Step 2 (contain): If exposure is confirmed and unintended, rebind to 127.0.0.1 (MCP_HOST=127.0.0.1) or set OAUTH_ENABLED=true and restart; upgrade to v3.1.0; add a host/network ACL restricting 8080. Rotate the PINOT_TOKEN / PINOT_USERNAME service credentials the server holds. Step 3 (hunt): Pull web/proxy logs for POST /mcp from that source (see companion UC), and review Pinot controller logs for unexpected schema/table-config creation (e.g. rogue schemas) and heavy SELECTs during the exposure window.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-233-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType == &quot;InboundConnectionAccepted&quot;
-| where LocalPort == 8080
-| where InitiatingProcessFileName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;python.exe&quot;,&quot;uv&quot;,&quot;uv.exe&quot;,&quot;uvicorn&quot;)
-   or InitiatingProcessCommandLine has_any (&quot;mcp_pinot&quot;,&quot;mcp-pinot&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| where RemoteIP !in (&quot;127.0.0.1&quot;,&quot;::1&quot;)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstPortNumber == 8080
-| where NetworkDirection == &quot;Inbound&quot;
-| where isnotempty(SrcIpAddr)
-| where SrcIpAddr !in (&quot;127.0.0.1&quot;,&quot;::1&quot;)
-| where not(ipv4_is_private(SrcIpAddr))
-| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Attempts = count() by SrcIpAddr, DstIpAddr, DstHostname, DstPortNumber, NetworkDirection
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=8080
-| ContextImageFileName=/(python3?|uv|uvicorn)/i
-| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| groupBy([aid, ComputerName, ContextImageFileName, LocalPort, RemoteAddressIP4], function=count())</code></pre></div>
-    <div class="tab-content" id="art-233-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8080 All_Traffic.direction=inbound All_Traffic.transport=tcp by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | where NOT cidrmatch(&quot;127.0.0.0/8&quot;, src_ip) AND NOT cidrmatch(&quot;10.0.0.0/8&quot;, src_ip) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;, src_ip) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;, src_ip) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-233-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8080 All_Traffic.direction=inbound All_Traffic.transport=tcp by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | where NOT cidrmatch(&quot;127.0.0.0/8&quot;, src_ip) AND NOT cidrmatch(&quot;10.0.0.0/8&quot;, src_ip) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;, src_ip) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;, src_ip) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="5a1773d3d3" data-platforms="sent,sigma,spl" data-targets="vcs">
-  <summary>
-    <span class="uc-title">Unauthenticated JSON-RPC tool invocation on mcp-pinot /mcp endpoint (no Authorization header)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5a1773d3d3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the CVE-2026-49257 confused-deputy invocation: an HTTP POST to the /mcp JSON-RPC endpoint that carries no Authorization header, from a non-loopback source, returning success. In the default (OAuth-off) config these calls execute read_query/create_schema/update_table_config against Pinot with the server&#x27;s privileged credentials.
-
-Rationale: Uses the article&#x27;s exact endpoint path (/mcp), the JSON-RPC POST verb from the reproduction curl, and the defining unauth condition — an empty Authorization header (ImWebSession.HttpRequestHeaderAuthorization). Combining path + missing auth + success + non-loopback source is high-fidelity because a correctly configured server would either require OAuth (auth header present) or bind loopback-only (no external source).
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-73cv-556c-w3g6
-  • https://www.akamai.com/blog/security-research/one-fluke-3-pattern-mcp-back-end-vulnerabilities
-  • https://dailycve.com/mcp-pinot-unauthenticated-remote-code-execution-via-default-configuration-cve-2026-49257-critical-dc-jun2026-701/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Data Manipulation: Stored Data Manipulation">T1565.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized MCP agent host legitimately calling /mcp while OAuth is intentionally disabled on an isolated network</li><li>Web proxy that strips/does not log the Authorization header, making authenticated calls look unauthenticated</li><li>Health-check or uptime monitor issuing POST /mcp with an empty JSON-RPC body</li><li>Security scanner probing the /mcp path</li><li>Internal API gateway that terminates OAuth upstream and forwards to /mcp without a per-request bearer token</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !in~ (&quot;kube-probe&quot;,&quot;ELB-HealthChecker/2.0&quot;) and SrcIpAddr !in (&quot;&lt;known-agent-host-ip&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the target host runs mcp-pinot &lt;3.1.0 and whether OAuth is expected; inspect the source IP and user-agent — automated tooling vs. curl/python-requests is a strong signal. Check response codes for a burst of successful 200s. Step 2 (contain): Block the source IP at the proxy/WAF, force OAUTH_ENABLED=true or MCP_HOST=127.0.0.1, restart, and upgrade to v3.1.0; rotate the Pinot service account credentials the server proxies with. Step 3 (hunt): Correlate to Pinot controller logs for create_schema/update_table_config/reload_table_filters activity and unusually expensive read_query SELECTs originating in the same window; enumerate any new/altered Pinot schemas or table configs and validate against change tickets.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-233-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where HttpMethod == &quot;POST&quot;
-| where Url has &quot;/mcp&quot;
-| where isempty(HttpRequestHeaderAuthorization)
-| where HttpStatusCode in (200, 202)
-| where isnotempty(SrcIpAddr) and SrcIpAddr !in (&quot;127.0.0.1&quot;,&quot;::1&quot;)
-| where not(ipv4_is_private(SrcIpAddr))
-| project TimeGenerated, SrcIpAddr, DstIpAddr, DstHostname, DstPortNumber, Url, HttpMethod, HttpStatusCode, UserAgent = HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unauthenticated POST to mcp-pinot /mcp JSON-RPC endpoint (CVE-2026-49257)
-id: 4a1f7c2e-8d3b-4e6a-9f10-2b7c5d9a1e34
-description: Detects HTTP POST requests to the mcp-pinot /mcp Model Context Protocol endpoint, which in the default oauth_enabled=False + host 0.0.0.0 configuration invoke Pinot tools with server-side credentials and no authentication.
-references:
-  - https://github.com/advisories/GHSA-73cv-556c-w3g6
-  - https://www.akamai.com/blog/security-research/one-fluke-3-pattern-mcp-back-end-vulnerabilities
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1190
-  - attack.initial_access
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-method: POST
-    cs-uri-stem|contains: &#x27;/mcp&#x27;
-  condition: selection
-falsepositives:
-  - Authorized internal MCP agent clients when OAuth is disabled
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-233-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/mcp*&quot; Web.status=200 by Web.src Web.dest Web.dest_port Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | where NOT cidrmatch(&quot;127.0.0.0/8&quot;, src) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-233-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/mcp*&quot; Web.status=200 by Web.src Web.dest Web.dest_port Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | where NOT cidrmatch(&quot;127.0.0.0/8&quot;, src) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-49257&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-233-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-49257&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-233-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-49257&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-233-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-49257&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">OAuth consent / suspicious app grant</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-233-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc3-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-233-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
-AuditLogs
-| where TimeGenerated &gt; ago(7d)
-| where OperationName has &quot;Consent to application&quot;
-| where Result =~ &quot;success&quot;
-| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
-         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
-         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
-| project TimeGenerated, OperationName, User, AppName, AppId, Result
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-233-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
-status: experimental
-description: |
-    User-driven consent to a third-party OAuth application — illicit-
-    consent attack precursor. Pair with first-time-seen-app heuristic
-    in your SIEM for higher fidelity.
-references:
-    - https://attack.mitre.org/techniques/T1528/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1528
-    - attack.persistence
-logsource:
-    product: azure
-    service: auditlogs
-detection:
-    selection:
-        OperationName: &#x27;Consent to application&#x27;
-        Result: &#x27;success&#x27;
-    condition: selection
-falsepositives:
-    - Legitimate first-time SaaS app onboarding
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-233-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-233-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="855c814a12" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="855c814a12" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;server.py&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;server.py&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;server.py&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;server.py&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;server.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;server.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-233-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-49257: mcp-pinot: Unauthenticated tool invocation via ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;server.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;server.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>
