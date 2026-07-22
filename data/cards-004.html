@@ -14643,8 +14643,8 @@ DeviceFileEvents
   data-platforms="def,sent,sigma,spl"
   data-splunk-cats="application,endpoint,web"
   data-targets="vcs,web-app,windows"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in the FacturaScripts REST API filter parameter via parenthesis bypass in `Where::sqlColumn` FacturaScripts: Authenticated SQL injection in the FacturaScripts REST API filter parameter via parenthesis bypass in `Where::sqlColumn` CVE-2026-45262 T1190 [LLM] FacturaScripts CVE-2026-45262: SQLi via parenthesis-bypass in REST API filter[] key [LLM] FacturaScripts CVE-2026-45262: successful UNION-based data exfiltration (HTTP 200 on injected filter) [LLM] FacturaScripts CVE-2026-45262: filter[] encoding-mutation / WAF-evasion probing burst [LLM] FacturaScripts CVE-2026-45262: admin-panel takeover (/AdminPlugins) from SQLi source with leaked logkey Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in">
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in the FacturaScripts REST API filter parameter via parenthesis bypass in `Where::sqlColumn` FacturaScripts: Authenticated SQL injection in the FacturaScripts REST API filter parameter via parenthesis bypass in `Where::sqlColumn` CVE-2026-45262 T1190 [LLM] FacturaScripts CVE-2026-45262 SQLi: parenthesis-bypass in REST API filter[] key [LLM] FacturaScripts filter[] SQLi column-count / schema enumeration (burst probing) [LLM] FacturaScripts account takeover: /AdminPlugins access following filter[] SQLi from same source Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-14-ghsa-critical-cve-2026-45262-facturascripts-authenticated-sq" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -14653,7 +14653,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-14</span>
-    <span>6 use cases</span>
+    <span>5 use cases</span>
     <span>1 technique</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -14703,32 +14703,32 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] FacturaScripts CVE-2026-45262: filter[] encoding-mutation / WAF-evasion probing burst</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] FacturaScripts CVE-2026-45262: SQLi via parenthesis-bypass in REST API filter[] key</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] FacturaScripts CVE-2026-45262 SQLi: parenthesis-bypass in REST API filter[] key · [LLM] FacturaScripts filter[] SQLi column-count / schema enumeration (burst probing)</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] FacturaScripts CVE-2026-45262: successful UNION-based data exfiltration (HTTP 200 on injected filter) · [LLM] FacturaScripts CVE-2026-45262: admin-panel takeover (/AdminPlugins) from SQLi source with leaked logkey</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] FacturaScripts account takeover: /AdminPlugins access following filter[] SQLi from same source</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="fdb8d809b4" data-platforms="sent,sigma,spl" data-targets="vcs,web-app" open>
+  <div class="usecases"><details class="uc" data-uc-slug="1fd6b1fdcd" data-platforms="sent,sigma,spl" data-targets="vcs,web-app" open>
   <summary>
-    <span class="uc-title">FacturaScripts CVE-2026-45262: SQLi via parenthesis-bypass in REST API filter[] key</span>
+    <span class="uc-title">FacturaScripts CVE-2026-45262 SQLi: parenthesis-bypass in REST API filter[] key</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="fdb8d809b4" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="1fd6b1fdcd" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP requests to the FacturaScripts REST API (/api/3/*) whose filter[] key contains parentheses plus SQL keywords — the exact signature of the Where::sqlColumn parenthesis-escape bypass. Legitimate filter keys are bare column names and never contain &#x27;(&#x27; , &#x27;)&#x27; , UNION or SELECT, so this is a near-zero-noise exploit signature.
+    <div class="uc-desc">Hunts exploitation of the Where::sqlColumn parenthesis bypass on the /api/3/&lt;resource&gt; and /api/3/attachedfiles routes, where a filter[] array key containing both parentheses is exempted from identifier escaping and concatenated into the WHERE clause. Keys on the article&#x27;s exact structural signature: a filter[ (or URL-encoded filter%5B) request key carrying &#x27;(&#x27; plus SQL keywords (UNION/SELECT/--/information_schema), which no legitimate column-name filter ever contains.
 
-Rationale: Uses the article&#x27;s exact sink signature: /api/3/ endpoint + filter[] key containing &#x27;(&#x27; and &#x27;)&#x27; (the Where::sqlColumn early-return trigger) plus UNION/SELECT/information_schema/IFNULL. Legit filter keys are plain column identifiers, so parens+SQL keywords in a filter key is definitionally the exploit. Defender AH left empty — FacturaScripts is a PHP/Linux web app and its HTTP query strings are not present in DeviceProcessEvents/DeviceNetworkEvents; detection must run on web/proxy/WAF telemetry.
+Rationale: Uses the article&#x27;s exact PoC structure: the filter[ (URL-encoded filter%5B) array key plus &#x27;(&#x27; plus UNION/SELECT/IFNULL/-- from the payload &#x27;filter[(0)UNION SELECT IFNULL(password,2)...FROM users WHERE(nick=admin)-- ]&#x27;. Parentheses in a filter-key never occur in legitimate FacturaScripts column filters, so combining bracket+paren+SQL-keyword is high-fidelity.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-5qmh-x653-g8qj
   • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-45262/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate FacturaScripts filter using the built-in &#x27;lower:&#x27; or &#x27;integer:&#x27; prefix (these do not add parens, so should not match, but a mis-crafted client string could)</li><li>Vulnerability scanners (Nessus/Burp/Nuclei) probing the API from an authorized internal range</li><li>Security team running the published PoC during patch validation</li><li>A custom integration that URL-encodes a legitimate value containing a literal parenthesis into the filter key (rare)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where NOT match(uri_query,&quot;(?i)filter\[(lower|integer):[a-z0-9_]+\]&quot;) and NOT cidr_match(&quot;10.0.0.0/8&quot;,src)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: pull the full uri_query and confirm the filter[] key literally contains &#x27;(&#x27; ,&#x27;)&#x27; plus a SQL verb (UNION/SELECT/FROM users). Check HttpStatusCode — 200 with a non-empty body means data was returned (real breach), 400/500 means a failed probe. Identify the ApiKey/token used and its source IP. 2) CONTAIN: revoke the ApiKey and any admin logkey/session issued around that time, force admin password reset (bcrypt hash may be exfiltrated), and block the source IP at the WAF; add a WAF rule rejecting filter keys containing &#x27;(&#x27; or &#x27;%28&#x27;. 3) HUNT: search all /api/3/* and /api/3/attachedfiles traffic from the same source for prior probing, and pivot to UC4 to see if /AdminPlugins or other admin paths were reached with a leaked logkey.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised DAST/pentest scans (Burp, sqlmap, OWASP ZAP) probing the same /api/3 endpoints</li><li>Vulnerability scanners (Nuclei/Nessus) firing the public CVE-2026-45262 template</li><li>A developer manually testing the filter parameter in a staging environment</li><li>Security researchers on a bug-bounty program hitting the production instance</li><li>WAF appliance replaying blocked payloads into a shadow/audit log that is also ingested</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;&lt;scanner_subnet_placeholder&gt;&quot;) // prefer: exclude known-good DAST/scanner source IPs by tag rather than hardcoding; keep production client ranges in scope</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all requests from the source IP to /api/3/* over the last 24h; check response sizes/status — a 200 with a large body on a clientes/attachedfiles filter query indicates successful extraction. Identify the ApiKey/token used. 2) Contain: revoke the offending ApiKey and force-rotate all admin logkey session cookies (invalidate sessions), block the source IP at the WAF, and apply the vendor mitigation/WAF rule denying &#x27;(&#x27; in filter[] keys. 3) Hunt: search the same IP/UA for follow-on /AdminPlugins access and for the leaked admin bcrypt hash reuse; review DB slow/query logs for UNION SELECT against the users table.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-116-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-116-uc0-sigma">Sigma</button>
@@ -14736,151 +14736,114 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-116-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(7d)
-| where Url has &quot;/api/3/&quot;
-| where Url has &quot;filter&quot;
-| where (Url contains &quot;(&quot; and Url contains &quot;)&quot;) or (Url contains &quot;%28&quot; and Url contains &quot;%29&quot;)
-| where Url has_any (&quot;UNION&quot;,&quot;union&quot;,&quot;SELECT&quot;,&quot;select&quot;,&quot;FROM users&quot;,&quot;information_schema&quot;,&quot;IFNULL&quot;,&quot;group_concat&quot;,&quot;--&quot;)
-| project TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, HttpUserAgent=HttpRequestHeaderUserAgent, HttpResponseBodyBytes
+| where (Url contains &quot;filter[&quot; or Url contains &quot;filter%5b&quot; or UrlOriginal contains &quot;filter[&quot; or UrlOriginal contains &quot;filter%5b&quot;)
+| where (Url contains &quot;(&quot; or Url contains &quot;%28&quot; or UrlOriginal contains &quot;(&quot; or UrlOriginal contains &quot;%28&quot;)
+| where (Url has_any (&quot;union&quot;,&quot;select&quot;,&quot;information_schema&quot;,&quot;ifnull&quot;,&quot;updatexml&quot;,&quot;extractvalue&quot;) or Url contains &quot;--&quot; or UrlOriginal contains &quot;--&quot;)
+| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, HttpStatusCode, Url, UserAgent = HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-116-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: FacturaScripts REST API filter[] parenthesis-bypass SQL injection (CVE-2026-45262)
-id: 6f2a8c11-4d3e-4b0a-9e77-2c1f9ab45262
-description: Detects UNION-based SQLi against the FacturaScripts /api/3 filter parameter exploiting the Where::sqlColumn parenthesis exemption
+    <div class="tab-content" id="art-116-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: FacturaScripts CVE-2026-45262 filter[] parenthesis-bypass SQL injection
+id: 6f3c1d2a-8b74-4e19-9a2e-1c9d2f6b45a1
+description: Detects the CVE-2026-45262 parenthesis-bypass SQLi against the FacturaScripts REST API filter[] parameter, where a filter key containing parentheses skips identifier escaping in Where::sqlColumn.
 references:
   - https://github.com/advisories/GHSA-5qmh-x653-g8qj
+  - https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-45262/
 author: SOC Detection Engineering
-date: 2026/07/21
+date: 2026/07/22
 tags:
   - attack.t1190
+  - attack.initial_access
 logsource:
   category: webserver
 detection:
-  selection_path:
-    cs-uri-stem|contains: &#x27;/api/3/&#x27;
   selection_filter:
-    cs-uri-query|contains: &#x27;filter&#x27;
+    - cs-uri-query|contains: &#x27;filter[&#x27;
+    - cs-uri-query|contains: &#x27;filter%5b&#x27;
   selection_paren:
-    cs-uri-query|contains:
-      - &#x27;(&#x27;
-      - &#x27;%28&#x27;
-  selection_sql:
-    cs-uri-query|contains:
-      - &#x27;UNION&#x27;
-      - &#x27;SELECT&#x27;
-      - &#x27;information_schema&#x27;
-      - &#x27;group_concat&#x27;
-      - &#x27;IFNULL&#x27;
-      - &#x27;--&#x27;
-  condition: all of selection_*
+    - cs-uri-query|contains: &#x27;(&#x27;
+    - cs-uri-query|contains: &#x27;%28&#x27;
+  selection_sqli:
+    - cs-uri-query|contains: &#x27;union&#x27;
+    - cs-uri-query|contains: &#x27;information_schema&#x27;
+    - cs-uri-query|contains: &#x27;--&#x27;
+    - cs-uri-query|contains: &#x27;ifnull&#x27;
+  condition: selection_filter and selection_paren and selection_sqli
 level: high</code></pre></div>
-    <div class="tab-content" id="art-116-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.uri_path=&quot;/api/3/*&quot; AND Web.uri_query=&quot;*filter*&quot; by Web.src, Web.dest, Web.uri_path, Web.uri_query, Web.http_method, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | where (match(uri_query,&quot;(?i)\(|%28&quot;) AND match(uri_query,&quot;(?i)\)|%29&quot;)) AND match(uri_query,&quot;(?i)union|select|from\s+users|information_schema|group_concat|ifnull\(|--\s&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-116-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.uri_path=&quot;/api/3/*&quot; AND Web.uri_query=&quot;*filter*&quot; by Web.src, Web.dest, Web.uri_path, Web.uri_query, Web.http_method, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | where (match(uri_query,&quot;(?i)\(|%28&quot;) AND match(uri_query,&quot;(?i)\)|%29&quot;)) AND match(uri_query,&quot;(?i)union|select|from\s+users|information_schema|group_concat|ifnull\(|--\s&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-116-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot;) AND (Web.url=&quot;*(*&quot; OR Web.url=&quot;*%28*&quot;) AND (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*--*&quot; OR Web.url=&quot;*ifnull*&quot;) by Web.src, Web.dest, Web.http_method, Web.status, Web.uri_path, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-116-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot;) AND (Web.url=&quot;*(*&quot; OR Web.url=&quot;*%28*&quot;) AND (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*--*&quot; OR Web.url=&quot;*ifnull*&quot;) by Web.src, Web.dest, Web.http_method, Web.status, Web.uri_path, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cd32ee4be9" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="82b089d9e1" data-platforms="sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">FacturaScripts CVE-2026-45262: successful UNION-based data exfiltration (HTTP 200 on injected filter)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cd32ee4be9" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">FacturaScripts filter[] SQLi column-count / schema enumeration (burst probing)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="82b089d9e1" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Escalates the injection signature to CONFIRMED data theft by requiring HTTP 200 on a /api/3/* request whose filter[] key carries the UNION payload — meaning the crafted UNION column count matched and rows (admin bcrypt hash / logkey) were returned in the JSON body. Distinct pivot from UC1: adds status-code + response-size to separate real exfil from failed probes.
+    <div class="uc-desc">Hunts the reconnaissance phase of the CVE-2026-45262 UNION attack: an attacker must iterate column counts (SELECT 1,2 / 1,2,3 ...) and table/column names to match the clientes table&#x27;s 32-column layout before extraction succeeds. Flags a source IP issuing multiple filter[]+SQL-keyword requests to the same host in a short window — a burst that distinguishes active enumeration from a single copy-paste PoC shot.
 
-Rationale: Article states the injected request &#x27;response body contained the raw bcrypt hash&#x27; and the leaked logkey — i.e. the UNION succeeded and returned data with HTTP 200. Requiring status=200 on the injection pattern separates true exfiltration from failed 400/500 probes; the article&#x27;s PoC mirrors the clientes table&#x27;s 32 columns so the merged result set is accepted. No Sigma (relies on status-code correlation + ordering, not a single-field selection).
+Rationale: Grounded in the article&#x27;s mechanics: the UNION must mirror the clientes table&#x27;s 32 columns and reference the users/nick columns, which requires iterative column-count and identifier probing. Bursting &gt;=5 filter[]+SQL-keyword requests per 10m from one src is the enumeration fingerprint that a single-shot PoC (UC1) would miss and that separates recon from a lucky one-liner.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-5qmh-x653-g8qj
   • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-45262/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data from Local System">T1005</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Active Scanning: Wordlist Scanning">T1595.003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized pentest confirming exploitability (will also produce 200s)</li><li>Scanner that happens to send a syntactically valid UNION matching the 32-column count</li><li>A monitoring probe replaying the public PoC against a staging instance</li><li>WAF in detection-only mode letting the request through to a 200 (should be treated as real until proven benign)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where NOT cidr_match(&quot;10.0.0.0/8&quot;,src)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: confirm HTTP 200 and inspect response size vs a normal single-record /api/3/clientes reply (baseline is small; an exfil row carrying a bcrypt hash inflates it). Extract the ApiKey and source IP. 2) CONTAIN: treat as confirmed credential theft — revoke the ApiKey, rotate the admin password and all logkey session cookies, invalidate active admin sessions, and WAF-block filter keys with parens. 3) HUNT: enumerate every distinct table/column named in the UNION payloads from this source (users, then any second-stage tables) to scope what was read, and check UC4 for admin-panel access with the stolen logkey.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised sqlmap run (issues hundreds of enumeration requests by design)</li><li>Scheduled DAST/CI security scans against staging</li><li>A single browser retrying a broken filter request repeatedly on a 500 error</li><li>Load/soak testing that fuzzes the API parameter</li><li>Bug-bounty researcher iterating payloads on production</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;&lt;scanner_subnet_placeholder&gt;&quot;) and HttpRequestHeaderUserAgent !has &quot;sqlmap&quot; // scanner UAs are known enumeration; tag-exclude approved scanner source IPs, keep unknown UAs in scope</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: order the source IP&#x27;s filter[] requests by time and inspect payload evolution — incrementing comma counts (1,2 -&gt; 1,2,3) or ORDER BY N sequences confirm active schema enumeration; note which request first returned HTTP 200. 2) Contain: block the source IP at the WAF, revoke the ApiKey used, and enable the deny-&#x27;(&#x27; -in-filter-key rule. 3) Hunt: check whether enumeration converged to a successful extraction (large 200 response on a clientes/attachedfiles filter query) and pivot to UC3 for downstream /AdminPlugins takeover from the same IP.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-116-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-116-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-116-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url has &quot;/api/3/&quot; and Url has &quot;filter&quot;
-| where (Url contains &quot;(&quot; and Url contains &quot;)&quot;) or (Url contains &quot;%28&quot; and Url contains &quot;%29&quot;)
-| where Url has_any (&quot;UNION&quot;,&quot;union&quot;,&quot;SELECT&quot;,&quot;FROM users&quot;,&quot;information_schema&quot;,&quot;IFNULL&quot;,&quot;group_concat&quot;)
-| where toint(HttpStatusCode) == 200
-| project TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, HttpResponseBodyBytes
-| order by HttpResponseBodyBytes desc</code></pre></div>
-    <div class="tab-content" id="art-116-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime sum(Web.bytes_out) as total_bytes_out from datamodel=Web where Web.uri_path=&quot;/api/3/*&quot; AND Web.uri_query=&quot;*filter*&quot; AND Web.status=200 by Web.src, Web.dest, Web.uri_path, Web.uri_query | `drop_dm_object_name(Web)` | where (match(uri_query,&quot;(?i)\(|%28&quot;)) AND match(uri_query,&quot;(?i)union\s+select|from\s+users|information_schema|group_concat|ifnull\(&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-116-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime sum(Web.bytes_out) as total_bytes_out from datamodel=Web where Web.uri_path=&quot;/api/3/*&quot; AND Web.uri_query=&quot;*filter*&quot; AND Web.status=200 by Web.src, Web.dest, Web.uri_path, Web.uri_query | `drop_dm_object_name(Web)` | where (match(uri_query,&quot;(?i)\(|%28&quot;)) AND match(uri_query,&quot;(?i)union\s+select|from\s+users|information_schema|group_concat|ifnull\(&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="07ddf7111f" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">FacturaScripts CVE-2026-45262: filter[] encoding-mutation / WAF-evasion probing burst</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="07ddf7111f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects a single source submitting multiple distinct encodings of the /api/3 filter[] parameter (mixed %28/&#x27;(&#x27; , inline /**/ comments, &#x27;--&#x27; terminators) within a short window — the behavioural fingerprint of an attacker iterating payload encodings to bypass input filtering before the parenthesis-bypass lands. Distinct pivot: aggregates per-source variant count rather than matching one request.
-
-Rationale: Article&#x27;s PoC mixes raw and percent-encoded syntax (filter%5B%280%29UNION..., %28, %29, %5b) and relies on &#x27;--&#x27; comment termination; an attacker probing the parenthesis exemption typically cycles encodings. Per-source dcount of filter-parameter variants over 5 min surfaces that iteration without needing to match the exact winning payload. Hunting tier / no Sigma — it is a threshold aggregation across events.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-5qmh-x653-g8qj</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Automated API client legitimately paginating/filtering with many distinct filter values (tune the paren/comment predicate to reduce this)</li><li>DAST/WAF tuning scan from an approved scanner</li><li>A dashboard integration that builds many distinct filter queries per user session</li><li>Load/performance test replaying varied API queries</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: review the SampleUrls set for the source — genuine business filters use column names; obfuscation attempts carry parens, /**/ , or UNION fragments. Check whether any variant later returned HTTP 200 (pivot to UC1/UC2). 2) CONTAIN: if payloads are clearly malicious, block the source IP and revoke the associated ApiKey; enable WAF blocking on filter keys containing &#x27;(&#x27; , &#x27;%28&#x27; , &#x27;/**/&#x27; or &#x27;--&#x27;. 3) HUNT: search the same source across all endpoints and other FacturaScripts hosts for the same variant-spraying behaviour and for successful exploitation.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-116-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-116-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-116-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(1d)
-| where Url has &quot;/api/3/&quot; and Url has &quot;filter&quot;
-| where Url has_any (&quot;%28&quot;,&quot;(&quot;,&quot;/**/&quot;,&quot;--&quot;,&quot;UNION&quot;,&quot;union&quot;,&quot;SELECT&quot;,&quot;%2f%2a&quot;)
-| summarize DistinctVariants=dcount(Url), TotalRequests=count(), SampleUrls=make_set(Url,10) by SrcIpAddr, bin(TimeGenerated, 5m)
-| where DistinctVariants &gt;= 3   // 3+ distinct encodings of the filter param in 5 min = obfuscation/WAF-evasion probing
-| order by DistinctVariants desc</code></pre></div>
-    <div class="tab-content" id="art-116-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` dc(Web.uri_query) as distinct_variants count as total_requests values(Web.uri_query) as sample_queries from datamodel=Web where Web.uri_path=&quot;/api/3/*&quot; AND Web.uri_query=&quot;*filter*&quot; AND (Web.uri_query=&quot;*%28*&quot; OR Web.uri_query=&quot;*(*&quot; OR Web.uri_query=&quot;*/**/*&quot; OR Web.uri_query=&quot;*--*&quot; OR Web.uri_query=&quot;*union*&quot; OR Web.uri_query=&quot;*UNION*&quot;) by Web.src, _time span=5m | `drop_dm_object_name(Web)` | where distinct_variants &gt;= 3</code></pre><pre class="spl-mode-body" id="art-116-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Web.uri_query) as distinct_variants count as total_requests values(Web.uri_query) as sample_queries from datamodel=Web where Web.uri_path=&quot;/api/3/*&quot; AND Web.uri_query=&quot;*filter*&quot; AND (Web.uri_query=&quot;*%28*&quot; OR Web.uri_query=&quot;*(*&quot; OR Web.uri_query=&quot;*/**/*&quot; OR Web.uri_query=&quot;*--*&quot; OR Web.uri_query=&quot;*union*&quot; OR Web.uri_query=&quot;*UNION*&quot;) by Web.src, _time span=5m | `drop_dm_object_name(Web)` | where distinct_variants &gt;= 3</code></pre></div></div>
+| where (Url contains &quot;filter[&quot; or Url contains &quot;filter%5b&quot;)
+| where (Url has_any (&quot;union&quot;,&quot;select&quot;,&quot;order by&quot;,&quot;information_schema&quot;) or Url contains &quot;--&quot;)
+| summarize AttemptCount = count(), DistinctPayloads = dcount(Url), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Statuses = make_set(HttpStatusCode, 10), SamplePayloads = make_set(Url, 5) by SrcIpAddr, DstHostname, bin(TimeGenerated, 10m)
+| where AttemptCount &gt;= 5   // &gt;=5 UNION/ORDER-BY probes to one host in 10m = column-count/schema enumeration, not a single PoC request
+| order by AttemptCount desc</code></pre></div>
+    <div class="tab-content" id="art-116-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count as reqCount dc(Web.url) as distinctPayloads min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.url) as urls from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot;) AND (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*order by*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*--*&quot;) by Web.src, Web.dest span=10m | `drop_dm_object_name(Web)` | where reqCount&gt;=5 | convert ctime(firstTime) ctime(lastTime) | sort - reqCount</code></pre><pre class="spl-mode-body" id="art-116-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as reqCount dc(Web.url) as distinctPayloads min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.url) as urls from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot;) AND (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*order by*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*--*&quot;) by Web.src, Web.dest span=10m | `drop_dm_object_name(Web)` | where reqCount&gt;=5 | convert ctime(firstTime) ctime(lastTime) | sort - reqCount</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cab2dd3260" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="524ef562e6" data-platforms="sent,spl" data-targets="web-app">
   <summary>
-    <span class="uc-title">FacturaScripts CVE-2026-45262: admin-panel takeover (/AdminPlugins) from SQLi source with leaked logkey</span>
+    <span class="uc-title">FacturaScripts account takeover: /AdminPlugins access following filter[] SQLi from same source</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cab2dd3260" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="524ef562e6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Correlates a source that issued the parenthesis-bypass SQLi against /api/3 with a subsequent successful GET /AdminPlugins — the article&#x27;s account-takeover confirmation, where the exfiltrated admin logkey cookie is replayed to reach the admin plugin-management UI from a token that only had read-only scope. Distinct pivot: cross-path correlation on source IP, not a single request.
+    <div class="uc-desc">Correlates the CVE-2026-45262 end-to-end takeover: after leaking the admin bcrypt hash and logkey via the filter[] SQLi, the attacker injects the stolen logkey cookie and reaches the admin plugin-management UI (GET /AdminPlugins returns 200). Flags a source IP that issued a filter[]+SQL-keyword request and then obtained a 200 on /AdminPlugins within a short window — a read-only token escalating to full admin.
 
-Rationale: Article: &#x27;leaked logkey was injected into a fresh cookie jar and GET /AdminPlugins returned 200 with the admin plugin management UI.&#x27; Correlating the same source IP performing the injection and then a 200 on the concrete /AdminPlugins admin path captures the full account-takeover chain and filters out benign admins (who never precede /AdminPlugins with a UNION injection). Alerting tier; no Sigma (cross-path correlation).
+Rationale: Encodes the article&#x27;s takeover chain literally: the SQLi leaks logkey, then &#x27;GET /AdminPlugins returned 200 with the admin plugin management UI.&#x27; Correlating a filter[] SQLi request and a subsequent 200 on /AdminPlugins from the same source IP within an hour captures the read-only-token-to-admin escalation that no single-event rule can.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-5qmh-x653-g8qj
   • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-45262/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate admin who happens to share a NAT/egress IP with a scanner that ran the injection (shared-IP collision)</li><li>Pentester who chains the full PoC end-to-end during an authorized test</li><li>Reverse-proxy that collapses many clients behind one source IP (tune to true client IP via X-Forwarded-For)</li><li>Internal vuln-management tooling that both probes the API and browses the admin UI from one host</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: confirm the source both injected (UNION on /api/3) and got 200 on /AdminPlugins; inspect the Cookie header for a logkey that does not belong to that ApiKey&#x27;s owner. 2) CONTAIN: this is active admin takeover — immediately invalidate all admin logkey sessions, rotate admin credentials and the exfiltrated bcrypt-hashed password, revoke the offending ApiKey, and block the source IP. Review AdminPlugins for any plugin installed/enabled by the attacker (potential webshell). 3) HUNT: pull all requests from this source after the injection (plugin uploads, config changes, further admin endpoints) and check other FacturaScripts instances for the same /api/3 → /AdminPlugins pattern.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate administrator whose workstation NATs behind the same egress IP as a benign API client</li><li>A pentester chaining the full exploit under an authorised engagement</li><li>Shared corporate proxy IP where one user probes the API and an unrelated admin logs in</li><li>Automated smoke test that hits both /api/3 and /AdminPlugins from a CI runner IP</li><li>Vulnerability scanner with authenticated admin session validating the fix</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has &quot;sqlmap&quot; and DstHostname !contains &quot;staging&quot; // exclude known scanner UAs and staging hosts; real takeover uses the same client across both requests</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the /AdminPlugins 200 followed a successful data-returning filter[] SQLi from the same IP; pull the admin session/logkey cookie in play and check whether it matches a real admin login event or appeared out of nowhere (stolen-cookie reuse). 2) Contain: invalidate all admin logkey sessions and force admin password reset (the bcrypt hash was exfiltrated), revoke the source ApiKey, block the IP, and disable/lock the admin account until reset. 3) Hunt: enumerate every action taken under the admin session — plugin installs/uploads via /AdminPlugins (potential webshell), new ApiKey/user creation, config changes — and review /api/3/attachedfiles for follow-on file access.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-116-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-116-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-116-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-116-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-116-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let injectors = ImWebSession
-    | where TimeGenerated &gt; ago(1d)
-    | where Url has &quot;/api/3/&quot; and Url has &quot;filter&quot;
-    | where (Url contains &quot;(&quot; or Url contains &quot;%28&quot;)
-    | where Url has_any (&quot;UNION&quot;,&quot;union&quot;,&quot;SELECT&quot;,&quot;FROM users&quot;,&quot;information_schema&quot;,&quot;IFNULL&quot;)
-    | distinct SrcIpAddr;
+    <div class="tab-content active" id="art-116-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let window = 1h;
+let sqli = ImWebSession
+    | where TimeGenerated &gt; ago(7d)
+    | where (Url contains &quot;filter[&quot; or Url contains &quot;filter%5b&quot;)
+    | where (Url has_any (&quot;union&quot;,&quot;select&quot;,&quot;information_schema&quot;) or Url contains &quot;--&quot;)
+    | project SqliTime = TimeGenerated, SrcIpAddr, DstHostname;
 ImWebSession
-| where TimeGenerated &gt; ago(1d)
-| where Url has &quot;/AdminPlugins&quot;
-| where toint(HttpStatusCode) == 200
-| where SrcIpAddr in (injectors)
-| project TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, Cookie=HttpRequestHeaderCookie
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-116-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_path=&quot;/api/3/*&quot; OR Web.uri_path=&quot;/AdminPlugins&quot;) by Web.src, Web.uri_path, Web.uri_query, Web.status | `drop_dm_object_name(Web)` | eval is_injection=if(match(uri_query,&quot;(?i)(\(|%28).*(union|select|from\s+users|information_schema)&quot;),1,0) | eval is_admin=if(uri_path=&quot;/AdminPlugins&quot; AND status=200,1,0) | stats max(is_injection) as saw_injection max(is_admin) as saw_admin min(firstTime) as firstTime max(lastTime) as lastTime values(uri_path) as paths by src | where saw_injection=1 AND saw_admin=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-116-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_path=&quot;/api/3/*&quot; OR Web.uri_path=&quot;/AdminPlugins&quot;) by Web.src, Web.uri_path, Web.uri_query, Web.status | `drop_dm_object_name(Web)` | eval is_injection=if(match(uri_query,&quot;(?i)(\(|%28).*(union|select|from\s+users|information_schema)&quot;),1,0) | eval is_admin=if(uri_path=&quot;/AdminPlugins&quot; AND status=200,1,0) | stats max(is_injection) as saw_injection max(is_admin) as saw_admin min(firstTime) as firstTime max(lastTime) as lastTime values(uri_path) as paths by src | where saw_injection=1 AND saw_admin=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+| where TimeGenerated &gt; ago(7d)
+| where Url contains &quot;AdminPlugins&quot;
+| where tostring(HttpStatusCode) == &quot;200&quot;
+| join kind=inner sqli on SrcIpAddr, DstHostname
+| where TimeGenerated between (SqliTime .. SqliTime + window)
+| project SqliTime, AdminAccessTime = TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, UserAgent = HttpRequestHeaderUserAgent
+| order by AdminAccessTime desc</code></pre></div>
+    <div class="tab-content" id="art-116-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot; OR Web.uri_path=&quot;*AdminPlugins*&quot;) by Web.src, Web.dest, Web.url, Web.uri_path, Web.status, _time span=1m | `drop_dm_object_name(Web)` | eval isSqli=if(match(url,&quot;(?i)filter(\[|%5b)&quot;) AND (match(url,&quot;(?i)union|select|information_schema|--&quot;)),1,0) | eval isAdmin=if(match(uri_path,&quot;(?i)AdminPlugins&quot;) AND status=200,1,0) | stats min(_time) as firstTime max(_time) as lastTime sum(isSqli) as sqliHits sum(isAdmin) as adminHits values(url) as urls by src, dest | where sqliHits&gt;0 AND adminHits&gt;0 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-116-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot; OR Web.uri_path=&quot;*AdminPlugins*&quot;) by Web.src, Web.dest, Web.url, Web.uri_path, Web.status, _time span=1m | `drop_dm_object_name(Web)` | eval isSqli=if(match(url,&quot;(?i)filter(\[|%5b)&quot;) AND (match(url,&quot;(?i)union|select|information_schema|--&quot;)),1,0) | eval isAdmin=if(match(uri_path,&quot;(?i)AdminPlugins&quot;) AND status=200,1,0) | stats min(_time) as firstTime max(_time) as lastTime sum(isSqli) as sqliHits sum(isAdmin) as adminHits values(url) as urls by src, dest | where sqliHits&gt;0 AND adminHits&gt;0 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -14898,11 +14861,11 @@ ImWebSession
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-116-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-116-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-116-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-116-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-116-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-116-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-116-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-116-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -14911,7 +14874,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-116-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-116-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -14923,12 +14886,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-116-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-116-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-45262&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-116-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-116-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-45262&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -14951,11 +14914,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-116-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-116-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-116-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-116-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-116-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-116-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-116-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in
+    <div class="tab-content active" id="art-116-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -14968,7 +14931,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-116-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-116-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in
@@ -14984,14 +14947,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-116-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in ```
+    <div class="tab-content" id="art-116-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-116-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-116-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-116-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/tmp/fs-hijack*&quot; OR Filesystem.file_path=&quot;*/tmp/admin.html*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-116-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-116-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)

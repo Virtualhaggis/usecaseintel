@@ -21,9 +21,9 @@
   </div>
   <p class="summary">Authorities in Germany and the U.S. dismantled the central infrastructure of Kratos, a phishing-as-a-service (PhaaS) platform with global reach, and its developer was arrested in Indonesia. [...]</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Phishing">T1566</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">dwbud.vilaribit.com</span> <span class="ind ">razen.online</span> <span class="ind ">theoceanac.online</span> <span class="ind ">jumpast.es</span> <span class="ind ">enerdizerandtron.de</span> <span class="ind ">abal.my</span> <span class="ind ">starwellmedia.com</span> <span class="ind ">aabiz.de</span> <span class="ind ">aspireglobal.ltd</span> <span class="ind ">buenne.de</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">abal.my</span> <span class="ind ">starwellmedia.com</span> <span class="ind ">aabiz.de</span> <span class="ind ">aspireglobal.ltd</span> <span class="ind ">buenne.de</span> <span class="ind ">dufllot.sbs</span> <span class="ind ">enerdizerandtron.de</span> <span class="ind ">espaciocf.de</span> <span class="ind ">ihrsupportcenter.de</span> <span class="ind ">ilersls.org</span></div>
 <div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">41.128.0.142</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">c447e75f1029ed7a…</span> <span class="ind ">cd231b895bbcd715…</span> <span class="ind ">949895df17148c5e…</span> <span class="ind ">9d1a1a5e3b5e5de8…</span> <span class="ind ">a3c298ccf2456989…</span></div>
+<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">cd231b895bbcd715…</span> <span class="ind ">949895df17148c5e…</span> <span class="ind ">9d1a1a5e3b5e5de8…</span> <span class="ind ">c447e75f1029ed7a…</span> <span class="ind ">a3c298ccf2456989…</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-00-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-00"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -715,11 +715,11 @@ level: high
     </div>
     <div class="tab-content active" id="art-00-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;41.128.0.142&quot;) or RemoteUrl has_any (&quot;dwbud.vilaribit.com&quot;, &quot;razen.online&quot;, &quot;theoceanac.online&quot;, &quot;jumpast.es&quot;, &quot;enerdizerandtron.de&quot;, &quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;)
+| where RemoteIP in (&quot;41.128.0.142&quot;) or RemoteUrl has_any (&quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;, &quot;dufllot.sbs&quot;, &quot;enerdizerandtron.de&quot;, &quot;espaciocf.de&quot;, &quot;ihrsupportcenter.de&quot;, &quot;ilersls.org&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
     <div class="tab-content" id="art-00-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;41.128.0.142&quot;]);
-let BadDomains = dynamic([&quot;dwbud.vilaribit.com&quot;, &quot;razen.online&quot;, &quot;theoceanac.online&quot;, &quot;jumpast.es&quot;, &quot;enerdizerandtron.de&quot;, &quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;]);
+let BadDomains = dynamic([&quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;, &quot;dufllot.sbs&quot;, &quot;enerdizerandtron.de&quot;, &quot;espaciocf.de&quot;, &quot;ihrsupportcenter.de&quot;, &quot;ilersls.org&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
 | where DstIpAddr in (BadIPs)
@@ -764,12 +764,12 @@ level: critical
 | `drop_dm_object_name(All_Traffic)`
 | append
     [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;dwbud.vilaribit.com&quot;, &quot;razen.online&quot;, &quot;theoceanac.online&quot;, &quot;jumpast.es&quot;, &quot;enerdizerandtron.de&quot;, &quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;)
+        where Web.dest IN (&quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;, &quot;dufllot.sbs&quot;, &quot;enerdizerandtron.de&quot;, &quot;espaciocf.de&quot;, &quot;ihrsupportcenter.de&quot;, &quot;ilersls.org&quot;)
         by Web.src, Web.dest, Web.url, Web.user
      | `drop_dm_object_name(Web)`]
 | append
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;dwbud.vilaribit.com&quot;, &quot;razen.online&quot;, &quot;theoceanac.online&quot;, &quot;jumpast.es&quot;, &quot;enerdizerandtron.de&quot;, &quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;)
+        where DNS.query IN (&quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;, &quot;dufllot.sbs&quot;, &quot;enerdizerandtron.de&quot;, &quot;espaciocf.de&quot;, &quot;ihrsupportcenter.de&quot;, &quot;ilersls.org&quot;)
         by DNS.src, DNS.query, DNS.answer
      | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-00-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
@@ -778,12 +778,12 @@ level: critical
 | `drop_dm_object_name(All_Traffic)`
 | append
     [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;dwbud.vilaribit.com&quot;, &quot;razen.online&quot;, &quot;theoceanac.online&quot;, &quot;jumpast.es&quot;, &quot;enerdizerandtron.de&quot;, &quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;)
+        where Web.dest IN (&quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;, &quot;dufllot.sbs&quot;, &quot;enerdizerandtron.de&quot;, &quot;espaciocf.de&quot;, &quot;ihrsupportcenter.de&quot;, &quot;ilersls.org&quot;)
         by Web.src, Web.dest, Web.url, Web.user
      | `drop_dm_object_name(Web)`]
 | append
     [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;dwbud.vilaribit.com&quot;, &quot;razen.online&quot;, &quot;theoceanac.online&quot;, &quot;jumpast.es&quot;, &quot;enerdizerandtron.de&quot;, &quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;)
+        where DNS.query IN (&quot;abal.my&quot;, &quot;starwellmedia.com&quot;, &quot;aabiz.de&quot;, &quot;aspireglobal.ltd&quot;, &quot;buenne.de&quot;, &quot;dufllot.sbs&quot;, &quot;enerdizerandtron.de&quot;, &quot;espaciocf.de&quot;, &quot;ihrsupportcenter.de&quot;, &quot;ilersls.org&quot;)
         by DNS.src, DNS.query, DNS.answer
      | `drop_dm_object_name(DNS)`]</code></pre></div></div>
   </div>
@@ -815,20 +815,20 @@ union
     ( DeviceFileEvents
         | where Timestamp &gt; ago(7d)
         | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;) or SHA1 in~ (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;) or MD5 in~ (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
+        | where SHA256 in~ (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;) or SHA1 in~ (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;) or MD5 in~ (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
         | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
                   Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
     ( DeviceProcessEvents
         | where Timestamp &gt; ago(7d)
         | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;) or SHA1 in~ (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;) or MD5 in~ (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
+        | where SHA256 in~ (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;) or SHA1 in~ (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;) or MD5 in~ (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
         | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
                   Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
 | order by Timestamp desc
 </code></pre></div>
     <div class="tab-content" id="art-00-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
 // Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;]);
+let BadHashes = dynamic([&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;]);
 union
     ( ImFileEvent
         | where TimeGenerated &gt; ago(7d)
@@ -877,21 +877,21 @@ level: critical
 </code></pre></div>
     <div class="tab-content" id="art-00-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
+    where Filesystem.file_hash IN (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
 | `drop_dm_object_name(Filesystem)`
 | append
     [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
+        where Processes.process_hash IN (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-00-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
+    where Filesystem.file_hash IN (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
 | `drop_dm_object_name(Filesystem)`
 | append
     [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
+        where Processes.process_hash IN (&quot;cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea&quot;, &quot;949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898&quot;, &quot;9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42&quot;, &quot;c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb&quot;, &quot;a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>

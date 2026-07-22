@@ -11,30 +11,20 @@ By Bill Toulas
 July 21, 2026
 07:07 PM
 0 
-
-
 Authorities in Germany and the U.S. dismantled the central infrastructure of Kratos, a phishing-as-a-service (PhaaS) platform with global reach, and its developer was arrested in Indonesia.
-
-
 During the operation, authorities seized more than 200 servers, effectively disrupting the malicious service and rendering it inoperable.
-
-
-The action was led by Frankfurt’s Prosecutor General Offi…
+The action was led by Frankfurt’s Prosecutor General Office (ZIT), Ge…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `41.128.0.142`
-- **Domain (defanged):** `dwbud.vilaribit.com`
-- **Domain (defanged):** `razen.online`
-- **Domain (defanged):** `theoceanac.online`
-- **Domain (defanged):** `jumpast.es`
-- **Domain (defanged):** `enerdizerandtron.de`
 - **Domain (defanged):** `abal.my`
 - **Domain (defanged):** `starwellmedia.com`
 - **Domain (defanged):** `aabiz.de`
 - **Domain (defanged):** `aspireglobal.ltd`
 - **Domain (defanged):** `buenne.de`
 - **Domain (defanged):** `dufllot.sbs`
+- **Domain (defanged):** `enerdizerandtron.de`
 - **Domain (defanged):** `espaciocf.de`
 - **Domain (defanged):** `ihrsupportcenter.de`
 - **Domain (defanged):** `ilersls.org`
@@ -43,13 +33,18 @@ The action was led by Frankfurt’s Prosecutor General Offi…
 - **Domain (defanged):** `smartcontrolengineer.com`
 - **Domain (defanged):** `sonnenbrillenspot.de`
 - **Domain (defanged):** `trisrnareprjdocz.com`
-- **Domain (defanged):** `crm-technik.de`
+- **Domain (defanged):** `dwbud.vilaribit.com`
+- **Domain (defanged):** `razen.online`
+- **Domain (defanged):** `theoceanac.online`
+- **Domain (defanged):** `jumpast.es`
 - **Domain (defanged):** `klenpare.com`
 - **Domain (defanged):** `uvarnix.cfd`
-- **SHA256:** `c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb`
+- **Domain (defanged):** `xavon.sbs`
+- **Domain (defanged):** `crm-technik.de`
 - **SHA256:** `cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea`
 - **SHA256:** `949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898`
 - **SHA256:** `9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42`
+- **SHA256:** `c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb`
 - **SHA256:** `a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c`
 
 ## MITRE ATT&CK Techniques
@@ -293,10 +288,10 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `41.128.0.142`, `dwbud.vilaribit.com`, `razen.online`, `theoceanac.online`, `jumpast.es`, `enerdizerandtron.de`, `abal.my`, `starwellmedia.com` _(+15 more)_
+  - IP / domain IOC(s): `41.128.0.142`, `abal.my`, `starwellmedia.com`, `aabiz.de`, `aspireglobal.ltd`, `buenne.de`, `dufllot.sbs`, `enerdizerandtron.de` _(+16 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb`, `cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea`, `949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898`, `9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42`, `a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c`
+  - file hash IOC(s): `cd231b895bbcd7154b81df1e065bf02f1ec667b920c8b6d23308cd509833b5ea`, `949895df17148c5ea29f190d2619a14b3ec648425b9cc3c5a1423553c16f3898`, `9d1a1a5e3b5e5de8a6c76ded7a01fa01709d426232b0048c9ee6ba0c5c1b8b42`, `c447e75f1029ed7a5882add16bcd13ad44be3bd47c93c830ff39185e23d25ebb`, `a3c298ccf2456989ceb080e661b01c3b00445902ae7bb3e58dad4d846334ff9c`
 
 
 ## Why this matters

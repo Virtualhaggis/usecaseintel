@@ -11,12 +11,8 @@ By Bill Toulas
 July 21, 2026
 06:34 PM
 0 
-
-
 A large-scale operation dubbed ‘FakeGit’ is pushing SmartLoader and StealC malware through 7,600 malicious GitHub repositories that accumulated more than 14 million downloads.
-
-
-Over 800 repositories pretended to be AI skills or MCP servers and appeared more than 600 times in public AI registries and catalogs. This increased the likelihood of being discovered by AI agents and dev…
+Over 800 repositories pretended to be AI skills or MCP servers and appeared more than 600 times in public AI registries and catalogs. This increased the likelihood of being discovered by AI agents and developers,…
 
 ## Indicators of Compromise (high-fidelity only)
 
