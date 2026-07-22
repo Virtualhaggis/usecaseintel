@@ -6624,11 +6624,11 @@ DeviceFileEvents
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="The Hacker News"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-platforms="def,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network"
-  data-targets="linux,windows"
-  data-uc-count="9" data-llm-uc-count="5"
-  data-search="TuxBot v3 Evolution Shows Signs of LLM-Assisted IoT Botnet Development Cybersecurity researchers have disclosed details of a previously unreported Internet-of-Things (IoT) botnet framework dubbed TuxBot v3 Evolution that shows signs of being developed with assistance from a large language model (LLM), albeit with not so successful results. &quot;While the AI complied with their request to generate botnet code, it included a safety disclaimer that the developer failed CVE-2013-7471 CVE-2014-2321 CVE-2014-8361 CVE-2017-17215 CVE-2017-18377 CVE-2018-10561 CVE-2018-10562 CVE-2018-20062 CVE-2020-17456 CVE-2022-30525 CVE-2023-39780 CVE-2025-34037 CVE-2026-5815 CVE-2007-3010 CVE-2007-5693 CVE-2016-11021 CVE-2020-8515 CVE-2021-4045 CVE-2021-25646 CVE-2022-1388 CVE-2022-22947 CVE-2022-22965 CVE-2022-44877 CVE-2023-1389 CVE-2025-34117 T1190 [LLM] TuxBot v3 C2 egress to known IPs / operator ports 1999,31337,9999 [LLM] TuxBot v3 DNS C2 lookups to known DGA / fallback domains [LLM] TuxBot v3 Telnet/SSH/ADB scanner fan-out from single host [LLM] TuxBot v3 Linux persistence via systemd/cron/rc.local watchdog [LLM] TuxBot v3 bot-agent execution by known SHA256 hash Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) File hash IOCs — endpoint file/process match">
+  data-targets="windows"
+  data-uc-count="4" data-llm-uc-count="0"
+  data-search="TuxBot v3 Evolution Shows Signs of LLM-Assisted IoT Botnet Development Cybersecurity researchers have disclosed details of a previously unreported Internet-of-Things (IoT) botnet framework dubbed TuxBot v3 Evolution that shows signs of being developed with assistance from a large language model (LLM), albeit with not so successful results. &quot;While the AI complied with their request to generate botnet code, it included a safety disclaimer that the developer failed CVE-2013-7471 CVE-2014-2321 CVE-2014-8361 CVE-2017-17215 CVE-2017-18377 CVE-2018-10561 CVE-2018-10562 CVE-2018-20062 CVE-2020-17456 CVE-2022-30525 CVE-2023-39780 CVE-2025-34037 CVE-2026-5815 CVE-2007-3010 CVE-2007-5693 CVE-2016-11021 CVE-2020-8515 CVE-2021-4045 CVE-2021-25646 CVE-2022-1388 CVE-2022-22947 CVE-2022-22965 CVE-2022-44877 CVE-2023-1389 CVE-2025-34117 T1190 Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) File hash IOCs — endpoint file/process match">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-15-tuxbot-v3-evolution-shows-signs-of-llm-assisted-iot-botnet-d" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -6637,7 +6637,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-07-15</span>
-    <span>9 use cases</span>
+    <span>4 use cases</span>
     <span>1 technique</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -6688,373 +6688,15 @@ DeviceFileEvents
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] TuxBot v3 Telnet/SSH/ADB scanner fan-out from single host · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] TuxBot v3 Linux persistence via systemd/cron/rc.local watchdog · [LLM] TuxBot v3 bot-agent execution by known SHA256 hash · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] TuxBot v3 C2 egress to known IPs / operator ports 1999,31337,9999 · [LLM] TuxBot v3 DNS C2 lookups to known DGA / fallback domains · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="8c35f97570" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">TuxBot v3 C2 egress to known IPs / operator ports 1999,31337,9999</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8c35f97570" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts outbound connections from any host to the seven published TuxBot C2 IPs, or to the framework&#x27;s distinctive Go-C2 listener ports (1999/31337 encrypted bot dispatch, 9999 JSON operator interface). Article-specific because these exact IPs and non-standard ports are unique to the TuxBot v3 Evolution framework within the Keksec ecosystem.
-
-Rationale: Uses the seven exact C2 IPs and the three non-standard Go-C2 ports (1999/31337 encrypted bot dispatch, 9999 JSON operator API) named in the article/Unit 42 write-up — all IOC-grade values unique to this framework.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-  • https://thehackernews.com/2026/07/tuxbot-v3-evolution-shows-signs-of-llm.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Non-Standard Port">T1571</span> <span class="ind tech" title="Non-Application Layer Protocol">T1095</span> <span class="ind tech" title="Domain Generation Algorithms">T1568.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate app using port 9999 (some DB/admin panels) to an internal host</li><li>Security scanner or honeypot deliberately probing these IPs</li><li>Port 31337 used by a legacy dev tool/BackOrifice-era test harness</li><li>Threat-intel enrichment box that resolves/connects to IOC IPs for validation</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteIPType != &quot;Public&quot; and RemotePort == 9999)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the source host is an IoT/embedded device or server that has no business reason to reach these public IPs/ports; pull InitiatingProcess and full connection history for the src. 2) Contain: isolate the host from the network (or apply an egress ACL blocking the seven IPs and ports 1999/31337/9999), preserve the running binary for hashing. 3) Hunt: pivot on src for Telnet/SSH/ADB scanning fan-out (UC3), systemd/cron persistence (UC4), and match dropped binaries against the TuxBot hash set (UC5).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionAttempt&quot;,&quot;ConnectionFailed&quot;)
-| where RemoteIP in (&quot;209.182.237.133&quot;,&quot;185.10.68.127&quot;,&quot;194.46.59.169&quot;,&quot;45.145.185.229&quot;,&quot;107.174.133.119&quot;,&quot;37.32.24.195&quot;,&quot;154.6.197.43&quot;)
-    or (RemoteIPType == &quot;Public&quot; and RemotePort in (1999, 31337, 9999))
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(30d)
-| where DstIpAddr in (&quot;209.182.237.133&quot;,&quot;185.10.68.127&quot;,&quot;194.46.59.169&quot;,&quot;45.145.185.229&quot;,&quot;107.174.133.119&quot;,&quot;37.32.24.195&quot;,&quot;154.6.197.43&quot;)
-    or DstPortNumber in (1999, 31337, 9999)
-| project TimeGenerated, SrcIpAddr, DstIpAddr, DstPortNumber, DvcHostname, NetworkApplicationProtocol, DvcAction
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: TuxBot v3 C2 Connection to Known IP or Go-C2 Operator Port
-id: b3f1c2a4-5d6e-4f70-8a91-1c2d3e4f5061
-description: Detects egress to published TuxBot v3 Evolution C2 IPs or its distinctive Go-C2 listener ports (1999/31337/9999).
-references:
-  - https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1571
-  - attack.t1095
-  - attack.command_and_control
-logsource:
-  category: network_connection
-  product: linux
-detection:
-  selection_ip:
-    DestinationIp:
-      - &#x27;209.182.237.133&#x27;
-      - &#x27;185.10.68.127&#x27;
-      - &#x27;194.46.59.169&#x27;
-      - &#x27;45.145.185.229&#x27;
-      - &#x27;107.174.133.119&#x27;
-      - &#x27;37.32.24.195&#x27;
-      - &#x27;154.6.197.43&#x27;
-  selection_port:
-    DestinationPort:
-      - 1999
-      - 31337
-      - 9999
-  condition: selection_ip or selection_port
-level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) (@network.destination.ip:209.182.237.133 OR @network.destination.ip:185.10.68.127 OR @network.destination.ip:194.46.59.169 OR @network.destination.ip:45.145.185.229 OR @network.destination.ip:107.174.133.119 OR @network.destination.ip:37.32.24.195 OR @network.destination.ip:154.6.197.43)</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| (RemoteAddressIP4=/^(209\.182\.237\.133|185\.10\.68\.127|194\.46\.59\.169|45\.145\.185\.229|107\.174\.133\.119|37\.32\.24\.195|154\.6\.197\.43)$/ OR RemotePort=1999 OR RemotePort=31337 OR RemotePort=9999)
-| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN (&quot;209.182.237.133&quot;,&quot;185.10.68.127&quot;,&quot;194.46.59.169&quot;,&quot;45.145.185.229&quot;,&quot;107.174.133.119&quot;,&quot;37.32.24.195&quot;,&quot;154.6.197.43&quot;) OR All_Traffic.dest_port IN (1999,31337,9999)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN (&quot;209.182.237.133&quot;,&quot;185.10.68.127&quot;,&quot;194.46.59.169&quot;,&quot;45.145.185.229&quot;,&quot;107.174.133.119&quot;,&quot;37.32.24.195&quot;,&quot;154.6.197.43&quot;) OR All_Traffic.dest_port IN (1999,31337,9999)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="3d0ffe4f4a" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">TuxBot v3 DNS C2 lookups to known DGA / fallback domains</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3d0ffe4f4a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts DNS resolution and connections to the five published TuxBot domains (digikalas.online, jetross.com, cfcybernews.eu, captcha.kanfetka.site, c2.tuxbot.local), which back the framework&#x27;s DNS-TXT covert channel and HTTP-polling fallback. Article-specific because these domains are the recovered C2 rendezvous points for this framework&#x27;s multi-tiered channel architecture.
-
-Rationale: Matches the five exact domains recovered from TuxBot samples that anchor its DNS-TXT and HTTP-polling fallback C2 channels; a bare domain hit is high-fidelity since these are non-public malicious rendezvous names.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-  • https://thehackernews.com/2026/07/tuxbot-v3-evolution-shows-signs-of-llm.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Domain Generation Algorithms">T1568.002</span> <span class="ind tech" title="Fallback Channels">T1008</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Passive DNS / threat-intel sinkhole resolving IOC domains for research</li><li>Security appliance sandbox detonating the sample and generating lookups</li><li>Analyst manually resolving the domain during triage from a corporate host</li><li>Internal .local resolver noise returning NXDOMAIN for c2.tuxbot.local</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the querying host and the process (ContextImageFileName) that issued the lookup; check whether the resolution succeeded and any subsequent connection to the resolved IP. 2) Contain: sinkhole/block the five domains at the resolver and egress-block resolved IPs; isolate the host if a non-research source. 3) Hunt: correlate the same host against the C2 IP/port detection (UC1) and check for repeated TXT-type queries indicative of the DNS covert channel.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;digikalas.online&quot;,&quot;jetross.com&quot;,&quot;cfcybernews.eu&quot;,&quot;captcha.kanfetka.site&quot;,&quot;c2.tuxbot.local&quot;)
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
-| where TimeGenerated &gt; ago(30d)
-| where DnsQuery has_any (&quot;digikalas.online&quot;,&quot;jetross.com&quot;,&quot;cfcybernews.eu&quot;,&quot;captcha.kanfetka.site&quot;,&quot;c2.tuxbot.local&quot;)
-| project TimeGenerated, SrcIpAddr, DvcHostname, DnsQuery, DnsQueryTypeName, DnsResponseName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: TuxBot v3 DNS Query to Known C2 / Fallback Domain
-id: c4e2d3b5-6e7f-4081-9b02-2d3e4f506172
-description: Detects DNS lookups for the recovered TuxBot v3 Evolution C2 domains backing its DNS-TXT covert channel and HTTP-polling fallback.
-references:
-  - https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1071.004
-  - attack.t1568.002
-  - attack.command_and_control
-logsource:
-  category: dns
-  product: linux
-detection:
-  selection:
-    QueryName|endswith:
-      - &#x27;digikalas.online&#x27;
-      - &#x27;jetross.com&#x27;
-      - &#x27;cfcybernews.eu&#x27;
-      - &#x27;captcha.kanfetka.site&#x27;
-      - &#x27;c2.tuxbot.local&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| DomainName=/(digikalas\.online|jetross\.com|cfcybernews\.eu|captcha\.kanfetka\.site|c2\.tuxbot\.local)$/i
-| groupBy([aid, ComputerName, DomainName, RequestType, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN (&quot;digikalas.online&quot;,&quot;jetross.com&quot;,&quot;cfcybernews.eu&quot;,&quot;captcha.kanfetka.site&quot;,&quot;c2.tuxbot.local&quot;) OR DNS.query=&quot;*.digikalas.online&quot; OR DNS.query=&quot;*.tuxbot.local&quot;) by DNS.src DNS.query DNS.record_type | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN (&quot;digikalas.online&quot;,&quot;jetross.com&quot;,&quot;cfcybernews.eu&quot;,&quot;captcha.kanfetka.site&quot;,&quot;c2.tuxbot.local&quot;) OR DNS.query=&quot;*.digikalas.online&quot; OR DNS.query=&quot;*.tuxbot.local&quot;) by DNS.src DNS.query DNS.record_type | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4ede56911f" data-platforms="def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">TuxBot v3 Telnet/SSH/ADB scanner fan-out from single host</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="4ede56911f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects a single internal host initiating high-volume outbound connections to Telnet (23/2323), SSH (22), and Android Debug Bridge (5555) ports across many distinct destinations — the propagation behaviour of TuxBot&#x27;s built-in scanners (1,496-pair Telnet brute-forcer plus SSH/HTTP/ADB scanners running up to 128 concurrent connections). Article-specific to the framework&#x27;s scanner sub-modules.
-
-Rationale: Targets TuxBot&#x27;s named scanner sub-modules (Telnet 23/2323, SSH 22, ADB 5555, HTTP 80/8080 at 128 concurrent connections) via a destination fan-out threshold rather than a single-connection match, which is the correct shape for propagation/brute-force sweeps.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-  • https://thehackernews.com/2026/07/tuxbot-v3-evolution-shows-signs-of-llm.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Network Service Discovery">T1046</span> <span class="ind tech" title="Active Scanning: Scanning IP Blocks">T1595.001</span> <span class="ind tech" title="Brute Force: Password Guessing">T1110.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanner (Nessus/Nmap/Rapid7) sweeping the subnet</li><li>Configuration-management/monitoring host SSH-polling the fleet</li><li>Network discovery tool during asset inventory</li><li>Ansible/Salt master reaching many nodes over 22</li><li>Load balancer or uptime monitor probing 80/8080 across pools</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;nmap&quot;,&quot;masscan&quot;,&quot;nessusd&quot;,&quot;zmap&quot;,&quot;ansible&quot;,&quot;salt-minion&quot;,&quot;nuclei&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the src host and initiating process — is it a sanctioned scanner subnet/host, or an IoT/embedded device that normally only speaks HTTP? Check the destination spread (internet-wide vs internal). 2) Contain: quarantine the host and block outbound 23/2323/5555 at the egress if unsanctioned; capture the offending process. 3) Hunt: pivot the src to the C2 IP/port and DNS detections (UC1/UC2) and to systemd/cron persistence (UC4) to confirm full TuxBot infection.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where ActionType in (&quot;ConnectionAttempt&quot;,&quot;ConnectionFailed&quot;,&quot;ConnectionSuccess&quot;)
-| where RemotePort in (23, 2323, 22, 5555, 80, 8080)
-| summarize DistinctTargets = dcount(RemoteIP), Ports = make_set(RemotePort, 10), Attempts = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, InitiatingProcessFileName
-| where DistinctTargets &gt;= 50   // 50 = fan-out threshold: a single host sweeping Telnet/SSH/ADB across dozens of hosts is scanner behaviour, well above normal client egress
-| order by DistinctTargets desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(1d)
-| where DstPortNumber in (23, 2323, 22, 5555, 80, 8080)
-| summarize DistinctTargets = dcount(DstIpAddr), Ports = make_set(DstPortNumber, 10), Attempts = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SrcIpAddr, DvcHostname
-| where DistinctTargets &gt;= 50   // 50 = empirical scanner fan-out threshold
-| order by DistinctTargets desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| (RemotePort=23 OR RemotePort=2323 OR RemotePort=22 OR RemotePort=5555 OR RemotePort=80 OR RemotePort=8080)
-| groupBy([aid, ComputerName, ContextImageFileName], function=count(field=RemoteAddressIP4, distinct=true, as=DistinctTargets))
-| DistinctTargets &gt;= 50</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` dc(All_Traffic.dest) as distinct_targets count as attempts values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (23,2323,22,5555,80,8080) by All_Traffic.src All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where distinct_targets &gt;= 50 | sort - distinct_targets</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(All_Traffic.dest) as distinct_targets count as attempts values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (23,2323,22,5555,80,8080) by All_Traffic.src All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where distinct_targets &gt;= 50 | sort - distinct_targets</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="96c2a6ece4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">TuxBot v3 Linux persistence via systemd/cron/rc.local watchdog</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="96c2a6ece4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts non-package-manager processes installing systemd services, cron entries, or rc.local hooks on Linux/IoT hosts — the triple persistence mechanism (systemd service + cron + watchdog keepalive) TuxBot uses to stay resident. Article-specific to the framework&#x27;s documented persistence installer that also spawns a keepalive/watchdog process.
-
-Rationale: Anchors on TuxBot&#x27;s documented triple persistence (systemd service + cron + rc.local watchdog) by flagging writes to those exact autostart paths from non-package-manager parents, with a bias toward /tmp,/dev/shm,/var/tmp droppers typical of botnet installers.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-  • https://thehackernews.com/2026/07/tuxbot-v3-evolution-shows-signs-of-llm.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create or Modify System Process: Systemd Service">T1543.002</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin installing/enabling a systemd unit via systemctl</li><li>Config management (Ansible/Puppet/Chef) deploying cron jobs or units</li><li>Custom in-house software installers not run through the package manager</li><li>Container/cloud-init bootstrap writing rc.local on first boot</li><li>Backup/monitoring agent registering its own systemd service</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;ansible&quot;,&quot;puppet&quot;,&quot;chef-client&quot;,&quot;salt-minion&quot;,&quot;systemd&quot;,&quot;systemd-sysv-install&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the written unit/cron file contents and the parent process path — a service pointing at a binary in /tmp, /dev/shm, or a hidden/renamed process is high-confidence malicious. 2) Contain: disable/remove the persistence entry, kill the watchdog/keepalive process, isolate the host, and preserve the referenced binary. 3) Hunt: hash the referenced binary against the TuxBot set (UC5) and correlate the host with the C2 (UC1/UC2) and scanner (UC3) detections.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where (FileName in~ (&quot;systemctl&quot;,&quot;crontab&quot;) and ProcessCommandLine has_any (&quot;enable&quot;,&quot;--user&quot;))
-    or ProcessCommandLine has_any (&quot;/etc/systemd/system/&quot;,&quot;/etc/cron.d/&quot;,&quot;/etc/init.d/&quot;,&quot;/etc/rc.local&quot;)
-| where InitiatingProcessFileName !in~ (&quot;dpkg&quot;,&quot;apt&quot;,&quot;apt-get&quot;,&quot;yum&quot;,&quot;dnf&quot;,&quot;rpm&quot;,&quot;snapd&quot;,&quot;cloud-init&quot;,&quot;unattended-upgrade&quot;)
-| where AccountName != &quot;root&quot; or InitiatingProcessFolderPath has_any (&quot;/tmp/&quot;,&quot;/dev/shm/&quot;,&quot;/var/tmp/&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where TargetProcessName has_any (&quot;systemctl&quot;,&quot;crontab&quot;)
-    or TargetProcessCommandLine has_any (&quot;/etc/systemd/system/&quot;,&quot;/etc/cron.d/&quot;,&quot;/etc/init.d/&quot;,&quot;/etc/rc.local&quot;)
-| where ParentProcessName !in~ (&quot;dpkg&quot;,&quot;apt&quot;,&quot;apt-get&quot;,&quot;yum&quot;,&quot;dnf&quot;,&quot;rpm&quot;,&quot;snapd&quot;,&quot;cloud-init&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: TuxBot v3 Linux Persistence via systemd/cron/rc.local
-id: d5f3e4c6-7f80-4192-ac13-3e4f50617283
-description: Detects non-package-manager processes writing systemd service, cron, or rc.local persistence used by TuxBot v3 Evolution.
-references:
-  - https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1543.002
-  - attack.t1053.003
-  - attack.persistence
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    CommandLine|contains:
-      - &#x27;/etc/systemd/system/&#x27;
-      - &#x27;/etc/cron.d/&#x27;
-      - &#x27;/etc/init.d/&#x27;
-      - &#x27;/etc/rc.local&#x27;
-  filter_pkg:
-    ParentImage|endswith:
-      - &#x27;/dpkg&#x27;
-      - &#x27;/apt&#x27;
-      - &#x27;/apt-get&#x27;
-      - &#x27;/yum&#x27;
-      - &#x27;/dnf&#x27;
-      - &#x27;/rpm&#x27;
-      - &#x27;/snapd&#x27;
-      - &#x27;/cloud-init&#x27;
-  condition: selection and not filter_pkg
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:(*&quot;/etc/systemd/system/&quot;* OR *&quot;/etc/cron.d/&quot;* OR *&quot;/etc/init.d/&quot;* OR *&quot;/etc/rc.local&quot;*) OR @process.name:(systemctl OR crontab)) -@process.executable.path:(*/dpkg OR */apt OR */apt-get OR */dnf OR */yum OR */rpm)</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| (ImageFileName=/\/(systemctl|crontab)$/i OR regex(&quot;/etc/(systemd/system|cron\\.d|init\\.d|rc\\.local)&quot;, field=CommandLine))
-| NOT (ParentBaseFileName=/(dpkg|apt|apt-get|yum|dnf|rpm|snapd|cloud-init)/i)
-| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;systemctl&quot;,&quot;crontab&quot;) OR Processes.process IN (&quot;*/etc/systemd/system/*&quot;,&quot;*/etc/cron.d/*&quot;,&quot;*/etc/init.d/*&quot;,&quot;*/etc/rc.local*&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT parent_process_name IN (&quot;dpkg&quot;,&quot;apt&quot;,&quot;apt-get&quot;,&quot;yum&quot;,&quot;dnf&quot;,&quot;rpm&quot;,&quot;snapd&quot;,&quot;cloud-init&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;systemctl&quot;,&quot;crontab&quot;) OR Processes.process IN (&quot;*/etc/systemd/system/*&quot;,&quot;*/etc/cron.d/*&quot;,&quot;*/etc/init.d/*&quot;,&quot;*/etc/rc.local*&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT parent_process_name IN (&quot;dpkg&quot;,&quot;apt&quot;,&quot;apt-get&quot;,&quot;yum&quot;,&quot;dnf&quot;,&quot;rpm&quot;,&quot;snapd&quot;,&quot;cloud-init&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d7019ea9c3" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">TuxBot v3 bot-agent execution by known SHA256 hash</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d7019ea9c3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Alerts on execution or on-disk presence of any of the 20 recovered TuxBot v3 Evolution sample hashes (the cross-compiled C bot agent for ARM/MIPS/x86_64/PowerPC/RISC-V plus Go C2 components). Article-specific: these are the exact file hashes published for this framework, so a match is a direct IOC hit regardless of CPU architecture.
-
-Rationale: Direct match on the 20 published SHA256 hashes for the TuxBot v3 Evolution bot agent and C2 components; hash IOCs are architecture-independent so a single cross-compiled binary is caught on ARM/MIPS/x86_64/PowerPC/RISC-V alike.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-  • https://thehackernews.com/2026/07/tuxbot-v3-evolution-shows-signs-of-llm.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Malware analyst detonating a recovered sample in a sanctioned lab host that reports to EDR</li><li>Threat-intel platform storing the sample on a research file share</li><li>Reverse-engineering VM with EDR enabled</li><li>AV quarantine copy briefly present on disk before deletion</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceName !in~ (&quot;malware-lab-01&quot;,&quot;re-sandbox-01&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host is production (not a sanctioned analysis/RE box) and capture execution context — path, parent, user, and any child scanner/DDoS processes. 2) Contain: isolate the host, kill the process tree and watchdog, and quarantine the binary; block associated C2 IPs/domains at the perimeter. 3) Hunt: sweep the fleet for the same hashes, then pivot confirmed hosts into the C2 (UC1/UC2), scanner (UC3), and persistence (UC4) detections to scope lateral spread within the subnet.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where SHA256 in (&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;,&quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;,&quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;,&quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;,&quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;,&quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;,&quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;,&quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;,&quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;,&quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;,&quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;,&quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;,&quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;,&quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;,&quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;,&quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;,&quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;,&quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;,&quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;,&quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where SHA256 in~ (&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;,&quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;,&quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;,&quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;,&quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;,&quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;,&quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;,&quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;,&quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;,&quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;,&quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;,&quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;,&quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;,&quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;,&quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;,&quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;,&quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;,&quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;,&quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;,&quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, SHA256, TargetProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: TuxBot v3 Bot Agent Execution by Known SHA256
-id: e6041502-8091-42a3-bd24-4f5061728394
-description: Detects execution of any recovered TuxBot v3 Evolution sample by SHA256 hash across CPU architectures.
-references:
-  - https://unit42.paloaltonetworks.com/tuxbot-v3-evolution-iot-botnet/
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1204.002
-  - attack.t1105
-  - attack.execution
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    Hashes|contains:
-      - &#x27;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&#x27;
-      - &#x27;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&#x27;
-      - &#x27;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&#x27;
-      - &#x27;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&#x27;
-      - &#x27;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&#x27;
-      - &#x27;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&#x27;
-      - &#x27;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&#x27;
-      - &#x27;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&#x27;
-      - &#x27;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&#x27;
-      - &#x27;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&#x27;
-      - &#x27;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&#x27;
-      - &#x27;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&#x27;
-      - &#x27;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&#x27;
-      - &#x27;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&#x27;
-      - &#x27;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&#x27;
-      - &#x27;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&#x27;
-      - &#x27;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&#x27;
-      - &#x27;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&#x27;
-      - &#x27;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&#x27;
-      - &#x27;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| in(SHA256HashData, values=[&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;,&quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;,&quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;,&quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;,&quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;,&quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;,&quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;,&quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;,&quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;,&quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;,&quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;,&quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;,&quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;,&quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;,&quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;,&quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;,&quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;,&quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;,&quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;,&quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;])
-| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;,&quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;,&quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;,&quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;,&quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;,&quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;,&quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;,&quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;,&quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;,&quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;,&quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;,&quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;,&quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;,&quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;,&quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;,&quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;,&quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;,&quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;,&quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;,&quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;,&quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;,&quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;,&quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;,&quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;,&quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;,&quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;,&quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;,&quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;,&quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;,&quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;,&quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;,&quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;,&quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;,&quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;,&quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;,&quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;,&quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;,&quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;,&quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
+  <div class="usecases"><details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows" open>
   <summary>
     <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
     <span class="uc-phase">Command &amp; Control</span>
@@ -7069,11 +6711,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -7086,7 +6728,7 @@ level: high</code></pre></div>
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -7096,7 +6738,7 @@ level: high</code></pre></div>
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -7105,7 +6747,7 @@ level: high</code></pre></div>
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -7132,17 +6774,17 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;209.182.237.133&quot;, &quot;185.10.68.127&quot;, &quot;194.46.59.169&quot;, &quot;45.145.185.229&quot;, &quot;107.174.133.119&quot;, &quot;37.32.24.195&quot;, &quot;154.6.197.43&quot;) or RemoteUrl has_any (&quot;digikalas.online&quot;, &quot;jetross.com&quot;, &quot;cfcybernews.eu&quot;, &quot;captcha.kanfetka.site&quot;, &quot;c2.tuxbot.local&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;209.182.237.133&quot;, &quot;185.10.68.127&quot;, &quot;194.46.59.169&quot;, &quot;45.145.185.229&quot;, &quot;107.174.133.119&quot;, &quot;37.32.24.195&quot;, &quot;154.6.197.43&quot;]);
+    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;209.182.237.133&quot;, &quot;185.10.68.127&quot;, &quot;194.46.59.169&quot;, &quot;45.145.185.229&quot;, &quot;107.174.133.119&quot;, &quot;37.32.24.195&quot;, &quot;154.6.197.43&quot;]);
 let BadDomains = dynamic([&quot;digikalas.online&quot;, &quot;jetross.com&quot;, &quot;cfcybernews.eu&quot;, &quot;captcha.kanfetka.site&quot;, &quot;c2.tuxbot.local&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -7151,7 +6793,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -7181,7 +6823,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;209.182.237.133&quot;, &quot;185.10.68.127&quot;, &quot;194.46.59.169&quot;, &quot;45.145.185.229&quot;, &quot;107.174.133.119&quot;, &quot;37.32.24.195&quot;, &quot;154.6.197.43&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -7195,7 +6837,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;digikalas.online&quot;, &quot;jetross.com&quot;, &quot;cfcybernews.eu&quot;, &quot;captcha.kanfetka.site&quot;, &quot;c2.tuxbot.local&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-103-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;209.182.237.133&quot;, &quot;185.10.68.127&quot;, &quot;194.46.59.169&quot;, &quot;45.145.185.229&quot;, &quot;107.174.133.119&quot;, &quot;37.32.24.195&quot;, &quot;154.6.197.43&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -7227,11 +6869,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -7240,7 +6882,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -7252,12 +6894,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2013-7471&quot;, &quot;CVE-2014-2321&quot;, &quot;CVE-2014-8361&quot;, &quot;CVE-2017-17215&quot;, &quot;CVE-2017-18377&quot;, &quot;CVE-2018-10561&quot;, &quot;CVE-2018-10562&quot;, &quot;CVE-2018-20062&quot;, &quot;CVE-2020-17456&quot;, &quot;CVE-2022-30525&quot;, &quot;CVE-2023-39780&quot;, &quot;CVE-2025-34037&quot;, &quot;CVE-2026-5815&quot;, &quot;CVE-2007-3010&quot;, &quot;CVE-2007-5693&quot;, &quot;CVE-2016-11021&quot;, &quot;CVE-2020-8515&quot;, &quot;CVE-2021-4045&quot;, &quot;CVE-2021-25646&quot;, &quot;CVE-2022-1388&quot;, &quot;CVE-2022-22947&quot;, &quot;CVE-2022-22965&quot;, &quot;CVE-2022-44877&quot;, &quot;CVE-2023-1389&quot;, &quot;CVE-2025-34117&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2013-7471&quot;, &quot;CVE-2014-2321&quot;, &quot;CVE-2014-8361&quot;, &quot;CVE-2017-17215&quot;, &quot;CVE-2017-18377&quot;, &quot;CVE-2018-10561&quot;, &quot;CVE-2018-10562&quot;, &quot;CVE-2018-20062&quot;, &quot;CVE-2020-17456&quot;, &quot;CVE-2022-30525&quot;, &quot;CVE-2023-39780&quot;, &quot;CVE-2025-34037&quot;, &quot;CVE-2026-5815&quot;, &quot;CVE-2007-3010&quot;, &quot;CVE-2007-5693&quot;, &quot;CVE-2016-11021&quot;, &quot;CVE-2020-8515&quot;, &quot;CVE-2021-4045&quot;, &quot;CVE-2021-25646&quot;, &quot;CVE-2022-1388&quot;, &quot;CVE-2022-22947&quot;, &quot;CVE-2022-22965&quot;, &quot;CVE-2022-44877&quot;, &quot;CVE-2023-1389&quot;, &quot;CVE-2025-34117&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -7280,12 +6922,12 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
 // predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
 // (Initiating only) so column-projection has to differ per side.
 union
@@ -7303,7 +6945,7 @@ union
                   Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
 // Defender version so the engine can push hash predicates per-side.
 let BadHashes = dynamic([&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;, &quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;, &quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;, &quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;, &quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;, &quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;, &quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;, &quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;, &quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;, &quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;, &quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;, &quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;, &quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;, &quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;, &quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;, &quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;, &quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;, &quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;, &quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;, &quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;]);
 union
@@ -7326,7 +6968,7 @@ union
                   Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+    <div class="tab-content" id="art-103-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
 status: experimental
 description: |
@@ -7352,7 +6994,7 @@ falsepositives:
     - None on a true-positive hash match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;, &quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;, &quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;, &quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;, &quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;, &quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;, &quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;, &quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;, &quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;, &quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;, &quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;, &quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;, &quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;, &quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;, &quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;, &quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;, &quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;, &quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;, &quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;, &quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
@@ -7361,7 +7003,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Endpoint.Processes
         where Processes.process_hash IN (&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;, &quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;, &quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;, &quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;, &quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;, &quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;, &quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;, &quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;, &quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;, &quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;, &quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;, &quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;, &quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;, &quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;, &quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;, &quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;, &quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;, &quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;, &quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;, &quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-103-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;6b7a8e0c96c2318e747f074f9a99d26738700769ac01bba692d19fc884847737&quot;, &quot;146f6010f6ee082aab13e0148d39baefa77eaba4ff65817b511b08c2092bdfd2&quot;, &quot;bd6431fb06e4689142ef597cf00382e38ae20a5393a4d9277e45a3f5b3cbcff9&quot;, &quot;a03b0d41f5ef03328150331ffa0ed970998883f7e0343d79b2d3b95330d8e7c1&quot;, &quot;eb2fa179fde2f097c18d5d700ad87d660fc238ee14cbe5477032e60856859621&quot;, &quot;a8d70d16509e227d8306be361bc37a3dc9fe34bf476f51e361e55e6d293c2b3f&quot;, &quot;0f8bcca3ed65e980da2a1f90a767b7d543be32eeea3e9338d09d4d635a497988&quot;, &quot;96b1f96efce69b3df2dea85678d60da27e3265b4a00e39e20e64b27bb985e1561&quot;, &quot;c7a36d6b8128c41f93a32413675401a10a2b5769b221bbaa8c5c309585b73ceb&quot;, &quot;246c97957651de568e61eba1abe572f0b0f960456209995d43d53a0d7cc494a1&quot;, &quot;3ec016d637e4c9cd331edd2580a229621ad638e924a4aa29ac0342e9144ace19&quot;, &quot;2f2c3551762c03da126e45dca6fc2f997c63f0f1bfc21fd0ceed680ac6f083ce&quot;, &quot;9cd5e7e3c8bad321ef6c3d47fe25b3b56e9487f703a7eeee52db4067e6bafe61&quot;, &quot;e3a5296e762e9ee16010399666441d663beeea956382e97cca032a6a5ad06811&quot;, &quot;f1efb78887bb8783d7781c07cd13b53c9c79ebe5baa81f335838d0a6e73dec7e&quot;, &quot;f324a45fcd2a9db4e542c09486c21b08bc42d6bf76fbd5f17871090361b10815&quot;, &quot;15c17dce89deccd5172285b2650de957918aa1157cde8e4633ae15dfe31f2711&quot;, &quot;71dfbb171eca4ef9d02ff630b56e5283bbef7b375d4dbe9e8c9531bef312fa8d&quot;, &quot;511d3ffb4091cbcc94571d9fb3102e8cb424c6e187d01d53ff12078d54929bda&quot;, &quot;6aa4034dc7a2858094ff4dc59af07d6fe31119591e41599bcc0f3d0b516ee734&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
