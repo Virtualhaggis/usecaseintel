@@ -16,15 +16,22 @@ Over 800 repositories pretended to be AI skills or MCP servers and appeared more
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `144.31.57.65`
+- **IPv4 (defanged):** `144.31.57.67`
+- **IPv4 (defanged):** `213.176.73.149`
+- **Domain (defanged):** `https://raw.githubusercontent.com/deepanshugoel99/long/refs/heads/main/long/long/message1.txt`
+- **Domain (defanged):** `https://raw.githubusercontent.com/deepanshugoel99/long/refs/heads/main/long/long/message2.txt`
+- **SHA256:** `87de3e5a8ef669589c421220cd392ae8027a8f8d3cd97d35ac339f87dcff12c8`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1053.005** — Scheduled Task
+- **T1027** — Obfuscated Files or Information
 - **T1059** — Command and Scripting Interpreter
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1204.002** — User Execution: Malicious File
@@ -44,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### SmartLoader: renamed LuaJIT interpreter launched with .txt/.log data-file stage
 
-`UC_1_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +72,7 @@ DeviceProcessEvents
 
 ### SmartLoader persistence: scheduled task running a LuaJIT stage or FakeGit task names
 
-`UC_1_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +92,7 @@ DeviceProcessEvents
 
 ### SmartLoader Polygon smart-contract C2 resolution / hardcoded C2 IP callback
 
-`UC_1_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +110,7 @@ DeviceNetworkEvents
 
 ### StealC exfiltration to hardcoded FakeGit gate IPs / PHP endpoint
 
-`UC_1_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +128,7 @@ DeviceNetworkEvents
 
 ### FakeGit GitHub dead-drop stage download by LuaJIT/LOLBin process
 
-`UC_1_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -230,7 +237,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `144.31.57.65`, `144.31.57.67`, `213.176.73.149`, `https://raw.githubusercontent.com/deepanshugoel99/long/refs/heads/main/long/long/message1.txt`, `https://raw.githubusercontent.com/deepanshugoel99/long/refs/heads/main/long/long/message2.txt`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `87de3e5a8ef669589c421220cd392ae8027a8f8d3cd97d35ac339f87dcff12c8`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

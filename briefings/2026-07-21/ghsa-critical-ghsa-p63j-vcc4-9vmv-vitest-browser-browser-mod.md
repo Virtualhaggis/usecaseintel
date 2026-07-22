@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### @vitest/browser Browser Mode API exposed to non-loopback network (inbound to node/vitest)
 
-`UC_9_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_10_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceNetworkEvents
 
 ### Vitest Browser Mode provider command writes/deletes files outside project (node.exe PNG/zip to sensitive paths)
 
-`UC_9_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p63j-vcc4-9vmv: @vitest/browser: Browser Mode provider co
 
-`UC_9_0` · phase: **exploit** · confidence: **High**
+`UC_10_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
