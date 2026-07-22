@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Sednit known-bad SHA-1 hash match: Xagent / SlimAgent / BeardShell binaries
 
-`UC_574_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_576_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ union (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA1 in~ (Sednit
 
 ### SlimAgent / BeardShell DLL load with implant filename outside System32
 
-`UC_574_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_576_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ union
 
 ### BeardShell C2: outbound to Icedrive cloud-storage API as non-browser process
 
-`UC_574_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_576_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### Covenant C2: outbound to Filen cloud-storage API as non-browser process
 
-`UC_574_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_576_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### Sednit COM-hijacking persistence via HKCU CLSID InprocServer32 to user-writable DLL
 
-`UC_574_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_576_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceRegistryEvents
 
 ### SlimAgent keylogger HTML log artefact written to disk (Xagent-lineage colour scheme)
 
-`UC_574_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_576_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -426,7 +426,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
 
-`UC_574_7` · phase: **exploit** · confidence: **High**
+`UC_576_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

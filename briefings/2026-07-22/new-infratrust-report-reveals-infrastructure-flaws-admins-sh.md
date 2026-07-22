@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 22, 2026
 10:15 AM
 0 
-
-
 Eclypsium has launched InfraTrust, a new infrastructure cybersecurity knowledge base and monthly InfraTrust Pulse report designed to help organizations prioritize vulnerabilities affecting infrastructure, firmware, networking, and edge devices.
-
-
-The monthly report aggregates security advisories from major infrastructure vendors and highlights the vulnerabilities admi…
+The monthly report aggregates security advisories from major infrastructure vendors and highlights the vulnerabilities administrato…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -25,17 +21,10 @@ The monthly report aggregates security advisories from major infrastructure ven
 - **CVE:** `CVE-2026-39808`
 - **CVE:** `CVE-2026-25089`
 - **CVE:** `CVE-2026-21385`
-- **CVE:** `CVE-2026-0288`
-- **CVE:** `CVE-2026-0287`
-- **IPv4 (defanged):** `193.37.32.179`
-- **IPv4 (defanged):** `193.37.32.214`
-- **IPv4 (defanged):** `216.73.163.151`
-- **IPv4 (defanged):** `216.73.163.158`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
-- **T1071** — Application Layer Protocol
 - **T1068** — Exploitation for Privilege Escalation
 - **T1059.006** — Command and Scripting Interpreter: Python
 - **T1105** — Ingress Tool Transfer
@@ -48,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### SonicWall SMA1000 pre-auth exploit chain: /wsproxy SSRF + execRemoveHotfix RPC (CVE-2026-15409/15410)
 
-`UC_1_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_6_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### SonicWall SMA1000 post-exploit malware artifacts (KNUCKLEBALL / ORANGETAIL / ROOTRUN)
 
-`UC_1_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,12 +72,9 @@ union
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-15409`, `CVE-2026-15410`, `CVE-2026-39808`, `CVE-2026-25089`, `CVE-2026-21385`, `CVE-2026-0288`, `CVE-2026-0287`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `193.37.32.179`, `193.37.32.214`, `216.73.163.151`, `216.73.163.158`
+  - CVE(s): `CVE-2026-15409`, `CVE-2026-15410`, `CVE-2026-39808`, `CVE-2026-25089`, `CVE-2026-21385`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

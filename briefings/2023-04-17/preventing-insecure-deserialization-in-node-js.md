@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### node-serialize / serialize-to-js deserialization RCE payload marker `_$$ND_FUNC$$_` in web request
 
-`UC_1746_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1747_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js process spawning a command interpreter (deserialization RCE child_process exec)
 
-`UC_1746_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1747_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Preventing insecure deserialization in Node.js
 
-`UC_1746_1` · phase: **exploit** · confidence: **High**
+`UC_1747_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

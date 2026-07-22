@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe Acrobat Chrome extension (CVE-2026-48294 / HermeticReader) exposure
 
-`UC_2_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Browser exfil to rare external host during active WhatsApp Web session (HermeticReader)
 
-`UC_2_5` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_7_5` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

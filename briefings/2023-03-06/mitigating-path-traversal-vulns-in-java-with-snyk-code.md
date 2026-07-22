@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Mitigating path traversal vulns in Java with Snyk Code
 
-`UC_1808_0` · phase: **install** · confidence: **High**
+`UC_1809_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

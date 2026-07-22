@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Prototype pollution / type-confusion payload in web request (__proto__, constructor[prototype])
 
-`UC_2765_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2766_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — JavaScript type confusion: Bypassed input validation (and how to remediate)
 
-`UC_2765_1` · phase: **exploit** · confidence: **High**
+`UC_2766_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

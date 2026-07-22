@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2591 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2593 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -16,6 +16,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new infratrust report reveals infrastructure flaws admins sh](./2026-07-22/new-infratrust-report-reveals-infrastructure-flaws-admins-sh.md)
 - [openai says its ai models escaped sandbox targeted hugging f](./2026-07-22/openai-says-its-ai-models-escaped-sandbox-targeted-hugging-f.md)
 - [police dismantle kratos phishing kit built to steal microsof](./2026-07-22/police-dismantle-kratos-phishing-kit-built-to-steal-microsof.md)
+- [real world incident response microsoft and axa xl strengthen](./2026-07-22/real-world-incident-response-microsoft-and-axa-xl-strengthen.md)
+- [sol searching can frontier models tackle autonomous long hor](./2026-07-22/sol-searching-can-frontier-models-tackle-autonomous-long-hor.md)
+- [sql injection isn t dead](./2026-07-22/sql-injection-isn-t-dead.md)
+- [swiss rail giant stadler rejects 12 3m ransom demand after c](./2026-07-22/swiss-rail-giant-stadler-rejects-12-3m-ransom-demand-after-c.md)
 - [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-22/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
 - [trojanized newtonsoft json fork hides game rigging code in a](./2026-07-22/trojanized-newtonsoft-json-fork-hides-game-rigging-code-in-a.md)
 - [why modern socs need multi layered detections](./2026-07-22/why-modern-socs-need-multi-layered-detections.md)
@@ -175,7 +179,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
 - [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
 - [ghsa critical cve 2026 53649 joro unauthenticated cross orig](./2026-07-08/ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig.md)
-- [protecting microsoft at ai speed how sfi proactively hardens](./2026-07-08/protecting-microsoft-at-ai-speed-how-sfi-proactively-hardens.md)
 
 ## 2026-07-07
 - [cisa kev cve 2026 48282 adobe coldfusion path traversal vuln](./2026-07-07/cisa-kev-cve-2026-48282-adobe-coldfusion-path-traversal-vuln.md)
@@ -512,7 +515,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-23
 - [cisa kev cve 2026 39987 marimo remote code execution vulnera](./2026-04-23/cisa-kev-cve-2026-39987-marimo-remote-code-execution-vulnera.md)
-- [fast16 mystery shadow brokers reference reveals high precisi](./2026-04-23/fast16-mystery-shadow-brokers-reference-reveals-high-precisi.md)
 - [gopherwhisper a burrow full of malware](./2026-04-23/gopherwhisper-a-burrow-full-of-malware.md)
 - [hardcoding security into every commit the future of snyk sec](./2026-04-23/hardcoding-security-into-every-commit-the-future-of-snyk-sec.md)
 - [is shai hulud back compromised bitwarden cli contains a self](./2026-04-23/is-shai-hulud-back-compromised-bitwarden-cli-contains-a-self.md)

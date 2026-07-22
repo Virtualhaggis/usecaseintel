@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious flatmap-stream npm package present in node_modules (event-stream supply-chain backdoor)
 
-`UC_3570_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3571_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceFileEvents
 
 ### Build-time injection into vendored @zxing ReedSolomonDecoder.js (Copay wallet stealer payload)
 
-`UC_3570_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3571_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — A post-mortem of the malicious event-stream backdoor
 
-`UC_3570_0` · phase: **exploit** · confidence: **High**
+`UC_3571_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

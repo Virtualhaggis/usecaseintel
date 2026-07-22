@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### HelloNet persistence: wtsapi32.dll sideload dropped into ViPNet Update System dir
 
-`UC_91_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_95_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### HelloInjector sideload execution: itcsrvup64.exe loads wtsapi32.dll from non-System32 path
 
-`UC_91_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_95_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -95,7 +95,7 @@ DeviceImageLoadEvents
 
 ### HelloProxy AFD interception artifact: tesh4RPC.txt log written to C:\Users\Public
 
-`UC_91_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_95_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceFileEvents
 
 ### HelloNet C2 egress to 5.39.253.206 / 176.32.34.135
 
-`UC_91_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_95_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceNetworkEvents
 
 ### Renamed PuTTY reverse SSH tunnel to HelloNet C2 (frontpage.exe -R sftp@5.39.253.206)
 
-`UC_91_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_95_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceProcessEvents
 
 ### Injected svchost (netsvcs) listener on HelloProxy ports 5003/5060
 
-`UC_91_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_95_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -166,7 +166,7 @@ DeviceNetworkEvents
 
 ### HelloExecutor recon: injected svchost enumerating ViPNet/InfoTeCS export directories
 
-`UC_91_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_95_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -246,7 +246,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — HelloNet campaign — new malicious modules launched through the ViPNet update sys
 
-`UC_91_4` · phase: **exploit** · confidence: **High**
+`UC_95_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

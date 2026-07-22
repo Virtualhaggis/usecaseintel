@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Building Docker images in Kubernetes
 
-`UC_2257_0` · phase: **install** · confidence: **High**
+`UC_2258_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
