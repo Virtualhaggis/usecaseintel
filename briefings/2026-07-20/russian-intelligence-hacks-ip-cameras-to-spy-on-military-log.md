@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-facing devices carrying the Dropbear/Apache CVEs named in the AIVD IP-camera advisory
 
-`UC_51_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_52_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

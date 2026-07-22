@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### npm install pulls malicious easy-day-js dropper (setup.cjs + .pkg marker files)
 
-`UC_298_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_299_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### Node dropper fetches second stage from Hostwinds raw IP 23.254.164.92:8000
 
-`UC_298_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_299_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 
 ### Cross-platform stealer RAT C2 beacon to 23.254.164.123
 
-`UC_298_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_299_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### easy-day-js stealer persistence masquerading as Node tooling (NodePackages / LaunchAgent / systemd)
 
-`UC_298_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_299_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceFileEvents
 
 ### Mastra easy-day-js second-stage stealer payload by SHA256
 
-`UC_298_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_299_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -332,7 +332,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A Forgotten Contributor Account Compromised the Entire Mastra npm Package Scope
 
-`UC_298_8` · phase: **exploit** · confidence: **High**
+`UC_299_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

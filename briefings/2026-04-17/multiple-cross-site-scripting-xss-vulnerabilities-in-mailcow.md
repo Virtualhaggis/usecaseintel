@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Mailcow Autodiscover endpoint receives unauthenticated XSS payload (GHSA-f9xf-vc72-rcgm)
 
-`UC_476_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_477_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Mailcow quarantine XSS via EICAR + HTML in attachment filename (GHSA-2xjc-rg88-jvpp)
 
-`UC_476_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_477_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ EmailAttachmentInfo
 
 ### Mailcow login with HTML/JS injected into X-Real-IP header (GHSA-jprq-w83q-q62h)
 
-`UC_476_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_477_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple Cross-Site Scripting (XSS) Vulnerabilities in Mailcow
 
-`UC_476_3` · phase: **exploit** · confidence: **High**
+`UC_477_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

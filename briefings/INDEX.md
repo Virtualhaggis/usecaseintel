@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-22
 - [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
 - [openai says its ai models escaped sandbox targeted hugging f](./2026-07-22/openai-says-its-ai-models-escaped-sandbox-targeted-hugging-f.md)
+- [police dismantle kratos phishing kit built to steal microsof](./2026-07-22/police-dismantle-kratos-phishing-kit-built-to-steal-microsof.md)
 - [trojanized newtonsoft json fork hides game rigging code in a](./2026-07-22/trojanized-newtonsoft-json-fork-hides-game-rigging-code-in-a.md)
 
 ## 2026-07-21
@@ -57,6 +58,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
 - [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
 - [sonicwall sma1000 flaws exploited as zero days to push custo](./2026-07-20/sonicwall-sma1000-flaws-exploited-as-zero-days-to-push-custo.md)
+- [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-20/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
 - [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
 
 ## 2026-07-19
@@ -103,7 +105,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [two scattered spider hackers get 5 5 years each for 29 milli](./2026-07-16/two-scattered-spider-hackers-get-5-5-years-each-for-29-milli.md)
 - [uat 11795 deploys novel starland rat and bespoke wldr c2 imp](./2026-07-16/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-imp.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
-- [unpatched shark vacuum flaw could let attackers control othe](./2026-07-16/unpatched-shark-vacuum-flaw-could-let-attackers-control-othe.md)
 
 ## 2026-07-15
 - [cisa kev cve 2023 4346 knx association knx protocol connecti](./2026-07-15/cisa-kev-cve-2023-4346-knx-association-knx-protocol-connecti.md)
@@ -687,7 +688,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-03-03
 - [cisa kev cve 2026 21385 qualcomm multiple chipsets memory co](./2026-03-03/cisa-kev-cve-2026-21385-qualcomm-multiple-chipsets-memory-co.md)
 - [cisa kev cve 2026 22719 broadcom vmware aria operations comm](./2026-03-03/cisa-kev-cve-2026-22719-broadcom-vmware-aria-operations-comm.md)
-- [persistent xss rce using websockets in storybook s dev serve](./2026-03-03/persistent-xss-rce-using-websockets-in-storybook-s-dev-serve.md)
 
 ## 2026-03-01
 - [harden runner now supports windows and macos github actions ](./2026-03-01/harden-runner-now-supports-windows-and-macos-github-actions-.md)

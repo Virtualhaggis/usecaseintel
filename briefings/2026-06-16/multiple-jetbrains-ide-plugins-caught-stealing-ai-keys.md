@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### JetBrains IDE plugin AI-key exfil: endpoint egress to C2 39.107.60.51
 
-`UC_299_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_300_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceNetworkEvents
 
 ### JetBrains AI-key stealer HTTP exfil: cleartext POST to /api/software/ path
 
-`UC_299_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_300_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### Malicious JetBrains Marketplace plugin install (15 DeepSeek/CodeGPT clone IDs)
 
-`UC_299_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_300_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

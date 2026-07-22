@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### LegacyHive: autorun value written into another user's registry hive by non-admin process
 
-`UC_34_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_35_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceRegistryEvents
 
 ### LegacyHive: elevated process at admin logon executing from a user-writable path
 
-`UC_34_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_35_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
