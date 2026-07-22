@@ -9,6 +9,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-22
+- [adobe chrome extension flaw let sites access private whatsap](./2026-07-22/adobe-chrome-extension-flaw-let-sites-access-private-whatsap.md)
+- [cisa orders urgent action on actively exploited langflow rce](./2026-07-22/cisa-orders-urgent-action-on-actively-exploited-langflow-rce.md)
 - [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
 - [openai says its ai models escaped sandbox targeted hugging f](./2026-07-22/openai-says-its-ai-models-escaped-sandbox-targeted-hugging-f.md)
 - [police dismantle kratos phishing kit built to steal microsof](./2026-07-22/police-dismantle-kratos-phishing-kit-built-to-steal-microsof.md)
@@ -42,12 +44,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [open source android ai agents could let invisible screen tex](./2026-07-21/open-source-android-ai-agents-could-let-invisible-screen-tex.md)
 - [police dismantle kratos phishing platform arrest developer](./2026-07-21/police-dismantle-kratos-phishing-platform-arrest-developer.md)
 - [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)
-- [windows legacyhive zero day flaw gets free unofficial patche](./2026-07-21/windows-legacyhive-zero-day-flaw-gets-free-unofficial-patche.md)
 - [wordpress wp2shell exploitation grows as public exploit fuel](./2026-07-21/wordpress-wp2shell-exploitation-grows-as-public-exploit-fuel.md)
 - [zimbra patches critical snmp command injection and four xss ](./2026-07-21/zimbra-patches-critical-snmp-command-injection-and-four-xss-.md)
 
 ## 2026-07-20
-- [est e lauder discloses data breach via oracle e business fla](./2026-07-20/est-e-lauder-discloses-data-breach-via-oracle-e-business-fla.md)
 - [exposed server reveals ai assisted phishing toolkit behind w](./2026-07-20/exposed-server-reveals-ai-assisted-phishing-toolkit-behind-w.md)
 - [fakegit campaign uses 7 600 github repositories to spread sm](./2026-07-20/fakegit-campaign-uses-7-600-github-repositories-to-spread-sm.md)
 - [ghsa critical cve 2026 59873 node tar decompression parse do](./2026-07-20/ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do.md)
