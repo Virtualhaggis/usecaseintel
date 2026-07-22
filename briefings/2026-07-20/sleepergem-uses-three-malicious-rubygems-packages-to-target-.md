@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### SleeperGem RubyGems loader — C2/staging egress to Forgejo host git.disroot.org
 
-`UC_59_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_61_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### SleeperGem native daemon drop at ~/.local/share/gcm/ and deploy.sh install script
 
-`UC_59_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceFileEvents
 
 ### SleeperGem setuid-root shell masquerading as ping6 at /usr/local/sbin/ping6
 
-`UC_59_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_61_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ union DeviceFileEvents, DeviceProcessEvents
 
 ### SleeperGem ruby gem loader spawning downloader to fetch second stage
 
-`UC_59_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_61_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -537,7 +537,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SleeperGem Uses Three Malicious RubyGems Packages to Target Developer Machines
 
-`UC_59_13` · phase: **exploit** · confidence: **High**
+`UC_61_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

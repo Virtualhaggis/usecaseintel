@@ -11,15 +11,9 @@ By Bill Toulas
 July 22, 2026
 09:22 AM
 0 
-
-
 The Adobe Acrobat extension for Chrome could be used to access conversations and data rendered in WhatsApp Web without any form of authentication.
-
-
 The attack exploits a chain of vulnerabilities,  collectively tracked as CVE-2026-48294 and dubbed HermeticReader by researchers at cybersecurity firm Guardio.
-
-
-Exploiting them requires only that the target running the Adobe Acroba…
+Exploiting them requires only that the target running the Adobe Acrobat extension …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -45,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe Acrobat Chrome extension (CVE-2026-48294 / HermeticReader) exposure
 
-`UC_0_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +60,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Browser exfil to rare external host during active WhatsApp Web session (HermeticReader)
 
-`UC_0_5` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_2_5` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

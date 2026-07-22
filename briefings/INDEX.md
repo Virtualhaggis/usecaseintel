@@ -10,10 +10,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-22
 - [adobe chrome extension flaw let sites access private whatsap](./2026-07-22/adobe-chrome-extension-flaw-let-sites-access-private-whatsap.md)
-- [cisa orders urgent action on actively exploited langflow rce](./2026-07-22/cisa-orders-urgent-action-on-actively-exploited-langflow-rce.md)
+- [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
+- [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
 - [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
+- [new infratrust report reveals infrastructure flaws admins sh](./2026-07-22/new-infratrust-report-reveals-infrastructure-flaws-admins-sh.md)
 - [openai says its ai models escaped sandbox targeted hugging f](./2026-07-22/openai-says-its-ai-models-escaped-sandbox-targeted-hugging-f.md)
 - [police dismantle kratos phishing kit built to steal microsof](./2026-07-22/police-dismantle-kratos-phishing-kit-built-to-steal-microsof.md)
+- [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-22/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
 - [trojanized newtonsoft json fork hides game rigging code in a](./2026-07-22/trojanized-newtonsoft-json-fork-hides-game-rigging-code-in-a.md)
 - [why modern socs need multi layered detections](./2026-07-22/why-modern-socs-need-multi-layered-detections.md)
 
@@ -58,7 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
 - [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
-- [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-20/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
 - [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
 
 ## 2026-07-19
@@ -91,14 +93,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 39808 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-39808-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 58644 microsoft sharepoint deserialization](./2026-07-16/cisa-kev-cve-2026-58644-microsoft-sharepoint-deserialization.md)
-- [daxin resurfaces in taiwan alongside stupig pre login system](./2026-07-16/daxin-resurfaces-in-taiwan-alongside-stupig-pre-login-system.md)
 - [ghsa critical cve 2026 53713 envoy gateway authentication by](./2026-07-16/ghsa-critical-cve-2026-53713-envoy-gateway-authentication-by.md)
 - [ghsa critical cve 2026 55579 pheditor hardcoded default pass](./2026-07-16/ghsa-critical-cve-2026-55579-pheditor-hardcoded-default-pass.md)
 - [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
 - [n8n token exchange flaw could let attackers log in as users ](./2026-07-16/n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-.md)
-- [new agent data injection attack can make ai agents misclick ](./2026-07-16/new-agent-data-injection-attack-can-make-ai-agents-misclick-.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [threatsday game cheat spyware 24 hour ransomware chrome sync](./2026-07-16/threatsday-game-cheat-spyware-24-hour-ransomware-chrome-sync.md)
 - [two scattered spider hackers get 5 5 years each for 29 milli](./2026-07-16/two-scattered-spider-hackers-get-5-5-years-each-for-29-milli.md)

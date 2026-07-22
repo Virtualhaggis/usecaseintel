@@ -1,4 +1,4 @@
-<article class="card" id="art-2515" data-art-slug="2022-03-03-cisa-kev-cve-2017-6743-cisco-ios-and-ios-xe-software-snmp-re"
+<article class="card" id="art-2514" data-art-slug="2022-03-03-cisa-kev-cve-2017-6743-cisco-ios-and-ios-xe-software-snmp-re"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="CISA KEV"
@@ -21,6 +21,133 @@
   </div>
   <p class="summary">The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6743</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-2514-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-2514"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-2514-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-2514-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-2514-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-2514-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-2514-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2017-6743&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2514-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2017-6743&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-2514-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2514-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2514-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2514-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6743&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-2514-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6743&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-2515" data-art-slug="2022-03-03-cisa-kev-cve-2017-6740-cisco-ios-and-ios-xe-software-snmp-re"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2017-6740 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code on an affected system or cause an affected system to reload. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6740 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6740-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6740 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2022-03-03</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code on an affected system or cause an affected system to reload. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6740</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2515-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -94,7 +221,7 @@
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6743&quot;)
+| where CveId in~ (&quot;CVE-2017-6740&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -105,7 +232,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6743&quot;)
+| where CveId in~ (&quot;CVE-2017-6740&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -113,19 +240,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2515-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2515-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2515-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2515-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6743&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6740&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2515-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6743&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6740&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2516" data-art-slug="2022-03-03-cisa-kev-cve-2017-6740-cisco-ios-and-ios-xe-software-snmp-re"
+<article class="card" id="art-2516" data-art-slug="2022-03-03-cisa-kev-cve-2017-6739-cisco-ios-and-ios-xe-software-snmp-re"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="CISA KEV"
@@ -133,12 +260,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-6740 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code on an affected system or cause an affected system to reload. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6740 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-6739 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code on an affected system or cause an affected system to reload. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6739 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6740-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6739-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6740 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6739 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -147,7 +274,7 @@ DeviceTvmSoftwareVulnerabilities
     <span>2 kill-chain phases detected</span>
   </div>
   <p class="summary">The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code on an affected system or cause an affected system to reload. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6740</span></div>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6739</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2516-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -221,7 +348,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6740&quot;)
+| where CveId in~ (&quot;CVE-2017-6739&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -232,7 +359,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6740&quot;)
+| where CveId in~ (&quot;CVE-2017-6739&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -240,19 +367,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2516-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2516-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2516-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2516-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6740&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6739&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2516-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6740&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6739&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2517" data-art-slug="2022-03-03-cisa-kev-cve-2017-6739-cisco-ios-and-ios-xe-software-snmp-re"
+<article class="card" id="art-2517" data-art-slug="2022-03-03-cisa-kev-cve-2017-6738-cisco-ios-and-ios-xe-software-snmp-re"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="CISA KEV"
@@ -260,12 +387,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-6739 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code on an affected system or cause an affected system to reload. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6739 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-6738 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6738 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6739-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6738-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6739 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6738 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -273,8 +400,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code on an affected system or cause an affected system to reload. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6739</span></div>
+  <p class="summary">The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6738</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2517-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -348,7 +475,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6739&quot;)
+| where CveId in~ (&quot;CVE-2017-6738&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -359,7 +486,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6739&quot;)
+| where CveId in~ (&quot;CVE-2017-6738&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -367,19 +494,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2517-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2517-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2517-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2517-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6739&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6738&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2517-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6739&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6738&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2518" data-art-slug="2022-03-03-cisa-kev-cve-2017-6738-cisco-ios-and-ios-xe-software-snmp-re"
+<article class="card" id="art-2518" data-art-slug="2022-03-03-cisa-kev-cve-2017-6737-cisco-ios-and-ios-xe-software-snmp-re"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="CISA KEV"
@@ -387,12 +514,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-6738 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6738 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-6737 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6737 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6738-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6737-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6738 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6737 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -401,7 +528,7 @@ DeviceTvmSoftwareVulnerabilities
     <span>2 kill-chain phases detected</span>
   </div>
   <p class="summary">The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6738</span></div>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6737</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2518-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -475,7 +602,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6738&quot;)
+| where CveId in~ (&quot;CVE-2017-6737&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -486,7 +613,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6738&quot;)
+| where CveId in~ (&quot;CVE-2017-6737&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -494,19 +621,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2518-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2518-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2518-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2518-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6738&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6737&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2518-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6738&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6737&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2519" data-art-slug="2022-03-03-cisa-kev-cve-2017-6737-cisco-ios-and-ios-xe-software-snmp-re"
+<article class="card" id="art-2519" data-art-slug="2022-03-03-cisa-kev-cve-2017-6736-cisco-ios-and-ios-xe-software-snmp-re"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="CISA KEV"
@@ -514,12 +641,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-6737 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6737 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-6736 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6736 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6737-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6736-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6737 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6736 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -528,7 +655,7 @@ DeviceTvmSoftwareVulnerabilities
     <span>2 kill-chain phases detected</span>
   </div>
   <p class="summary">The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6737</span></div>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6736</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2519-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -602,7 +729,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6737&quot;)
+| where CveId in~ (&quot;CVE-2017-6736&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -613,7 +740,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6737&quot;)
+| where CveId in~ (&quot;CVE-2017-6736&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -621,42 +748,41 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2519-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2519-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2519-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2519-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6737&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6736&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2519-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6737&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6736&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2520" data-art-slug="2022-03-03-cisa-kev-cve-2017-6736-cisco-ios-and-ios-xe-software-snmp-re"
+<article class="card" id="art-2520" data-art-slug="2022-03-03-cisa-kev-cve-2017-6663-cisco-ios-software-and-cisco-ios-xe-s"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
+  data-techs=""
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-6736 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6736 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-6663 — Cisco IOS Software and Cisco IOS XE Software Denial-of-Service Vulnerability A vulnerability in the Autonomic Networking feature of Cisco IOS Software and Cisco IOS XE Software could allow an unauthenticated, adjacent attacker to cause autonomic nodes of an affected system to reload, resulting in denial-of-service (DoS). Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6663  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6736-cisco-ios-and-ios-xe-software-snmp-re" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6663-cisco-ios-software-and-cisco-ios-xe-s" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6736 — Cisco IOS and IOS XE Software SNMP Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6663 — Cisco IOS Software and Cisco IOS XE Software Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
     <span>1 use case</span>
-    <span>1 technique</span>
+    <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">The Simple Network Management Protocol (SNMP) subsystem of Cisco IOS and IOS XE contains a vulnerability that could allow an authenticated, remote attacker to remotely execute code. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6736</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <p class="summary">A vulnerability in the Autonomic Networking feature of Cisco IOS Software and Cisco IOS XE Software could allow an unauthenticated, adjacent attacker to cause autonomic nodes of an affected system to reload, resulting in denial-of-service (DoS). Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6663</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2520-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2520"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -729,7 +855,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6736&quot;)
+| where CveId in~ (&quot;CVE-2017-6663&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -740,7 +866,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6736&quot;)
+| where CveId in~ (&quot;CVE-2017-6663&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -748,19 +874,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2520-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2520-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2520-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2520-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6736&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6663&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2520-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6736&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6663&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2521" data-art-slug="2022-03-03-cisa-kev-cve-2017-6663-cisco-ios-software-and-cisco-ios-xe-s"
+<article class="card" id="art-2521" data-art-slug="2022-03-03-cisa-kev-cve-2017-6627-cisco-ios-software-and-cisco-ios-xe-s"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -768,12 +894,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-6663 — Cisco IOS Software and Cisco IOS XE Software Denial-of-Service Vulnerability A vulnerability in the Autonomic Networking feature of Cisco IOS Software and Cisco IOS XE Software could allow an unauthenticated, adjacent attacker to cause autonomic nodes of an affected system to reload, resulting in denial-of-service (DoS). Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6663  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-6627 — Cisco IOS Software and Cisco IOS XE Software UDP Packet Processing Denial-of-Service Vulnerability A vulnerability in the UDP processing code of Cisco IOS and IOS XE could allow an unauthenticated, remote attacker to cause the input queue of an affected system to hold UDP packets, causing an interface queue wedge and denial of service. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6627  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6663-cisco-ios-software-and-cisco-ios-xe-s" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6627-cisco-ios-software-and-cisco-ios-xe-s" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6663 — Cisco IOS Software and Cisco IOS XE Software Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6627 — Cisco IOS Software and Cisco IOS XE Software UDP Packet Processing Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -781,8 +907,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A vulnerability in the Autonomic Networking feature of Cisco IOS Software and Cisco IOS XE Software could allow an unauthenticated, adjacent attacker to cause autonomic nodes of an affected system to reload, resulting in denial-of-service (DoS). Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6663</span></div>
+  <p class="summary">A vulnerability in the UDP processing code of Cisco IOS and IOS XE could allow an unauthenticated, remote attacker to cause the input queue of an affected system to hold UDP packets, causing an interface queue wedge and denial of service. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6627</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2521-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2521"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -855,7 +981,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6663&quot;)
+| where CveId in~ (&quot;CVE-2017-6627&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -866,7 +992,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6663&quot;)
+| where CveId in~ (&quot;CVE-2017-6627&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -874,19 +1000,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2521-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2521-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2521-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2521-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6663&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6627&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2521-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6663&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-6627&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2522" data-art-slug="2022-03-03-cisa-kev-cve-2017-6627-cisco-ios-software-and-cisco-ios-xe-s"
+<article class="card" id="art-2522" data-art-slug="2022-03-03-cisa-kev-cve-2017-12319-cisco-ios-xe-software-ethernet-virtu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -894,12 +1020,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-6627 — Cisco IOS Software and Cisco IOS XE Software UDP Packet Processing Denial-of-Service Vulnerability A vulnerability in the UDP processing code of Cisco IOS and IOS XE could allow an unauthenticated, remote attacker to cause the input queue of an affected system to hold UDP packets, causing an interface queue wedge and denial of service. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-6627  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12319 — Cisco IOS XE Software Ethernet Virtual Private Network Border Gateway Protocol Denial-of-Service Vulnerability A vulnerability in the Border Gateway Protocol (BGP) over an Ethernet Virtual Private Network (EVPN) for Cisco IOS XE Software could allow an unauthenticated, remote attacker to cause the device to reload, resulting in a denial of service (DoS) condition, or potentially corrupt the BGP routing table, which could result in network instability. Vendor: Cisco, Product: IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-12319  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-6627-cisco-ios-software-and-cisco-ios-xe-s" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12319-cisco-ios-xe-software-ethernet-virtu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-6627 — Cisco IOS Software and Cisco IOS XE Software UDP Packet Processing Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12319 — Cisco IOS XE Software Ethernet Virtual Private Network Border Gateway Protocol Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -907,8 +1033,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A vulnerability in the UDP processing code of Cisco IOS and IOS XE could allow an unauthenticated, remote attacker to cause the input queue of an affected system to hold UDP packets, causing an interface queue wedge and denial of service. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-6627</span></div>
+  <p class="summary">A vulnerability in the Border Gateway Protocol (BGP) over an Ethernet Virtual Private Network (EVPN) for Cisco IOS XE Software could allow an unauthenticated, remote attacker to cause the device to reload, resulting in a denial of service (DoS) condition, or potentially corrupt the BGP routing table, which could result in network instability. Vendor: Cisco, Product: IOS XE Software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12319</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2522-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2522"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -981,7 +1107,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6627&quot;)
+| where CveId in~ (&quot;CVE-2017-12319&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -992,7 +1118,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-6627&quot;)
+| where CveId in~ (&quot;CVE-2017-12319&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1000,41 +1126,42 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2522-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2522-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2522-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2522-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6627&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12319&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2522-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-6627&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12319&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2523" data-art-slug="2022-03-03-cisa-kev-cve-2017-12319-cisco-ios-xe-software-ethernet-virtu"
+<article class="card" id="art-2523" data-art-slug="2022-03-03-cisa-kev-cve-2017-12240-cisco-ios-and-ios-xe-software-dhcp-r"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
+  data-techs="T1190"
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12319 — Cisco IOS XE Software Ethernet Virtual Private Network Border Gateway Protocol Denial-of-Service Vulnerability A vulnerability in the Border Gateway Protocol (BGP) over an Ethernet Virtual Private Network (EVPN) for Cisco IOS XE Software could allow an unauthenticated, remote attacker to cause the device to reload, resulting in a denial of service (DoS) condition, or potentially corrupt the BGP routing table, which could result in network instability. Vendor: Cisco, Product: IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-12319  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12240 — Cisco IOS and IOS XE Software DHCP Remote Code Execution Vulnerability The Dynamic Host Configuration Protocol (DHCP) relay subsystem of Cisco IOS and Cisco IOS XE Software contains a vulnerability that could allow an unauthenticated, remote attacker to execute arbitrary code and gain full control of an affected system. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-12240 CVE-2017-6736 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12319-cisco-ios-xe-software-ethernet-virtu" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12240-cisco-ios-and-ios-xe-software-dhcp-r" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12319 — Cisco IOS XE Software Ethernet Virtual Private Network Border Gateway Protocol Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12240 — Cisco IOS and IOS XE Software DHCP Remote Code Execution Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
     <span>1 use case</span>
-    <span>0 techniques</span>
+    <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A vulnerability in the Border Gateway Protocol (BGP) over an Ethernet Virtual Private Network (EVPN) for Cisco IOS XE Software could allow an unauthenticated, remote attacker to cause the device to reload, resulting in a denial of service (DoS) condition, or potentially corrupt the BGP routing table, which could result in network instability. Vendor: Cisco, Product: IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12319</span></div>
+  <p class="summary">The Dynamic Host Configuration Protocol (DHCP) relay subsystem of Cisco IOS and Cisco IOS XE Software contains a vulnerability that could allow an unauthenticated, remote attacker to execute arbitrary code and gain full control of an affected system. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12240</span> <span class="ind cve">CVE-2017-6736</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2523-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2523"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1107,7 +1234,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12319&quot;)
+| where CveId in~ (&quot;CVE-2017-12240&quot;, &quot;CVE-2017-6736&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1118,7 +1245,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12319&quot;)
+| where CveId in~ (&quot;CVE-2017-12240&quot;, &quot;CVE-2017-6736&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1126,42 +1253,41 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2523-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2523-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2523-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2523-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12319&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12240&quot;, &quot;CVE-2017-6736&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2523-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12319&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12240&quot;, &quot;CVE-2017-6736&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2524" data-art-slug="2022-03-03-cisa-kev-cve-2017-12240-cisco-ios-and-ios-xe-software-dhcp-r"
+<article class="card" id="art-2524" data-art-slug="2022-03-03-cisa-kev-cve-2017-12238-cisco-catalyst-6800-series-switches-"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
+  data-techs=""
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12240 — Cisco IOS and IOS XE Software DHCP Remote Code Execution Vulnerability The Dynamic Host Configuration Protocol (DHCP) relay subsystem of Cisco IOS and Cisco IOS XE Software contains a vulnerability that could allow an unauthenticated, remote attacker to execute arbitrary code and gain full control of an affected system. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-12240 CVE-2017-6736 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12238 — Cisco Catalyst 6800 Series Switches VPLS Denial-of-Service Vulnerability A vulnerability in the Virtual Private LAN Service (VPLS) code of Cisco IOS for Cisco Catalyst 6800 Series Switches could allow an unauthenticated, adjacent attacker to cause a denial of service. Vendor: Cisco, Product: Catalyst 6800 Series Switches. Federal patch due: 2022-03-24. CVE-2017-12238  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12240-cisco-ios-and-ios-xe-software-dhcp-r" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12238-cisco-catalyst-6800-series-switches-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12240 — Cisco IOS and IOS XE Software DHCP Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12238 — Cisco Catalyst 6800 Series Switches VPLS Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
     <span>1 use case</span>
-    <span>1 technique</span>
+    <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">The Dynamic Host Configuration Protocol (DHCP) relay subsystem of Cisco IOS and Cisco IOS XE Software contains a vulnerability that could allow an unauthenticated, remote attacker to execute arbitrary code and gain full control of an affected system. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12240</span> <span class="ind cve">CVE-2017-6736</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <p class="summary">A vulnerability in the Virtual Private LAN Service (VPLS) code of Cisco IOS for Cisco Catalyst 6800 Series Switches could allow an unauthenticated, adjacent attacker to cause a denial of service. Vendor: Cisco, Product: Catalyst 6800 Series Switches. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12238</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2524-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2524"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1234,7 +1360,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12240&quot;, &quot;CVE-2017-6736&quot;)
+| where CveId in~ (&quot;CVE-2017-12238&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1245,7 +1371,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12240&quot;, &quot;CVE-2017-6736&quot;)
+| where CveId in~ (&quot;CVE-2017-12238&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1253,19 +1379,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2524-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2524-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2524-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2524-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12240&quot;, &quot;CVE-2017-6736&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12238&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2524-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12240&quot;, &quot;CVE-2017-6736&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12238&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2525" data-art-slug="2022-03-03-cisa-kev-cve-2017-12238-cisco-catalyst-6800-series-switches-"
+<article class="card" id="art-2525" data-art-slug="2022-03-03-cisa-kev-cve-2017-12237-cisco-ios-and-ios-xe-software-intern"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1273,12 +1399,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12238 — Cisco Catalyst 6800 Series Switches VPLS Denial-of-Service Vulnerability A vulnerability in the Virtual Private LAN Service (VPLS) code of Cisco IOS for Cisco Catalyst 6800 Series Switches could allow an unauthenticated, adjacent attacker to cause a denial of service. Vendor: Cisco, Product: Catalyst 6800 Series Switches. Federal patch due: 2022-03-24. CVE-2017-12238  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12237 — Cisco IOS and IOS XE Software Internet Key Exchange Denial-of-Service Vulnerability A vulnerability in the Internet Key Exchange Version 2 (IKEv2) module of Cisco IOS and Cisco IOS XE could allow an unauthenticated, remote attacker to cause high CPU utilization, traceback messages, or a reload of an affected device that leads to a denial of service. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-12237  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12238-cisco-catalyst-6800-series-switches-" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12237-cisco-ios-and-ios-xe-software-intern" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12238 — Cisco Catalyst 6800 Series Switches VPLS Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12237 — Cisco IOS and IOS XE Software Internet Key Exchange Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -1286,8 +1412,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A vulnerability in the Virtual Private LAN Service (VPLS) code of Cisco IOS for Cisco Catalyst 6800 Series Switches could allow an unauthenticated, adjacent attacker to cause a denial of service. Vendor: Cisco, Product: Catalyst 6800 Series Switches. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12238</span></div>
+  <p class="summary">A vulnerability in the Internet Key Exchange Version 2 (IKEv2) module of Cisco IOS and Cisco IOS XE could allow an unauthenticated, remote attacker to cause high CPU utilization, traceback messages, or a reload of an affected device that leads to a denial of service. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12237</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2525-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2525"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1360,7 +1486,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12238&quot;)
+| where CveId in~ (&quot;CVE-2017-12237&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1371,7 +1497,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12238&quot;)
+| where CveId in~ (&quot;CVE-2017-12237&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1379,19 +1505,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2525-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2525-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2525-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2525-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12238&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12237&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2525-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12238&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12237&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2526" data-art-slug="2022-03-03-cisa-kev-cve-2017-12237-cisco-ios-and-ios-xe-software-intern"
+<article class="card" id="art-2526" data-art-slug="2022-03-03-cisa-kev-cve-2017-12235-cisco-ios-software-for-cisco-industr"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1399,12 +1525,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12237 — Cisco IOS and IOS XE Software Internet Key Exchange Denial-of-Service Vulnerability A vulnerability in the Internet Key Exchange Version 2 (IKEv2) module of Cisco IOS and Cisco IOS XE could allow an unauthenticated, remote attacker to cause high CPU utilization, traceback messages, or a reload of an affected device that leads to a denial of service. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24. CVE-2017-12237  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12235 — Cisco IOS Software for Cisco Industrial Ethernet Switches PROFINET Denial-of-Service Vulnerability A vulnerability in the implementation of the PROFINET Discovery and Configuration Protocol (PN-DCP) for Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12235  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12237-cisco-ios-and-ios-xe-software-intern" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12235-cisco-ios-software-for-cisco-industr" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12237 — Cisco IOS and IOS XE Software Internet Key Exchange Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12235 — Cisco IOS Software for Cisco Industrial Ethernet Switches PROFINET Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -1412,8 +1538,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A vulnerability in the Internet Key Exchange Version 2 (IKEv2) module of Cisco IOS and Cisco IOS XE could allow an unauthenticated, remote attacker to cause high CPU utilization, traceback messages, or a reload of an affected device that leads to a denial of service. Vendor: Cisco, Product: IOS and IOS XE Software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12237</span></div>
+  <p class="summary">A vulnerability in the implementation of the PROFINET Discovery and Configuration Protocol (PN-DCP) for Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12235</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2526-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2526"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1486,7 +1612,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12237&quot;)
+| where CveId in~ (&quot;CVE-2017-12235&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1497,7 +1623,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12237&quot;)
+| where CveId in~ (&quot;CVE-2017-12235&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1505,19 +1631,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2526-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2526-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2526-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2526-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12237&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12235&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2526-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12237&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12235&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2527" data-art-slug="2022-03-03-cisa-kev-cve-2017-12235-cisco-ios-software-for-cisco-industr"
+<article class="card" id="art-2527" data-art-slug="2022-03-03-cisa-kev-cve-2017-12234-cisco-ios-software-common-industrial"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1525,12 +1651,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12235 — Cisco IOS Software for Cisco Industrial Ethernet Switches PROFINET Denial-of-Service Vulnerability A vulnerability in the implementation of the PROFINET Discovery and Configuration Protocol (PN-DCP) for Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12235  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12234 — Cisco IOS Software Common Industrial Protocol Request Denial-of-Service Vulnerability There is a vulnerability in the implementation of the Common Industrial Protocol (CIP) feature in Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12234  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12235-cisco-ios-software-for-cisco-industr" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12234-cisco-ios-software-common-industrial" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12235 — Cisco IOS Software for Cisco Industrial Ethernet Switches PROFINET Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12234 — Cisco IOS Software Common Industrial Protocol Request Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -1538,8 +1664,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A vulnerability in the implementation of the PROFINET Discovery and Configuration Protocol (PN-DCP) for Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12235</span></div>
+  <p class="summary">There is a vulnerability in the implementation of the Common Industrial Protocol (CIP) feature in Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12234</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2527-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2527"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1612,7 +1738,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12235&quot;)
+| where CveId in~ (&quot;CVE-2017-12234&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1623,7 +1749,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12235&quot;)
+| where CveId in~ (&quot;CVE-2017-12234&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1631,19 +1757,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2527-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2527-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2527-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2527-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12235&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12234&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2527-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12235&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12234&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2528" data-art-slug="2022-03-03-cisa-kev-cve-2017-12234-cisco-ios-software-common-industrial"
+<article class="card" id="art-2528" data-art-slug="2022-03-03-cisa-kev-cve-2017-12233-cisco-ios-software-common-industrial"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1651,12 +1777,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12234 — Cisco IOS Software Common Industrial Protocol Request Denial-of-Service Vulnerability There is a vulnerability in the implementation of the Common Industrial Protocol (CIP) feature in Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12234  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12233 — Cisco IOS Software Common Industrial Protocol Request Denial-of-Service Vulnerability There is a vulnerability in the implementation of the Common Industrial Protocol (CIP) feature in Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12233  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12234-cisco-ios-software-common-industrial" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12233-cisco-ios-software-common-industrial" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12234 — Cisco IOS Software Common Industrial Protocol Request Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12233 — Cisco IOS Software Common Industrial Protocol Request Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -1665,7 +1791,7 @@ DeviceTvmSoftwareVulnerabilities
     <span>2 kill-chain phases detected</span>
   </div>
   <p class="summary">There is a vulnerability in the implementation of the Common Industrial Protocol (CIP) feature in Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12234</span></div>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12233</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2528-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2528"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1738,7 +1864,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12234&quot;)
+| where CveId in~ (&quot;CVE-2017-12233&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1749,7 +1875,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12234&quot;)
+| where CveId in~ (&quot;CVE-2017-12233&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1757,19 +1883,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2528-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2528-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2528-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2528-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12234&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12233&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2528-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12234&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12233&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2529" data-art-slug="2022-03-03-cisa-kev-cve-2017-12233-cisco-ios-software-common-industrial"
+<article class="card" id="art-2529" data-art-slug="2022-03-03-cisa-kev-cve-2017-12232-cisco-ios-software-for-cisco-integra"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1777,12 +1903,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12233 — Cisco IOS Software Common Industrial Protocol Request Denial-of-Service Vulnerability There is a vulnerability in the implementation of the Common Industrial Protocol (CIP) feature in Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12233  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12232 — Cisco IOS Software for Cisco Integrated Services Routers Denial-of-Service Vulnerability A vulnerability in the implementation of a protocol in Cisco Integrated Services Routers Generation 2 (ISR G2) Routers running Cisco IOS could allow an unauthenticated, adjacent attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12232 CVE-2018-0154  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12233-cisco-ios-software-common-industrial" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12232-cisco-ios-software-for-cisco-integra" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12233 — Cisco IOS Software Common Industrial Protocol Request Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12232 — Cisco IOS Software for Cisco Integrated Services Routers Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -1790,8 +1916,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">There is a vulnerability in the implementation of the Common Industrial Protocol (CIP) feature in Cisco IOS could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12233</span></div>
+  <p class="summary">A vulnerability in the implementation of a protocol in Cisco Integrated Services Routers Generation 2 (ISR G2) Routers running Cisco IOS could allow an unauthenticated, adjacent attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12232</span> <span class="ind cve">CVE-2018-0154</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2529-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2529"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1864,7 +1990,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12233&quot;)
+| where CveId in~ (&quot;CVE-2017-12232&quot;, &quot;CVE-2018-0154&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -1875,7 +2001,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12233&quot;)
+| where CveId in~ (&quot;CVE-2017-12232&quot;, &quot;CVE-2018-0154&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -1883,19 +2009,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2529-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2529-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2529-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2529-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12233&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12232&quot;, &quot;CVE-2018-0154&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2529-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12233&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12232&quot;, &quot;CVE-2018-0154&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2530" data-art-slug="2022-03-03-cisa-kev-cve-2017-12232-cisco-ios-software-for-cisco-integra"
+<article class="card" id="art-2530" data-art-slug="2022-03-03-cisa-kev-cve-2017-12231-cisco-ios-software-network-address-t"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -1903,12 +2029,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12232 — Cisco IOS Software for Cisco Integrated Services Routers Denial-of-Service Vulnerability A vulnerability in the implementation of a protocol in Cisco Integrated Services Routers Generation 2 (ISR G2) Routers running Cisco IOS could allow an unauthenticated, adjacent attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12232 CVE-2018-0154  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-12231 — Cisco IOS Software Network Address Translation Denial-of-Service Vulnerability A vulnerability in the implementation of Network Address Translation (NAT) functionality in Cisco IOS could allow an unauthenticated, remote attacker to cause a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12231  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12232-cisco-ios-software-for-cisco-integra" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12231-cisco-ios-software-network-address-t" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12232 — Cisco IOS Software for Cisco Integrated Services Routers Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12231 — Cisco IOS Software Network Address Translation Denial-of-Service Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -1916,8 +2042,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A vulnerability in the implementation of a protocol in Cisco Integrated Services Routers Generation 2 (ISR G2) Routers running Cisco IOS could allow an unauthenticated, adjacent attacker to cause an affected device to reload, resulting in a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12232</span> <span class="ind cve">CVE-2018-0154</span></div>
+  <p class="summary">A vulnerability in the implementation of Network Address Translation (NAT) functionality in Cisco IOS could allow an unauthenticated, remote attacker to cause a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12231</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2530-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2530"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -1990,7 +2116,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12232&quot;, &quot;CVE-2018-0154&quot;)
+| where CveId in~ (&quot;CVE-2017-12231&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2001,7 +2127,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12232&quot;, &quot;CVE-2018-0154&quot;)
+| where CveId in~ (&quot;CVE-2017-12231&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2009,41 +2135,42 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2530-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2530-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2530-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2530-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12232&quot;, &quot;CVE-2018-0154&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12231&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2530-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12232&quot;, &quot;CVE-2018-0154&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-12231&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2531" data-art-slug="2022-03-03-cisa-kev-cve-2017-12231-cisco-ios-software-network-address-t"
+<article class="card" id="art-2531" data-art-slug="2022-03-03-cisa-kev-cve-2017-11826-microsoft-office-remote-code-executi"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
+  data-techs="T1190"
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-12231 — Cisco IOS Software Network Address Translation Denial-of-Service Vulnerability A vulnerability in the implementation of Network Address Translation (NAT) functionality in Cisco IOS could allow an unauthenticated, remote attacker to cause a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24. CVE-2017-12231  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-11826 — Microsoft Office Remote Code Execution Vulnerability A remote code execution vulnerability exists in Microsoft Office software when the software fails to properly handle objects in memory. An attacker who successfully exploited the vulnerability could run arbitrary code in the context of the current user. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24. CVE-2017-11826 CVE-2019-1297 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-12231-cisco-ios-software-network-address-t" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-11826-microsoft-office-remote-code-executi" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-12231 — Cisco IOS Software Network Address Translation Denial-of-Service Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-11826 — Microsoft Office Remote Code Execution Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
     <span>1 use case</span>
-    <span>0 techniques</span>
+    <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A vulnerability in the implementation of Network Address Translation (NAT) functionality in Cisco IOS could allow an unauthenticated, remote attacker to cause a denial of service. Vendor: Cisco, Product: IOS software. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-12231</span></div>
+  <p class="summary">A remote code execution vulnerability exists in Microsoft Office software when the software fails to properly handle objects in memory. An attacker who successfully exploited the vulnerability could run arbitrary code in the context of the current user. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-11826</span> <span class="ind cve">CVE-2019-1297</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2531-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2531"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2116,7 +2243,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12231&quot;)
+| where CveId in~ (&quot;CVE-2017-11826&quot;, &quot;CVE-2019-1297&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2127,7 +2254,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-12231&quot;)
+| where CveId in~ (&quot;CVE-2017-11826&quot;, &quot;CVE-2019-1297&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2135,19 +2262,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2531-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2531-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2531-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2531-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12231&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-11826&quot;, &quot;CVE-2019-1297&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2531-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-12231&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-11826&quot;, &quot;CVE-2019-1297&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2532" data-art-slug="2022-03-03-cisa-kev-cve-2017-11826-microsoft-office-remote-code-executi"
+<article class="card" id="art-2532" data-art-slug="2022-03-03-cisa-kev-cve-2017-11292-adobe-flash-player-type-confusion-vu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="CISA KEV"
@@ -2155,12 +2282,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-11826 — Microsoft Office Remote Code Execution Vulnerability A remote code execution vulnerability exists in Microsoft Office software when the software fails to properly handle objects in memory. An attacker who successfully exploited the vulnerability could run arbitrary code in the context of the current user. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24. CVE-2017-11826 CVE-2019-1297 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-11292 — Adobe Flash Player Type Confusion Vulnerability Adobe Flash Player contains a type confusion vulnerability which can allow for remote code execution. Vendor: Adobe, Product: Flash Player. Federal patch due: 2022-03-24. CVE-2017-11292 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-11826-microsoft-office-remote-code-executi" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-11292-adobe-flash-player-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-11826 — Microsoft Office Remote Code Execution Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-11292 — Adobe Flash Player Type Confusion Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -2168,8 +2295,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A remote code execution vulnerability exists in Microsoft Office software when the software fails to properly handle objects in memory. An attacker who successfully exploited the vulnerability could run arbitrary code in the context of the current user. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-11826</span> <span class="ind cve">CVE-2019-1297</span></div>
+  <p class="summary">Adobe Flash Player contains a type confusion vulnerability which can allow for remote code execution. Vendor: Adobe, Product: Flash Player. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-11292</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2532-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -2243,7 +2370,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-11826&quot;, &quot;CVE-2019-1297&quot;)
+| where CveId in~ (&quot;CVE-2017-11292&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2254,7 +2381,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-11826&quot;, &quot;CVE-2019-1297&quot;)
+| where CveId in~ (&quot;CVE-2017-11292&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2262,19 +2389,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2532-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2532-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2532-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2532-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-11826&quot;, &quot;CVE-2019-1297&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-11292&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2532-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-11826&quot;, &quot;CVE-2019-1297&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-11292&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2533" data-art-slug="2022-03-03-cisa-kev-cve-2017-11292-adobe-flash-player-type-confusion-vu"
+<article class="card" id="art-2533" data-art-slug="2022-03-03-cisa-kev-cve-2017-0261-microsoft-office-use-after-free-vulne"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="CISA KEV"
@@ -2282,12 +2409,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-11292 — Adobe Flash Player Type Confusion Vulnerability Adobe Flash Player contains a type confusion vulnerability which can allow for remote code execution. Vendor: Adobe, Product: Flash Player. Federal patch due: 2022-03-24. CVE-2017-11292 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-0261 — Microsoft Office Use-After-Free Vulnerability Microsoft Office contains a use-after-free vulnerability which can allow for remote code execution. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24. CVE-2017-0261 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-11292-adobe-flash-player-type-confusion-vu" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-0261-microsoft-office-use-after-free-vulne" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-11292 — Adobe Flash Player Type Confusion Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-0261 — Microsoft Office Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -2295,8 +2422,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Adobe Flash Player contains a type confusion vulnerability which can allow for remote code execution. Vendor: Adobe, Product: Flash Player. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-11292</span></div>
+  <p class="summary">Microsoft Office contains a use-after-free vulnerability which can allow for remote code execution. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-0261</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2533-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -2370,7 +2497,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-11292&quot;)
+| where CveId in~ (&quot;CVE-2017-0261&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2381,7 +2508,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-11292&quot;)
+| where CveId in~ (&quot;CVE-2017-0261&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2389,42 +2516,41 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2533-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2533-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2533-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2533-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-11292&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-0261&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2533-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-11292&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-0261&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2534" data-art-slug="2022-03-03-cisa-kev-cve-2017-0261-microsoft-office-use-after-free-vulne"
+<article class="card" id="art-2534" data-art-slug="2022-03-03-cisa-kev-cve-2017-0001-microsoft-graphics-device-interface-g"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
+  data-techs=""
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-0261 — Microsoft Office Use-After-Free Vulnerability Microsoft Office contains a use-after-free vulnerability which can allow for remote code execution. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24. CVE-2017-0261 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2017-0001 — Microsoft Graphics Device Interface (GDI) Privilege Escalation Vulnerability The Graphics Device Interface (GDI) in Microsoft Windows Vista SP2; Windows Server 2008 SP2 and R2 SP1; Windows 7 SP1; Windows 8.1; Windows Server 2012 Gold and R2; Windows RT 8.1; and Windows 10 Gold, 1511, and 1607 allows local users to gain privileges Vendor: Microsoft, Product: Graphics Device Interface (GDI). Federal patch due: 2022-03-24. CVE-2017-0001  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-0261-microsoft-office-use-after-free-vulne" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-0001-microsoft-graphics-device-interface-g" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-0261 — Microsoft Office Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-0001 — Microsoft Graphics Device Interface (GDI) Privilege Escalation Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
     <span>1 use case</span>
-    <span>1 technique</span>
+    <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Microsoft Office contains a use-after-free vulnerability which can allow for remote code execution. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-0261</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <p class="summary">The Graphics Device Interface (GDI) in Microsoft Windows Vista SP2; Windows Server 2008 SP2 and R2 SP1; Windows 7 SP1; Windows 8.1; Windows Server 2012 Gold and R2; Windows RT 8.1; and Windows 10 Gold, 1511, and 1607 allows local users to gain privileges Vendor: Microsoft, Product: Graphics Device Interface (GDI). Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-0001</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2534-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2534"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2497,7 +2623,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-0261&quot;)
+| where CveId in~ (&quot;CVE-2017-0001&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2508,7 +2634,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-0261&quot;)
+| where CveId in~ (&quot;CVE-2017-0001&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2516,19 +2642,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2534-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2534-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2534-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2534-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-0261&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-0001&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2534-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-0261&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2017-0001&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2535" data-art-slug="2022-03-03-cisa-kev-cve-2017-0001-microsoft-graphics-device-interface-g"
+<article class="card" id="art-2535" data-art-slug="2022-03-03-cisa-kev-cve-2016-8562-siemens-simatic-cp-1543-1-improper-pr"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2536,12 +2662,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2017-0001 — Microsoft Graphics Device Interface (GDI) Privilege Escalation Vulnerability The Graphics Device Interface (GDI) in Microsoft Windows Vista SP2; Windows Server 2008 SP2 and R2 SP1; Windows 7 SP1; Windows 8.1; Windows Server 2012 Gold and R2; Windows RT 8.1; and Windows 10 Gold, 1511, and 1607 allows local users to gain privileges Vendor: Microsoft, Product: Graphics Device Interface (GDI). Federal patch due: 2022-03-24. CVE-2017-0001  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2016-8562 — Siemens SIMATIC CP 1543-1 Improper Privilege Management Vulnerability An improper privilege management vulnerability exists within the Siemens SIMATIC Communication Processor (CP) that allows a privileged attacker to remotely cause a denial of service. Vendor: Siemens, Product: SIMATIC CP. Federal patch due: 2022-03-24. CVE-2016-8562  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2017-0001-microsoft-graphics-device-interface-g" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2016-8562-siemens-simatic-cp-1543-1-improper-pr" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2017-0001 — Microsoft Graphics Device Interface (GDI) Privilege Escalation Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-8562 — Siemens SIMATIC CP 1543-1 Improper Privilege Management Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -2549,8 +2675,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">The Graphics Device Interface (GDI) in Microsoft Windows Vista SP2; Windows Server 2008 SP2 and R2 SP1; Windows 7 SP1; Windows 8.1; Windows Server 2012 Gold and R2; Windows RT 8.1; and Windows 10 Gold, 1511, and 1607 allows local users to gain privileges Vendor: Microsoft, Product: Graphics Device Interface (GDI). Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-0001</span></div>
+  <p class="summary">An improper privilege management vulnerability exists within the Siemens SIMATIC Communication Processor (CP) that allows a privileged attacker to remotely cause a denial of service. Vendor: Siemens, Product: SIMATIC CP. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-8562</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2535-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2535"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2623,7 +2749,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-0001&quot;)
+| where CveId in~ (&quot;CVE-2016-8562&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2634,7 +2760,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-0001&quot;)
+| where CveId in~ (&quot;CVE-2016-8562&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2642,19 +2768,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2535-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2535-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2535-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2535-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-0001&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2016-8562&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2535-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-0001&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2016-8562&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2536" data-art-slug="2022-03-03-cisa-kev-cve-2016-8562-siemens-simatic-cp-1543-1-improper-pr"
+<article class="card" id="art-2536" data-art-slug="2022-03-03-cisa-kev-cve-2016-7855-adobe-flash-player-use-after-free-vul"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2662,12 +2788,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2016-8562 — Siemens SIMATIC CP 1543-1 Improper Privilege Management Vulnerability An improper privilege management vulnerability exists within the Siemens SIMATIC Communication Processor (CP) that allows a privileged attacker to remotely cause a denial of service. Vendor: Siemens, Product: SIMATIC CP. Federal patch due: 2022-03-24. CVE-2016-8562  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2016-7855 — Adobe Flash Player Use-After-Free Vulnerability Use-after-free vulnerability in Adobe Flash Player Windows and OS and Linux allows remote attackers to execute arbitrary code. Vendor: Adobe, Product: Flash Player. Federal patch due: 2022-03-24. CVE-2016-7855 CVE-2016-7255  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2016-8562-siemens-simatic-cp-1543-1-improper-pr" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2016-7855-adobe-flash-player-use-after-free-vul" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-8562 — Siemens SIMATIC CP 1543-1 Improper Privilege Management Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-7855 — Adobe Flash Player Use-After-Free Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -2675,8 +2801,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">An improper privilege management vulnerability exists within the Siemens SIMATIC Communication Processor (CP) that allows a privileged attacker to remotely cause a denial of service. Vendor: Siemens, Product: SIMATIC CP. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-8562</span></div>
+  <p class="summary">Use-after-free vulnerability in Adobe Flash Player Windows and OS and Linux allows remote attackers to execute arbitrary code. Vendor: Adobe, Product: Flash Player. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-7855</span> <span class="ind cve">CVE-2016-7255</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2536-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2536"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2749,7 +2875,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-8562&quot;)
+| where CveId in~ (&quot;CVE-2016-7855&quot;, &quot;CVE-2016-7255&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2760,7 +2886,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-8562&quot;)
+| where CveId in~ (&quot;CVE-2016-7855&quot;, &quot;CVE-2016-7255&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2768,19 +2894,19 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2536-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2536-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2536-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2536-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2016-8562&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2016-7855&quot;, &quot;CVE-2016-7255&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2536-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2016-8562&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2016-7855&quot;, &quot;CVE-2016-7255&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2537" data-art-slug="2022-03-03-cisa-kev-cve-2016-7855-adobe-flash-player-use-after-free-vul"
+<article class="card" id="art-2537" data-art-slug="2022-03-03-cisa-kev-cve-2016-7262-microsoft-office-security-feature-byp"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="CISA KEV"
@@ -2788,12 +2914,12 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2016-7855 — Adobe Flash Player Use-After-Free Vulnerability Use-after-free vulnerability in Adobe Flash Player Windows and OS and Linux allows remote attackers to execute arbitrary code. Vendor: Adobe, Product: Flash Player. Federal patch due: 2022-03-24. CVE-2016-7855 CVE-2016-7255  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2016-7262 — Microsoft Office Security Feature Bypass Vulnerability A security feature bypass vulnerability exists when Microsoft Office improperly handles input. An attacker who successfully exploited the vulnerability could execute arbitrary commands. Vendor: Microsoft, Product: Excel. Federal patch due: 2022-03-24. CVE-2016-7262  Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2016-7855-adobe-flash-player-use-after-free-vul" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2016-7262-microsoft-office-security-feature-byp" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-7855 — Adobe Flash Player Use-After-Free Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-7262 — Microsoft Office Security Feature Bypass Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
@@ -2801,8 +2927,8 @@ DeviceTvmSoftwareVulnerabilities
     <span>0 techniques</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">Use-after-free vulnerability in Adobe Flash Player Windows and OS and Linux allows remote attackers to execute arbitrary code. Vendor: Adobe, Product: Flash Player. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-7855</span> <span class="ind cve">CVE-2016-7255</span></div>
+  <p class="summary">A security feature bypass vulnerability exists when Microsoft Office improperly handles input. An attacker who successfully exploited the vulnerability could execute arbitrary commands. Vendor: Microsoft, Product: Excel. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-7262</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2537-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2537"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2875,7 +3001,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-7855&quot;, &quot;CVE-2016-7255&quot;)
+| where CveId in~ (&quot;CVE-2016-7262&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -2886,7 +3012,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-7855&quot;, &quot;CVE-2016-7255&quot;)
+| where CveId in~ (&quot;CVE-2016-7262&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -2894,41 +3020,42 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2537-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2537-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2537-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2537-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2016-7855&quot;, &quot;CVE-2016-7255&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2016-7262&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-2537-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2016-7855&quot;, &quot;CVE-2016-7255&quot;)
+    where Vulnerabilities.signature IN (&quot;CVE-2016-7262&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
-<article class="card" id="art-2538" data-art-slug="2022-03-03-cisa-kev-cve-2016-7262-microsoft-office-security-feature-byp"
+<article class="card" id="art-2538" data-art-slug="2022-03-03-cisa-kev-cve-2016-7193-microsoft-office-memory-corruption-vu"
   data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
+  data-techs="T1190"
   data-sources="CISA KEV"
   data-platforms="def,sent,spl"
   data-splunk-cats="application"
   data-targets=""
   data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2016-7262 — Microsoft Office Security Feature Bypass Vulnerability A security feature bypass vulnerability exists when Microsoft Office improperly handles input. An attacker who successfully exploited the vulnerability could execute arbitrary commands. Vendor: Microsoft, Product: Excel. Federal patch due: 2022-03-24. CVE-2016-7262  Asset exposure — vulnerability matches article CVE(s)">
+  data-search="CISA KEV: CVE-2016-7193 — Microsoft Office Memory Corruption Vulnerability Microsoft Office contains a memory corruption vulnerability which can allow for remote code execution. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24. CVE-2016-7193 T1190 Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2016-7262-microsoft-office-security-feature-byp" title="Copy share link to this article" aria-label="Copy share link">
+  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2016-7193-microsoft-office-memory-corruption-vu" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
   </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-7262 — Microsoft Office Security Feature Bypass Vulnerability</a></h2>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-7193 — Microsoft Office Memory Corruption Vulnerability</a></h2>
   <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
   <div class="pubmeta">
     <span>2022-03-03</span>
     <span>1 use case</span>
-    <span>0 techniques</span>
+    <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
-  <p class="summary">A security feature bypass vulnerability exists when Microsoft Office improperly handles input. An attacker who successfully exploited the vulnerability could execute arbitrary commands. Vendor: Microsoft, Product: Excel. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-7262</span></div>
+  <p class="summary">Microsoft Office contains a memory corruption vulnerability which can allow for remote code execution. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-7193</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-2538-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-2538"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -3001,7 +3128,7 @@ DeviceTvmSoftwareVulnerabilities
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-7262&quot;)
+| where CveId in~ (&quot;CVE-2016-7193&quot;)
 | join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
@@ -3012,7 +3139,7 @@ DeviceTvmSoftwareVulnerabilities
 // gaps as a coarse approximation.
 DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-7262&quot;)
+| where CveId in~ (&quot;CVE-2016-7193&quot;)
 | join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
 | project DeviceName, OSPlatform, CveId,
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
@@ -3020,137 +3147,10 @@ DeviceTvmSoftwareVulnerabilities
 </code></pre></div>
     <div class="tab-content" id="art-2538-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2538-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2538-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2538-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2016-7262&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-2538-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2016-7262&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-2539" data-art-slug="2022-03-03-cisa-kev-cve-2016-7193-microsoft-office-memory-corruption-vu"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2016-7193 — Microsoft Office Memory Corruption Vulnerability Microsoft Office contains a memory corruption vulnerability which can allow for remote code execution. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24. CVE-2016-7193 T1190 Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2022-03-03-cisa-kev-cve-2016-7193-microsoft-office-memory-corruption-vu" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2016-7193 — Microsoft Office Memory Corruption Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2022-03-03</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Microsoft Office contains a memory corruption vulnerability which can allow for remote code execution. Vendor: Microsoft, Product: Office. Federal patch due: 2022-03-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2016-7193</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-2539-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-2539"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-2539-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-2539-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-2539-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-2539-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-2539-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-7193&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2539-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2016-7193&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-2539-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-2539-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-2539-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-2539-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2016-7193&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-2539-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-2538-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2016-7193&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve

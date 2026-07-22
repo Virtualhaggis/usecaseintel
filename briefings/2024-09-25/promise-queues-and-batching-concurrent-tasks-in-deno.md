@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Promise queues and batching concurrent tasks in Deno
 
-`UC_1196_1` · phase: **exploit** · confidence: **High**
+`UC_1195_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

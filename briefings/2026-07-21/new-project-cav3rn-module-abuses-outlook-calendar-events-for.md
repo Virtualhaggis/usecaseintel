@@ -76,7 +76,7 @@ _(none detected from narrative keywords)_
 
 ### CAV3RN/HOLLOWGRAPH DNS AAAA config-recovery beaconing to cloudlanecdn[.]com
 
-`UC_39_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_42_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### CAV3RN AzureCommunication.dll config file 'logAzure.txt' written to disk
 
-`UC_39_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_42_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceFileEvents
 
 ### CAV3RN framework module DLLs loaded/dropped (AzureCommunication / n-HTCommp / masqueraded uxtheme)
 
-`UC_39_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_42_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceImageLoadEvents
 
 ### Anomalous DLL-host process reaching Microsoft Graph/login.microsoftonline for calendar C2
 
-`UC_39_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_42_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -217,7 +217,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — New Project CAV3RN module abuses Outlook calendar events for C2 and DNS AAAA rec
 
-`UC_39_4` · phase: **exploit** · confidence: **High**
+`UC_42_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

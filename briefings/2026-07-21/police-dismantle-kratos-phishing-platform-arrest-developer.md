@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### Kratos PhaaS network/DNS egress to phishing domains and operator IP 41.128.0.142
 
-`UC_11_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_15_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ let D=dynamic(["dwbud.vilaribit.com","razen.online","theoceanac.online","jumpast
 
 ### Kratos phishing kit web-asset fingerprint (barr.svg + lg.svg / PTT-SOft path)
 
-`UC_11_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_15_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any ("bar
 
 ### Kratos PhaaS credential-exfil POST to next.php / save.php on phishing host
 
-`UC_11_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_15_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ let D=dynamic(["dwbud.vilaribit.com","razen.online","theoceanac.online","jumpast
 
 ### Inbound email with URL to Kratos phishing domain clicked via Safe Links
 
-`UC_11_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_15_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -123,7 +123,7 @@ let D=dynamic(["dwbud.vilaribit.com","razen.online","theoceanac.online","jumpast
 
 ### Microsoft 365 successful sign-in sourced from Kratos operator IP 41.128.0.142
 
-`UC_11_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_15_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

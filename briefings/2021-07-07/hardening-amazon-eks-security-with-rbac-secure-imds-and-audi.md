@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Hardening Amazon EKS security with RBAC, secure IMDS, and audit logging
 
-`UC_3113_2` · phase: **install** · confidence: **High**
+`UC_3112_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
