@@ -11,15 +11,9 @@ By Bill Toulas
 July 22, 2026
 12:59 PM
 1 
-
-
 Swiss rail vehicle manufacturer Stadler Rail says the Everest ransomware gang demanded about $12.3 million after breaching a data exchange platform shared with one of its suppliers.
-
-
 The threat actor has not publicly claimed the attack, but the Swiss company says that it received an extortion letter from Everest ransomware asking for a ransom of 10 million Swiss francs.
-
-
-T…
+The company r…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -9,7 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-22
-- [adobe chrome extension flaw let sites access private whatsap](./2026-07-22/adobe-chrome-extension-flaw-let-sites-access-private-whatsap.md)
+- [adobe acrobat extension flaw let malicious sites read whatsa](./2026-07-22/adobe-acrobat-extension-flaw-let-malicious-sites-read-whatsa.md)
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
 - [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
 - [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
@@ -22,6 +22,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [swiss rail giant stadler rejects 12 3m ransom demand after c](./2026-07-22/swiss-rail-giant-stadler-rejects-12-3m-ransom-demand-after-c.md)
 - [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-22/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
 - [trojanized newtonsoft json fork hides game rigging code in a](./2026-07-22/trojanized-newtonsoft-json-fork-hides-game-rigging-code-in-a.md)
+- [ubuntu snap confine flaw could give local users root on defa](./2026-07-22/ubuntu-snap-confine-flaw-could-give-local-users-root-on-defa.md)
 - [why modern socs need multi layered detections](./2026-07-22/why-modern-socs-need-multi-layered-detections.md)
 
 ## 2026-07-21
@@ -91,7 +92,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [unauthenticated rce in wordpress core wp2shell via sql injec](./2026-07-17/unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec.md)
 
 ## 2026-07-16
-- [20 hijacked government websites became an attack channel](./2026-07-16/20-hijacked-government-websites-became-an-attack-channel.md)
 - [acr stealer two observed intrusion chains amid increased thr](./2026-07-16/acr-stealer-two-observed-intrusion-chains-amid-increased-thr.md)
 - [ai automation and attacks unpacking the unit 42 2026 global ](./2026-07-16/ai-automation-and-attacks-unpacking-the-unit-42-2026-global-.md)
 - [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)

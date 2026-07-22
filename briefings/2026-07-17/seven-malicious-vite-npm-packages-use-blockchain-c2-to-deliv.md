@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### ViteVenom malicious npm package install/presence (@vitejs typosquat cluster)
 
-`UC_74_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_75_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ union InstallCmd, OnDisk
 
 ### Node/build process egress to blockchain RPC & explorer infra (Tron/BSC/Aptos C2)
 
-`UC_74_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_75_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### Node/build process spawning interactive shell (ViteVenom RAT reverse shell)
 
-`UC_74_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_75_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### Shell profile persistence (.bashrc/.zshrc/.profile) modified by node/npm
 
-`UC_74_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_75_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
