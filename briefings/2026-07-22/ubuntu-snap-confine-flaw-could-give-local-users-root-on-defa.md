@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious udev .rules file dropped into /run/udev/rules.d (snap-confine CVE-2026-8933)
 
-`UC_1_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceFileEvents
 
 ### snap-confine invoked with concurrent FUSE mount over /tmp scratch dir (CVE-2026-8933 race)
 
-`UC_1_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### systemd-udevd spawning a shell/interpreter as root (CVE-2026-8933 payload execution)
 
-`UC_1_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### Ubuntu Desktop hosts exposed to vulnerable snap-confine (CVE-2026-8933)
 
-`UC_1_14` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_3_14` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

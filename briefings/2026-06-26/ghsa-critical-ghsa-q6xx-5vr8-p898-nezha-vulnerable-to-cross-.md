@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Nezha WebSocket terminal/file-manager session hijack — one stream UUID attached from 2+ source IPs
 
-`UC_236_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_238_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Nezha harvested stream-UUID replay — one client attaching to many distinct terminal/file WebSocket UUIDs
 
-`UC_236_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_238_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

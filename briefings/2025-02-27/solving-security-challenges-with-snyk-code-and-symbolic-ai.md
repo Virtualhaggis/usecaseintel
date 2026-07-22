@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Solving Security Challenges with Snyk Code and Symbolic AI
 
-`UC_1039_0` · phase: **exploit** · confidence: **High**
+`UC_1041_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

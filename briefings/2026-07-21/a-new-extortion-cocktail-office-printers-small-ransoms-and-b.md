@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### MSSQL sqlservr.exe spawning OS shell via xp_cmdshell (XEntry Team)
 
-`UC_41_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_43_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### Server-side BitLocker mass encryption enablement (XEntry Team extortion)
 
-`UC_41_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Unsanctioned RMM trio deployment: Endpoint Central, Mesh Agent, Tactical RMM
 
-`UC_41_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_43_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### BitLocker recovery key harvesting via manage-bde -protectors -get
 
-`UC_41_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_43_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

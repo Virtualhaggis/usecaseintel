@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe Acrobat Chrome extension (HermeticReader CVE-2026-48294) present via TVM
 
-`UC_7_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -64,7 +64,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Vulnerable Adobe Acrobat extension version folder on disk (HermeticReader CVE-2026-48294)
 
-`UC_7_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_9_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

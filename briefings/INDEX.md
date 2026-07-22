@@ -10,6 +10,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-22
 - [adobe acrobat extension flaw let malicious sites read whatsa](./2026-07-22/adobe-acrobat-extension-flaw-let-malicious-sites-read-whatsa.md)
+- [cisa kev cve 2026 16232 check point smartconsole improper au](./2026-07-22/cisa-kev-cve-2026-16232-check-point-smartconsole-improper-au.md)
+- [critical sharepoint rce flaw exploited to steal machine keys](./2026-07-22/critical-sharepoint-rce-flaw-exploited-to-steal-machine-keys.md)
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
 - [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
 - [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
@@ -32,10 +34,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2021 27137 dd wrt stack based buffer overflow v](./2026-07-21/cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v.md)
 - [cisa kev cve 2026 0770 langflow inclusion of functionality f](./2026-07-21/cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f.md)
 - [cisa kev cve 2026 60137 wordpress core sql injection vulnera](./2026-07-21/cisa-kev-cve-2026-60137-wordpress-core-sql-injection-vulnera.md)
-- [closing the identity gaps in critical infrastructure securit](./2026-07-21/closing-the-identity-gaps-in-critical-infrastructure-securit.md)
 - [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
 - [critical sharepoint rce cve 2026 50522 under active exploita](./2026-07-21/critical-sharepoint-rce-cve-2026-50522-under-active-exploita.md)
-- [critical sharepoint rce flaw exploited to steal machine keys](./2026-07-21/critical-sharepoint-rce-flaw-exploited-to-steal-machine-keys.md)
 - [critical wp2shell wordpress flaws exploited to install websh](./2026-07-21/critical-wp2shell-wordpress-flaws-exploited-to-install-websh.md)
 - [fakegit campaign uses 7 600 github repos to push smartloader](./2026-07-21/fakegit-campaign-uses-7-600-github-repos-to-push-smartloader.md)
 - [ghsa critical cve 2026 20896 gitea docker image reverse prox](./2026-07-21/ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox.md)

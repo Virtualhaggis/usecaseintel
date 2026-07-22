@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### Weaponized HTA download-and-execute via mshta.exe from UAT-11795 staging domains (ClickFix)
 
-`UC_100_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_102_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Trojanized software installer (MobaXterm/WebEx/Zoom/DBeaver/FACEIT) spawning Python bytecode loader
 
-`UC_100_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### WLDR PowerShell C2 beacon to eorthopaedics/sastoro under /feed/ and /alpha/ HWID paths
 
-`UC_100_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceNetworkEvents
 
 ### Starland RAT HWID-bound C2 to windowscreenrepairnearme/aipythondevs from Python
 
-`UC_100_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceNetworkEvents
 
 ### Polygon smart-contract Eth_call fallback C2 resolution (JSON-RPC to polygon-rpc)
 
-`UC_100_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceNetworkEvents
 
 ### web-devtools.com raw shellcode staging fetch (/starlandfox, /x32remka, /dopfile)
 
-`UC_100_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_102_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +180,7 @@ DeviceNetworkEvents
 
 ### UAT-11795 scheduled-task persistence via New-ScheduledTask 'PythonLauncher-' entry
 
-`UC_100_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_102_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -205,7 +205,7 @@ union
 
 ### Starland RAT browser-credential and cryptocurrency-wallet harvesting by Python
 
-`UC_100_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -542,7 +542,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially
 
-`UC_100_10` · phase: **exploit** · confidence: **High**
+`UC_102_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

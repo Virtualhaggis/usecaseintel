@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow unauthenticated RCE via /api/v1/validate/code (CVE-2025-3248)
 
-`UC_48_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_50_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow Python runtime spawning shell / nsenter / base64-decoded child process
 
-`UC_48_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_50_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### Docker-socket privileged container breakout + nsenter host escape
 
-`UC_48_17` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_50_17` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### ENCFORGE Go ransomware execution — hashes, hidden path, and cmdline flags
 
-`UC_48_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_50_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### Mass .locked rename + ENCFORGE ransom-note drop on AI model stores
 
-`UC_48_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -547,7 +547,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New ENCFORGE Ransomware Targets AI Model Files in Langflow RCE Attack
 
-`UC_48_14` · phase: **install** · confidence: **High**
+`UC_50_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

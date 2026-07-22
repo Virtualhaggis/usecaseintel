@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### SonicWall SMA1000 unauthenticated SSRF via /wsproxy endpoint (CVE-2026-15409)
 
-`UC_8_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_10_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### SonicWall SMA1000 command injection via AMC sysCtrl.execRemoveHotfix RPC (CVE-2026-15410)
 
-`UC_8_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure inventory: infrastructure assets carrying the InfraTrust KEV priority CVEs
 
-`UC_8_3` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_10_3` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
