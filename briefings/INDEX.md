@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2591 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2593 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-23
+- [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
 - [check point patches exploited smartconsole flaw allowing ful](./2026-07-23/check-point-patches-exploited-smartconsole-flaw-allowing-ful.md)
+- [new msarat malware uses chrome edge browsers to route c2 tra](./2026-07-23/new-msarat-malware-uses-chrome-edge-browsers-to-route-c2-tra.md)
+- [nine year old refluxfs linux flaw gives local users root on ](./2026-07-23/nine-year-old-refluxfs-linux-flaw-gives-local-users-root-on-.md)
+- [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
 
 ## 2026-07-22
 - [adobe acrobat extension flaw let malicious sites read whatsa](./2026-07-22/adobe-acrobat-extension-flaw-let-malicious-sites-read-whatsa.md)
@@ -39,7 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 60137 wordpress core sql injection vulnera](./2026-07-21/cisa-kev-cve-2026-60137-wordpress-core-sql-injection-vulnera.md)
 - [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
 - [critical sharepoint rce cve 2026 50522 under active exploita](./2026-07-21/critical-sharepoint-rce-cve-2026-50522-under-active-exploita.md)
-- [fakegit campaign uses 7 600 github repos to push smartloader](./2026-07-21/fakegit-campaign-uses-7-600-github-repos-to-push-smartloader.md)
 - [ghsa critical cve 2026 20896 gitea docker image reverse prox](./2026-07-21/ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox.md)
 - [ghsa critical cve 2026 22874 gitea incomplete ssrf protectio](./2026-07-21/ghsa-critical-cve-2026-22874-gitea-incomplete-ssrf-protectio.md)
 - [ghsa critical cve 2026 56750 gitea remember me token theft n](./2026-07-21/ghsa-critical-cve-2026-56750-gitea-remember-me-token-theft-n.md)
@@ -96,6 +99,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-16
 - [acr stealer two observed intrusion chains amid increased thr](./2026-07-16/acr-stealer-two-observed-intrusion-chains-amid-increased-thr.md)
 - [ai automation and attacks unpacking the unit 42 2026 global ](./2026-07-16/ai-automation-and-attacks-unpacking-the-unit-42-2026-global-.md)
+- [begun the patch wars have](./2026-07-16/begun-the-patch-wars-have.md)
 - [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 39808 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-39808-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 58644 microsoft sharepoint deserialization](./2026-07-16/cisa-kev-cve-2026-58644-microsoft-sharepoint-deserialization.md)
@@ -105,7 +109,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
-- [threatsday game cheat spyware 24 hour ransomware chrome sync](./2026-07-16/threatsday-game-cheat-spyware-24-hour-ransomware-chrome-sync.md)
 - [two scattered spider hackers get 5 5 years each for 29 milli](./2026-07-16/two-scattered-spider-hackers-get-5-5-years-each-for-29-milli.md)
 - [uat 11795 deploys novel starland rat and bespoke wldr c2 imp](./2026-07-16/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-imp.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
@@ -307,7 +310,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
-- [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)

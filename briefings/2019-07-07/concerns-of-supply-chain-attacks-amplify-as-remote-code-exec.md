@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### strong_password 0.0.7 backdoor: Ruby app server fetches second-stage payload from pastebin.com/raw/xa456PFt
 
-`UC_3495_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3496_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### strong_password 0.0.7 backdoor: beacon to home server smiley.zzz.com.ua
 
-`UC_3495_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3496_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### strong_password 0.0.7 backdoor: RCE via attacker-controlled ___id cookie eval middleware
 
-`UC_3495_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3496_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

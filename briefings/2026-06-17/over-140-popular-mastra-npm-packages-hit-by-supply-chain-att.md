@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Sapphire Sleet easy-day-js RAT C2 beacon to Hostwinds 23.254.164.92 / 23.254.164.123
 
-`UC_302_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_303_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### easy-day-js postinstall dropper spawning node.exe with C2 IP passed as argument
 
-`UC_302_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_303_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Malicious easy-day-js package installed into node_modules
 
-`UC_302_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_303_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceFileEvents
 
 ### Node.js writing a random 24-hex-char .js dropper to the OS temp directory
 
-`UC_302_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_303_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

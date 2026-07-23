@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious npm flatmap-stream / event-stream@3.3.6 dependency dropped to endpoint disk
 
-`UC_3574_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3575_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceFileEvents
 
 ### Copay wallet-stealer C2 exfil to copayapi.host / 111.90.151.134
 
-`UC_3574_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3575_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
