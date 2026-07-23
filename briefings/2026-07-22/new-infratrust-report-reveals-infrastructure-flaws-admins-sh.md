@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure hunt: internet-infrastructure devices carrying actively-exploited/KEV CVEs from July 2026 InfraTrust Pulse
 
-`UC_18_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_22_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### SonicWall SMA1000 pre-auth SSRF + management-console command injection exploitation (CVE-2026-15409/15410)
 
-`UC_18_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_22_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### FortiSandbox unauthenticated OS command injection via crafted HTTP (CVE-2026-39808 / CVE-2026-25089)
 
-`UC_18_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_22_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Context.ai compromised Chrome extension (ID omddlmnhcofjbnbflmjginpjjblphbgk) present on endpoint
 
-`UC_459_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_458_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceFileEvents
 
 ### Cyberhaven compromised extension C2 beacon to cyberhavenext[.]pro
 
-`UC_459_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_458_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### rundll32.exe loading node-gyp.dll dropped by Scavenger-infected npm postinstall (CVE-2025-54313)
 
-`UC_884_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_883_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Scavenger Stealer C2 beacon to corroborated infrastructure (datahog.su / datalytica.su / smartscreen-api.com)
 
-`UC_884_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_883_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### npm registry typosquat npnjs.com — DNS / URL click (eslint-config-prettier maintainer phishing kit)
 
-`UC_884_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_883_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ union isfuzzy=true
 
 ### Scavenger Loader DLL (node-gyp.dll) written inside node_modules of CVE-2025-54313 packages
 
-`UC_884_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_883_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceFileEvents
 
 ### Scavenger Stealer sandbox-evasion marker file %TEMP%\SCVNGR_VM created
 
-`UC_884_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_883_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

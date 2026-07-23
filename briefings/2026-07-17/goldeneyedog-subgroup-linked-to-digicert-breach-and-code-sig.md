@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### Golden Gh0st Loader DLL side-load loading encrypted 'update.log' payload from user-writable path
 
-`UC_84_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_86_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ let Window = 14d; let SideloadHosts = DeviceImageLoadEvents | where Timestamp > 
 
 ### GoldenEyeDog .scr screensaver payload executed from download/archive path (support-chat delivery)
 
-`UC_84_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_86_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents | where Timestamp > ago(14d) | where AccountName !endswith "
 
 ### Golden Gh0st RAT plaintext WebSocket C2 to qaqkongtiao.com / GoldenEyeDog IP set
 
-`UC_84_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_86_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceNetworkEvents | where Timestamp > ago(14d) | where RemoteUrl has "qaqkongt
 
 ### Golden Gh0st RAT browser/credential collection targeting 360, QQ and Skype data stores
 
-`UC_84_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_86_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceFileEvents | where Timestamp > ago(14d) | where FolderPath has_any (@"\360
 
 ### Execution of stolen-cert-signed Zhong Stealer / Golden Gh0st RAT artifacts by SHA256
 
-`UC_84_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_86_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

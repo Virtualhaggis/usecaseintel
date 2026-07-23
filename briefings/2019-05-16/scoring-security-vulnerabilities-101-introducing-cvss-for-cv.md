@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Scoring security vulnerabilities 101: Introducing CVSS for CVEs
 
-`UC_3509_0` · phase: **exploit** · confidence: **High**
+`UC_3508_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

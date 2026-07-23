@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### UAC-0145 ClickFix: explorer-spawned PowerShell downloads + drops VBS to Startup (GHETTOVIBE)
 
-`UC_76_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_78_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### GHETTOVIBE persistence: VBS written to Startup folder by script host / PowerShell
 
-`UC_76_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_78_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceFileEvents
 
 ### UAC-0145 ClickFix C2 / staging domain contact (office366.com, 365softupdate.com, delta.smartlinkupload.com)
 
-`UC_76_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_78_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### EtherHiding: browser fetching UAC-0145 C2 domain from Ethereum/BSC smart contract via public RPC
 
-`UC_76_16` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_78_16` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Montana Empire phishing-kit ZIP + companion APK by SHA256 on endpoints
 
-`UC_233_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_232_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ union
 
 ### Montana Empire kit PHP components staged on web infrastructure
 
-`UC_233_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_232_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### AI coding-assistant egress to first-seen external domain (phantom squatting)
 
-`UC_233_9` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_232_9` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

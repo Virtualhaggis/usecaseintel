@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### OpenSSL build missing June 9 HollowByte fix (below 4.0.1/3.6.3/3.5.7/3.4.6/3.0.21)
 
-`UC_81_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_83_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceTvmSoftwareInventory
 
 ### OOM-killer terminates TLS-terminating daemon (HollowByte memory exhaustion impact)
 
-`UC_81_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_83_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ index=* (sourcetype=syslog OR sourcetype=linux_messages_syslog OR sourcetype="li
 
 ### Crash-loop / rapid restart of TLS server process (post-exhaustion instability)
 
-`UC_81_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_83_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

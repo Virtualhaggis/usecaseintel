@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — A Snyk peek into Node.js and npm’s state of open source security report 2019
 
-`UC_3461_0` · phase: **exploit** · confidence: **High**
+`UC_3460_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

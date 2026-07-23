@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2593 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2590 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-23
+- [attackers weaponize github actions runners to target cpanel ](./2026-07-23/attackers-weaponize-github-actions-runners-to-target-cpanel-.md)
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
 - [check point patches exploited smartconsole flaw allowing ful](./2026-07-23/check-point-patches-exploited-smartconsole-flaw-allowing-ful.md)
 - [new msarat malware uses chrome edge browsers to route c2 tra](./2026-07-23/new-msarat-malware-uses-chrome-edge-browsers-to-route-c2-tra.md)
@@ -55,7 +56,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new encforge ransomware targets ai model files in langflow r](./2026-07-21/new-encforge-ransomware-targets-ai-model-files-in-langflow-r.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
 - [open source android ai agents could let invisible screen tex](./2026-07-21/open-source-android-ai-agents-could-let-invisible-screen-tex.md)
-- [police dismantle kratos phishing platform arrest developer](./2026-07-21/police-dismantle-kratos-phishing-platform-arrest-developer.md)
 - [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)
 - [wordpress wp2shell exploitation grows as public exploit fuel](./2026-07-21/wordpress-wp2shell-exploitation-grows-as-public-exploit-fuel.md)
 - [zimbra patches critical snmp command injection and four xss ](./2026-07-21/zimbra-patches-critical-snmp-command-injection-and-four-xss-.md)
@@ -83,11 +83,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-17
 - [acr stealer uses clickfix lures to steal browser tokens and ](./2026-07-17/acr-stealer-uses-clickfix-lures-to-steal-browser-tokens-and-.md)
 - [armenia detains russian tourist on u s warrant for revil hac](./2026-07-17/armenia-detains-russian-tourist-on-u-s-warrant-for-revil-hac.md)
-- [cisa adds exploited sharepoint rce zero day cve 2026 58644 t](./2026-07-17/cisa-adds-exploited-sharepoint-rce-zero-day-cve-2026-58644-t.md)
 - [e u orders google to open android mic camera and screen to r](./2026-07-17/e-u-orders-google-to-open-android-mic-camera-and-screen-to-r.md)
 - [fake coding tests deliver ottercookie aligned malware hidden](./2026-07-17/fake-coding-tests-deliver-ottercookie-aligned-malware-hidden.md)
 - [goldeneyedog subgroup linked to digicert breach and code sig](./2026-07-17/goldeneyedog-subgroup-linked-to-digicert-breach-and-code-sig.md)
-- [new goserpent malware targets southeast asian governments an](./2026-07-17/new-goserpent-malware-targets-southeast-asian-governments-an.md)
 - [new nadmesh botnet hunts exposed ai services for cloud keys ](./2026-07-17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-.md)
 - [new wp2shell wordpress core flaw lets unauthenticated attack](./2026-07-17/new-wp2shell-wordpress-core-flaw-lets-unauthenticated-attack.md)
 - [openssl hollowbyte flaw could freeze server memory with 11 b](./2026-07-17/openssl-hollowbyte-flaw-could-freeze-server-memory-with-11-b.md)
@@ -109,7 +107,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
-- [two scattered spider hackers get 5 5 years each for 29 milli](./2026-07-16/two-scattered-spider-hackers-get-5-5-years-each-for-29-milli.md)
 - [uat 11795 deploys novel starland rat and bespoke wldr c2 imp](./2026-07-16/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-imp.md)
 - [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
 
