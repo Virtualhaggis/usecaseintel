@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### Trojanized Webex/Zoom/MobaXterm installer spawning Python (Starland RAT)
 
-`UC_99_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_102_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### mshta.exe executing weaponized HTA then spawning PowerShell/cmd (UAT-11795 ClickFix)
 
-`UC_99_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_102_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### In-memory PowerShell AMSI/ETW bypass (UAT-11795 WLDR agent stager)
 
-`UC_99_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### Scheduled task persistence created by mshta/PowerShell/Python (UAT-11795)
 
-`UC_99_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_102_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ DeviceProcessEvents
 
 ### DNS/connection to UAT-11795 Starland RAT C2 and staging domains
 
-`UC_99_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -542,7 +542,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Begun, the Patch Wars have
 
-`UC_99_13` · phase: **exploit** · confidence: **High**
+`UC_102_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

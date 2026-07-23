@@ -37,12 +37,8 @@ Th…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1082** — System Information Discovery
-- **T1083** — File and Directory Discovery
-- **T1548.001** — Abuse Elevation Control Mechanism: Setuid and Setgid
 - **T1068** — Exploitation for Privilege Escalation
-- **T1078.003** — Valid Accounts: Local Accounts
-- **T1556.003** — Modify Authentication Process: Pluggable Authentication Modules
+- **T1548.001** — Abuse Elevation Control Mechanism: Setuid and Setgid
 
 ## Kill chain phases observed
 
@@ -50,109 +46,83 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### XFS reflink capability reconnaissance (RefluXFS CVE-2026-64600 pre-exploit)
+### Hosts exposed to RefluXFS XFS reflink LPE (CVE-2026-64600)
 
-`UC_2_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=xfs_info OR Processes.process=*xfs_info* OR Processes.process=*reflink=*) Processes.user!=root by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where (process_name="xfs_info" OR match(process,"(?i)reflink=")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessCommandLine has "xfs_info" or ProcessCommandLine has "reflink="
-| where AccountName != "root" and AccountName !endswith "$"
-| where AccountName !in~ ("system","_apt")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### chsh executed by unprivileged user to reset RefluXFS unshared-block precondition
-
-`UC_2_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_9_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=chsh Processes.user!=root by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "chsh"
-| where AccountName != "root" and AccountName !endswith "$"
-| where AccountName !in~ ("system")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Root shell spawned by non-root process without sudo/su (RefluXFS LPE outcome)
-
-`UC_2_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.user=root (Processes.process_name=bash OR Processes.process_name=sh OR Processes.process_name=dash OR Processes.process_name=zsh OR Processes.process_name=ksh) NOT (Processes.parent_process_name IN (sudo,su,pkexec,sshd,login,systemd,runuser,cron,crond,init,gdm-session-worker,"sshd-session")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("bash","sh","dash","zsh","ksh")
-| where AccountName == "root"
-| where isnotempty(InitiatingProcessAccountName) and InitiatingProcessAccountName != "root" and InitiatingProcessAccountName !endswith "$"
-| where InitiatingProcessAccountName !in~ ("system")
-| where InitiatingProcessFileName !in~ ("sudo","su","pkexec","sshd","login","systemd","runuser","cron","crond","gdm-session-worker")
-| project Timestamp, DeviceName, ParentUser=InitiatingProcessAccountName, ChildUser=AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Anomalous direct root logon after RefluXFS /etc/passwd password strip
-
-`UC_2_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.user=root Authentication.action=success (Authentication.src_category="multi_tenant" OR Authentication.app IN (sshd,login,systemd-logind)) by Authentication.dest Authentication.user Authentication.src Authentication.app Authentication.action | `drop_dm_object_name(Authentication)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let Baseline = DeviceLogonEvents
-| where Timestamp between (ago(30d) .. ago(1d))
-| where AccountName == "root" and ActionType == "LogonSuccess"
-| summarize by DeviceName;
-DeviceLogonEvents
-| where Timestamp > ago(1d)
-| where AccountName == "root"
-| where ActionType == "LogonSuccess"
-| where LogonType in ("Interactive","RemoteInteractive","Remote","Network")
-| where InitiatingProcessFileName !in~ ("sudo","su","cron","crond","systemd","systemd-logind")
-| join kind=leftanti Baseline on DeviceName
-| project Timestamp, DeviceName, AccountName, LogonType, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### RefluXFS CVE-2026-64600 exposure: reflink-XFS hosts on unpatched kernels
-
-`UC_2_16` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve="CVE-2026-64600" OR Vulnerabilities.signature="CVE-2026-64600") by Vulnerabilities.dest Vulnerabilities.severity Vulnerabilities.cve Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | sort - severity
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-64600" by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
 | where CveId == "CVE-2026-64600"
-| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, OSDistribution) by DeviceId) on DeviceId
+| project Timestamp, DeviceName, DeviceId, OSPlatform, OSDistribution, OSVersion, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing
+| order by IsInternetFacing desc, Timestamp desc
+```
+
+### Unprivileged reflink clone of /etc/passwd or setuid-root binary (RefluXFS primitive)
+
+`UC_9_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*--reflink*" (Processes.process="*/etc/passwd*" OR Processes.process="*/etc/shadow*" OR Processes.process="*/usr/bin/passwd*" OR Processes.process="*/usr/bin/sudo*" OR Processes.process="*/usr/bin/chsh*" OR Processes.process="*/usr/bin/chfn*" OR Processes.process="*/bin/su*") Processes.user!="root" by Processes.dest Processes.user Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "--reflink"
+| where ProcessCommandLine has_any ("/etc/passwd","/etc/shadow","/usr/bin/passwd","/usr/bin/sudo","/usr/bin/chsh","/usr/bin/chfn","/bin/su","/usr/bin/su","/usr/bin/mount","/usr/bin/pkexec")
+| where isnotempty(AccountName) and AccountName != "root"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### RefluXFS reset primitive (chsh/chfn) followed by passwordless root escalation
+
+`UC_9_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as reset_time from datamodel=Endpoint.Processes where Processes.process_name IN ("chsh","chfn") Processes.user!="root" by Processes.dest Processes.user
+| `drop_dm_object_name(Processes)`
+| rename user as reset_user
+| join dest [| tstats `summariesonly` count min(_time) as root_time from datamodel=Endpoint.Processes where Processes.user="root" (Processes.parent_process_name IN ("su","sudo","login","sshd","bash","sh")) by Processes.dest Processes.process Processes.parent_process_name
+ | `drop_dm_object_name(Processes)`]
+| where root_time>=reset_time AND root_time<=reset_time+600
+| eval delay_sec=root_time-reset_time
+| convert ctime(reset_time) ctime(root_time)
+| table dest reset_user reset_time root_time delay_sec process parent_process_name
+```
+
+**Defender KQL:**
+```kql
+let win = 10m;
+let ResetPrimitive = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where FileName in~ ("chsh","chfn")
+    | where isnotempty(AccountName) and AccountName != "root"
+    | project ResetTime = Timestamp, DeviceId, DeviceName, ResetUser = AccountName, ResetCmd = ProcessCommandLine;
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName == "root"
+| where InitiatingProcessFileName in~ ("su","sudo","login","sshd","bash","sh")
+| join kind=inner ResetPrimitive on DeviceId
+| where Timestamp between (ResetTime .. ResetTime + win)
+| project ResetTime, RootTime = Timestamp, DeviceName, ResetUser, ResetCmd, RootProcess = FileName, RootCmd = ProcessCommandLine, ViaProcess = InitiatingProcessFileName, ViaAccount = InitiatingProcessAccountName, DelaySec = datetime_diff('second', Timestamp, ResetTime)
+| order by RootTime desc
 ```
 
 ### Suspicious browser extension installation
@@ -494,7 +464,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nine-Year-Old RefluXFS Linux Flaw Gives Local Users Root on Default RHEL Install
 
-`UC_2_11` · phase: **install** · confidence: **High**
+`UC_9_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -535,4 +505,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 17 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 15 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

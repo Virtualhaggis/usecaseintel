@@ -11,16 +11,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-23
 - [attackers weaponize github actions runners to target cpanel ](./2026-07-23/attackers-weaponize-github-actions-runners-to-target-cpanel-.md)
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
+- [chaos ransomware uses msarat to route c2 traffic through hea](./2026-07-23/chaos-ransomware-uses-msarat-to-route-c2-traffic-through-hea.md)
 - [check point patches exploited smartconsole flaw allowing ful](./2026-07-23/check-point-patches-exploited-smartconsole-flaw-allowing-ful.md)
+- [china nexus jadeprox uses new triback loader in government a](./2026-07-23/china-nexus-jadeprox-uses-new-triback-loader-in-government-a.md)
+- [claude cowork flaw could let ai agent escape its vm and acce](./2026-07-23/claude-cowork-flaw-could-let-ai-agent-escape-its-vm-and-acce.md)
+- [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
+- [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
+- [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
 - [new msarat malware uses chrome edge browsers to route c2 tra](./2026-07-23/new-msarat-malware-uses-chrome-edge-browsers-to-route-c2-tra.md)
 - [nine year old refluxfs linux flaw gives local users root on ](./2026-07-23/nine-year-old-refluxfs-linux-flaw-gives-local-users-root-on-.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
+- [russian global webmail espionage](./2026-07-23/russian-global-webmail-espionage.md)
 
 ## 2026-07-22
 - [adobe acrobat extension flaw let malicious sites read whatsa](./2026-07-22/adobe-acrobat-extension-flaw-let-malicious-sites-read-whatsa.md)
 - [cisa kev cve 2026 16232 check point smartconsole improper au](./2026-07-22/cisa-kev-cve-2026-16232-check-point-smartconsole-improper-au.md)
 - [cisa kev cve 2026 50522 microsoft sharepoint deserialization](./2026-07-22/cisa-kev-cve-2026-50522-microsoft-sharepoint-deserialization.md)
-- [find unused stale and oidc replaceable github actions secret](./2026-07-22/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
 - [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
 - [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
@@ -81,8 +87,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
 
 ## 2026-07-17
-- [acr stealer uses clickfix lures to steal browser tokens and ](./2026-07-17/acr-stealer-uses-clickfix-lures-to-steal-browser-tokens-and-.md)
-- [armenia detains russian tourist on u s warrant for revil hac](./2026-07-17/armenia-detains-russian-tourist-on-u-s-warrant-for-revil-hac.md)
 - [e u orders google to open android mic camera and screen to r](./2026-07-17/e-u-orders-google-to-open-android-mic-camera-and-screen-to-r.md)
 - [fake coding tests deliver ottercookie aligned malware hidden](./2026-07-17/fake-coding-tests-deliver-ottercookie-aligned-malware-hidden.md)
 - [goldeneyedog subgroup linked to digicert breach and code sig](./2026-07-17/goldeneyedog-subgroup-linked-to-digicert-breach-and-code-sig.md)
@@ -90,7 +94,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new wp2shell wordpress core flaw lets unauthenticated attack](./2026-07-17/new-wp2shell-wordpress-core-flaw-lets-unauthenticated-attack.md)
 - [openssl hollowbyte flaw could freeze server memory with 11 b](./2026-07-17/openssl-hollowbyte-flaw-could-freeze-server-memory-with-11-b.md)
 - [seven malicious vite npm packages use blockchain c2 to deliv](./2026-07-17/seven-malicious-vite-npm-packages-use-blockchain-c2-to-deliv.md)
-- [the race to field military autonomy is on can trusted inform](./2026-07-17/the-race-to-field-military-autonomy-is-on-can-trusted-inform.md)
 - [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
 - [unauthenticated rce in wordpress core wp2shell via sql injec](./2026-07-17/unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec.md)
 
@@ -294,8 +297,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 34908 ubiquiti unifi os improper access co](./2026-06-23/cisa-kev-cve-2026-34908-ubiquiti-unifi-os-improper-access-co.md)
 - [cisa kev cve 2026 34909 ubiquiti unifi os path traversal vul](./2026-06-23/cisa-kev-cve-2026-34909-ubiquiti-unifi-os-path-traversal-vul.md)
 - [cisa kev cve 2026 34910 ubiquiti unifi os improper input val](./2026-06-23/cisa-kev-cve-2026-34910-ubiquiti-unifi-os-improper-input-val.md)
-- [ghsa critical ghsa phv5 334h mxcw motioneye partial authenti](./2026-06-23/ghsa-critical-ghsa-phv5-334h-mxcw-motioneye-partial-authenti.md)
-- [ghsa critical ghsa qxvg h7q2 hcxh motioneye lfi pass the has](./2026-06-23/ghsa-critical-ghsa-qxvg-h7q2-hcxh-motioneye-lfi-pass-the-has.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
 - [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
@@ -337,7 +338,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-12
 - [5 socket security alternatives and why they are better](./2026-06-12/5-socket-security-alternatives-and-why-they-are-better.md)
 - [cisa kev cve 2026 35273 oracle peoplesoft enterprise peoplet](./2026-06-12/cisa-kev-cve-2026-35273-oracle-peoplesoft-enterprise-peoplet.md)
-- [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
 
 ## 2026-06-11
 - [cisa kev cve 2026 10520 ivanti sentry os command injection v](./2026-06-11/cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v.md)

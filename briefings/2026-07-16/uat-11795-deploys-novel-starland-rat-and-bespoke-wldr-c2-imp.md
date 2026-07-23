@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### UAT-11795 weaponized HTA delivery via mshta.exe from ClickFix staging domain
 
-`UC_105_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_108_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### UAT-11795 trojanized installer spawns Python bytecode loader (PythonLauncher-*)
 
-`UC_105_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_108_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### Starland RAT HWID C2 beaconing from Python process
 
-`UC_105_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_108_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceNetworkEvents
 
 ### UAT-11795 staging chain + WLDR PowerShell C2 over /feed/ and /alpha/ paths
 
-`UC_105_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_108_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### Starland RAT Polygon smart-contract fallback C2 resolution (Eth_call)
 
-`UC_105_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_108_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -183,7 +183,7 @@ union
 
 ### Starland RAT browser credential & cryptocurrency wallet harvesting via Python
 
-`UC_105_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_108_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -523,7 +523,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially
 
-`UC_105_10` · phase: **exploit** · confidence: **High**
+`UC_108_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

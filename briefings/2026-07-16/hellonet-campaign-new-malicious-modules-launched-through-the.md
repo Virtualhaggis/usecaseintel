@@ -45,16 +45,12 @@ UPD 16.07.2026: Added de…
 - **T1574.002** — DLL Side-Loading
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1572** — Protocol Tunneling
-- **T1021.004** — Remote Services: SSH
-- **T1036.003** — Masquerading: Rename System Utilities
-- **T1105** — Ingress Tool Transfer
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1083** — File and Directory Discovery
-- **T1087.001** — Account Discovery: Local Account
-- **T1518** — Software Discovery
 - **T1090** — Proxy
+- **T1021.004** — Remote Services: SSH
+- **T1083** — File and Directory Discovery
+- **T1082** — System Information Discovery
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
-- **T1573** — Encrypted Channel
 
 ## Kill chain phases observed
 
@@ -62,13 +58,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### HelloInjector DLL side-load: wtsapi32.dll planted in ViPNet Update System dir
+### HelloInjector DLL side-load: wtsapi32.dll planted in ViPNet Update System directory
 
-`UC_101_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_104_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="wtsapi32.dll" Filesystem.file_path="*InfoTeCS\\VIPNet Update System*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="wtsapi32.dll" Filesystem.file_path="*\\InfoTeCS\\VIPNet Update System\\*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id 
+| `drop_dm_object_name(Filesystem)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -77,41 +76,82 @@ DeviceFileEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "wtsapi32.dll"
 | where FolderPath has @"InfoTeCS\VIPNet Update System"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName
+| where InitiatingProcessFileName !in~ ("msiexec.exe","trustedinstaller.exe")
+| project Timestamp, DeviceName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
 | order by Timestamp desc
 ```
 
-### Renamed PuTTY reverse SSH tunnel from users\public\music to C2 5.39.253.206
+### itcsrvup64.exe side-loads wtsapi32.dll from ViPNet folder (HelloInjector execution)
 
-`UC_101_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_104_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "wtsapi32.dll"
+| where FolderPath has @"InfoTeCS\VIPNet Update System"
+| where InitiatingProcessFileName =~ "itcsrvup64.exe"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Renamed PuTTY reverse SSH tunnel to HelloNet C2 (frontpage.exe -> 5.39.253.206)
+
+`UC_104_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*-R *" OR Processes.process="*-R*:*") Processes.process="*5.39.253.206*" by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*5.39.253.206*" AND Processes.process="*-R *") OR (Processes.process_path="*\\Users\\Public\\Music\\frontpage.exe") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process 
+| `drop_dm_object_name(Processes)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has "5.39.253.206"
-| where ProcessCommandLine has "-R" and (ProcessCommandLine has "-N" or ProcessCommandLine has "sftp@")
-| where FolderPath has @"\users\public\music" or ProcessCommandLine has "-pw"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
-          ProcessCommandLine, ProcessVersionInfoProductName,
-          InitiatingProcessFileName, SHA256
+| where (ProcessCommandLine has "5.39.253.206" and ProcessCommandLine has "-R ")
+     or (FolderPath has @"Users\Public\Music" and FileName =~ "frontpage.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### HelloProxy artifact: tesh4RPC.txt dropped in C:\users\public by svchost
+### HelloExecutor reconnaissance enumerating ViPNet key-material Export directories
 
-`UC_101_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_104_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="tesh4RPC.txt" Filesystem.file_path="*\\users\\public\\*" by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("cmd.exe","powershell.exe") Processes.process="*infotecs*" (Processes.process="*ViPNet Client\\Export*" OR Processes.process="*ViPNet Administrator\\kc\\Export*" OR Processes.process="*ViPNet Administrator*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process 
+| `drop_dm_object_name(Processes)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe")
+| where ProcessCommandLine has "infotecs"
+| where ProcessCommandLine has_any (@"ViPNet Client\Export", @"ViPNet Administrator\kc\Export", @"ViPNet Administrator")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### HelloProxy traffic log dropped at C:\Users\Public\tesh4RPC.txt
+
+`UC_104_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="tesh4RPC.txt" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id 
+| `drop_dm_object_name(Filesystem)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -119,74 +159,28 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "tesh4RPC.txt"
-| where FolderPath has @"\users\public"
-| project Timestamp, DeviceName, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessId,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName
+| project Timestamp, DeviceName, FolderPath, FileName, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### HelloExecutor reconnaissance targeting ViPNet key-container Export directories
+### Network connection to HelloNet C2 infrastructure (5.39.253.206 / 176.32.34.135)
 
-`UC_101_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="cmd.exe" (Processes.process="*infotecs\\ViPNet Administrator\\kc\\Export*" OR Processes.process="*infotecs\\ViPNet Client\\Export*" OR Processes.process="*infotecs\\ViPNet Administrator*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("cmd.exe","powershell.exe")
-| where ProcessCommandLine has "infotecs"
-| where ProcessCommandLine has_any (@"ViPNet Administrator\kc\Export", @"ViPNet Client\Export", @"ViPNet Administrator\kc")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessId,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Injected svchost listening on HelloProxy ports 5003/5060
-
-`UC_101_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_104_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Ports where Ports.dest_port IN (5003,5060) Ports.transport="tcp" Ports.process_name="svchost.exe" by Ports.dest Ports.dest_port Ports.process_name | `drop_dm_object_name(Ports)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("5.39.253.206","176.32.34.135") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport 
+| `drop_dm_object_name(All_Traffic)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where ActionType == "ListeningConnectionCreated"
-| where LocalPort in (5003, 5060)
-| where InitiatingProcessFileName =~ "svchost.exe"
-| project Timestamp, DeviceName, LocalPort, Protocol,
-          InitiatingProcessFileName, InitiatingProcessId,
-          InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### Outbound connections to HelloNet C2 infrastructure 5.39.253.206 / 176.32.34.135
-
-`UC_101_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("5.39.253.206","176.32.34.135") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in ("5.39.253.206", "176.32.34.135")
-| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName
+| where RemoteIP in ("5.39.253.206","176.32.34.135")
+| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, LocalPort, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -252,7 +246,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — HelloNet campaign — new malicious modules launched through the ViPNet update sys
 
-`UC_101_4` · phase: **exploit** · confidence: **High**
+`UC_104_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -331,4 +325,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

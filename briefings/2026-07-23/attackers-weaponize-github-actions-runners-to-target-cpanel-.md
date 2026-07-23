@@ -42,12 +42,10 @@ The activity involves malicious Packagist development versions spanning 10 packa
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1105** — Ingress Tool Transfer
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1556** — Modify Authentication Process
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1048** — Exfiltration Over Alternative Protocol
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.004** — Unsecured Credentials: Private Keys
 
 ## Kill chain phases observed
 
@@ -55,77 +53,58 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Egress to cPanel/WHM campaign C2 43.228.157.68 (Linux payload download + result POST)
+### Network beacon to cPanel-harvester C2 43.228.157.68 (payload pull + credential exfil)
 
-`UC_3_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_10_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="43.228.157.68" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app host | `drop_dm_object_name("All_Traffic")` | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="43.228.157.68" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "43.228.157.68"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
-| order by Timestamp desc
-```
-
-### DNSHook C2/exfil beacon to *.dnshook.site (campaign GUID f5b0b742)
-
-`UC_3_15` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*dnshook.site*" by DNS.src DNS.query host | `drop_dm_object_name("DNS")` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "dnshook.site" or RemoteUrl contains "f5b0b742-240a-4811-8a5b-b0ba6060685d"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Malicious Packagist install: compromised dinushchathurya/* PHP packages
-
-`UC_3_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*dinushchathurya/*" by Processes.dest Processes.user Processes.process_name Processes.process host | `drop_dm_object_name("Processes")` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has "dinushchathurya/"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Server-side secret harvest fan-out (AWS/SSH/Git/DB/Stripe) by single process
-
-`UC_3_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true dc(Filesystem.file_path) as distinct_secrets values(Filesystem.file_path) as files min(_time) as firstTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*/.ssh/id_rsa" OR Filesystem.file_path="*/.ssh/id_ed25519" OR Filesystem.file_path="*/.git-credentials" OR Filesystem.file_path="*/.npmrc" OR Filesystem.file_path="*/.netrc" OR Filesystem.file_path="*/.my.cnf" OR Filesystem.file_path="*.env") by Filesystem.dest Filesystem.process_id host | `drop_dm_object_name("Filesystem")` | where distinct_secrets>=4 | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any (".aws/credentials", "/.ssh/id_rsa", "/.ssh/id_ed25519", ".git-credentials", ".npmrc", ".netrc", ".my.cnf", "gh/hosts.yml") or FileName endswith ".env"
-| summarize DistinctSecrets = dcount(FolderPath), SampleFiles = make_set(FolderPath, 20), FirstSeen = min(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine
-| where DistinctSecrets >= 4
-| order by FirstSeen desc
+| where RemoteIP == "43.228.157.68"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| sort by Timestamp desc
+```
+
+### cPanel/WHM CVE-2026-41940 auth-bypass exploitation on control-panel ports (2087/2083)
+
+`UC_10_15` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest_port=2087 OR Web.dest_port=2083 OR Web.dest_port=2086 OR Web.dest_port=2082) (Web.url="*login*" OR Web.url="*session*" OR Web.url="*cpsess*") by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+### DNSHook C2 channel resolution (dnshook.site + campaign GUID f5b0b742-…)
+
+`UC_10_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*f5b0b742-240a-4811-8a5b-b0ba6060685d*" OR DNS.query="*.dnshook.site") by DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "dnshook.site" or RemoteUrl has "f5b0b742-240a-4811-8a5b-b0ba6060685d"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| sort by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -542,4 +521,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 18 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
