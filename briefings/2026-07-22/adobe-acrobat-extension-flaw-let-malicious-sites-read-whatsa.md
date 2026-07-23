@@ -39,8 +39,10 @@ The shortcoming has been codenamed HermeticReader by Guardio Labs. It's official
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1189** — Drive-by Compromise
+- **T1176.001** — Browser Extensions
+- **T1203** — Exploitation for Client Execution
 - **T1185** — Browser Session Hijacking
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -48,39 +50,68 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable Adobe Acrobat Chrome extension (HermeticReader CVE-2026-48294) present via TVM
+### Vulnerable Adobe Acrobat Chrome extension (HermeticReader / CVE-2026-48294) present on endpoints
 
-`UC_9_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-48294"
-| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, LoggedOnUsers, PublicIP, IsInternetFacing) by DeviceId) on DeviceId
-| project DeviceName, DeviceId, OSPlatform, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, LoggedOnUsers, IsInternetFacing
-| order by DeviceName asc
-```
-
-### Vulnerable Adobe Acrobat extension version folder on disk (HermeticReader CVE-2026-48294)
-
-`UC_9_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_path="*efaidnbmnnnibpcajpcglclefindmkaj*" by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | rex field=file_path "efaidnbmnnnibpcajpcglclefindmkaj[\\\\/](?<ext_version>\d+\.\d+\.\d+\.\d+)" | where isnotnull(ext_version) AND ext_version!="26.5.2.3" | table dest ext_version file_path process_name firstTime lastTime | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Extensions\\efaidnbmnnnibpcajpcglclefindmkaj\\*" by Filesystem.dest, Filesystem.file_path
+| `drop_dm_object_name(Filesystem)`
+| rex field=file_path "efaidnbmnnnibpcajpcglclefindmkaj\\\\(?<ext_version>\d+\.\d+\.\d+\.\d+)_"
+| where isnotnull(ext_version)
+| eval v=split(ext_version,"."), major=tonumber(mvindex(v,0)), minor=tonumber(mvindex(v,1)), build=tonumber(mvindex(v,2)), rev=tonumber(mvindex(v,3))
+| where major<26 OR (major==26 AND (minor<5 OR (minor==5 AND (build<2 OR (build==2 AND rev<=2)))))
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has "efaidnbmnnnibpcajpcglclefindmkaj"
-| extend ExtVersion = extract(@"efaidnbmnnnibpcajpcglclefindmkaj[\\/]([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)", 1, FolderPath)
+| where FolderPath has @"\Extensions\efaidnbmnnnibpcajpcglclefindmkaj\"
+| extend ExtVersion = extract(@"efaidnbmnnnibpcajpcglclefindmkaj\\([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)_", 1, FolderPath)
 | where isnotempty(ExtVersion)
-| where ExtVersion != "26.5.2.3"   // 26.5.2.3 = HermeticReader-patched build; every build <= 26.5.2.2 is vulnerable to CVE-2026-48294
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Versions=make_set(ExtVersion, 10) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
+| extend v = split(ExtVersion, ".")
+| extend Major=toint(v[0]), Minor=toint(v[1]), Build=toint(v[2]), Rev=toint(v[3])
+// vulnerable = <= 26.5.2.2 ; fixed build is 26.5.2.3
+| where Major < 26 or (Major==26 and (Minor<5 or (Minor==5 and (Build<2 or (Build==2 and Rev<=2)))))
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SamplePath=any(FolderPath) by DeviceName, DeviceId, ExtVersion
 | order by LastSeen desc
+```
+
+### First-ever WhatsApp Web contact from a browser on a HermeticReader-vulnerable host
+
+`UC_11_13` · phase: **actions** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="web.whatsapp.com" by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime
+| head 500
+```
+
+**Defender KQL:**
+```kql
+let VulnHosts = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FolderPath has @"\Extensions\efaidnbmnnnibpcajpcglclefindmkaj\"
+    | distinct DeviceId;
+let Baseline = DeviceNetworkEvents
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where RemoteUrl has "web.whatsapp.com"
+    | distinct DeviceId;
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe")
+| where RemoteUrl has "web.whatsapp.com"
+| where DeviceId in (VulnHosts)      // host carries the vulnerable Adobe Acrobat extension
+| where DeviceId !in (Baseline)      // first time this host has ever reached WhatsApp Web
+| summarize FirstSeen=min(Timestamp), Connections=count() by DeviceId, DeviceName, InitiatingProcessFileName, RemoteUrl
+| order by FirstSeen desc
 ```
 
 ### Suspicious browser extension installation
@@ -433,4 +464,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

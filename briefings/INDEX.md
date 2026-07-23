@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2593 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2592 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,6 +12,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [adobe acrobat extension flaw let malicious sites read whatsa](./2026-07-22/adobe-acrobat-extension-flaw-let-malicious-sites-read-whatsa.md)
 - [cisa kev cve 2026 16232 check point smartconsole improper au](./2026-07-22/cisa-kev-cve-2026-16232-check-point-smartconsole-improper-au.md)
 - [critical sharepoint rce flaw exploited to steal machine keys](./2026-07-22/critical-sharepoint-rce-flaw-exploited-to-steal-machine-keys.md)
+- [find unused stale and oidc replaceable github actions secret](./2026-07-22/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
 - [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
 - [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
@@ -36,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 60137 wordpress core sql injection vulnera](./2026-07-21/cisa-kev-cve-2026-60137-wordpress-core-sql-injection-vulnera.md)
 - [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
 - [critical sharepoint rce cve 2026 50522 under active exploita](./2026-07-21/critical-sharepoint-rce-cve-2026-50522-under-active-exploita.md)
-- [critical wp2shell wordpress flaws exploited to install websh](./2026-07-21/critical-wp2shell-wordpress-flaws-exploited-to-install-websh.md)
 - [fakegit campaign uses 7 600 github repos to push smartloader](./2026-07-21/fakegit-campaign-uses-7-600-github-repos-to-push-smartloader.md)
 - [ghsa critical cve 2026 20896 gitea docker image reverse prox](./2026-07-21/ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox.md)
 - [ghsa critical cve 2026 22874 gitea incomplete ssrf protectio](./2026-07-21/ghsa-critical-cve-2026-22874-gitea-incomplete-ssrf-protectio.md)
@@ -859,7 +859,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 43529 apple multiple products use after fr](./2025-12-15/cisa-kev-cve-2025-43529-apple-multiple-products-use-after-fr.md)
 - [critical remote code execution vulnerabilities discovered in](./2025-12-15/critical-remote-code-execution-vulnerabilities-discovered-in.md)
 - [how harden runner detected the sha1 hulud supply chain attac](./2025-12-15/how-harden-runner-detected-the-sha1-hulud-supply-chain-attac.md)
-- [sha1 hulud the second coming zapier ens domains and other pr](./2025-12-15/sha1-hulud-the-second-coming-zapier-ens-domains-and-other-pr.md)
 
 ## 2025-12-12
 - [cisa kev cve 2018 4063 sierra wireless airlink aleos unrestr](./2025-12-12/cisa-kev-cve-2018-4063-sierra-wireless-airlink-aleos-unrestr.md)

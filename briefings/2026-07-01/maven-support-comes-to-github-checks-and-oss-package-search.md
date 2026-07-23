@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Jackson Maven typosquat C2 — beacon to fasterxml.org / 103.127.243.82
 
-`UC_220_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_221_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### Java/Spring drops & runs svchosts.exe (svchost masquerade) — Jackson typosquat implant
 
-`UC_220_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_221_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### Jackson typosquat Cobalt Strike implant hash sighting (Win + macOS/Linux)
 
-`UC_220_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_221_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -47,14 +47,12 @@ Talos has discovered that the actor in this campaign delivers a Python-based re
 - **T1566.001** — Phishing: Spearphishing Attachment
 - **T1059.006** — Command and Scripting Interpreter: Python
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1620** — Reflective Code Loading
+- **T1102.001** — Web Service: Dead Drop Resolver
 - **T1571** — Non-Standard Port
-- **T1095** — Non-Application Layer Protocol
-- **T1102** — Web Service: Dead Drop Resolver
-- **T1568** — Dynamic Resolution
-- **T1105** — Ingress Tool Transfer
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -62,13 +60,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Weaponized HTA download-and-execute via mshta.exe from UAT-11795 staging domains (ClickFix)
+### UAT-11795 ClickFix: mshta.exe launching remote HTA from staging domains
 
-`UC_102_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_103_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe AND (Processes.process="*http*" OR Processes.process="*.hta*" OR Processes.process="*zynaris.io*" OR Processes.process="*eorthopaedics.com*" OR Processes.process="*sastoro.com*" OR Processes.process="*web-devtools.com*") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe (Processes.process="*http*" OR Processes.process="*.hta*" OR Processes.process="*zynaris.io*" OR Processes.process="*eorthopaedics.com*" OR Processes.process="*sastoro.com*" OR Processes.process="*web-devtools.com*") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -77,18 +75,18 @@ DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "mshta.exe"
 | where AccountName !endswith "$"
-| where ProcessCommandLine has_any ("http://","https://",".hta","zynaris.io","eorthopaedics.com","sastoro.com","web-devtools.com")
-| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, ProcessCommandLine, SHA256
+| where ProcessCommandLine has_any ("http://","https://","javascript:","vbscript:",".hta","zynaris.io","eorthopaedics.com","sastoro.com","web-devtools.com")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, ParentProcess = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Trojanized software installer (MobaXterm/WebEx/Zoom/DBeaver/FACEIT) spawning Python bytecode loader
+### UAT-11795 trojanized installer spawning Python / PythonLauncher loader
 
-`UC_102_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_103_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("MobaXterm_v26.1.exe","WebEx_Client.exe","dbeaver-ce-windows-x86_64.exe","FaceitInstaller_x64.exe") OR Processes.parent_process="*Zoom*installer*") AND Processes.process_name IN ("python.exe","pythonw.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process_name IN ("MobaXterm_v26.1.exe","WebEx_Client.exe","dbeaver-ce-windows-x86_64.exe","FaceitInstaller_x64.exe") AND Processes.process_name IN ("python.exe","pythonw.exe")) OR Processes.process="*PythonLauncher-*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -96,132 +94,88 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("MobaXterm_v26.1.exe","WebEx_Client.exe","dbeaver-ce-windows-x86_64.exe","FaceitInstaller_x64.exe") or InitiatingProcessCommandLine has "Zoom" and InitiatingProcessCommandLine has "install"
-| where FileName in~ ("python.exe","pythonw.exe")
-| project Timestamp, DeviceName, AccountName, Installer=InitiatingProcessFileName, InstallerFolder=InitiatingProcessFolderPath, ChildCmd=ProcessCommandLine, SHA256
+| where (InitiatingProcessFileName in~ ("MobaXterm_v26.1.exe","WebEx_Client.exe","dbeaver-ce-windows-x86_64.exe","FaceitInstaller_x64.exe") and FileName in~ ("python.exe","pythonw.exe"))
+   or ProcessCommandLine matches regex @"(?i)PythonLauncher-[A-Za-z0-9]{3}"
+   or FileName matches regex @"(?i)PythonLauncher-[A-Za-z0-9]{3}\.exe"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### WLDR PowerShell C2 beacon to eorthopaedics/sastoro under /feed/ and /alpha/ HWID paths
+### Starland RAT Python process harvesting browser creds & crypto wallets
 
-`UC_102_13` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*eorthopaedics.com/feed/*" OR Web.url="*sastoro.com/alpha/*" OR Web.dest IN ("eorthopaedics.com","sastoro.com")) AND Web.process_name IN ("powershell.exe","pwsh.exe") by Web.src Web.dest Web.url Web.process_name | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
-| where RemoteUrl has_any ("eorthopaedics.com","sastoro.com")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Starland RAT HWID-bound C2 to windowscreenrepairnearme/aipythondevs from Python
-
-`UC_102_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_103_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("windowscreenrepairnearme.com","aipythondevs.com","*.windowscreenrepairnearme.com","*.aipythondevs.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
-| where RemoteUrl has_any ("windowscreenrepairnearme.com","aipythondevs.com")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Polygon smart-contract Eth_call fallback C2 resolution (JSON-RPC to polygon-rpc)
-
-`UC_102_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("polygon-rpc.com","rpc.ankr.com","polygon-mainnet.infura.io","*.polygon-rpc.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | join type=inner DNS_src [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","pythonw.exe","powershell.exe") by Processes.dest | rename Processes.dest as DNS_src] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","powershell.exe","pwsh.exe")
-| where RemoteUrl has_any ("polygon-rpc.com","polygon-mainnet.infura.io","rpc.ankr.com","maticvigil.com")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
-| order by Timestamp desc
-```
-
-### web-devtools.com raw shellcode staging fetch (/starlandfox, /x32remka, /dopfile)
-
-`UC_102_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest="web-devtools.com" AND (Web.url="*/starlandfox*" OR Web.url="*/x32remka*" OR Web.url="*/dopfile*") by Web.src Web.dest Web.url Web.http_user_agent Web.process_name | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "web-devtools.com"
-| where RemoteUrl has_any ("/starlandfox","/x32remka","/dopfile")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
-| order by Timestamp desc
-```
-
-### UAT-11795 scheduled-task persistence via New-ScheduledTask 'PythonLauncher-' entry
-
-`UC_102_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*New-ScheduledTask*" AND Processes.process="*PythonLauncher-*" by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-union
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where FileName in~ ("powershell.exe","pwsh.exe")
-  | where ProcessCommandLine has "New-ScheduledTask" and ProcessCommandLine has "PythonLauncher-"
-  | project Timestamp, DeviceName, AccountName, Evidence=ProcessCommandLine ),
-( DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "ScheduledTaskCreated"
-  | where AdditionalFields has "PythonLauncher-"
-  | project Timestamp, DeviceName, AccountName, Evidence=AdditionalFields )
-| order by Timestamp desc
-```
-
-### Starland RAT browser-credential and cryptocurrency-wallet harvesting by Python
-
-`UC_102_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("python.exe","pythonw.exe") AND (Filesystem.file_path="*\\Google\\Chrome\\User Data*" OR Filesystem.file_path="*\\Microsoft\\Edge\\User Data*" OR Filesystem.file_path="*\\Mozilla\\Firefox\\Profiles*" OR Filesystem.file_path="*\\Ethereum*" OR Filesystem.file_path="*\\Exodus*" OR Filesystem.file_path="*\\Electrum*" OR Filesystem.file_name="Login Data" OR Filesystem.file_name="wallet.dat") by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Login Data" OR Filesystem.file_path="*Chrome\\User Data*" OR Filesystem.file_path="*Edge\\User Data*" OR Filesystem.file_path="*Firefox\\Profiles*" OR Filesystem.file_path="*Exodus*" OR Filesystem.file_path="*Electrum*" OR Filesystem.file_path="*Ethereum\\keystore*" OR Filesystem.file_path="*\\wallets\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
-| where FolderPath has_any (@"\Google\Chrome\User Data", @"\Microsoft\Edge\User Data", @"\Mozilla\Firefox\Profiles", @"\Exodus", @"\Electrum", @"\Ethereum", @"\com.liberty.jaxx")
-   or FileName in~ ("Login Data","wallet.dat","key3.db","logins.json")
-| summarize PathsTouched=dcount(FolderPath), Sample=any(FolderPath), FirstSeen=min(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessId
-| where PathsTouched >= 2
-| order by FirstSeen desc
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe") or InitiatingProcessCommandLine has "PythonLauncher-"
+| where FolderPath has_any (@"\Chrome\User Data", @"\Edge\User Data", @"\Mozilla\Firefox\Profiles", @"\Login Data", @"\Web Data", @"\Ethereum\keystore", @"\Exodus", @"\Electrum", @"\Ledger Live", @"\wallets")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, ActionType, FileName, FolderPath
+| order by Timestamp desc
+```
+
+### WLDR PowerShell C2: Runspace engine staged by Starland RAT
+
+`UC_103_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") Processes.parent_process_name IN ("python.exe","pythonw.exe","mshta.exe") (Processes.process="*Runspace*" OR Processes.process="*RunspaceFactory*" OR Processes.process="*EncodedCommand*" OR Processes.process="*New-ScheduledTask*" OR Processes.process="*WLDR*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","mshta.exe")
+| where ProcessCommandLine has_any ("Runspace","RunspaceFactory","CreateRunspace","-enc","-EncodedCommand","IEX","Invoke-Expression","DownloadString","New-ScheduledTask","WLDR")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### UAT-11795 HWID C2 + Polygon smart-contract fallback resolution
+
+`UC_103_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*windowscreenrepairnearme.com" OR DNS.query="*aipythondevs.com" OR DNS.query="*polygon-rpc.com" OR DNS.query="*rpc.ankr.com" OR DNS.query="*polygon.llamarpc.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","powershell.exe","pwsh.exe","mshta.exe")
+| where RemoteUrl has_any ("windowscreenrepairnearme.com","aipythondevs.com","polygon-rpc.com","rpc.ankr.com","polygon.llamarpc.com")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Starland/WLDR C2 beaconing to UAT-11795 staging & C2 domains
+
+`UC_103_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*eorthopaedics.com" OR DNS.query="*sastoro.com" OR DNS.query="*web-devtools.com" OR DNS.query="*zynaris.io" OR DNS.query="*windowscreenrepairnearme.com" OR DNS.query="*aipythondevs.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("eorthopaedics.com","sastoro.com","web-devtools.com","zynaris.io","windowscreenrepairnearme.com","aipythondevs.com")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -542,7 +496,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially
 
-`UC_102_10` · phase: **exploit** · confidence: **High**
+`UC_103_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -599,4 +553,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 19 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

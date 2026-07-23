@@ -25,9 +25,7 @@ The monthly report aggregates security advisories from major infrastructure ven
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
-- **T1090** — Proxy
 - **T1059** — Command and Scripting Interpreter
-- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
@@ -35,41 +33,40 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### SonicWall SMA1000 unauthenticated SSRF via /wsproxy endpoint (CVE-2026-15409)
+### Exposure hunt: internet-infrastructure devices carrying actively-exploited/KEV CVEs from July 2026 InfraTrust Pulse
 
-`UC_10_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.http_user_agent) as user_agent from datamodel=Web where Web.url="*/wsproxy*" (Web.dest_port=443 OR Web.dest_port=8443 OR Web.url="*/wsproxy*") by Web.src, Web.dest, Web.url, Web.status | `drop_dm_object_name(Web)` | where NOT cidrmatch("10.0.0.0/8",src) AND NOT cidrmatch("192.168.0.0/16",src) AND NOT cidrmatch("172.16.0.0/12",src) | convert ctime(firstTime) ctime(lastTime) | sort - count
-```
-
-### SonicWall SMA1000 command injection via AMC sysCtrl.execRemoveHotfix RPC (CVE-2026-15410)
-
-`UC_10_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_12_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method from datamodel=Web where (Web.url="*execRemoveHotfix*" OR Web.url="*sysCtrl.execRemoveHotfix*") by Web.src, Web.dest, Web.url, Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count
-```
-
-### Exposure inventory: infrastructure assets carrying the InfraTrust KEV priority CVEs
-
-`UC_10_3` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as cve values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities where Vulnerabilities.signature IN ("CVE-2026-15409","CVE-2026-15410","CVE-2026-39808","CVE-2026-25089","CVE-2026-21385") by Vulnerabilities.dest, Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-15409","CVE-2026-15410","CVE-2026-39808","CVE-2026-25089","CVE-2026-21385") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - severity
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
 | where CveId in ("CVE-2026-15409","CVE-2026-15410","CVE-2026-39808","CVE-2026-25089","CVE-2026-21385")
-| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | project CveId, CvssScore, IsExploitAvailable) on CveId
-| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, IsExploitAvailable, CvssScore, RecommendedSecurityUpdate
-| sort by CvssScore desc
+| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | project CveId, IsExploitAvailable, CvssScore, PublishedDate) on CveId
+| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsExploitAvailable, CvssScore
+| order by CvssScore desc
+```
+
+### SonicWall SMA1000 pre-auth SSRF + management-console command injection exploitation (CVE-2026-15409/15410)
+
+`UC_12_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Web.http_user_agent) as user_agent values(Web.url) as urls from datamodel=Web.Web where Web.http_method IN ("POST","PUT") AND (Web.url="*cgi-bin*" OR Web.url="*__api__*" OR Web.url="*workplace*" OR Web.url="*management*") AND (Web.url="*`*" OR Web.url="*$(*" OR Web.url="*%60*" OR Web.url="*%3B*" OR Web.url="*%7C*" OR Web.url="*;*" OR Web.url="*|*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | sort - count
+```
+
+### FortiSandbox unauthenticated OS command injection via crafted HTTP (CVE-2026-39808 / CVE-2026-25089)
+
+`UC_12_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Web.url) as urls values(Web.http_user_agent) as user_agent from datamodel=Web.Web where (Web.dest="*fortisandbox*" OR Web.dest="*fsa*" OR Web.http_method IN ("POST","PUT","GET")) AND (Web.url="*%60*" OR Web.url="*`*" OR Web.url="*$(*" OR Web.url="*%24%28*" OR Web.url="*%3B*" OR Web.url="*;*" OR Web.url="*%7C*" OR Web.url="*|*" OR Web.url="*%26%26*" OR Web.url="*&&*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | sort - count
 ```
 
 ### IOC-driven hunts (use shared templates)
@@ -82,4 +79,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated request to WordPress REST batch/v1 endpoint (wp2shell CVE-2026-63030)
 
-`UC_74_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_75_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Successful (HTTP 200) response from WordPress batch/v1 to an anonymous caller
 
-`UC_74_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_75_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### WordPress web-server / PHP-FPM process spawns a shell interpreter
 
-`UC_74_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_75_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### PHP webshell written under wp-content by WordPress web process
 
-`UC_74_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_75_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceFileEvents
 
 ### wp-config.php read via shell utility (post-RCE DB credential theft)
 
-`UC_74_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_75_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

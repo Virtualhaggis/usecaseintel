@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### SmartLoader: renamed LuaJIT interpreter launched with .txt/.log data-file stage
 
-`UC_26_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_28_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### SmartLoader persistence: scheduled task running a LuaJIT stage or FakeGit task names
 
-`UC_26_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_28_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### SmartLoader Polygon smart-contract C2 resolution / hardcoded C2 IP callback
 
-`UC_26_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_28_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### StealC exfiltration to hardcoded FakeGit gate IPs / PHP endpoint
 
-`UC_26_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_28_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceNetworkEvents
 
 ### FakeGit GitHub dead-drop stage download by LuaJIT/LOLBin process
 
-`UC_26_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_28_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
