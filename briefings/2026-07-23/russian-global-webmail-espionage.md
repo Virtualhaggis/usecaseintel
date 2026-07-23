@@ -73,7 +73,6 @@ Unit 42 has observed a persistent cyberespionage campa…
 - **T1041** — Exfiltration Over C2 Channel
 - **T1566.001** — Phishing: Spearphishing Attachment
 - **T1203** — Exploitation for Client Execution
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1539** — Steal Web Session Cookie
 
 ## Kill chain phases observed
@@ -82,63 +81,81 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### CL-STA-1114 Zimbra espionage C2 / exfiltration channel contact (9 domains + 9 IPs)
+### CL-STA-1114 (Void Blizzard) Zimbra espionage C2/exfil infrastructure contact
 
-`UC_9_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104","analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport
+| `drop_dm_object_name("All_Traffic")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let c2ips = dynamic(["37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104"]);
-let c2domains = dynamic(["analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com"]);
+let c2Domains = dynamic(["analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com"]);
+let c2IPs = dynamic(["37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (c2ips) or RemoteUrl has_any (c2domains)
+| where RemoteIP in (c2IPs) or RemoteUrl has_any (c2Domains)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### Inbound HTML-attachment / embedded-HTML Zimbra XSS lure (CVE-2025-66376 delivery)
+### Inbound HTML-attachment lure exploiting Zimbra XSS (CVE-2025-66376)
 
-`UC_9_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_12_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-let c2domains = dynamic(["analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com"]);
-let Inbound = EmailEvents
+EmailAttachmentInfo
+| where Timestamp > ago(30d)
+| where FileType in~ ("html","htm")
+| join kind=inner (
+    EmailEvents
     | where Timestamp > ago(30d)
-    | where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
-    | project NetworkMessageId, Timestamp, SenderFromAddress, SenderMailFromDomain, Subject, RecipientEmailAddress;
-let HtmlAttach = EmailAttachmentInfo
-    | where Timestamp > ago(30d)
-    | where FileType in~ ("html","htm")
-    | project NetworkMessageId, FileName, FileType, SHA256;
-let UrlHit = EmailUrlInfo
-    | where Timestamp > ago(30d)
-    | where UrlDomain in~ (c2domains) or Url has_any (c2domains)
-    | project NetworkMessageId, Url, UrlDomain;
-Inbound
-| join kind=leftouter HtmlAttach on NetworkMessageId
-| join kind=leftouter UrlHit on NetworkMessageId
-| where isnotempty(FileName) or isnotempty(Url)
-| extend Reason = case(isnotempty(Url), "C2-domain-in-message", "HTML-attachment-lure")
-| project Timestamp, Reason, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, FileName, FileType, SHA256, Url, UrlDomain
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+  ) on NetworkMessageId
+| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, FileName, FileType, DeliveryAction, DeliveryLocation, ThreatTypes
 | order by Timestamp desc
 ```
 
-### Unpatched Zimbra Collaboration Suite exposed to CVE-2025-66376
+### Browser-initiated webmail data exfiltration to CL-STA-1114 C2
 
-`UC_9_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_12_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest IN ("analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com","37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.app
+| `drop_dm_object_name("Web")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let c2Domains = dynamic(["analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com"]);
+let c2IPs = dynamic(["37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
+| where RemoteUrl has_any (c2Domains) or RemoteIP in (c2IPs)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Unpatched Zimbra Collaboration exposed to CVE-2025-66376 (Void Blizzard target)
+
+`UC_12_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
 | where CveId == "CVE-2025-66376"
-| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
 | order by DeviceName asc
 ```
 
@@ -479,4 +496,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

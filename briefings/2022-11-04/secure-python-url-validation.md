@@ -271,7 +271,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Secure Python URL validation
 
-`UC_1926_6` · phase: **exploit** · confidence: **High**
+`UC_1927_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

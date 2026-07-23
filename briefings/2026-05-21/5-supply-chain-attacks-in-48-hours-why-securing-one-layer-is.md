@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised Nx Console VS Code extension (nrwl.angular-console v18.94.0/18.95.0/18.100.0) install on endpoint
 
-`UC_388_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_389_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceFileEvents
 
 ### Known Shai-Hulud / Nx Console implant hash match (SHA256/SHA1)
 
-`UC_388_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_389_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union
 
 ### Nx Console / Shai-Hulud C2 connection (t.m-kosche.com, check.git-service.com, filev2.getsession.org, api.masscan.cloud, 83.142.209.194)
 
-`UC_388_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_389_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceNetworkEvents
 
 ### macOS LaunchAgent/LaunchDaemon plist persistence pointing at Python interpreter
 
-`UC_388_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_389_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceFileEvents
 
 ### Developer credential store read by Python or Node spawned from VS Code (Nx Console stealer pattern)
 
-`UC_388_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_389_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceFileEvents
 
 ### GitHub audit log bulk private-repo clone burst (post Nx Console compromise pattern)
 
-`UC_388_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_389_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

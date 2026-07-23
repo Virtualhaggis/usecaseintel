@@ -1,6 +1,6 @@
 # [CRIT] Adobe Acrobat Extension Flaw Let Malicious Sites Read WhatsApp Web Data
 
-**Source:** The Hacker News, BleepingComputer
+**Source:** The Hacker News
 **Published:** 2026-07-22
 **Article:** https://thehackernews.com/2026/07/adobe-acrobat-extension-flaw-let.html
 
@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe Acrobat Chrome extension (HermeticReader / CVE-2026-48294) present on endpoints
 
-`UC_35_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_37_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceFileEvents
 
 ### First-ever WhatsApp Web contact from a browser on a HermeticReader-vulnerable host
 
-`UC_35_13` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_37_13` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

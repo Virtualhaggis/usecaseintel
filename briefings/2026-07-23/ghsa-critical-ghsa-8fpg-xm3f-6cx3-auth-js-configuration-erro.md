@@ -22,6 +22,7 @@ When the Auth.js configuration produces a server-side error, the `auth` object e
 
 - **T1204.002** — User Execution: Malicious File
 - **T1556** — Modify Authentication Process
+- **T1190** — Exploit Public-Facing Application
 - **T1078** — Valid Accounts
 
 ## Kill chain phases observed
@@ -30,52 +31,41 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Auth.js fail-open canary: missing AUTH_SECRET (MissingSecret) config error in app logs
+### Auth.js (next-auth v5) server-configuration error surfaced in application logs (fail-open trigger)
 
-`UC_7_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=app_logs ("[auth][error]" AND ("MissingSecret" OR "AUTH_SECRET"))
-| rex field=_raw "(?<AuthError>\[auth\]\[error\][^\n]*)"
-| stats count as errorCount, min(_time) as firstSeen, max(_time) as lastSeen, values(AuthError) as sampleError, values(source) as sources by host
-| sort - lastSeen
+index=* sourcetype IN ("nodejs","nextjs","node:application") ("[auth][error]") ("InvalidEndpoints" OR "MissingSecret" OR "AUTH_SECRET" OR "There was a problem with the server configuration") | stats count AS hits, min(_time) AS firstSeen, max(_time) AS lastSeen, values(source) AS sources BY host | sort - hits
 ```
 
-### Auth.js fail-open canary: InvalidEndpoints provider misconfiguration in app logs
+### HTTP 500 on Auth.js /api/auth/session endpoint (@auth/core error body read as session)
 
-`UC_7_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=app_logs ("[auth][error]" AND "InvalidEndpoints")
-| rex field=_raw "(?<AuthError>\[auth\]\[error\]\s*InvalidEndpoints[^\n]*)"
-| stats count as errorCount, min(_time) as firstSeen, max(_time) as lastSeen, values(AuthError) as sampleError, values(source) as sources by host
-| sort - lastSeen
+| tstats `summariesonly` count, min(_time) AS firstSeen, max(_time) AS lastSeen FROM datamodel=Web.Web WHERE Web.status=500 Web.url="*/api/auth/session*" BY Web.site, Web.src, Web.url
+| `drop_dm_object_name(Web)`
+| sort - count
 ```
 
-### Auth.js fail-open bypass: config-error auth log correlated with successful protected-route response
+### Auth.js fail-open evidence: successful protected-route access within window of /api/auth 500 error
 
-`UC_7_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=app_logs "[auth][error]"
-| bin span=5m _time AS errWindow
-| stats count as authErrors by errWindow, host
-| join type=inner errWindow host [
-    search index=web_logs (status=200 OR status=302)
-    | search NOT uri_path="/api/auth/*" NOT uri_path="/_next/*"
-    | bin span=5m _time AS errWindow
-    | stats count as successResponses, values(uri_path) as samplePaths by errWindow, host
-  ]
-| where authErrors > 0 AND successResponses > 0
-| sort - errWindow
+| tstats `summariesonly` count(eval(Web.status=500 AND like(Web.url,"%/api/auth/%"))) AS auth_errors, count(eval(Web.status IN (200,302) AND NOT like(Web.url,"%/api/auth/%") AND NOT like(Web.url,"%/_next/%"))) AS authed_access FROM datamodel=Web.Web BY Web.src, Web.site, _time span=5m
+| `drop_dm_object_name(Web)`
+| where auth_errors > 0 AND authed_access > 0
+| sort - _time
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
 
-`UC_7_0` · phase: **exploit** · confidence: **High**
+`UC_10_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,4 +115,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

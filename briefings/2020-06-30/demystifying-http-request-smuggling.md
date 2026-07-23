@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### GET request carrying a body / Content-Length — HTTP request smuggling (CL:CL) precursor
 
-`UC_3324_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3325_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Front-end/back-end stack exposed to request-smuggling CVEs (nginx CVE-2020-12440, Werkzeug CVE-2019-16786)
 
-`UC_3324_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3325_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,7 +218,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Demystifying HTTP request smuggling
 
-`UC_3324_4` · phase: **exploit** · confidence: **High**
+`UC_3325_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

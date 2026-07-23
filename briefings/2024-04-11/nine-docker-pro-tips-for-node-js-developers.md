@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Nine Docker pro tips for Node.js developers
 
-`UC_1352_0` · phase: **exploit** · confidence: **High**
+`UC_1353_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

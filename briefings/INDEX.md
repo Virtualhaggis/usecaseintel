@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2591 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2592 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -17,10 +17,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [claude cowork flaw could let ai agent escape its vm and acce](./2026-07-23/claude-cowork-flaw-could-let-ai-agent-escape-its-vm-and-acce.md)
 - [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)
 - [email threat landscape q2 2026 trends and insights](./2026-07-23/email-threat-landscape-q2-2026-trends-and-insights.md)
+- [fake claude app promoted by bing ads pushes sectoprat malwar](./2026-07-23/fake-claude-app-promoted-by-bing-ads-pushes-sectoprat-malwar.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
 - [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
 - [hackers abuse notepad plugins to stealthily install malware](./2026-07-23/hackers-abuse-notepad-plugins-to-stealthily-install-malware.md)
+- [new dolphin x malware uses ai to rank high value targets](./2026-07-23/new-dolphin-x-malware-uses-ai-to-rank-high-value-targets.md)
 - [new msarat malware uses chrome edge browsers to route c2 tra](./2026-07-23/new-msarat-malware-uses-chrome-edge-browsers-to-route-c2-tra.md)
 - [nine year old refluxfs linux flaw gives local users root on ](./2026-07-23/nine-year-old-refluxfs-linux-flaw-gives-local-users-root-on-.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
@@ -35,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
 - [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
 - [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
-- [new infratrust report reveals infrastructure flaws admins sh](./2026-07-22/new-infratrust-report-reveals-infrastructure-flaws-admins-sh.md)
 - [openai says its ai models escaped sandbox targeted hugging f](./2026-07-22/openai-says-its-ai-models-escaped-sandbox-targeted-hugging-f.md)
 - [police dismantle kratos phishing kit built to steal microsof](./2026-07-22/police-dismantle-kratos-phishing-kit-built-to-steal-microsof.md)
 - [real world incident response microsoft and axa xl strengthen](./2026-07-22/real-world-incident-response-microsoft-and-axa-xl-strengthen.md)

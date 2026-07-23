@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js (Express) process spawning a command shell — express-fileupload prototype-pollution RCE outcome
 
-`UC_3303_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3304_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ DeviceProcessEvents
 
 ### Prototype-pollution payload (__proto__ / constructor.prototype) in inbound web requests to Express app
 
-`UC_3303_2` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_3304_2` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Exposure: hosts running express-fileupload vulnerable to CVE-2020-7699
 
-`UC_3303_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3304_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
