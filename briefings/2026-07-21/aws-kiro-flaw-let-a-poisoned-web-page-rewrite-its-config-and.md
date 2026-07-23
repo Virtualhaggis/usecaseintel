@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Kiro (AWS agentic IDE) writing protected config files mcp.json / .vscode tasks.json
 
-`UC_54_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_56_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### Kiro process spawning shell / interpreter child (rogue MCP server start command)
 
-`UC_54_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_56_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Kiro-spawned interpreter beaconing to external host (rogue MCP server C2)
 
-`UC_54_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_56_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

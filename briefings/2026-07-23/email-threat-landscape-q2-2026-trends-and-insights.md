@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound email delivering ClickUp-hosted BAT dropper (9i6pokerdepot Q2 2026 chain)
 
-`UC_5_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ EmailEvents
 
 ### Endpoint download of .bat dropper from ClickUp attachments CDN
 
-`UC_5_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceFileEvents
 
 ### Non-browser fetch of final installer from pixeldrain /api/file endpoint
 
-`UC_5_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_6_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -412,7 +412,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Email threat landscape: Q2 2026 trends and insights
 
-`UC_5_9` · phase: **exploit** · confidence: **High**
+`UC_6_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

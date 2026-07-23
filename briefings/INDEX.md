@@ -15,6 +15,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [check point patches exploited smartconsole flaw allowing ful](./2026-07-23/check-point-patches-exploited-smartconsole-flaw-allowing-ful.md)
 - [china nexus jadeprox uses new triback loader in government a](./2026-07-23/china-nexus-jadeprox-uses-new-triback-loader-in-government-a.md)
 - [claude cowork flaw could let ai agent escape its vm and acce](./2026-07-23/claude-cowork-flaw-could-let-ai-agent-escape-its-vm-and-acce.md)
+- [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)
 - [email threat landscape q2 2026 trends and insights](./2026-07-23/email-threat-landscape-q2-2026-trends-and-insights.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
@@ -23,7 +24,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new msarat malware uses chrome edge browsers to route c2 tra](./2026-07-23/new-msarat-malware-uses-chrome-edge-browsers-to-route-c2-tra.md)
 - [nine year old refluxfs linux flaw gives local users root on ](./2026-07-23/nine-year-old-refluxfs-linux-flaw-gives-local-users-root-on-.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
-- [russian hackers exploit zimbra zero click flaw for email the](./2026-07-23/russian-hackers-exploit-zimbra-zero-click-flaw-for-email-the.md)
+- [russian espionage group exploited zimbra zero day to steal m](./2026-07-23/russian-espionage-group-exploited-zimbra-zero-day-to-steal-m.md)
+- [russian global webmail espionage](./2026-07-23/russian-global-webmail-espionage.md)
 - [threatsday android spyware plc attacks ai image prompt injec](./2026-07-23/threatsday-android-spyware-plc-attacks-ai-image-prompt-injec.md)
 
 ## 2026-07-22
@@ -90,7 +92,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
 
 ## 2026-07-17
-- [fake coding tests deliver ottercookie aligned malware hidden](./2026-07-17/fake-coding-tests-deliver-ottercookie-aligned-malware-hidden.md)
 - [goldeneyedog subgroup linked to digicert breach and code sig](./2026-07-17/goldeneyedog-subgroup-linked-to-digicert-breach-and-code-sig.md)
 - [new nadmesh botnet hunts exposed ai services for cloud keys ](./2026-07-17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-.md)
 - [new wp2shell wordpress core flaw lets unauthenticated attack](./2026-07-17/new-wp2shell-wordpress-core-flaw-lets-unauthenticated-attack.md)
@@ -272,7 +273,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [top koi alternatives in 2026](./2026-06-26/top-koi-alternatives-in-2026.md)
 
 ## 2026-06-25
-- [beyond iocs ai enabled threat intelligence](./2026-06-25/beyond-iocs-ai-enabled-threat-intelligence.md)
 - [cisa kev cve 2026 12569 ptc windchill and flexplm improper i](./2026-06-25/cisa-kev-cve-2026-12569-ptc-windchill-and-flexplm-improper-i.md)
 - [cisa kev cve 2026 20230 cisco unified communications manager](./2026-06-25/cisa-kev-cve-2026-20230-cisco-unified-communications-manager.md)
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)

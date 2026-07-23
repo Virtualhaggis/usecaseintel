@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Auth.js fail-open canary: missing AUTH_SECRET (MissingSecret) config error in app logs
 
-`UC_6_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ index=app_logs ("[auth][error]" AND ("MissingSecret" OR "AUTH_SECRET"))
 
 ### Auth.js fail-open canary: InvalidEndpoints provider misconfiguration in app logs
 
-`UC_6_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ index=app_logs ("[auth][error]" AND "InvalidEndpoints")
 
 ### Auth.js fail-open bypass: config-error auth log correlated with successful protected-route response
 
-`UC_6_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ index=app_logs "[auth][error]"
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
 
-`UC_6_0` · phase: **exploit** · confidence: **High**
+`UC_7_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

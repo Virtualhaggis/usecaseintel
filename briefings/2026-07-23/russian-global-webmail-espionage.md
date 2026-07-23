@@ -1,8 +1,8 @@
-# [CRIT] Russian hackers exploit Zimbra zero-click flaw for email theft
+# [CRIT] Russian Global Webmail Espionage
 
-**Source:** BleepingComputer, Unit 42 (Palo Alto)
+**Source:** Unit 42 (Palo Alto)
 **Published:** 2026-07-23
-**Article:** https://www.bleepingcomputer.com/news/security/russian-hackers-exploit-zimbra-zero-click-flaw-for-email-theft/
+**Article:** https://unit42.paloaltonetworks.com/russian-webmail-espionage/
 
 ## Threat Profile
 
@@ -71,13 +71,10 @@ Unit 42 has observed a persistent cyberespionage campa…
 - **T1569.002** — Service Execution
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1132.001** — Data Encoding: Standard Encoding
 - **T1566.001** — Phishing: Spearphishing Attachment
 - **T1203** — Exploitation for Client Execution
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1539** — Steal Web Session Cookie
-- **T1111** — Multi-Factor Authentication Interception
-- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
@@ -85,71 +82,64 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### CL-STA-1114 Zimbra espionage C2/exfil to hard-coded email-analytics lookalike domains & IPs
+### CL-STA-1114 Zimbra espionage C2 / exfiltration channel contact (9 domains + 9 IPs)
 
-`UC_0_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest_ip IN ("37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104") OR All_Traffic.dest IN ("analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104","analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let c2Domains = dynamic(["analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com"]);
-let c2IPs = dynamic(["37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104"]);
+let c2ips = dynamic(["37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104"]);
+let c2domains = dynamic(["analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (c2IPs) or (isnotempty(RemoteUrl) and RemoteUrl has_any (c2Domains))
+| where RemoteIP in (c2ips) or RemoteUrl has_any (c2domains)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### Zimbra HTML-attachment lure followed by beacon to CL-STA-1114 C2 (zero-click exploit chain)
+### Inbound HTML-attachment / embedded-HTML Zimbra XSS lure (CVE-2025-66376 delivery)
 
-`UC_0_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count from datamodel=Network_Traffic where (All_Traffic.dest IN ("analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com") OR All_Traffic.dest_ip IN ("37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104")) by All_Traffic.src _time | `drop_dm_object_name(All_Traffic)` | rename src as beacon_src, _time as beacon_time | join type=inner beacon_src [| tstats summariesonly=t count from datamodel=Email where Email.direction="inbound" Email.file_type="html" by Email.recipient Email.src_user _time | `drop_dm_object_name(Email)` | rename recipient as beacon_src, _time as mail_time] | where beacon_time>=mail_time AND beacon_time<=mail_time+86400 | table mail_time beacon_time beacon_src dest dest_ip
-```
+`UC_9_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-let c2Domains = dynamic(["analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com"]);
-let c2IPs = dynamic(["37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104"]);
-let C2Hits = DeviceNetworkEvents
+let c2domains = dynamic(["analyticemailmeter.com","emailanalytics.com.ua","istc-cloud.com","mailnalysis.com","synacorzimbra.nl","zimbra-metadata.com","zimbrastat.com","zimbrasoft.com.ua","zmailanalytics.com"]);
+let Inbound = EmailEvents
     | where Timestamp > ago(30d)
-    | where RemoteIP in (c2IPs) or (isnotempty(RemoteUrl) and RemoteUrl has_any (c2Domains))
-    | project C2Time = Timestamp, DeviceName, BeaconUser = tolower(InitiatingProcessAccountUpn), RemoteUrl, RemoteIP;
-EmailEvents
-| where Timestamp > ago(30d)
-| where EmailDirection == "Inbound" and DeliveryAction == "Delivered" and AttachmentCount > 0
-| join kind=inner (EmailAttachmentInfo | where FileType has "html" or FileName endswith ".html" or FileName endswith ".htm" | project NetworkMessageId, FileName, FileType) on NetworkMessageId
-| extend BeaconUser = tolower(RecipientEmailAddress)
-| join kind=inner C2Hits on BeaconUser
-| where C2Time between (Timestamp .. Timestamp + 1d)
-| project MailTime = Timestamp, C2Time, RecipientEmailAddress, SenderFromAddress, Subject, AttachmentName = FileName, DeviceName, RemoteUrl, RemoteIP
-| order by MailTime desc
+    | where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+    | project NetworkMessageId, Timestamp, SenderFromAddress, SenderMailFromDomain, Subject, RecipientEmailAddress;
+let HtmlAttach = EmailAttachmentInfo
+    | where Timestamp > ago(30d)
+    | where FileType in~ ("html","htm")
+    | project NetworkMessageId, FileName, FileType, SHA256;
+let UrlHit = EmailUrlInfo
+    | where Timestamp > ago(30d)
+    | where UrlDomain in~ (c2domains) or Url has_any (c2domains)
+    | project NetworkMessageId, Url, UrlDomain;
+Inbound
+| join kind=leftouter HtmlAttach on NetworkMessageId
+| join kind=leftouter UrlHit on NetworkMessageId
+| where isnotempty(FileName) or isnotempty(Url)
+| extend Reason = case(isnotempty(Url), "C2-domain-in-message", "HTML-attachment-lure")
+| project Timestamp, Reason, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, FileName, FileType, SHA256, Url, UrlDomain
+| order by Timestamp desc
 ```
 
-### Authentication / mailbox access sourced from CL-STA-1114 Zimbra campaign C2 IPs
+### Unpatched Zimbra Collaboration Suite exposed to CVE-2025-66376
 
-`UC_0_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src IN ("37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104") by Authentication.user Authentication.src Authentication.app Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
-```
+`UC_9_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-let c2IPs = dynamic(["37.120.247.228","64.226.124.190","104.248.134.194","185.86.79.95","193.238.152.66","194.156.103.193","216.252.238.18","216.252.238.64","216.252.238.104"]);
-AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where IPAddress in (c2IPs)
-| project Timestamp, AccountUpn, IPAddress, Application, ResourceDisplayName, ErrorCode, Country, City, ClientAppUsed, UserAgent, IsInteractive
-| order by Timestamp desc
+DeviceTvmSoftwareVulnerabilities
+| where CveId == "CVE-2025-66376"
+| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -489,4 +479,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
