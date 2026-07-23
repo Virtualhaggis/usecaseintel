@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2590 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2591 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,13 +15,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [check point patches exploited smartconsole flaw allowing ful](./2026-07-23/check-point-patches-exploited-smartconsole-flaw-allowing-ful.md)
 - [china nexus jadeprox uses new triback loader in government a](./2026-07-23/china-nexus-jadeprox-uses-new-triback-loader-in-government-a.md)
 - [claude cowork flaw could let ai agent escape its vm and acce](./2026-07-23/claude-cowork-flaw-could-let-ai-agent-escape-its-vm-and-acce.md)
+- [email threat landscape q2 2026 trends and insights](./2026-07-23/email-threat-landscape-q2-2026-trends-and-insights.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
 - [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
+- [hackers abuse notepad plugins to stealthily install malware](./2026-07-23/hackers-abuse-notepad-plugins-to-stealthily-install-malware.md)
 - [new msarat malware uses chrome edge browsers to route c2 tra](./2026-07-23/new-msarat-malware-uses-chrome-edge-browsers-to-route-c2-tra.md)
 - [nine year old refluxfs linux flaw gives local users root on ](./2026-07-23/nine-year-old-refluxfs-linux-flaw-gives-local-users-root-on-.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
-- [russian global webmail espionage](./2026-07-23/russian-global-webmail-espionage.md)
+- [russian hackers exploit zimbra zero click flaw for email the](./2026-07-23/russian-hackers-exploit-zimbra-zero-click-flaw-for-email-the.md)
+- [threatsday android spyware plc attacks ai image prompt injec](./2026-07-23/threatsday-android-spyware-plc-attacks-ai-image-prompt-injec.md)
 
 ## 2026-07-22
 - [adobe acrobat extension flaw let malicious sites read whatsa](./2026-07-22/adobe-acrobat-extension-flaw-let-malicious-sites-read-whatsa.md)
@@ -87,7 +90,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
 
 ## 2026-07-17
-- [e u orders google to open android mic camera and screen to r](./2026-07-17/e-u-orders-google-to-open-android-mic-camera-and-screen-to-r.md)
 - [fake coding tests deliver ottercookie aligned malware hidden](./2026-07-17/fake-coding-tests-deliver-ottercookie-aligned-malware-hidden.md)
 - [goldeneyedog subgroup linked to digicert breach and code sig](./2026-07-17/goldeneyedog-subgroup-linked-to-digicert-breach-and-code-sig.md)
 - [new nadmesh botnet hunts exposed ai services for cloud keys ](./2026-07-17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-.md)
@@ -174,7 +176,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 52766 yeswiki vulnerable to unauthent](./2026-07-09/ghsa-critical-cve-2026-52766-yeswiki-vulnerable-to-unauthent.md)
 - [ghsa critical cve 2026 52777 yeswiki vulnerable to authentic](./2026-07-09/ghsa-critical-cve-2026-52777-yeswiki-vulnerable-to-authentic.md)
 - [ghsa critical cve 2026 52778 yeswiki has unsafe eval in its ](./2026-07-09/ghsa-critical-cve-2026-52778-yeswiki-has-unsafe-eval-in-its-.md)
-- [gigawiper anatomy of a destructive backdoor assembled from m](./2026-07-09/gigawiper-anatomy-of-a-destructive-backdoor-assembled-from-m.md)
 - [one target two flags rival espionage actors converge on paki](./2026-07-09/one-target-two-flags-rival-espionage-actors-converge-on-paki.md)
 - [symlinks are still scary and yes you can commit them to git](./2026-07-09/symlinks-are-still-scary-and-yes-you-can-commit-them-to-git.md)
 - [winning 54 of the time](./2026-07-09/winning-54-of-the-time.md)

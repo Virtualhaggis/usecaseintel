@@ -21,8 +21,8 @@ When the Auth.js configuration produces a server-side error, the `auth` object e
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
-- **T1190** — Exploit Public-Facing Application
 - **T1556** — Modify Authentication Process
+- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
@@ -30,20 +30,52 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Auth.js v5 fail-open trigger: server-configuration error in application logs
+### Auth.js fail-open canary: missing AUTH_SECRET (MissingSecret) config error in app logs
 
-`UC_0_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* ("[auth][error]") ("InvalidEndpoints" OR "There was a problem with the server configuration" OR "MissingSecret" OR "AUTH_SECRET")
-| stats count AS hits, min(_time) AS firstSeen, max(_time) AS lastSeen, values(host) AS hosts, values(source) AS sources BY sourcetype
+index=app_logs ("[auth][error]" AND ("MissingSecret" OR "AUTH_SECRET"))
+| rex field=_raw "(?<AuthError>\[auth\]\[error\][^\n]*)"
+| stats count as errorCount, min(_time) as firstSeen, max(_time) as lastSeen, values(AuthError) as sampleError, values(source) as sources by host
 | sort - lastSeen
+```
+
+### Auth.js fail-open canary: InvalidEndpoints provider misconfiguration in app logs
+
+`UC_6_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=app_logs ("[auth][error]" AND "InvalidEndpoints")
+| rex field=_raw "(?<AuthError>\[auth\]\[error\]\s*InvalidEndpoints[^\n]*)"
+| stats count as errorCount, min(_time) as firstSeen, max(_time) as lastSeen, values(AuthError) as sampleError, values(source) as sources by host
+| sort - lastSeen
+```
+
+### Auth.js fail-open bypass: config-error auth log correlated with successful protected-route response
+
+`UC_6_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=app_logs "[auth][error]"
+| bin span=5m _time AS errWindow
+| stats count as authErrors by errWindow, host
+| join type=inner errWindow host [
+    search index=web_logs (status=200 OR status=302)
+    | search NOT uri_path="/api/auth/*" NOT uri_path="/_next/*"
+    | bin span=5m _time AS errWindow
+    | stats count as successResponses, values(uri_path) as samplePaths by errWindow, host
+  ]
+| where authErrors > 0 AND successResponses > 0
+| sort - errWindow
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
 
-`UC_0_0` · phase: **exploit** · confidence: **High**
+`UC_6_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,4 +125,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

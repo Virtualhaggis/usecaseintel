@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Hosts exposed to RefluXFS XFS reflink LPE (CVE-2026-64600)
 
-`UC_9_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Unprivileged reflink clone of /etc/passwd or setuid-root binary (RefluXFS primitive)
 
-`UC_9_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### RefluXFS reset primitive (chsh/chfn) followed by passwordless root escalation
 
-`UC_9_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -464,7 +464,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nine-Year-Old RefluXFS Linux Flaw Gives Local Users Root on Default RHEL Install
 
-`UC_9_11` · phase: **install** · confidence: **High**
+`UC_14_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

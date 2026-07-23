@@ -44,8 +44,9 @@ The activity involves malicious Packagist development versions spanning 10 packa
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1556** — Modify Authentication Process
 - **T1071.004** — Application Layer Protocol: DNS
+- **T1572** — Protocol Tunneling
+- **T1595.001** — Active Scanning: Scanning IP Blocks
 
 ## Kill chain phases observed
 
@@ -53,58 +54,60 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Network beacon to cPanel-harvester C2 43.228.157.68 (payload pull + credential exfil)
+### Network callback to GitHub Actions cPanel-campaign C2 43.228.157.68
 
-`UC_10_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_15_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="43.228.157.68" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="43.228.157.68" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.direction | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where RemoteIP == "43.228.157.68"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
-| sort by Timestamp desc
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFolderPath
+| order by Timestamp desc
 ```
 
-### cPanel/WHM CVE-2026-41940 auth-bypass exploitation on control-panel ports (2087/2083)
+### DNSHook beacon to dnshook.site (campaign UUID f5b0b742-...)
 
-`UC_10_15` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_15_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest_port=2087 OR Web.dest_port=2083 OR Web.dest_port=2086 OR Web.dest_port=2082) (Web.url="*login*" OR Web.url="*session*" OR Web.url="*cpsess*") by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-### DNSHook C2 channel resolution (dnshook.site + campaign GUID f5b0b742-…)
-
-`UC_10_16` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*f5b0b742-240a-4811-8a5b-b0ba6060685d*" OR DNS.query="*.dnshook.site") by DNS.src DNS.query DNS.answer
-| `drop_dm_object_name(DNS)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*dnshook.site" by DNS.src, DNS.query, DNS.record_type | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where RemoteUrl has "dnshook.site" or RemoteUrl has "f5b0b742-240a-4811-8a5b-b0ba6060685d"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| sort by Timestamp desc
+| order by Timestamp desc
+```
+
+### Inbound scanning of cPanel/WHM control-panel ports (CVE-2026-41940 exploitation)
+
+`UC_15_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(All_Traffic.dest) as targeted_hosts values(All_Traffic.dest_port) as ports min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (2082,2083,2086,2087) (All_Traffic.direction="inbound" OR All_Traffic.src="43.228.157.68") by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | where count > 20 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemotePort in (2082, 2083, 2086, 2087)
+| where ActionType == "InboundConnectionAccepted" or RemoteIP == "43.228.157.68"
+| summarize ConnCount = count(), Ports = make_set(RemotePort), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, RemoteIP
+| where ConnCount > 20
+| order by ConnCount desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -521,4 +524,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

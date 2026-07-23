@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Azure DevOps MCP server launched without least-privilege domain scope (no -d flag)
 
-`UC_39_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_42_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Azure DevOps MCP server loaded with abusable pipelines/wiki/security domains in a review context
 
-`UC_39_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_42_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

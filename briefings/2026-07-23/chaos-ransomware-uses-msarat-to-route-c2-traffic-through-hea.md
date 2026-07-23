@@ -41,11 +41,12 @@ The implant never opens an outbound connection of its own. Its process talks to 
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1105** — Ingress Tool Transfer
-- **T1218.007** — System Binary Proxy Execution: Msiexec
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1572** — Protocol Tunneling
-- **T1090.004** — Proxy: Domain Fronting
+- **T1102** — Web Service
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1090** — Proxy
+- **T1218.007** — System Binary Proxy Execution: Msiexec
 
 ## Kill chain phases observed
 
@@ -53,13 +54,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### msaRAT MSI stager pulled by curl.exe from Chaos staging IP to C:\programdata
+### curl fetches fake Windows-update MSI to ProgramData from Chaos staging host
 
-`UC_5_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=curl.exe (Processes.process="*172.86.126.18*" OR Processes.process="*update_ms.msi*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=curl.exe AND (Processes.process="*update_ms.msi*" OR Processes.process="*172.86.126.18*") AND Processes.process="*programdata*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -67,18 +68,20 @@ _(none detected from narrative keywords)_
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "curl.exe"
-| where ProcessCommandLine has "172.86.126.18" or ProcessCommandLine has "update_ms.msi"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where ProcessCommandLine has "update_ms.msi" or ProcessCommandLine has "172.86.126.18"
+| where ProcessCommandLine has @"programdata"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Headless Chrome/Edge with CDP debugging launched by non-interactive parent (msaRAT C2)
+### Headless Chrome/Edge launched with CDP remote-debugging flags by non-interactive parent
 
-`UC_5_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_10_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (chrome.exe,msedge.exe) Processes.process="*--headless=new*" Processes.process="*--remote-debugging-port*" NOT Processes.parent_process_name IN (explorer.exe,chrome.exe,msedge.exe) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=chrome.exe OR Processes.process_name=msedge.exe) AND Processes.process="*--headless=new*" AND Processes.process="*--remote-debugging-port*" AND Processes.parent_process_name!=explorer.exe by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -88,37 +91,18 @@ DeviceProcessEvents
 | where FileName in~ ("chrome.exe","msedge.exe")
 | where ProcessCommandLine has "--headless=new" and ProcessCommandLine has "--remote-debugging-port"
 | where InitiatingProcessFileName !in~ ("explorer.exe","chrome.exe","msedge.exe")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Headless browser beaconing to Chaos Cloudflare Worker / Twilio TURN relay (msaRAT WebRTC C2)
+### msaRAT command execution via cmd.exe with /e:ON /v:OFF /d /c flag combination
 
-`UC_5_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="is-01-ast.ols-img-12.workers.dev" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe")
-| where (RemoteUrl has "is-01-ast.ols-img-12.workers.dev")
-     or (RemoteUrl endswith "turn.twilio.com" and InitiatingProcessCommandLine has "--headless=new")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### msaRAT command execution via cmd.exe /e:ON /v:OFF /d /c signature
-
-`UC_5_17` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=cmd.exe Processes.process="*/e:ON /v:OFF /d /c*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=cmd.exe AND Processes.process="*/e:ON*" AND Processes.process="*/v:OFF*" AND Processes.process="*/d*" AND Processes.process="*/c*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -126,9 +110,48 @@ DeviceNetworkEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "cmd.exe"
-| where ProcessCommandLine contains "/e:ON /v:OFF /d /c"
+| extend Cmd = tolower(ProcessCommandLine)
+| where Cmd has "/e:on" and Cmd has "/v:off" and Cmd has "/d" and Cmd has "/c"
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessId
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### Browser process resolving/contacting msaRAT Cloudflare Worker C2 signaling host
+
+`UC_10_17` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="is-01-ast.ols-img-12.workers.dev" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl =~ "is-01-ast.ols-img-12.workers.dev"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### msiexec installs staged fake-update MSI from ProgramData (msaRAT loader)
+
+`UC_10_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=msiexec.exe AND Processes.process="*update_ms.msi*" AND Processes.process="*programdata*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "msiexec.exe"
+| where ProcessCommandLine has "update_ms.msi"
+| where ProcessCommandLine has "programdata"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -533,7 +556,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chaos Ransomware Uses msaRAT to Route C2 Traffic Through Headless Chrome and Edg
 
-`UC_5_13` · phase: **exploit** · confidence: **High**
+`UC_10_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -590,4 +613,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 19 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

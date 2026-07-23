@@ -58,11 +58,17 @@ We all knew, to some degree or another, that this summer was going to a hot mess
 - **T1053.005** — Persistence (article-specific)
 - **T1059.006** — Command and Scripting Interpreter: Python
 - **T1218.005** — System Binary Proxy Execution: Mshta
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.003** — Windows Command Shell
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1562.006** — Indicator Blocking
+- **T1620** — Reflective Code Loading
+- **T1105** — Ingress Tool Transfer
+- **T1008** — Fallback Channels
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1568** — Dynamic Resolution
+- **T1555.003** — Credentials from Web Browsers
+- **T1555** — Credentials from Password Stores
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -70,128 +76,147 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Trojanized Webex/Zoom/MobaXterm installer spawning Python (Starland RAT)
+### Trojanized WebEx/Zoom/MobaXterm installer spawns Python or script host (UAT-11795 Starland RAT)
 
-`UC_102_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_104_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="python.exe" OR Processes.process_name="pythonw.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_path
-| `drop_dm_object_name(Processes)`
-| where like(lower(parent_process_name),"%webex%") OR like(lower(parent_process_name),"%zoom%") OR like(lower(parent_process_name),"%mobaxterm%") OR like(lower(parent_process_name),"%dbeaver%") OR like(lower(parent_process_name),"%faceit%") OR like(lower(parent_process_name),"%installer%") OR like(lower(parent_process_name),"%setup%") OR like(lower(process_path),"%\\temp\\%") OR like(lower(process_path),"%\\downloads\\%")
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("webex.exe","webexapp.exe","ciscowebexstart.exe","zoom.exe","zoominstaller.exe","mobaxterm.exe","mobaxterm_installer.exe","dbeaver.exe","faceitclient.exe","faceitinstaller.exe") OR Processes.parent_process IN ("*webex*","*zoom*","*mobaxterm*","*dbeaver*","*faceit*")) AND Processes.process_name IN ("python.exe","pythonw.exe","mshta.exe","powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("python.exe","pythonw.exe")
-| where InitiatingProcessFileName has_any ("webex","zoom","mobaxterm","dbeaver","faceit","installer","setup")
-    or InitiatingProcessFolderPath has_any (@"\Temp\", @"\Downloads\", @"\AppData\Local\Temp\")
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName has_any ("webex","zoom","mobaxterm","dbeaver","faceit")
+| where FileName in~ ("python.exe","pythonw.exe","mshta.exe","powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe")
 | where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### mshta.exe executing weaponized HTA then spawning PowerShell/cmd (UAT-11795 ClickFix)
+### ClickFix mshta.exe silently executing remote HTA then dropping batch (UAT-11795 initial access)
 
-`UC_102_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="mshta.exe" (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="cmd.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="mshta.exe" AND (Processes.process IN ("*http:*","*https:*","*javascript:*","*vbscript:*") OR Processes.parent_process_name IN ("explorer.exe","cmd.exe","powershell.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName =~ "mshta.exe"
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
+| where Timestamp > ago(30d)
+| where FileName =~ "mshta.exe"
+| where ProcessCommandLine has_any ("http:","https:","javascript:","vbscript:",".hta")
+   or InitiatingProcessFileName in~ ("explorer.exe","cmd.exe","powershell.exe","pwsh.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### In-memory PowerShell AMSI/ETW bypass (UAT-11795 WLDR agent stager)
+### PowerShell AMSI/ETW bypass reflection (UAT-11795 WLDR evasion)
 
-`UC_102_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_104_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| where match(process,"(?i)AmsiScanBuffer|amsiInitFailed|AmsiUtils|System\.Management\.Automation\.AmsiUtils|EtwEventWrite|ntdll.*EtwEventWrite|\[Ref\]\.Assembly\.GetType")
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process IN ("*AmsiUtils*","*amsiInitFailed*","*amsiContext*","*System.Management.Automation.AmsiUtils*","*EtwEventWrite*","*[Ref].Assembly.GetType*","*GetProcAddress*ntdll*","*VirtualProtect*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine has_any ("AmsiScanBuffer","amsiInitFailed","AmsiUtils","System.Management.Automation.AmsiUtils","EtwEventWrite","[Ref].Assembly.GetType")
+| where ProcessCommandLine has_any ("AmsiUtils","amsiInitFailed","amsiContext","AmsiScanBuffer","EtwEventWrite","[Ref].Assembly.GetType")
+   or (ProcessCommandLine has "ntdll" and ProcessCommandLine has_any ("VirtualProtect","GetProcAddress"))
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Scheduled task persistence created by mshta/PowerShell/Python (UAT-11795)
+### In-memory WLDR PowerShell C2 implant (fileless, no -File, unusual parent)
 
-`UC_102_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_104_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*/create*" (Processes.parent_process_name="mshta.exe" OR Processes.parent_process_name="powershell.exe" OR Processes.parent_process_name="pwsh.exe" OR Processes.parent_process_name="cmd.exe" OR Processes.parent_process_name="python.exe" OR Processes.parent_process_name="pythonw.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process IN ("*-nop*","*-noprofile*","*-noninteractive*","*-w hidden*","*-windowstyle hidden*") AND NOT Processes.process IN ("*-file *","*.ps1*") AND Processes.parent_process_name IN ("python.exe","pythonw.exe","mshta.exe","wscript.exe","cscript.exe","webex.exe","zoom.exe","mobaxterm.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where InitiatingProcessFileName in~ ("mshta.exe","powershell.exe","pwsh.exe","cmd.exe","python.exe","pythonw.exe")
+| where Timestamp > ago(30d)
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| extend cmd = tolower(ProcessCommandLine)
+| where cmd has_any ("-nop","-noprofile","-noninteractive","-w hidden","-windowstyle hidden")
+| where not(cmd has "-file ") and not(cmd has ".ps1")
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","mshta.exe","wscript.exe","cscript.exe") or InitiatingProcessFileName has_any ("webex","zoom","mobaxterm","dbeaver","faceit")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
 | order by Timestamp desc
 ```
 
-### DNS/connection to UAT-11795 Starland RAT C2 and staging domains
+### Blockchain-anchored C2 fallback: non-browser process contacting polygon-rpc.com
 
-`UC_102_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_104_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app="python.exe" OR All_Traffic.app="pythonw.exe" OR All_Traffic.app="mshta.exe") All_Traffic.direction="outbound" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| where NOT cidrmatch("10.0.0.0/8",dest) AND NOT cidrmatch("172.16.0.0/12",dest) AND NOT cidrmatch("192.168.0.0/16",dest)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - firstTime
+| tstats summariesonly count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("polygon-rpc.com","*.polygon-rpc.com","rpc.ankr.com","etherscan.io","*.etherscan.io","blockchair.com","api.blockcypher.com")) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | join type=inner src [| tstats summariesonly values(Processes.process_name) as proc_names from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe","python.exe","pythonw.exe","mshta.exe","rundll32.exe") by Processes.dest | rename Processes.dest as src | rename dest as src] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let Baseline = DeviceNetworkEvents
-| where Timestamp between (ago(30d) .. ago(1d))
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","mshta.exe")
-| summarize by RemoteIP;
 DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","mshta.exe")
-| where RemoteIPType == "Public"
-| join kind=leftanti Baseline on RemoteIP
-| summarize FirstSeen=min(Timestamp), Conns=count(), Ports=make_set(RemotePort,10) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl
-| order by FirstSeen desc
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("polygon-rpc.com","rpc.ankr.com","etherscan.io","blockchair.com","api.blockcypher.com")
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","python.exe","pythonw.exe","mshta.exe","rundll32.exe","wscript.exe","cscript.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Connection to known UAT-11795 Starland RAT C2 / distribution domains
+
+`UC_104_19` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("eorthopaedics.com","*.eorthopaedics.com","sastoro.com","*.sastoro.com","web-devtools.com","*.web-devtools.com","zynaris.io","*.zynaris.io","windowscreenrepairnearme.com","*.windowscreenrepairnearme.com","aipythondevs.com","*.aipythondevs.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let c2Domains = dynamic(["eorthopaedics.com","sastoro.com","web-devtools.com","zynaris.io","windowscreenrepairnearme.com","aipythondevs.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteUrl has_any (c2Domains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### CastleStealer/Starland RAT accessing browser credential stores and crypto wallets
+
+`UC_104_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*\\User Data\\*\\Login Data","*\\User Data\\*\\Network\\Cookies","*\\Mozilla\\Firefox\\Profiles\\*logins.json","*wallet.dat","*\\Ethereum\\keystore\\*","*\\Exodus\\exodus.wallet\\*","*\\discord\\Local Storage\\*","*\\Telegram Desktop\\tdata\\*")) by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where process_name IN ("python.exe","pythonw.exe","powershell.exe","pwsh.exe","cmd.exe","rundll32.exe","mshta.exe") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has_any (@"\User Data\", "Login Data", @"\Network\Cookies", "logins.json", "wallet.dat", @"\Ethereum\keystore\", @"\Exodus\", @"\discord\Local Storage\", @"\Telegram Desktop\tdata\")
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","powershell.exe","pwsh.exe","cmd.exe","rundll32.exe","mshta.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, ActionType, FolderPath, FileName
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -542,7 +567,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Begun, the Patch Wars have
 
-`UC_102_13` · phase: **exploit** · confidence: **High**
+`UC_104_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -605,4 +630,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 19 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 21 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -36,10 +36,12 @@ Accomplish AI, which shared details of the vulnerability with The Hacker News ah
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1068** — Exploitation for Privilege Escalation
 - **T1611** — Escape to Host
+- **T1005** — Data from Local System
+- **T1068** — Exploitation for Privilege Escalation
+- **T1548** — Abuse Elevation Control Mechanism
 - **T1552.004** — Unsecured Credentials: Private Keys
-- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1555** — Credentials from Password Stores
 
 ## Kill chain phases observed
 
@@ -47,74 +49,83 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### pedit COW (CVE-2026-46331) exploitation via tc act_pedit inside Claude Cowork guest VM
+### Cowork VM escape: guest process writing to host root via /mnt/.virtiofs-root
 
-`UC_4_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_9_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=tc AND Processes.process="*pedit*") OR (Processes.process_name IN ("modprobe","insmod","kmod") AND Processes.process="*act_pedit*") OR Processes.process_name="packet_edit_meme" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="/mnt/.virtiofs-root/*" (Filesystem.action="created" OR Filesystem.action="modified" OR Filesystem.action="deleted" OR Filesystem.action="renamed") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+DeviceFileEvents
 | where Timestamp > ago(7d)
-| where (FileName =~ "tc" and ProcessCommandLine has "pedit")
-   or (FileName in~ ("modprobe","insmod","kmod") and ProcessCommandLine has "act_pedit")
-   or FileName =~ "packet_edit_meme"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where FolderPath startswith "/mnt/.virtiofs-root/"
+| where ActionType in ("FileCreated","FileModified","FileRenamed","FileDeleted")
+| where InitiatingProcessFileName != "coworkd"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
 | order by Timestamp desc
 ```
 
-### Unprivileged user+network namespace creation chained to net/sched exploit (SharedRoot prereq)
+### CVE-2026-46331 pedit COW exploit: tc act_pedit action loaded on Cowork guest
 
-`UC_4_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name=unshare (Processes.process="*--user*" OR Processes.process="*-U*") (Processes.process="*--net*" OR Processes.process="*-n*") by _time Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)` | rename process as ns_cmd, _time as ns_time | join type=inner dest [| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name=tc AND Processes.process="*pedit*") OR (Processes.process_name IN ("modprobe","insmod") AND Processes.process="*act_pedit*") OR Processes.process_name="packet_edit_meme" by _time Processes.dest Processes.process | `drop_dm_object_name(Processes)` | rename process as exploit_cmd, _time as exploit_time] | where exploit_time>=ns_time AND exploit_time<=ns_time+300 | table ns_time, exploit_time, dest, user, ns_cmd, exploit_cmd
-```
-
-**Defender KQL:**
-```kql
-let ns = DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "unshare"
-| where (ProcessCommandLine has "--user" or ProcessCommandLine matches regex @"(?i)(^|\s)-[a-z]*u")
-| where (ProcessCommandLine has "--net"  or ProcessCommandLine matches regex @"(?i)(^|\s)-[a-z]*n")
-| project NsTime = Timestamp, DeviceId, DeviceName, AccountName, NsCmd = ProcessCommandLine;
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where (FileName =~ "tc" and ProcessCommandLine has "pedit")
-   or (FileName in~ ("modprobe","insmod") and ProcessCommandLine has "act_pedit")
-   or FileName =~ "packet_edit_meme"
-| join kind=inner ns on DeviceId
-| where Timestamp between (NsTime .. NsTime + 5m)
-| project NsTime, ExploitTime = Timestamp, DeviceName, AccountName, NsCmd, ExploitCmd = ProcessCommandLine, FileName
-| order by ExploitTime desc
-```
-
-### Guest process accessing host filesystem via /mnt/.virtiofs-root (SharedRoot host escape)
-
-`UC_4_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_9_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*/mnt/.virtiofs-root*" AND NOT Processes.process_name IN ("coworkd","mount","mount.virtiofs") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="tc" Processes.process="*pedit*" by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process,"(?i)(action|filter|qdisc|add)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where ProcessCommandLine has "/mnt/.virtiofs-root"
-| where InitiatingProcessFileName !in~ ("coworkd","mount","mount.virtiofs") and FileName !in~ ("coworkd","mount","mount.virtiofs")
-| extend TouchesSecrets = ProcessCommandLine has_any ("/.ssh/","/.aws/","id_rsa","id_ed25519","credentials","/.config/gcloud","/.kube/")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, TouchesSecrets,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TouchesSecrets desc, Timestamp desc
+| where FileName == "tc"
+| where ProcessCommandLine has "pedit"
+| where ProcessCommandLine has_any ("action","filter","qdisc","add")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Cowork guest: unprivileged user + network namespace creation granting CAP_NET_ADMIN
+
+`UC_9_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="unshare" (Processes.process="*--user*" OR Processes.process="*--map-root-user*" OR Processes.process="*-U*" OR Processes.process="*-r*") (Processes.process="*--net*" OR Processes.process="*-n*") by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName == "unshare"
+| where ProcessCommandLine has_any ("--user","--map-root-user","-U","-r") or ProcessCommandLine matches regex @"(?i)\s-[a-z]*U[a-z]*"
+| where ProcessCommandLine has_any ("--net","-n") or ProcessCommandLine matches regex @"(?i)\s-[a-z]*n[a-z]*"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Post-escape credential theft: Cowork guest reading host SSH/cloud keys via virtiofs mount
+
+`UC_9_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*/mnt/.virtiofs-root/*" (Processes.process="*/.ssh*" OR Processes.process="*/.aws*" OR Processes.process="*id_rsa*" OR Processes.process="*credentials*" OR Processes.process="*/.kube*" OR Processes.process="*/.config/gcloud*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "/mnt/.virtiofs-root/"
+| where ProcessCommandLine has_any ("/.ssh","id_rsa","id_ed25519","/.aws","credentials","/.kube","/.config/gcloud")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -464,4 +475,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 14 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

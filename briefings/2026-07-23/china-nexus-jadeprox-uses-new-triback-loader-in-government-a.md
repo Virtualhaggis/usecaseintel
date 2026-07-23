@@ -63,14 +63,14 @@ Group-IB found the server in mid-April 2026 in Alibaba Cloud's Singapore…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1547.001** — Persistence (article-specific)
-- **T1574.002** — DLL Side-Loading
-- **T1027.013** — Encrypted/Encoded File
-- **T1547.001** — Registry Run Keys / Startup Folder
-- **T1218.007** — Msiexec
-- **T1070.004** — File Deletion
-- **T1074.001** — Local Data Staging
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
+- **T1095** — Non-Application Layer Protocol
+- **T1573.001** — Encrypted Channel: Symmetric Cryptography
+- **T1189** — Drive-by Compromise
+- **T1595.002** — Active Scanning: Vulnerability Scanning
 
 ## Kill chain phases observed
 
@@ -78,53 +78,78 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TriBack Loader DLL side-load: avk.dll/MpClient.dll/hostfxr.dll from user-writable dirs
+### TriBack Loader DLL side-load: signed vendor EXE loading avk.dll/hostfxr.dll/MpClient.dll from user-writable path
 
-`UC_7_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("NOVupdate.exe","MpCopyAccelerator.exe")) AND (Processes.process_path IN ("*\\AppData\\*","*\\Temp\\*","*\\Public\\*","*\\Startup\\*","*\\ProgramData\\*")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("avk.dll","hostfxr.dll","MpClient.dll")) AND (Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\Startup\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\ProgramData\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceImageLoadEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("avk.dll","MpClient.dll","hostfxr.dll")
-| where FolderPath has_any (@"\AppData\", @"\Temp\", @"\Users\Public\", @"\Start Menu\Programs\Startup\", @"\ProgramData\")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, LoadedDll = FileName, DllPath = FolderPath, InitiatingProcessSHA256, InitiatingProcessCommandLine
+| where FileName in~ ("avk.dll","hostfxr.dll","MpClient.dll")
+| where FolderPath has_any (@"\AppData\", @"\Temp\", @"\Start Menu\Programs\Startup\", @"\Users\Public\", @"\ProgramData\")
+| where InitiatingProcessFolderPath has_any (@"\AppData\", @"\Temp\", @"\Start Menu\Programs\Startup\", @"\Users\Public\", @"\ProgramData\")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, HostBinary = InitiatingProcessFileName, HostPath = InitiatingProcessFolderPath, LoadedDll = FileName, DllPath = FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### JadeProx Startup-folder persistence: side-load triad dropped by msiexec
+### TriBack Loader Startup-folder persistence: signed EXE + encrypted .dat/.log + malicious DLL trio dropped by MSI
 
-`UC_7_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=created) AND (Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*") AND (Filesystem.file_name IN ("NOVupdate.exe","MpCopyAccelerator.exe","avk.dll","MpClient.dll","NOVupdate.exe.dat","Windows.log")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" AND (Filesystem.file_name="*.dat" OR Filesystem.file_name="*.log" OR Filesystem.file_name="*.dll" OR Filesystem.file_name="*.exe")) OR (Filesystem.file_name IN ("NOVupdate.exe","NOVupdate.exe.dat","avk.dll","~del.vbs.bat")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
+let StartupPath = @"\Start Menu\Programs\Startup\";
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType == "FileCreated"
-| where FolderPath has @"\Start Menu\Programs\Startup\"
-| where FileName in~ ("NOVupdate.exe","MpCopyAccelerator.exe","avk.dll","MpClient.dll","NOVupdate.exe.dat","Windows.log")
-    or (FileName endswith ".dat" or FileName endswith ".log")
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
+| where (FolderPath has StartupPath and (FileName endswith ".dat" or FileName endswith ".log" or FileName endswith ".dll" or FileName endswith ".exe"))
+     or FileName in~ ("NOVupdate.exe","NOVupdate.exe.dat","avk.dll","~del.vbs.bat")
+     or FolderPath matches regex @"(?i)\\_CL_[0-9]{6}\\"
+| summarize DroppedFiles = make_set(FileName, 20), FirstSeen = min(Timestamp), FileCount = dcount(FileName) by DeviceName, FolderPath, InitiatingProcessFileName, InitiatingProcessAccountName
+| where FileCount >= 1
+| order by FirstSeen desc
 ```
 
-### TriBack Loader staging artifacts: ~del.vbs.bat and nested _CL_###### folders
+### JadeProx / Beagle C2 to campaign domains and 43.106.71.28:8000 staging server
 
-`UC_7_18` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="~del.vbs.bat" OR Filesystem.file_path="*\\_CL_*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("claude-pro.com","license.claude-pro.com","licence.claude-pro.com","sylverixstrategy.com","gouvvbo.top","vertextrust-advisors.com","update-trellix.com","update-crowdstrike.com","update-sentinelone.com")) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats summariesonly=t count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="43.106.71.28" AND All_Traffic.dest_port=8000) OR All_Traffic.dest IN ("8.217.190.58","209.189.190.206","178.128.108.89","192.252.186.62") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`]
+```
+
+**Defender KQL:**
+```kql
+let CampaignDomains = dynamic(["claude-pro.com","license.claude-pro.com","licence.claude-pro.com","sylverixstrategy.com","gouvvbo.top","vertextrust-advisors.com","update-trellix.com","update-crowdstrike.com","update-sentinelone.com"]);
+let CampaignIPs = dynamic(["43.106.71.28","8.217.190.58","209.189.190.206","178.128.108.89","192.252.186.62"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (isnotempty(RemoteUrl) and RemoteUrl has_any (CampaignDomains))
+     or (RemoteIP in (CampaignIPs))
+     or (RemoteIP == "43.106.71.28" and RemotePort == 8000)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### Fake Claude malvertising: MSI/ZIP download originating from claude-pro.com
+
+`UC_12_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*claude-pro.com*") by Web.src Web.user Web.url Web.dest Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -132,29 +157,29 @@ DeviceFileEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileRenamed")
-| where FileName =~ "~del.vbs.bat"
-    or FolderPath matches regex @"(?i)\\_CL_[0-9]{6}\\"
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where isnotempty(FileOriginUrl) and FileOriginUrl has "claude-pro.com"
+| where FileName endswith ".msi" or FileName endswith ".zip" or FileName endswith ".exe"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, FileOriginUrl, FileOriginIP, SHA256
 | order by Timestamp desc
 ```
 
-### JadeProx C2 / staging egress: claude-pro[.]com set and 43.106.71[.]28:8000
+### Internet-facing hosts exposed to the four CVEs JadeProx actively scanned/exploited
 
-`UC_7_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_20` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("43.106.71.28","8.217.190.58","209.189.190.206","178.128.108.89","192.252.186.62")) OR (All_Traffic.dest_ip="43.106.71.28" AND All_Traffic.dest_port=8000) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count from datamodel=Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2018-11511","CVE-2021-24139","CVE-2021-31755","CVE-2021-32305")) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | eval priority=if(cve="CVE-2021-31755","1-CISA-KEV","2") | sort priority
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("claude-pro.com","sylverixstrategy.com","gouvvbo.top","vertextrust-advisors.com","update-trellix.com","update-crowdstrike.com","update-sentinelone.com")
-    or RemoteIP in ("43.106.71.28","8.217.190.58","209.189.190.206","178.128.108.89","192.252.186.62")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2018-11511","CVE-2021-24139","CVE-2021-31755","CVE-2021-32305")
+| join kind=leftouter (DeviceInfo | where Timestamp > ago(1d) | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| extend Priority = iff(CveId == "CVE-2021-31755", "1-CISA-KEV", "2")
+| project DeviceName, CveId, Priority, IsInternetFacing, PublicIP, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Priority asc, IsInternetFacing desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -559,7 +584,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — China-Nexus JadeProx Uses New TriBack Loader in Government and Healthcare Attack
 
-`UC_7_15` · phase: **exploit** · confidence: **High**
+`UC_12_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -622,4 +647,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 20 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 21 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
