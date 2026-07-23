@@ -36,126 +36,12 @@ The high-severity flaw, tracked as CVE-2026-8933 (CVSS score: 7.8), impacts defa
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1068** — Exploitation for Privilege Escalation
-- **T1546.017** — Event Triggered Execution: Udev Rules
-- **T1222.002** — Linux File and Directory Permissions Modification
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### snap-confine writes malicious udev .rules file to /run/udev/rules.d (CVE-2026-8933)
-
-`UC_5_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","rename") (Filesystem.file_path="*/run/udev/rules.d/*.rules" OR Filesystem.file_path="*/etc/udev/rules.d/*.rules") Filesystem.user!="root" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.action 
-| `drop_dm_object_name(Filesystem)` 
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FolderPath has "/run/udev/rules.d" or FolderPath has "/etc/udev/rules.d"
-| where FileName endswith ".rules"
-| where InitiatingProcessFileName has "snap-confine"
-    or (InitiatingProcessAccountName !in~ ("root") and InitiatingProcessFileName !in~ ("systemd-udevd","udevadm","dpkg","apt","apt-get","dpkg-deb"))
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
-| order by Timestamp desc
-```
-
-### snap-confine execution burst — race-condition brute force (CVE-2026-8933)
-
-`UC_5_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parent_process_name values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.process_name="snap-confine" Processes.user!="root" by Processes.dest Processes.user _time span=1m 
-| `drop_dm_object_name(Processes)` 
-| where count > 50 
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(1d)
-| where FileName == "snap-confine" or FolderPath endswith "/snap-confine"
-| where AccountName !endswith "$" and AccountName !in~ ("root")
-| summarize InvocationCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), ParentProcs = make_set(InitiatingProcessFileName, 8), SampleCmd = any(ProcessCommandLine) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where InvocationCount > 50   // legit snap launches spawn snap-confine a handful of times; >50/min/user = TOCTOU brute force
-| order by InvocationCount desc
-```
-
-### FUSE mount over snap-confine /tmp scratch directory by unprivileged user (CVE-2026-8933)
-
-`UC_5_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="fusermount" OR Processes.process_name="fusermount3" OR Processes.process_name="mount.fuse") (Processes.process="*/tmp/snap*" OR Processes.process="*snap-private-tmp*") Processes.user!="root" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("fusermount","fusermount3","mount.fuse","mount.fuse3")
-| where ProcessCommandLine has "/tmp/snap" or ProcessCommandLine has "snap-private-tmp"
-| where AccountName !endswith "$" and AccountName !in~ ("root")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### systemd-udevd spawns shell/interpreter as root — udev rule code execution (CVE-2026-8933)
-
-`UC_5_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="systemd-udevd" (Processes.process_name IN ("bash","sh","dash","zsh","python3","python","perl","nc","ncat","curl","wget","chmod","chown","cp","id")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName == "systemd-udevd" or InitiatingProcessFolderPath endswith "/systemd-udevd"
-| where FileName in~ ("bash","sh","dash","zsh","python3","python","perl","nc","ncat","curl","wget","chmod","chown","cp","id")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Ubuntu endpoints exposed to snap-confine LPE CVE-2026-8933
-
-`UC_5_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-8933" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve 
-| `drop_dm_object_name(Vulnerabilities)` 
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-8933"
-| project DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
-```
 
 ### Suspicious browser extension installation
 
@@ -504,4 +390,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
