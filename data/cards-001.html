@@ -1350,7 +1350,7 @@ DeviceFileEvents
   data-splunk-cats="application,endpoint,web"
   data-targets="azure,linux,m365,windows"
   data-uc-count="16" data-llm-uc-count="5"
-  data-search="Ubuntu snap-confine Flaw Could Give Local Users Root on Default Desktop Installs Cybersecurity researchers have disclosed details of a new local privilege escalation (LPE) vulnerability in snap-confine that an unprivileged user can trigger to obtain root access and gain complete control of a target environment. The high-severity flaw, tracked as CVE-2026-8933 (CVSS score: 7.8), impacts default installations of Ubuntu Desktop 24.04, 25.10, and 26.04. The disclosure comes as CVE-2026-8933 T1021.001 T1190 T1195.002 T1486 T1528 T1555.003 T1566 [LLM] snap-confine invoked by interactive user shell instead of snapd (CVE-2026-8933 trigger) [LLM] Malicious udev .rules file dropped in /run/udev/rules.d/ (CVE-2026-8933 AppArmor bypass) [LLM] systemd-udevd spawning a shell or interpreter as root (CVE-2026-8933 code execution) [LLM] FUSE mount over a /tmp scratch directory (CVE-2026-8933 mount-namespace race) [LLM] Ubuntu hosts exposed to snap-confine CVE-2026-8933 (vulnerable snapd inventory) Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Trusted vendor binary / installer launching unusual children">
+  data-search="Ubuntu snap-confine Flaw Could Give Local Users Root on Default Desktop Installs Cybersecurity researchers have disclosed details of a new local privilege escalation (LPE) vulnerability in snap-confine that an unprivileged user can trigger to obtain root access and gain complete control of a target environment. The high-severity flaw, tracked as CVE-2026-8933 (CVSS score: 7.8), impacts default installations of Ubuntu Desktop 24.04, 25.10, and 26.04. The disclosure comes as CVE-2026-8933 T1021.001 T1190 T1195.002 T1486 T1528 T1555.003 T1566 [LLM] Non-root write of a .rules file into /run/udev/rules.d/ (snap-confine CVE-2026-8933 AppArmor bypass) [LLM] snap-confine spawned by an interactive user shell instead of snapd (CVE-2026-8933 trigger) [LLM] Unprivileged FUSE filesystem mounted over a /tmp scratch directory (CVE-2026-8933 namespace race) [LLM] systemd-udevd spawning a shell or command interpreter as root (CVE-2026-8933 payload execution) [LLM] Exposure sweep: unpatched snapd / snap-confine vulnerable to CVE-2026-8933 Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Trusted vendor binary / installer launching unusual children">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-22-ubuntu-snap-confine-flaw-could-give-local-users-root-on-defa" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1407,63 +1407,58 @@ DeviceFileEvents
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Ubuntu hosts exposed to snap-confine CVE-2026-8933 (vulnerable snapd inventory) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Exposure sweep: unpatched snapd / snap-confine vulnerable to CVE-2026-8933 · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] snap-confine invoked by interactive user shell instead of snapd (CVE-2026-8933 trigger) · [LLM] FUSE mount over a /tmp scratch directory (CVE-2026-8933 mount-namespace race) · Office app spawning script/LOLBin child process · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Malicious udev .rules file dropped in /run/udev/rules.d/ (CVE-2026-8933 AppArmor bypass) · Suspicious browser extension installation</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Non-root write of a .rules file into /run/udev/rules.d/ (snap-confine CVE-2026-8933 AppArmor bypass) · [LLM] snap-confine spawned by an interactive user shell instead of snapd (CVE-2026-8933 trigger) · [LLM] Unprivileged FUSE filesystem mounted over a /tmp scratch directory (CVE-2026-8933 namespace race) · Office app spawning script/LOLBin child process · Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] systemd-udevd spawning a shell or command interpreter as root (CVE-2026-8933 payload execution) · Suspicious browser extension installation</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] systemd-udevd spawning a shell or interpreter as root (CVE-2026-8933 code execution) · Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="5788172a1c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="a0f5e15ba6" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">snap-confine invoked by interactive user shell instead of snapd (CVE-2026-8933 trigger)</span>
+    <span class="uc-title">Non-root write of a .rules file into /run/udev/rules.d/ (snap-confine CVE-2026-8933 AppArmor bypass)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="5788172a1c" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a0f5e15ba6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts direct invocation of the snap-confine helper from an unprivileged user shell or scripting interpreter rather than its legitimate parent snapd/snap. CVE-2026-8933 exploitation drives snap-confine from attacker-controlled user context to race its /tmp scratch-dir setup, so a non-snapd parent for snap-confine is the earliest host-side tell.
+    <div class="uc-desc">Hunts the core CVE-2026-8933 exploit primitive: an unprivileged process dropping a malicious udev .rules file into /run/udev/rules.d/ via the symlink/permission race. The AppArmor profile permits read-write on /run/udev/**, so the attacker plants a rule there and triggers a FUSE mount/unmount cycle to make systemd-udevd run it as root. Runtime udev rules under /run/udev/rules.d/ are normally written only by root/systemd, so a non-root writer is highly anomalous.
 
-Rationale: Uses the article&#x27;s concrete binary path /usr/lib/snapd/snap-confine and the reviewer&#x27;s baseline that snap-confine&#x27;s legitimate parent is snapd, not a user shell. Parent-exclusion keeps it broad enough for a hunt while the specific binary keeps volume low.
+Rationale: Uses the article&#x27;s most specific artifact: a .rules file dropped into /run/udev/rules.d/ (the /run/udev/** AppArmor-writable path Qualys names) by a non-root process. Confirmed by the Qualys advisory and Infosecurity Magazine write-up. This runtime directory is not a normal user or application write target.
 
 Cross-checked against:
   • https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
   • https://www.infosecurity-magazine.com/news/ubuntu-snap-confine-local-root-cve/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Abuse Elevation Control Mechanism: Setuid and Setgid">T1548.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A local admin manually running snap-confine for troubleshooting from a root shell (filtered by AccountName!=root)</li><li>Custom snap packaging/CI scripts that invoke snap-confine via a wrapper shell</li><li>Configuration-management tooling (Ansible/Puppet) shelling out to snap internals</li><li>Third-party snap-management utilities that re-exec snap-confine</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;snapcraft&quot; and InitiatingProcessCommandLine !has &quot;/usr/bin/snap &quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree for the snap-confine event — confirm the parent is a user shell/interpreter and the account is non-root; check whether a snap was actually being installed/updated at that time. 2) Contain: isolate the host and suspend the initiating user session; snapshot /tmp and /run/udev before they are cleared. 3) Hunt: on the same host look for a fusermount/mount over a /tmp scratch dir, new files under /run/udev/rules.d/, and systemd-udevd spawning a shell within the following seconds (UCs 2-4).</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Event Triggered Execution">T1546</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Root-run package post-install (dpkg/apt) scripts regenerating runtime udev rules (filtered by non-root writer)</li><li>Admin manually reloading udev with a hand-authored rule copied into /run/udev/rules.d as root</li><li>systemd-udevd/udevadm itself materialising compiled rules (root context)</li><li>Configuration-management agent (Ansible/Puppet) running as root staging device rules</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !has &quot;/snapd&quot; and InitiatingProcessFileName !in~ (&quot;systemd-udevd&quot;,&quot;udevadm&quot;,&quot;dpkg&quot;,&quot;apt&quot;,&quot;apt-get&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: On the host, capture the .rules file contents and the writing process (InitiatingProcessFileName/CommandLine, UID). A non-root UID writing an executable RUN+= or IMPORT{program} rule = confirmed exploitation. Correlate to snap-confine activity in the prior seconds. 2) CONTAIN: Isolate the host, kill the writing process and any systemd-udevd child shells, delete the planted rule, and force a full snapd version audit. 3) HUNT: Search the same host for a preceding FUSE mount over /tmp, snap-confine spawned by a user shell, and systemd-udevd spawning shells (UCs 3 and 4). Verify installed snapd version against the patched build across the fleet.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-05-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-05-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-05-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-05-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-05-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-05-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-05-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where FileName =~ &quot;snap-confine&quot; or FolderPath endswith &quot;/snapd/snap-confine&quot;
-| where InitiatingProcessFileName !in~ (&quot;snapd&quot;,&quot;snap&quot;,&quot;systemd&quot;)
-| where AccountName !in~ (&quot;root&quot;)
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine,
-          ParentProcess = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,
-          ParentAccount = InitiatingProcessAccountName
+    <div class="tab-content active" id="art-05-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FolderPath startswith &quot;/run/udev/rules.d/&quot; and FileName endswith &quot;.rules&quot;
+| where InitiatingProcessAccountName !in~ (&quot;root&quot;,&quot;system&quot;)   // runtime udev rules are normally written only by root/systemd
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where DvcOs has &quot;Linux&quot; or DvcOs == &quot;&quot;
-| where ActingProcessName has &quot;snap-confine&quot;
-| where ParentProcessName !has &quot;snapd&quot; and not(ParentProcessName has_any (&quot;/snap&quot;,&quot;systemd&quot;))
-| where ActorUsername !in~ (&quot;root&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
+    <div class="tab-content" id="art-05-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where TargetFilePath startswith &quot;/run/udev/rules.d/&quot; and TargetFileName endswith &quot;.rules&quot;
+| where ActorUsername != &quot;root&quot;   // runtime udev rules are normally written only by root/systemd
+| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName, ActorUsername, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: snap-confine Spawned by Non-snapd Parent (CVE-2026-8933)
-id: 3f2a9c14-8b71-4e2d-9a5c-6d1e0f7a2b31
-description: snap-confine invoked directly by a user shell or interpreter rather than snapd, indicative of CVE-2026-8933 LPE exploitation.
+    <div class="tab-content" id="art-05-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Non-root udev Rule Written to /run/udev/rules.d (snap-confine CVE-2026-8933)
+id: 6f2a1c94-3e5b-4d1a-9c77-2b8f0a1d55e3
+description: Detects creation of a .rules file under the runtime udev directory /run/udev/rules.d/, the AppArmor-permitted path abused by CVE-2026-8933 to force systemd-udevd to execute attacker commands as root.
 references:
   - https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
   - https://thehackernews.com/2026/07/ubuntu-snap-confine-flaw-could-give.html
@@ -1471,121 +1466,122 @@ author: SOC Detection Engineering
 date: 2026/07/23
 tags:
   - attack.t1068
-  - attack.t1548.001
+  - attack.t1546
+  - attack.privilege_escalation
 logsource:
-  category: process_creation
   product: linux
+  category: file_event
 detection:
   selection:
-    Image|endswith: &#x27;/snap-confine&#x27;
-  filter_parent:
-    ParentImage|endswith:
-      - &#x27;/snapd&#x27;
-      - &#x27;/snap&#x27;
-      - &#x27;/systemd&#x27;
-  condition: selection and not filter_parent
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-05-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.executable.path:*/snap-confine OR @process.name:snap-confine) -@process.parent.name:(snapd OR snap OR systemd) -@user.name:root</code></pre></div>
-    <div class="tab-content" id="art-05-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 event_platform=Lin ImageFileName=/\/snap-confine$/i | NOT (ParentBaseFileName=/^(snapd|snap|systemd)$/i) | groupBy([aid, ComputerName, UserName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-05-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=snap-confine OR Processes.process_path=&quot;/usr/lib/snapd/snap-confine&quot;) AND NOT (Processes.parent_process_name IN (&quot;snapd&quot;,&quot;snap&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where user!=&quot;root&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=snap-confine OR Processes.process_path=&quot;/usr/lib/snapd/snap-confine&quot;) AND NOT (Processes.parent_process_name IN (&quot;snapd&quot;,&quot;snap&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where user!=&quot;root&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    TargetFilename|startswith: &#x27;/run/udev/rules.d/&#x27;
+    TargetFilename|endswith: &#x27;.rules&#x27;
+  condition: selection
+falsepositives:
+  - Package post-install scripts run as root regenerating runtime udev rules
+level: high</code></pre></div>
+    <div class="tab-content" id="art-05-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\/run\/udev\/rules\.d\/.*\.rules$/i
+| ContextImageFileName!=/\/(systemd|systemd-udevd|udevadm)$/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-05-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;renamed&quot;) Filesystem.file_path=&quot;/run/udev/rules.d/*&quot; Filesystem.file_name=&quot;*.rules&quot; Filesystem.user!=&quot;root&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;renamed&quot;) Filesystem.file_path=&quot;/run/udev/rules.d/*&quot; Filesystem.file_name=&quot;*.rules&quot; Filesystem.user!=&quot;root&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="7c4e8a3374" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="1121c04c26" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Malicious udev .rules file dropped in /run/udev/rules.d/ (CVE-2026-8933 AppArmor bypass)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">snap-confine spawned by an interactive user shell instead of snapd (CVE-2026-8933 trigger)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7c4e8a3374" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="1121c04c26" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on creation or modification of a .rules file under the runtime path /run/udev/rules.d/ by any process other than udev&#x27;s own management tooling. CVE-2026-8933 abuses the writable /run/udev/** path to plant a rule containing a RUN+= directive that systemd-udevd later executes as root; that runtime rules.d directory is normally not populated by user processes.
+    <div class="uc-desc">Hunts the CVE-2026-8933 trigger condition: snap-confine invoked directly from an unprivileged user context (bash/sh/python/tmux/screen) rather than by the snapd daemon. Legitimate snap launches drive snap-confine as a child of snapd; a shell or scripting interpreter directly executing snap-confine is the shape an LPE exploit uses to race sandbox setup.
 
-Rationale: Directly keys on the article&#x27;s most specific IOC: &#x27;dropping a malicious .rules file in /run/udev/rules.d/&#x27;. The runtime rules.d path is managed only by udev tooling, so a write from any other process is high-fidelity with minimal legitimate traffic.
+Rationale: The article states &#x27;local users&#x27; trigger the flaw, and Canonical documents snap-confine as a snapd sub-process. So snap-confine whose parent is a user shell (not snapd) is a direct behavioural signal of manual exploitation. auditd query omitted because the required parent-process constraint (shell vs snapd) is not expressible on the standard auditd EXECVE fields shipped to Datadog and snap-confine alone is too noisy.
 
 Cross-checked against:
   • https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
-  • https://securitybrief.com.au/story/ubuntu-snap-confine-flaw-can-give-attackers-root-access</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Boot or Logon Autostart Execution">T1547</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A hotplug/device-manager package that legitimately generates runtime udev rules under /run</li><li>systemd-udevd itself writing generated rules (filtered out)</li><li>Container/snap runtime tooling synthesizing transient rules</li><li>Admin manually testing a udev rule in the runtime dir before persisting to /etc/udev/rules.d</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !startswith &quot;/usr/lib/udev&quot; and InitiatingProcessFileName != &quot;systemd&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the dropped .rules file contents (look for RUN+=, PROGRAM=, IMPORT{program}= directives invoking shells or payload paths) and identify the writing process and its parent chain. 2) Contain: delete/quarantine the rule, isolate the host, and kill any child of systemd-udevd; force `udevadm control --reload` only after removal. 3) Hunt: pivot to UC1 (snap-confine from a user shell) and UC3 (systemd-udevd spawning a shell) on the same host and correlate to the initiating user for scope.</div></details>
+  • https://www.infosecurity-magazine.com/news/ubuntu-snap-confine-local-root-cve/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer/CI wrapper scripts that invoke /usr/lib/snapd/snap-confine directly for testing</li><li>Debugging snap confinement with snap run --shell (parent is a shell)</li><li>Custom snap packaging tooling calling snap-confine outside snapd</li><li>strace/gdb sessions launching snap-confine under a shell</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;snapcraft&quot; and InitiatingProcessCommandLine !has &quot;/test&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Inspect the ProcessCommandLine and the parent shell&#x27;s history/UID. Legit snap launches never have a shell as snap-confine&#x27;s direct parent; confirm whether the invocation includes attacker-controlled temp paths or SNAP env manipulation. 2) CONTAIN: If unrecognised, isolate the host and suspend the initiating user session; snapshot /tmp and /run/udev. 3) HUNT: Pivot on same host for a concurrent FUSE mount over /tmp (UC3), a .rules drop in /run/udev/rules.d (UC1), and systemd-udevd spawning a shell (UC4). Confirm snapd is patched.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-05-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-05-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-05-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-05-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-05-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-05-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-05-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(14d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where FolderPath startswith &quot;/run/udev/rules.d/&quot;
-| where FileName endswith &quot;.rules&quot;
-| where InitiatingProcessFileName !in~ (&quot;systemd-udevd&quot;,&quot;udevadm&quot;,&quot;udevd&quot;,&quot;(udev-worker)&quot;)
-| project Timestamp, DeviceName, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
+    <div class="tab-content active" id="art-05-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where FileName == &quot;snap-confine&quot; or FolderPath == &quot;/usr/lib/snapd/snap-confine&quot;
+| where InitiatingProcessFileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;tmux&quot;,&quot;screen&quot;,&quot;gcc&quot;,&quot;cc&quot;)   // normal parent is snapd
+| where AccountName != &quot;root&quot;
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(14d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where TargetFilePath startswith &quot;/run/udev/rules.d/&quot;
-| where TargetFileName endswith &quot;.rules&quot;
-| where not(ActingProcessName has_any (&quot;systemd-udevd&quot;,&quot;udevadm&quot;,&quot;udevd&quot;,&quot;udev-worker&quot;))
-| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName,
-          ActingProcessName, ActingProcessCommandLine, ActorUsername
+    <div class="tab-content" id="art-05-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessName endswith &quot;/snap-confine&quot; or ActingProcessName == &quot;snap-confine&quot;
+| where ParentProcessName has_any (&quot;/bash&quot;,&quot;/sh&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;/python&quot;,&quot;/perl&quot;,&quot;/tmux&quot;,&quot;/screen&quot;)   // normal parent is snapd
+| where ActorUsername != &quot;root&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious udev Rule Dropped in /run/udev/rules.d (CVE-2026-8933)
-id: 7c8d1e60-2a44-4b9f-bd31-9e5a6c02f7a8
-description: Creation of a .rules file under the runtime /run/udev/rules.d directory by a non-udev process, used by CVE-2026-8933 to force systemd-udevd to run commands as root.
+    <div class="tab-content" id="art-05-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: snap-confine Executed From Interactive Shell (CVE-2026-8933)
+id: c1e8b3a2-7d44-4f19-b0a6-9e2c4f7a1b60
+description: Detects the snap-confine setuid/set-capabilities helper spawned directly by an interactive shell or scripting interpreter instead of the snapd daemon, matching the CVE-2026-8933 LPE trigger.
 references:
   - https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
 author: SOC Detection Engineering
 date: 2026/07/23
 tags:
-  - attack.t1547
   - attack.t1068
+  - attack.privilege_escalation
 logsource:
-  category: file_event
   product: linux
+  category: process_creation
 detection:
   selection:
-    TargetFilename|startswith: &#x27;/run/udev/rules.d/&#x27;
-    TargetFilename|endswith: &#x27;.rules&#x27;
-  filter:
-    Image|endswith:
-      - &#x27;/systemd-udevd&#x27;
-      - &#x27;/udevadm&#x27;
-      - &#x27;/udevd&#x27;
-  condition: selection and not filter
+    Image|endswith: &#x27;/snap-confine&#x27;
+    ParentImage|endswith:
+      - &#x27;/bash&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/perl&#x27;
+      - &#x27;/tmux&#x27;
+      - &#x27;/screen&#x27;
+  condition: selection
+falsepositives:
+  - Custom snap wrapper scripts that call snap-confine directly
 level: high</code></pre></div>
-    <div class="tab-content" id="art-05-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd (@auditd.type:PATH OR @auditd.type:CREATE) @file.path:/run/udev/rules.d/*.rules -@process.name:(systemd-udevd OR udevadm OR udevd OR udev-worker)</code></pre></div>
-    <div class="tab-content" id="art-05-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten event_platform=Lin TargetFileName=/^\/run\/udev\/rules\.d\/.*\.rules$/i | NOT (ContextImageFileName=/(systemd-udevd|udevadm|udevd|udev-worker)/i) | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-05-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;/run/udev/rules.d/*&quot; AND Filesystem.file_name=&quot;*.rules&quot; AND Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT process_name IN (&quot;systemd-udevd&quot;,&quot;udevadm&quot;,&quot;udevd&quot;,&quot;(udev-worker)&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;/run/udev/rules.d/*&quot; AND Filesystem.file_name=&quot;*.rules&quot; AND Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT process_name IN (&quot;systemd-udevd&quot;,&quot;udevadm&quot;,&quot;udevd&quot;,&quot;(udev-worker)&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-05-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/snap-confine$/i
+| ParentBaseFileName=/^(bash|sh|dash|zsh|python3?|perl|tmux|screen|gcc|cc)$/i
+| UserName!=root
+| groupBy([aid, ComputerName, UserName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-05-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=snap-confine Processes.parent_process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;tmux&quot;,&quot;screen&quot;,&quot;gcc&quot;,&quot;cc&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=snap-confine Processes.parent_process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;tmux&quot;,&quot;screen&quot;,&quot;gcc&quot;,&quot;cc&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="540017a2a4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="8ab461fe7d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">systemd-udevd spawning a shell or interpreter as root (CVE-2026-8933 code execution)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="540017a2a4" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Unprivileged FUSE filesystem mounted over a /tmp scratch directory (CVE-2026-8933 namespace race)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="8ab461fe7d" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects systemd-udevd (or its udev-worker) executing an interactive shell, scripting interpreter, or recon/networking binary — the final code-execution stage of CVE-2026-8933 where a planted udev rule forces root command execution. Legitimate udev rules rarely invoke bash/id/nc, making a udevd→shell chain highly anomalous.
+    <div class="uc-desc">Hunts the first race in CVE-2026-8933: an unprivileged user mounting a malicious FUSE filesystem over snap-confine&#x27;s freshly created /tmp scratch directory to defeat the mount-namespace isolation. Detects fusermount/mount.fuse execution against a /tmp path by a non-root user.
 
-Rationale: Targets the article&#x27;s stated endpoint: &#x27;forces systemd-udevd to execute arbitrary commands as root&#x27;. A udevd→shell/recon parent-child chain is the smoking-gun that the udev-rule payload fired, and it runs in root context so it is worth alerting.
+Rationale: The article states the attacker &#x27;mounts a malicious FUSE file system over the temporary scratch directory&#x27; under /tmp to bypass mount-namespace isolation. fusermount/mount.fuse against /tmp by a non-root user is the observable form. Tier kept hunting because AppImage self-mounts under /tmp/.mount_* create legitimate FUSE-over-/tmp events.
 
 Cross-checked against:
   • https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
   • https://www.infosecurity-magazine.com/news/ubuntu-snap-confine-local-root-cve/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate custom udev rule using RUN+=/PROGRAM= to invoke a helper shell script for device setup (e.g. printer/USB automation)</li><li>Vendor device-management packages that shell out from udev worker for firmware loading</li><li>Admin-authored udev rules calling chmod/chown to fix device node permissions</li><li>Container runtimes that reparent short-lived helpers under udevd</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;/lib/udev/&quot; and ProcessCommandLine !has &quot;firmware&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the child command line and the udev rule that triggered it (correlate with UC2 write to /run/udev/rules.d); confirm the child is not part of a sanctioned device-automation rule in /etc/udev/rules.d. 2) Contain: isolate the host, kill the udevd child tree, and preserve /run/udev for forensics before reloading udev. 3) Hunt: search for outbound connections or new setuid files created by the udevd child, and check other Ubuntu 24.04/25.10/26.04 hosts for the same udevd→shell pattern.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>AppImage applications self-mounting a squashfs FUSE image under /tmp/.mount_XXXX</li><li>sshfs or rclone FUSE mounts whose mountpoint the user placed under /tmp</li><li>gvfs/gio user-space FUSE mounts during desktop file operations</li><li>Developer testing of a custom FUSE driver in a /tmp workspace</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;/tmp/.mount_&quot; and InitiatingProcessFileName !in~ (&quot;sshfs&quot;,&quot;rclone&quot;,&quot;gvfsd-fuse&quot;,&quot;gio&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Resolve the FUSE mount target path and the backing binary; a mount over a snap scratch dir (e.g. /tmp/snap.* or a snap-confine-created dir) rather than /tmp/.mount_* (AppImage) is suspicious. Check for a snap-confine execution within seconds on the same host/user. 2) CONTAIN: If exploitation likely, unmount, isolate the host, and suspend the user. 3) HUNT: Correlate with UC1 (udev rule drop) and UC4 (systemd-udevd child shell) on the same host to confirm the full chain, and audit snapd version.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-05-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-05-uc2-sentinel">Sentinel KQL</button>
@@ -1595,38 +1591,111 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-05-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-05-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessFileName in~ (&quot;systemd-udevd&quot;,&quot;udevd&quot;,&quot;(udev-worker)&quot;,&quot;udev-worker&quot;)
-| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;chmod&quot;,&quot;chown&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessIntegrityLevel
+| where Timestamp &gt; ago(7d)
+| where AccountName != &quot;root&quot;
+| where (FileName in~ (&quot;fusermount&quot;,&quot;fusermount3&quot;,&quot;mount.fuse&quot;,&quot;mount.fuse3&quot;)) or (FileName == &quot;mount&quot; and ProcessCommandLine has &quot;fuse&quot;)
+| where ProcessCommandLine has &quot;/tmp&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-05-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ParentProcessName has_any (&quot;systemd-udevd&quot;,&quot;udevd&quot;,&quot;udev-worker&quot;)
-| where ActingProcessName has_any (&quot;bash&quot;,&quot;/sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;ncat&quot;,&quot;/nc&quot;,&quot;whoami&quot;,&quot;/id&quot;,&quot;chmod&quot;,&quot;chown&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          ActingProcessCommandLine, ParentProcessName
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername != &quot;root&quot;
+| where (ActingProcessName has_any (&quot;/fusermount&quot;,&quot;/mount.fuse&quot;)) or (ActingProcessName endswith &quot;/mount&quot; and ActingProcessCommandLine has &quot;fuse&quot;)
+| where ActingProcessCommandLine has &quot;/tmp&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: systemd-udevd Spawning Shell or Interpreter (CVE-2026-8933)
-id: b1e4d7a2-5c39-4f8b-8a20-3f6c1d904e57
-description: systemd-udevd or a udev-worker executing a shell/interpreter/recon binary, the root code-execution stage of CVE-2026-8933.
+    <div class="tab-content" id="art-05-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unprivileged FUSE Mount Over /tmp (snap-confine CVE-2026-8933)
+id: 9a4d7f11-2c63-4b8e-8f05-6d1a3e9c72af
+description: Detects fusermount/mount.fuse execution targeting a /tmp path, the namespace-bypass race used in CVE-2026-8933 to keep snap-confine&#x27;s scratch directory attacker-controlled.
 references:
   - https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
 author: SOC Detection Engineering
 date: 2026/07/23
 tags:
   - attack.t1068
-  - attack.t1059.004
+  - attack.privilege_escalation
 logsource:
-  category: process_creation
   product: linux
+  category: process_creation
+detection:
+  selection_bin:
+    Image|endswith:
+      - &#x27;/fusermount&#x27;
+      - &#x27;/fusermount3&#x27;
+      - &#x27;/mount.fuse&#x27;
+      - &#x27;/mount.fuse3&#x27;
+  selection_path:
+    CommandLine|contains: &#x27;/tmp&#x27;
+  condition: selection_bin and selection_path
+falsepositives:
+  - AppImage self-mounts under /tmp/.mount_*
+  - sshfs/rclone mounts pointed at a /tmp target
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-05-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.name:(fusermount OR fusermount3 OR mount.fuse OR mount.fuse3)) @process.command_line:*/tmp* -@user.name:root</code></pre></div>
+    <div class="tab-content" id="art-05-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/(fusermount3?|mount\.fuse3?)$/i
+| regex(&quot;/tmp&quot;, field=CommandLine)
+| UserName!=root
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-05-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;fusermount&quot;,&quot;fusermount3&quot;,&quot;mount.fuse&quot;,&quot;mount.fuse3&quot;) OR (Processes.process_name=mount AND Processes.process=&quot;*fuse*&quot;)) Processes.process=&quot;*/tmp*&quot; Processes.user!=&quot;root&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;fusermount&quot;,&quot;fusermount3&quot;,&quot;mount.fuse&quot;,&quot;mount.fuse3&quot;) OR (Processes.process_name=mount AND Processes.process=&quot;*fuse*&quot;)) Processes.process=&quot;*/tmp*&quot; Processes.user!=&quot;root&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="2e8e58602a" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">systemd-udevd spawning a shell or command interpreter as root (CVE-2026-8933 payload execution)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="2e8e58602a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the final RCE stage of CVE-2026-8933: after a malicious rule is planted in /run/udev/rules.d/, the FUSE mount/unmount cycle forces systemd-udevd to execute the attacker&#x27;s command as root. Detects systemd-udevd as the parent of a shell, interpreter, or hands-on tooling — a pattern legitimate udev RUN+= helpers almost never produce.
+
+Rationale: The article states the exploit &#x27;forces systemd-udevd to execute arbitrary commands as root.&#x27; systemd-udevd (a root daemon) as the parent of a shell/interpreter is the observable root-RCE signal and is extremely rare in benign operation. auditd query omitted because the parent-process (ppid-&gt;comm) join is not reliably expressible on the standard Datadog auditd EXECVE fields.
+
+Cross-checked against:
+  • https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
+  • https://www.infosecurity-magazine.com/news/ubuntu-snap-confine-local-root-cve/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Event Triggered Execution">T1546</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Third-party device driver packages installing udev RUN+= rules that legitimately invoke a shell script on hotplug (e.g. some printer/scanner/VPN adapters)</li><li>Custom in-house udev rules shelling out for device provisioning</li><li>Debugging udev with a RUN+= /bin/sh test rule</li><li>Network-manager or modem-manager helper scripts triggered by udev</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has_any (&quot;NetworkManager&quot;,&quot;ModemManager&quot;,&quot;/lib/udev/&quot;,&quot;/usr/lib/udev/&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the child ProcessCommandLine and identify which udev rule triggered it (check /run/udev/rules.d and /etc/udev/rules.d for a matching RUN+=/IMPORT{program}). An interactive shell or recon/network tool as a systemd-udevd child = confirmed root RCE. 2) CONTAIN: Isolate immediately, kill the process tree, remove the planted rule, and treat the host as root-compromised (rotate local creds/keys). 3) HUNT: Walk back the chain on this host - UC1 (rule drop), UC3 (FUSE over /tmp), UC2 (snap-confine from shell) - and sweep the fleet for the same systemd-udevd-&gt;shell pattern and for unpatched snapd.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-05-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-05-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-05-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-05-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-05-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-05-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName == &quot;systemd-udevd&quot;
+| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;chmod&quot;,&quot;chown&quot;,&quot;cp&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;whoami&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-05-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName endswith &quot;/systemd-udevd&quot; or ParentProcessName == &quot;systemd-udevd&quot;
+| where ActingProcessName has_any (&quot;/bash&quot;,&quot;/sh&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;/python&quot;,&quot;/perl&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/chmod&quot;,&quot;/chown&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/id&quot;,&quot;/whoami&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-05-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: systemd-udevd Spawning Shell/Interpreter As Root (CVE-2026-8933 payload)
+id: 2b7c5e88-9a41-4f6d-bb3e-1c04a7f9d215
+description: Detects systemd-udevd executing a shell, scripting interpreter, or hands-on tool - the root code-execution payload of CVE-2026-8933 delivered via a malicious /run/udev/rules.d rule and a FUSE mount/unmount trigger.
+references:
+  - https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
+  - https://www.infosecurity-magazine.com/news/ubuntu-snap-confine-local-root-cve/
+author: SOC Detection Engineering
+date: 2026/07/23
+tags:
+  - attack.t1068
+  - attack.t1546
+  - attack.privilege_escalation
+logsource:
+  product: linux
+  category: process_creation
 detection:
   selection:
-    ParentImage|endswith:
-      - &#x27;/systemd-udevd&#x27;
-      - &#x27;/udevd&#x27;
-      - &#x27;/udev-worker&#x27;
+    ParentImage|endswith: &#x27;/systemd-udevd&#x27;
     Image|endswith:
       - &#x27;/bash&#x27;
       - &#x27;/sh&#x27;
@@ -1636,127 +1705,58 @@ detection:
       - &#x27;/perl&#x27;
       - &#x27;/nc&#x27;
       - &#x27;/ncat&#x27;
-      - &#x27;/whoami&#x27;
-      - &#x27;/id&#x27;
+      - &#x27;/chmod&#x27;
+      - &#x27;/chown&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
   condition: selection
+falsepositives:
+  - Vendor device RUN+= helpers that legitimately shell out during hotplug
 level: high</code></pre></div>
-    <div class="tab-content" id="art-05-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.parent.name:(systemd-udevd OR udevd OR udev-worker) @process.name:(bash OR sh OR dash OR zsh OR python3 OR python OR perl OR ruby OR nc OR ncat OR id OR whoami OR chmod OR chown)</code></pre></div>
-    <div class="tab-content" id="art-05-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 event_platform=Lin | regex(&quot;(systemd-udevd|udevd|udev-worker)&quot;, field=ParentBaseFileName) | ImageFileName=/\/(bash|sh|dash|zsh|python3|python|perl|ruby|nc|ncat|id|whoami|chmod|chown)$/i | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-05-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;systemd-udevd&quot;,&quot;udevd&quot;,&quot;(udev-worker)&quot;,&quot;udev-worker&quot;) AND Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;chmod&quot;,&quot;chown&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;systemd-udevd&quot;,&quot;udevd&quot;,&quot;(udev-worker)&quot;,&quot;udev-worker&quot;) AND Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;chmod&quot;,&quot;chown&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-05-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^systemd-udevd$/i
+| ImageFileName=/\/(bash|sh|dash|zsh|python3?|perl|nc|ncat|chmod|chown|curl|wget|id|whoami)$/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-05-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=systemd-udevd Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;chmod&quot;,&quot;chown&quot;,&quot;cp&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;whoami&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=systemd-udevd Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;chmod&quot;,&quot;chown&quot;,&quot;cp&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;whoami&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="8670dce0e6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="c0645a37f3" data-platforms="def,sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">FUSE mount over a /tmp scratch directory (CVE-2026-8933 mount-namespace race)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8670dce0e6" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts execution of fusermount/mount.fuse (or mount with a fuse type) targeting a path under /tmp by an unprivileged user — the mount-namespace-bypass primitive in CVE-2026-8933 where the attacker mounts a malicious FUSE filesystem over snap-confine&#x27;s temporary scratch directory. FUSE mounts specifically over /tmp are unusual for legitimate desktop apps.
-
-Rationale: Grounded in the article&#x27;s first race condition: &#x27;mounts a malicious FUSE file system over the temporary scratch directory&#x27; under /tmp. Constraining fusermount/mount.fuse to a /tmp target by a non-root user separates exploit activity from routine sshfs/rclone/gvfs mounts that target ~/.cache or /run.
-
-Cross-checked against:
-  • https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
-  • https://securitybrief.com.au/story/ubuntu-snap-confine-flaw-can-give-attackers-root-access</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Abuse Elevation Control Mechanism: Setuid and Setgid">T1548.001</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>AppImage or Flatpak tooling that FUSE-mounts a bundle under /tmp</li><li>Developer test harnesses mounting fuse filesystems in /tmp scratch areas</li><li>Backup/archive tools (archivemount, ratarmount) pointed at /tmp</li><li>CI runners that mount fuse-overlayfs under /tmp</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;AppImage&quot; and InitiatingProcessFileName !in~ (&quot;flatpak&quot;,&quot;fuse-overlayfs&quot;,&quot;appimaged&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the FUSE mount target path and the mounting user; confirm whether a snap-confine process was active on the host in the same second (correlate with UC1). 2) Contain: isolate the host and unmount the rogue FUSE mount only after capturing its backing process, and suspend the user session. 3) Hunt: look for a subsequent .rules write to /run/udev/rules.d/ (UC2) and a udevd→shell chain (UC3) — three-of-three is a confirmed CVE-2026-8933 chain.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-05-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-05-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-05-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-05-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-05-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-05-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-05-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where FileName in~ (&quot;fusermount&quot;,&quot;fusermount3&quot;,&quot;mount.fuse&quot;,&quot;mount.fuse3&quot;)
-   or (FileName =~ &quot;mount&quot; and ProcessCommandLine has_any (&quot;-t fuse&quot;,&quot;fuse.&quot;))
-| where ProcessCommandLine has &quot;/tmp&quot;
-| where AccountName !in~ (&quot;root&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where (ActingProcessName has_any (&quot;fusermount&quot;,&quot;mount.fuse&quot;))
-     or (ActingProcessName endswith &quot;/mount&quot; and ActingProcessCommandLine has_any (&quot;-t fuse&quot;,&quot;fuse.&quot;))
-| where ActingProcessCommandLine has &quot;/tmp&quot;
-| where ActorUsername !in~ (&quot;root&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          ActingProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: FUSE Mount Over /tmp Scratch Directory (CVE-2026-8933)
-id: 9d2f6a51-7b08-4c1e-a3d9-4e8b2c15f6d0
-description: fusermount/mount.fuse targeting a path under /tmp by a non-root user, the mount-namespace-bypass primitive of CVE-2026-8933.
-references:
-  - https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
-author: SOC Detection Engineering
-date: 2026/07/23
-tags:
-  - attack.t1548.001
-  - attack.t1068
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    Image|endswith:
-      - &#x27;/fusermount&#x27;
-      - &#x27;/fusermount3&#x27;
-      - &#x27;/mount.fuse&#x27;
-      - &#x27;/mount.fuse3&#x27;
-    CommandLine|contains: &#x27;/tmp&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-05-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(fusermount OR fusermount3 OR mount.fuse OR mount.fuse3) @process.command_line:*/tmp/* -@user.name:root</code></pre></div>
-    <div class="tab-content" id="art-05-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 event_platform=Lin ImageFileName=/\/(fusermount3?|mount\.fuse3?)$/i | regex(&quot;/tmp/&quot;, field=CommandLine) | NOT UserName=root | groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-05-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;fusermount&quot;,&quot;fusermount3&quot;,&quot;mount.fuse&quot;,&quot;mount.fuse3&quot;) AND Processes.process=&quot;*/tmp/*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user!=&quot;root&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;fusermount&quot;,&quot;fusermount3&quot;,&quot;mount.fuse&quot;,&quot;mount.fuse3&quot;) AND Processes.process=&quot;*/tmp/*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user!=&quot;root&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="18f975984a" data-platforms="def,sent" data-targets="">
-  <summary>
-    <span class="uc-title">Ubuntu hosts exposed to snap-confine CVE-2026-8933 (vulnerable snapd inventory)</span>
+    <span class="uc-title">Exposure sweep: unpatched snapd / snap-confine vulnerable to CVE-2026-8933</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="18f975984a" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="c0645a37f3" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces managed Ubuntu 24.04/25.10/26.04 endpoints carrying a snapd/snap-confine build affected by CVE-2026-8933 so the SOC can prioritise patch verification. The advisory stresses that patched-then-updated systems can still carry the affected snap-confine variant, so version confirmation — not release age — is required.
+    <div class="uc-desc">Inventory-driven hunt to enumerate Ubuntu Desktop 24.04/25.10/26.04 hosts still carrying a snapd/snap-confine build vulnerable to CVE-2026-8933 (and related prior snap-confine LPEs). The article stresses verifying the installed snapd version rather than trusting release age or prior patch status.
 
-Rationale: Uses the exact CVE id CVE-2026-8933 and the article&#x27;s named affected platforms (Ubuntu Desktop 24.04, 25.10, 26.04) and component (snapd/snap-confine). Provides the exposure denominator that scopes the behavioural UCs above.
+Rationale: Directly implements the article&#x27;s remediation emphasis: enumerate hosts by installed snapd/snap-confine version/CVE rather than release age. Includes the prior snap-confine LPEs the article references (CVE-2026-3888, CVE-2022-3328, CVE-2021-44731) so long-lived unpatched builds surface. Endpoint/Datadog/Falcon queries omitted - this is software-inventory telemetry, not process/file EDR events.
 
 Cross-checked against:
   • https://blog.qualys.com/vulnerabilities-threat-research/2026/07/21/cve-2026-8933-snap-confine-local-privilege-escalation
-  • https://www.infosecurity-magazine.com/news/ubuntu-snap-confine-local-root-cve/</div>
+  • https://discourse.ubuntu.com/t/snapd-multiple-vulnerabilities-fixed/85433</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>TVM catalog lag briefly listing already-patched snapd versions until re-scan</li><li>Ubuntu hosts pinned to an ESM/backport snapd build the KB does not yet map</li><li>Non-desktop server images that ship snapd but are not the affected default-desktop config</li><li>Duplicate device entries for re-imaged hosts</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: cross-check the reported SoftwareVersion against Canonical&#x27;s fixed snapd version rather than trusting release age or prior patch status. 2) Contain: prioritise workstations, developer, and admin endpoints (per the article&#x27;s response scope) for immediate `snap refresh`/apt snapd update and reboot. 3) Hunt: on any host that cannot be patched immediately, deploy UCs 1-4 as monitored detections and review recent snap-confine/udev activity for prior exploitation.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Hosts already patched but TVM catalog lagging on the fixed snapd version (stale scan)</li><li>Non-desktop/server images where snapd is present but the vulnerable snap-confine variant is not shipped</li><li>Containers/WSL images that report snapd but do not run the desktop confinement path</li><li>Air-gapped hosts flagged vulnerable that cannot be reached by the exploit&#x27;s local-user prerequisite</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Rank returned hosts by exposure (internet-facing/dev/admin endpoints first per the article&#x27;s scope note). Confirm the actual installed snapd version on a sample via `snap version`/`dpkg -l snapd` rather than trusting release age. 2) CONTAIN: Push the latest snapd update and verify the fixed version post-install; prioritise multi-user and shared workstations where untrusted local access exists. 3) HUNT: For any host that showed exploitation behaviour (UCs 1-4), treat as compromised and investigate regardless of current patch state.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-05-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-05-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-05-uc4-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-05-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-8933&quot;
-   or (SoftwareName in~ (&quot;snapd&quot;,&quot;snap-confine&quot;) and OSPlatform startswith &quot;Ubuntu&quot;)
-| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName,
-          SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| where CveId in (&quot;CVE-2026-8933&quot;,&quot;CVE-2026-3888&quot;,&quot;CVE-2022-3328&quot;,&quot;CVE-2021-44731&quot;)
+| where SoftwareName has &quot;snapd&quot; or SoftwareName has &quot;snap-confine&quot;
+| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by DeviceName asc</code></pre></div>
     <div class="tab-content" id="art-05-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId == &quot;CVE-2026-8933&quot;
-   or (SoftwareName in~ (&quot;snapd&quot;,&quot;snap-confine&quot;) and OSPlatform startswith &quot;Ubuntu&quot;)
-| summarize arg_max(TimeGenerated, *) by DeviceName, SoftwareName
-| project DeviceName, OSPlatform, OSVersion, SoftwareName, SoftwareVersion,
-          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| where TimeGenerated &gt; ago(1d)
+| where CveId in (&quot;CVE-2026-8933&quot;,&quot;CVE-2026-3888&quot;,&quot;CVE-2022-3328&quot;,&quot;CVE-2021-44731&quot;)
+| where SoftwareName has &quot;snapd&quot; or SoftwareName has &quot;snap-confine&quot;
+| summarize arg_max(TimeGenerated, *) by DeviceName, CveId
+| project TimeGenerated, DeviceName, OSPlatform, OSVersion, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-05-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-8933&quot;,&quot;CVE-2026-3888&quot;,&quot;CVE-2022-3328&quot;,&quot;CVE-2021-44731&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-05-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-8933&quot;,&quot;CVE-2026-3888&quot;,&quot;CVE-2022-3328&quot;,&quot;CVE-2021-44731&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="bf48d37680" data-platforms="def,sent,sigma,spl" data-targets="windows">

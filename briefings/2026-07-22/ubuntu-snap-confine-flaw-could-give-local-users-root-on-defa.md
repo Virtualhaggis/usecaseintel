@@ -37,9 +37,7 @@ The high-severity flaw, tracked as CVE-2026-8933 (CVSS score: 7.8), impacts defa
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1068** — Exploitation for Privilege Escalation
-- **T1548.001** — Abuse Elevation Control Mechanism: Setuid and Setgid
-- **T1547** — Boot or Logon Autostart Execution
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1546** — Event Triggered Execution
 
 ## Kill chain phases observed
 
@@ -47,104 +45,100 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### snap-confine invoked by interactive user shell instead of snapd (CVE-2026-8933 trigger)
+### Non-root write of a .rules file into /run/udev/rules.d/ (snap-confine CVE-2026-8933 AppArmor bypass)
 
-`UC_5_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=snap-confine OR Processes.process_path="/usr/lib/snapd/snap-confine") AND NOT (Processes.parent_process_name IN ("snapd","snap")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where user!="root" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "snap-confine" or FolderPath endswith "/snapd/snap-confine"
-| where InitiatingProcessFileName !in~ ("snapd","snap","systemd")
-| where AccountName !in~ ("root")
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine,
-          ParentProcess = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,
-          ParentAccount = InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Malicious udev .rules file dropped in /run/udev/rules.d/ (CVE-2026-8933 AppArmor bypass)
-
-`UC_5_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="/run/udev/rules.d/*" AND Filesystem.file_name="*.rules" AND Filesystem.action IN ("created","modified") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT process_name IN ("systemd-udevd","udevadm","udevd","(udev-worker)") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") Filesystem.file_path="/run/udev/rules.d/*" Filesystem.file_name="*.rules" Filesystem.user!="root" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(7d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FolderPath startswith "/run/udev/rules.d/"
-| where FileName endswith ".rules"
-| where InitiatingProcessFileName !in~ ("systemd-udevd","udevadm","udevd","(udev-worker)")
-| project Timestamp, DeviceName, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
+| where FolderPath startswith "/run/udev/rules.d/" and FileName endswith ".rules"
+| where InitiatingProcessAccountName !in~ ("root","system")   // runtime udev rules are normally written only by root/systemd
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### systemd-udevd spawning a shell or interpreter as root (CVE-2026-8933 code execution)
+### snap-confine spawned by an interactive user shell instead of snapd (CVE-2026-8933 trigger)
 
-`UC_5_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("systemd-udevd","udevd","(udev-worker)","udev-worker") AND Processes.process_name IN ("bash","sh","dash","zsh","python3","python","perl","ruby","nc","ncat","id","whoami","chmod","chown") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=snap-confine Processes.parent_process_name IN ("bash","sh","dash","zsh","python","python3","perl","tmux","screen","gcc","cc") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("systemd-udevd","udevd","(udev-worker)","udev-worker")
-| where FileName in~ ("bash","sh","dash","zsh","python3","python","perl","ruby","nc","ncat","id","whoami","chmod","chown")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessIntegrityLevel
+| where Timestamp > ago(7d)
+| where FileName == "snap-confine" or FolderPath == "/usr/lib/snapd/snap-confine"
+| where InitiatingProcessFileName in~ ("bash","sh","dash","zsh","python","python3","perl","tmux","screen","gcc","cc")   // normal parent is snapd
+| where AccountName != "root"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### FUSE mount over a /tmp scratch directory (CVE-2026-8933 mount-namespace race)
+### Unprivileged FUSE filesystem mounted over a /tmp scratch directory (CVE-2026-8933 namespace race)
 
-`UC_5_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_5_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("fusermount","fusermount3","mount.fuse","mount.fuse3") AND Processes.process="*/tmp/*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user!="root" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("fusermount","fusermount3","mount.fuse","mount.fuse3") OR (Processes.process_name=mount AND Processes.process="*fuse*")) Processes.process="*/tmp*" Processes.user!="root" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("fusermount","fusermount3","mount.fuse","mount.fuse3")
-   or (FileName =~ "mount" and ProcessCommandLine has_any ("-t fuse","fuse."))
+| where Timestamp > ago(7d)
+| where AccountName != "root"
+| where (FileName in~ ("fusermount","fusermount3","mount.fuse","mount.fuse3")) or (FileName == "mount" and ProcessCommandLine has "fuse")
 | where ProcessCommandLine has "/tmp"
-| where AccountName !in~ ("root")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Ubuntu hosts exposed to snap-confine CVE-2026-8933 (vulnerable snapd inventory)
+### systemd-udevd spawning a shell or command interpreter as root (CVE-2026-8933 payload execution)
 
-`UC_5_15` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_5_14` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=systemd-udevd Processes.process_name IN ("bash","sh","dash","zsh","python","python3","perl","nc","ncat","chmod","chown","cp","curl","wget","id","whoami") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName == "systemd-udevd"
+| where FileName in~ ("bash","sh","dash","zsh","python","python3","perl","nc","ncat","chmod","chown","cp","curl","wget","id","whoami")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Exposure sweep: unpatched snapd / snap-confine vulnerable to CVE-2026-8933
+
+`UC_5_15` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-8933","CVE-2026-3888","CVE-2022-3328","CVE-2021-44731") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-8933"
-   or (SoftwareName in~ ("snapd","snap-confine") and OSPlatform startswith "Ubuntu")
-| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName,
-          SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| where CveId in ("CVE-2026-8933","CVE-2026-3888","CVE-2022-3328","CVE-2021-44731")
+| where SoftwareName has "snapd" or SoftwareName has "snap-confine"
+| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by DeviceName asc
 ```
 
@@ -495,4 +489,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 16 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
