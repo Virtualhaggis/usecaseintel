@@ -12700,11 +12700,11 @@ level: high
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="The Hacker News"
-  data-platforms="datadog,def,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,cloud"
-  data-targets="linux"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="OpenSSL HollowByte Flaw Could Freeze Server Memory with 11-Byte TLS Requests Eleven bytes will make an unpatched OpenSSL server set aside up to 131 KB of memory for a message that never arrives. On the glibc systems Okta tested, that memory is gone until the process restarts. OpenSSL shipped the HollowByte fix in June with no CVE, no advisory, and no changelog entry pointing at it. Okta&#x27;s Red Team, which reported the denial-of-service bug and named it, published the CVE-2026-34183 CVE-2025-66199 T1190 [LLM] Unpatched OpenSSL exposed to HollowByte DoS (pre-2026-06-09 build, no CVE to scan) [LLM] OpenSSL TLS server OOM-kill / memory pressure (HollowByte glibc heap fragmentation) Asset exposure — vulnerability matches article CVE(s)">
+  data-targets="linux,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="OpenSSL HollowByte Flaw Could Freeze Server Memory with 11-Byte TLS Requests Eleven bytes will make an unpatched OpenSSL server set aside up to 131 KB of memory for a message that never arrives. On the glibc systems Okta tested, that memory is gone until the process restarts. OpenSSL shipped the HollowByte fix in June with no CVE, no advisory, and no changelog entry pointing at it. Okta&#x27;s Red Team, which reported the denial-of-service bug and named it, published the CVE-2026-34183 CVE-2025-66199 T1190 [LLM] OpenSSL build missing June 9 HollowByte fix (below 4.0.1/3.6.3/3.5.7/3.4.6/3.0.21) [LLM] OOM-killer terminates TLS-terminating daemon (HollowByte memory exhaustion impact) [LLM] Crash-loop / rapid restart of TLS server process (post-exhaustion instability) Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-17-openssl-hollowbyte-flaw-could-freeze-server-memory-with-11-b" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -12713,7 +12713,7 @@ level: high
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-07-17</span>
-    <span>3 use cases</span>
+    <span>4 use cases</span>
     <span>1 technique</span>
     <span>3 kill-chain phases detected</span>
   </div>
@@ -12764,89 +12764,84 @@ level: high
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unpatched OpenSSL exposed to HollowByte DoS (pre-2026-06-09 build, no CVE to scan)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] OpenSSL build missing June 9 HollowByte fix (below 4.0.1/3.6.3/3.5.7/3.4.6/3.0.21)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] OpenSSL TLS server OOM-kill / memory pressure (HollowByte glibc heap fragmentation)</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] OOM-killer terminates TLS-terminating daemon (HollowByte memory exhaustion impact) · [LLM] Crash-loop / rapid restart of TLS server process (post-exhaustion instability)</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="9801225ca8" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="c11a205f1d" data-platforms="def,sent,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">Unpatched OpenSSL exposed to HollowByte DoS (pre-2026-06-09 build, no CVE to scan)</span>
+    <span class="uc-title">OpenSSL build missing June 9 HollowByte fix (below 4.0.1/3.6.3/3.5.7/3.4.6/3.0.21)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="9801225ca8" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="c11a205f1d" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces OpenSSL installs on branches 3.0/3.4/3.5/3.6/4.0 below the 2026-06-09 fixed releases (3.0.21, 3.4.6, 3.5.7, 3.6.3, 4.0.1) that carry the un-numbered HollowByte TLS length-over-allocation DoS. Because HollowByte shipped with NO CVE/advisory, normal scanners miss it; this hunt keys on the raw version and on CVE-2026-34183 (the QUIC PATH_CHALLENGE DoS that shipped in the SAME June 9 train) as a proxy for a build that predates the fix.
+    <div class="uc-desc">Hunts hosts running OpenSSL builds older than the June 9 fixed releases that silently patched HollowByte. Because HollowByte shipped with no CVE, standard vuln scanners won&#x27;t flag it — so this pivots on the exact fixed version boundaries and, on Sentinel, on the co-shipped CVE-2026-34183 as a proxy for &#x27;has not taken the June 9 release&#x27;.
 
-Rationale: Uses the exact fixed-release list from the article (3.0.21/3.4.6/3.5.7/3.6.3/4.0.1, dated 2026-06-09) and CVE-2026-34183 as a same-train proxy for a pre-fix build. Corroborated that CVE-2026-34183 shipped 2026-06-09 and affects 3.0/3.4/3.5/3.6/4.0 (not 1.1.1/1.0.2) via Red Hat Bugzilla and openssl-library.org, so 1.x is deliberately excluded to avoid FPs on branches whose HollowByte status is unconfirmed.
+Rationale: Uses the exact fixed-release strings the article lists (4.0.1, 3.6.3, 3.5.7, 3.4.6, 3.0.21, all June 9) and the co-shipped CVE-2026-34183/CVE-2025-66199 as a proxy, exactly as the article argues (&#x27;anyone running one of those upstream builds has the fix without being told&#x27;). Cross-checked against Red Hat Bugzilla 2481885 / RHSA-2026:25237 and the Okta writeup.
 
 Cross-checked against:
   • https://sec.okta.com/articles/2026/06/openssl-hollowbtye-a-dos-hiding-in-11-bytes/
   • https://bugzilla.redhat.com/show_bug.cgi?id=2481885
-  • https://openssl-library.org/news/vulnerabilities/
-  • https://www.openwall.com/lists/oss-security/2026/06/09/15</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Endpoint Denial of Service: Application or System Exploitation">T1499.004</span></div>
+  • https://access.redhat.com/errata/RHSA-2026:25237
+  • https://www.securityweek.com/openssl-silently-fixes-hollowbyte-dos-vulnerability/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Distro-backported package (Red Hat/Debian) that reports the old base version string but already contains the patch — the article explicitly warns version reporting lies after a backport</li><li>OpenSSL statically linked into an appliance/container image where TVM reads the wrapper version, not the linked libssl</li><li>Build patched for CVE-2026-34183 but where the maintainer took the QUIC fix only and not the HollowByte TLS commit (rare, but the reason the Defender version-hunt exists alongside the CVE proxy)</li><li>Development / test hosts intentionally pinned to an old OpenSSL for compatibility testing</li><li>4.0.1 hosts still exposed via the un-fixed DTLS path — these will NOT appear in this hunt because the TLS branch is patched</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where EndOfSupportStatus != &quot;EOS&quot; or isempty(EndOfSupportStatus)  // optional: focus on supported builds where a backport is plausible</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each hit confirm whether the host actually terminates TLS/DTLS on an internet-facing port (nginx/haproxy/httpd/stunnel) — an unlinked or loopback-only OpenSSL is low priority; check the package changelog or ask the maintainer whether they rebased on the 2026-06-09 release or cherry-picked PR 30792/30793/30794. 2) Contain: for internet-facing terminators, upgrade to the listed fixed release and restart the service (buffer only frees on process restart); if immediate patch is impossible, front the service with a proxy that fully buffers/validates the ClientHello before backend hand-off. 3) Hunt: pivot to UC &#x27;OpenSSL TLS server OOM/memory-pressure&#x27; on the same hosts to see whether exploitation is already underway, and enumerate sibling hosts sharing the same golden image or package pin.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Red Hat / Debian backported package still reporting its base version even though the maintainer took PR 30792/30793/30794 — version string looks old but is patched (the article&#x27;s core downstream warning)</li><li>OpenSSL bundled inside an appliance/container image where the vendor patched but the embedded version banner wasn&#x27;t bumped</li><li>FIPS-module-only deployments where the affected TLS path may not be exercised</li><li>Statically-linked applications where the reported OpenSSL version is the build-time version, not the runtime library</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVendor !has &quot;Red Hat&quot; and SoftwareVendor !has &quot;Debian&quot;   // optional: backported distros report base version; validate via package changelog instead of dropping outright</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: confirm the host actually terminates external TLS (internet-facing NGINX/Apache/HAProxy/custom TLS daemon) rather than only using OpenSSL as a client library; for Red Hat/Debian hosts, check the package changelog for PR 30792/30793/30794 or a rebase to the June 9 release before treating the version string as authoritative. Step 2 — Contain: prioritise patching internet-facing TLS terminators; where patching lags, front them with a TLS-terminating proxy/WAF that is already on a fixed build. Step 3 — Hunt: pivot to UC-2/UC-3 on the same hosts to see whether memory-exhaustion or crash-loop impact has already occurred.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-77-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-77-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-77-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-77-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Direct build-version hunt — catches HollowByte-vulnerable OpenSSL even where the CVE-2026-34183 proxy is patched but the un-numbered fix was not backported.
-DeviceTvmSoftwareInventory
-| where SoftwareVendor has &quot;openssl&quot; or SoftwareName has &quot;openssl&quot;
-| extend Parts = split(SoftwareVersion, &quot;.&quot;)
-| extend Major = toint(Parts[0]), Minor = toint(Parts[1]), Patch = toint(Parts[2])
-| where (Major == 3 and Minor == 0 and Patch &lt; 21)   // 3.0.x fixed at 3.0.21
-     or (Major == 3 and Minor == 4 and Patch &lt; 6)    // 3.4.x fixed at 3.4.6
-     or (Major == 3 and Minor == 5 and Patch &lt; 7)    // 3.5.x fixed at 3.5.7
-     or (Major == 3 and Minor == 6 and Patch &lt; 3)    // 3.6.x fixed at 3.6.3
-     or (Major == 4 and Minor == 0 and Patch &lt; 1)    // 4.0.x fixed at 4.0.1
-     or (Major == 3 and Minor in (1, 2, 3))          // EOL 3.x branches, no HollowByte fix shipped
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform, EndOfSupportStatus
-| sort by SoftwareVersion asc</code></pre></div>
-    <div class="tab-content" id="art-77-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Proxy hunt: TVM still flags this OpenSSL for CVE-2026-34183 (shipped in the same 2026-06-09 release as the un-numbered HollowByte fix) =&gt; build predates the fix =&gt; also HollowByte-vulnerable.
-DeviceTvmSoftwareVulnerabilities
+    <div class="tab-content active" id="art-77-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+| where Timestamp &gt; ago(1d)
+| where SoftwareName has &quot;openssl&quot;
+| extend Ver = parse_version(SoftwareVersion)
+| where (SoftwareVersion startswith &quot;4.0.&quot; and Ver &lt; parse_version(&quot;4.0.1&quot;))
+     or (SoftwareVersion startswith &quot;3.6.&quot; and Ver &lt; parse_version(&quot;3.6.3&quot;))
+     or (SoftwareVersion startswith &quot;3.5.&quot; and Ver &lt; parse_version(&quot;3.5.7&quot;))
+     or (SoftwareVersion startswith &quot;3.4.&quot; and Ver &lt; parse_version(&quot;3.4.6&quot;))
+     or (SoftwareVersion startswith &quot;3.0.&quot; and Ver &lt; parse_version(&quot;3.0.21&quot;))
+     or (SoftwareVersion startswith &quot;3.1.&quot;) or (SoftwareVersion startswith &quot;3.2.&quot;) or (SoftwareVersion startswith &quot;3.3.&quot;)
+     or (SoftwareVersion startswith &quot;1.&quot;)   // 1.1.1 / 1.0.2 extended-support branches — HollowByte fix status unconfirmed, treat as vulnerable
+| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion
+| sort by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-77-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
 | where SoftwareName has &quot;openssl&quot;
-| where CveId == &quot;CVE-2026-34183&quot;
-| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| where CveId in (&quot;CVE-2026-34183&quot;, &quot;CVE-2025-66199&quot;)   // co-shipped in the same June 9 release as the HollowByte fix; their presence means the host lacks the June 9 build and is therefore also HollowByte-exposed
+| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel
 | sort by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-77-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-77-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-77-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-77-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-34183&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+    <div class="tab-content" id="art-77-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-77-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-77-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-77-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.signature=&quot;*OpenSSL*&quot; OR Vulnerabilities.cve IN (&quot;CVE-2026-34183&quot;,&quot;CVE-2025-66199&quot;)) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity
 | `drop_dm_object_name(Vulnerabilities)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-77-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-34183&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-77-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.signature=&quot;*OpenSSL*&quot; OR Vulnerabilities.cve IN (&quot;CVE-2026-34183&quot;,&quot;CVE-2025-66199&quot;)) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity
 | `drop_dm_object_name(Vulnerabilities)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
 | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="ba5ab15ed3" data-platforms="datadog,sent,sigma,spl" data-targets="linux">
+<details class="uc" data-uc-slug="739f672a4d" data-platforms="datadog,sent,sigma,spl" data-targets="linux">
   <summary>
-    <span class="uc-title">OpenSSL TLS server OOM-kill / memory pressure (HollowByte glibc heap fragmentation)</span>
+    <span class="uc-title">OOM-killer terminates TLS-terminating daemon (HollowByte memory exhaustion impact)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="ba5ab15ed3" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="739f672a4d" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the HollowByte impact signature: an OpenSSL-linked TLS-terminating server (nginx, httpd/apache2, haproxy, stunnel) killed by the Linux OOM-killer or emitting OOM/oom_reaper events. HollowByte&#x27;s distinguishing trait is that freed buffers never return to the kernel on glibc, so RSS climbs and stays climbed until the process is OOM-killed — without ever crossing a connection ceiling.
+    <div class="uc-desc">Detects the Linux Out-of-Memory killer reaping an internet-facing TLS server process, the exact impact Okta demonstrated when a 1 GB NGINX host was OOM-killed with ~547 MB frozen in glibc heap fragments. Targets kernel syslog OOM messages naming TLS-serving processes rather than network volume, because the attack stays under connection ceilings.
 
-Rationale: Keys on the article&#x27;s/Okta&#x27;s stated impact: glibc keeps freed small/medium chunks so RSS &#x27;stays climbed long after the attacker has gone&#x27; and the server is &#x27;OOM-killed&#x27; (nginx named explicitly). The kernel OOM-killer line (&#x27;Out of memory: Killed process N (nginx)&#x27;) plus a TLS-terminator process name is high-fidelity and article-specific. Defender AH has no OOM ActionType for Linux, so defender_kql is intentionally empty; the signal lives in kernel syslog.
+Rationale: Anchors on the article&#x27;s explicit impact — Okta&#x27;s 1 GB NGINX host OOM-killed with 547 MB frozen — using kernel OOM syslog strings scoped to TLS-serving process names. Free of network-volume assumptions, matching the article&#x27;s point that connection-limiting defenses miss this. Corroborated by BleepingComputer and the Okta writeup.
 
 Cross-checked against:
   • https://sec.okta.com/articles/2026/06/openssl-hollowbtye-a-dos-hiding-in-11-bytes/
   • https://www.bleepingcomputer.com/news/security/hollowbyte-ddos-flaw-bloats-openssl-server-memory-with-11-byte-payload/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Endpoint Denial of Service: Application or System Exploitation">T1499.004</span> <span class="ind tech" title="Endpoint Denial of Service: Service Exhaustion Flood">T1499.002</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Endpoint Denial of Service">T1499</span> <span class="ind tech" title="Application Exhaustion Flood">T1499.003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Genuinely undersized VM where nginx/haproxy is OOM-killed under legitimate peak traffic, not attack</li><li>A memory leak in a web-app module (PHP-FPM, mod_php) rather than in OpenSSL&#x27;s handshake buffers</li><li>cgroup/container memory-limit kills (memory.max) on a co-located sidecar that names the TLS process incidentally</li><li>Batch/cron jobs on the same host spiking memory and triggering global OOM that reaps the web server as the largest RSS consumer</li><li>Kubernetes eviction storms that surface as OOM messages referencing the ingress-nginx pod</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SampleMessage !has &quot;memory.max&quot; and SampleMessage !has &quot;cgroup&quot;  // drop container memory-limit kills; keep global/host OOM which matches the HollowByte host-exhaustion pattern</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the OOM victim is an internet-facing TLS terminator and correlate the kill timestamps with a rising RSS trend on that PID (node_exporter/process metrics) and with source-IP diversity of half-open/never-completed TLS connections at the LB — HollowByte holds workers on bodies that never arrive. 2) Contain: restart the affected service to reclaim the frozen glibc arenas (memory only returns on process restart), then patch OpenSSL to the 2026-06-09 fixed release (3.0.21/3.4.6/3.5.7/3.6.3/4.0.1) and, as a stopgap, set MALLOC_ARENA_MAX / front with a fully-buffering proxy and lower handshake timeouts. 3) Hunt: run UC &#x27;Unpatched OpenSSL exposed to HollowByte&#x27; across the fleet to find every host on a pre-fix build, and review perimeter logs for sources opening many TLS connections that send only a tiny ClientHello then go silent.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate traffic spike / memory leak in the web app tier triggering OOM under genuine load (not HollowByte)</li><li>Undersized VM / container with an aggressive cgroup memory limit where OOM-kills are chronic and benign</li><li>A colocated batch/analytics job consuming host memory and getting the TLS worker reaped as collateral</li><li>Buggy third-party NGINX/Apache module leaking memory independent of TLS</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SyslogMessage !has &quot;cgroup&quot; and SyslogMessage !has &quot;memory cgroup out of memory&quot;   // drop container cgroup-limit OOM (per-container, not host memory exhaustion) to keep the host-wide HollowByte signal</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: pull the full OOM report from dmesg/journald to confirm the reaped process was the TLS terminator and capture RSS at kill time; check whether inbound connection counts were normal (HollowByte fingerprint = high RSS with low connection volume). Step 2 — Contain: fail traffic over to a patched node or a TLS-terminating proxy on a fixed build; restart the service to reclaim frozen glibc fragments. Step 3 — Hunt: run UC-1 to confirm the host&#x27;s OpenSSL build predates June 9, and UC-3 to detect the crash/restart loop that typically accompanies repeated OOM events.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-77-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-77-uc1-sigma">Sigma</button>
@@ -12855,48 +12850,98 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-77-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
 | where TimeGenerated &gt; ago(1d)
-| where Facility in (&quot;kern&quot;, &quot;syslog&quot;, &quot;daemon&quot;)
-| where SyslogMessage has &quot;Out of memory&quot; or SyslogMessage has &quot;oom-kill&quot; or SyslogMessage has &quot;oom_reaper&quot;
-| where SyslogMessage has_any (&quot;nginx&quot;, &quot;openssl&quot;, &quot;httpd&quot;, &quot;apache2&quot;, &quot;haproxy&quot;, &quot;stunnel&quot;)
-| summarize KillCount = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), SampleMessage = any(SyslogMessage) by Computer, HostName, Facility
-| where KillCount &gt;= 2   // 2 = repeated OOM of a TLS terminator within the window; single OOMs are common one-offs
-| sort by KillCount desc</code></pre></div>
-    <div class="tab-content" id="art-77-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: OpenSSL TLS Server Killed by Linux OOM-Killer (HollowByte Memory Exhaustion)
-id: 6b2f1d84-9c3a-4e57-bf20-8a1c7d0e5b91
-status: experimental
-description: Detects the Linux OOM-killer terminating an OpenSSL-linked TLS-terminating service (nginx/httpd/haproxy/stunnel), the impact signature of the HollowByte length-over-allocation DoS whose freed buffers never return to the kernel on glibc.
+| where SyslogMessage has_any (&quot;Out of memory: Killed process&quot;, &quot;invoked oom-killer&quot;, &quot;oom_reaper&quot;)
+| where SyslogMessage has_any (&quot;nginx&quot;, &quot;httpd&quot;, &quot;apache2&quot;, &quot;haproxy&quot;, &quot;stunnel&quot;, &quot;envoy&quot;, &quot;openssl&quot;)
+| project TimeGenerated, Computer, HostName, Facility, SeverityLevel, ProcessName, SyslogMessage
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-77-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: OOM-Killer Terminates TLS-Terminating Daemon (HollowByte Impact)
+id: b7e3c1a2-9f84-4d6e-8a1c-2f3e4d5a6b7c
+description: Linux Out-of-Memory killer reaping an internet-facing TLS server process, consistent with OpenSSL HollowByte heap-fragmentation memory exhaustion.
 references:
   - https://thehackernews.com/2026/07/openssl-hollowbyte-flaw-could-freeze.html
   - https://sec.okta.com/articles/2026/06/openssl-hollowbtye-a-dos-hiding-in-11-bytes/
 author: SOC Detection Engineering
-date: 2026/07/18
+date: 2026/07/23
 tags:
   - attack.impact
-  - attack.t1499.004
+  - attack.t1499
+  - attack.t1499.003
 logsource:
   product: linux
+  service: syslog
 detection:
-  keywords_oom:
+  oom_kill:
     - &#x27;Out of memory: Killed process&#x27;
-    - &#x27;oom-kill:&#x27;
+    - &#x27;invoked oom-killer&#x27;
     - &#x27;oom_reaper&#x27;
-  keywords_proc:
+  tls_service:
     - &#x27;nginx&#x27;
     - &#x27;httpd&#x27;
     - &#x27;apache2&#x27;
     - &#x27;haproxy&#x27;
     - &#x27;stunnel&#x27;
-    - &#x27;openssl&#x27;
-  condition: keywords_oom and keywords_proc
-falsepositives:
-  - Legitimate memory pressure on undersized hosts unrelated to TLS
-  - Application memory leaks in the web server itself
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-77-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (&quot;Out of memory: Killed process&quot; OR oom-kill OR oom_reaper) (nginx OR httpd OR apache2 OR haproxy OR stunnel OR openssl)</code></pre></div>
-    <div class="tab-content" id="art-77-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=syslog OR sourcetype=linux_messages_syslog OR source=&quot;/var/log/messages&quot; OR source=&quot;/var/log/syslog&quot;) (&quot;Out of memory: Killed process&quot; OR &quot;oom-kill:&quot; OR &quot;oom_reaper&quot;) (nginx OR openssl OR httpd OR apache2 OR haproxy OR stunnel OR &quot;nginx: worker&quot;)
-| stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sampleMessage by host
-| where count &gt;= 2
+    - &#x27;envoy&#x27;
+  condition: oom_kill and tls_service
+level: high</code></pre></div>
+    <div class="tab-content" id="art-77-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (&quot;Out of memory: Killed process&quot; OR &quot;invoked oom-killer&quot; OR oom_reaper) (nginx OR httpd OR apache2 OR haproxy OR stunnel OR envoy OR openssl)</code></pre></div>
+    <div class="tab-content" id="art-77-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=syslog OR sourcetype=linux_messages_syslog OR sourcetype=&quot;linux:messages&quot;) (&quot;Out of memory: Killed process&quot; OR &quot;invoked oom-killer&quot; OR &quot;oom_reaper&quot;) (nginx OR httpd OR apache2 OR haproxy OR stunnel OR envoy OR openssl)
+| stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sampleMessages by host
 | sort - count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="d5aaff52af" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Crash-loop / rapid restart of TLS server process (post-exhaustion instability)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="d5aaff52af" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects a TLS-terminating daemon (NGINX/Apache/HAProxy/stunnel) respawning abnormally often, the downstream instability after HollowByte fragments the heap and workers get OOM-reaped and restarted. Healthy web servers spawn a fixed worker pool once; a burst of respawns within minutes indicates a crash-loop.
+
+Rationale: Targets the observable aftermath the article describes — NGINX workers OOM-killed and respawned — via process-creation burst counting and systemd restart messages scoped to the named TLS daemons. Distinct log-source pivot from UC-2 (process telemetry vs kernel OOM strings). Thresholds are commented and tunable per environment.
+
+Cross-checked against:
+  • https://sec.okta.com/articles/2026/06/openssl-hollowbtye-a-dos-hiding-in-11-bytes/
+  • https://www.bleepingcomputer.com/news/security/hollowbyte-ddos-flaw-bloats-openssl-server-memory-with-11-byte-payload/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Endpoint Denial of Service">T1499</span> <span class="ind tech" title="Application or System Exploitation">T1499.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate config-reload / log-rotation loops (systemctl reload, logrotate postrotate) that respawn workers</li><li>Blue/green or autoscaling deploys cycling the service repeatedly in a short window</li><li>CI/CD or configuration-management (Ansible/Puppet) runs restarting the daemon on each converge</li><li>A crash-loop caused by a bad config or unrelated module bug rather than memory exhaustion</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SampleCmd !has &quot;-s reload&quot; and SampleCmd !has &quot;-t&quot;   // Defender: drop graceful nginx reloads/config-tests, keep unexpected worker respawns</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: inspect journalctl for the service to distinguish clean reloads (SIGHUP, exit 0) from crashes (SEGV/ABRT/OOM, non-zero exit) and correlate the restart timestamps with UC-2 OOM events on the same host. Step 2 — Contain: if crashes are exploitation-driven, drain the node and shift TLS termination to a patched host; disable auto-restart backoff temporarily to preserve a core dump for analysis. Step 3 — Hunt: confirm the OpenSSL build via UC-1 and review RSS trend on the host to see whether memory &#x27;stays climbed&#x27; after connections close — the HollowByte glibc-fragmentation signature.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-77-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-77-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-77-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-77-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-77-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-77-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(6h)
+| where FileName in~ (&quot;nginx&quot;, &quot;httpd&quot;, &quot;apache2&quot;, &quot;haproxy&quot;, &quot;stunnel&quot;)
+| summarize SpawnCount = count(), SampleCmd = any(ProcessCommandLine), Parents = make_set(InitiatingProcessFileName, 5), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, DeviceId, FileName, bin(Timestamp, 10m)
+| where SpawnCount &gt; 20   // healthy TLS daemons spawn a fixed worker pool once; &gt;20 respawns/10min = crash-loop
+| sort by SpawnCount desc</code></pre></div>
+    <div class="tab-content" id="art-77-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(6h)
+| where SyslogMessage has &quot;systemd&quot; or ProcessName == &quot;systemd&quot;
+| where SyslogMessage has_any (&quot;nginx.service&quot;, &quot;httpd.service&quot;, &quot;apache2.service&quot;, &quot;haproxy.service&quot;, &quot;stunnel.service&quot;)
+| where SyslogMessage has_any (&quot;Main process exited&quot;, &quot;Failed with result&quot;, &quot;Scheduled restart&quot;, &quot;start-limit-hit&quot;, &quot;core-dumped&quot;, &quot;signal=SEGV&quot;, &quot;signal=ABRT&quot;)
+| summarize RestartEvents = count(), Sample = any(SyslogMessage), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by Computer, HostName, bin(TimeGenerated, 10m)
+| where RestartEvents &gt; 5   // repeated systemd restarts of a TLS service within 10 min = crash-loop
+| sort by RestartEvents desc</code></pre></div>
+    <div class="tab-content" id="art-77-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (nginx.service OR httpd.service OR apache2.service OR haproxy.service OR stunnel.service) (&quot;Main process exited&quot; OR core-dumped OR &quot;signal=SEGV&quot; OR &quot;signal=ABRT&quot; OR &quot;Scheduled restart&quot;)</code></pre></div>
+    <div class="tab-content" id="art-77-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ImageFileName=/\/(nginx|httpd|apache2|haproxy|stunnel)$/i
+| groupBy([aid, ComputerName, ImageFileName], function=count(as=SpawnCount))
+| SpawnCount &gt; 20</code></pre></div>
+    <div class="tab-content" id="art-77-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-77-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-77-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-77-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;nginx&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;haproxy&quot;,&quot;stunnel&quot;) by Processes.dest, Processes.process_name, _time span=10m
+| `drop_dm_object_name(Processes)`
+| where count &gt; 20
+| sort - count</code></pre><pre class="spl-mode-body" id="art-77-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;nginx&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;haproxy&quot;,&quot;stunnel&quot;) by Processes.dest, Processes.process_name, _time span=10m
+| `drop_dm_object_name(Processes)`
+| where count &gt; 20
+| sort - count</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -12914,11 +12959,11 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-77-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-77-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-77-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-77-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-77-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-77-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-77-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-77-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -12927,7 +12972,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-77-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-77-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -12939,12 +12984,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-77-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-77-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-77-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-77-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-77-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-77-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-77-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-77-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-34183&quot;, &quot;CVE-2025-66199&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-77-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-77-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-34183&quot;, &quot;CVE-2025-66199&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve

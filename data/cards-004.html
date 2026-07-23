@@ -5694,9 +5694,9 @@ DeviceFileEvents
   data-sources="Cisco Talos"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network,web"
-  data-targets="azure,m365,vcs,windows"
+  data-targets="azure,m365,windows"
   data-uc-count="18" data-llm-uc-count="7"
-  data-search="UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially motivated campaign Cisco Talos is disclosing UAT-11795, a sophisticated, Russian-speaking, financially motivated adversary that has been conducting a malicious campaign targeting users in the U.S. and Europe since at least June 2025.  T1027 T1047 T1053.005 T1059.001 T1176 T1190 T1204.002 T1204.004 T1218.005 T1555.003 [LLM] UAT-11795 weaponized HTA downloader via mshta.exe to campaign staging domains [LLM] Trojanized installer (MobaXterm/WebEx/DBeaver/FACEIT) spawning Python bytecode loader [LLM] Starland RAT / WLDR C2 beaconing to UAT-11795 domains and staging IPs [LLM] Starland RAT Polygon smart-contract fallback C2 resolution (Eth_call to polygon-rpc.com) [LLM] UAT-11795 Telegram bot beacon (skuefq_bot / komandastuk_bot) from endpoint process [LLM] WLDR/Starland persistence via scheduled task named PythonLauncher-XXX [LLM] Starland RAT browser-credential and cryptocurrency-wallet harvesting by Python interpreter Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Crypto-wallet file/keystore access by non-wallet process Scheduled task created with suspicious image / encoded args Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially">
+  data-search="UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially motivated campaign Cisco Talos is disclosing UAT-11795, a sophisticated, Russian-speaking, financially motivated adversary that has been conducting a malicious campaign targeting users in the U.S. and Europe since at least June 2025.  T1027 T1047 T1053.005 T1059.001 T1176 T1190 T1204.002 T1204.004 T1218.005 T1555.003 [LLM] UAT-11795 mshta.exe remote HTA downloader from staging domains (ClickFix) [LLM] Trojanized MobaXterm/WebEx/DBeaver/FACEIT installer spawning Python (Starland loader) [LLM] Starland RAT shell command downloading WLDR PowerShell stager / shellcode from staging paths [LLM] Starland RAT C2 beacon to campaign domains and Polygon smart-contract fallback resolver [LLM] Starland/CastleStealer exfil beacon to Telegram bot API from non-Telegram process [LLM] Starland RAT / CastleStealer browser-credential and crypto-wallet enumeration by Python [LLM] UAT-11795 scheduled-task persistence via New-ScheduledTask &#x27;PythonLauncher-XXX&#x27; Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Crypto-wallet file/keystore access by non-wallet process Scheduled task created with suspicious image / encoded args Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-16-uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-imp" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -5755,33 +5755,32 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] UAT-11795 weaponized HTA downloader via mshta.exe to campaign staging domains · Phishing-link click correlated to endpoint execution</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] UAT-11795 mshta.exe remote HTA downloader from staging domains (ClickFix) · Phishing-link click correlated to endpoint execution</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Article-specific behavioural hunt — UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Trojanized installer (MobaXterm/WebEx/DBeaver/FACEIT) spawning Python bytecode loader · [LLM] WLDR/Starland persistence via scheduled task named PythonLauncher-XXX · Suspicious browser extension installation · Scheduled task created with suspicious image / encoded args · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Starland RAT / WLDR C2 beaconing to UAT-11795 domains and staging IPs · [LLM] Starland RAT Polygon smart-contract fallback C2 resolution (Eth_call to polygon-rpc.com) · [LLM] UAT-11795 Telegram bot beacon (skuefq_bot / komandastuk_bot) from endpoint process · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Starland RAT browser-credential and cryptocurrency-wallet harvesting by Python interpreter · Infostealer — non-browser process accessing browser cookie/login DBs · Crypto-wallet file/keystore access by non-wallet process</em></div></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Trojanized MobaXterm/WebEx/DBeaver/FACEIT installer spawning Python (Starland loader) · [LLM] UAT-11795 scheduled-task persistence via New-ScheduledTask &#x27;PythonLauncher-XXX&#x27; · Suspicious browser extension installation · Scheduled task created with suspicious image / encoded args · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Starland RAT shell command downloading WLDR PowerShell stager / shellcode from staging paths · [LLM] Starland RAT C2 beacon to campaign domains and Polygon smart-contract fallback resolver · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Starland/CastleStealer exfil beacon to Telegram bot API from non-Telegram process · [LLM] Starland RAT / CastleStealer browser-credential and crypto-wallet enumeration by Python · Infostealer — non-browser process accessing browser cookie/login DBs · Crypto-wallet file/keystore access by non-wallet process</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="15d8a93778" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="55881bac42" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">UAT-11795 weaponized HTA downloader via mshta.exe to campaign staging domains</span>
+    <span class="uc-title">UAT-11795 mshta.exe remote HTA downloader from staging domains (ClickFix)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15d8a93778" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="55881bac42" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts mshta.exe launching a remote HTA from the UAT-11795 staging domains (ClickFix entry point) or fetching any remote HTTP payload. This is the article&#x27;s documented initial-access vector that pulls down the trojanized installers.
+    <div class="uc-desc">Hunts the campaign entry point where mshta.exe executes a weaponized HTA hosted on UAT-11795 staging infrastructure (zynaris.io / web-devtools.com / eorthopaedics.com / sastoro.com), typically via a ClickFix lure. Surfaces the parent and any child installer/script it spawns.
 
-Rationale: Anchors on the article&#x27;s explicit initial-access vector (mshta.exe HTA downloader via ClickFix) combined with the confirmed staging domains from the Talos IOC bundle; mshta reaching out to a remote URL is inherently rare in enterprise environments.
+Rationale: Anchored on mshta.exe with the four named staging domains plus a fallback remote-.hta clause; Talos names mshta.exe HTA download as the ClickFix entry point. Domains corroborated by BleepingComputer and Talos IOC set.
 
 Cross-checked against:
   • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
-  • https://github.com/Cisco-Talos/IOCs/blob/main/2026/07/new-starland-rat-and-WLDR-implant-campaign.txt
-  • https://cyberpress.org/uat-11795-spreads-dual-backdoors/</div>
+  • https://www.bleepingcomputer.com/news/security/russian-hackers-trojanize-webex-zoom-apps-to-push-starland-malware/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="System Binary Proxy Execution: Mshta">T1218.005</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy internal LOB apps distributed as intranet HTA files launched via mshta</li><li>IT automation/logon scripts that call mshta against an internal file share</li><li>Security tooling that emulates mshta for testing</li><li>Developer machines running local HTA prototypes over http://localhost</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;http://localhost&quot;,&quot;http://127.0.0.1&quot;) or InitiatingProcessFolderPath has &quot;\\SysWOW64\\CCM\\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full mshta command line and the parent process; confirm the URL resolves to a campaign staging domain/IP and whether a child installer or python.exe spawned within 60s. 2) Contain: network-isolate the host, block the staging domains/IPs at proxy/DNS, and kill the mshta and any spawned Python/installer processes. 3) Hunt: sweep for the downloaded trojanized installers (MobaXterm_v26.1.exe, WebEx_Client.exe, dbeaver-ce-windows-x86_64.exe, FaceitInstaller_x64.exe), scheduled tasks named PythonLauncher-XXX, and outbound beacons to the RAT C2 domains.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate internal apps that still ship .hta files launched via mshta from an intranet URL</li><li>Software deployment tooling that wraps HTA-based installers</li><li>Security researchers detonating samples on a lab host</li><li>Admin scripts referencing one of the staging domains after they are sinkholed/reused</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;msiexec.exe&quot;,&quot;ccmexec.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full mshta.exe command line and the parent (expect browser/explorer/cmd from a ClickFix paste). Resolve the HTA URL and check DeviceNetworkEvents for the download. 2) Contain: isolate the host; block the four staging domains at proxy/DNS; kill the mshta and any spawned installer/python process. 3) Hunt: pivot on the host for trojanized installers (MobaXterm/WebEx/DBeaver/FACEIT), python.exe children, and outbound to the campaign C2 domains.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
@@ -5793,26 +5792,23 @@ Cross-checked against:
     <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
 | where FileName =~ &quot;mshta.exe&quot;
-| where AccountName !endswith &quot;$&quot;
-| where ProcessCommandLine has_any (&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;web-devtools.com&quot;,&quot;zynaris.io&quot;,&quot;aipythondevs.com&quot;,&quot;windowscreenrepairnearme.com&quot;,&quot;alphabitcapital.info&quot;)
-    or ProcessCommandLine matches regex @&quot;(?i)mshta(\.exe)?[\s&quot;&quot;&#x27;]+https?://&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| where ProcessCommandLine has_any (&quot;zynaris.io&quot;,&quot;web-devtools.com&quot;,&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;)
+    or (ProcessCommandLine has &quot;.hta&quot; and ProcessCommandLine has_any (&quot;http://&quot;,&quot;https://&quot;))
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(30d)
 | where EventID == 4688
 | where NewProcessName endswith &quot;\\mshta.exe&quot;
-| where CommandLine has_any (&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;web-devtools.com&quot;,&quot;zynaris.io&quot;,&quot;aipythondevs.com&quot;,&quot;windowscreenrepairnearme.com&quot;,&quot;alphabitcapital.info&quot;)
-    or CommandLine matches regex @&quot;(?i)mshta(\.exe)?[\s&quot;&quot;&#x27;]+https?://&quot;
+| where CommandLine has_any (&quot;zynaris.io&quot;,&quot;web-devtools.com&quot;,&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;)
+    or (CommandLine has &quot;.hta&quot; and CommandLine has_any (&quot;http://&quot;,&quot;https://&quot;))
 | project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 mshta.exe HTA Downloader to Campaign Staging Domains
-id: 8c1f2d64-7a3b-4e19-9d21-3a44e2f0b7a1
-status: experimental
-description: Detects mshta.exe launching a remote HTA/HTTP payload from UAT-11795 Starland RAT staging domains.
+    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 mshta.exe Remote HTA Downloader from Staging Domains
+id: 6f1c8b2a-4d3e-4a91-9c02-7e5b1a9f0d11
+description: Detects mshta.exe executing a remote HTA referencing UAT-11795 staging infrastructure or any remote HTA URL, consistent with the ClickFix-delivered downloader.
 references:
   - https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
-  - https://github.com/Cisco-Talos/IOCs/blob/main/2026/07/new-starland-rat-and-WLDR-implant-campaign.txt
 author: SOC Detection Engineering
 date: 2026/07/23
 tags:
@@ -5824,49 +5820,46 @@ logsource:
 detection:
   selection_img:
     Image|endswith: &#x27;\mshta.exe&#x27;
-  selection_c2:
+  selection_domains:
     CommandLine|contains:
+      - &#x27;zynaris.io&#x27;
+      - &#x27;web-devtools.com&#x27;
       - &#x27;eorthopaedics.com&#x27;
       - &#x27;sastoro.com&#x27;
-      - &#x27;web-devtools.com&#x27;
-      - &#x27;zynaris.io&#x27;
-      - &#x27;aipythondevs.com&#x27;
-      - &#x27;windowscreenrepairnearme.com&#x27;
-      - &#x27;alphabitcapital.info&#x27;
+  selection_remote_hta:
+    CommandLine|contains: &#x27;.hta&#x27;
+    CommandLine|contains:
       - &#x27;http://&#x27;
       - &#x27;https://&#x27;
-  condition: selection_img and selection_c2
-falsepositives:
-  - Internal admin scripts invoking mshta against a legitimate intranet HTA
+  condition: selection_img and (selection_domains or selection_remote_hta)
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\mshta.exe OR *\\MSHTA.EXE) (@CommandLine:(*eorthopaedics.com* OR *sastoro.com* OR *web-devtools.com* OR *zynaris.io* OR *aipythondevs.com* OR *windowscreenrepairnearme.com* OR *alphabitcapital.info*) OR @CommandLine:(*http\://* OR *https\://*))</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/mshta\.exe$/i
-| regex(&quot;(?i)(eorthopaedics\.com|sastoro\.com|web-devtools\.com|zynaris\.io|aipythondevs\.com|windowscreenrepairnearme\.com|alphabitcapital\.info|https?://)&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe AND (Processes.process=&quot;*eorthopaedics.com*&quot; OR Processes.process=&quot;*sastoro.com*&quot; OR Processes.process=&quot;*web-devtools.com*&quot; OR Processes.process=&quot;*zynaris.io*&quot; OR Processes.process=&quot;*aipythondevs.com*&quot; OR Processes.process=&quot;*windowscreenrepairnearme.com*&quot; OR Processes.process=&quot;*alphabitcapital.info*&quot; OR Processes.process=&quot;*http*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe AND (Processes.process=&quot;*eorthopaedics.com*&quot; OR Processes.process=&quot;*sastoro.com*&quot; OR Processes.process=&quot;*web-devtools.com*&quot; OR Processes.process=&quot;*zynaris.io*&quot; OR Processes.process=&quot;*aipythondevs.com*&quot; OR Processes.process=&quot;*windowscreenrepairnearme.com*&quot; OR Processes.process=&quot;*alphabitcapital.info*&quot; OR Processes.process=&quot;*http*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)`</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\mshta.exe OR *\\MSHTA.EXE) (@CommandLine:(*zynaris.io* OR *web-devtools.com* OR *eorthopaedics.com* OR *sastoro.com*) OR (@CommandLine:*.hta* AND @CommandLine:*http*))</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\mshta\.exe$/i
+| CommandLine=/(zynaris\.io|web-devtools\.com|eorthopaedics\.com|sastoro\.com|\.hta.*https?:\/\/)/i
+| groupBy([aid, ComputerName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=mshta.exe) AND (Processes.process=&quot;*zynaris.io*&quot; OR Processes.process=&quot;*web-devtools.com*&quot; OR Processes.process=&quot;*eorthopaedics.com*&quot; OR Processes.process=&quot;*sastoro.com*&quot; OR (Processes.process=&quot;*.hta*&quot; AND (Processes.process=&quot;*http://*&quot; OR Processes.process=&quot;*https://*&quot;))) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=mshta.exe) AND (Processes.process=&quot;*zynaris.io*&quot; OR Processes.process=&quot;*web-devtools.com*&quot; OR Processes.process=&quot;*eorthopaedics.com*&quot; OR Processes.process=&quot;*sastoro.com*&quot; OR (Processes.process=&quot;*.hta*&quot; AND (Processes.process=&quot;*http://*&quot; OR Processes.process=&quot;*https://*&quot;))) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="8cb9917045" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="9da40c49f7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Trojanized installer (MobaXterm/WebEx/DBeaver/FACEIT) spawning Python bytecode loader</span>
+    <span class="uc-title">Trojanized MobaXterm/WebEx/DBeaver/FACEIT installer spawning Python (Starland loader)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8cb9917045" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="9da40c49f7" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects UAT-11795 trojanized NSIS installers spawning python.exe/pythonw.exe (byte-compiled Starland RAT loader) or creating the PythonLauncher-XXX artifact. Anchored on the exact impersonated installer file names from the article.
+    <div class="uc-desc">Detects a UAT-11795 trojanized installer (legit software name from a staging domain) launching python.exe/pythonw.exe or a PythonLauncher-XXX helper, which is the NSIS-bundled byte-compiled Python loader that decodes Starland RAT into memory. Legitimate MobaXterm/WebEx/DBeaver/FACEIT installers do not spawn Python.
 
-Rationale: Uses the four exact impersonated installer file names from the article table plus the PythonLauncher-{3 random characters} artifact (code block 3), giving a legit-software-name parent spawning a Python interpreter — a signature UAT-11795 pattern.
+Rationale: Uses the four exact trojanized installer filenames from Talos Table 1 as parents and python child / PythonLauncher-{3 char} pattern from Code Block 3 — legitimate installs of these tools never spawn Python, so parent+child pairing is high fidelity.
 
 Cross-checked against:
   • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
-  • https://securityaffairs.com/195532/malware/new-russian-campaign-uses-fake-webex-and-zoom-installers-to-deploy-starland-rat.html
-  • https://github.com/Cisco-Talos/IOCs/blob/main/2026/07/new-starland-rat-and-WLDR-implant-campaign.txt</div>
+  • https://securityaffairs.com/195532/malware/new-russian-campaign-uses-fake-webex-and-zoom-installers-to-deploy-starland-rat.html</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate DBeaver/MobaXterm installs that bundle a real Python runtime for plugins</li><li>Corporate software-packaging pipelines that wrap installers and launch Python post-install scripts</li><li>Data-science workstations where Python is spawned by legitimately-named tooling</li><li>Signed vendor installers whose embedded Python runs a first-launch config task</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFolderPath has_any (&quot;\\Program Files\\DBeaver&quot;,&quot;\\Program Files\\Mobatek&quot;,&quot;\\Program Files (x86)\\Webex&quot;) and InitiatingProcessTokenElevation != &quot;TokenElevationTypeFull&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: verify the installer&#x27;s digital signature and origin URL (FileOriginUrl) — legit MobaXterm/WebEx/DBeaver are code-signed and downloaded from vendor domains, not eorthopaedics/web-devtools/zynaris. Inspect the spawned Python command line and loaded .pyc. 2) Contain: isolate host, quarantine the installer and any %TEMP% Python payloads, kill python processes. 3) Hunt: check for a PythonLauncher-XXX scheduled task, outbound C2 to the RAT domains, and CastleStealer/Remcos secondary payloads dropped in %TEMP%.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer legitimately packaging one of these tools whose installer wrapper genuinely calls an embedded Python (rare)</li><li>Renamed benign python distribution named PythonLauncher-xyz by an unrelated tool</li><li>Malware sandbox replaying the installer</li><li>EDR misattributing a Python IDE child to the installer parent during rapid process reuse</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !has &quot;\\JetBrains\\&quot; and InitiatingProcessFolderPath !has &quot;\\Python\\&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the installer&#x27;s origin (download URL / OriginUrl) and whether it came from a campaign staging domain; hash the installer and the python image. 2) Contain: isolate host, quarantine the installer and any %TEMP% payloads, terminate the python process tree. 3) Hunt: look for in-memory Starland RAT beacons to windowscreenrepairnearme.com/aipythondevs.com and Telegram bot beacons from the same host.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
@@ -5877,22 +5870,21 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where AccountName !endswith &quot;$&quot;
 | where (InitiatingProcessFileName in~ (&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;) and FileName in~ (&quot;python.exe&quot;,&quot;pythonw.exe&quot;))
-    or FileName matches regex @&quot;(?i)PythonLauncher-[a-z0-9]{3}&quot;
-    or ProcessCommandLine matches regex @&quot;(?i)PythonLauncher-[a-z0-9]{3}&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, ProcessCommandLine, FolderPath, SHA256
+    or FileName matches regex @&quot;(?i)^PythonLauncher-[a-zA-Z0-9]{3}\.exe$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(30d)
-| where (ParentProcessName has_any (&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;) and ActingProcessName has_any (&quot;python.exe&quot;,&quot;pythonw.exe&quot;))
-    or ActingProcessCommandLine matches regex @&quot;(?i)PythonLauncher-[a-z0-9]{3}&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine
+| where EventID == 4688
+| extend ParentName = tostring(split(ParentProcessName, &quot;\\&quot;)[-1])
+| where (ParentName in~ (&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;) and NewProcessName has_any (&quot;\\python.exe&quot;,&quot;\\pythonw.exe&quot;))
+    or NewProcessName matches regex @&quot;(?i)\\PythonLauncher-[a-zA-Z0-9]{3}\.exe$&quot;
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Trojanized Installer Spawning Python Bytecode Loader
-id: 2b7e9a10-4c8d-4f33-b5e2-9f1c6d0a2e88
-status: experimental
-description: Detects UAT-11795 trojanized NSIS installers (MobaXterm/WebEx/DBeaver/FACEIT) spawning a Python interpreter that loads the Starland RAT.
+    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Trojanized Installer Spawning Python (Starland Loader)
+id: a2d4f7c9-1b6e-4c05-8f3a-2e9b7d1a4c88
+description: Detects a named trojanized software installer launching python.exe/pythonw.exe or a PythonLauncher-XXX helper, the byte-compiled Python loader for Starland RAT.
 references:
   - https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
 author: SOC Detection Engineering
@@ -5904,50 +5896,46 @@ logsource:
   category: process_creation
   product: windows
 detection:
-  selection_installer:
+  selection_installer_python:
     ParentImage|endswith:
       - &#x27;\MobaXterm_v26.1.exe&#x27;
       - &#x27;\WebEx_Client.exe&#x27;
       - &#x27;\dbeaver-ce-windows-x86_64.exe&#x27;
       - &#x27;\FaceitInstaller_x64.exe&#x27;
-  selection_child:
     Image|endswith:
       - &#x27;\python.exe&#x27;
       - &#x27;\pythonw.exe&#x27;
-  selection_task:
-    CommandLine|re: &#x27;(?i)PythonLauncher-[a-z0-9]{3}&#x27;
-  condition: (selection_installer and selection_child) or selection_task
-falsepositives:
-  - Genuine MobaXterm/WebEx/DBeaver builds that legitimately embed a Python runtime
+  selection_launcher:
+    Image|contains: &#x27;\PythonLauncher-&#x27;
+  condition: selection_installer_python or selection_launcher
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 ((@ParentImage:(*\\MobaXterm_v26.1.exe OR *\\WebEx_Client.exe OR *\\dbeaver-ce-windows-x86_64.exe OR *\\FaceitInstaller_x64.exe) AND @Image:(*\\python.exe OR *\\pythonw.exe OR *\\Python.exe)) OR @CommandLine:*PythonLauncher-*)</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 ((@ParentImage:(*\\MobaXterm_v26.1.exe OR *\\WebEx_Client.exe OR *\\dbeaver-ce-windows-x86_64.exe OR *\\FaceitInstaller_x64.exe) AND @Image:(*\\python.exe OR *\\pythonw.exe OR *\\PYTHON.EXE)) OR @Image:(*\\PythonLauncher-* OR *\\pythonlauncher-*))</code></pre></div>
     <div class="tab-content" id="art-103-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| (ParentBaseFileName=/(MobaXterm_v26\.1|WebEx_Client|dbeaver-ce-windows-x86_64|FaceitInstaller_x64)\.exe$/i ImageFileName=/python(w)?\.exe$/i) OR CommandLine=/PythonLauncher-[a-z0-9]{3}/i
+| (ParentBaseFileName=/(MobaXterm_v26\.1|WebEx_Client|dbeaver-ce-windows-x86_64|FaceitInstaller_x64)\.exe$/i AND ImageFileName=/\\pythonw?\.exe$/i) OR ImageFileName=/\\PythonLauncher-[a-z0-9]{3}\.exe$/i
 | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process_name IN (&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;) AND Processes.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;)) OR Processes.process=&quot;*PythonLauncher-*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process_name IN (&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;) AND Processes.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;)) OR Processes.process=&quot;*PythonLauncher-*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;) AND Processes.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;)) OR Processes.process_name=&quot;PythonLauncher-*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;) AND Processes.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;)) OR Processes.process_name=&quot;PythonLauncher-*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="8a44ee846c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+<details class="uc" data-uc-slug="15d5962ac8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Starland RAT / WLDR C2 beaconing to UAT-11795 domains and staging IPs</span>
+    <span class="uc-title">Starland RAT shell command downloading WLDR PowerShell stager / shellcode from staging paths</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8a44ee846c" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15d5962ac8" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects outbound resolution/connection to the confirmed UAT-11795 C2 and staging infrastructure (eorthopaedics.com, sastoro.com, aipythondevs.com, windowscreenrepairnearme.com, web-devtools.com and the associated IPs). Covers both RAT C2 and PowerShell-stage staging.
+    <div class="uc-desc">Detects the Starland RAT &#x27;shellexecute&#x27; intermediate payload where powershell/cmd downloads the WLDR C2 stager or x32/x64 shellcode from UAT-11795 staging URLs (/feed/, /alpha/, /starlandfox, /x32remka, /dopfile on web-devtools.com/eorthopaedics.com/sastoro.com). Targets the exact URL routes rather than generic download behaviour.
 
-Rationale: Directly ships the confirmed C2/staging domains and resolved IPs from the Cisco-Talos IOC bundle (second-source validated), covering both RAT C2 (windowscreenrepairnearme.com, aipythondevs.com) and PowerShell staging (eorthopaedics.com, sastoro.com, web-devtools.com).
+Rationale: Uses the exact staging URL routes Talos documents (/starlandfox, /x32remka, /dopfile shellcode paths and /feed/ /alpha/ stager paths) combined with a downloader interpreter — these routes are unique to the campaign so an in-cmdline hit is near-zero FP.
 
 Cross-checked against:
-  • https://github.com/Cisco-Talos/IOCs/blob/main/2026/07/new-starland-rat-and-WLDR-implant-campaign.txt
   • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
-  • https://radar.offseq.com/threat/novel-starland-rat-and-bespoke-wldr-c2-implant-dep-e6ab953c0d52f095</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Data Encoding: Standard Encoding">T1132.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>eorthopaedics.com and windowscreenrepairnearme.com are hijacked legitimate domains — a user browsing the real site triggers a benign hit</li><li>Threat-intel/sandbox VMs or researchers deliberately resolving the IOCs</li><li>Shared-hosting IPs where a benign co-tenant site is contacted</li><li>Security scanners validating the IOC list</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;) or RemoteIP in (&quot;104.248.233.104&quot;,&quot;192.81.216.250&quot;,&quot;74.114.119.201&quot;,&quot;178.255.126.39&quot;,&quot;193.149.176.254&quot;,&quot;185.238.191.234&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process — a browser hitting a hijacked domain is lower priority; python.exe/pythonw.exe/powershell.exe/mshta.exe beaconing (esp. to /feed/, /alpha/, /command paths) is high priority. 2) Contain: block the domains and IPs at DNS/proxy/firewall and isolate any host where a non-browser process made the connection. 3) Hunt: pivot on the initiating process for the full Starland/WLDR chain — trojanized installer parent, PythonLauncher-XXX task, Telegram beacons, and Polygon fallback resolution.</div></details>
+  • https://cyberpress.org/uat-11795-spreads-dual-backdoors/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A benign internal script referencing a &#x27;/feed/&#x27; or &#x27;/alpha/&#x27; path on an unrelated host (path tokens alone, without the campaign domains)</li><li>Domain reuse after takedown by a legitimate service</li><li>Analyst reproduction of the download during IR</li><li>URL-shortener expansion logging that echoes the path</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the resolved URL and downloaded artifact; determine if a WLDR PowerShell stager or raw shellcode blob landed in %TEMP%. 2) Contain: isolate host, block the staging domains, kill the PowerShell/cmd process and remove dropped stager. 3) Hunt: search for follow-on Runspace/encoded PowerShell, CastleStealer (.NET) or Remcos artifacts, and beacons to the primary Starland C2 domains.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
@@ -5956,71 +5944,79 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-103-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;aipythondevs.com&quot;,&quot;windowscreenrepairnearme.com&quot;,&quot;web-devtools.com&quot;,&quot;zynaris.io&quot;,&quot;alphabitcapital.info&quot;)
-    or RemoteIP in (&quot;104.248.233.104&quot;,&quot;192.81.216.250&quot;,&quot;74.114.119.201&quot;,&quot;178.255.126.39&quot;,&quot;193.149.176.254&quot;,&quot;185.238.191.234&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;)
+| where ProcessCommandLine has_any (&quot;web-devtools.com&quot;,&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;/starlandfox&quot;,&quot;/x32remka&quot;,&quot;/dopfile&quot;,&quot;/feed/&quot;,&quot;/alpha/&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
+    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(30d)
-| where DnsQuery has_any (&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;aipythondevs.com&quot;,&quot;windowscreenrepairnearme.com&quot;,&quot;web-devtools.com&quot;,&quot;zynaris.io&quot;,&quot;alphabitcapital.info&quot;)
-| project TimeGenerated, SrcIpAddr, SrcHostname, DnsQuery, DnsResponseName
+| where EventID == 4688
+| where NewProcessName has_any (&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;,&quot;\\cmd.exe&quot;,&quot;\\mshta.exe&quot;)
+| where CommandLine has_any (&quot;web-devtools.com&quot;,&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;/starlandfox&quot;,&quot;/x32remka&quot;,&quot;/dopfile&quot;,&quot;/feed/&quot;,&quot;/alpha/&quot;)
+| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Starland/WLDR C2 Domain Resolution
-id: 4d9a1c72-5b6e-4a80-8c14-77d2e3f9b512
-status: experimental
-description: Detects DNS resolution of UAT-11795 Starland RAT / WLDR C2 and staging domains.
+    <div class="tab-content" id="art-103-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 WLDR Stager / Shellcode Download via PowerShell from Staging Paths
+id: c7e2b1d4-9a83-4f60-b1c5-8d02e6a4f7b2
+description: Detects powershell/cmd/mshta downloading the WLDR PowerShell stager or x32/x64 shellcode from UAT-11795 staging URL routes.
 references:
-  - https://github.com/Cisco-Talos/IOCs/blob/main/2026/07/new-starland-rat-and-WLDR-implant-campaign.txt
+  - https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
 author: SOC Detection Engineering
 date: 2026/07/23
 tags:
-  - attack.t1071.001
+  - attack.t1059.001
+  - attack.t1105
 logsource:
-  category: dns
+  category: process_creation
   product: windows
 detection:
-  selection:
-    QueryName:
+  selection_proc:
+    Image|endswith:
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\mshta.exe&#x27;
+  selection_url:
+    CommandLine|contains:
+      - &#x27;web-devtools.com&#x27;
       - &#x27;eorthopaedics.com&#x27;
       - &#x27;sastoro.com&#x27;
-      - &#x27;aipythondevs.com&#x27;
-      - &#x27;windowscreenrepairnearme.com&#x27;
-      - &#x27;web-devtools.com&#x27;
-      - &#x27;zynaris.io&#x27;
-      - &#x27;alphabitcapital.info&#x27;
-  condition: selection
-falsepositives:
-  - eorthopaedics.com and windowscreenrepairnearme.com are likely hijacked legitimate domains; benign visits to their web content are possible
+      - &#x27;/starlandfox&#x27;
+      - &#x27;/x32remka&#x27;
+      - &#x27;/dopfile&#x27;
+      - &#x27;/feed/&#x27;
+      - &#x27;/alpha/&#x27;
+  condition: selection_proc and selection_url
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationHostname:(eorthopaedics.com OR sastoro.com OR aipythondevs.com OR windowscreenrepairnearme.com OR web-devtools.com OR zynaris.io OR alphabitcapital.info) OR @DestinationIp:(104.248.233.104 OR 192.81.216.250 OR 74.114.119.201 OR 178.255.126.39 OR 193.149.176.254 OR 185.238.191.234))</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(eorthopaedics|sastoro|aipythondevs|windowscreenrepairnearme|web-devtools|zynaris|alphabitcapital)\.(com|io|info)$/i
-| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;aipythondevs.com&quot;,&quot;windowscreenrepairnearme.com&quot;,&quot;web-devtools.com&quot;,&quot;zynaris.io&quot;,&quot;alphabitcapital.info&quot;) by DNS.src DNS.query | `drop_dm_object_name(DNS)`</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;aipythondevs.com&quot;,&quot;windowscreenrepairnearme.com&quot;,&quot;web-devtools.com&quot;,&quot;zynaris.io&quot;,&quot;alphabitcapital.info&quot;) by DNS.src DNS.query | `drop_dm_object_name(DNS)`</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\powershell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\cmd.exe OR *\\CMD.EXE OR *\\mshta.exe) @CommandLine:(*web-devtools.com* OR *eorthopaedics.com* OR *sastoro.com* OR *\/starlandfox* OR *\/x32remka* OR *\/dopfile* OR *\/feed\/* OR *\/alpha\/*)</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\(powershell|pwsh|cmd|mshta)\.exe$/i
+| CommandLine=/(web-devtools\.com|eorthopaedics\.com|sastoro\.com|\/starlandfox|\/x32remka|\/dopfile|\/feed\/|\/alpha\/)/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;)) AND (Processes.process=&quot;*web-devtools.com*&quot; OR Processes.process=&quot;*eorthopaedics.com*&quot; OR Processes.process=&quot;*sastoro.com*&quot; OR Processes.process=&quot;*/starlandfox*&quot; OR Processes.process=&quot;*/x32remka*&quot; OR Processes.process=&quot;*/dopfile*&quot; OR Processes.process=&quot;*/feed/*&quot; OR Processes.process=&quot;*/alpha/*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;)) AND (Processes.process=&quot;*web-devtools.com*&quot; OR Processes.process=&quot;*eorthopaedics.com*&quot; OR Processes.process=&quot;*sastoro.com*&quot; OR Processes.process=&quot;*/starlandfox*&quot; OR Processes.process=&quot;*/x32remka*&quot; OR Processes.process=&quot;*/dopfile*&quot; OR Processes.process=&quot;*/feed/*&quot; OR Processes.process=&quot;*/alpha/*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="26945e087e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="92991be38c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Starland RAT Polygon smart-contract fallback C2 resolution (Eth_call to polygon-rpc.com)</span>
+    <span class="uc-title">Starland RAT C2 beacon to campaign domains and Polygon smart-contract fallback resolver</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="26945e087e" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="92991be38c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the RAT&#x27;s blockchain resilience mechanism: a non-browser endpoint process querying polygon-rpc.com (JSON-RPC eth_call) or a process referencing the actor&#x27;s Polygon contract address to retrieve the XOR-encrypted fallback C2 domain.
+    <div class="uc-desc">Detects host connectivity to UAT-11795 C2/staging domains (windowscreenrepairnearme.com, aipythondevs.com, eorthopaedics.com, sastoro.com) and the Starland RAT blockchain fallback: an Eth_call to polygon-rpc.com that resolves the XOR-encrypted backup C2 from contract 0x6ae382ed2154cc84c6672e4e908cd2c69c1b35ba.
 
-Rationale: Targets the article&#x27;s distinctive blockchain C2-resilience mechanism — Eth_call (code block 1) to the Polygon contract 0x6ae382ed2154cc84c6672e4e908cd2c69c1b35ba via polygon-rpc.com (confirmed by gbhackers/securityaffairs) — where a python/powershell process, not a wallet app, doing web3 JSON-RPC is highly anomalous on a corporate endpoint.
+Rationale: Domains are the primary Starland RAT C2 (windowscreenrepairnearme/aipythondevs) plus dual C2 (eorthopaedics/sastoro); polygon-rpc.com is the Eth_call fallback resolver corroborated by external reporting (contract 0x6ae382ed... / selector 0xc659f3b8). A workstation resolving polygon-rpc.com is itself anomalous outside dev/crypto users.
 
 Cross-checked against:
-  • https://gbhackers.com/starland-rat-steals-browser-credentials/
-  • https://securityaffairs.com/195532/malware/new-russian-campaign-uses-fake-webex-and-zoom-installers-to-deploy-starland-rat.html
-  • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Service: Dead Drop Resolver">T1102.001</span> <span class="ind tech" title="Dynamic Resolution">T1568</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer/finance workstations running a legitimate web3 wallet (MetaMask desktop, Exodus) or dApp</li><li>Blockchain analytics or trading tooling that queries polygon-rpc.com</li><li>Browser extensions proxied through a helper process resolving the RPC endpoint</li><li>Researcher sandbox detonating the sample</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !has &quot;\\AppData\\Local\\Programs\\&quot; or InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;pythonw.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the initiating process is not a sanctioned crypto app; python.exe/pythonw.exe/powershell.exe resolving polygon-rpc.com is a strong Starland RAT signal — capture the process tree. 2) Contain: isolate host, block polygon-rpc.com egress for non-wallet processes, and capture memory to recover the decrypted fallback C2 domain. 3) Hunt: extract the fallback domain from the eth_call response/memory and add it to the C2 domain hunt; check for the primary RAT beacons and installer chain.</div></details>
+  • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
+  • https://www.bleepingcomputer.com/news/security/russian-hackers-trojanize-webex-zoom-apps-to-push-starland-malware/
+  • https://gbhackers.com/starland-rat-steals-browser-credentials/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Dynamic Resolution: Fast Flux / Dead Drop Resolver">T1568.001</span> <span class="ind tech" title="Web Service: Dead Drop Resolver">T1102.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developers or crypto-trading users legitimately querying polygon-rpc.com from wallets/web3 apps</li><li>A staging domain (eorthopaedics.com likely hijacked) still serving legitimate content to some users</li><li>Threat-intel/DNS-sinkhole appliances resolving the IOCs for enrichment</li><li>Security scanners probing the domains</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;msedge.exe&quot;,&quot;chrome.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;) or RemoteUrl !has &quot;polygon-rpc.com&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the InitiatingProcess for the connection — python.exe/pythonw.exe or a trojanized installer strongly confirms Starland; a browser/wallet app to polygon-rpc.com is likely benign. 2) Contain: isolate host, sinkhole/block all five domains, capture memory for the in-memory Starland RAT. 3) Hunt: enumerate other hosts resolving the same domains and check for CastleStealer/Remcos and Telegram exfil from those hosts.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
@@ -6029,80 +6025,65 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-103-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let contract = &quot;0x6ae382ed2154cc84c6672e4e908cd2c69c1b35ba&quot;;
-DeviceNetworkEvents
+    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl has &quot;polygon-rpc.com&quot;
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;metamask.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
-| union (
-    DeviceProcessEvents
-    | where Timestamp &gt; ago(30d)
-    | where ProcessCommandLine has contract or (ProcessCommandLine has &quot;eth_call&quot; and ProcessCommandLine has &quot;polygon&quot;)
-    | project Timestamp, DeviceName, InitiatingProcessFileName=FileName, InitiatingProcessFolderPath=FolderPath, InitiatingProcessCommandLine=ProcessCommandLine, RemoteUrl=&quot;&quot;, RemoteIP=&quot;&quot;
-)
+| where RemoteUrl has_any (&quot;windowscreenrepairnearme.com&quot;,&quot;aipythondevs.com&quot;,&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;polygon-rpc.com&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
+    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
 | where TimeGenerated &gt; ago(30d)
-| where DnsQuery has &quot;polygon-rpc.com&quot;
-| project TimeGenerated, SrcIpAddr, SrcHostname, DnsQuery
+| where Name has_any (&quot;windowscreenrepairnearme.com&quot;,&quot;aipythondevs.com&quot;,&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;polygon-rpc.com&quot;)
+| project TimeGenerated, Computer, ClientIP, Name, QueryType, ResultCode
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Starland RAT Polygon Fallback C2 Resolution
-id: 7e0b3c95-1a4d-4c62-9f88-2d55a1e6f0c3
-status: experimental
-description: Detects a non-browser endpoint process resolving polygon-rpc.com, used by Starland RAT to fetch an XOR-encrypted fallback C2 via eth_call.
+    <div class="tab-content" id="art-103-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Starland RAT C2 and Polygon Fallback Resolver Beacon
+id: e91b3f28-6c47-4ad2-9b1e-4f7c0a2d8e63
+description: Detects DNS/connectivity to UAT-11795 C2 domains and to polygon-rpc.com used by Starland RAT for its blockchain-based fallback C2 resolution.
 references:
-  - https://gbhackers.com/starland-rat-steals-browser-credentials/
   - https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
 author: SOC Detection Engineering
 date: 2026/07/23
 tags:
+  - attack.t1071.001
   - attack.t1102.001
-  - attack.t1568
 logsource:
   category: dns
   product: windows
 detection:
   selection:
-    QueryName: &#x27;polygon-rpc.com&#x27;
-  filter_browser:
-    Image|endswith:
-      - &#x27;\chrome.exe&#x27;
-      - &#x27;\msedge.exe&#x27;
-      - &#x27;\firefox.exe&#x27;
-      - &#x27;\brave.exe&#x27;
-      - &#x27;\opera.exe&#x27;
-  condition: selection and not filter_browser
-falsepositives:
-  - Legitimate crypto/web3 desktop wallets or dApp clients on the host
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(polygon-rpc.com OR *.polygon-rpc.com) -@Image:(*\\chrome.exe OR *\\msedge.exe OR *\\firefox.exe OR *\\brave.exe OR *\\opera.exe OR *\\MetaMask.exe)</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/polygon-rpc\.com$/i
-| NOT (ContextImageFileName=/(chrome|msedge|firefox|brave|opera|metamask)\.exe$/i)
-| groupBy([aid, ComputerName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;polygon-rpc.com&quot; by DNS.src DNS.query | `drop_dm_object_name(DNS)`</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;polygon-rpc.com&quot; by DNS.src DNS.query | `drop_dm_object_name(DNS)`</code></pre></div></div>
+    QueryName|contains:
+      - &#x27;windowscreenrepairnearme.com&#x27;
+      - &#x27;aipythondevs.com&#x27;
+      - &#x27;eorthopaedics.com&#x27;
+      - &#x27;sastoro.com&#x27;
+      - &#x27;polygon-rpc.com&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:(3 OR 22) @QueryName:(*windowscreenrepairnearme.com* OR *aipythondevs.com* OR *eorthopaedics.com* OR *sastoro.com* OR *polygon-rpc.com*)</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(windowscreenrepairnearme\.com|aipythondevs\.com|eorthopaedics\.com|sastoro\.com|polygon-rpc\.com)$/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN (&quot;windowscreenrepairnearme.com&quot;,&quot;aipythondevs.com&quot;,&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;polygon-rpc.com&quot;) OR DNS.query=&quot;*.windowscreenrepairnearme.com&quot; OR DNS.query=&quot;*.aipythondevs.com&quot;) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN (&quot;windowscreenrepairnearme.com&quot;,&quot;aipythondevs.com&quot;,&quot;eorthopaedics.com&quot;,&quot;sastoro.com&quot;,&quot;polygon-rpc.com&quot;) OR DNS.query=&quot;*.windowscreenrepairnearme.com&quot; OR DNS.query=&quot;*.aipythondevs.com&quot;) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="35cfd93a28" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="78d587318d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">UAT-11795 Telegram bot beacon (skuefq_bot / komandastuk_bot) from endpoint process</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="35cfd93a28" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Starland/CastleStealer exfil beacon to Telegram bot API from non-Telegram process</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="78d587318d" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the implant&#x27;s execution-notification beacons to the actor&#x27;s Telegram bots by matching the unique bot IDs/usernames or api.telegram.org/bot paths in an endpoint process command line. Used to exfil victim fingerprints and crypto-wallet inventories.
+    <div class="uc-desc">Detects UAT-11795 implant status/exfil beacons to api.telegram.org (actor bots skuefq_bot/8384531459 and komandastuk_bot/7993597060) initiated by python, PowerShell, mshta or one of the trojanized installers rather than a real Telegram client. Also flags the raw bot IDs if they surface in a command line.
 
-Rationale: Anchors on the two unique actor-controlled Telegram bot IDs (8384531459/skuefq_bot, 7993597060/komandastuk_bot) named in the article — these are non-guessable, campaign-specific values that yield near-zero false positives.
+Rationale: Talos names two actor Telegram bots (8384531459/skuefq_bot, 7993597060/komandastuk_bot) receiving machine-fingerprint and wallet-inventory beacons; scoping api.telegram.org to script interpreters / trojanized installers avoids benign Telegram Desktop traffic. Sentinel left empty: Sentinel DnsEvents cannot filter by initiating process and api.telegram.org DNS alone is too noisy.
 
 Cross-checked against:
   • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
-  • https://cybermagazine.com/news/cisco-talos-what-is-starland-rat-malware</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Service: Bidirectional Communication">T1102.002</span> <span class="ind tech" title="Exfiltration Over Web Service: Exfiltration to Code Repository">T1567.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal DevOps/alerting scripts that legitimately post to Telegram (but using different bot tokens, not these IDs)</li><li>Security researcher replaying the sample</li><li>A red-team emulation reusing the published IOCs</li><li>Threat-intel enrichment tooling embedding the bot IDs in test payloads</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the process and parent — a python/powershell process embedding these exact bot IDs is a confirmed compromise; capture the beacon body (machine fingerprint / wallet inventory). 2) Contain: isolate host, block api.telegram.org egress for the process, revoke exposed credentials/wallet secrets. 3) Hunt: the beacon means data staging occurred — hunt for wallet/browser credential access, the trojanized installer, and CastleStealer/Remcos secondary payloads.</div></details>
+  • https://cyberpress.org/uat-11795-spreads-dual-backdoors/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over Web Service">T1567</span> <span class="ind tech" title="Web Service">T1102</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legit PowerShell/python automation using a Telegram bot for internal notifications/monitoring</li><li>Developers testing Telegram bot integrations</li><li>A Python app bundling Telegram notification features</li><li>IT scripts pushing alerts to a corporate Telegram channel</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !has &quot;\\Telegram Desktop\\&quot; and InitiatingProcessCommandLine !has &quot;corp-notify&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the initiating process, its folder path and command line; a python/pythonw child of a trojanized installer beaconing to Telegram is a confirmed exfil. 2) Contain: isolate host, block api.telegram.org egress for the affected process class, capture memory before killing. 3) Hunt: assume credential/wallet theft — force-reset the user&#x27;s browser-stored and crypto credentials and hunt other hosts beaconing the same bot IDs.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc4-sentinel">Sentinel KQL</button>
@@ -6111,70 +6092,77 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-103-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-103-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where AccountName !endswith &quot;$&quot;
-| where ProcessCommandLine has_any (&quot;8384531459&quot;,&quot;7993597060&quot;,&quot;skuefq_bot&quot;,&quot;komandastuk_bot&quot;,&quot;api.telegram.org/bot&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where RemoteUrl has &quot;api.telegram.org&quot;
+| where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;pythonw.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;cmd.exe&quot;,&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
 | where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where CommandLine has_any (&quot;8384531459&quot;,&quot;7993597060&quot;,&quot;skuefq_bot&quot;,&quot;komandastuk_bot&quot;,&quot;api.telegram.org/bot&quot;)
-| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
+| where RemoteUrl has &quot;api.telegram.org&quot;
+| where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;pythonw.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;cmd.exe&quot;,&quot;MobaXterm_v26.1.exe&quot;,&quot;WebEx_Client.exe&quot;,&quot;dbeaver-ce-windows-x86_64.exe&quot;,&quot;FaceitInstaller_x64.exe&quot;)
+| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Telegram Bot Beacon Command Line
-id: a1c58e33-6d2f-4b90-9e77-14b0f2a6c9d4
-status: experimental
-description: Detects UAT-11795 implant beaconing to actor-controlled Telegram bots via unique bot IDs/usernames in a process command line.
+    <div class="tab-content" id="art-103-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Telegram Bot Exfil Beacon from Non-Telegram Process
+id: 2b8d6a41-7f39-4c1a-8e05-9d3b2f6c1e77
+description: Detects connections to api.telegram.org initiated by python/PowerShell/mshta or a trojanized installer, consistent with UAT-11795 Telegram bot beacons (8384531459 / 7993597060).
 references:
   - https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
 author: SOC Detection Engineering
 date: 2026/07/23
 tags:
-  - attack.t1102.002
-  - attack.t1567.001
+  - attack.t1567
+  - attack.t1102
 logsource:
-  category: process_creation
+  category: network_connection
   product: windows
 detection:
   selection:
-    CommandLine|contains:
-      - &#x27;8384531459&#x27;
-      - &#x27;7993597060&#x27;
-      - &#x27;skuefq_bot&#x27;
-      - &#x27;komandastuk_bot&#x27;
-      - &#x27;api.telegram.org/bot&#x27;
+    Initiated: &#x27;true&#x27;
+    DestinationHostname|contains: &#x27;api.telegram.org&#x27;
+    Image|endswith:
+      - &#x27;\python.exe&#x27;
+      - &#x27;\pythonw.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\mshta.exe&#x27;
+      - &#x27;\MobaXterm_v26.1.exe&#x27;
+      - &#x27;\WebEx_Client.exe&#x27;
+      - &#x27;\dbeaver-ce-windows-x86_64.exe&#x27;
+      - &#x27;\FaceitInstaller_x64.exe&#x27;
   condition: selection
-falsepositives:
-  - Legitimate internal automation using Telegram bot notifications (different bot IDs)
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @CommandLine:(*8384531459* OR *7993597060* OR *skuefq_bot* OR *komandastuk_bot* OR *api.telegram.org/bot*)</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 CommandLine=/(8384531459|7993597060|skuefq_bot|komandastuk_bot|api\.telegram\.org\/bot)/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*8384531459*&quot; OR Processes.process=&quot;*7993597060*&quot; OR Processes.process=&quot;*skuefq_bot*&quot; OR Processes.process=&quot;*komandastuk_bot*&quot; OR Processes.process=&quot;*api.telegram.org/bot*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-103-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*8384531459*&quot; OR Processes.process=&quot;*7993597060*&quot; OR Processes.process=&quot;*skuefq_bot*&quot; OR Processes.process=&quot;*komandastuk_bot*&quot; OR Processes.process=&quot;*api.telegram.org/bot*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:*api.telegram.org* @Image:(*\\python.exe OR *\\pythonw.exe OR *\\powershell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\mshta.exe OR *\\MobaXterm_v26.1.exe OR *\\WebEx_Client.exe OR *\\dbeaver-ce-windows-x86_64.exe OR *\\FaceitInstaller_x64.exe)</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/api\.telegram\.org$/i
+| ContextImageFileName=/\\(pythonw?|powershell|pwsh|mshta|MobaXterm_v26\.1|WebEx_Client|dbeaver-ce-windows-x86_64|FaceitInstaller_x64)\.exe$/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*api.telegram.org*&quot; OR Processes.process=&quot;*8384531459*&quot; OR Processes.process=&quot;*7993597060*&quot; OR Processes.process=&quot;*skuefq_bot*&quot; OR Processes.process=&quot;*komandastuk_bot*&quot;) AND Processes.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;cmd.exe&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*api.telegram.org*&quot; OR Processes.process=&quot;*8384531459*&quot; OR Processes.process=&quot;*7993597060*&quot; OR Processes.process=&quot;*skuefq_bot*&quot; OR Processes.process=&quot;*komandastuk_bot*&quot;) AND Processes.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;cmd.exe&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="b8bcfffee6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="701d4bd9f0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">WLDR/Starland persistence via scheduled task named PythonLauncher-XXX</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b8bcfffee6" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Starland RAT / CastleStealer browser-credential and crypto-wallet enumeration by Python</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="701d4bd9f0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects creation of a scheduled task whose name matches the UAT-11795 PythonLauncher-{3 random characters} convention, via PowerShell New-ScheduledTask or schtasks /create. This is the campaign&#x27;s persistence mechanism for the Python RAT / WLDR loader.
+    <div class="uc-desc">Detects the Python-based Starland RAT (or CastleStealer) touching browser credential stores and cryptocurrency wallet directories — Chrome/Edge/Firefox &#x27;Login Data&#x27;, extension wallet stores, and desktop wallets (Exodus/Electrum/Ethereum). Scoped to python.exe/pythonw.exe initiators to stay campaign-specific rather than generic wallet access.
 
-Rationale: Combines the article&#x27;s persistence code block (New-ScheduledTask) with the unique PythonLauncher-{3 random characters} task-name convention (code block 3), yielding a campaign-specific persistence signature rather than a generic scheduled-task rule.
+Rationale: Article states Starland RAT steals browser data and crypto wallets and CastleStealer targets 40+ wallets; scoping browser/wallet path access to a python initiator keeps this tied to the Python-based Starland RAT rather than tripping on browsers themselves (which would be a generic rule).
 
 Cross-checked against:
   • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
-  • https://cyberpress.org/uat-11795-spreads-dual-backdoors/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Scheduled Task">T1053.005</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate Python distribution or app that registers a &#x27;PythonLauncher&#x27; task (verify the random 3-char suffix pattern)</li><li>Admin scripting that creates ad-hoc Python-related tasks</li><li>Software deployment tooling registering interpreter tasks</li><li>Developer setup scripts scheduling Python jobs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFolderPath has &quot;\\Program Files\\Python&quot; and InitiatingProcessTokenElevation == &quot;TokenElevationTypeFull&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: dump the scheduled-task action/trigger — UAT-11795 tasks launch python.exe/pythonw.exe or the WLDR PowerShell loader from %TEMP%/%APPDATA%; confirm the random-suffixed name. 2) Contain: disable and delete the task (schtasks /delete), isolate the host, kill the associated interpreter processes. 3) Hunt: trace the creating parent back to the trojanized installer/mshta chain and hunt the RAT C2 beacons and stealer file access on the same host.</div></details>
+  • https://gbhackers.com/starland-rat-steals-browser-credentials/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Credentials from Web Browsers">T1555.003</span> <span class="ind tech" title="Credentials from Password Stores: Keychain/Wallets">T1555.001</span> <span class="ind tech" title="Data from Local System">T1005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legit Python tooling/backup scripts that copy browser profiles</li><li>Data-migration utilities written in Python touching wallet folders</li><li>Security tooling / DLP agents built on Python enumerating credential stores</li><li>A developer&#x27;s crypto-related Python project accessing local wallet files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !has &quot;\\Python3&quot; or InitiatingProcessCommandLine !has &quot;backup&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the python process lineage (child of a trojanized installer / PythonLauncher-XXX = confirmed). Note which wallet/browser stores were touched. 2) Contain: isolate host; treat all browser-saved and wallet credentials as compromised and begin rotation; capture memory. 3) Hunt: correlate with Telegram exfil beacons and C2 to the campaign domains from the same host and timeframe.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc5-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc5-sentinel">Sentinel KQL</button>
@@ -6183,114 +6171,28 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-103-uc5-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where AccountName !endswith &quot;$&quot;
-| where (FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;) and ProcessCommandLine has &quot;New-ScheduledTask&quot;)
-    or (FileName =~ &quot;schtasks.exe&quot; and ProcessCommandLine has &quot;/create&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)PythonLauncher-[a-z0-9]{3}&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where (NewProcessName endswith &quot;\\powershell.exe&quot; and CommandLine has &quot;New-ScheduledTask&quot;)
-    or (NewProcessName endswith &quot;\\schtasks.exe&quot; and CommandLine has &quot;/create&quot;)
-| where CommandLine matches regex @&quot;(?i)PythonLauncher-[a-z0-9]{3}&quot;
-| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 PythonLauncher Scheduled Task Persistence
-id: c3f7a0e1-8b45-4d2c-9a63-0e5f1b7c2d90
-status: experimental
-description: Detects creation of a scheduled task named PythonLauncher-XXX used by UAT-11795 to persist the Starland RAT / WLDR loader.
-references:
-  - https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
-author: SOC Detection Engineering
-date: 2026/07/23
-tags:
-  - attack.t1053.005
-  - attack.t1059.001
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_tool:
-    Image|endswith:
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\schtasks.exe&#x27;
-  selection_name:
-    CommandLine|re: &#x27;(?i)PythonLauncher-[a-z0-9]{3}&#x27;
-  selection_verb:
-    CommandLine|contains:
-      - &#x27;New-ScheduledTask&#x27;
-      - &#x27;/create&#x27;
-  condition: selection_tool and selection_name and selection_verb
-falsepositives:
-  - Legitimate software that registers a Python launcher scheduled task (verify naming/random suffix)
-level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4688 @CommandLine:*PythonLauncher-* @CommandLine:(*New-ScheduledTask* OR *\/create*)</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(powershell|pwsh|schtasks)\.exe$/i CommandLine=/PythonLauncher-[a-z0-9]{3}/i CommandLine=/(New-ScheduledTask|\/create)/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;schtasks.exe&quot;) AND Processes.process=&quot;*PythonLauncher-*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-103-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;schtasks.exe&quot;) AND Processes.process=&quot;*PythonLauncher-*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="be16a8fda3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Starland RAT browser-credential and cryptocurrency-wallet harvesting by Python interpreter</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="be16a8fda3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects a Python interpreter (Starland RAT) touching browser credential stores and cryptocurrency wallet directories — the article&#x27;s stated objective of stealing browser data and crypto wallets. Anchored on python.exe/pythonw.exe as the initiating process over sensitive artifact paths.
-
-Rationale: Uses the article&#x27;s explicit objective (Starland RAT stealing browser data and cryptocurrency wallets; gbhackers confirms 40+ wallet targets) by pivoting a python.exe initiating process over the canonical Chromium &#x27;Login Data&#x27;/&#x27;Local State&#x27;, Firefox key/logins DBs, and desktop wallet directories; the fan-out threshold (&gt;=2 artifacts) reduces single-file noise.
-
-Cross-checked against:
-  • https://gbhackers.com/starland-rat-steals-browser-credentials/
-  • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
-  • https://www.cyware.com/resources/threat-briefings/daily-threat-briefing/cyware-daily-threat-intelligence-july-16-2026</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Credentials from Password Stores: Credentials from Web Browsers">T1555.003</span> <span class="ind tech" title="Data from Local System">T1005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Python-based backup/sync utilities that legitimately read browser profiles</li><li>Password-manager import tooling written in Python</li><li>Data-science or QA scripts that parse local SQLite browser DBs</li><li>Endpoint agents with Python components that inventory installed wallets</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !has_any (&quot;\\Program Files\\&quot;, &quot;\\ProgramData\\Microsoft\\&quot;) and InitiatingProcessCommandLine !has_any (&quot;backup&quot;, &quot;password-manager&quot;, &quot;bitwarden&quot;, &quot;keepass&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the Python process is not a sanctioned tool — check its image path (unsigned/%TEMP%/%APPDATA%), parent process, and whether it touched multiple browser+wallet artifacts in a short window. 2) Contain: isolate the host, force-reset browser-stored and cloud credentials for the user, and advise the user to move crypto assets from any wallets on the host. 3) Hunt: correlate with the Telegram beacon (wallet-inventory exfil), the RAT C2 domains, and the trojanized-installer/PythonLauncher chain to scope the full compromise.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc6-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc6-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-103-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(30d)
 | where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;pythonw.exe&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Local State&quot;,&quot;wallet.dat&quot;,&quot;key3.db&quot;,&quot;key4.db&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-    or FolderPath has_any (&quot;Wallets&quot;,&quot;Ethereum&quot;,&quot;Electrum&quot;,&quot;Exodus&quot;,&quot;Bitcoin&quot;,&quot;User Data&quot;)
-| summarize FirstSeen=min(Timestamp), Artifacts=make_set(FolderPath, 25), Files=make_set(FileName, 25), Count=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| where Count &gt;= 2
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where FolderPath has_any (&quot;\\Login Data&quot;,&quot;wallet.dat&quot;,&quot;\\Ethereum\\&quot;,&quot;\\Exodus\\&quot;,&quot;\\Electrum\\&quot;,&quot;\\Local Extension Settings\\&quot;,&quot;\\Google\\Chrome\\User Data\\&quot;,&quot;\\Microsoft\\Edge\\User Data\\&quot;,&quot;\\Mozilla\\Firefox\\Profiles\\&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, ActionType, FileName, FolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has_any (&quot;python.exe&quot;,&quot;pythonw.exe&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Local State&quot;,&quot;wallet.dat&quot;,&quot;key3.db&quot;,&quot;key4.db&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-    or TargetFilePath has_any (&quot;Wallets&quot;,&quot;Ethereum&quot;,&quot;Electrum&quot;,&quot;Exodus&quot;,&quot;Bitcoin&quot;,&quot;User Data&quot;)
-| summarize FirstSeen=min(TimeGenerated), Files=make_set(TargetFileName, 25), Count=count() by DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine
-| where Count &gt;= 2
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Starland RAT Browser/Wallet Credential Harvesting via Python
-id: e5b4d7f2-9c31-4a0e-8b76-5f2a1c8e0d63
-status: experimental
-description: Detects a Python interpreter accessing browser credential stores and cryptocurrency wallet files, consistent with Starland RAT stealer behaviour.
+| where ActingProcessName has_any (&quot;\\python.exe&quot;,&quot;\\pythonw.exe&quot;)
+| where TargetFilePath has_any (&quot;\\Login Data&quot;,&quot;wallet.dat&quot;,&quot;\\Ethereum\\&quot;,&quot;\\Exodus\\&quot;,&quot;\\Electrum\\&quot;,&quot;\\Local Extension Settings\\&quot;,&quot;\\Google\\Chrome\\User Data\\&quot;,&quot;\\Microsoft\\Edge\\User Data\\&quot;,&quot;\\Mozilla\\Firefox\\Profiles\\&quot;)
+| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, EventType, TargetFileName, TargetFilePath
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Python Access to Browser Credential and Crypto Wallet Stores
+id: 4d1a9c7e-8b25-4e60-a3f1-6c9d0b2e5f4a
+description: Detects python.exe/pythonw.exe (Starland RAT / CastleStealer) touching browser Login Data and cryptocurrency wallet directories.
 references:
-  - https://gbhackers.com/starland-rat-steals-browser-credentials/
   - https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
 author: SOC Detection Engineering
 date: 2026/07/23
 tags:
   - attack.t1555.003
+  - attack.t1555.001
   - attack.t1005
 logsource:
   category: file_access
@@ -6300,28 +6202,96 @@ detection:
     Image|endswith:
       - &#x27;\python.exe&#x27;
       - &#x27;\pythonw.exe&#x27;
-  selection_files:
+  selection_paths:
     TargetFilename|contains:
-      - &#x27;Login Data&#x27;
-      - &#x27;Local State&#x27;
+      - &#x27;\Login Data&#x27;
       - &#x27;wallet.dat&#x27;
-      - &#x27;key3.db&#x27;
-      - &#x27;key4.db&#x27;
-      - &#x27;logins.json&#x27;
-      - &#x27;\Wallets\&#x27;
       - &#x27;\Ethereum\&#x27;
-      - &#x27;\Electrum\&#x27;
       - &#x27;\Exodus\&#x27;
-  condition: selection_proc and selection_files
-falsepositives:
-  - Python-based backup, sync, or password-manager tooling that legitimately reads browser/wallet files
+      - &#x27;\Electrum\&#x27;
+      - &#x27;\Local Extension Settings\&#x27;
+      - &#x27;\Google\Chrome\User Data\&#x27;
+      - &#x27;\Microsoft\Edge\User Data\&#x27;
+      - &#x27;\Mozilla\Firefox\Profiles\&#x27;
+  condition: selection_proc and selection_paths
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @Image:(*\\python.exe OR *\\pythonw.exe OR *\\Python.exe) @TargetFilename:(*Login?Data* OR *Local?State* OR *wallet.dat* OR *key3.db* OR *key4.db* OR *logins.json* OR *\\Wallets\\* OR *\\Ethereum\\* OR *\\Electrum\\* OR *\\Exodus\\*)</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo ContextImageFileName=/python(w)?\.exe$/i
-| TargetFileName=/(Login Data|Local State|wallet\.dat|key3\.db|key4\.db|logins\.json|\\Wallets\\|\\Ethereum\\|\\Electrum\\|\\Exodus\\)/i
-| groupBy([aid, ComputerName, ContextImageFileName], function=count(field=TargetFileName, distinct=true), limit=max)
-| _count &gt;= 2</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;) AND (Filesystem.file_name IN (&quot;Login Data&quot;,&quot;Local State&quot;,&quot;wallet.dat&quot;,&quot;key3.db&quot;,&quot;key4.db&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;) OR Filesystem.file_path=&quot;*Wallets*&quot; OR Filesystem.file_path=&quot;*Ethereum*&quot; OR Filesystem.file_path=&quot;*Electrum*&quot; OR Filesystem.file_path=&quot;*Exodus*&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-103-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;) AND (Filesystem.file_name IN (&quot;Login Data&quot;,&quot;Local State&quot;,&quot;wallet.dat&quot;,&quot;key3.db&quot;,&quot;key4.db&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;) OR Filesystem.file_path=&quot;*Wallets*&quot; OR Filesystem.file_path=&quot;*Ethereum*&quot; OR Filesystem.file_path=&quot;*Electrum*&quot; OR Filesystem.file_path=&quot;*Exodus*&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @Image:(*\\python.exe OR *\\pythonw.exe OR *\\PYTHON.EXE) @TargetFilename:(*\\Login\ Data* OR *wallet.dat* OR *\\Ethereum\\* OR *\\Exodus\\* OR *\\Electrum\\* OR *\\Local\ Extension\ Settings\\*)</code></pre></div>
+    <div class="tab-content" id="art-103-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^File(Written|OpenInfo)$/ ContextImageFileName=/\\pythonw?\.exe$/i
+| TargetFileName=/(\\Login Data|wallet\.dat|\\Ethereum\\|\\Exodus\\|\\Electrum\\|\\Local Extension Settings\\|\\Chrome\\User Data\\|\\Edge\\User Data\\|\\Firefox\\Profiles\\)/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;)) AND (Filesystem.file_path=&quot;*\\Login Data*&quot; OR Filesystem.file_path=&quot;*wallet.dat*&quot; OR Filesystem.file_path=&quot;*\\Ethereum\\*&quot; OR Filesystem.file_path=&quot;*\\Exodus\\*&quot; OR Filesystem.file_path=&quot;*\\Electrum\\*&quot; OR Filesystem.file_path=&quot;*\\Local Extension Settings\\*&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;python.exe&quot;,&quot;pythonw.exe&quot;)) AND (Filesystem.file_path=&quot;*\\Login Data*&quot; OR Filesystem.file_path=&quot;*wallet.dat*&quot; OR Filesystem.file_path=&quot;*\\Ethereum\\*&quot; OR Filesystem.file_path=&quot;*\\Exodus\\*&quot; OR Filesystem.file_path=&quot;*\\Electrum\\*&quot; OR Filesystem.file_path=&quot;*\\Local Extension Settings\\*&quot;) by Filesystem.dest Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="39368d12be" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">UAT-11795 scheduled-task persistence via New-ScheduledTask &#x27;PythonLauncher-XXX&#x27;</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="39368d12be" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the campaign&#x27;s persistence mechanism: PowerShell New-ScheduledTask (or schtasks.exe) registering a task named PythonLauncher-{3 random chars} to relaunch the Python-based Starland loader at logon/boot.
+
+Rationale: Combines the New-ScheduledTask cmdlet (Code Block 2) with the PythonLauncher-{3 random chars} task naming convention (Code Block 3) — the literal &#x27;PythonLauncher&#x27; token makes this near-zero FP for the campaign&#x27;s persistence.
+
+Cross-checked against:
+  • https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Scheduled Task">T1053.005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate Python IDE or packaging tool that registers a task literally containing &#x27;PythonLauncher&#x27; (uncommon)</li><li>Admin automation deploying a python launcher scheduled task with that exact name</li><li>Red-team persistence testing</li><li>Software vendor installer using a PythonLauncher-named task</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the full task action/trigger from the command line — confirm it points at a python payload in a user-writable path (%TEMP%/%APPDATA%). 2) Contain: isolate host, delete the scheduled task, remove the referenced payload, kill running python instances. 3) Hunt: check other hosts for PythonLauncher-XXX tasks and for the upstream trojanized installer and C2 beacons.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-103-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc6-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-103-uc6-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-103-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-103-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;) and ProcessCommandLine has &quot;New-ScheduledTask&quot; and ProcessCommandLine has &quot;PythonLauncher&quot;)
+    or (FileName =~ &quot;schtasks.exe&quot; and ProcessCommandLine has &quot;PythonLauncher&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where (NewProcessName has_any (&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;) and CommandLine has &quot;New-ScheduledTask&quot; and CommandLine has &quot;PythonLauncher&quot;)
+    or (NewProcessName endswith &quot;\\schtasks.exe&quot; and CommandLine has &quot;PythonLauncher&quot;)
+| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: UAT-11795 Scheduled Task Persistence PythonLauncher
+id: 9c0e5b73-2a41-4d8f-b6e2-1f8a7c3d9e40
+description: Detects creation of a scheduled task named PythonLauncher-XXX via New-ScheduledTask or schtasks.exe, the UAT-11795 persistence for the Starland Python loader.
+references:
+  - https://blog.talosintelligence.com/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-implant-in-financially-motivated-campaign/
+author: SOC Detection Engineering
+date: 2026/07/23
+tags:
+  - attack.t1053.005
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_ps:
+    Image|endswith:
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+    CommandLine|contains|all:
+      - &#x27;New-ScheduledTask&#x27;
+      - &#x27;PythonLauncher&#x27;
+  selection_schtasks:
+    Image|endswith: &#x27;\schtasks.exe&#x27;
+    CommandLine|contains: &#x27;PythonLauncher&#x27;
+  condition: selection_ps or selection_schtasks
+level: high</code></pre></div>
+    <div class="tab-content" id="art-103-uc6-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 ((@Image:(*\\powershell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe) AND @CommandLine:*New-ScheduledTask* AND @CommandLine:*PythonLauncher*) OR (@Image:(*\\schtasks.exe OR *\\SCHTASKS.EXE) AND @CommandLine:*PythonLauncher*))</code></pre></div>
+    <div class="tab-content" id="art-103-uc6-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| (ImageFileName=/\\pwsh|powershell\.exe$/i AND CommandLine=/New-ScheduledTask/i AND CommandLine=/PythonLauncher/i) OR (ImageFileName=/\\schtasks\.exe$/i AND CommandLine=/PythonLauncher/i)
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;) AND Processes.process=&quot;*New-ScheduledTask*&quot; AND Processes.process=&quot;*PythonLauncher*&quot;) OR (Processes.process_name=&quot;schtasks.exe&quot; AND Processes.process=&quot;*PythonLauncher*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;) AND Processes.process=&quot;*New-ScheduledTask*&quot; AND Processes.process=&quot;*PythonLauncher*&quot;) OR (Processes.process_name=&quot;schtasks.exe&quot; AND Processes.process=&quot;*PythonLauncher*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
